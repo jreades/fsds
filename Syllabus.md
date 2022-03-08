@@ -69,7 +69,7 @@ We've found issues running Docker using Windows that when closing down the Docke
 
 `-v "$WORK_DIR":/home/jovyan/work`
 
-In the `docker.sh` file with:
+with:
 
 `--mount type=bind,source="$(pwd)",target=/home/jovyan/work`
 
@@ -79,7 +79,7 @@ and trying to load up the Docker image again. In doing so you should be able to 
 
 In this weeks workshop we will introduce modules aims, learning outcomes and expectations with a general introduction to the course
 
-N.B Workshop material and all other resources for this module are on the Moodle
+N.B. Workshop material and all other resources for this module are on the Moodle
 
 ### Practical
 
@@ -356,7 +356,7 @@ The practical can then be [downloaded from GitHub](https://github.com/jreades/i2
 #### Readings
 
 - [@dignazio:2020, chap. 3] On Rational, Scientific, Objective Viewpoints from Mythical, Imaginary, Impossible Standpoints in Data Feminism; [Pre-review URL](https://bookbook.pubpub.org/pub/8tjbs2x5)
-- [@badger:2019]) Neighborhood Is Mostly Black. The Home Buyers Are Mostly White. [URL](https://www.nytimes.com/interactive/2019/04/27/upshot/diversity-housing-maps-raleigh-gentrification.html)
+- [@badger:2019] The Neighborhood Is Mostly Black. The Home Buyers Are Mostly White. [URL](https://www.nytimes.com/interactive/2019/04/27/upshot/diversity-housing-maps-raleigh-gentrification.html)
 
 #### Contribution
 

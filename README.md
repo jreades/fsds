@@ -7,3 +7,15 @@ The module's objective is to enable students to access, understand, utilise, vis
 ## Using this Repository
 
 In order to make use of these materials you will need to download and install the [Spatial Data Science computing environment](https://github.com/jreades/sds_env/).
+
+## To Dos
+
+- [Shift away from .values](https://stackoverflow.com/questions/17241004/how-do-i-convert-a-pandas-series-or-index-to-a-numpy-array/54324513#54324513)
+- Swap Weeks 8 (Visualising Data) and 9 (Dimensions in Data) + explain rationale to students.
+- Shift focus of (new) Week 9 & 10 to review/discussing the final assessment. Content still available to view/practice but not required/delivered.
+- Require more active use of GitHub/Git — a submission in which it’s easy to automate checks that they’ve created a repo and populated it with the completed notebooks?
+- Refresh Code Camp and make it more self-test oriented. Use the self-test to set expectations about level of effort/preparation required (and whether or not taking the module will be useful).
+- Standardise delivery of practical content by TAs: should have consistent approach across practicals.
+- Point to cross-module content/recaps.
+- Joint reading list?
+- Investigate [CoCalc](https://cocalc.com/software/python) as an alternative. What is situation with JupyterHub at UCL.
