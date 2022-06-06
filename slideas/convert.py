@@ -1,6 +1,6 @@
 #! /usr/bin/python
 
-import os
+import os, re
 
 # Convert Slideas-formatted Markdown to Reveal.js-formatted Markdown
 
@@ -44,8 +44,12 @@ def process_split(txt:str) -> str:
     content = txt.split("\n")
 
     output = [':::: {.columns}\n','::: {.column width="50%"}\n']
-
-    slice_start = content.index('Layout: Split')+1
+    try:
+        slice_start = content.index('Layout: Split')+1
+    except ValueError:
+        print("Unable to located start of slice!")
+        print(content)
+        exit()
     try:
         slice_end = content.index(next((x for x in content[slice_start:] if x.startswith('^')), None))
     except ValueError:
@@ -82,19 +86,35 @@ def process_page(txt:list) -> str:
     output.append("---\n")
     return "\n".join(output)
 
-fn = '5.4-Pandas'
-fn = '3.4-Functions'
+mypath = '.'
+slideas_files = [f for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath,f)) and f.endswith('.md')]
 
-with open(f'{fn}.md','r') as f:
-    pages = f.read().split('---')
+mypath = os.path.join('..','lectures')
+reveal_files = [f for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath,f))]
 
-with open(os.path.join('..','lectures',f'{fn}.qmd'),'w') as f:
-
-    f.write(extract_meta(pages.pop(0)))
-
-    for p in pages:
-        f.write(process_page(p))
+for src in slideas_files:
+    original  = os.path.getmtime(src)
     
-    f.write('## Thank you!')
+    try:
+        converted = os.path.getmtime(os.path.join('..','lectures',src.replace('.md','.qmd')))
+    except FileNotFoundError:
+        converted = 0
+
+    if converted - original > 0:
+        print(f"Found converted copy of {src}")
+    else:
+        if re.match(r'\d+\.\d+-',src):
+            print(f"Converting {src}")
+            with open(src,'r') as f:
+                pages = f.read().split('---\n')
+
+            with open(os.path.join('..','lectures',src.replace('.md','.qmd')),'w') as f:
+
+                f.write(extract_meta(pages.pop(0)))
+
+                for p in pages:
+                    f.write(process_page(p))
+                
+                f.write('## Thank you!')
 
 print('Done!')
