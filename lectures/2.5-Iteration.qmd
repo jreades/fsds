@@ -1,0 +1,273 @@
+---
+format:
+  revealjs:
+    theme: serif
+slide-format: revealjs
+title:  Iteration
+author:  Jon Reades
+---
+
+
+
+
+::: {.notes}
+
+By themselves, lists and variables aren't very useful if we can only access items either one at a time, or as slice. 
+
+But if we can *iterate* over a list (do something to every item in a list) then we gain some **superpowers**.
+
+:::
+
+
+![Let's Get This Party Started](https://sd.keepcalms.com/i-w600/lets-get-this-party-started-4.jpg)
+
+
+## *it·er·a·tion* {.smaller}
+
+
+/itə'rāSHən/
+
+*Noun*
+
+The repetition of a process or utterance.
+
+- repetition of a mathematical or computational procedure applied to the result of a previous application, typically as a means of obtaining successively closer approximations to the solution of a problem.
+- a new version of a piece of computer hardware or software.plural noun: **iterations**
+
+
+
+::: {.notes}
+
+Most programmers also call these *loops*.
+
+:::
+
+---
+
+:::: {.columns}
+::: {.column width="50%"}
+### 'For' loops
+
+- Used with *finite* lists of *definite* length
+- *For* each item in this list do something...
+:::
+::: {.column width="50%"}
+### 'While' loops:
+
+- Used with *unknown* or *non-finite* lists
+- *While* a condition is still `True`, do something to the list...
+
+:::
+::::
+
+## Making the Difference Memorable 
+
+
+![autoplay](https://www.youtube.com/watch?v=9AJ0uoxtdCQ)
+
+
+## For {.smaller}
+
+
+This 'simple' loop allows us to print out every element of the list in turn:
+
+```python
+geographers = ['Rose','Massey','Jefferson','Von Humboldt','Harvey']
+for g in geographers:
+  print(g)
+> Rose
+> Massey
+> Jefferson
+...
+```
+
+Notice the format:
+
+```python
+for x in list:
+  ...do something...
+```
+
+
+
+::: {.notes}
+
+Notice that this is the same `in` that we saw with `if 'Batty' in geographers`!
+
+:::
+
+## While {.smaller}
+
+
+This while loop does the _same_ thing, but it does it differently:
+
+```python
+geographers = ['Rose','Massey','Jefferson','Von Humboldt','Harvey']
+g = 0
+while g < len(geographers):
+  print( geographers[g] )
+  g += 1
+```
+
+Notice the format:
+
+```python
+while <some condition is true>:
+  ...do something...
+```
+
+
+## Nesting Loops {.smaller}
+
+
+We can use one loop 'inside' another loop! What do you think this might print?
+
+```python
+for g in geographers:
+  for h in g:
+    print(h)
+```
+
+Let's puzzle it out... 
+
+
+---
+
+
+When you see something completely new, it's often good to:
+
+1. Add `print(...)` statements to see how the values of a variable are changing.
+2. Comment out the parts you don't understand so that you can focus on the parts you do and then *iteratively* add complexity!
+
+So I would start off with:
+
+```python
+for g in geographers:
+  print(g)
+#   for h in g:
+#   print(h)
+```
+
+
+---
+
+
+```python
+'Rose'
+'Massey'
+'Jefferson'
+'Von Humboldt'
+'Harvey'
+```
+
+OK, so... 
+
+1. We now know that `g` is the name of a geographer.
+2. So the 'outer' loop *on its own* sets `g` to the name of a new geographer in the list on *each iteration*.
+3. So if `g` is set to `'Rose'` what does `for h in g...` do?
+
+
+---
+
+
+```python
+for g in geographers:
+  print(g)
+  for h in g:
+    print(h)
+> Rose
+> R
+> o
+> s
+> e
+> Massey
+> M
+> a
+...
+```
+
+
+::: {.notes}
+
+You've learned two things here... what are they?
+
+Whoah, so a string can be treated _as_ a list!
+
+:::
+
+## Recap
+
+
+
+**for** iterates once over a collection items (e.g. a list).
+
+
+**while** keeps going until a condition is False.
+
+
+## Test Yourself {.smaller}
+
+
+What will this code print? *[I'd suggest that you **don't** run it!]*
+
+```python
+geographers = ['Rose','Massey','Jefferson','Von Humboldt','Harvey']
+g = 0
+while g < len(geographers):
+  print( geographers[g] )
+```
+
+
+## Test Yourself (Tricksy Version) {.smaller}
+
+
+Here's a really tricky one! The following two blocks of code produce the *same* output, *how* are they different?
+
+```python
+geographers = ['Rose','Massey','Jefferson','Von Humboldt','Harvey']
+geographers.reverse()
+for g in geographers:
+  print(g)
+```
+
+And:
+
+```python
+geographers = ['Rose','Massey','Jefferson','Von Humboldt','Harvey']
+g = len(geographers)-1
+while g >= 0:
+  print( geographers[g] )
+  g -= 1
+```
+
+## One More Thing... {.smaller}
+
+Let's go back to the [Lists](2.4-Lists.md) examples for a second:
+```python
+female_geographers = ['Rose','Valentine','Massey','Jefferson']
+male_geographers = ['Von Humboldt','Harvey','Hägerstrand']
+all_geographers = []
+all_geographers.append(female_geographers)
+all_geographers.append(male_geographers)
+```
+Have a think about how this code works:
+```python
+for ag in all_geographers:
+  for g in ag:
+    print(g)
+```
+
+
+## Resources {.smaller}
+
+
+- [What is Iteration?](https://www.linkedin.com/learning/python-quick-start/what-is-iteration)
+- [Loops](https://www.linkedin.com/learning/learning-python-2/loops)
+- [For Loop](https://www.linkedin.com/learning/python-quick-start/for-loop)
+- [While Loop](https://www.linkedin.com/learning/python-quick-start/while-loop)
+
+We don't cover the concept of recursion, but it's quite a powerful idea and links nicely with Iteration:
+- [What is a recursive function?](https://www.linkedin.com/learning/python-quick-start/what-is-a-recursive-function)
+- [Define recursive functions](https://www.linkedin.com/learning/python-quick-start/define-recursive-functions)
+
+# Thank you!

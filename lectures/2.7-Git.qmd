@@ -1,0 +1,203 @@
+---
+format:
+  revealjs:
+    theme: serif
+slide-format: revealjs
+title:  Getting to Grips with Git
+author:  Jon Reades
+---
+
+
+
+
+::: {.notes}
+
+You will need two things to get started:
+
+1. `git` installed on *your* computer: [git-scm.com/downloads](https://git-scm.com/downloads)
+
+2. A GitHub account: [github.com](https://github.com/join?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F&source=header-home)
+
+:::
+
+
+![Versions](img/phd101212s.gif) 
+
+
+::: {.notes}
+
+Version control has been around longer than the Internet. Broadly, it was designed to achieve three things:
+
+1. A record of and and all edits made to a file containing code.
+
+2. A means of allowing developers to share edits with one another.
+
+3. A way of reconciling conflicts when two (or more) developers edited the same code.
+
+:::
+
+## However
+
+Although we naturally connect version control to coding, you can use it **anywhere** that you have files that are changing (*hint:* essays, notes, projects, assessments, code...) and need/want to track them. 
+
+**Bonus:** you *also* gain free backups if some part of your version control system is on a different computer!
+
+
+## How It Works
+
+The **natural way** to think about managing versions of a document is to have a *master* copy **somewhere**. Everyone asks the server for the master copy, makes some changes, and then checks those changes back in.
+
+This is not how Git works.
+
+## How Git Works
+
+Git is **distributed**. You could call it peer-to-peer, meaning that *every* computer where git is installed is **its own server** and has its own *master copy*. 
+
+So every computer has a **full history** of a file or project that been added to Git.
+
+In order to make this **useful**, you need ways to synchronise changes between computers that all think *they're* right.
+
+## GitHub
+
+GitHub is **nothing special** to Git, just another server with which to negotiate changes. Do *not* think of GitHub as the 'master' copy. There isn't one. 
+
+## Using Git
+
+## Getting Started {.smaller}
+
+| Term | Means |
+| :--- | :---- |
+| Repository (Repo) | A project or achive stored in Git. |
+| init | To create a new repo. |
+| clone | To make a full copy of a repo somewhere else. |
+
+For example:
+```bash
+mkdir i2p
+cd i2p
+git init
+```
+Or: `git clone https://github.com/jreades/i2p.git`
+
+
+## Working on a File {.smaller}
+
+| Term | Means |
+| :--- | :---- |
+| add  | Add a file to a repo. |
+| Move (mv) | Move/Rename a file in a repo. |
+| Remove (rm) | Remove a file from a repo. |
+
+For example:
+```bash
+git add README.md
+git mv README.md fileA.md
+git rm fileA.md
+```
+But no one *else* knows about these changes yet!
+
+
+## Looking at the History {.smaller}
+
+| Term | Means |
+| :--- | :---- |
+| diff | Show changes between commits. |
+| status | Show status of files in repo. |
+| log | Show history of commits. |
+
+For example:
+```bash
+git status
+```
+
+
+## Working on a Project or File {.smaller}
+| Term | Means |
+| :--- | :---- |
+| commit | To record changes to the repo. |
+| branch | Create or delete branches. |
+| checkout | Jump to a different branch. |
+
+For example:
+```bash
+git commit -m "Moved and then deleted README file."
+```
+
+## Collaborating on a Project {.smaller}
+
+| Term | Means |
+| :--- | :---- |
+| pull | To request changes to a repo *from* another computer. |
+| push | To send your changes to a repo *to* another computer. |
+
+For example:
+```
+git push
+```
+
+
+## Consequences
+
+All changes are **local** until you `push` them. 
+
+If you forget to `push` your changes (e.g. to GitHub) then you are **not backed up** if your computer dies.
+
+
+## This is *not* easy
+
+![XKCD Comic About Git](img/xkcd-git.png)
+
+[Source](https://xkcd.com/1597/)
+
+
+## A Dropbox Analogy
+
+- Think of the programming environment (Vagrant+JupyterLab) as being an application (like Word or Excel) that allows you to read/write/edit notebook files.
+- Think of GitHub as being like Dropbox somewhere in the cloud that files on your home machine can be backed up.
+- So you should not need to do anything in JupyterLab to move files to, or see changes on, GitHub.
+- Git gives you much finer-grained control over files and syncrhonisation than Dropbox.
+
+
+
+
+
+::: {.notes}
+
+Like Dropbox, GitHub offers a lot of 'value added' featuers (like simple text editing) on top of the basic service of 'storing files'.
+
+Dropbox will automatically back up anything that you put in your special Dropbox folder. 
+
+Git will only back up the things that you tell it to back up, *even if* they are in the Git folder! 
+
+:::
+
+## A Note on Workflow {.smaller}
+
+So your workflow should be:
+
+1. Save edits to Jupyter notebook.
+2. Run `git add <filename.ipynb>` to record changes to the notebook (obviously replace `<filename.ipynb>` completely with the notebook filename.
+3. Run `git commit -m "Adding notes based on lecture"` (or whatever message is appropriate: `-m` means 'message').
+4. Then run `git push` to push the changes to GitHub.
+
+If any of those commands indicate that there are no changes being recorded/pushed then it might be that you’re not editing the file that you think you are (this happens to me!).
+
+On the GitHub web site you may need to force reload the view of the repository: Shift + Reload button usually does it in most browsers. You may also need to wait 5 to 10 seconds for the changes to become ‘visible’ before reloading. It’s not quite instantaeous.
+
+
+## Resources
+
+- [Understanding Git (Part 1) -- Explain it Like I'm Five](https://hackernoon.com/understanding-git-fcffd87c15a3)
+- [Trying Git](https://try.github.io)
+- [Visualising Git](http://git-school.github.io/visualizing-git/)
+- [Git Novice](http://swcarpentry.github.io/git-novice/)
+- [Andy's R-focussed Tutorial](https://andrewmaclachlan.github.io/CASA0005repo/git-github-and-rmarkdown.html#set-up-your-github)
+
+
+::: {.notes}
+
+I now have everything in Git repos: articles, research, presentations, modules... the uses are basically endless once you start using Markdown heavily (even if you don't do much coding).
+
+:::
+
+# Thank you!
