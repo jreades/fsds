@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-0.9.492">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Foundations of Spatial Data Science – week2</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../sessions/week3.html" rel="next">
+<link href="../sessions/week1.html" rel="prev">
+<link href="../img/favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-md navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <a class="navbar-brand" href="../index.html">
+    <img src="../img/CASA_Logo_no_text.png" alt="">
+    <span class="navbar-title">Foundations of Spatial Data Science</span>
+  </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html">Welcome</a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-setting-up" role="button" data-bs-toggle="dropdown" aria-expanded="false">Setting Up</a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-setting-up">    
+        <li>
+    <a class="dropdown-item" href="../setup/index.html">
+ <span class="dropdown-text">Getting Started</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Requirements</li>
+        <li>
+    <a class="dropdown-item" href="../setup/health.html">
+ <span class="dropdown-text">Health Check</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../setup/base.html">
+ <span class="dropdown-text">Base Utilities</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../setup/code_camp.html">
+ <span class="dropdown-text">Code Camp</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Installation</li>
+        <li>
+    <a class="dropdown-item" href="../setup/git.html">
+ <span class="dropdown-text">Git &amp; GitHub</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../setup/markdown.html">
+ <span class="dropdown-text">Markdown</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../setup/env.html">
+ <span class="dropdown-text">Programming Environment</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-week-by-week" role="button" data-bs-toggle="dropdown" aria-expanded="false">Week-by-Week</a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-week-by-week">    
+        <li>
+    <a class="dropdown-item" href="../sessions/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Week-by-Week</li>
+        <li>
+    <a class="dropdown-item" href="../sessions/week1.html">
+ <span class="dropdown-text">1. Setting Up</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week2.html">
+ <span class="dropdown-text">2. Foundations (Pt.1)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week3.html">
+ <span class="dropdown-text">3. Foundations (Pt.2)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week4.html">
+ <span class="dropdown-text">4. Objects</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week5.html">
+ <span class="dropdown-text">5. Numeric Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week6.html">
+ <span class="dropdown-text">Reading Week</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week7.html">
+ <span class="dropdown-text">6. Spatial Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week8.html">
+ <span class="dropdown-text">7. Textual Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week9.html">
+ <span class="dropdown-text">8. Dimensions in Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week10.html">
+ <span class="dropdown-text">9. Visualising Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week11.html">
+ <span class="dropdown-text">10. Grouping Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../references.html">
+ <span class="dropdown-text">References</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-assessments" role="button" data-bs-toggle="dropdown" aria-expanded="false">Assessments</a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-assessments">    
+        <li>
+    <a class="dropdown-item" href="../assessments.html">
+ <span class="dropdown-text">Assessments</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Elements</li>
+        <li>
+    <a class="dropdown-item" href="../assessments/audit.html">
+ <span class="dropdown-text">Data Audit (30%)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../assessments/briefing.html">
+ <span class="dropdown-text">Data+Policy Briefing (50%)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../assessments/individual.html">
+ <span class="dropdown-text">Individual Reflection (20%)</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+              <div class="quarto-toggle-container">
+                  <a href="" class="quarto-reader-toggle nav-link" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+              </div>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">(Untitled)</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sessions/index.html" class="sidebar-item-text sidebar-link">Overview</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+    <div class="sidebar-item-container"> 
+        <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Week-by-Week</a>
+      <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+        <i class="bi bi-chevron-right ms-2"></i>
+      </a>
+    </div>
+    <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sessions/week1.html" class="sidebar-item-text sidebar-link">1. Setting Up</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sessions/week2.html" class="sidebar-item-text sidebar-link active">2. Foundations (Pt.1)</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sessions/week3.html" class="sidebar-item-text sidebar-link">3. Foundations (Pt.2)</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sessions/week4.html" class="sidebar-item-text sidebar-link">4. Objects</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sessions/week5.html" class="sidebar-item-text sidebar-link">5. Numeric Data</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sessions/week6.html" class="sidebar-item-text sidebar-link">Reading Week</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sessions/week7.html" class="sidebar-item-text sidebar-link">6. Spatial Data</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sessions/week8.html" class="sidebar-item-text sidebar-link">7. Textual Data</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sessions/week9.html" class="sidebar-item-text sidebar-link">8. Dimensions in Data</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sessions/week10.html" class="sidebar-item-text sidebar-link">9. Visualising Data</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../sessions/week11.html" class="sidebar-item-text sidebar-link">10. Grouping Data</a>
+  </div>
+</li>
+    </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">References</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#foundations-pt.-1" id="toc-foundations-pt.-1" class="nav-link active" data-scroll-target="#foundations-pt.-1">Foundations (Pt. 1)</a>
+  <ul class="collapse">
+  <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#lectures" id="toc-lectures" class="nav-link" data-scroll-target="#lectures">Lectures</a></li>
+  <li><a href="#practical" id="toc-practical" class="nav-link" data-scroll-target="#practical">Practical</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jreades/fsds/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+
+<section id="foundations-pt.-1" class="level1">
+<h1>Foundations (Pt. 1)</h1>
+<div class="callout-warning callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Changes before 22/23
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul class="task-list">
+<li><input type="checkbox" disabled="">
+Add Learning Outcomes for each week</li>
+<li><input type="checkbox" disabled="">
+More focus on code re-use and simplicity.</li>
+</ul>
+</div>
+</div>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This week’s learning objectives are:</p>
+<ol type="1">
+<li>A review of basic Python syntax.</li>
+<li>A review of logical operators in Python.</li>
+<li>A review of basic list operations.</li>
+<li>An introduction to making use of Git+GitHub.</li>
+<li>An introdution to make use of the Shell/Terminal.</li>
+<li>An understanding of how none of this all that new.</li>
+</ol>
+</div>
+</div>
+<p>This week we will be (briefly) reviewing the basics of Python with a view to recapping the more complex aspects of simple data structures. And yes, that’s a bit of an oxymoron, but we’re focussing here on how computers ‘think’ and how that differs from what you might be expecting as an intelligen human being!</p>
+<p>We will be contextualising all of this within the longer history of the study of geography through computation. I hope to convince you that many of the problems we face today are <em>not</em> new and why that should encourage you to continue to do the readings!</p>
+</section>
+<section id="lectures" class="level2">
+<h2 class="anchored" data-anchor-id="lectures">Lectures</h2>
+<p>As we’re working in a ‘flipped’ environment, you should watch these videos <em>before</em> class so that the ‘live’ workshop can focus on demonstration, discussion, and clarification. This week is very busy because we need to cover off the basics for those of you who were unable to engage with <a href="https://kingsgeocomputation.org/teaching/code-camp/code-camp-python/">Code Camp</a>, while recapping only the crucial bits for those of you who <em>were</em> able to do so.</p>
+<p>Come to class prepared to present:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Video</th>
+<th style="text-align: left;">Markdown for Note-taking</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><a href="https://web.microsoftstream.com/video/dc5951ed-33fb-43a7-8e30-19ec2b41cb1f">Python: the Basics</a></td>
+<td style="text-align: left;"><a href="../lectures/2.3-Python_the_Basics.qmd">Notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><a href="https://web.microsoftstream.com/video/21ef45cf-c432-4882-be54-e9bdbdaf7a3b">Lists</a></td>
+<td style="text-align: left;"><a href="../lectures/2.4-Lists.qmd">Notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><a href="https://web.microsoftstream.com/video/ecbf2b2b-6d11-4df0-a28b-caed2badbea1">Iteration</a></td>
+<td style="text-align: left;"><a href="../lectures/2.5-Iteration.qmd">Notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><a href="https://web.microsoftstream.com/video/5cd2a59c-ab53-4e75-a607-dd5de5e61681">The Command Line</a></td>
+<td style="text-align: left;"><a href="../lectures/2.6-The_Command_Line.qmd">Notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><a href="https://web.microsoftstream.com/video/aa0f7893-4fb5-4af1-ad44-af8e352f4d52">Getting Stuck Into Git</a></td>
+<td style="text-align: left;"><a href="../lectures/2.7-Git.qmd">Notes</a></td>
+</tr>
+</tbody>
+</table>
+<section id="readings" class="level3">
+<h3 class="anchored" data-anchor-id="readings">Readings</h3>
+<p>Come to class prepared to present:</p>
+<ul>
+<li><span class="citation" data-cites="Burton:1963">(<a href="#ref-Burton:1963" role="doc-biblioref">Burton 1963</a>)</span> <a href="https://doi.org/10.1111/j.1541-0064.1963.tb00796.x">DOI</a></li>
+<li><span class="citation" data-cites="ArribasBel:2018">(<a href="#ref-ArribasBel:2018" role="doc-biblioref">Arribas-Bel and Reades 2018</a>)</span> <a href="https://doi.org/10.1111/gec3.12403">DOI</a></li>
+</ul>
+</section>
+<section id="activities" class="level3">
+<h3 class="anchored" data-anchor-id="activities">Activities</h3>
+<ul>
+<li>Padlet: [Collaborative Agenda]</li>
+<li>Complete the <a href="https://moodle.ucl.ac.uk/mod/quiz/view.php?id=2388403">short Moodle quiz</a> associated with this week’s activities.</li>
+</ul>
+</section>
+</section>
+<section id="practical" class="level2">
+<h2 class="anchored" data-anchor-id="practical">Practical</h2>
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This week’s learning objectives are:</p>
+<ol type="1">
+<li></li>
+<li></li>
+<li></li>
+</ol>
+</div>
+</div>
+<div class="callout-warning callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Changes before 22/23
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul class="task-list">
+<li><input type="checkbox" disabled="">
+Add Learning Outcomes for each week</li>
+<li><input type="checkbox" disabled="">
+Standardise delivery by TAs where practicals are TA-led (e.g.&nbsp;FSDS): clearer guidance on how to take students through each week.</li>
+<li><input type="checkbox" disabled="">
+Clearer articulation of difficulty levels/targets for components <em>within</em> each week’s practicals.</li>
+<li><input type="checkbox" disabled="">
+Make links between lecture and practical content explicit; ideally trace a question through the whole process (<em>e.g.</em> “If I wanted to know if and where blue plaques are clustered in London how would I find out?”)</li>
+</ul>
+</div>
+</div>
+<div class="callout-warning callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This week’s practical requires you to have completed installation of the programming environment. Make sure you have <a href="../setup/index.html">completed setup of the environment</a>.</p>
+</div>
+</div>
+<p>The practical can be <a href="https://github.com/jreades/fsds/raw/master/practicals/Practical-02-Foundations_1.ipynb">downloaded from GitHub</a>.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
+<div id="ref-ArribasBel:2018" class="csl-entry" role="doc-biblioentry">
+Arribas-Bel, D., and J. Reades. 2018. <span>“Geography and Computers: Past, Present, and Future.”</span> <em>Geography Compass</em> 0 (0):e12403. <a href="https://doi.org/10.1111/gec3.12403">https://doi.org/10.1111/gec3.12403</a>.
+</div>
+<div id="ref-Burton:1963" class="csl-entry" role="doc-biblioentry">
+Burton, I. 1963. <span>“The Quantitative Revolution and Theoretical Geography.”</span> <em>The Canadian Geographer/Le Géographe Canadien</em> 7 (4):151–62. <a href="https://doi.org/10.1111/j.1541-0064.1963.tb00796.x">https://doi.org/10.1111/j.1541-0064.1963.tb00796.x</a>.
+</div>
+</div>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../sessions/week1.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">1. Setting Up</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../sessions/week3.html" class="pagination-link">
+        <span class="nav-page-text">3. Foundations (Pt.2)</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">Copyright 2022, Jon Reades</div>   
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jreades/fsds">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/jreades">
+      <i class="bi bi-twitter" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+</body></html>
