@@ -19,10 +19,7 @@ history: false
 css: slides.css
 ---
 
-
-
-> Data sets in isolation are of limited use, but the ability to link data sets unlocks all kinds of new applications!
-
+# > Data sets in isolation are of limited use, but the ability to link data unlocks all kinds of new possibilities!
 
 # Non-Spatial Linkages
 
@@ -41,6 +38,14 @@ css: slides.css
 | 4        | LUT   | Luton LA |
 | 5        | SEN   | Stobart  |
 
+```{.python .code-overflow-wrap .smaller}
+df1 = pd.DataFrame({
+  'SensorID': [1,2,3,4,5],
+  'Place': ['LHR','LGA','STA','LUT','SEN'],
+  'Owner': ['BAA','GIP','MAG','Luton LA','Stobart']
+})
+```
+
 :::
 ::: {.column width="50%"}
 ### Data Set 2
@@ -53,25 +58,28 @@ css: slides.css
 | 4        | Temperature | 7ºC   |
 | 6        | Humidity    | 18%   |
 
+```{.python .code-overflow-wrap}
+df2 = pd.DataFrame({
+  'SensorID': [1,2,3,4,5],
+  'Parameter': ['Temperature','Humidity','Temperature','Temperature','Humidity'],
+  'Value': ['5ºC','15%','7ºC','7ºC','18%']
+})
+```
+
 :::
 ::::
 
 ::: {.notes}
-
 How do we connect these? 
-
 :::
 
 ## General Join Syntax
 
 A **join** refers to the merging of two (or more) data tables using one (or more) matching columns:
 
-```python
-new_df = pd.merge(df1, df2, on='SensorID')
+```{.python}
+pd.merge(df1, df2, on='SensorID')
 ```
-
-
-
 
 ::: {.notes}
 
@@ -83,9 +91,10 @@ Note that the *default* behaviour is an inner join (i.e. defaults to `how='inner
 
 ---
 
+## Inner Join
+
 :::: {.columns}
 ::: {.column width="50%"}
-## Inner Join
 
 ### Data Set 1
 
@@ -99,7 +108,7 @@ Note that the *default* behaviour is an inner join (i.e. defaults to `how='inner
 
 :::
 ::: {.column width="50%"}
-## &nbsp;
+
 ### Data Set 2
 
 | SensorID | Parameter   | Value |
@@ -113,15 +122,17 @@ Note that the *default* behaviour is an inner join (i.e. defaults to `how='inner
 :::
 ::::
 
-## Inner Join Result {.smaller}
+## Inner Join Result
 
 On an **Inner Join** all non-matching rows are dropped:
 
-```python
-new_df = pd.merge(df1, df2, 
-                    how = 'inner',
-                    on  = 'SensorID')
+```{.python}
+pd.merge(df1, df2, 
+         how = 'inner',
+         on  = 'SensorID')
 ```
+
+&nbsp;
 
 | SensorID | Place | Owner    | Parameter   | Value |
 | -------- | ----- | -------- | ----------- | ----- |
@@ -131,18 +142,20 @@ new_df = pd.merge(df1, df2,
 | 4        | LUT   | Luton LA | Temperature | 7ºC   |
 
 
-## But What If... {.smaller}
+## But What If...
 
-If Data Set 2 had a `SensorKey` instead of a SensorID then the command changes to:
+If Data Set 2 had a `SensorKey` instead of a `SensorID` then:
 
-```python
-new_df = pd.merge(df1, df2, 
-                  how      = 'inner',
-                  left_on  = 'SensorID',
-                  right_on = 'SensorKey')
+```{.python}
+pd.merge(df1, df2, 
+         how      = 'inner',
+         left_on  = 'SensorID',
+         right_on = 'SensorKey')
 ```
 
-This will also impact the result:
+&nbsp;
+
+We will get an 'extra' field:
 
 | SensorID | Place | Owner    | SensorKey | Parameter   | Value |
 | -------- | ----- | -------- | --------- | ----------- | ----- |
@@ -152,16 +165,17 @@ This will also impact the result:
 | 4        | LUT   | Luton LA | 4         | Temperature | 7ºC   |
 
 
-## Outer Join {.smaller}
-
+## Outer Join
 
 On an **Outer Join** all rows are retained, including ones with no match:
 
 ```python
-new_df = pd.merge(df1, df2,
-                  how = 'outer',
-                  on  = 'SensorID')
+pd.merge(df1, df2,
+         how = 'outer',
+         on  = 'SensorID')
 ```
+
+&nbsp;
 
 | SensorID | Place | Owner             | Parameter | Value |
 | -------- | ----- | ----------------- | --------- | ----- |
@@ -174,15 +188,17 @@ new_df = pd.merge(df1, df2,
 | 6        | NaN   | NaN               | Hum.      | 20%   |
 
 
-## Left Join {.smaller}
+## Left Join
 
 On a **Left Join** all rows on the left table are retained, including ones with no match, but unmatched right rows are dropped:
 
  ```python
-new_df = pd.merge(df1, df2, 
-                  how = 'left',
-                  on  = 'SensorID')
+pd.merge(df1, df2, 
+         how = 'left',
+         on  = 'SensorID')
  ```
+
+&nbsp;
 
 | SensorID | Place | Owner             | Parameter | Value |
 | -------- | ----- | ----------------- | --------- | ----- |
@@ -194,12 +210,10 @@ new_df = pd.merge(df1, df2,
 | 5        | SEN   | Stobart           | NaN       | NaN   |
 
 
-## Any Guesses?
-
-> Any guesses for the fourth type of join?
+# > Any guesses for the fourth type?
 
 
-## Append & Concat {.smaller}
+## Append & Concat
 
 Pandas has two *additional* join-*like* functions:
 
@@ -255,8 +269,6 @@ Outputs:
 |        2 |         4 | Temperature | 2.00 |
 |        3 |         3 | Temperature | 3.00 |
 
-
-
 ::: {.notes}
 
 Note that a Dictionary-of-Lists would also work for an append and that appending a column that doesn't exist (for vertical appends) will cause the column to be created while appending a row that doesn't exist (for horizontal appends) with cause the row to be created.
@@ -273,23 +285,20 @@ As usual, [Stack Overflow to the rescue](https://stackoverflow.com/questions/382
 
 *[Hint](https://railsware.com/blog/python-for-machine-learning-pandas-axis-explained/):* `axis=0` refers to the row index & `axis=1` to the column index.
 
-
 ## Merge vs. Append vs. Concat vs. Join? {.smaller}
 
-These achieve the same thing, but they are *not always equivalent*:
+These achieve the same thing, but they are *not* always equivalent:
 
 ```python
 pd.merge(df1, df2, left_index=True, right_index=True)
 pd.concat([df1, df2], axis=1)
 df1.join(df2)
 ```
-
 Generally:
 
 - **Concat** expects the number of columns in all data frames to match (if concatenating vertically) and the number of rows in all data frames to match (if concatenating horizontally). It does *not* deal well with *linking*.
 - **Append** assumes that *either* the columns or the rows will match.
 - **Join** is basically a functionality-restricted merge.
-
 
 ## Resources {.smaller}
 
