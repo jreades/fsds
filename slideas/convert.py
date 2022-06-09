@@ -20,7 +20,7 @@ def extract_meta(txt:str, theme:str='serif') -> str:
     output = f'''---
 format:
   revealjs:
-    theme: [serif, casa.scss]
+    theme: [serif, slides.scss]
 author: "{meta['author']}"
 title: "{meta['title']}"
 footer: "{meta['title']} • {meta['author']}"
@@ -35,7 +35,7 @@ title-slide-attributes:
   data-background-opacity: .17
 logo: ../img/CASA_logo.png
 history: false
-css: casa.css
+css: slides.css
 ---
 '''
     return output
