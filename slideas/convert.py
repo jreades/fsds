@@ -5,26 +5,39 @@ import os, re
 # Convert Slideas-formatted Markdown to Reveal.js-formatted Markdown
 
 def extract_meta(txt:str, theme:str='serif') -> str:
-    meta = {'slide-format':'revealjs'}
+    meta = {}
     for arr in [s.split(':') for s in txt.split('\n')]:
         try:
-            k = arr[0]
-            v = arr[1]
+            k = arr[0].strip()
+            v = arr[1].strip()
 
             if k not in ['Theme','Size','Palette']:
                 meta[k.lower()] = v
 
         except IndexError:
             pass
-
-    output = """---
+    
+    output = f'''---
 format:
   revealjs:
-    theme: serif
-"""
-    for k,v in meta.items():
-        output += f'{k}: {v}\n'
-    output += '---\n'
+    theme: [serif, casa.scss]
+author: "{meta['author']}"
+title: "{meta['title']}"
+footer: "{meta['title']} • {meta['author']}"
+highlight-style: github
+code-copy: true
+code-line-numbers: true
+slide-level: 2
+title-slide-attributes:
+  data-background-image: ../img/CASA_Logo_no_text.png
+  data-background-size: cover
+  data-background-position: center
+  data-background-opacity: .17
+logo: ../img/CASA_logo.png
+history: false
+css: casa.css
+---
+'''
     return output
 
 def extract_notes(txt:str) -> str:
@@ -116,15 +129,22 @@ def process_page(txt:list, page_num:int) -> str:
         else:
             output.append(t)
     
+    # If only one element in the slide
+    # it's certainly a section divider
+    if title != None and len(max(output, key=len)) < 1 and title.startswith('##'):
+        title = title.replace('#','',1)
+        output = ['']
+
+    # And now try to format
     if not title:
         output.insert(0,'---\n')
     elif page_num > 1: 
-        output.insert(0,title + " {.smaller}" if len(output) > 10 else title)
+        output.insert(0,title + " {.smaller}" if (len(output) > 10 or len(" ".join(output)) > 300) else title)
     
     output.append(notes)
     return "\n".join(output)
 
-mypath = '.'
+mypath = '.'  # and f.startswith('2.3') 
 slideas_files = [f for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath,f)) and f.endswith('.md')]
 
 mypath = os.path.join('..','lectures')
