@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="generator" content="quarto-0.9.492">
+
+  <meta name="author" content="Jon Reades">
+  <title>Foundations of Spatial Data Science - Exploratory Data Analysis</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto.css" id="theme">
+  <link rel="stylesheet" href="casa.css">
+  <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+
+  .callout {
+    margin-top: 1em;
+    margin-bottom: 1em;  
+    border-radius: .25rem;
+  }
+
+  .callout.callout-style-simple { 
+    padding: 0em 0.5em;
+    border-left: solid #acacac .3rem;
+    border-right: solid 1px silver;
+    border-top: solid 1px silver;
+    border-bottom: solid 1px silver;
+    display: flex;
+  }
+
+  .callout.callout-style-default {
+    border-left: solid #acacac .3rem;
+    border-right: solid 1px silver;
+    border-top: solid 1px silver;
+    border-bottom: solid 1px silver;
+  }
+
+  .callout .callout-body-container {
+    flex-grow: 1;
+  }
+
+  .callout.callout-style-simple .callout-body {
+    font-size: 1rem;
+    font-weight: 400;
+  }
+
+  .callout.callout-style-default .callout-body {
+    font-size: 0.9rem;
+    font-weight: 400;
+  }
+
+  .callout.callout-captioned.callout-style-simple .callout-body {
+    margin-top: 0.2em;
+  }
+
+  .callout:not(.callout-captioned) .callout-body {
+      display: flex;
+  }
+
+  .callout:not(.no-icon).callout-captioned.callout-style-simple .callout-content {
+    padding-left: 1.6em;
+  }
+
+  .callout.callout-captioned .callout-header {
+    padding-top: 0.2em;
+    margin-bottom: -0.2em;
+  }
+
+  .callout.callout-captioned .callout-caption  p {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+    
+  .callout.callout-captioned.callout-style-simple .callout-content  p {
+    margin-top: 0;
+  }
+
+  .callout.callout-captioned.callout-style-default .callout-content  p {
+    margin-top: 0.7em;
+  }
+
+  .callout.callout-style-simple div.callout-caption {
+    border-bottom: none;
+    font-size: .9rem;
+    font-weight: 600;
+    opacity: 75%;
+  }
+
+  .callout.callout-style-default  div.callout-caption {
+    border-bottom: none;
+    font-weight: 600;
+    opacity: 85%;
+    font-size: 0.9rem;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  .callout.callout-style-default div.callout-content {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  .callout.callout-style-simple .callout-icon::before {
+    height: 1rem;
+    width: 1rem;
+    display: inline-block;
+    content: "";
+    background-repeat: no-repeat;
+    background-size: 1rem 1rem;
+  }
+
+  .callout.callout-style-default .callout-icon::before {
+    height: 0.9rem;
+    width: 0.9rem;
+    display: inline-block;
+    content: "";
+    background-repeat: no-repeat;
+    background-size: 0.9rem 0.9rem;
+  }
+
+  .callout-caption {
+    display: flex
+  }
+    
+  .callout-icon::before {
+    margin-top: 1rem;
+    padding-right: .5rem;
+  }
+
+  .callout.no-icon::before {
+    display: none !important;
+  }
+
+  .callout.callout-captioned .callout-body > .callout-content > :last-child {
+    margin-bottom: 0.5rem;
+  }
+
+  .callout.callout-captioned .callout-icon::before {
+    margin-top: .5rem;
+    padding-right: .5rem;
+  }
+
+  .callout:not(.callout-captioned) .callout-icon::before {
+    margin-top: 1rem;
+    padding-right: .5rem;
+  }
+
+  /* Callout Types */
+
+  div.callout-note {
+    border-left-color: #4582ec !important;
+  }
+
+  div.callout-note .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEU0lEQVRYCcVXTWhcVRQ+586kSUMMxkyaElstCto2SIhitS5Ek8xUKV2poatCcVHtUlFQk8mbaaziwpWgglJwVaquitBOfhQXFlqlzSJpFSpIYyXNjBNiTCck7x2/8/LeNDOZxDuEkgOXe++553zfefee+/OYLOXFk3+1LLrRdiO81yNqZ6K9cG0P3MeFaMIQjXssE8Z1JzLO9ls20MBZX7oG8w9GxB0goaPrW5aNMp1yOZIa7Wv6o2ykpLtmAPs/vrG14Z+6d4jpbSKuhdcSyq9wGMPXjonwmESXrriLzFGOdDBLB8Y6MNYBu0dRokSygMA/mrun8MGFN3behm6VVAwg4WR3i6FvYK1T7MHo9BK7ydH+1uurECoouk5MPRyVSBrBHMYwVobG2aOXM07sWrn5qgB60rc6mcwIDJtQrnrEr44kmy+UO9r0u9O5/YbkS9juQckLed3DyW2XV/qWBBB3ptvI8EUY3I9p/67OW+g967TNr3Sotn3IuVlfMLVnsBwH4fsnebJvyGm5GeIUA3jljERmrv49SizPYuq+z7c2H/jlGC+Ghhupn/hcapqmcudB9jwJ/3jvnvu6vu5lVzF1fXyZuZZ7U8nRmVzytvT+H3kilYvH09mLWrQdwFSsFEsxFVs5fK7A0g8gMZjbif4ACpKbjv7gNGaD8bUrlk8x+KRflttr22JEMRUbTUwwDQScyzPgedQHZT0xnx7ujw2jfVfExwYHwOsDTjLdJ2ebmeQIlJ7neo41s/DrsL3kl+W2lWvAga0tR3zueGr6GL78M3ifH0rGXrBC2aAR8uYcIA5gwV8zIE8onoh8u0Fca/ciF7j1uOzEnqcIm59sEXoGc0+z6+H45V1CvAvHcD7THztu669cnp+L0okAeIc6zjbM/24LgGM1gZk7jnRu1aQWoU9sfUOuhrmtaPIO3YY1KLLWZaEO5TKUbMY5zx8W9UJ6elpLwKXbsaZ4EFl7B4bMtDv0iRipKoDQT2sNQI9b1utXFdYisi+wzZ/ri/1m7QfDgEuvgUUEIJPq3DhX/5DWNqIXDOweC2wvIR90Oq3lDpdMIgD2r0dXvGdsEW5H6x6HLRJYU7C69VefO1x8Gde1ZFSJLfWS1jbCnhtOPxmpfv2LXOA2Xk2tvnwKKPFuZ/oRmwBwqRQDcKNeVQkYcOjtWVBuM/JuYw5b6isojIkYxyYAFn5K7ZBF10fea52y8QltAg6jnMqNHFBmGkQ1j+U43HMi2xMar1Nv0zGsf1s8nUsmUtPOOrbFIR8bHFDMB5zL13Gmr/kGlCkUzedTzzmzsaJXhYawnA3UmARpiYj5ooJZiUoxFRtK3X6pgNPv+IZVPcnwbOl6f+aBaO1CNvPW9n9LmCp01nuSaTRF2YxHqZ8DYQT6WsXT+RD6eUztwYLZ8rM+rcPxamv1VQzFUkzFXvkiVrySGQgJNvXHJAxiU3/NwiC03rSf05VBaPtu/Z7/B8Yn/w7eguloAAAAAElFTkSuQmCC');
+  }
+
+  div.callout-note.callout-style-default .callout-caption {
+    background-color: #dae6fb
+  }
+
+  div.callout-important {
+    border-left-color: #d9534f !important;
+  }
+
+  div.callout-important .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEKklEQVRYCcVXTWhcVRS+575MJym48A+hSRFr00ySRQhURRfd2HYjk2SSTokuBCkU2o0LoSKKraKIBTcuFCoidGFD08nkBzdREbpQ1EDNIv8qSGMFUboImMSZd4/f9zJv8ibJMC8xJQfO3HPPPef7zrvvvnvviIkpC9nsw0UttFunbUhpFzFtarSd6WJkStVMw5xyVqYTvkwfzuf/5FgtkVoB0729j1rjXwThS7Vio+Mo6DNnvLfahoZ+i/o32lULuJ3NNiz7q6+pyAUkJaFF6JwaM2lUJlV0MlnQn5aTRbEu0SEqHUa0A4AdiGuB1kFXRfVyg5d87+Dg4DL6m2TLAub60ilj7A1Ec4odSAc8X95sHh7+ZRPCFo6Fnp7HfU/fBng/hi10CjCnWnJjsxvDNxWw0NfV6Rv5GgP3I3jGWXumdTD/3cbEOP2ZbOZp69yniG3FQ9z1jD7bnBu9Fc2tKGC2q+uAJOQHBDRiZX1x36o7fWBs7J9ownbtO+n0/qWkvW7UPIfc37WgT6ZGR++EOJyeQDSb9UB+DZ1G6DdLDzyS+b/kBCYGsYgJbSQHuThGKRcw5xdeQf8YdNHsc6ePXrlSYMBuSIAFTGAtQo+VuALo4BX83N190NWZWbynBjhOHsmNfFWLeL6v+ynsA58zDvvAC8j5PkbOcXCMg2PZFk3q8MjI7WAG/Dp9AwP7jdGBOOQkAvlFUB+irtm16I1Zw9YBcpGTGXYmk3kQIC/Cds55l+iMI3jqhjAuaoe+am2Jw5GT3Nbz3CkE12NavmzN5+erJW7046n/CH1RO/RVa8lBLozXk9uqykkGAyRXLWlLv5jyp4RFsG5vGVzpDLnIjTWgnRy2Rr+tDKvRc7Y8AyZq10jj8DqXdnIRNtFZb+t/ZRtXcDiVnzpqx8mPcDWxgARUqx0W1QB9MeUZiNrV4qP+Ehc+BpNgATsTX8ozYKL2NtFYAHc84fG7ndxUPr+AR/iQSns7uSUufAymwDOb2+NjK27lEFocm/EE2WpyIy/Hi66MWuMKJn8RvxIcj87IM5Vh9663ziW36kR0HNenXuxmfaD8JC7tfKbrhFr7LiZCrMjrzTeGx+PmkosrkNzW94ObzwocJ7A1HokLolY+AvkTiD/q1H0cN48c5EL8Crkttsa/AXQVDmutfyku0E7jShx49XqV3MFK8IryDhYVbj7Sj2P2eBxwcXoe8T8idsKKPRcnZw1b+slFTubwUwhktrfnAt7J++jwQtLZcm3sr9LQrjRzz6cfMv9aLvgmnAGvpoaGLxM4mAEaLV7iAzQ3oU0IvD5x9ix3yF2RAAuYAOO2f7PEFWCXZ4C9Pb2UsgDeVnFSpbFK7/IWu7TPTvBqzbGdCHOJQSxiEjt6IyZmxQyEJHv6xyQsYk//moVFsN2zP6fRImjfq7/n/wFDguUQFNEwugAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-important.callout-style-default .callout-caption {
+    background-color: #f7dddc
+  }
+
+  div.callout-warning {
+    border-left-color: #f0ad4e !important;
+  }
+
+  div.callout-warning .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAETklEQVRYCeVWW2gcVRg+58yaTUnizqbipZeX4uWhBEniBaoUX1Ioze52t7sRq6APio9V9MEaoWlVsFasRq0gltaAPuxms8lu0gcviE/FFOstVbSIxgcv6SU7EZqmdc7v9+9mJtNks51NTUH84ed889/PP+cmxP+d5FIbMJmNbpREu4WUkiTtCicKny0l1pIKmBzovF2S+hIJHX8iEu3hZJ5lNZGqyRrGSIQpq15AzF28jgpeY6yk6GVdrfFqdrD6Iw+QlB8g0YS2g7dyQmXM/IDhBhT0UCiRf59lfqmmDvzRt6kByV/m4JjtzuaujMUM2c5Z2d6JdKrRb3K2q6mA+oYVz8JnDdKPmmNthzkAk/lN63sYPgevrguc72aZX/L9C6x09GYyxBgCX4NlvyGUHOKELlm5rXeR1kchuChJt4SSwyddZRXgvwMGvYo4QSlk3/zkHD8UHxwVJA6zjZZqP8v8kK8OWLnIZtLyCAJagYC4rTGW/9Pqj92N/c+LUaAj27movwbi19tk/whRCIE7Q9vyI6yvRpftAKVTdUjOW40X3h5OXsKCdmFcx0xlLJoSuQngnrJe7Kcjm4OMq9FlC7CMmScQANuNvjfP3PjGXDBaUQmbp296S5L4DrpbrHN1T87ZVEZVCzg1FF0Ft+dKrlLukI+/c9ENo+TvlTDbYFvuKPtQ9+l052rXrgKoWkDAFnvh0wTOmYn8R5f4k/jN/fZiCM1tQx9jQQ4ANhqG4hiL0qIFTGViG9DKB7GYzgubnpofgYRwO+DFjh0Zin2m4b/97EDkXkc+f6xYAPX0KK2I/7fUQuwzuwo/L3AkcjugPNixC8cHf0FyPjWlItmLxWw4Ou9YsQCr5fijMGoD/zpdRy95HRysyXA74MWOnscpO4j2y3HAVisw85hX5+AFBRSHt4ShfLFkIMXTqyKFc46xdzQM6XbAi702a7sy04J0+feReMFKp5q9esYLCqAZYw/k14E/xcLLsFElaornTuJB0svMuJINy8xkIYuL+xPAlWRceH6+HX7THJ0djLUom46zREu7tTkxwmf/FdOZ/sh6Q8qvEAiHpm4PJ4a/doJe0gH1t+aHRgCzOvBvJedEK5OFE5jpm4AGP2a8Dxe3gGJ/pAutug9Gp6he92CsSsWBaEcxGx0FHytmIpuqGkOpldqNYQK8cSoXvd+xLxXADw0kf6UkJNFtdo5MOgaLjiQOQHcn+A6h5NuL2s0qsC2LOM75PcF3yr5STuBSAcGG+meA14K/CI21HcS4LBT6tv0QAh8Dr5l93AhZzG5ZJ4VxAqdZUEl9z7WJ4aN+svMvwHHL21UKTd1mqvChH7/Za5xzXBBKrUcB0TQ+Ulgkfbi/H/YT5EptrGzsEK7tR1B7ln9BBwckYfMiuSqklSznIuoIIOM42MQO+QnduCoFCI0bpkzjCjddHPN/F+2Yu+sd9bKNpVwHhbS3LluK/0zgfwD0xYI5dXuzlQAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-warning.callout-style-default .callout-caption {
+    background-color: #fcefdc
+  }
+
+  div.callout-tip {
+    border-left-color: #02b875 !important;
+  }
+
+  div.callout-tip .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAADr0lEQVRYCe1XTWgTQRj9ZjZV8a9SPIkKgj8I1bMHsUWrqYLVg4Ue6v9BwZOxSYsIerFao7UiUryIqJcqgtpimhbBXoSCVxUFe9CTiogUrUp2Pt+3aUI2u5vdNh4dmMzOzHvvezuz8xNFM0mjnbXaNu1MvFWRXkXEyE6aYOYJpdW4IXuA4r0fo8qqSMDBU0v1HJUgVieAXxzCsdE/YJTdFcVIZQNMyhruOMJKXYFoLfIfIvVIMWdsrd+Rpd86ZmyzzjJmLStqRn0v8lzkb4rVIXvnpScOJuAn2ACC65FkPzEdEy4TPWRLJ2h7z4cArXzzaOdKlbOvKKX25Wl00jSnrwVxAg3o4dRxhO13RBSdNvH0xSARv3adTXbBdTf64IWO2vH0LT+cv4GR1DJt+DUItaQogeBX/chhbTBxEiZ6gftlDNXTrvT7co4ub5A6gp9HIcHvzTa46OS5fBeP87Qm0fQkr4FsYgVQ7Qg+ZayaDg9jhg1GkWj8RG6lkeSacrrHgDaxdoBiZPg+NXV/KifMuB6//JmYH4CntVEHy/keA6x4h4CU5oFy8GzrBS18cLJMXcljAKB6INjWsRcuZBWVaS3GDrqB7rdapVIeA+isQ57Eev9eCqzqOa81CY05VLd6SamW2wA2H3SiTbnbSxmzfp7WtKZkqy4mdyAlGx7ennghYf8voqp9cLSgKdqNfa6RdRsAAkPwRuJZNbpByn+RrJi1RXTwdi8RQF6ymDwGMAtZ6TVE+4uoKh+MYkcLsT0Hk8eAienbiGdjJHZTpmNjlbFJNKDVAp2fJlYju6IreQxQ08UJDNYdoLSl6AadO+fFuCQqVMB1NJwPm69T04Wv5WhfcWyfXQB+wXRs1pt+nCknRa0LVzSA/2B+a9+zQJadb7IyyV24YAxKp2Jqs3emZTuNnKxsah+uabKbMk7CbTgJx/zIgQYErIeTKRQ9yD9wxVof5YolPHqaWo7TD6tJlh7jQnK5z2n3+fGdggIOx2kaa2YI9QWarc5Ce1ipNWMKeSG4DysFF52KBmTNMmn5HqCFkwy34rDg05gDwgH3bBi+sgFhN/e8QvRn8kbamCOhgrZ9GJhFDgfcMHzFb6BAtjKpFhzTjwv1KCVuxHvCbsSiEz4CANnj84cwHdFXAbAOJ4LTSAawGWFn5tDhLMYz6nWeU2wJfIhmIJBefcd/A5FWQWGgrWzyORZ3Q6HuV+Jf0Bj+BTX69fm1zWgK7By1YTXchFDORywnfQ7GpzOo6S+qECrsx2ifVQAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-tip.callout-style-default .callout-caption {
+    background-color: #ccf1e3
+  }
+
+  div.callout-caution {
+    border-left-color: #fd7e14 !important;
+  }
+
+  div.callout-caution .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAACV0lEQVRYCdVWzWoUQRCuqp2ICBLJXgITZL1EfQDBW/bkzUMUD7klD+ATSHBEfAIfQO+iXsWDxJsHL96EHAwhgzlkg8nBg25XWb0zIb0zs9muYYWkoKeru+vn664fBqElyZNuyh167NXJ8Ut8McjbmEraKHkd7uAnAFku+VWdb3reSmRV8PKSLfZ0Gjn3a6Xlcq9YGb6tADjn+lUfTXtVmaZ1KwBIvFI11rRXlWlatwIAAv2asaa9mlB9wwygiDX26qaw1yYPzFXg2N1GgG0FMF8Oj+VIx7E/03lHx8UhvYyNZLN7BwSPgekXXLribw7w5/c8EF+DBK5idvDVYtEEwMeYefjjLAdEyQ3M9nfOkgnPTEkYU+sxMq0BxNR6jExrAI31H1rzvLEfRIdgcv1XEdj6QTQAS2wtstEALLG1yEZ3QhH6oDX7ExBSFEkFINXH98NTrme5IOaaA7kIfiu2L8A3qhH9zRbukdCqdsA98TdElyeMe5BI8Rs2xHRIsoTSSVFfCFCWGPn9XHb4cdobRIWABNf0add9jakDjQJpJ1bTXOJXnnRXHRf+dNL1ZV1MBRCXhMbaHqGI1JkKIL7+i8uffuP6wVQAzO7+qVEbF6NbS0LJureYcWXUUhH66nLR5rYmva+2tjRFtojkM2aD76HEGAD3tPtKM309FJg5j/K682ywcWJ3PASCcycH/22u+Bh7Aa0ehM2Fu4z0SAE81HF9RkB21c5bEn4Dzw+/qNOyXr3DCTQDMBOdhi4nAgiFDGCinIa2owCEChUwD8qzd03PG+qdW/4fDzjUMcE1ZpIAAAAASUVORK5CYII=');
+  }
+
+  div.callout-caution.callout-style-default .callout-caption {
+    background-color: #ffe5d0
+  }
+
+  </style>
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+<link href="../img/favicon.ico" rel="icon">
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-html.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" data-background-image="../img/CASA_Logo_no_text.png" data-background-opacity="0.17" data-background-position="center" data-background-size="cover" class="center">
+  <h1 class="title">Exploratory Data Analysis</h1>
+  <p class="author">Jon Reades</p>
+</section>
+
+<section class="slide level2">
+
+<h3 id="with-pandas-geopandas">(With Pandas &amp; GeoPandas)</h3>
+<div data-align="center">
+<p><img src="https://github.com/jreades/i2p/raw/master/lectures/img/Epicycles.png" width="400"></p>
+</div>
+</section>
+<section id="epicyclic-feedback" class="slide level2 smaller">
+<h2>Epicyclic Feedback</h2>
+<p><a href="http://bedford-computing.co.uk/learning/wp-content/uploads/2016/09/artofdatascience.pdf">Peng and Matsui, <em>The Art of Data Science</em>, p.8</a></p>
+<table>
+<colgroup>
+<col style="width: 4%">
+<col style="width: 32%">
+<col style="width: 38%">
+<col style="width: 24%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Set Expectations</th>
+<th style="text-align: left;">Collect Information</th>
+<th style="text-align: left;">Revise Expectations</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Question</td>
+<td style="text-align: left;">Question is of interest to audience</td>
+<td style="text-align: left;">Literature search/experts</td>
+<td style="text-align: left;">Sharpen question</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">EDA</td>
+<td style="text-align: left;">Data are appropriate for question</td>
+<td style="text-align: left;">Make exploratory plots</td>
+<td style="text-align: left;">Refine question or collect more data</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Modelling</td>
+<td style="text-align: left;">Primary model answers question</td>
+<td style="text-align: left;">Fit secondary models / analysis</td>
+<td style="text-align: left;">Revise model to include more predictors</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Interpretation</td>
+<td style="text-align: left;">Interpretation provides specific and meaningful answer</td>
+<td style="text-align: left;">Interpret analyses with focus on effect and uncertainty</td>
+<td style="text-align: left;">Revise EDA and/or models to provide more specific answers</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Communication</td>
+<td style="text-align: left;">Process &amp; results are complete and meaningful</td>
+<td style="text-align: left;">Seek feedback</td>
+<td style="text-align: left;">Revises anlyses or approach to presentation</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="approaching-eda" class="slide level2 smaller">
+<h2>Approaching EDA</h2>
+<p>There’s <em>no</em> hard and fast way of doing EDA, but as a general rule you’re looking to:</p>
+<ul>
+<li>Clean</li>
+<li>Canonicalise</li>
+<li>Clean More</li>
+<li>Visualise &amp; Describe</li>
+<li>Review</li>
+<li>Clean Some More</li>
+<li>…</li>
+</ul>
+<aside class="notes">
+<p>Cleaning Part 1: testing validity of records (possibly while tracking rejected records for subsequent analysis)</p>
+<p>Canonicalisation: controling for variation (e.g.&nbsp;typos, capitalisation, formatting, leading/trailing whitespace, different types of NULL values, etc.) and in a spatial context deal with projection and geo-data issues.</p>
+<p>Cleaning Part 2: further testing of records (e.g.&nbsp;deciding what to do with NaNs, missing values, outside of study area, etc.)</p>
+<p>Visualise &amp; Describe: covered in QM but we’ll take a high-level look at this.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="a-related-take" class="slide level2 smaller">
+<h2>A Related Take</h2>
+<p>From: <a href="https://medium.com/towards-artificial-intelligence/exploratory-data-analysis-eda-dont-ask-how-ask-what-2e29703fb24a">EDA—Don’t ask how, ask what</a>:</p>
+<ul>
+<li>Descriptive Statistics: get a high-level understanding of your dataset</li>
+<li>Missing values: come to terms with how bad your dataset is</li>
+<li>Distributions and Outliers: and why countries that insist on using different units make our jobs so much harder</li>
+<li>Correlations: and why sometimes even the most obvious patterns still require some investigating</li>
+</ul>
+</section>
+<section id="another-take" class="slide level2 smaller">
+<h2><em>Another</em> Take</h2>
+<p>Here’s another view of how to do EDA:</p>
+<ol type="1">
+<li>Preview data</li>
+<li>Check total number of entries and column types</li>
+<li>Check any null values</li>
+<li>Check duplicate entries</li>
+<li>Plot distribution of numeric data (univariate and pairwise joint distribution)</li>
+<li>Plot count distribution of categorical data</li>
+<li>Analyse time series of numeric data by daily, monthly and yearly frequencies</li>
+</ol>
+</section>
+<section>
+<section id="signal-noise" class="title-slide slide level1 center">
+<h1>Signal &amp; Noise</h1>
+
+</section>
+<section id="what-is-it" class="slide level2">
+<h2>What is it?</h2>
+<div data-align="center">
+<p><img src="https://github.com/jreades/i2p/raw/master/lectures/img/Doggy.png" width="90%"></p>
+</div>
+</section>
+<section id="what-is-it-1" class="slide level2">
+<h2>What is it?</h2>
+<div data-align="center">
+<p><img src="https://github.com/jreades/i2p/raw/master/lectures/img/Cow.png" width="90%"></p>
+</div>
+</section>
+<section id="what-is-it-2" class="slide level2">
+<h2>What is it?</h2>
+<div data-align="center">
+<p><img src="https://github.com/jreades/i2p/raw/master/lectures/img/Kanizsa.png" width="65%"></p>
+</div>
+</section>
+<section id="start-with-a-chart" class="slide level2 smaller">
+<h2>Start with a Chart</h2>
+<p>The problem of relying on statistics alone was amply illustrated by Anscombe’s Quartet (1973)…</p>
+<ul>
+<li>We <em>are not</em> very good at looking at spreadsheets.</li>
+<li>We <em>are</em> very good at spotting patterns visually.</li>
+</ul>
+<p>Sometimes, we are <em>too</em> good; that’s where the stats comes in. Think of it as the ‘tiger in the jungle’ problem..</p>
+</section>
+<section id="anscombes-quartet" class="slide level2 smaller">
+<h2>Anscombe’s Quartet</h2>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: right;">X1</th>
+<th style="text-align: right;">Y1</th>
+<th style="text-align: right;">X2</th>
+<th style="text-align: right;">Y2</th>
+<th style="text-align: right;">X3</th>
+<th style="text-align: right;">Y3</th>
+<th style="text-align: right;">X4</th>
+<th style="text-align: right;">Y4</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">10.0</td>
+<td style="text-align: right;">8.04</td>
+<td style="text-align: right;">10.0</td>
+<td style="text-align: right;">9.14</td>
+<td style="text-align: right;">10.0</td>
+<td style="text-align: right;">7.46</td>
+<td style="text-align: right;">10.0</td>
+<td style="text-align: right;">6.58</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8.0</td>
+<td style="text-align: right;">6.95</td>
+<td style="text-align: right;">8.0</td>
+<td style="text-align: right;">8.14</td>
+<td style="text-align: right;">8.0</td>
+<td style="text-align: right;">6.77</td>
+<td style="text-align: right;">8.0</td>
+<td style="text-align: right;">5.76</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">13.0</td>
+<td style="text-align: right;">7.58</td>
+<td style="text-align: right;">13.0</td>
+<td style="text-align: right;">8.74</td>
+<td style="text-align: right;">13.0</td>
+<td style="text-align: right;">12.74</td>
+<td style="text-align: right;">13.0</td>
+<td style="text-align: right;">7.71</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">9.0</td>
+<td style="text-align: right;">8.81</td>
+<td style="text-align: right;">9.0</td>
+<td style="text-align: right;">8.77</td>
+<td style="text-align: right;">9.0</td>
+<td style="text-align: right;">7.11</td>
+<td style="text-align: right;">9.0</td>
+<td style="text-align: right;">8.84</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">11.0</td>
+<td style="text-align: right;">8.33</td>
+<td style="text-align: right;">11.0</td>
+<td style="text-align: right;">9.26</td>
+<td style="text-align: right;">11.0</td>
+<td style="text-align: right;">7.81</td>
+<td style="text-align: right;">11.0</td>
+<td style="text-align: right;">8.47</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">14.0</td>
+<td style="text-align: right;">9.96</td>
+<td style="text-align: right;">14.0</td>
+<td style="text-align: right;">8.10</td>
+<td style="text-align: right;">14.0</td>
+<td style="text-align: right;">8.84</td>
+<td style="text-align: right;">14.0</td>
+<td style="text-align: right;">7.04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">6.0</td>
+<td style="text-align: right;">7.24</td>
+<td style="text-align: right;">6.0</td>
+<td style="text-align: right;">6.13</td>
+<td style="text-align: right;">6.0</td>
+<td style="text-align: right;">6.08</td>
+<td style="text-align: right;">6.0</td>
+<td style="text-align: right;">5.25</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4.0</td>
+<td style="text-align: right;">4.26</td>
+<td style="text-align: right;">4.0</td>
+<td style="text-align: right;">3.10</td>
+<td style="text-align: right;">4.0</td>
+<td style="text-align: right;">5.39</td>
+<td style="text-align: right;">4.0</td>
+<td style="text-align: right;">12.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">12.0</td>
+<td style="text-align: right;">10.84</td>
+<td style="text-align: right;">12.0</td>
+<td style="text-align: right;">9.13</td>
+<td style="text-align: right;">12.0</td>
+<td style="text-align: right;">8.15</td>
+<td style="text-align: right;">12.0</td>
+<td style="text-align: right;">5.56</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">7.0</td>
+<td style="text-align: right;">4.82</td>
+<td style="text-align: right;">7.0</td>
+<td style="text-align: right;">7.26</td>
+<td style="text-align: right;">7.0</td>
+<td style="text-align: right;">6.42</td>
+<td style="text-align: right;">7.0</td>
+<td style="text-align: right;">7.91</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">5.68</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">4.74</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">5.73</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">6.89</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="summary-statistics-for-the-quartet" class="slide level2 smaller">
+<h2>Summary Statistics for the Quartet</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Property</th>
+<th style="text-align: right;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Mean of <code>x</code></td>
+<td style="text-align: right;">9.0</td>
+</tr>
+<tr class="even">
+<td>Variance of <code>x</code></td>
+<td style="text-align: right;">11.0</td>
+</tr>
+<tr class="odd">
+<td>Mean of <code>y</code></td>
+<td style="text-align: right;">7.5</td>
+</tr>
+<tr class="even">
+<td>Variance of <code>y</code></td>
+<td style="text-align: right;">4.12</td>
+</tr>
+<tr class="odd">
+<td>Correlation between <code>x</code> and <code>y</code></td>
+<td style="text-align: right;">0.816</td>
+</tr>
+<tr class="even">
+<td>Linear Model</td>
+<td style="text-align: right;"><code>y = 3 + 0.5x</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="but-what-do-they-look-like" class="slide level2">
+<h2>But What do They <em>Look</em> Like?</h2>
+
+<img data-src="img/Quartet.png" class="r-stretch"></section>
+<section id="the-tiger-that-isnt" class="slide level2">
+<h2>The Tiger that Isn’t</h2>
+<blockquote>
+<p>I would argue that the basic purpose of charts and of statistics as a whole is to help us untangle signal from noise. We are ‘programmed’ to see signals, so we need to set the standard for ‘it’s a tiger!’ quite high in research &amp; in policy-making.</p>
+</blockquote>
+<aside class="notes">
+<p>Or, as Albert Einstein reportedly said: “If I can’t picture it, I can’t understand it.”</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="think-it-through" class="slide level2 smaller">
+<h2>Think it Through</h2>
+<p>You can make a lot of progress in your research without <em>any</em> advanced statistics!</p>
+<ul>
+<li>A ‘picture’ isn’t <em>just</em> worth 1,000 words, it could be a whole dissertation!</li>
+<li>The right chart makes your case eloquently and succinctly.</li>
+</ul>
+<p>Always ask yourself: - What am I trying to say? - How can I say it most effectively? - Is there anything I’m overlooking in the data?</p>
+<p>A good chart is a good way to start!</p>
+</section>
+<section id="what-makes-a-good-plot" class="slide level2 smaller">
+<h2>What Makes a Good Plot?</h2>
+<p>A good chart or table:</p>
+<ol type="1">
+<li>Serves a <strong>purpose</strong> — it is clear how it advances the argument in a way that could not be done in the text <em>alone</em>.</li>
+<li>Contains only what is <strong>relevant</strong> — zeroes in on what the reader <em>needs</em> and is not needlessly cluttered.</li>
+<li>Uses precision that is <strong>meaningful</strong> —</li>
+</ol>
+<aside class="notes">
+<p>Far too many charts or tables could be easily written up in a single sentence.</p>
+<p>Far too many charts or tables contain redundancy, clutter, and ‘flair’.</p>
+<p>Don’t report average height of your class to sub-millimeter level accuracy, or lat/long to sub-atomic scale.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="for-example" class="slide level2 smaller">
+<h2>For Example…</h2>
+<p>How much precision is necessary? <a href="https://en.wikipedia.org/wiki/Decimal_degrees#Precision">Wikipedia</a> has the answer at the equator!</p>
+<table>
+<thead>
+<tr class="header">
+<th>Decimal Places</th>
+<th>Degrees</th>
+<th style="text-align: right;">Distance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>1</td>
+<td style="text-align: right;">111km</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>0.1</td>
+<td style="text-align: right;">11.1km</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>0.01</td>
+<td style="text-align: right;">1.11km</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>0.001</td>
+<td style="text-align: right;">111m</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>0.0001</td>
+<td style="text-align: right;">11.1m</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>0.00001</td>
+<td style="text-align: right;">1.11m</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>0.000001</td>
+<td style="text-align: right;">11.1cm</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>0.0000001</td>
+<td style="text-align: right;">1.11cm</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>0.00000001</td>
+<td style="text-align: right;">1.11mm</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="goals-by-world-cup-final" class="slide level2">
+<h2>Goals by World Cup Final</h2>
+
+<img data-src="img/Goals_1.png" class="r-stretch"></section>
+<section id="goals-by-world-cup-final-1" class="slide level2">
+<h2>Goals by World Cup Final</h2>
+
+<img data-src="img/Goals_2.png" class="r-stretch"></section>
+<section id="average-goals-by-world-cup-final" class="slide level2">
+<h2>Average Goals by World Cup Final</h2>
+<p><img data-src="img/Goals_3.png"></p>
+<aside class="notes">
+<p>In 1982 the number of teams went from 16 to 24, and in 1998 it went from 24 to 32!</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="how-far-from-equality" class="slide level2">
+<h2>How far from Equality?</h2>
+
+<img data-src="img/Brazil_Senate_1.png" class="r-stretch"></section>
+<section id="how-far-from-equality-1" class="slide level2">
+<h2>How far from Equality?</h2>
+
+<img data-src="img/Brazil_Senate_2.png" class="r-stretch"></section>
+<section id="the-purpose-of-a-chart" class="slide level2 smaller">
+<h2>The Purpose of a Chart</h2>
+<p>The purpose of a graph is to show that there are <em>relationships</em> within the observations in a data set.</p>
+<p>Choose the chart to highlight relationships / lack thereof: - Think of a chart or table as part of your ‘argument’ – if you can’t tell me how a figure advances your argument (or if your explanation is more concise than the figure) then you probably don’t need it. - Identify &amp; prioritise the relationships in the data. - Choose a chart type/chart symbology that gives emphasis to the most important relationships.</p>
+</section>
+<section class="slide level2">
+
+<blockquote>
+<p>If a picture is worth 1,000 words, make sure those words aren’t “blah, blah, blah…”</p>
+</blockquote>
+</section></section>
+<section>
+<section id="beyond-the-chart" class="title-slide slide level1 center">
+<h1>Beyond the Chart</h1>
+
+</section>
+<section class="slide level2">
+
+<blockquote>
+<p>Getting information from a table is like extracting sunlight from a cucumber. Arthur &amp; Henry Fahrquhar 1891)</p>
+</blockquote>
+</section>
+<section id="real-numbers" class="slide level2 smaller">
+<h2>Real Numbers</h2>
+<p>Consider the difference in emphasis between:</p>
+<ul>
+<li>11316149</li>
+<li>11,316,149</li>
+<li>11.3 million</li>
+<li>11 x 10<span class="math display">\[^{6}\]</span></li>
+<li>22%</li>
+<li>22.2559%</li>
+</ul>
+<p>Always keep in mind the <em>purpose</em> of the number.</p>
+</section>
+<section id="theres-still-a-role-for-tables" class="slide level2 smaller">
+<h2>There’s <em>Still</em> a Role for Tables</h2>
+<p>Why a table is sometimes better than a chart:</p>
+<ul>
+<li>You need to present data values with greater detail</li>
+<li>You need to enable readers to draw comparisons between data values</li>
+<li>You need to present the same data in multiple ways (<em>e.g.</em> raw number <em>and</em> percentage)</li>
+<li>You want to show many dimensions for a small number of observations</li>
+</ul>
+<aside class="notes">
+<p><em>e.g.</em> percentage of people falling into each ethnic or income category for a small number of wards or boroughs.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="undergraduate-tables-failing-grade" class="slide level2">
+<h2>Undergraduate Tables (Failing Grade)</h2>
+
+<img data-src="img/ugtables-1.png" class="r-stretch"></section>
+<section id="undergraduate-tables-passing-grade" class="slide level2">
+<h2>Undergraduate Tables (Passing Grade)</h2>
+
+<img data-src="img/ugtables-2.png" class="r-stretch"></section>
+<section id="postgraduate-tables-failing-grade" class="slide level2">
+<h2>Postgraduate Tables (Failing Grade)</h2>
+
+<img data-src="img/pgtables-1.png" class="r-stretch"></section>
+<section id="postgraduate-tables-failing-grade-1" class="slide level2">
+<h2>Postgraduate Tables (Failing Grade)</h2>
+
+<img data-src="img/pgtables-2.png" class="r-stretch"></section>
+<section id="design-for-tables" class="slide level2 smaller">
+<h2>Design for Tables</h2>
+<p>Principles:</p>
+<ul>
+<li>Reduce the number of lines to a minimum (and you should almost never need vertical lines).</li>
+<li>Use ‘white-space’ to create visual space between groups of unrelated (or less related) elements.</li>
+<li>Remove redundancy (if you find yourself typing ‘millions’ or ‘GBP’ or ‘Male’ repeatedly then you’ve got redundancy).</li>
+<li>Ensure that meta-data is clearly separate from, but attached to, the graph (<em>i.e.</em> source, title, etc.).</li>
+</ul>
+</section></section>
+<section>
+<section id="deploying-python" class="title-slide slide level1 center">
+<h1>Deploying Python</h1>
+
+</section>
+<section id="handy-recall" class="slide level2 smaller">
+<h2>Handy Recall</h2>
+<p>If you are trying to follow along by writing code…</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
+<span id="cb1-3"><a href="#cb1-3"></a>url<span class="op">=</span><span class="st">'https://bit.ly/3owocdI'</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a>df <span class="op">=</span> pd.read_csv(url) </span>
+<span id="cb1-5"><a href="#cb1-5"></a>df[<span class="st">'price'</span>] <span class="op">=</span> df.price.<span class="bu">str</span>.replace(<span class="st">'$'</span>,<span class="st">''</span>).astype(<span class="st">'float'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This will load the sampled Airbnb data from GitHub. You can always download it and load it locally (maybe a good <code>utilty</code> function to package up?)</p>
+</section>
+<section id="what-can-we-do-series" class="slide level2 smaller">
+<h2>What Can We Do? (Series)</h2>
+<p>This is by no means all that we can do…</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Command</th>
+<th style="text-align: left;">Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>s.mean()</code></td>
+<td style="text-align: left;">Mean</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>s.count()</code></td>
+<td style="text-align: left;">Number of non-null values</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>s.max()</code></td>
+<td style="text-align: left;">Highest value</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>s.min()</code></td>
+<td style="text-align: left;">Lowest value</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>s.median()</code></td>
+<td style="text-align: left;">Median</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>s.std()</code></td>
+<td style="text-align: left;">Standard deviation</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>s.quantile(q=x)</code></td>
+<td style="text-align: left;"><span class="math display">\[x^{th}\]</span> quantile</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="what-can-we-do-data-frame" class="slide level2 smaller">
+<h2>What Can We Do? (Data Frame)</h2>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Command</th>
+<th style="text-align: left;">Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>df.mean()</code></td>
+<td style="text-align: left;">Mean of each column</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>df.count()</code></td>
+<td style="text-align: left;">Number of non-null values in each column</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>df.max()</code></td>
+<td style="text-align: left;">Highest value in each column</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math display">\[\vdots\]</span></td>
+<td style="text-align: left;"><span class="math display">\[\vdots\]</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>df.corr()</code></td>
+<td style="text-align: left;">Correlation between columns</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>df.describe()</code></td>
+<td style="text-align: left;">Summarise</td>
+</tr>
+</tbody>
+</table>
+<aside class="notes">
+<p>Notice how we have the <em>same</em> functionality, but it operates at the level of the data set itself now. We gain a few <em>new</em> functions as well that relate to interactions between columns (a.k.a. data series).</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="measures" class="slide level2 smaller">
+<h2>Measures</h2>
+<p>So pandas provides functions for commonly-used measures:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="bu">print</span>(df.price.mean())</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="bu">print</span>(df.price.median())</span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="bu">print</span>(df.price.quantile(<span class="fl">0.25</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Output:</p>
+<pre><code>118.4542
+80.5
+40.75</code></pre>
+</section>
+<section id="more-complex-measures" class="slide level2 smaller">
+<h2>More Complex Measures</h2>
+<p>But Pandas <em>also</em> makes it easy to derive new variables:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>df[<span class="st">'zscore'</span>] <span class="op">=</span> (df.price <span class="op">-</span> df.price.mean())<span class="op">/</span>df.price.std()</span>
+<span id="cb4-2"><a href="#cb4-2"></a>df.zscore.describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>count    1.000000e+02
+mean    -1.332268e-17
+std      1.000000e+00
+min     -8.351963e-01
+25%     -6.273139e-01
+50%     -3.064081e-01
+75%      2.546724e-01
+max      5.486042e+00
+Name: zscore, dtype: float64</code></pre>
+</section>
+<section id="and-even-more-complex" class="slide level2 smaller">
+<h2>And Even More Complex</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>df[<span class="st">'iqr_std'</span>] <span class="op">=</span> (df.price <span class="op">-</span> df.price.median())<span class="op">/</span> <span class="op">\</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>      (df.price.quantile(q<span class="op">=</span><span class="fl">0.75</span>)<span class="op">-</span>df.price.quantile(q<span class="op">=</span><span class="fl">0.25</span>))</span>
+<span id="cb6-3"><a href="#cb6-3"></a>df.iqr_std.describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>count    <span class="fl">100.000000</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>mean       <span class="fl">0.347407</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a>std        <span class="fl">1.133804</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a><span class="bu">min</span>       <span class="op">-</span><span class="fl">0.599542</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="dv">25</span><span class="op">%</span>       <span class="op">-</span><span class="fl">0.363844</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a><span class="dv">50</span><span class="op">%</span>        <span class="fl">0.000000</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a><span class="dv">75</span><span class="op">%</span>        <span class="fl">0.636156</span></span>
+<span id="cb7-8"><a href="#cb7-8"></a><span class="bu">max</span>        <span class="fl">6.567506</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a>Name: iqr_std, dtype: float64</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="the-plot-thickens" class="slide level2 smaller">
+<h2>The Plot Thickens</h2>
+<p>We’ll get to more complex plotting over the course of the term, but here’s a good start for <em>exploring</em> the data! All plotting depends on <code>matplotlib</code> which is the ogre in the attic to R’s <code>ggplot</code>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This will allow you to save and manipulate the figures created in Python. It is <em>not</em> the most intuitive approach (unless you’ve used MATLAB before) but it <em>does</em> work.</p>
+</section>
+<section class="slide level2">
+
+<blockquote>
+<p><strong>Confession Time:</strong> I <em>do</em> like <code>ggplot</code> and sometimes even finish off graphics for articles in R <em>just</em> so that I can use <code>ggplot</code>; however, it <em>is</em> possible to generate great-looking figures in <code>matplotlib</code> but it is often more work because it’s a <em>lot</em> less intuitive.</p>
+</blockquote>
+</section>
+<section id="boxplot" class="slide level2">
+<h2>Boxplot</h2>
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>df.price.plot.box()</span>
+<span id="cb9-2"><a href="#cb9-2"></a>plt.savefig(<span class="st">'pboxplot.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+<img data-src="img/pboxplot.png" class="r-stretch"></section>
+<section id="frequency" class="slide level2">
+<h2>Frequency</h2>
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>df.room_type.value_counts().plot.bar()</span>
+<span id="cb10-2"><a href="#cb10-2"></a>plt.savefig(<span class="st">'phistplot.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+<img data-src="img/phistplot.png" class="r-stretch"></section>
+<section id="a-correlation-heatmap" class="slide level2">
+<h2>A Correlation Heatmap</h2>
+<p>We’ll get to these in more detail in a couple of weeks, but here’s some useful output…</p>
+
+<img data-src="img/correlation.png" class="r-stretch"></section>
+<section id="a-map" class="slide level2">
+<h2>A ‘Map’</h2>
+<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>df.plot.scatter(x<span class="op">=</span><span class="st">'longitude'</span>,y<span class="op">=</span><span class="st">'latitude'</span>)</span>
+<span id="cb11-2"><a href="#cb11-2"></a>plt.savefig(<span class="st">'pscatterplot.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+<img data-src="img/pscatterplot.png" class="r-stretch"></section>
+<section id="a-fancy-map" class="slide level2 smaller">
+<h2>A Fancy ‘Map’</h2>
+<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>df.plot.scatter(x<span class="op">=</span><span class="st">'longitude'</span>,y<span class="op">=</span><span class="st">'latitude'</span>,</span>
+<span id="cb12-2"><a href="#cb12-2"></a>                c<span class="op">=</span><span class="st">'price'</span>,colormap<span class="op">=</span><span class="st">'viridis'</span>,</span>
+<span id="cb12-3"><a href="#cb12-3"></a>                figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">5</span>),title<span class="op">=</span><span class="st">'London'</span>,</span>
+<span id="cb12-4"><a href="#cb12-4"></a>                grid<span class="op">=</span><span class="va">True</span>,s<span class="op">=</span><span class="dv">24</span>,marker<span class="op">=</span><span class="st">'x'</span>)</span>
+<span id="cb12-5"><a href="#cb12-5"></a>plt.savefig(<span class="st">'pscatterplot.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+<img data-src="img/pscatterplot-fancy.png" class="r-stretch"></section>
+<section id="an-actual-map" class="slide level2 smaller">
+<h2>An Actual ‘Map’</h2>
+<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>gdf <span class="op">=</span> gpd.GeoDataFrame(df, </span>
+<span id="cb13-2"><a href="#cb13-2"></a>      geometry<span class="op">=</span>gpd.points_from_xy(df[<span class="st">'longitude'</span>], df[<span class="st">'latitude'</span>], crs<span class="op">=</span><span class="st">'epsg:4326'</span>))</span>
+<span id="cb13-3"><a href="#cb13-3"></a>gdf.plot(column<span class="op">=</span><span class="st">'price'</span>, cmap<span class="op">=</span><span class="st">'viridis'</span>, scheme<span class="op">=</span><span class="st">'quantiles'</span>, markersize<span class="op">=</span><span class="dv">8</span>, legend<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+<img data-src="img/scattermap.png" class="r-stretch"></section>
+<section id="resources" class="slide level2 smaller">
+<h2>Resources</h2>
+<p>There’s <a href="https://www.google.com/search?q=eda+with+pandas">so much more</a> to find, but:</p>
+<ul>
+<li><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.plot.html">Pandas Reference</a></li>
+<li><a href="https://levelup.gitconnected.com/cozy-up-with-your-data-6aedfb651172">A Guide to EDA in Python</a> (Looks very promising)</li>
+<li><a href="https://www.kaggle.com/kashnitsky/topic-1-exploratory-data-analysis-with-pandas">EDA with Pandas on Kaggle</a></li>
+<li><a href="https://towardsdatascience.com/exploratory-data-analysis-eda-visualization-using-pandas-ca5a04271607">EDA Visualisation using Pandas</a></li>
+<li><a href="https://www.datacamp.com/community/tutorials/exploratory-data-analysis-python">Python EDA Analysis Tutorial</a></li>
+<li><a href="https://towardsdatascience.com/a-better-eda-with-pandas-profiling-e842a00e1136">Better EDA with Pandas Profiling</a> <strong>[Requires module installation]</strong></li>
+<li><a href="https://towardsdatascience.com/exploratory-data-analysis-dataprep-eda-vs-pandas-profiling-7137683fe47f">EDA: DataPrep.eda vs Pandas-Profiling</a> <strong>[Requires module installation]</strong></li>
+<li><a href="https://medium.com/analytics-vidhya/a-data-science-project-for-beginners-exploratory-data-analysis-eda-d334f58f94ee">A Data Science Project for Beginners (EDA)</a></li>
+<li><a href="https://towardsdatascience.com/exploratory-data-analysis-eda-a-practical-guide-and-template-for-structured-data-abfbf3ee3bd9">EDA: A Pracitcal Guide and Template for Structured Data</a></li>
+<li><a href="https://medium.com/towards-artificial-intelligence/exploratory-data-analysis-eda-dont-ask-how-ask-what-2e29703fb24a">EDA—Don’t ask how, ask what</a> (Part 1)</li>
+<li><a href="https://medium.com/towards-artificial-intelligence/preparing-your-dataset-for-modeling-quickly-and-easily-c8c1b89fdb2e">Preparing your Dataset for Modeling –&nbsp;Quickly and Easily</a> (Part 2)</li>
+<li><a href="https://towardsdatascience.com/handling-missing-data-for-a-beginner-6d6f5ea53436">Handling Missing Data</a></li>
+<li><a href="https://medium.com/code-heroku/introduction-to-exploratory-data-analysis-eda-c0257f888676">Introduction to Exploratory Data Analysis (EDA)</a></li>
+</ul>
+</section></section>
+<section id="thank-you" class="title-slide slide level1 center">
+<h1>Thank you!</h1>
+
+
+<img src="../img/CASA_logo.png" class="slide-logo r-stretch"><div class="footer footer-default">
+<p>Exploratory Data Analysis • Jon Reades</p>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'smaller': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const clipboard = new window.ClipboardJS('.code-copy-button', {
+        target: function(trigger) {
+          return trigger.previousElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        setTimeout(function() {
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      });
+      function tippyHover(el, contentFn) {
+        const config = {
+          allowHTML: true,
+          content: contentFn,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'quarto-reveal',
+          placement: 'bottom-start'
+        };
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          let href = ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          return note.innerHTML;
+        });
+      }
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+        tippyHover(ref, function() {
+          var popup = window.document.createElement('div');
+          cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    });
+    </script>
+    
+
+</body></html>

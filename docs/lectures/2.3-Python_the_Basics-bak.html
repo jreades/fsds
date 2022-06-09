@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="generator" content="quarto-0.9.492">
+
+  <meta name="author" content="Jon Reades">
+  <title>Foundations of Spatial Data Science - Python, the Basics</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto.css" id="theme">
+  <link rel="stylesheet" href="casa.css">
+  <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+
+  .callout {
+    margin-top: 1em;
+    margin-bottom: 1em;  
+    border-radius: .25rem;
+  }
+
+  .callout.callout-style-simple { 
+    padding: 0em 0.5em;
+    border-left: solid #acacac .3rem;
+    border-right: solid 1px silver;
+    border-top: solid 1px silver;
+    border-bottom: solid 1px silver;
+    display: flex;
+  }
+
+  .callout.callout-style-default {
+    border-left: solid #acacac .3rem;
+    border-right: solid 1px silver;
+    border-top: solid 1px silver;
+    border-bottom: solid 1px silver;
+  }
+
+  .callout .callout-body-container {
+    flex-grow: 1;
+  }
+
+  .callout.callout-style-simple .callout-body {
+    font-size: 1rem;
+    font-weight: 400;
+  }
+
+  .callout.callout-style-default .callout-body {
+    font-size: 0.9rem;
+    font-weight: 400;
+  }
+
+  .callout.callout-captioned.callout-style-simple .callout-body {
+    margin-top: 0.2em;
+  }
+
+  .callout:not(.callout-captioned) .callout-body {
+      display: flex;
+  }
+
+  .callout:not(.no-icon).callout-captioned.callout-style-simple .callout-content {
+    padding-left: 1.6em;
+  }
+
+  .callout.callout-captioned .callout-header {
+    padding-top: 0.2em;
+    margin-bottom: -0.2em;
+  }
+
+  .callout.callout-captioned .callout-caption  p {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+    
+  .callout.callout-captioned.callout-style-simple .callout-content  p {
+    margin-top: 0;
+  }
+
+  .callout.callout-captioned.callout-style-default .callout-content  p {
+    margin-top: 0.7em;
+  }
+
+  .callout.callout-style-simple div.callout-caption {
+    border-bottom: none;
+    font-size: .9rem;
+    font-weight: 600;
+    opacity: 75%;
+  }
+
+  .callout.callout-style-default  div.callout-caption {
+    border-bottom: none;
+    font-weight: 600;
+    opacity: 85%;
+    font-size: 0.9rem;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  .callout.callout-style-default div.callout-content {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  .callout.callout-style-simple .callout-icon::before {
+    height: 1rem;
+    width: 1rem;
+    display: inline-block;
+    content: "";
+    background-repeat: no-repeat;
+    background-size: 1rem 1rem;
+  }
+
+  .callout.callout-style-default .callout-icon::before {
+    height: 0.9rem;
+    width: 0.9rem;
+    display: inline-block;
+    content: "";
+    background-repeat: no-repeat;
+    background-size: 0.9rem 0.9rem;
+  }
+
+  .callout-caption {
+    display: flex
+  }
+    
+  .callout-icon::before {
+    margin-top: 1rem;
+    padding-right: .5rem;
+  }
+
+  .callout.no-icon::before {
+    display: none !important;
+  }
+
+  .callout.callout-captioned .callout-body > .callout-content > :last-child {
+    margin-bottom: 0.5rem;
+  }
+
+  .callout.callout-captioned .callout-icon::before {
+    margin-top: .5rem;
+    padding-right: .5rem;
+  }
+
+  .callout:not(.callout-captioned) .callout-icon::before {
+    margin-top: 1rem;
+    padding-right: .5rem;
+  }
+
+  /* Callout Types */
+
+  div.callout-note {
+    border-left-color: #4582ec !important;
+  }
+
+  div.callout-note .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEU0lEQVRYCcVXTWhcVRQ+586kSUMMxkyaElstCto2SIhitS5Ek8xUKV2poatCcVHtUlFQk8mbaaziwpWgglJwVaquitBOfhQXFlqlzSJpFSpIYyXNjBNiTCck7x2/8/LeNDOZxDuEkgOXe++553zfefee+/OYLOXFk3+1LLrRdiO81yNqZ6K9cG0P3MeFaMIQjXssE8Z1JzLO9ls20MBZX7oG8w9GxB0goaPrW5aNMp1yOZIa7Wv6o2ykpLtmAPs/vrG14Z+6d4jpbSKuhdcSyq9wGMPXjonwmESXrriLzFGOdDBLB8Y6MNYBu0dRokSygMA/mrun8MGFN3behm6VVAwg4WR3i6FvYK1T7MHo9BK7ydH+1uurECoouk5MPRyVSBrBHMYwVobG2aOXM07sWrn5qgB60rc6mcwIDJtQrnrEr44kmy+UO9r0u9O5/YbkS9juQckLed3DyW2XV/qWBBB3ptvI8EUY3I9p/67OW+g967TNr3Sotn3IuVlfMLVnsBwH4fsnebJvyGm5GeIUA3jljERmrv49SizPYuq+z7c2H/jlGC+Ghhupn/hcapqmcudB9jwJ/3jvnvu6vu5lVzF1fXyZuZZ7U8nRmVzytvT+H3kilYvH09mLWrQdwFSsFEsxFVs5fK7A0g8gMZjbif4ACpKbjv7gNGaD8bUrlk8x+KRflttr22JEMRUbTUwwDQScyzPgedQHZT0xnx7ujw2jfVfExwYHwOsDTjLdJ2ebmeQIlJ7neo41s/DrsL3kl+W2lWvAga0tR3zueGr6GL78M3ifH0rGXrBC2aAR8uYcIA5gwV8zIE8onoh8u0Fca/ciF7j1uOzEnqcIm59sEXoGc0+z6+H45V1CvAvHcD7THztu669cnp+L0okAeIc6zjbM/24LgGM1gZk7jnRu1aQWoU9sfUOuhrmtaPIO3YY1KLLWZaEO5TKUbMY5zx8W9UJ6elpLwKXbsaZ4EFl7B4bMtDv0iRipKoDQT2sNQI9b1utXFdYisi+wzZ/ri/1m7QfDgEuvgUUEIJPq3DhX/5DWNqIXDOweC2wvIR90Oq3lDpdMIgD2r0dXvGdsEW5H6x6HLRJYU7C69VefO1x8Gde1ZFSJLfWS1jbCnhtOPxmpfv2LXOA2Xk2tvnwKKPFuZ/oRmwBwqRQDcKNeVQkYcOjtWVBuM/JuYw5b6isojIkYxyYAFn5K7ZBF10fea52y8QltAg6jnMqNHFBmGkQ1j+U43HMi2xMar1Nv0zGsf1s8nUsmUtPOOrbFIR8bHFDMB5zL13Gmr/kGlCkUzedTzzmzsaJXhYawnA3UmARpiYj5ooJZiUoxFRtK3X6pgNPv+IZVPcnwbOl6f+aBaO1CNvPW9n9LmCp01nuSaTRF2YxHqZ8DYQT6WsXT+RD6eUztwYLZ8rM+rcPxamv1VQzFUkzFXvkiVrySGQgJNvXHJAxiU3/NwiC03rSf05VBaPtu/Z7/B8Yn/w7eguloAAAAAElFTkSuQmCC');
+  }
+
+  div.callout-note.callout-style-default .callout-caption {
+    background-color: #dae6fb
+  }
+
+  div.callout-important {
+    border-left-color: #d9534f !important;
+  }
+
+  div.callout-important .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEKklEQVRYCcVXTWhcVRS+575MJym48A+hSRFr00ySRQhURRfd2HYjk2SSTokuBCkU2o0LoSKKraKIBTcuFCoidGFD08nkBzdREbpQ1EDNIv8qSGMFUboImMSZd4/f9zJv8ibJMC8xJQfO3HPPPef7zrvvvnvviIkpC9nsw0UttFunbUhpFzFtarSd6WJkStVMw5xyVqYTvkwfzuf/5FgtkVoB0729j1rjXwThS7Vio+Mo6DNnvLfahoZ+i/o32lULuJ3NNiz7q6+pyAUkJaFF6JwaM2lUJlV0MlnQn5aTRbEu0SEqHUa0A4AdiGuB1kFXRfVyg5d87+Dg4DL6m2TLAub60ilj7A1Ec4odSAc8X95sHh7+ZRPCFo6Fnp7HfU/fBng/hi10CjCnWnJjsxvDNxWw0NfV6Rv5GgP3I3jGWXumdTD/3cbEOP2ZbOZp69yniG3FQ9z1jD7bnBu9Fc2tKGC2q+uAJOQHBDRiZX1x36o7fWBs7J9ownbtO+n0/qWkvW7UPIfc37WgT6ZGR++EOJyeQDSb9UB+DZ1G6DdLDzyS+b/kBCYGsYgJbSQHuThGKRcw5xdeQf8YdNHsc6ePXrlSYMBuSIAFTGAtQo+VuALo4BX83N190NWZWbynBjhOHsmNfFWLeL6v+ynsA58zDvvAC8j5PkbOcXCMg2PZFk3q8MjI7WAG/Dp9AwP7jdGBOOQkAvlFUB+irtm16I1Zw9YBcpGTGXYmk3kQIC/Cds55l+iMI3jqhjAuaoe+am2Jw5GT3Nbz3CkE12NavmzN5+erJW7046n/CH1RO/RVa8lBLozXk9uqykkGAyRXLWlLv5jyp4RFsG5vGVzpDLnIjTWgnRy2Rr+tDKvRc7Y8AyZq10jj8DqXdnIRNtFZb+t/ZRtXcDiVnzpqx8mPcDWxgARUqx0W1QB9MeUZiNrV4qP+Ehc+BpNgATsTX8ozYKL2NtFYAHc84fG7ndxUPr+AR/iQSns7uSUufAymwDOb2+NjK27lEFocm/EE2WpyIy/Hi66MWuMKJn8RvxIcj87IM5Vh9663ziW36kR0HNenXuxmfaD8JC7tfKbrhFr7LiZCrMjrzTeGx+PmkosrkNzW94ObzwocJ7A1HokLolY+AvkTiD/q1H0cN48c5EL8Crkttsa/AXQVDmutfyku0E7jShx49XqV3MFK8IryDhYVbj7Sj2P2eBxwcXoe8T8idsKKPRcnZw1b+slFTubwUwhktrfnAt7J++jwQtLZcm3sr9LQrjRzz6cfMv9aLvgmnAGvpoaGLxM4mAEaLV7iAzQ3oU0IvD5x9ix3yF2RAAuYAOO2f7PEFWCXZ4C9Pb2UsgDeVnFSpbFK7/IWu7TPTvBqzbGdCHOJQSxiEjt6IyZmxQyEJHv6xyQsYk//moVFsN2zP6fRImjfq7/n/wFDguUQFNEwugAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-important.callout-style-default .callout-caption {
+    background-color: #f7dddc
+  }
+
+  div.callout-warning {
+    border-left-color: #f0ad4e !important;
+  }
+
+  div.callout-warning .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAETklEQVRYCeVWW2gcVRg+58yaTUnizqbipZeX4uWhBEniBaoUX1Ioze52t7sRq6APio9V9MEaoWlVsFasRq0gltaAPuxms8lu0gcviE/FFOstVbSIxgcv6SU7EZqmdc7v9+9mJtNks51NTUH84ed889/PP+cmxP+d5FIbMJmNbpREu4WUkiTtCicKny0l1pIKmBzovF2S+hIJHX8iEu3hZJ5lNZGqyRrGSIQpq15AzF28jgpeY6yk6GVdrfFqdrD6Iw+QlB8g0YS2g7dyQmXM/IDhBhT0UCiRf59lfqmmDvzRt6kByV/m4JjtzuaujMUM2c5Z2d6JdKrRb3K2q6mA+oYVz8JnDdKPmmNthzkAk/lN63sYPgevrguc72aZX/L9C6x09GYyxBgCX4NlvyGUHOKELlm5rXeR1kchuChJt4SSwyddZRXgvwMGvYo4QSlk3/zkHD8UHxwVJA6zjZZqP8v8kK8OWLnIZtLyCAJagYC4rTGW/9Pqj92N/c+LUaAj27movwbi19tk/whRCIE7Q9vyI6yvRpftAKVTdUjOW40X3h5OXsKCdmFcx0xlLJoSuQngnrJe7Kcjm4OMq9FlC7CMmScQANuNvjfP3PjGXDBaUQmbp296S5L4DrpbrHN1T87ZVEZVCzg1FF0Ft+dKrlLukI+/c9ENo+TvlTDbYFvuKPtQ9+l052rXrgKoWkDAFnvh0wTOmYn8R5f4k/jN/fZiCM1tQx9jQQ4ANhqG4hiL0qIFTGViG9DKB7GYzgubnpofgYRwO+DFjh0Zin2m4b/97EDkXkc+f6xYAPX0KK2I/7fUQuwzuwo/L3AkcjugPNixC8cHf0FyPjWlItmLxWw4Ou9YsQCr5fijMGoD/zpdRy95HRysyXA74MWOnscpO4j2y3HAVisw85hX5+AFBRSHt4ShfLFkIMXTqyKFc46xdzQM6XbAi702a7sy04J0+feReMFKp5q9esYLCqAZYw/k14E/xcLLsFElaornTuJB0svMuJINy8xkIYuL+xPAlWRceH6+HX7THJ0djLUom46zREu7tTkxwmf/FdOZ/sh6Q8qvEAiHpm4PJ4a/doJe0gH1t+aHRgCzOvBvJedEK5OFE5jpm4AGP2a8Dxe3gGJ/pAutug9Gp6he92CsSsWBaEcxGx0FHytmIpuqGkOpldqNYQK8cSoXvd+xLxXADw0kf6UkJNFtdo5MOgaLjiQOQHcn+A6h5NuL2s0qsC2LOM75PcF3yr5STuBSAcGG+meA14K/CI21HcS4LBT6tv0QAh8Dr5l93AhZzG5ZJ4VxAqdZUEl9z7WJ4aN+svMvwHHL21UKTd1mqvChH7/Za5xzXBBKrUcB0TQ+Ulgkfbi/H/YT5EptrGzsEK7tR1B7ln9BBwckYfMiuSqklSznIuoIIOM42MQO+QnduCoFCI0bpkzjCjddHPN/F+2Yu+sd9bKNpVwHhbS3LluK/0zgfwD0xYI5dXuzlQAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-warning.callout-style-default .callout-caption {
+    background-color: #fcefdc
+  }
+
+  div.callout-tip {
+    border-left-color: #02b875 !important;
+  }
+
+  div.callout-tip .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAADr0lEQVRYCe1XTWgTQRj9ZjZV8a9SPIkKgj8I1bMHsUWrqYLVg4Ue6v9BwZOxSYsIerFao7UiUryIqJcqgtpimhbBXoSCVxUFe9CTiogUrUp2Pt+3aUI2u5vdNh4dmMzOzHvvezuz8xNFM0mjnbXaNu1MvFWRXkXEyE6aYOYJpdW4IXuA4r0fo8qqSMDBU0v1HJUgVieAXxzCsdE/YJTdFcVIZQNMyhruOMJKXYFoLfIfIvVIMWdsrd+Rpd86ZmyzzjJmLStqRn0v8lzkb4rVIXvnpScOJuAn2ACC65FkPzEdEy4TPWRLJ2h7z4cArXzzaOdKlbOvKKX25Wl00jSnrwVxAg3o4dRxhO13RBSdNvH0xSARv3adTXbBdTf64IWO2vH0LT+cv4GR1DJt+DUItaQogeBX/chhbTBxEiZ6gftlDNXTrvT7co4ub5A6gp9HIcHvzTa46OS5fBeP87Qm0fQkr4FsYgVQ7Qg+ZayaDg9jhg1GkWj8RG6lkeSacrrHgDaxdoBiZPg+NXV/KifMuB6//JmYH4CntVEHy/keA6x4h4CU5oFy8GzrBS18cLJMXcljAKB6INjWsRcuZBWVaS3GDrqB7rdapVIeA+isQ57Eev9eCqzqOa81CY05VLd6SamW2wA2H3SiTbnbSxmzfp7WtKZkqy4mdyAlGx7ennghYf8voqp9cLSgKdqNfa6RdRsAAkPwRuJZNbpByn+RrJi1RXTwdi8RQF6ymDwGMAtZ6TVE+4uoKh+MYkcLsT0Hk8eAienbiGdjJHZTpmNjlbFJNKDVAp2fJlYju6IreQxQ08UJDNYdoLSl6AadO+fFuCQqVMB1NJwPm69T04Wv5WhfcWyfXQB+wXRs1pt+nCknRa0LVzSA/2B+a9+zQJadb7IyyV24YAxKp2Jqs3emZTuNnKxsah+uabKbMk7CbTgJx/zIgQYErIeTKRQ9yD9wxVof5YolPHqaWo7TD6tJlh7jQnK5z2n3+fGdggIOx2kaa2YI9QWarc5Ce1ipNWMKeSG4DysFF52KBmTNMmn5HqCFkwy34rDg05gDwgH3bBi+sgFhN/e8QvRn8kbamCOhgrZ9GJhFDgfcMHzFb6BAtjKpFhzTjwv1KCVuxHvCbsSiEz4CANnj84cwHdFXAbAOJ4LTSAawGWFn5tDhLMYz6nWeU2wJfIhmIJBefcd/A5FWQWGgrWzyORZ3Q6HuV+Jf0Bj+BTX69fm1zWgK7By1YTXchFDORywnfQ7GpzOo6S+qECrsx2ifVQAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-tip.callout-style-default .callout-caption {
+    background-color: #ccf1e3
+  }
+
+  div.callout-caution {
+    border-left-color: #fd7e14 !important;
+  }
+
+  div.callout-caution .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAACV0lEQVRYCdVWzWoUQRCuqp2ICBLJXgITZL1EfQDBW/bkzUMUD7klD+ATSHBEfAIfQO+iXsWDxJsHL96EHAwhgzlkg8nBg25XWb0zIb0zs9muYYWkoKeru+vn664fBqElyZNuyh167NXJ8Ut8McjbmEraKHkd7uAnAFku+VWdb3reSmRV8PKSLfZ0Gjn3a6Xlcq9YGb6tADjn+lUfTXtVmaZ1KwBIvFI11rRXlWlatwIAAv2asaa9mlB9wwygiDX26qaw1yYPzFXg2N1GgG0FMF8Oj+VIx7E/03lHx8UhvYyNZLN7BwSPgekXXLribw7w5/c8EF+DBK5idvDVYtEEwMeYefjjLAdEyQ3M9nfOkgnPTEkYU+sxMq0BxNR6jExrAI31H1rzvLEfRIdgcv1XEdj6QTQAS2wtstEALLG1yEZ3QhH6oDX7ExBSFEkFINXH98NTrme5IOaaA7kIfiu2L8A3qhH9zRbukdCqdsA98TdElyeMe5BI8Rs2xHRIsoTSSVFfCFCWGPn9XHb4cdobRIWABNf0add9jakDjQJpJ1bTXOJXnnRXHRf+dNL1ZV1MBRCXhMbaHqGI1JkKIL7+i8uffuP6wVQAzO7+qVEbF6NbS0LJureYcWXUUhH66nLR5rYmva+2tjRFtojkM2aD76HEGAD3tPtKM309FJg5j/K682ywcWJ3PASCcycH/22u+Bh7Aa0ehM2Fu4z0SAE81HF9RkB21c5bEn4Dzw+/qNOyXr3DCTQDMBOdhi4nAgiFDGCinIa2owCEChUwD8qzd03PG+qdW/4fDzjUMcE1ZpIAAAAASUVORK5CYII=');
+  }
+
+  div.callout-caution.callout-style-default .callout-caption {
+    background-color: #ffe5d0
+  }
+
+  </style>
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+<link href="../img/favicon.ico" rel="icon">
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-html.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" data-background-image="../img/CASA_Logo_no_text.png" data-background-opacity="0.17" data-background-position="center" data-background-size="cover" class="center">
+  <h1 class="title">Python, the Basics</h1>
+  <p class="author">Jon Reades</p>
+</section>
+
+<section class="slide level2">
+
+<h3 id="level-3-1">Level 3 1</h3>
+<h3 id="level-4-1">Level 4 1</h3>
+<aside class="notes">
+<p>At heart, <em>all</em> programming is about:</p>
+<ul>
+<li>Storing data (or references to data) in variables,</li>
+<li>Feeding those variables into operations,</li>
+<li>Assigning the results to new variables,</li>
+<li>Reporting back.</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="variables-have-types" class="slide level2 smaller">
+<h2>Variables Have Types</h2>
+<table>
+<colgroup>
+<col style="width: 7%">
+<col style="width: 29%">
+<col style="width: 63%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Value</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>msg</td>
+<td>‘Hello world’</td>
+<td><code>type(msg)==str</code></td>
+</tr>
+<tr class="even">
+<td>answer</td>
+<td>42</td>
+<td><code>type(answer)==int</code></td>
+</tr>
+<tr class="odd">
+<td>pi</td>
+<td>3.14159</td>
+<td><code>type(pi)==float</code></td>
+</tr>
+<tr class="even">
+<td>c</td>
+<td>complex(5,2)</td>
+<td><code>type(c)==complex</code></td>
+</tr>
+<tr class="odd">
+<td>correct</td>
+<td>True</td>
+<td><code>type(correct)==bool</code></td>
+</tr>
+</tbody>
+</table>
+<aside class="notes">
+<p>As we’ll see in Week 4, everything is <em>also</em> an object.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="we-can-change-those-types" class="slide level2 smaller">
+<h2>We Can Change Those Types</h2>
+<p>Message starts as a string:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>msg <span class="op">=</span> <span class="st">'42'</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="bu">type</span>(msg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>But we can change it to an integer like this:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>msg <span class="op">=</span> <span class="bu">int</span>(msg)</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="bu">type</span>(msg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>And back to a string:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>msg <span class="op">=</span> <span class="bu">str</span>(msg)</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="bu">type</span>(msg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="variables-have-names" class="slide level2">
+<h2>Variables Have Names</h2>
+<p>Rules for variable names:</p>
+<ul>
+<li>They cannot start with a number (e.g.&nbsp;<code>3items</code> is invalid)</li>
+<li>White space and symbols (e.g.&nbsp;<code>$</code>, <code>+</code>, etc.) are <strong>not</strong> allowed, but <code>_</code> (underscore) <em>is</em> allowed (e.g.&nbsp;<code>my_variable</code> is fine)</li>
+<li>Case matters: <code>myVar</code> is different from both <code>myvar</code> and <code>MYVAR</code></li>
+<li>Be consistent: <code>my_var</code> is more ‘Pythonic’, though <code>myVar</code> is also widely used, but don’t mix these!</li>
+<li>Variable names should be long enough to be clear but not so long as to be impractical: <code>bldg_height</code> vs.&nbsp;<code>bh</code> vs.&nbsp;<code>max_building_height_at_eaves</code>.</li>
+</ul>
+</section>
+<section id="we-cant-use-these-names" class="slide level2 smaller">
+<h2>We Can’t Use These Names</h2>
+<p>You should not try to use <em>any</em> of these words as a variable. Python <em>may</em> not complain, but strange things will happen when you run your code.</p>
+<table>
+<tbody>
+<tr class="odd">
+<td>and</td>
+<td>del</td>
+<td>from</td>
+<td>not</td>
+<td>while</td>
+</tr>
+<tr class="even">
+<td>as</td>
+<td>elif</td>
+<td>global</td>
+<td>or</td>
+<td>with</td>
+</tr>
+<tr class="odd">
+<td>assert</td>
+<td>else</td>
+<td>if</td>
+<td>pass</td>
+<td>yield</td>
+</tr>
+<tr class="even">
+<td>break</td>
+<td>except</td>
+<td>import</td>
+<td>print</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>class</td>
+<td>exec</td>
+<td>in</td>
+<td>raise</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>continue</td>
+<td>finally</td>
+<td>is</td>
+<td>return</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>def</td>
+<td>for</td>
+<td>lambda</td>
+<td>try</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section>
+<section id="operators" class="title-slide slide level1 center">
+<h1>Operators</h1>
+
+</section>
+<section id="simple-operations-on-variables" class="slide level2 smaller">
+<h2>Simple Operations on Variables</h2>
+<p>Let’s start with <code>x=10</code> and <code>y=5</code>…</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Operator</th>
+<th style="text-align: right;">Input</th>
+<th style="text-align: right;">Result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Sum</td>
+<td style="text-align: right;"><code>x + y</code></td>
+<td style="text-align: right;"><code>15</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Difference</td>
+<td style="text-align: right;"><code>x - y</code></td>
+<td style="text-align: right;"><code>5</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Product</td>
+<td style="text-align: right;"><code>x * y</code></td>
+<td style="text-align: right;"><code>50</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Quotient</td>
+<td style="text-align: right;"><code>x / y</code></td>
+<td style="text-align: right;"><code>2.0</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Floored Quotient</td>
+<td style="text-align: right;"><code>x // y</code></td>
+<td style="text-align: right;"><code>2</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Remainder</td>
+<td style="text-align: right;"><code>x % y</code></td>
+<td style="text-align: right;"><code>0</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Power</td>
+<td style="text-align: right;"><code>pow(x,y)</code> or <code>x**y</code></td>
+<td style="text-align: right;"><code>100000</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Equality</td>
+<td style="text-align: right;"><code>x==y</code></td>
+<td style="text-align: right;"><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="strings-are-different" class="slide level2 smaller">
+<h2>Strings Are Different</h2>
+<p>When you do things with strings the answers can look a little different…</p>
+<p>Let’s start with <code>x="Hello"</code> and <code>y="You"</code> and <code>z=2</code>…</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Operator</th>
+<th style="text-align: right;">Input</th>
+<th style="text-align: right;">Result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Sum</td>
+<td style="text-align: right;"><code>x + y</code></td>
+<td style="text-align: right;"><code>'HelloYou'</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Difference</td>
+<td style="text-align: right;"><code>x - y</code></td>
+<td style="text-align: right;"><code>TypeError</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Product</td>
+<td style="text-align: right;"><code>x * z</code></td>
+<td style="text-align: right;"><code>HelloHello</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Equality</td>
+<td style="text-align: right;"><code>x==y</code></td>
+<td style="text-align: right;"><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="using-strings-to-output-information" class="slide level2 smaller">
+<h2>Using Strings to Output Information</h2>
+<p>Obviously, a really common requirement that programmers have is ‘output a nicely formatted string containing information about the variables in my program’.</p>
+<p>Over time, Python has acquired no fewer than three ways to do this: 1) string concatenation using <code>+</code>; 2) string formatting using <code>&lt;str&gt;.format(&lt;variables&gt;)</code>; and 3) the new f-strings using f”{variable_1}… {variable_n}“. There are pros and cons to each:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>x <span class="op">=</span> <span class="dv">24</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>y <span class="op">=</span> <span class="st">'Something'</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="bu">print</span>(<span class="st">"The value of "</span> <span class="op">+</span> y <span class="op">+</span> <span class="st">" is "</span> <span class="op">+</span> <span class="bu">str</span>(x))</span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="bu">print</span>(<span class="st">"The value of </span><span class="sc">{0}</span><span class="st"> is </span><span class="sc">{1}</span><span class="st">"</span>.<span class="bu">format</span>(y, x))</span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="bu">print</span>(<span class="ss">f"The value of </span><span class="sc">{</span>y<span class="sc">}</span><span class="ss"> is </span><span class="sc">{</span>x<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<aside class="notes">
+<p>I rather like f-strings because they can actually contain any code you like (you could, for instance, write `f”The square root of {y} is {x**(1/2)}” and it would work. However, concatenation is the easiest to learn.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="operators-assemble" class="slide level2 smaller">
+<h2>Operators Assemble!</h2>
+<p>Operators follow clear rules about <em>precedence</em>: what calculations are performed in what order. For instance, the following lines of code are <em>not</em> the same:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>x <span class="op">+</span> y <span class="op">*</span> <span class="dv">2</span>         <span class="co"># == 20</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>(x <span class="op">+</span> y) <span class="op">*</span> <span class="dv">2</span>       <span class="co"># == 30</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a>x <span class="op">+</span> y <span class="op">*</span> <span class="dv">2</span> <span class="op">/</span> <span class="dv">3</span>     <span class="co"># == 13.3333333333334</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a>x <span class="op">+</span> y <span class="op">*</span> (<span class="dv">2</span><span class="op">/</span><span class="dv">3</span>)     <span class="co"># == 13.3333333333332</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a>(x <span class="op">+</span> y) <span class="op">*</span> (<span class="dv">2</span><span class="op">/</span><span class="dv">3</span>)   <span class="co"># == 10.0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>And here’s a subtle one:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>(x <span class="op">*</span> y) <span class="op">**</span> <span class="dv">2</span><span class="op">/</span><span class="dv">3</span>    <span class="co"># == 833.333333333334</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>(x <span class="op">*</span> y) <span class="op">**</span> (<span class="dv">2</span><span class="op">/</span><span class="dv">3</span>)  <span class="co"># == 13.5720880829745</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The full list is <a href="https://docs.python.org/3/reference/expressions.html#operator-precedence">here</a>.</p>
+<aside class="notes">
+<p>If you’re a little rusty on exponents, that last example is the cube root of <code>(x*y)**2</code>. So <code>x**(1/2) * x**(1/2) == x)</code>.</p>
+<p>Also notice that with <em>floats</em> you do not always get the same result from operations that <em>should</em> give the same answer. This is because non-terminating decimals (<em>e.g.</em> <code>1/3</code>) will always be rounded by the computer because it doesn’t have infinite memory. The process of rounding means that you need to be <em>very</em> careful comparing (more on this later) floats.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="comparing-variables" class="slide level2 smaller">
+<h2>Comparing Variables</h2>
+<p>When variables are of the same type then comparing them is easy. Let’s go back to <code>x=10</code> and <code>y=5</code>…</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Operator</th>
+<th style="text-align: right;">Input</th>
+<th style="text-align: right;">Result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>==</code></td>
+<td style="text-align: right;"><code>x == y</code></td>
+<td style="text-align: right;"><code>False</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>!=</code></td>
+<td style="text-align: right;"><code>x != y</code></td>
+<td style="text-align: right;"><code>True</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>&lt;</code>, <code>&lt;=</code></td>
+<td style="text-align: right;"><code>x &lt; y</code></td>
+<td style="text-align: right;"><code>False</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>&gt;</code>, <code>&gt;=</code></td>
+<td style="text-align: right;"><code>x &gt; y</code></td>
+<td style="text-align: right;"><code>True</code></td>
+</tr>
+</tbody>
+</table>
+<p>But notice, if <code>x='4a'</code>, <code>y='365'</code>, and <code>z='42'</code>:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>x <span class="op">&gt;</span> y   <span class="co"># True</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>x <span class="op">&gt;</span> z   <span class="co"># True</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<aside class="notes">
+<p>Notice that the result of any (successful) comparison is a Boolean (True/False). We can save the output of this comparison to a new variable (<em>e.g.</em> <code>z = x &gt; y</code>).</p>
+<p>This last example has to do with the way that strings are compared.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="danger-will-robinson" class="slide level2 smaller">
+<h2>Danger, Will Robinson!</h2>
+<p>Notice the <em>very</em> <strong>subtle difference</strong> between <code>=</code> and <code>==</code>!</p>
+<p>Confusing these two operators is the most common source of mistakes early on when learning to code in Python! One (<code>=</code>) does <em>assignment</em>, the other (<code>==</code>) does <em>comparison</em>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>x <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a>z <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a>x <span class="op">=</span> z   <span class="co"># Probably a mistake: setting x to the value of z</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a>x <span class="op">==</span> z  <span class="co"># True, because x and z are now both set to the value of 10</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Remember this!</strong></p>
+</section>
+<section id="forcing-a-change-in-type" class="slide level2 smaller">
+<h2>Forcing a Change in Type</h2>
+<p>A really common mistake is to think that string (<code>str</code>) <code>"42"</code> is the same as the integer (<code>int</code>) <code>42</code>. Here’s the output from some attempts at comparison:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>x<span class="op">=</span><span class="st">'42'</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a>y<span class="op">=</span><span class="dv">42</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a>x<span class="op">==</span>y   <span class="co"># False</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a>x<span class="op">&gt;</span>y</span>
+<span id="cb9-5"><a href="#cb9-5"></a>Traceback (most recent call last):</span>
+<span id="cb9-6"><a href="#cb9-6"></a>  File <span class="st">"&lt;stdin&gt;"</span>, line <span class="dv">1</span>, <span class="kw">in</span> <span class="op">&lt;</span>module<span class="op">&gt;</span></span>
+<span id="cb9-7"><a href="#cb9-7"></a><span class="pp">TypeError</span>: <span class="st">'&gt;'</span> <span class="kw">not</span> supported between instances of <span class="st">'str'</span> <span class="kw">and</span> <span class="st">'int'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>If we want to compare them then we’ll need to <em>change</em> their type:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>x <span class="op">&gt;</span> <span class="bu">str</span>(y)  <span class="co"># False</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="bu">int</span>(x) <span class="op">&lt;=</span> y <span class="co"># True</span></span>
+<span id="cb10-3"><a href="#cb10-3"></a>x <span class="op">&gt;=</span> <span class="bu">str</span>(y) <span class="co"># Also True</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<aside class="notes">
+<p>Notice that in the first example we <em>can</em> say that 42 is clearly <em>not</em> the same as ‘42’, but we can’t say whether it’s more or less because that’s non-sensical in this context. So this is a computer being <em>totally</em> logical but not always <em>sensible</em>.</p>
+<p>Also notice the syntax for this: we have <code>str(&lt;something&gt;)</code> and <code>int(&lt;something&gt;)</code> to convert between types. These are functions, which we’ll spend a lot more time on next week!</p>
+<p>Why might it be (fractionally) faster to compare integers than strings?</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section>
+<section id="conditions" class="title-slide slide level1 center">
+<h1>Conditions</h1>
+
+</section>
+<section id="conditions-consequences" class="slide level2 smaller">
+<h2>Conditions &amp; Consequences</h2>
+<p>No matter how complex, conditions always ultimately evaluate to <code>True</code> or <code>False</code>.</p>
+<p>The simplest condition only considers one outcome:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="cf">if</span> <span class="op">&lt;</span>condition <span class="kw">is</span> true<span class="op">&gt;</span>:</span>
+<span id="cb11-2"><a href="#cb11-2"></a>    ...do something...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>But you’ll often needs something a little more sophisticated:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="cf">if</span> <span class="op">&lt;</span>condition <span class="kw">is</span> true<span class="op">&gt;</span>:</span>
+<span id="cb12-2"><a href="#cb12-2"></a>    ...do something...</span>
+<span id="cb12-3"><a href="#cb12-3"></a><span class="cf">elif</span> <span class="op">&lt;</span>some other condition <span class="kw">is</span> true<span class="op">&gt;</span>:</span>
+<span id="cb12-4"><a href="#cb12-4"></a>    ...do something <span class="cf">else</span>...</span>
+<span id="cb12-5"><a href="#cb12-5"></a><span class="cf">else</span>:</span>
+<span id="cb12-6"><a href="#cb12-6"></a>    ...<span class="cf">if</span> no conditions are true...</span>
+<span id="cb12-7"><a href="#cb12-7"></a></span>
+<span id="cb12-8"><a href="#cb12-8"></a>...code continues...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="for-example" class="slide level2 smaller">
+<h2>For Example</h2>
+<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="cf">if</span> x <span class="op">&lt;</span> y:</span>
+<span id="cb13-2"><a href="#cb13-2"></a>  <span class="bu">print</span>(<span class="st">"x is less than y"</span>)</span>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="cf">else</span>:</span>
+<span id="cb13-4"><a href="#cb13-4"></a>  <span class="bu">print</span>(<span class="st">"x is not less than y"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Or:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="cf">if</span> x <span class="op">&lt;</span> y:</span>
+<span id="cb14-2"><a href="#cb14-2"></a>  <span class="bu">print</span>(<span class="st">"x is less than y"</span>)</span>
+<span id="cb14-3"><a href="#cb14-3"></a><span class="cf">elif</span> x <span class="op">&gt;</span> y:</span>
+<span id="cb14-4"><a href="#cb14-4"></a>  <span class="bu">print</span>(<span class="st">"x is greater than y"</span>)</span>
+<span id="cb14-5"><a href="#cb14-5"></a><span class="cf">else</span>:</span>
+<span id="cb14-6"><a href="#cb14-6"></a>  <span class="bu">print</span>(<span class="st">"x equals y"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="conditional-syntax" class="slide level2">
+<h2>Conditional Syntax</h2>
+<p>The most common sources of syntax errors in conditions are:</p>
+<ol type="1">
+<li>Incorrect <strong>indenting</strong>;</li>
+<li>Missing <strong>colons</strong> on conditional code;</li>
+<li>Unbalanced <strong>parentheses</strong>;</li>
+<li>Incorrect <strong>logic</strong>.</li>
+</ol>
+</section>
+<section id="all-of-them-together-input" class="slide level2 smaller">
+<h2>All of Them Together (Input)!</h2>
+<div class="sourceCode" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a><span class="cf">if</span> hours <span class="op">&gt;=</span> <span class="dv">0</span>:</span>
+<span id="cb15-2"><a href="#cb15-2"></a><span class="bu">print</span>(<span class="st">"Hours were worked."</span>)</span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="cf">else</span></span>
+<span id="cb15-4"><a href="#cb15-4"></a>    <span class="bu">print</span> <span class="st">"No hours were worked."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>All <strong>four errors</strong> can be found here, can you spot them?</p>
+</section>
+<section id="all-of-them-together-output" class="slide level2 smaller">
+<h2>All of Them Together (Output)!</h2>
+<p>Output from the Python interpreter:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="cf">if</span> hours <span class="op">&gt;=</span> <span class="dv">0</span>:</span>
+<span id="cb16-2"><a href="#cb16-2"></a>... <span class="bu">print</span>(<span class="st">"Hours were worked."</span>)</span>
+<span id="cb16-3"><a href="#cb16-3"></a>  File <span class="st">"&lt;stdin&gt;"</span>, line <span class="dv">2</span></span>
+<span id="cb16-4"><a href="#cb16-4"></a>    <span class="bu">print</span>(<span class="st">"Hours were worked."</span>)</span>
+<span id="cb16-5"><a href="#cb16-5"></a>    <span class="op">^</span></span>
+<span id="cb16-6"><a href="#cb16-6"></a><span class="pp">IndentationError</span>: expected an indented block</span>
+<span id="cb16-7"><a href="#cb16-7"></a><span class="op">&gt;&gt;&gt;</span> <span class="cf">else</span></span>
+<span id="cb16-8"><a href="#cb16-8"></a>  File <span class="st">"&lt;stdin&gt;"</span>, line <span class="dv">1</span></span>
+<span id="cb16-9"><a href="#cb16-9"></a>    <span class="cf">else</span></span>
+<span id="cb16-10"><a href="#cb16-10"></a>    <span class="op">^</span></span>
+<span id="cb16-11"><a href="#cb16-11"></a><span class="pp">SyntaxError</span>: invalid syntax</span>
+<span id="cb16-12"><a href="#cb16-12"></a><span class="op">&gt;&gt;&gt;</span>     <span class="bu">print</span> <span class="st">"No hours were worked."</span>)</span>
+<span id="cb16-13"><a href="#cb16-13"></a>  File <span class="st">"&lt;stdin&gt;"</span>, line <span class="dv">1</span></span>
+<span id="cb16-14"><a href="#cb16-14"></a>    <span class="bu">print</span> <span class="st">"No hours were worked."</span>)</span>
+<span id="cb16-15"><a href="#cb16-15"></a>    <span class="op">^</span></span>
+<span id="cb16-16"><a href="#cb16-16"></a><span class="pp">IndentationError</span>: unexpected indent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="thats-better" class="slide level2">
+<h2>That’s Better!</h2>
+<p>Notice that it’s <em>relatively</em> straightforward to figure out the <strong>syntax errors</strong>, but the <strong>logical error</strong> is much less obvious. Over time, you become far <em>more</em> likely to make logical errors than syntactical ones.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="cf">if</span> hours <span class="op">&gt;=</span> <span class="dv">0</span>:</span>
+<span id="cb17-2"><a href="#cb17-2"></a>    <span class="bu">print</span>(<span class="st">"Hours were worked."</span>)</span>
+<span id="cb17-3"><a href="#cb17-3"></a><span class="cf">else</span>:</span>
+<span id="cb17-4"><a href="#cb17-4"></a>    <span class="bu">print</span>(<span class="st">"No hours were worked."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section></section>
+<section>
+<section id="comment-your-code" class="title-slide slide level1 center">
+<h1>Comment Your Code</h1>
+<aside class="notes">
+<p>One way to reduce the risk of logic errors is to comment your code!</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="make-your-life-easy-well-easier" class="slide level2 smaller">
+<h2>Make Your Life Easy (Well, Easier)</h2>
+<p>Always comment your code:</p>
+<ol type="1">
+<li>So that you know <em>what</em> is going on.</li>
+<li>So that you know <em>why</em> it is going on.</li>
+<li>So that others can <em>read your code</em>.</li>
+<li>To help you <em>plan</em> your code</li>
+</ol>
+<aside class="notes">
+<p>You are reminding your future self what your code was <em>for</em> and helping to give it structure (explaining==thinking!).</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="different-comment-styles" class="slide level2 smaller">
+<h2>Different comment styles</h2>
+<div class="sourceCode" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># This is a short comment</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="bu">print</span>(<span class="st">"Foo"</span>)</span>
+<span id="cb18-3"><a href="#cb18-3"></a><span class="bu">print</span>(<span class="st">"Bar"</span>) <span class="co"># Also a short comment</span></span>
+<span id="cb18-4"><a href="#cb18-4"></a></span>
+<span id="cb18-5"><a href="#cb18-5"></a><span class="co"># You can have comments span multiple</span></span>
+<span id="cb18-6"><a href="#cb18-6"></a><span class="co"># lines just by adding more '#' at the </span></span>
+<span id="cb18-7"><a href="#cb18-7"></a><span class="co"># start of the line.</span></span>
+<span id="cb18-8"><a href="#cb18-8"></a></span>
+<span id="cb18-9"><a href="#cb18-9"></a><span class="co"># You can keep code from running</span></span>
+<span id="cb18-10"><a href="#cb18-10"></a><span class="co"># print("Baz")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="comments-should-follow-indentation" class="slide level2 smaller">
+<h2>Comments should follow indentation</h2>
+<div class="sourceCode" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># Function for processing occupational data</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a><span class="co"># from the 2001 and 2011 Censuses.</span></span>
+<span id="cb19-3"><a href="#cb19-3"></a><span class="kw">def</span> occ_data(df):</span>
+<span id="cb19-4"><a href="#cb19-4"></a>    <span class="co">#  Columns of interest in data set</span></span>
+<span id="cb19-5"><a href="#cb19-5"></a>    occ <span class="op">=</span> [<span class="st">'Managerial'</span>,<span class="st">'Professional'</span>,<span class="st">'Technical'</span>,</span>
+<span id="cb19-6"><a href="#cb19-6"></a>           <span class="st">'Administrative'</span>,<span class="st">'Skilled'</span>,<span class="st">'Personal Service'</span>,</span>
+<span id="cb19-7"><a href="#cb19-7"></a>           <span class="st">'Customer Service'</span>,<span class="st">'Operators'</span>,<span class="st">'Elementary'</span>]</span>
+<span id="cb19-8"><a href="#cb19-8"></a>    </span>
+<span id="cb19-9"><a href="#cb19-9"></a>    <span class="co"># Integrate results into single dataset -- </span></span>
+<span id="cb19-10"><a href="#cb19-10"></a>    <span class="co"># right now we don't replicate Jordan's approach of</span></span>
+<span id="cb19-11"><a href="#cb19-11"></a>    <span class="co"># grouping them into 'knowledge worker' and 'other'. </span></span>
+<span id="cb19-12"><a href="#cb19-12"></a>    occ_data <span class="op">=</span> pd.DataFrame()</span>
+<span id="cb19-13"><a href="#cb19-13"></a>    ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="easier-multi-line-comments" class="slide level2 smaller">
+<h2>Easier Multi-Line Comments</h2>
+<p>The below are not <em>real</em> comments, but they can help when you have a really long comment that you want to make. They are also used to help explain what a function does (called a <code>docstring</code>).</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a><span class="co">"""</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a><span class="co">So I was thinking that what we need here is </span></span>
+<span id="cb20-3"><a href="#cb20-3"></a><span class="co">a way to handle the case where the data is</span></span>
+<span id="cb20-4"><a href="#cb20-4"></a><span class="co">incomplete or contains an observation that we</span></span>
+<span id="cb20-5"><a href="#cb20-5"></a><span class="co">weren't expecting (e.g. "N/A" instead of "0").</span></span>
+<span id="cb20-6"><a href="#cb20-6"></a><span class="co">"""</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="commenting-tips" class="slide level2">
+<h2>Commenting Tips</h2>
+<p>Some useful tips for commenting your code: - Include general information at the top of your programming file. - Assume the person reading the code is a coder themselves. - Good commenting is sparse in the sense that it is used judiciously, and concise without being gnomic. - Use comments to track the logic of your code (especially in conditionals and loops)</p>
+</section>
+<section id="more-resources" class="slide level2 smaller">
+<h2>More Resources</h2>
+<p>Here are some links to videos on LinkedIn Learning that might help, and YouTube will undoubtedly have lots more options and styles of learning… - <a href="https://www.linkedin.com/learning/python-quick-start/types-of-data">Types of Data</a> - <a href="https://www.linkedin.com/learning/learning-python-2/variables-and-expressions">Variables and expressions</a> - <a href="https://www.linkedin.com/learning/python-for-students/strings">Strings</a> - <a href="https://www.linkedin.com/learning/python-essential-training-2/the-string-type">The string type</a> - <a href="https://www.linkedin.com/learning/python-essential-training-2/common-string-methods">Common string methods</a> - <a href="https://www.linkedin.com/learning/python-essential-training-2/formatting-strings">Formatting strings</a> - <a href="https://www.linkedin.com/learning/python-essential-training-2/splitting-and-joining">Splitting and joining</a> - <a href="https://www.linkedin.com/learning/python-essential-training-2/numeric-types">Numeric types</a> - <a href="https://www.linkedin.com/learning/python-essential-training-2/the-bool-type">The bool type</a> - <a href="https://www.linkedin.com/learning/python-quick-start/store-data-using-variables">Storing Data in Variables</a> - <a href="https://www.linkedin.com/learning/learning-python-2/conditional-structures">Conditional structures</a> - <a href="https://www.linkedin.com/learning/python-quick-start/if-statement">If Statements</a> - <a href="https://www.linkedin.com/learning/python-quick-start/if-else-statement">If-Else Statements</a> - <a href="https://www.linkedin.com/learning/python-quick-start/if-elif-and-if-elif-else-statements">If-Elif</a> - <a href="https://www.linkedin.com/learning/python-essential-training-2/whitespace-and-comments">Whitespace and comments</a> - <a href="https://www.linkedin.com/learning/python-essential-training-2/using-print">Using print()</a> - <a href="https://www.linkedin.com/learning/python-essential-training-2/conditional-syntax">Conditional syntax</a> - <a href="https://www.linkedin.com/learning/python-essential-training-2/conditional-operators">Conditional operators</a> - <a href="https://www.linkedin.com/learning/python-essential-training-2/conditional-assignment">Conditional assignment</a></p>
+</section></section>
+<section id="thank-you" class="title-slide slide level1 center">
+<h1>Thank you!</h1>
+
+
+<img src="../img/CASA_logo.png" class="slide-logo r-stretch"><div class="footer footer-default">
+<p>Python, the Basics •&nbsp;Jon Reades</p>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'smaller': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const clipboard = new window.ClipboardJS('.code-copy-button', {
+        target: function(trigger) {
+          return trigger.previousElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        setTimeout(function() {
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      });
+      function tippyHover(el, contentFn) {
+        const config = {
+          allowHTML: true,
+          content: contentFn,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'quarto-reveal',
+          placement: 'bottom-start'
+        };
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          let href = ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          return note.innerHTML;
+        });
+      }
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+        tippyHover(ref, function() {
+          var popup = window.document.createElement('div');
+          cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    });
+    </script>
+    
+
+</body></html>
