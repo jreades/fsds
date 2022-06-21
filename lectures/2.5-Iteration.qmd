@@ -20,21 +20,18 @@ css: slides.css
 ---
 
 
+![Let's Get This Party Started](https://sd.keepcalms.com/i-w600/lets-get-this-party-started-4.jpg)
 
 
 ::: {.notes}
 
 By themselves, lists and variables aren't very useful if we can only access items either one at a time, or as slice. 
 
-But if we can *iterate* over a list (do something to every item in a list) then we gain some **superpowers**.
+But if we can *iterate* over a list (do something to every item in a list) then we gain some serious *powers*.
 
 :::
 
-
-![Let's Get This Party Started](https://sd.keepcalms.com/i-w600/lets-get-this-party-started-4.jpg)
-
-
-## *it·er·a·tion* {.smaller}
+## *it·er·a·tion*
 
 
 /itə'rāSHən/
@@ -44,17 +41,18 @@ But if we can *iterate* over a list (do something to every item in a list) then 
 The repetition of a process or utterance.
 
 - repetition of a mathematical or computational procedure applied to the result of a previous application, typically as a means of obtaining successively closer approximations to the solution of a problem.
-- a new version of a piece of computer hardware or software.plural noun: **iterations**
-
+- a new version of a piece of computer hardware or software. plural noun: *iterations*
 
 
 ::: {.notes}
 
-Most programmers also call these *loops*.
+Many programmers also call these *loops*.
 
 :::
 
 ---
+
+## Two Types of Iteration
 
 :::: {.columns}
 ::: {.column width="50%"}
@@ -72,35 +70,27 @@ Most programmers also call these *loops*.
 :::
 ::::
 
-## Making the Difference Memorable 
+## Making the Difference Memorable
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/9AJ0uoxtdCQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope" allowfullscreen></iframe>
 
 
-![autoplay](https://www.youtube.com/watch?v=9AJ0uoxtdCQ)
-
-
-## For {.smaller}
-
+## For Loops
 
 This 'simple' loop allows us to print out every element of the list in turn:
 
 ```python
-geographers = ['Rose','Massey','Jefferson','Von Humboldt','Harvey']
+geographers = ['Rose','Massey','Jefferson']
 for g in geographers:
   print(g)
-> Rose
-> Massey
-> Jefferson
-...
 ```
 
 Notice the format:
 
 ```python
 for x in list:
-  ...do something...
+  # ...do something...
 ```
-
-
 
 ::: {.notes}
 
@@ -108,13 +98,12 @@ Notice that this is the same `in` that we saw with `if 'Batty' in geographers`!
 
 :::
 
-## While {.smaller}
+## While Loops
 
-
-This while loop does the _same_ thing, but it does it differently:
+This loop does the _same_ thing, but differently:
 
 ```python
-geographers = ['Rose','Massey','Jefferson','Von Humboldt','Harvey']
+geographers = ['Rose','Massey','Jefferson']
 g = 0
 while g < len(geographers):
   print( geographers[g] )
@@ -125,118 +114,119 @@ Notice the format:
 
 ```python
 while <some condition is true>:
-  ...do something...
+  # ...do something...
 ```
 
 
-## Nesting Loops {.smaller}
+## Nesting Loops
 
 
 We can use one loop 'inside' another loop! What do you think this might print?
 
 ```python
+geographers = ['Rose','Massey','Jefferson']
 for g in geographers:
   for h in g:
     print(h)
 ```
 
-Let's puzzle it out... 
+Huh??? Let's puzzle this out... 
 
 
----
-
+## Debugging
 
 When you see something completely new, it's often good to:
 
 1. Add `print(...)` statements to see how the values of a variable are changing.
-2. Comment out the parts you don't understand so that you can focus on the parts you do and then *iteratively* add complexity!
+2. Comment out the parts you don't understand so that you can focus on the parts you *do*
+3. Then *iteratively* add complexity!
+
+
+## Step 1: The 'Outer Loop'
 
 So I would start off with:
 
 ```python
+geographers = ['Rose','Massey','Jefferson']
 for g in geographers:
   print(g)
 #   for h in g:
 #   print(h)
 ```
 
-
----
-
+This prints: 
 
 ```python
 'Rose'
 'Massey'
 'Jefferson'
-'Von Humboldt'
-'Harvey'
 ```
 
-OK, so... 
+## Step 1: Summing Up
 
-1. We now know that `g` is the name of a geographer.
-2. So the 'outer' loop *on its own* sets `g` to the name of a new geographer in the list on *each iteration*.
-3. So if `g` is set to `'Rose'` what does `for h in g...` do?
+OK, so now we know:  
+
+1. That `g` is the name of a geographer.
+2. The 'outer' loop sets `g` to the name of a new geographer on *each iteration*.
+3. So if `g` is set to `'Rose'` what does `for h in g:` do?
 
 
 ---
 
+## Step 2: The 'Inner' Loop
 
+We know change it like this: 
 ```python
 for g in geographers:
   print(g)
   for h in g:
     print(h)
-> Rose
-> R
-> o
-> s
-> e
-> Massey
-> M
-> a
-...
+  break # <-- Notice this!
 ```
 
+This prints: 
+```python 
+Rose
+R
+o
+s
+e
+```
 
-::: {.notes}
+## Step 2: Summing Up
 
-You've learned two things here... what are they?
+And *now* we know that:
 
-Whoah, so a string can be treated _as_ a list!
+1. `h` is looping over the _string_, meaning that a string can be treated _as_ a list!
+2. And `break` is a really useful way to control a loop *while* you're testing your code!
 
-:::
 
 ## Recap
 
+1. `for` iterates once over a collection items (e.g. a list).
+2. `while` keeps going until a condition is False.
 
 
-**for** iterates once over a collection items (e.g. a list).
-
-
-**while** keeps going until a condition is False.
-
-
-## Test Yourself {.smaller}
+## Test Yourself
 
 
 What will this code print? *[I'd suggest that you **don't** run it!]*
 
 ```python
-geographers = ['Rose','Massey','Jefferson','Von Humboldt','Harvey']
+geographers = ['Rose','Massey','Jefferson']
 g = 0
 while g < len(geographers):
   print( geographers[g] )
 ```
 
 
-## Test Yourself (Tricksy Version) {.smaller}
+## Test Yourself (Tricksy Version)
 
 
 Here's a really tricky one! The following two blocks of code produce the *same* output, *how* are they different?
 
 ```python
-geographers = ['Rose','Massey','Jefferson','Von Humboldt','Harvey']
+geographers = ['Rose','Massey','Jefferson']
 geographers.reverse()
 for g in geographers:
   print(g)
@@ -245,16 +235,16 @@ for g in geographers:
 And:
 
 ```python
-geographers = ['Rose','Massey','Jefferson','Von Humboldt','Harvey']
+geographers = ['Rose','Massey','Jefferson']
 g = len(geographers)-1
 while g >= 0:
   print( geographers[g] )
   g -= 1
 ```
 
-## One More Thing... {.smaller}
+## One More Thing...
 
-Let's go back to the [Lists](2.4-Lists.md) examples for a second:
+Let's go back to the [Lists](2.4-Lists.html#/concatenating) examples for a second:
 ```python
 female_geographers = ['Rose','Valentine','Massey','Jefferson']
 male_geographers = ['Von Humboldt','Harvey','Hägerstrand']

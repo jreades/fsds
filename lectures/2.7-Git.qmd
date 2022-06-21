@@ -19,8 +19,7 @@ history: false
 css: slides.css
 ---
 
-
-
+# Why Git?
 
 ::: {.notes}
 
@@ -32,154 +31,229 @@ You will need two things to get started:
 
 :::
 
+---
 
-![Versions](img/phd101212s.gif) 
-
+![](img/phd101212s.gif){.r-stretch}
 
 ::: {.notes}
 
 Version control has been around longer than the Internet. Broadly, it was designed to achieve three things:
 
-1. A record of and and all edits made to a file containing code.
-
+1. A record of any and all edits made to a file containing code.
 2. A means of allowing developers to share edits with one another.
-
 3. A way of reconciling conflicts when two (or more) developers edited the same code.
 
 :::
 
-## However {.smaller}
+# > You can use Git **anywhere** you have files that are changing (*hint:* essays, notes, projects, assessments, code...) and need/want to track them. 
 
-Although we naturally connect version control to coding, you can use it **anywhere** that you have files that are changing (*hint:* essays, notes, projects, assessments, code...) and need/want to track them. 
+::: {.notes}
 
 **Bonus:** you *also* gain free backups if some part of your version control system is on a different computer!
 
+::: 
 
 ## How It Works
 
-The **natural way** to think about managing versions of a document is to have a *master* copy **somewhere**. Everyone asks the server for the master copy, makes some changes, and then checks those changes back in.
+The **natural way** to think about managing versions of a document is to have a master copy *somewhere*. Everyone asks the server for the master copy, makes some changes, and then checks those changes back in.
 
-This is not how Git works.
+This is **not** how Git works.
 
-## How Git Works {.smaller}
+## How Git Works
 
-Git is **distributed**. You could call it peer-to-peer, meaning that *every* computer where git is installed is **its own server** and has its own *master copy*. 
+Git is **distributed**, meaning that *every* computer where git is installed has its *own* master copy. 
 
-So every computer has a **full history** of a file or project that been added to Git.
+So every computer has a **full history** of any git project (aka. repository or 'repo'). Indeed, you don't *have* to synchronise your repo with *any* other computer or server at all! ^[I'd suggest that this is leaving the benefit of free backups on the table for no good reason!]
+
+::: {.notes}
 
 In order to make this **useful**, you need ways to synchronise changes between computers that all think *they're* right.
 
+:::
+
+
 ## GitHub
 
-GitHub is **nothing special** to Git, just another server with which to negotiate changes. Do *not* think of GitHub as the 'master' copy. There isn't one. 
+GitHub is **nothing special** to Git, just another Git server with which to negotiate changes. Do *not* think of GitHub as the 'master' copy. There isn't one.
+
+There *are*, however, upstream and remote repositories.
+
+::: {.notes}
+
+An 'upstream' repository is where there's a 'gatekeeper': e.g. the people who *run* PySAL have a repo that is considered the 'gatekeeper' for PySAL.
+
+A remote repository is any repository with which your copy synchronises. So the remote repository can be 'upstream' or it can just be another computer you run, or you GitHub account.
+
+:::
 
 # Using Git
 
-## Getting Started {.smaller}
+## Getting Started
 
 | Term | Means |
 | :--- | :---- |
 | Repository (Repo) | A project or achive stored in Git. |
-| init | To create a new repo. |
+| init | To create a new repo *on your computer*. |
 | clone | To make a full copy of a repo somewhere else. |
 
-For example:
+This creates a local repo that is *unsynchronised* with anything else:
 ```bash
-mkdir i2p
-cd i2p
+mkdir test
+cd test
 git init
 ```
-Or: `git clone https://github.com/jreades/i2p.git`
+This creates a local clone that is *fully synchronised* with GitHub:
+```bash
+cd .. # To move out of 'test'
+git clone https://github.com/jreades/fsds.git
+```
 
 
 ## Working on a File {.smaller}
 
 | Term | Means |
-| :--- | :---- |
-| add  | Add a file to a repo. |
-| Move (mv) | Move/Rename a file in a repo. |
-| Remove (rm) | Remove a file from a repo. |
+| :--- | :------- |
+| `add` | Add a file to a repo. |
+| `mv` | Move/Rename a file in a repo. |
+| `rm` | Remove a file from a repo. |
 
 For example:
 ```bash
-git add README.md
-git mv README.md fileA.md
-git rm fileA.md
+cd test # Back into the new Repo
+touch README.md # Create empty file called README.md
+git add README.md # Add it to the repository
+git mv README.md fileA.md # Rename it (move it)
+git rm fileA.md # Remove it... which is an Error!
 ```
-But no one *else* knows about these changes yet!
+This produces:
+```bash
+error: the following file has changes staged in the index:
+    fileA.md
+(use --cached to keep the file, or -f to force removal)
+```
 
+::: {.notes}
+
+This is telling you that you can force remove (`git rm -f fileA.md`) if you really want, but you'd probably be better off commiting the changes that have been 'staged'... more on this in a second!
+
+*Also*: no one *else* knows about these changes yet!
+
+:::
 
 ## Looking at the History {.smaller}
 
 | Term | Means |
 | :--- | :---- |
-| diff | Show changes between commits. |
-| status | Show status of files in repo. |
-| log | Show history of commits. |
+| `diff` | Show changes between commits. |
+| `status` | Show status of files in repo. |
+| `log` | Show history of commits. |
 
 For example:
 ```bash
-git status
+cd ../test/ # In case you weren't already there
+git status  # What's the status
 ```
 
+This produces:
+```bash
+On branch master
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+	new file:   fileA.md
+```
+
+::: {.notes}
+
+So again, git is giving us hints as to the options: 'changes to be *committed*' vs. '*unstage*' the changes. We can also see what files are to be committed (i.e. have changed).
+
+:::
 
 ## Working on a Project or File {.smaller}
 | Term | Means |
 | :--- | :---- |
-| commit | To record changes to the repo. |
-| branch | Create or delete branches. |
-| checkout | Jump to a different branch. |
+| `commit` | To record changes to the repo. |
+| `branch` | Create or delete branches. |
+| `checkout` | Jump to a different branch. |
 
 For example:
 ```bash
-git commit -m "Moved and then deleted README file."
+git commit -m "Added and then renamed the README."
+git status
 ```
+
+You should see:
+```bash
+[master (root-commit) e7a0b25] Added and then renamed the README Markdown file.
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 fileA.md
+# ... and then this:
+On branch master
+nothing to commit, working tree clean
+```
+
+**Make a note of the number after 'root-commit'!**
+
+---
+
+## Recovery
+
+```bash
+git rm fileA.md
+git status
+git commit -m "Removed file."
+ls 
+git checkout <number you wrote down earlier>
+ls 
+```
+
+::: {.notes}
+
+So *every* operation on a file is recorded in the repository: adding, renaming, deleting, and so on. And we can roll back any change at any time. For plain-text files (such as Markdown, Python and R scripts) these changes are recorded at the level of each line of code: so you can jump around through your entire history of a project and trace exactly when and what changes you (or anyone else) made.
+
+:::
 
 ## Collaborating on a Project {.smaller}
 
 | Term | Means |
 | :--- | :---- |
-| pull | To request changes to a repo *from* another computer. |
-| push | To send your changes to a repo *to* another computer. |
+| `pull` | To *request* changes on a repo *from* another computer. |
+| `push` | To *send* changes on a repo *to* another computer. |
 
 For example:
 ```
-git push
+git push 
 ```
 
 
-## Consequences
-
-All changes are **local** until you `push` them. 
+# All changes are local until `push`ed. 
 
 If you forget to `push` your changes (e.g. to GitHub) then you are **not backed up** if your computer dies.
 
 
 ## This is *not* easy
 
-![XKCD Comic About Git](img/xkcd-git.png)
+![](img/xkcd-git.png)
 
 [Source](https://xkcd.com/1597/)
 
 
-## A Dropbox Analogy {.smaller}
+## A Dropbox Analogy
 
-- Think of the programming environment (Vagrant+JupyterLab) as being an application (like Word or Excel) that allows you to read/write/edit notebook files.
-- Think of GitHub as being like Dropbox somewhere in the cloud that files on your home machine can be backed up.
-- So you should not need to do anything in JupyterLab to move files to, or see changes on, GitHub.
-- Git gives you much finer-grained control over files and syncrhonisation than Dropbox.
+- Think of JupyterLab as being like Word or Excel: an application that allows you to read/write/edit notebook files.
+- Think of GitHub as being like Dropbox: a place somewhere in the cloud that files on your home machine can be backed up.
 
-
-
-
+But Dropbox doesn't have the `.gitignore` file! 
 
 ::: {.notes}
 
+So why use Git? It gives you a full history of *everything* for as far back as the project goes and much finer-grained control over files and syncrhonisation than Dropbox. If you don't `add` a file to git it can live quite happily in your git repository but will never synchronise.
+
 Like Dropbox, GitHub offers a lot of 'value added' featuers (like simple text editing) on top of the basic service of 'storing files'.
 
-Dropbox will automatically back up anything that you put in your special Dropbox folder. 
-
-Git will only back up the things that you tell it to back up, *even if* they are in the Git folder! 
+Dropbox will automatically back up anything that you put in your special Dropbox folder. Git will only back up the things that you tell it to back up, *even if* they are in the Git folder! 
 
 :::
 
