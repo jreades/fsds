@@ -20,8 +20,7 @@ css: slides.css
 ---
 
 
-> A Python dictionary is just like a real dictionary: you can find things (values) using a word (key) instead of having to read the whole book. So: key ![m](mi_arrow_forward) value.
-
+# A Python dictionary is like a real dictionary: you find things (values) using a word (key) instead of having to read the whole book.
 
 ::: {.notes}
 
@@ -29,11 +28,25 @@ What advantages might this have over a list?
 
 :::
 
-## How Does it Work?
+## So: Key -> Value
 
-The key can be *almost* anything—an integer, a string, a variable...—that is *unique* in the dictionary and **immutable**. 
+The key can be *almost* anything that is *immutable* (aka. hashable). So these are all 'legit':
 
-A list is not immutable, so you can't use a list as a dictionary key.
+```python
+lookup[1]             # Int
+lookup(52.1)          # Float
+lookup['1']           # String
+lookup['Jon Reades']  # String
+k = 'Jon Reades'
+lookup[k]             # String variable
+lookup[(52.1, -0.04)] # Tuple
+```
+But this is not:
+```python
+lookup[['Jon','Reades']] # Error, unhashable type
+```
+
+That's because a list is *not* immutable.
 
 
 ::: {.notes}
@@ -44,48 +57,57 @@ Again, just like a real dictionary: you don't have multiple entries for 'dog', o
 
 ---
 
+## Deliberately Similar
+
+Notice the differences when *creating* them, and the absence of difference when *accessing* them.
+
 :::: {.columns}
-::: {.column width="50%"}
+::: {.column width="43%"}
 
 ### List
 ```python
-stuff = [
+cities = [
   'San Francisco',
-  'USA',
-  837442]
+  'London',
+  'Paris',
+  'Beijing']
   
-# Population:
-print(stuff[2]) 
+# Prints London
+print(cities[2]) 
 ```
 
 :::
-::: {.column width="50%"}
+::: {.column width="57%"}
 ### Dict
 ```python
-stuff = {
-  'city': 'San Francisco',
-  'country': 'USA',
-  'pop': 837442}
+cities = {
+  'San Francisco': 837442,
+  'London': 8673713,
+  'Paris': 837442,
+  'Beijing': 21700000}
 
-# Population
-print(stuff['pop'])
+# Prints pop of London
+print(cities['London'])
 ```
 :::
 ::::
 
 ::: {.notes}
 
-Technically, we get the same answer from both of these and you will get the answer slightly faster from the list; so why might we prefer the dictionary?
+So why might we prefer the dictionary?
 
 1. Dicts are **created** using: `d = { key: value, key: value }`
-
 2. Dicts are **accessed** using: `d[key]`
 
 So the only difference between lists and dicts is: `[...]` and `{...}` when they are created.
 
+Over the next couple of weeks we'll see ways that you can store more information in a list and also why lists are *sometimes* more powerful than you realise... *if* you can think about your data in an entirely new way. But for simple key/value stuff it's hard to beat a dictionary!
+
 :::
 
----
+## It's All About Access
+
+Specifically: do we need sequential or random access?
 
 :::: {.columns}
 ::: {.column width="50%"}
@@ -113,66 +135,69 @@ So the only difference between lists and dicts is: `[...]` and `{...}` when they
 :::
 ::::
 
-## Manipulating Dictionaries {.smaller}
-
-```python
-cities = {
-  'San Francisco': 837442,
-  'London': 8673713,
-  'Paris': 2229621, 
-  'Beijing': 21700000
-}
-c = 'Beijing'
-print(f"The population of {c} is {cities['Beijing']}")
-```
-
-## Setting Values {.smaller}
-
-It's the same process to update an existing value or create a new one:
-```python
-cities['Beijing'] = 21716620
-cities['Toronto'] = 2930000
-
-print(cities['Beijing'])
-print(cities['Toronto'])
-del cities['Toronto'] # Key is deleted immediately
-cities.pop('Toronto',None) # Does not return error if key doesn't exist; returns None
-```
-
-
-## Getting Values {.smaller}
+## Getting Values
 
 There are two ways to retrieve values from a dictionary:
+
 1. `cities['Beijing']`
 2. `cities.get('Beijing')`
 
 Why have two? Consider:
 ```python
-print(cities['Sao Paulo'])
-> Traceback (most recent call last):
->  File "<stdin>", line 1, in <module>
-> KeyError: 'Sao Paulo'
-print(cities.get('Sao Paulo'))
-> None
+cities = {
+  'San Francisco': 837442,
+  'London': 8673713,
+  'Paris': 837442,
+  'Beijing': 21700000}
+
+print(cities['Sao Paulo'])     # Throws KeyError
+print(cities.get('Sao Paulo')) # Returns None
+print(cities.get('Sao Paulo','No Data')) # Returns 'No Data'
 ```
-
-
 
 ::: {.notes}
 
-The first triggers an **error**, the second returns `None`. Errors _can_ be unfriendly: do you want your entire Python program to fail because a single city is missing, or would you rather than it did something a little more sensible such as... skipping the row?
+The first triggers an **error**, the second returns `None`. Errors _can_ be unfriendly: do you want your entire Python program to fail because a single city is missing, or would you rather than it did something a little more sensible such as... skipping the row or returning a sensible default?
 
 :::
 
-## Getting Values (cont'd) {.smaller}
-```python
-print(cities['Sao Paulo'])
-> KeyError: ‘Sao Paulo’
+## Getting Values (cont'd)
 
+If we want to think about whether a value is *in* the dictionary (as opposed to just retrieving it) then notice these options:
+
+```python
 c = cities.get('Sao Paulo')
 if not c:
   print("Sorry, no city by that name.")
-> "Sorry, no city by that name."
+
+if 'Beijing' in cities:
+  print("Found Beijing!")
+```
+
+::: {.notes}
+The first example works because `cities.get` returns `None`, which is the same as 'undefined' for Python. So we can use 'not' to imply 'if c is not defined then do something...'
+
+The second example works because we are implicitly treating the *keys* in the cities dictionary as a list and looking to see if Beijing is one of the values in that list. 
+
+Python often benefits *and* suffers from TMTOWTDI (There's More Than One Way To Do It): think of these as being different ways to say the same thing, but depending on where you want to put the emphasis you would choose one or the other.
+:::
+
+## Setting Values {.smaller}
+
+It's the same process to update an existing value or create a new one:
+```python
+cities = {}  # Empty dictionary
+cities['Beijing'] = 21716620    # Sets key->value
+cities['Toronto'] = 2930000     # Sets key->value
+
+print(cities['Toronto'])        # Prints 2930000
+del cities['Toronto']           # Deletes Toronto key (and value)
+cities.pop('Toronto','Default') # Prints 'Default' b/c key not found
+print(cities)
+```
+This last command outputs:
+```python
+{'Beijing': 21716620}
 ```
 
 
@@ -181,6 +206,12 @@ if not c:
 Similar to iterating over lists but... 
 
 ```python
+cities = {
+  'San Francisco': 837442,
+  'London': 8673713,
+  'Paris': 837442,
+  'Beijing': 21700000}
+
 for c in cities:
   print(c)
 ```
@@ -190,21 +221,21 @@ Prints:
 'London'
 'Paris'
 'Beijing'
-'Toronto'
 ```
-
-
 
 ::: {.notes}
 
-How would we print out the populations?
+One *really* important point to note: here, the cities are printed out in the *same* order that they were added to the dictionary, but that is *not* guaranteed! Unlike lists, dictionaries are **unordered**.
+
+Also, how would we print out the population of each city?
 
 :::
 
 ---
+## {.smaller}
 
 :::: {.columns}
-::: {.column width="50%"}
+::: {.column width="33%"}
 
 ### Keys
 ```python
@@ -218,11 +249,10 @@ Prints:
 'London'
 'Paris'
 'Beijing'
-'Toronto'
 ```
 
 :::
-::: {.column width="50%"}
+::: {.column width="33%"}
 ### Values
 ```python
 for v in cities.values():
@@ -235,7 +265,22 @@ Prints:
 8673713
 2229621
 21716620
-2930000
+```
+
+:::
+::: {.column width="33%"}
+### Both
+```python
+for k,v in cities.items():
+  print(f"{k} -> {v}")
+```
+
+Prints:
+```python
+San Francisco -> 837442
+London -> 8673713
+Paris -> 837442
+Beijing -> 21700000
 ```
 
 :::
@@ -248,23 +293,18 @@ Prints:
 
 ## A Final Note! {.smaller}
 
-> Keys can be **almost** anything, and so can values!
+Values can be almost anything, including a dictionary or list! This opens up some interesting possibilities:
 
+:::: {.columns}
+::: {.column width="42%"}
 ```python
 cities = {
-  'San Francisco': [37.77, -122.43, 'SFO']
+  'San Francisco': 
+    [37.77, -122.43, 'SFO']
 }
 ```
-
-
-
-::: {.notes}
-
-What is this starting to look like?
-
 :::
-
-## And Also... {.smaller}
+::: {.column width="58%"}
 
 ```python
 cities = {
@@ -275,10 +315,18 @@ cities = {
 }
 print(cities['San Francisco']['lat'])
 ```
-This is *basically* what JSON is.
+:::
+::::
 
+*Spoiler*: you're going to encounter this kind of thing a *lot*.
 
-# One More Thing... {.smaller}
+::: {.notes}
+
+What is this starting to look like? This is *basically* what JSON is.
+
+:::
+
+# One More Thing...
 
 You may come across this:
 ```python
@@ -289,7 +337,7 @@ It _looks_ like a dictionary, but where are the keys?
 type(s)
 > <class 'set'>
 ```
-A set is just a group of unique keys _without_ values attached. They have many uses!
+A set is just a group of unique keys (no values attached). They have many uses!
 
 
 ::: {.notes}

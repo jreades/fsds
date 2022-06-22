@@ -19,61 +19,66 @@ history: false
 css: slides.css
 ---
 
+# Advanced Laziness!
+
+> Packages (also called modules or libraries) are bundles of useful, *related* functions and constants.
+
+---
+
+## Popular Packages
+
+| Package | Does |
+| :-- | :-------------- |
+| `os`         | Operating System stuff (paths, processes, etc.) |
+| `csv`        | Reading and Writing CSV files.                  |
+| `math`       | Maths constants and functions.                  |
+| `statistics` | Simple statistical tests & measures.            |
+| `urllib`     | URL Reading (e.g. web pages).                   |
+| `numpy`      | Numerical Python (scientific computing).        |
+| `scipy`      | Scientific Python (more scientific computing)   |
+| `sklearn`    | Machine learning, clustering, etc.              |
 
 
-::: {.notes}
-
-Packages (also called modules or libraries) are bundles of useful, related functions and constants.
-
-:::
-
-
-|      |      |
-| :--- | :--- |
-| `os`  | Operating System stuff (paths, processes, etc.) |
-| `csv`   | Reading and Writing CSV files. |
-| `math`  | Maths constants and functions. |
-| `statistics` | Simple statistical tests & measures. |
-| `urllib` | URL Reading (e.g. web pages). |
-| `numpy`  | Numerical Python (scientific computing). |
-| `scipy`  | Scientific Python (more scientific computing) |
-| `sklearn` | Machine learning, clustering, etc. |
-
-
-## Importing a Package {.smaller}
+## Importing a Package
 
 If a package is installed, then it's as simple as:
 ```python
-import packagename
+import <packagename>
 ```
 
 You normally do this at the start of a program so that it's easy to see what the program requires to run:
 ```python
-import os
 import math
-
-... <rest of your code> ...
+print(math.pi) # Prints 3.141592653589793
 ```
 
+## What Can a Package Do?
 
-## What Can a Package Do? {.smaller}
+There are many ways to find this out: 
 
-There are many ways to find this out: **read the documentation**, **search Google**, and **search StackOverflow**. There's even a web site [python.readthedocs.io](https://python.readthedocs.io/en/latest/).
+1. Read the documentation
+2. Search Google, and 
+3. Search StackOverflow
+
+There's even a web site [python.readthedocs.io](https://python.readthedocs.io/en/latest/).
 
 But we can also **ask the package**:
 ```python
 import math
 dir(math)
-['__doc__', '__file__', '__name__', '__package__', ..., 'log', 'log10', 'log1p', 'modf', 'pi', 'pow', 'radians', 'sin', 'sinh', 'sqrt', 'tan', 'tanh', 'trunc']
+# ['__doc__', '__file__', '__name__', '__package__', ..., 
+# 'log', 'log10', 'log1p', 'modf', 'pi', ...]
 help(math.log10)
-print(math.pi) 
 ```
 
+::: {.notes}
+So, remember what I said in the talk about functions: that the `numbers` and `total` variables in the function aren't the same as the ones *outside* the function? I said the answer had to do with something called the *namespace*. Here is the *math* namespace.
+:::
 
 ## So... {.smaller}
 
 1. `dir(<package name>)` lists all 'things' that `<package>` contains. 
-2. By convention, things that start with `__` are 'private' (you shouldn't change them) and things that start *and* end with `__` are metadata.
+2. By convention, things that start with `__` are 'private' (you shouldn't change them) and things that start *and* end with `__` are metadata (e.g. `__version__`).
 3. Everything else you can interrogate with `help(<package name>.<thing in package>)`.
 
 With `help(math.log10)` you get an answer like this:
@@ -86,27 +91,47 @@ log10(x, /)
 
 With `help(math.pi)` you get an answer `Help on float object`...
 
-
-
 ::: {.notes}
 
 This tells you that `pi` is a float, it doesn't tell you what Pi *is* (an irrational number). So here's another case where the computer gives you a technically correct but not always helpful answer. In the context of the `math` package, Pi is a float constant.
 
 :::
 
-## *More* Laziness: Aliases {.smaller}
+## Why Namespaces Matter
 
-Programmers *hate* typing more than they have to. So if you use the `math` library a *lot* then you might object to constantly writing:
+Consider this:
 ```python
+import math
+pi = 4
+print(math.pi)
+print(pi)
+```
+
+So `math.pi` and `pi` are *not* the same variable!
+
+::: {.notes}
+
+The latter is *implicitly* `main.pi` but Python doesn't have a 'main' programme namespace. Everything is 'main' unless you put it in a package.
+
+:::
+
+## *More* Laziness: Aliases 
+
+Programmers *hate* typing more than they have to:
+```python
+import math
+r = 5
 area = math.pi * r**2
 ln = math.log(area)
-...
+print(ln)
 ```
 So we can use an alias instead:
 ```python
 import math as m
+r = 5
 area = m.pi * r**2
-...
+ln = m.log(area)
+print(ln)
 ```
 You will see this used a *lot* with more complex libraries like Pandas (`pd`), Geopandas (`gpd`), and PySAL (`ps`).
 
@@ -119,42 +144,38 @@ from math import pi, log10
 print(pi)
 help(log10)
 ```
-
+This import `pi` and `log10` from `math` into the 'main' namespace.
 
 ---
 
+## Gotcha! {.smaller}
+
+Notice the subtle differences here:
+
 :::: {.columns}
 ::: {.column width="50%"}
-### Approach 1
+#### Approach 1
 ```python
 pi = 3.1415
-print(pi)
-> 3.1415
+print(pi)      # 3.1415
 
 import math as m
-print(m.pi)
-> 3.141592653589793
-
-print(pi)
-> 3.1415
+print(m.pi)    # 3.141592...
+print(pi)      # 3.1415
+print(math.pi) # Error!
 ```
 
 :::
 ::: {.column width="50%"}
-### Approach 2
+#### Approach 2
 ```python
 pi = 3.1415
-print(pi)
-> 3.1415
+print(pi) # 3.1415
 
 from math import pi
-print(pi)
-> 3.141592653589793
-
-print(math.pi)
-> Traceback (most recent call last):
->   File "<stdin>", line 1, in <module>
-> NameError: name 'm' is not defined
+print(pi)      # 3.141592...
+print(m.pi)    # Error!
+print(math.pi) # Error!
 ```
 
 :::
@@ -162,21 +183,27 @@ print(math.pi)
 
 ## Packages Make Your Life Easier
 
-![Flying with Python](https://imgs.xkcd.com/comics/python.png)
+![](https://imgs.xkcd.com/comics/python.png)
 
 ## Resources {.smaller}
 
 A bit of a mish-mash of different explanations:
 
+:::: {.columns}
+::: {.column width="50%"}
 - [LearnPython.org](https://www.learnpython.org/en/Modules_and_Packages)
 - [RealPython: Namespaces and Scope](https://realpython.com/python-namespaces-scope/)
 - [Real Python: Modules and Packages](https://realpython.com/python-modules-packages/)
-- [Prorgamiz](https://www.programiz.com/python-programming/package)
+- [Programiz](https://www.programiz.com/python-programming/package)
 - [PythonCourse.eu](https://www.python-course.eu/python3_packages.php)
 - [TutorialsTeacher.com](https://www.tutorialsteacher.com/python/python-package)
 - [TutorialsPoint.com](tutorialspoint.com/packages-in-python)
+:::
+::: {.column width="50%"}
 - [How to Make a Package in Python](https://medium.com/datadriveninvestor/how-to-make-the-package-in-python-a82292aeb775)
 - [How to Create Your First Python Package](https://medium.com/@tinabu/how-to-create-your-first-python-package-dc42192001ea)
-- [Create Python Packages for Your Python Code](https://medium.com/@manivannan_data/create-python-package-to-your-python-code-28a1bde4ec51) [This is more for distributing]
+- [Create Python Packages for Your Python Code](https://medium.com/@manivannan_data/create-python-package-to-your-python-code-28a1bde4ec51) *[This is more for distributing your own packages via Pip]*
+:::
+::::
 
 # Thank you!
