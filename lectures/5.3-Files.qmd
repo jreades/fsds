@@ -19,7 +19,7 @@ history: false
 css: slides.css
 ---
 
-
+## From Files to Data
 
 In order to read a file you need to know a few things:
 
@@ -30,20 +30,18 @@ In order to read a file you need to know a few things:
 - Is the metadata in a separate file or embedded in the file?
 
 
-## Structure of a Tabular Data File {.smaller}
+## Structure of a Tabular Data File
 
 Row and column names make it a lot easier to find and refer to data (_e.g._ the 'East of England row' or the 'Total column') but they are **not data** and don't belong in the data set itself.
 
-
 Usually, one record (a.k.a. observation) finishes and the next one starts with a 'newline' (`\n`) or 'carriage return (`\r`) or both (`\r\n`) but it *could* be anything (e.g. `EOR`).
-
 
 Usually, one field (a.k.a. attribute or value) finishes and the next one starts with a comma (`,`) which gives rise to CSV (Comma-Separate Values), but it could be tabs (`\t`) or anything else too (`;` or `|` or `EOF`).
 
-![](mi_question_answer)  How would we **choose** a good field separator?
-
 
 ::: {.notes}
+
+How would we **choose** a good field separator?
 
 *Pro tip*: if we store column and row names separately from the data then we can access everything easily without having to factor in any ‘special’ values!
 
@@ -51,12 +49,9 @@ Noice also the \r and \n here. This is the escape sequence again that you also e
 
 :::
 
----
+# Don't Reinvent the Wheel
 
-
-> Reading data is a **very** common challenge so... chances are that there is a package or class that can help us to do this! You **don't** need to tell Python how to read Excel files, SQL files, web pages... find a package that does it for you!
-
-
+Reading data is a *very* common challenge so... there is a probably a package or class for that! You *don't* need to tell Python how to read Excel files, SQL files, web pages... find a package that does it for you!
 
 ::: {.notes}
 
@@ -69,19 +64,22 @@ What you *do* want, if possible, is a tool that makes it easy to take the 'nativ
 
 | Extension         | Field Separator                               | Record Separator                    | Python Package      |
 | ----------------- | --------------------------------------------- | ----------------------------------- | ------------------- |
-| `.csv`            | `,` but can appear in fields enclosed by `"`. | `\n` but could be `\r` or `\r\n`.   | `csv`               |
+| `.csv`            | `,` but separator can appear in fields enclosed by `"`. | `\n` but could be `\r` or `\r\n`.   | `csv`               |
 | `.tsv` or `.tab`  | `\t` and unlikely to appear in fields.        | `\n` but could be `\r` or `\r\n`.   | `csv` (!)           |
 | `.xls` or `.xlsx` | Binary, you need a library to read.           | Binary, you need a library to read. | `xlrd`/`xlsxwriter` |
 | `.sav` or `.sas` | Binary, you need a library to read.           | Binary, you need a library to read. | `pyreadstat`        |
-
-
+| `.json`, `.geojson` | Complex (`,`, `[]`, `{}`), but plain text. | Complex (`,`, `[]`, `{}`), but plain text | `json`, `geojson` |
+| `.feather` | Binary, you need a library to read. | Binary, you need a library to read. | `pyarrow`, `geofeather` |
+| `.parquet` | Binary, you need a library to read. | Binary, you need a library to read. | `pyarrow` |
 
 
 ::: {.notes}
 
-One of the reasons we like CSV and TSV files is that they can be opened and interacted with using the Command Line directly. As soon as you get into binary file formats you either need the original tool (and then export) or you need a tool that can *read* those formats. So the complexity level rises very quickly. 
+One of the reasons we like CSV and TSV files is that they can be opened and interacted with using the Command Line (as well as Excel/Numbers/etc.) directly. As soon as you get into binary file formats you either need the original tool (and then export) or you need a tool that can *read* those formats. So the complexity level rises very quickly. 
 
 Of course, sometimes you can gain (e.g. SPSS or SAS) in terms of obtaining information about variable types, levels, etc. but usually you use these when that's all that's available *or* when you want to **write** a file for others to use.
+
+The two formats at the bottom of the table are there because they are useful: the feather format was designed for fast reads and for data interachange with R, while Parquet is a highly-compressed, column-oriented storage format for large data. So for modest-sized data sets (a few hundred MB), or situations where you are working across R and Python, then Feather cannot be beat. For 'big data' where you need access to parts of the data set and want to do lazy loading, then parquet is the winner.
 
 :::
 
@@ -102,9 +100,6 @@ Here's a mapping
 | 'Jon Reades', 'Huanfa Chen', etc. | `str`                                                        |
 | '3-FEB-2020', '10/25/20', etc.    | `datetime` module (`date`, `datetime` or `time`)             |
 
-
-
-
 ::: {.notes}
 
 These would be a mapping of variables between two formats. We talk of mapping any time we are taking inputs from one data set/format/data structure as a lookup for use with *another* data set/format/data structure.
@@ -113,14 +108,15 @@ Have a think about how you can use an `int` to represent **nominal data**. There
 
 :::
 
-## Testing a Mapping {.smaller}
+## Testing a Mapping
 
-
-As we'll see over the remainder of the term, working out an *appropriate* mapping (representation of the data) can take up *enormous* amounts of time. **You should never assume that the data matches the spec.**
+Working out an *appropriate* mapping (representation of the data) is hugely time-consuming.
 
 > It's commonly held that 80% of data science is *data cleaning*.
 
 The Unix utilities (`grep`, `awk`, `tail`, `head`) can be very useful for quickly exploring the data in order to develop a *basic* understanding of the data and to catch *obvious* errors.
+
+**You should never assume that the data matches the spec.**
 
 
 # Why This Isn't Easy
@@ -128,9 +124,6 @@ The Unix utilities (`grep`, `awk`, `tail`, `head`) can be very useful for quickl
 ---
 
 ![](./img/ONS_Excel_File.png)
-
-
-
 
 ::: {.notes}
 
@@ -140,14 +133,9 @@ What would we say the row and column names *currently* are?
 
 :::
 
-## Label These {.smaller}
+## Label These
 
-![](/Users/jreades/Documents/git/i2p/lectures/img/ONS_Excel_File-Layout.png)
-
-
-
-
-
+![](../lectures/img/ONS_Excel_File-Layout.png){height="600"}
 
 <!--
 
@@ -221,10 +209,7 @@ Also have to consider trade-offs around mapping the full column names on to some
 
 :::
 
-## Why This Isn't Easy (Part 2) {.smaller}
-
-
-### Things That Can Go Wrong...
+## Things That Can Go Wrong...
 
 A selection of *real* issues I've seen in my life:
 

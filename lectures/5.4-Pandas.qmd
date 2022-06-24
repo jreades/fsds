@@ -19,21 +19,13 @@ history: false
 css: slides.css
 ---
 
-
+![](img/Pandas.jpg)
 
 ::: {.notes}
 
 Feel like I've been signposting this for a _really_ long time, so I hope you feel like it's worth it.
 
 :::
-
----
-
-
-![](img/Pandas.jpg)
-
-
-
 
 
 ::: {.notes}
@@ -46,9 +38,9 @@ We will now start to use the Pandas package, which allows us to create ‘data f
 
 :::
 
-## Why Pandas? {.smaller}
+## Why Pandas?
 
-Pandas is probably (together with scipy and numpy) the *main* reason that Python has become popular for data science. According to ‘Learn Data Sci’ it accounts for 1% of *all* Stack Overflow question views!
+Pandas is probably (together with scipy, numpy, and sklearn) the *main* reason that Python has become popular for data science. According to ‘Learn Data Sci’ it accounts for 1% of *all* Stack Overflow question views!
 
 You will want to bookmark these:
 
@@ -83,26 +75,23 @@ You will want to bookmark these:
 
 ## Using Pandas {.smaller}
 
-
-So here’s some code to read a CSV file:
+Here’s code to read a (remote) CSV file:
 
 ```python
 import pandas as pd      # import package
-# Bitly link for: https://github.com/jreades/i2p/raw/master/data/src/2019-sample-Crime.csv
-url='https://bit.ly/31NP4fx'
-df = pd.read_csv(url)    # load a (remote) CSV
-type(df)                 # not simple data type
-print(df.columns.values) # column names
+# Bitly: https://raw.githubusercontent.com/jreades/fsds/master/data/2019-sample-crime.csv
+url='https://bit.ly/39SJpfp'
+df = pd.read_csv(url)     # load a (remote) CSV
+print(type(df))           # not simple data type
+print(df.columns.values)  # column names
 ```
 
 Output:
-
 ```python
 <class 'pandas.core.frame.DataFrame'>
 ['ID' 'Case Number' 'Date' 'Primary Type' 'Description'
  'Location Description' 'Arrest' 'Domestic' 'Year' 'Latitude' 'Longitude']
 ```
-
 
 ## Summarise a Data Frame
 
@@ -117,7 +106,6 @@ df.info()     # Information about each Series and the df
 
 ## Familiar? {.smaller}
 
-
 This should be looking *eerily* familiar:
 
 ```python
@@ -129,7 +117,6 @@ print(f"2: {df.Latitude.mean()}")    # if no spaces in name
 ```
 
 Produces: 
-
 ```python
 <class 'pandas.core.series.Series'>
 <class 'numpy.ndarray'>
@@ -137,6 +124,13 @@ Produces:
 1: 41.84550008439
 2: 41.84550008439
 ```
+
+::: {.notes}
+Notice that we've got two ways of accessing a pandas Series:
+
+1. The dictionary-like way: `df['Latitude']`; this works for *all* columns, always.
+2. The method-like way: `df.Latitude`; this works for 'reading' columns without spaces in their names.
+:::
 
 
 ## Jupyter Formatting
@@ -149,24 +143,55 @@ Pandas is also 'Jupyter-aware', meaning that output can displayed directly in Ju
 ## Familiar? {.smaller}
 
 ```python
-df.head(3)                   # all columns first 3 rows
-df[['ID','Date','Year']].tail(3) # selected columns, last 3 rows
-df.sample(frac=0.3)           # a random 30% sample
-df.sample(3, random_state=42) # set state of random number generator
-df.sample(3, random_state=42) # will yield same sample
+df.head(3)                       # First 3 rows of df
+df[['ID','Date','Year']].tail(3) # Last 3 rows of selected columns
+df.sample(frac=0.3)              # A random 30% sample
+df.sample(3, random_state=42)    # A random sample with a seed
+df.sample(3, random_state=42)    # Same sample!
 ```
 
+::: {.notes}
+On one level, this is what we've been building towards! We've got `head` and `tail` which we saw in the [Command Line](./2.6-The_Command_Line.qmd) lecture. We've got random sampling with seeds which we saw in the [Randomness](./5.2-Randomness.qmd) lecture. We've even got LoLs, which we saw way back in the [Lists of Lists](./3.2-LOLs.qmd) lecture!
+:::
 
-## Data Frames vs Series {.smaller}
+## Data Frames vs Series
 
-Any operation on a data frame *returns* a data frame.
+Pandas operates on two principles:
 
-Any operation on a series *returns* a series.
+1. Any operation on a Data Frame *returns* a Data Frame.
+2. Any operation on a Series *returns* a Series.
 
-By default, any operation returns a *shallow copy* and the original is unchanged *unless* you specify `inplace=True` (for methods that allow it).
+::: {.notes}
+We'll see in a moment why this is useful!
+:::
+
+## 'Shallow' Copies
+
+More subtly, operations on a Series or Data Frame return a *shallow copy*, which is like a 'view' in a database...
+
+1. The original is unchanged *unless* you specify `inplace=True` (where supported).
+2. Attempts to *change* a subset of the data frame will often trigger a `SettingWithCopyWarning` warning.
 
 If you need a full copy then use the `copy()` method (e.g. `df.copy()` or `df.Series.copy()`).
 
+::: {.aside}
+[DataQuest](https://www.dataquest.io/blog/settingwithcopywarning/) has a nice overview of how `SettingWithCopyWarning` is triggered and what to do about it.
+:::
+
+## Putting These Ideas Together
+
+```python
+# Returns a series but not a column
+df.Latitude - 1 
+# Saves returned series as a new column
+df['lat'] = df.Latitude - 1
+# Returns a new data frame w/o 'lat' 
+df.drop(columns=['lat']) 
+# Modifies df directly
+df.drop(columns=['lat'], inplace=True) 
+# Try to modify a view of df (triggers warning)
+df[df['Primary Type']=='BURGLARY'].Latitude = 41.7 
+```
 
 # What Can We Do? 
 
@@ -175,19 +200,17 @@ If you need a full copy then use the `copy()` method (e.g. `df.copy()` or `df.Se
 Operations on a Data Frame **return a DataFrame** and operations on a Series **return a Series**, allowing us to 'chain' steps together:
 
 ```python
-df.sort_values(['Year','ID'], ascending=False).head(20).median()
+df.sort_values(by=['Year','ID'], ascending=False).sample(frac=0.5).head(20).median()
 ```
-
 
 ## Selection {.smaller}
 
-We can subset the data using selection criteria
-
 ```python
+# Returns a selection (Boolean series)
+df['Primary Type']=='ASSAULT'
+
 # All rows where Primary Type is ASSAULT
-df[
-  df['Primary Type']=='ASSAULT'
-]
+df[ df['Primary Type']=='ASSAULT' ]
 
 # Calculations on a slice (returns mean centroid!)
 df[df['Primary Type']=='ASSAULT'][['Longitude','Latitude']].mean()
@@ -215,7 +238,7 @@ A Data Series can *only* be of one type:
 
 | Pandas Dtype    | Python Type      | Usage                       |
 | --------------- | ---------------- | --------------------------- |
-| `object`        | `str` or mixed   | Text or mixed columns       |
+| `object`        | `str` or mixed   | Text or mixed columns (including arrays) |
 | `int64`         | `int`            | Integer columns             |
 | `float64`       | `float`          | Floating point columns      |
 | `bool`          | `bool`           | True/False columns          |
@@ -228,15 +251,14 @@ A Data Series can *only* be of one type:
 
 
 ```python
-print(df['Primary Type'].unique()) # Find unique values
-print(df['Primary Type'].dtype.name)
+print(df['Primary Type'].unique())   # Find unique values
+print(df['Primary Type'].dtype.name) # Confirm is 'object'
 df['Primary Type'] = df['Primary Type'].astype('category')
-print(df['Primary Type'].dtype.name)
-print(df['Primary Type'].describe())
+print(df['Primary Type'].dtype.name) # Confirm is 'category'
+print(df['Primary Type'].describe()) # Category column info
 ```
 
 Outputs:
-
 ```python
 ['BURGLARY' 'DECEPTIVE PRACTICE' 'BATTERY'...]
 object   # < before `as type`
@@ -245,7 +267,7 @@ count       100
 unique       15
 top       THEFT
 freq         28
-Name: Primary Type, dtype: object # category==special type of object
+Name: Primary Type, dtype: object # category==special class of object
 ```
 
 
@@ -254,14 +276,22 @@ Name: Primary Type, dtype: object # category==special type of object
 What do we do here?
 
 ```python
+print(df.Date.dtype.name)
+# object
 df.Date.to_list()[:3]
->>> ['04/20/2019 11:00:00 PM', '12/02/2019 10:35:00 AM', '10/06/2019 04:50:00 PM']
+# ['04/20/2019 11:00:00 PM', '12/02/2019 10:35:00 AM', '10/06/2019 04:50:00 PM']
 ```
+
+This shows that `Date` is currently a string of dates+times.
 
 Pandas handles date and times using a `datetime` type that also works as an index (more on these later):
 ```python
 df['dt'] = pd.to_datetime(df.Date.values, 
               format="%m/%d/%Y %H:%M:%S %p")
+print(df.dt.dtype.name)
+# datetime64[ns]
+df.dt.to_list()[:3]
+# [Timestamp('2019-04-20 11:00:00'), Timestamp('2019-12-02 10:35:00'), Timestamp('2019-10-06 04:50:00')]
 ```
 
 These follow [the formatting conventions](https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes) of `strftime` (string format time) for conversion.
@@ -279,52 +309,81 @@ Examples of `strftime` conventions include:
 | %Y | 4-digit year |
 | %p | AM/PM |
 
+So that is why:
+```python
+pd.to_datetime(df.Date.values, format="%m/%d/%Y %H:%M:%S %p")
+```
+Note the other things happening here:
+
+1. `pd.to_datetime(...)` is *not* a method, it's a function from the `pandas` package.
+2. `df.Date.values` gives access to the *data* directly, whereas `df.Date` gives access to the *Series*.
+
+---
+
+## Deprecation Warning!
+
+From time to time, real-world software projects will change the way things work. Pandas is *just* such a project!
+
+::: {.callout-warning}
+We recommend using `Series.array` or `Series.to_numpy()`, depending on whether you need a reference to the underlying data or a NumPy array. See [API Documenation](https://pandas.pydata.org/docs/reference/api/pandas.Series.values.html?highlight=values#pandas.Series.values).
+:::
+
+So while `Series.values` still works, and will continue to work for some time, you are being *advised* to start using `Series.array` or `Series.to_numpy()` instead. Meaning, we should *consider* using `df.Date.array`.
 
 ## Tidying Up {.smaller}
 
-This is one way, there are many subtleties...
+This is one way, there are many options and subtleties...
 ```python
 # Fix categories
 mapping = {}
+
 # df['Primary Type'].unique().to_list() also works
 for x in df['Primary Type'].cat.categories.to_list():
-    mapping[x]=x.title()
-df['Primary Type'] = df['Primary Type'].cat.
-                             rename_categories(mapping)
+  mapping[x]=x.title()
+
+# And update
+df['Primary Type'] = df['Primary Type'].cat.rename_categories(mapping)
 ```
+How would you work out what this code does? ^[There are at least two ways: 1) print out `mapping`; 2) before running the code comment out the 'update' line and print out `x` and `x.title()`; 3) search for `title python`.]
 
-There are *many* other things that we can do, many of them accessible via Google! For instance, to deal with pricing information treated as a string:
-
+To deal with pricing information treated as a string:
 ```python
 df2['price'].str.replace('$','').astype(float)
 ```
+Many more examples accessible via Google! 
 
+::: {.notes}
+Another thing you might notice here: adding `.cat` allows us to access *category methods* for the Series; adding `.str` allows us to access *string methods* for the Series.
+:::
 
-## Other Types of Tidying Up {.smaller}
+## Dropping Rows and Columns {.smaller}
 
-The `inplace=True` option means that `df` itself is changed. Otherwise `df` is not touched and a copy is returned:
-
+There are multiple ways to drop 'stuff':
 ```python
-print(df.columns.values)
-df.drop(columns=['Year'], inplace=True)
-print(df.columns.values)
+df2 = df.copy()
+print(f"The data frame has {df2.shape[0]:,} rows and {df.shape[1]:,} cols.")
+df2.drop(index=range(5,10), inplace=True) # Row 'numbers' or index values
+print(f"The data frame has {df2.shape[0]:,} rows and {df.shape[1]:,} cols.")
+df.drop(columns=['Year'], inplace=True)   # Column name(s)
+print(f"The data frame has {df2.shape[0]:,} rows and {df.shape[1]:,} cols.")
 ```
 
-There is also `df.dropna()` which can apply to rows or columns with NULL values. 
+There is also `df.dropna()` which can apply to rows or columns with `NULL` or `np.nan` values. 
 
-Columns are dropped by `df.drop(index=[...])`; however, I often prefer: `df = df[df.ID>11934410]` (selection!).
+I often prefer `df = df[df.index > 15]` (negative selection) to `df.drop(index=range(0,14))` (positive selection).
 
-![](mi_question_answer) Why might you want the default to *not* be `in_place`?
-
+::: {.notes}
+Why might you want the default to *not* be `in_place`?
+:::
 
 ## Accessing Data by Location {.smaller}
 
-|       | 0        | 1               | 2                     | 3                  |
-| ----- | -------- | --------------- | --------------------- | ------------------ |
-|       | **ID**   | **Case Number** | **Date**              | **Primary Type**   |
-| 0     | 11667185 | JC237601        | 04/20/2020 11:00:00PM | BURGLARY           |
-| 1     | 11998178 | JC532226        | 12/02/2020 10:35:00AM | DECEPTIVE PRACTICE |
-| 2 | 11852571 | JC462365        | 10/06/2020 04:50:00PM | BATTERY            |
+| Index | 0        | 1               | 2                     | 3                  |
+| - | -------- | --------------- | --------------------- | ------------------ |
+|   | **ID**   | **Case Number** | **Date**              | **Primary Type**   |
+| **0** | 11667185 | JC237601        | 04/20/2020 11:00:00PM | BURGLARY           |
+| **1** | 11998178 | JC532226        | 12/02/2020 10:35:00AM | DECEPTIVE PRACTICE |
+| **2** | 11852571 | JC462365        | 10/06/2020 04:50:00PM | BATTERY            |
 
 We can interact with rows and columns by *position* or *name*:
 
@@ -332,7 +391,10 @@ We can interact with rows and columns by *position* or *name*:
 df.iloc[0:2,0:2] # List selection! (':' means 'all')
 df.loc[0:2,['ID','Case Number']] # Dict selection
 ```
-These actually return different results because of the index: `0:2` in `df.loc` returns the rows *labeled* 0, 1, and 2!
+These actually return different results because of the index: 
+
+- `df.loc` returns the rows *labeled* 0, 1, and 2 (`[0..2]`), whereas
+- `df.iloc` returns the *range* 0..2 (`[0..2)`)!
 
 
 ## Indexes {.smaller}
@@ -342,23 +404,32 @@ So by default, pandas *creates* a row index index whose **values** are *0..n* an
 ```python
 df.head(3)
 ```
-
 The left-most column (without) a name is the index.
-
 ```python
 df.set_index('ID', inplace=True)
 df.head(3)
 ```
+Now we see:
+```
+         Case Number                    Date  ...  Longitude                  dt
+ID                                            ...
+11667185    JC237601  04/20/2019 11:00:00 PM  ... -87.603468 2019-04-20 11:00:00
+11909178    JC532226  12/02/2019 10:35:00 AM  ... -87.643230 2019-12-02 10:35:00
+11852571    JC462365  10/06/2019 04:50:00 PM  ... -87.758473 2019-10-06 04:50:00
 
+```
+So `ID` is now the index and is *not* accessible as a column: `df.ID` will now throw an error because it's not longer part of the Column Index.
 
 ## Indexes (cont'd) {.smaller}
 
-|      |              | 0               | 1                     | 2                  |
-| ---- | ------------ | --------------- | --------------------- | ------------------ |
-|      | **ID**       | **Case Number** | **Date**              | **Primary Type**   |
-| 0    | **11667185** | JC237601        | 04/20/2020 11:00:00PM | BURGLARY           |
-| 1    | **11998178** | JC532226        | 12/02/2020 10:35:00AM | DECEPTIVE PRACTICE |
-| 2    | **11852571** | JC462365        | 10/06/2020 04:50:00PM | BATTERY            |
+Notice the change to the data frame:
+
+|              | 0               | 1                     | 2                  |
+| ------------ | --------------- | --------------------- | ------------------ |
+| **ID**       | **Case Number** | **Date**              | **Primary Type**   |
+| **11667185** | JC237601        | 04/20/2020 11:00:00PM | BURGLARY           |
+| **11998178** | JC532226        | 12/02/2020 10:35:00AM | DECEPTIVE PRACTICE |
+| **11852571** | JC462365        | 10/06/2020 04:50:00PM | BATTERY            |
 
 And now:
 
@@ -367,9 +438,9 @@ print(df.loc[11667185,:])
 print(df.loc[11667185:11852571,'Case Number':'Date'])
 ```
 
-*Notice!* We used `iloc` to select rows/cols based on **integer location** and we can use `loc` to select rows/cols based on **name location**.
+*Mnemonic*: we used `iloc` to select rows/cols based on **integer location** and we use `loc` to select rows/cols based on **name location**.
 
-P.S. You can *reset* the index using `df.reset_index(inplace=True)`.
+P.S. You can *reset* the data frame using `df.reset_index(inplace=True)`.
 
 
 ## Saving {.smaller}
@@ -380,11 +451,12 @@ Pandas can write to a [wide range of file types](https://pandas.pydata.org/panda
 | ------------------------ | ------------------------------------------------------------ |
 | `df.to_csv(<path>)`      | CSV file. But note [the options](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_csv.html) to change `sep` (default is `','`) and to suppress index output (`index=False`). |
 | `df.to_excel(<path>)`    | XLSX file. But note [the options](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_excel.html) to specify a `sheet_name`, `na_rep`, and so on, as well as to suppress the index (`index=False`). |
-| `df.to_feather(<path>)`  | Feather file also directly usable by R. Requires `pyarrow` to be installed to access [the options](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_feather.html). |
-| `df.to_latex(<path>))`   | Write to LaTeX file to include into main body. [Requires booktabs](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_latex.html). Could to copy+pasted with `print(df.to_latex())`. |
-| `df.to_markdown(<path>)` | Write to Markdown format. [Requires tabulate](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_markdown.html). Could do copy+paste with `print(df.to_markdown())`. |
+| `df.to_feather(<path>)`  | Directly usable by R. Requires `pyarrow` to be installed to access [the options](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_feather.html). |
+| `df.to_parquet(<path>)`  | Directly usable by many languages. Requires `pyarrow` to be installed to access [the options](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_parquet.html). |
+| `df.to_latex(<path>))`   | Write a LaTeX-formatted table to a file. [Display requires booktabs](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_latex.html). Could do copy+paste with `print(df.to_latex())`. |
+| `df.to_markdown(<path>)` | Write a Markdown-formatted table to a file. [Requires tabulate](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_markdown.html). Could do copy+paste with `print(df.to_markdown())`. |
 
-In most cases compression is supported automatically (e.g. `df.to_csv('file.csv.gz')`).
+In most cases compression is detected automatically (e.g. `df.to_csv('file.csv.gz')`) but you can also specify it (e.g. `df.to_csv('file.csv.gz', compression='gzip'))`.^[For instance, a bit.ly link to a Gzipped file requires `compression='gzip'` because there's nothing in the link itself to tell Pandas what to expect.]
 
 
 ## Resources {.smaller}
