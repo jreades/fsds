@@ -19,14 +19,17 @@ history: false
 css: slides.css
 ---
 
+# "The good news about computers is that they do what you tell them to do. The bad news is that they do what you tell them to do." <cite>- Ted Nelson</cite>
 
 ---
 
+## Do You Want?
+
 :::: {.columns}
 ::: {.column width="50%"}
-### Do You Want?
 
 Consider the following three things I've said to my toddler:
+
 1. Do you want to go to the park **and** have ice cream?
 2. Do you want cereal **or** toast for breakfast?
 3. Do **not** touch that again or else!
@@ -34,28 +37,31 @@ Consider the following three things I've said to my toddler:
 Unlike my toddler, the computer *does* listen, but my toddler has more common sense!
 :::
 ::: {.column width="50%"}
-![](img/Toddler.png)
+
+![](img/Toddler.png){height="500"}
 
 :::
 ::::
 
 ## In Code Now {.smaller}
 
-Using 'Booleans' let's set `x=True` and `y=False`:
 ```python
+(x,y) = True,False
 if x:
   print("x")
+
 if x and y:
   print("x and y")
+
 if x or y:
   print("x or y")
+
 if x and not y:
   print("x and not y")
+
 if not(x and y):
   print("not x and y")
 ```
-
-
 
 ::: {.notes}
 
@@ -71,65 +77,64 @@ if not(x and y):
 
 ## Combining Logic With Operators {.smaller}
 
-Remember that operators like `<=` and `==` also produce True/False answers. So *that* means that:
+Remember that operators like `<=` and `==` also produce True/False answers:
 ```python
 x = y = 5
 z = 3
 if x==y:
   print("x==y")
+
 if x==y and x==z:
   print("x==y and x==z")
+
 if x==y or x==z:
   print("x==y or x==z")
+
 if x==y and not x==z:
   print("x==y and not x==z")
 ```
 
 
-## A Special Case {.smaller}
+## A Special Case
 
-There is a **second set** of logical operators that apply in very specific circumstances. These are called 'bitwise' operators and apply to data specified in **bits**.
+There is a *second* set of logical operators that apply in very specific circumstances. These are called 'bitwise' operators and apply to data specified in *bits*.
 
 | Regular Operator | Bitwise Equivalent |
 | :--------------- | :----------------- |
 | `and` | `&` |
-| `or`  | `\|` |
+| `or`  | `|` |
 | `not` | `~` |
 
 Let's see (briefly) how these work...
 
 
-## Working With Bits {.smaller}
-Let's set `x=38` and `y=3`:
+## Working With Bits
+
 ```python
+x,y = 38,3
 print(f"{x:b}") # `:b` means byte-format
 print(f"{y:b}")
 ```
 This gives us that `x` is `'100110'` and `y` is `'11'`, so now:
 ```python
-print("{0:b}".format( x & y ))
-> 10
-print("{0:b}".format( x | y ))
-> '100111'
-print("{0:b}".format( x & ~y ))
-> '100100'
+print(f"{x & y:b}")  # 10
+print(f"{x | y:b}")  # 100111
+print(f"{x & ~y:b}") # 100100
 ```
 
 
-## Perhaps Easier to See This Way? {.smaller}
+## Perhaps Easier to See This Way?
 
 | Operator | 1 | 2 | 3 | 4 | 5 | 6 |
 | --: | :-: | :-: | :-: | :-: | :-: | :-: |
 | **x** | 1 | 0 | 0 | 1 | 1 | 0 |
 | **y** | 0 | 0 | 0 | 0 | 1 | 1 |
-| x & y | 0 | 0 | 0 | 0 | 1 | 0 |
-| x \| y | 1 | 0 | 0 | 1 | 1 | 1 |
-| ~y | 1 | 1 | 1 | 1 | 0 | 0 |
-| x & ~y | 1 | 0 | 0 | 1 | 0 | 0 |
+| **x & y** | 0 | 0 | 0 | 0 | 1 | 0 |
+| **x \| y** | 1 | 0 | 0 | 1 | 1 | 1 |
+| **~y** | 1 | 1 | 1 | 1 | 0 | 0 |
+| **x & ~y** | 1 | 0 | 0 | 1 | 0 | 0 |
 
 Bitwise operations are *very*, *very* fast and so are a good way to, say, find things in large data sets. **You've been warned.**
-
-
 
 ::: {.notes}
 
@@ -137,73 +142,67 @@ They are how pandas and numpy manage indexes and queries against data frames.
 
 :::
 
-## Nulls: None vs. NaN {.smaller}
+## Nulls: None vs. NaN
 
 Beware of using logic with things that are _not_ what they appear: 
 
-- `None` is Python's way of saying that something has **no value at all** (not `0` or `" "`... but _None_). It is a **class**.
-- NaN (Not a Number) is a special numeric data type to deal with things like infinite values and other 'things' that are not numbers that can be represented with values. `np.nan` should be used whenever you are dealing with _data_ in bulk (_e.g._ see Pandas!).
+- `None` is Python's way of saying that something has **no value at all** (not `0` or `""`... but _None_). It is a **class**.
+- NaN (Not a Number) is a special numeric data type provided by the `numpy` package to deal with things like -ve and =ve infinity and similar 'issues'. 
+
+`np.nan` should be used whenever you are dealing with _data_ (_e.g._ see Pandas!). 
 
 
-## None vs. NaN {.smaller}
+## None vs. NaN
 
 ```python
 import numpy as np
-print(type(np.nan))
-> float
-print(type(None))
-> NoneType
+print(type(np.nan))     # float
+print(type(None))       # NoneType
 ```
 
 Critically:
-
 ```python
-print(np.nan==np.nan)
-print(np.nan is np.nan)
+print(""==None)         # False
+print(None==None)       # True
+print(np.nan==None)     # False
+print(np.nan==np.nan)   # False!
+print(np.nan is np.nan) # True
+print(np.isnan(np.nan)) # True
 ```
-
 
 # Membership
 
-## In / Not In {.smaller}
+## In / Not In
 
 We've touched on these before:
 ```python
 g = ['Harvey','Rose','Batty','Jefferson']
+
 if 'Batty' in g:
   print("In the group!")
+
 if 'Marx' not in g:
   print("Not in the group!")
 ```
-There is also a `set` data type that supports `in`, and `not in`.
 
-
+The `set` data type also supports `in`, and `not in` together with all of the set maths (`union`, `intersect`, etc.).
 
 ::: {.notes}
-
 This is a good place for a recap though.
-
 :::
 
-## Sets {.smaller}
+## Sets
 
-
-You can also do more complex membership 'things' with sets:
+Membership maths:
 
 ```python
 s1 = {'cherry','orange','banana','tomato'} # Or s1(...)
 s2 = {'potato','celery','carrot','tomato'} # Or s2(...)
-print('potato' in s1) # Same as for lists
->>> False
-print(s1.difference(s2))
->>> {'banana', 'cherry', 'orange'}
-print(s1.intersection(s2))
->>> {'tomato'}
-print(s1.union(s2))
->>> {'orange', 'carrot', 'tomato', 'cherry', 'celery', 'potato', 'banana'}
+print('potato' in s1)      # False
+print(s1.difference(s2))   # {'banana', ...}
+print(s1.intersection(s2)) # {'tomato'}
+print(s1.union(s2))        # {'orange', ...}
 ```
-
-
 
 ::: {.notes}
 
@@ -213,15 +212,19 @@ These more advanced functions are only for sets, not lists or dicts.
 
 ## Resources {.smaller}
 
-
+:::: {.columns}
+::: {.column width="50%"}
 - [Logical operators: And, or, not](https://www.linkedin.com/learning/learning-the-python-3-standard-library/logical-operators-and-or-not)
 - [Comparison operators](https://www.linkedin.com/learning/learning-the-python-3-standard-library/comparison-operators)
 - [Bitwise operators](https://www.linkedin.com/learning/python-essential-training-2/bitwise-operators)
 - [Comparison operators](https://www.linkedin.com/learning/python-essential-training-2/comparison-operators)
+:::
+::: {.column width="50%"}
 - [Boolean operators](https://www.linkedin.com/learning/python-essential-training-2/boolean-operators)
 - [Operator precedence](https://www.linkedin.com/learning/python-essential-training-2/operator-precedence)
 - [NaN and None in Python](https://medium.com/analytics-vidhya/dealing-with-missing-values-nan-and-none-in-python-6fc9b8fb4f31)
 - [Handling Missing Data](https://jakevdp.github.io/PythonDataScienceHandbook/03.04-missing-values.html)
-
+:::
+::::
 
 # Thank you!

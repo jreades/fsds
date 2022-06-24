@@ -19,11 +19,7 @@ history: false
 css: slides.css
 ---
 
-
-
-> A tight **coupling** or association of data structures with the methods or functions that act on the data. 
-
-
+# A tight *coupling* of the data, and the functions that act on the data. 
 
 ::: {.notes}
 
@@ -33,9 +29,12 @@ It is the **template** for producing new objects...
 
 ## What's an Object?
 
-Objects are **instantiated** versions of classes: `"hello world"` is an **instance** of a string, and `['A','B',1,3]` is an **instance** of a list. 
+Objects are **instantiated** versions of classes: 
 
-Or: the class is your recipe, the object is your 🍕... 
+- `"hello world"` is an **instance** of a string, and 
+- `['A','B',1,3]` is an **instance** of a list. 
+
+The class is your recipe, the object is your 🍕... 
 
 ## Really... Like a Pizza! {.smaller}
 
@@ -43,12 +42,12 @@ Or: the class is your recipe, the object is your 🍕...
 class pizza(object):
   base = 'sourdough'
   
-  def __init__(self, sauce='tomato', cheese='mozzarella'):
+  def __init__(self, sauce:str='tomato', cheese:str='mozzarella'):
     self.toppings = []
     self.sauce = sauce
     self.cheese = cheese
     
-  def add_topping(self, topping: str) -> None:
+  def add_topping(self, topping:str) -> None:
     self.toppings.insert(len(self.toppings), topping)
   
   def get_pizza(self) -> list:
@@ -57,7 +56,7 @@ class pizza(object):
     return ingredients
 ```
 
-## Class Definition {.smaller}
+## Class Definition
 ```python
 class pizza(object):
 
@@ -65,27 +64,31 @@ class pizza(object):
 	...
 ```
 
-Follows the pattern: `class <name>(<parent class>):`.
+Follows the pattern: `class <name>(<parent class>)`.
 
 You can find many examples in: `/opt/conda/envs/sds2020/lib/python3.7/site-packages` (Docker).
 
 
-## The Constructor {.smaller}
+## The Constructor
 
 ```python
-  def __init__(self, sauce='tomato', cheese='mozzarella'):
+  def __init__(self, sauce:str='tomato', cheese:str='mozzarella'):
     self.toppings = []
-    self.sauce = sauce
-    self.cheese = cheese
+    self.sauce    = sauce
+    self.cheese   = cheese
 ```
   
-Follows the pattern: `def __init__(self, <params>):`
+Follows the pattern: `def __init__(self, <params>)`
+
+::: {.aside} 
+Notice also the *namespace*: the parameters `sauce` and `cheese` are the same as the instance variables `self.sauce` and `self.cheese` because they occupy different namespaces.
+:::
 
 
 ## Adding Toppings
 
 ```python
-def add_topping(self, topping: str) -> None:
+def add_topping(self, topping:str) -> None:
     self.toppings.insert(len(self.toppings), topping)
 ```
 
@@ -107,9 +110,9 @@ def get_pizza(self) -> list:
 ```python
 p = pizza(sauce='white')
 p.add_topping('peppers')
-p.add_topping('chilis')
+p.add_topping('chillis')
 p.get_pizza()
-> ['sourdough', 'white', 'mozzarella', 'peppers', 'chilis']
+> ['sourdough', 'white', 'mozzarella', 'peppers', 'chillis']
 ```
 
 
@@ -134,15 +137,15 @@ p2.get_pizza()
 ### But...
 
 ```python
-pizza.base='Crusty' # <- Like changing a package var!
-p1.get_pizza()  # <- Base has changed
-> ['Crusty', 'white', 'mozzarella', 'peppers', 'chilis']
-p2.get_pizza()  # <- Base has not changed!
-> ['Plain old base', 'tomato', 'mozzarella', 'pineapple', 'ham']
+pizza.base='Crusty' # Like changing a package var!
+p1.get_pizza()      # Base has changed
+# ['Crusty', 'white', 'mozzarella', 'peppers', 'chilis']
+p2.get_pizza()      # Base has not changed!
+# ['Plain old base', 'tomato', 'mozzarella', 'pineapple', 'ham']
 
 p3 = pizza()
-p3.get_pizza()  # <- Base has changed
-> ['Crusty', 'tomato', 'mozzarella']
+p3.get_pizza()      # Base has changed
+# ['Crusty', 'tomato', 'mozzarella']
 ```
 
 
@@ -155,12 +158,12 @@ class <name>(<parent class):
 ```
 A class is initialised by:
 ```python
-  def __init__(self, <any parameters>):
+  def __init__(self, <any_parameters>):
     ...
 ```
 All methods *have* to have this:
 ```python
-  def <method>(self, <any parameters>):
+  def <method>(self, <any_parameters>):
     ...
 ```
 
@@ -171,32 +174,37 @@ This is an *instance* variable:
   self.<var> = <something>
 ```
 
-This is a *class* variable:
+This is a *class* variable (in the class definition):
 ```python
   <var> = <something>
 ```
 
 
-## Recap: Remember Your *Self*
+# Respect Your *Self*
 
-> So the keyword `self` refers to the *instantiated* object: the object always passes a reference to itself as the **first parameter** in any method. And `self` in a variable definition (`self.base`) is an **instance** variable, while `base` is a class variable.
+> So the keyword `self` refers to the *instantiated* object: the object always passes a reference to itself as the **first parameter** in any method.
 
 
 ## Resources {.smaller}
 
-
+:::: {.columns}
+::: {.column width="50%"}
 - [Classes](https://www.linkedin.com/learning/learning-python-2/classes)
 - [Objects](https://www.linkedin.com/learning/python-essential-training-2/objects)
 - [Basic class definition](https://www.linkedin.com/learning/python-object-oriented-programming/basic-class-definition)
 - [Instance methods and attributes](https://www.linkedin.com/learning/python-object-oriented-programming/instance-methods-and-attributes)
 - [Checking instance types](https://www.linkedin.com/learning/python-object-oriented-programming/checking-instance-types)
 - [Class methods and members](https://www.linkedin.com/learning/python-object-oriented-programming/class-methods-and-members)
+:::
+::: {.column width="50%"}
 - [Creating a class](https://www.linkedin.com/learning/python-essential-training-2/creating-a-class)
 - [Constructing an object](https://www.linkedin.com/learning/python-essential-training-2/constructing-an-object)
 - [Class methods](https://www.linkedin.com/learning/python-essential-training-2/class-methods)
 - [Class vs Instance Variables](https://medium.com/python-features/class-vs-instance-variables-8d452e9abcbd)
 - [Object data](https://www.linkedin.com/learning/python-essential-training-2/object-data)
-- [Inheritance](https://www.linkedin.com/learning/python-essential-training-2/inheritance) 
+- [Inheritance](https://www.linkedin.com/learning/python-essential-training-2/inheritance)
+:::
+::::
 
 
 # Thank you!
