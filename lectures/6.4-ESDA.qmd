@@ -18,32 +18,10 @@ logo: ../img/CASA_logo.png
 history: false
 css: slides.css
 ---
-### (With PySAL & GeoPandas)
 
+![](https://pysal.org/pysal1.png)
 
-[Read the Docs](https://pysal.org/documentation).
-
-{{Mind-Map}}
-PySAL
-	libpysal
-		weights
-			Distance Weights
-			Continguity Weights
-	explore
-		esda
-		inequality
-		pointpats
-		...
-	model
-		mgwr
-		spglm
-		spreg
-		...
-	viz
-		legendgram
-		mapclassify
-		splot
-
+For this one, you really need to [read the docs](https://pysal.org/docs/users/).
 
 ## Getting Spatial (with Boroughs) {.smaller}
 
@@ -63,9 +41,10 @@ And if you are trying to follow along by writing code...
 
 ```python
 import pandas as pd
-url ='https://bit.ly/3owocdI'
+url = 'https://bit.ly/3I0XDrq'
 df  = pd.read_csv(url) 
 df['price'] = df.price.str.replace('$','').astype('float')
+df.set_index('id',inplace=True)
 gdf = gpd.GeoDataFrame(df, 
         geometry=gpd.points_from_xy(
           df['longitude'], df['latitude'], crs='epsg:4326'

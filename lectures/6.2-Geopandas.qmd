@@ -61,7 +61,8 @@ Again, depending on file size you may want to save these locally, but...
 import geopandas as gpd
 gpkg_src = 'https://bit.ly/2K4JcsB'
 world = gpd.read_file(gpkg_src)
-world.plot(facecolor='white', edgecolor='darkblue')
+# The ';' suppresses matplotlib output
+world.plot(facecolor='white', edgecolor='darkblue');
 ```
 
 ![](./img/World_Demo.png)
@@ -71,15 +72,15 @@ world.plot(facecolor='white', edgecolor='darkblue')
 
 Write any OGR-supported [vector drivers](https://gdal.org/drivers/vector/index.html).
 
-```
+```python
 world.to_file('world.gpkg', driver='GPKG')
-world.to_file('world.shp') # driver='ESRI Shapefile'
+world.to_file('world.shp', driver='ESRI Shapefile')
 world.to_file('world.geojson', driver='GeoJSON')
 ```
 
 ::: {.notes}
 
-If you forget to specify the driver this writes shapefiles to a directory called `world.gpkg`!
+If you forget to specify the driver it writes shapefiles by default. This is mainly an issue if you try to write a GeoPackage or GeoJSON file but then end up writing a shapefile to a directory called `world.gpkg`!
 
 :::
 
@@ -102,14 +103,16 @@ In principle, a GeoSeries can contain multiple geo-data types, but in practice y
 Recall that we can ask if a particular object is an *[instance](https://www.w3schools.com/python/ref_func_isinstance.asp)* of any given class:
 
 ```python
+import pandas as pd
 print(isinstance(world, str))
-print(isinstance(world, gpd.GeoDataFrame))
 print(isinstance(world, pd.DataFrame))
+print(isinstance(world, gpd.GeoDataFrame))
 ```
 
 Prints: `False`, `True`, `True`.
 
 ```python
+import pandas as pd
 print(isinstance(world.geometry, str))
 print(isinstance(world.geometry, pd.Series))
 print(isinstance(world.geometry, gpd.GeoSeries))
@@ -117,14 +120,11 @@ print(isinstance(world.geometry, gpd.GeoSeries))
 
 Also prints: `False`, `True`, `True`.
 
-
-
-
 ::: {.notes}
 
 So converting from Pandas to GeoPandas works well because GeoPandas knows all about Pandas.
 
-You can use a GeoDataFrame anywhere you'd use a DataFrame with no loss of functionality! Same for a GeoSeries, though in this case a GeoSeries cannot perform the same statistical operations.
+You can use a GeoDataFrame anywhere you'd use a DataFrame with _no_ loss of functionality! Same for a GeoSeries, though in this case a GeoSeries cannot perform the same statistical operations.
 
 :::
 
@@ -133,13 +133,14 @@ You can use a GeoDataFrame anywhere you'd use a DataFrame with no loss of functi
 Depending on your data source, you may or may not have projection information attached to your GeoDataFrame:
 
 ```python
->>> print(world.crs)
-epsg:4326
+print(world.crs)
 ```
-
-But:
+outputs `epsg:4326`, but:
 ```python
->>> world.crs
+world.crs
+``` 
+outputs:
+```
 <Geographic 2D CRS: EPSG:4326>
 Name: WGS 84
 Axis Info [ellipsoidal]:
@@ -156,42 +157,28 @@ Datum: World Geodetic System 1984
 
 ## Finding Projections {.smaller}
 
-You can pretty much find any EPSG you might need at [epsg.io](http://epsg.io/). By far the most commonly-used _here_ are:
+You'll have already covered this in GIS, but you can find nearly any EPSG you might need at [epsg.io](http://epsg.io/). By far the most commonly-used _here_ are:
 
 - [EPSG\:4326](http://epsg.io/4326) for the World Geodetic System 84 used in GPS.
 - [EPSG\:27700](http://epsg.io/27700) for OSGB 1936/British National Grid used in the UK.
 
-_Note_: large territories (such as Canada, China and Russia) may well have _multiple_ projections at the state of provincial level.
+_Note_: recall that large territories (such as Canada, China and Russia) may well have _multiple_ projections at the state of provincial level.
 
 
-## Reprojection {.smaller}
+## Reprojection
 
-For data sets _without_ projection information (i.e. anything loaded from a shapefile) you must `gdf.set_crs(<spec>)`. For all others you should `gdf.to_crs(<spec>)`.
+For data sets _without_ projection information (i.e. often anything loaded from a shapefile) you must `gdf.set_crs(<spec>)`. For all others you should `gdf.to_crs(<spec>)`.
 
 ```python
 world2 = world.to_crs('ESRI:54030')
-world2.plot()
+world2.plot();
 ```
 
 ![](img/World_Reprojected.png)
 
-
-
 ::: {.notes}
 
-Different geometry columns can have different projections.
-
-:::
-
-## Standards?
-
-> Can you think why the _European Petroleum Standards Group_ is one of the big drivers behind (and users of) high-quality projection data?
-
-
-
-::: {.notes}
-
-_Hint_: you _really_ don't want to miss _what_?
+Unlike a shapefile, you can have more than one geometry column, each with a different projection. However, only _one_ will be plotted (the one named `geometry` or specified via `set_geometry()`).
 
 :::
 
@@ -200,8 +187,13 @@ _Hint_: you _really_ don't want to miss _what_?
 We can use GeoSeries' spatial index directly to perform simple spatial queries:
 
 ```python
-wslice = world.cx[-50:50, -20:20]
+import matplotlib.pyplot as plt
+wslice = world.cx[-50:50, -20:20] # cx = coordinate index
 ax = wslice.plot()
+plt.axvline(-50, linestyle='--', color='red')
+plt.axvline(50, linestyle='--', color='red')
+plt.axhline(-20, linestyle='--', color='red')
+plt.axhline(20, linestyle='--', color='red');
 ```
 
 ![](img/geo-index.png)
@@ -218,7 +210,7 @@ A GeoSeries has attributes like any other Series, but also includes some spatial
 - `is_valid` — if you need to test
 
 
-## Methods {.smaller}
+## Methods
 
 Additional GeoSeries methods icnlude:
 
@@ -226,8 +218,6 @@ Additional GeoSeries methods icnlude:
 - `centroid` — returns `GeoSeries` of **strict** centroids (called as: `<GeoSeries>.centroid`)
 - `representative_point()` — returns `GeoSeries` of points **within** features
 - `to_crs()` and `plot()`, which you've already seen.
-
-
 
 ::: {.notes}
 
@@ -246,12 +236,12 @@ Simple geographical tests:
 
 # Point Data
 
-## Converting Non-Spatial Data 1 {.smaller}
+## Converting Non-Spatial Data 1
 
-Lat/Long and Northing/Easting benefit from a helper function:
+Lat/Long and Northing/Easting benefit from a helper function `gpd.points_from_xy()`:
 
 ```python
-url = 'https://bit.ly/3owocdI'
+url = 'https://bit.ly/3I0XDrq'
 df  = pd.read_csv(url)
 
 gdf = gpd.GeoDataFrame(df, 
@@ -264,11 +254,9 @@ gdf = gpd.GeoDataFrame(df,
 gdf.plot()
 ```
 
-
-
 ::: {.notes}
 
-You can also use list comprehensions (`[x for x in list]`) and `zip` to combine two lists!
+You can also use list comprehensions (`[x for x in list]`) and `zip` to combine two lists but then need to specify the CRS as a separate step!
 
 :::
 
@@ -276,29 +264,30 @@ You can also use list comprehensions (`[x for x in list]`) and `zip` to combine 
 
 ![](img/Airbnb_Sample.png)
 
-
-
 ::: {.notes}
 
 Notice that the default plot from a GeoDataFrame is... a map!
 
 :::
 
-## Converting Non-Spatial Data 2 {.smaller}
+## Converting Non-Spatial Data 2
 
-Other feature types need to be in some kind of regular format such as [Well-Known Text](https://www.vertica.com/docs/9.2.x/HTML/Content/Authoring/AnalyzingData/Geospatial/Spatial_Definitions/WellknownTextWKT.htm) (WKT), [GeoJSON](https://geojson.org/), or something readable as a Shapely geometry.
+Other feature types need to be in some kind of regular format such as [Well-Known Text](https://www.vertica.com/docs/9.2.x/HTML/Content/Authoring/AnalyzingData/Geospatial/Spatial_Definitions/WellknownTextWKT.htm) (WKT), [GeoJSON](https://geojson.org/), or something readable *as* a Shapely geometry.
 
 ```python
+from shapely import wkt
+
+# Notice coordinate pairs and last point is same as first one
 bbox = 'POLYGON((5000000.0 2500000.0, 5000000.0 -2500000.0, -5000000.0 -2500000.0, -5000000.0 2500000.0, 5000000.0 2500000.0))'
 
-from shapely import wkt
-bgdf = gpd.GeoDataFrame(
-                {'id':[0], 'coordinates':bbox})
+# Create GeoPandas from dict just like Pandas
+bgdf = gpd.GeoDataFrame({'id':[0], 'coordinates':bbox})
+
+# Turn it into a geometry
 bgdf['geometry'] = bgdf.coordinates.apply(wkt.loads)
 bgdf = bgdf.set_crs('ESRI:54030')
+bgdf.plot() # Not very interesting but...
 ```
-
-
 
 ::: {.notes}
 
@@ -326,6 +315,5 @@ ax.set_ylim([-3*scale/10, +3*scale/10])
 - [GeoPandas on ReadTheDocs](https://geopandas.readthedocs.io/en/latest/docs.html)
 - [Dani's GDS Course](https://darribas.org/gds_course/content/home.html)
 - [Dani's Web Mapping Course](http://darribas.org/wmn/)
-- [Dani's GDS'19 Course](http://darribas.org/gds19/)
 
 # Thank you!
