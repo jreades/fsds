@@ -19,75 +19,35 @@ history: false
 css: slides.css
 ---
 
-
-
-Dictionaries-of-Lists are to Numeric Data 
-
-...as...
-
-Regular Expressions are to Textual Data?
-
-
-## *Describing* Character Sequences? {.smaller}
+## Can We Describe Text?
 
 Consider the following character sequences:
 
 - foo@bar.com
 - https://www.ucl.ac.uk/bartlett/casa/
-- (555) 102-1111
+- \(555\) 102-1111
 - E17 5RS
 - Now, fair Hippolyta, our nuptial hour / Draws on apace. Four happy days bring in / Another moon. But, oh, methinks how slow / This old moon wanes. She lingers my desires, / Like to a stepdame or a dowager / Long withering out a young man’s revenue. (I.i.) 
 
-
-
 ::: {.notes}
-
-We need ways to distinguish: Upper and Lower Case, Digits, Space Characters, Other Characters, Repetition, Type... these are things that Regular Expressions help us to achieve.
-
+We need ways to distinguish: Upper and Lower Case, Digits, Space Characters, Other Characters, Repetition, Type... Can you do those with strings alone?
 :::
 
-## Applications of RegExes {.smaller}
-
-If our problem follows some set of articulable *rules* about permissible sequences of characters then we can *probably* validate it using a regex:
-
-| Examples                                | More Examples                             |
-| --------------------------------------- | ----------------------------------------- |
-| Email                                   | Password                                  |
-| Postcode                                | Phone number                              |
-| Date                                    | Credit cards                              |
-| Web scraping                      | Syntax highlighting                       |
-| Sentence structure                            | Data wrangling                            |
-| Searching for/within<br />files/content | Lexical analysis/<br />Language detection |
-
-
-
-::: {.notes}
-
-These are all good problems...
-
-:::
-
-## But... {.smaller}
-
-String methods are _not_ enough:
+## Strings Methods are _Not_ Enough
 
 ```python
->>> '123foo456'.index('foo')
-2
->>> '123foo456'.split('foo')
-['123', '456']
->>> ' 123 foo 456 '.strip()
-'123 foo 456'
->>> 'HOW NOW BROWN COW?'.lower()
-'how now brown cow?'
->>> 'How now brown cow?'.replace('brown ','green-')
-'How now green-cow?'
+'123foo456'.index('foo') # 2
+'123foo456'.split('foo') # ['123', '456']
+' 123 foo 456 '.strip()  # '123 foo 456'
+'HOW NOW BROWN COW?'.lower() # 'how now brown cow?'
+'How now brown cow?'.replace('brown ','green-')
+# 'How now green-cow?'
 ```
 
 See: `dir(str)` for full list of string methods.
 
 
-## Regular Expressions {.smaller}
+## Regular Expressions
 
 Regexes are a way for talking _about_ patterns observed in text, although their origins are rooted in philosophy and linguistics.
 
@@ -102,11 +62,9 @@ if re.search('123',s):
 else:
   print("No match.")
 ```
-
 Prints `'Found a match.'`
 
-
-## Capturing Matches {.smaller}
+## Capturing Matches
 
 ```python
 m = re.search('123',s)
@@ -125,17 +83,16 @@ Outputs:
 123
 ```
 
-
-
 ::: {.notes}
 
 So, we have `None` if a search fails, but if it succeeds then we have attributes of the `match` objection like start, end, span, and group (this last is going to be particularly interesting since it tells us what matched).
 
 :::
 
-## Configuring Matches {.smaller}
+## Configuring Matches
 
 ```python
+s = '123foo456'
 m = re.search('FOO',s)
 print(m)
 m = re.search('FOO',s,re.IGNORECASE)
@@ -178,46 +135,59 @@ Outputs:
 
 # Let's Get Meta
 
-## Regular Expressions Do *Much* More {.smaller}
+## Regular Expressions Do *Much* More
 
 ```python
->>> import re
->>> m = re.search('\$((\d+,){2,}\d+)',
+import re
+m = re.search(r'\$((\d+,){2,}\d+)',
 		"'That will be $1,000,000 he said...'")
->>> m.group(1)
-'1,000,000'
+print(m.group(1)) # '1,000,000'
 ```
 
-This is not even scratching the surface, but it allows to look for sequences of 1-or-more digits followed by a comma... and for those sequence to repeat two or more times, ending with a sequence of digits. The rest is ignored.
+This looks for sequences of 1-or-more digits followed by a comma... and for those sequences to repeat two or more times:
 
+```python
+# Look for a literal '$'
+re.search(r'\$') 
+# Group of >=1 digits followed by a comma...
+re.search(r'(\d+,)') 
+# Repeated two or more times...
+re.search(r'(\d+,){2,}') 
+```
+
+::: {.aside}
+Also notice the `r'<regex>'` with an *r* in front of the string. This means 'raw' and is often a required modifier for regular expression patterns. Simple ones don't need it, but from here on out you will.
+:::
 
 ## Character Classes {.smaller}
 
 | Characters | Regex Meta Class Options | 'Antonyms' |
-| :--------- | :----------------------- | :--------- |
+| :------------------ | :----------------------- | :----- |
 | a...z      | `[a-z]`, `\w` (word-like characters)  | `[^a-z]`, `\W` |
 | A...Z      | `[A-Z]`, `\w` (word-like characters)  | `[^A-Z]`, `\W` |
 | 0...9      | `[0-9]`, `\d` (digits)                | `[^0-9]`, `\D` |
 | `' '`, `\n`, `\t`, `\r`, `\f`, `\v`   | `\s`  | `\S` |
 | `.`, `[`, `]`, `+`, `$`, `^`, `\|`, `{`, `}`, `*`, `(`, `)`, `?` | For safety always precede character with a `\`. | None  |
 
-*Note:*  `\w` will include `_`. And `\` is, once again, important as it 'escapes' various characters, and options.
+::: {.aside} 
+`\w` will include `_`. And `\` is, once again, important as it 'escapes' various characters, and options.
+:::
 
 
 ## Metacharacters {.smaller}
 
-| Metacharacter | Meaning                                    |
-| ------------- | ------------------------------------------ |
-| .             | Any character at all                       |
-| ^             | Start of a string/line                     |
-| $             | End of a string/line                       |
-| *             | 0 or more of something                     |
-| +             | 1 or more of something                     |
-| ?             | 0 or 1 of something; also lazy modifier                        |
-| {m,n}         | Between m and n of something               |
-| [ ]           | A set of character literals                |
-| ( )           | Group/remember this sequence of characters |
-| \|            | Or                                         |
+| Metacharacter | Meaning                     | Example |
+| ------ | ---------------------------------- | ------- |
+| .      | Any character at all                    | `c.t`      |
+| ^      | Start of a string/line                  | `^start`   |
+| $      | End of a string/line                    | `end$`     |
+| *      | 0 or more of something                  | `-*`       |
+| +      | 1 or more of something                  | `-+`       |
+| ?      | 0 or 1 of something; also lazy modifier | `,?`       |
+| {m,n}  | Repeat between *m* and *n* times        | `\d{1,4}`  |
+| [ ]    | A set of character literals             | `[1-5]`    |
+| ( )    | Group/remember this sequence of characters | `(\d+)` |
+| \|     | Or                                      | `(A|B)`    |
 
 
 # I am Completely Lost
@@ -241,13 +211,11 @@ Let's take some real regexes and try to make sense of them.
 | `r'(uk\|eu\|fr)$'`    | The characters 'uk' or 'eu' or 'fr' at the end of a line.    |
 
 
-## What's This?
+## What's This? {.smaller}
 
 ```python
 re.match(r'^[^@]+@([a-z0-9\-]+\.){1,5}[a-z0-9\-]+$', s)
 ```
-
-
 
 ::: {.notes}
 
@@ -255,28 +223,28 @@ re.match(r'^[^@]+@([a-z0-9\-]+\.){1,5}[a-z0-9\-]+$', s)
 
 :::
 
-## What's This?
+## What's This? {.smaller}
 
 ```python
 re.match(r'\d{4}-\d{2}-\d{2}', s)
 ```
 
 
-## What's This?
+## What's This? {.smaller}
 
 ```python
 re.match(r'^\s*$', s)
 ```
 
 
-## What's This?
+## What's This? {.smaller}
 
 ```python
 re.match(r'^(http|https|ftp):[\/]{2}([a-zA-Z0-9\-]+\.){1,4}[a-zA-Z]{2,5}(:[0-9]+)?\/?([a-zA-Z0-9\-\._\?\'\/\\\+\&\%\$#\=~]*)',s)
 ```
 
 
-## What's This?
+## What's This? {.smaller}
 
 ```python
 re.match(r'([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})',s)
@@ -305,12 +273,28 @@ regex = r"""
 re.match(regex,s,re.VERBOSE|re.IGNORECASE) # Can also use: re.X|re.I
 ```
 
-
-
 ::: {.notes}
 
 This is the [government's own regex](https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/488478/Bulk_Data_Transfer_-_additional_validation_valid_from_12_November_2015.pdf) but is probably *not* 100% accurate.
 
+:::
+
+
+## Applications of Regular Expressions
+
+If our problem follows some set of articulable *rules* about permissible sequences of characters then we can *probably* validate it using a regex:
+
+| Examples                                | More Examples                             |
+| --------------------------------------- | ----------------------------------------- |
+| Email                                   | Password                                  |
+| Postcode                                | Phone number                              |
+| Date                                    | Credit cards                              |
+| Web scraping                      | Syntax highlighting                       |
+| Sentence structure                            | Data wrangling                            |
+| Searching for/within<br />files/content | Lexical analysis/<br />Language detection |
+
+::: {.notes}
+These are all good problems...
 :::
 
 ## Resources {.smaller}

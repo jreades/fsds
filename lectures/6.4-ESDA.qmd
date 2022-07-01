@@ -29,38 +29,17 @@ For this one, you really need to [read the docs](https://pysal.org/docs/users/).
 import geopandas as gpd
 url = 'https://bit.ly/3neINBV'
 boros = gpd.read_file(url, driver='GPKG')
-boros.plot(color='none',edgecolor='red')
+boros.plot(color='none', edgecolor='red');
 ```
 
 ![](img/Borough_Map.png)
-
-
-## Handy Recall {.smaller}
-
-And if you are trying to follow along by writing code...
-
-```python
-import pandas as pd
-url = 'https://bit.ly/3I0XDrq'
-df  = pd.read_csv(url) 
-df['price'] = df.price.str.replace('$','').astype('float')
-df.set_index('id',inplace=True)
-gdf = gpd.GeoDataFrame(df, 
-        geometry=gpd.points_from_xy(
-          df['longitude'], df['latitude'], crs='epsg:4326'
-        )
-      )
-```
-
-This will load the sampled Airbnb data from GitHub.
-
 
 ## Convex Hull
 
 ```python
 boros['hulls'] = boros.geometry.convex_hull
 boros = boros.set_geometry('hulls')
-boros.plot(column='NAME', categorical=True, alpha=0.5)
+boros.plot(column='NAME', categorical=True, alpha=0.5);
 ```
 ![](img/Boroughs_Hull.png)
 
@@ -69,22 +48,21 @@ boros.plot(column='NAME', categorical=True, alpha=0.5)
 
 ```python
 boros['region'] = 'London'
-ldn = boros.dissolve(by='region')
+boros = boros.set_geometry('geometry') # Set back to original geom
+ldn   = boros.dissolve(by='region')    # And dissolve to a single poly
 
-f,ax = plt.subplots(figsize=(10,8))
-ldn.plot(ax=ax)
-gdf.plot(ax=ax, column='price', scheme='HeadTailBreaks', cmap='inferno')
+f,ax = plt.subplots(figsize=(10,8))    # New plot
+ldn.plot(ax=ax)                        # Add London layer to axis
 ```
-
-![](img/London.png)
+![](img/London.png){height="400"}
 
 
 ## Simplify
 
 ```python
-ldn.simplify(250).plot()
+ldn.simplify(500).plot()
 ```
-![](img/London_Simplify.png)
+![](img/London_Simplify.png){height="500"}
 
 
 ## Buffer
@@ -92,7 +70,7 @@ ldn.simplify(250).plot()
 ```python
 ldn.buffer(500).plot()
 ```
-![](img/London_Buffer.png)
+![](img/London_Buffer.png){height="500"}
 
 
 ## Buffer & Simplify
@@ -100,7 +78,7 @@ ldn.buffer(500).plot()
 ```python
 ldn.buffer(1000).simplify(1000).plot()
 ```
-![](img/London_Buffer_Simplify.png)
+![](img/London_Buffer_Simplify.png){height="500"}
 
 
 ## Difference
@@ -109,13 +87,34 @@ And some nice chaining...
 ```python
 ldn.buffer(3000).simplify(2500).difference(ldn.geometry).plot()
 ```
-![](img/London_Buffer_Simplify_Diff.png)
+![](img/London_Buffer_Simplify_Diff.png){height="500"}
 
 
 ## Legendgrams
 
-![](img/Legendgram.png)
+![](img/Legendgram.png){height="500"}
 
+::: {.aside}
+Code begins on next slide.
+:::
+
+## Handy Recall {.smaller}
+
+Load the CSV file and convert to GeoDataFrame:
+
+```python
+import pandas as pd
+url = 'https://bit.ly/3I0XDrq'
+df  = pd.read_csv(url) 
+df['price'] = df.price.str.replace('$','',regex=False).astype('float')
+df.set_index('id',inplace=True)
+gdf = gpd.GeoDataFrame(df, 
+        geometry=gpd.points_from_xy(
+          df['longitude'], df['latitude'], crs='epsg:4326'
+        )
+      )
+gdf = gdf.to_crs('epsg:27700')
+```
 
 ## Implementing Legendgrams {.smaller}
 
@@ -140,8 +139,6 @@ legendgram(f, ax,
                frameon=True)
 ```
 
-
-
 ::: {.notes}
 
 Note that the number of colours need to match *k*, which is 5 in this case.
@@ -152,11 +149,9 @@ It *should* be possible to set up the colormap and bins such that they can be pa
 
 ## KNN Weights {.smaller}
 
-
 ![](img/Airbnb_KNN.png)
 
---- 
-### Implementing KNN
+## Implementing KNN {.smaller}
 
 ```python
 from pysal.lib import weights
@@ -165,8 +160,8 @@ gdf['w_price'] = weights.lag_spatial(w, gdf.price)
 gdf[['name','price','w_price']].sample(5, random_state=42)
 ```
 
-|    | name | price | w_price |
-| :- | :--- | ----: | ------: |
+|    | name     | price | w_price |
+| :- | :------- | ----: | ------: |
 | 83 | Southfields Home | 85.0 | 263.0 |
 | 53 | Flat in Islington, Central London | 55.0 | 190.0 | 
 | 70 | 3bedroom Family Home minutes from Kensington Tube | 221.0 | 470.0 | 
@@ -174,7 +169,7 @@ gdf[['name','price','w_price']].sample(5, random_state=42)
 | 44 | Avni Kensington Hotel | 430.0 | 821.0 |
 
 
-## Spatial Lag of Distance Band
+## Spatial Lag of Distance Band {.smaller}
 
 ![](img/Airbnb_DistanceBand.png)
 

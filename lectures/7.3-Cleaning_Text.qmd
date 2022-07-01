@@ -19,54 +19,46 @@ history: false
 css: slides.css
 ---
 
-
-
-## Say What?
-
-> Bye, bye, for loop!
-
-
+# Bye, bye, for loop!
 
 ::: {.notes}
 
 Another great example of something where what makes sense to a human is not always the fastest way to *get things done*.
 
+Code is *embarassingly parallel* if the problem so clearly lacks interconnections with other problems that the code can be *run* in parallel without any effort.
+
+*Vectorisation* is the process (usually done 'under the hood' *for* you rather than explicitly *by* you) by which code that, by default, runs linearly is modified to run in parallel.
+
 :::
 
-## Do More with Each Tick-Tock {.smaller}
+## When a Loop Is Not Best
 
+If you need to apply the same operation to lots of data why do it *sequentially*?
 
-- Library/Package implements weak form of vectorisation or parallelisation, but some libraries do more.
+- Your computer has many cores and can run many threads *in parallel*.
+- The computer divides the work across the threads it sees fit.
+- The computer reassemble the answer at the end from the threads.
 
+If you have 4 cores then parallelisation cuts analysis time by 75%. 
 
+## So Do More with Each Clock Cycle
+
+- Many libraries/packages implement weak forms of vectorisation or parallelisation, but some libraries do more.
 - You must request it because it requires hardware or other support and it is highly optimsed.
-
-
 - Multiple separate machines acting as one.
 - Multiple GPUs acting as one.
 
-
-
 ::: {.notes}
-
 Conceptually, these get challenging if you can't clearly separate/parallelise tasks.
-
 :::
 
-## Pandas.apply() vs. Numpy {.smaller}
+## Pandas.apply() vs. Numpy
 
-Numpy is fully vectorised and will almost *always* out-perform operations like Pandas `apply`, but both are massive improvements on for loops:
+Numpy is fully vectorised and will almost *always* out-perform Pandas `apply`, but both are massive improvements on for loops:
 
 - Execute row-wise and column-wise operations.
-- Apply any arbitrary function to individual elements or whole axes.
-- Can make use of `lambda` functions too for 'one off' operations.
-
-```python
-import numpy as np
-df.apply(np.sqrt) # Square root of all values
-df.apply(np.sum, axis=0) # Sum by row
-```
-
+- Apply any arbitrary function to individual elements or whole axes (i.e. row or col).
+- Can make use of `lambda` functions too for 'one off' operations (ad-ohoc functions).
 
 ## Lambda Functions {.smaller}
 
@@ -75,25 +67,50 @@ Functional equivalent of list comprehensions: 1-line, anonymous functions.
 For example:
 
 ```python
->>> x = lambda a : a + 10
->>> print(x(5))
-15
+x = lambda a : a + 10
+print(x(5)) # 15
 ```
 
 Or:
 
 ```python
->>> full_name = lambda first, last: f'Full name: {first.title()} {last.title()}'
->>> full_name('guido', 'van rossum')
-'Guido Van Rossum'
+full_name = lambda first, last: f'Full name: {first.title()} {last.title()}'
+print(full_name('guido', 'van rossum')) # 'Guido Van Rossum'
 ```
 
 These are very useful with pandas.
 
 
+## Let's Compare {.smaller}
+
+```python
+import time
+import numpy as np
+def func(a,b):
+  c = 0
+  for i in range(len(a)): c += a[i]*b[i]
+  return c
+
+a = np.random.rand(1000000)
+b = np.random.rand(1000000)
+t1 = time.time()
+print(func(a,b))
+t2 = time.time()
+print(np.dot(a,b))
+t3 = time.time()
+
+print(f"For loop took {(t2-t1)*1000:.0f} milliseconds")
+print(f"Numpy took {(t3-t2)*1000:.0f} milliseconds")
+```
+Generally, I get `numpy` taking 86ms, while the `for` loop takes 331ms!
+
+::: {.aside}
+/ht to [The Last Byte](https://thelastbyteblog.wordpress.com/2020/06/09/vectorization-vs-parallelization-making-you-code-run-faster/) for inspiration.
+:::
+
 # Dealing with Structured Text
 
-## Beautiful Soup & Selenium {.smaller}
+## Beautiful Soup & Selenium
 
 Two stages to acquiring web-based documents:
 
@@ -109,14 +126,10 @@ Need to look at how the data is organised:
 
 - For very large corpora, you might want one document at a time (batch).
 - For very large files, you might want one line at a time (streaming).
-- For large files in large corpora, you might want more than one machine.
-
-
+- For large files in large corpora, you might want more than one 'machine'.
 
 ::: {.notes}
-
 See the [OpenVirus Project](https://blogs.bl.uk/digital-scholarship/2020/05/searching-etheses-for-the-openvirus-project.html).
-
 :::
 
 # Managing Vocabularies
@@ -127,9 +140,9 @@ A lot of what you'll see here are, at best, heuristics with enormous variation i
 
 :::
 
-## Starting Points {.smaller}
+## Starting Points
 
-These strategies can be sued singly or all-together:
+These strategies can be used singly or all-together:
 
 - Stopwords
 - Case
@@ -137,15 +150,7 @@ These strategies can be sued singly or all-together:
 - Punctuation
 - Numbers
 
-Sample stopwords:
-
-```python
-{'further', 'her', 'their', 'we', 'just', 'why', 'or', 'each', 's', "it's", 'ma', 'below', 'am', 'more', "couldn't", "should've", 'was', "mightn't", 'weren', 'ourselves', 'have', 'if', 'then', 'from', ...}
-```
-
 But these are just a *starting* point!
-
-
 
 ::: {.notes}
 
@@ -158,10 +163,8 @@ What's the semantic difference between 1,000,000 and 999,999?
 
 We can prune from both ends of the distribution:
 
-- Overly rare words: what does a word used in *one* document help us to do?
-- Overly common ones: what does a word used in *every* document help us to do?
-
-
+- Overly *rare* words: what does a word used in *one* document help us to understand about a corpus?
+- Overly *common* ones: what does a word used in *every* document help us to understand about a corpus?
 
 ::: {.notes}
 
@@ -171,14 +174,14 @@ Again, no hard-and-fast rules: can be done on raw counts, percentage of all docu
 
 # Stemming & Lemmatisation
 
-## Why Stem or Lemmatise? {.smaller}
+## Different Approaches
 
-Reduce the breadth of human expression:
+Humans use a *lot* of words/concepts^[A recent digitsation effort by Harvard and Google estimated 1,022,000 unique word-forms in English *alone* ([Source](https://englishlive.ef.com/blog/language-lab/many-words-english-language/)).]:
 
-- Porter & Snowball Stemming: rules-based truncation to a stem (can be augmented by language awareness).
-- Lemmatisation: dictionary-based 'deduplication' to a lemma (can be augmented by POS-tagging).
+- Stemming: rules-based truncation to a stem (can be augmented by language awareness).
+- Lemmatisation: usually dictionary-based 'deduplication' to a lemma (can be augmented by POS-tagging).
 
-Compare:
+## Different Outcomes
 
 | Source     | Porter  | Snowball | Lemmatisation |
 | ---------- | ------- | -------- | ------------- |
@@ -187,7 +190,16 @@ Compare:
 | complexity | complex | complex  | complexity    |
 | Reades     | read    | read     | Reades        |
 
-
+```python
+from nltk.stem.porter import PorterStemmer
+from nltk.stem.snowball import SnowballStemmer
+from nltk.stem import WordNetLemmatizer
+wnl = WordNetLemmatizer()
+for w in ['monkeys','cities','complexity','Reades']:
+    print(f"Porter: {PorterStemmer().stem(w)}")
+    print(f"Snowball: {SnowballStemmer('english').stem(w)}")
+    print(f"Lemmatisation: {wnl.lemmatize(w)}")
+```
 
 
 ## Resources {.smaller}
@@ -201,6 +213,5 @@ Compare:
 - [KD Nuggets: A Practitioner's Guide to NLP](https://www.kdnuggets.com/2018/08/practitioners-guide-processing-understanding-text-2.html)
 - [KD Nuggets: Linguistic Fundamentals for Natural Language Processing: 100 Essentials from Semantics and Pragmatics](https://www.kdnuggets.com/2020/08/linguistic-fundamentals-natural-language-processing.html)
 - [Roadmap to Natural Language Processing (NLP)](https://www.kdnuggets.com/2020/10/roadmap-natural-language-processing-nlp.html)
-- 
 
 # Thank you!
