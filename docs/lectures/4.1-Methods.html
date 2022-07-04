@@ -389,11 +389,11 @@
   <p class="author">Jon Reades</p>
 </section>
 
-<section class="slide level2">
-
-<p>We know that a <a href="3.4-Functions.md">function</a> looks like this:</p>
+<section id="todays-question" class="slide level2">
+<h2>Today’s Question</h2>
+<p>We know that a <a href="./3.4-Functions.qmd">function</a> looks like this:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="op">&lt;</span>function name<span class="op">&gt;</span>( <span class="op">&lt;</span><span class="bu">input</span><span class="op">&gt;</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>And we know that a <a href="3.5-Packages.md">function in a package</a> looks like this:</p>
+<p>And we know that a <a href="./3.5-Packages.qmd">function in a package</a> looks like this:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="op">&lt;</span>package name<span class="op">&gt;</span>.<span class="op">&lt;</span>function name<span class="op">&gt;</span>( <span class="op">&lt;</span><span class="bu">input</span><span class="op">&gt;</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>So is <code>list</code> a package?</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>my_list.append( <span class="op">&lt;</span>value<span class="op">&gt;</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -401,16 +401,22 @@
 <section id="well" class="slide level2">
 <h2>Well…</h2>
 <p><code>my_list.append( &lt;value&gt; )</code> <em>is</em> a function.</p>
-<p><code>my_list.append( &lt;value&gt; )</code> is a special <em>type</em> of function called a <strong>method</strong>.</p>
+<p><code>my_list.append( &lt;value&gt; )</code> is a special <em>type</em> of function called a <em>method</em>.</p>
 </section>
-<section id="whats-a-method-then" class="slide level2 smaller">
+<section id="whats-a-method-then" class="slide level2">
 <h2>What’s a Method Then?</h2>
-<p>If a <strong>package</strong> groups useful constants and functions together in one place, then <strong>methods</strong> are just a way of binding useful constants and functions together <strong>with data</strong>.</p>
-<p>So <code>my_list.append(...)</code> is called a <strong>list method</strong>: it <em>only</em> knows how to append things to lists. It is <strong>bound</strong> to variables of ‘type list’.</p>
+<p><em>Packages</em> group useful constants and functions together in one place.</p>
+<p><em>Methods</em> group constants and functions together in one place <strong>with data</strong>.</p>
+<p>So <code>my_list.append(...)</code> is called a <strong>list method</strong>:</p>
+<ul>
+<li>It <em>only</em> knows how to append things to lists.</li>
+<li>It is <em>only</em> available as a function when you have an <em>insantiated</em> list (e.g.&nbsp;<code>[]</code> or <code>[1,'dog',3.5]</code>).</li>
+<li>It is <em>bound</em> to variables (aka. objects) of <em>class</em> list.</li>
+</ul>
 </section>
 <section id="proof" class="slide level2 smaller">
 <h2>Proof!</h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>my_list <span class="op">=</span> []</span>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>my_list <span class="op">=</span> [] <span class="co">#&nbsp;</span></span>
 <span id="cb4-2"><a href="#cb4-2"></a><span class="bu">help</span>(my_list)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This will give you:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>Help on <span class="bu">list</span> <span class="bu">object</span>:</span>
@@ -430,6 +436,19 @@
 <span id="cb5-15"><a href="#cb5-15"></a> <span class="op">|</span>  copy(<span class="va">self</span>, <span class="op">/</span>)</span>
 <span id="cb5-16"><a href="#cb5-16"></a> <span class="op">|</span>      Return a shallow copy of the <span class="bu">list</span>.</span>
 <span id="cb5-17"><a href="#cb5-17"></a> <span class="op">|</span> ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<aside class="notes">
+<p>It’s not obvious here, but you can also create lists by writing <code>list()</code>.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="its-all-methods" class="slide level2 smaller">
 <h2>It’s <em>all</em> Methods</h2>
@@ -446,54 +465,69 @@
 <span id="cb7-7"><a href="#cb7-7"></a>    More specifically, make the first character have upper case <span class="kw">and</span> the rest lower</span>
 <span id="cb7-8"><a href="#cb7-8"></a>    case.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="recap" class="slide level2 smaller">
-<h2>Recap</h2>
-<blockquote>
-<p>Methods are functions (or constants) that are bound to an object from a class – so lists can append, but strings cannot (they concatenate using ‘+’).</p>
-</blockquote>
-<p><strong>Everything</strong> in Python is a class with method: <code>my_list = []</code> is just an easy way to write: <code>my_list = list()</code>, and <code>my_string = 'Foo'</code> is just an easy way to write <code>my_string = str('Foo')</code>. Even trusty old <code>print</code> is a method!</p>
+<section>
+<section id="everything-in-python-is-an-object" class="title-slide slide level1 center">
+<h1><em>Everything</em> in Python is an Object</h1>
+<p><code>my_list = []</code> can also be written <code>my_list = list()</code>, and <code>my_string = 'Foo'</code> can be written <code>my_string = str('Foo')</code>.</p>
+<aside class="notes">
+<p>Methods are functions (or constants) that are bound to an object from a class – so lists can append, but strings cannot (they concatenate using ‘+’)</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="the-last-few-bit-of-new-vocabulary" class="slide level2 smaller">
-<h2>The Last Few Bit of New Vocabulary</h2>
-<p>From here on out, <strong>nearly all</strong> of what you learn will be new <em>applications</em>, not new <em>fundamental concepts</em> and <em>terminology</em>.</p>
+<section id="final-fundamental-concepts" class="slide level2">
+<h2>Final Fundamental Concepts</h2>
+<p>From here on out, <em>nearly</em> all of what you learn will be new <em>applications</em>, not new <em>concepts</em> and <em>terminology</em>.</p>
 <table>
 <colgroup>
-<col style="width: 44%">
-<col style="width: 55%">
+<col style="width: 14%">
+<col style="width: 46%">
+<col style="width: 39%">
 </colgroup>
 <thead>
 <tr class="header">
 <th style="text-align: left;">Term</th>
 <th style="text-align: left;">Means</th>
+<th style="text-align: left;">Example</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Class</td>
 <td style="text-align: left;">The <em>template</em> for a ‘thing’.</td>
+<td style="text-align: left;">Recipe for a pizza.</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Object</td>
 <td style="text-align: left;">The instantiated ‘thing’.</td>
+<td style="text-align: left;">A pizza I can eat!</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Method</td>
-<td style="text-align: left;">Functions defined for the <em>class</em> that are available to the <em>object</em>.</td>
+<td style="text-align: left;">Functions defined for the <em>class</em> and available to the <em>object</em>.</td>
+<td style="text-align: left;">Things I can do with a pizza (eat, cook, make).</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Constructor</td>
 <td style="text-align: left;">The special method that builds new objects of that class.</td>
+<td style="text-align: left;">How to start a new pizza!</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Self</td>
 <td style="text-align: left;">A reference to the current object.</td>
+<td style="text-align: left;">The pizza in front of me!</td>
 </tr>
 </tbody>
 </table>
-</section>
-<section class="slide level2">
-
-</section>
+</section></section>
 <section id="thank-you" class="title-slide slide level1 center">
 <h1>Thank you!</h1>
 

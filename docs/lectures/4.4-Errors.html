@@ -389,18 +389,21 @@
   <p class="author">Jon Reades</p>
 </section>
 
-<section class="slide level2">
-
-<blockquote>
-<p>We all make mistakes, it’s how we deal with them that matters. It’s the same in Python: understanding and handling errors is the key to good code.</p>
-</blockquote>
+<section>
+<section id="we-all-make-mistakes" class="title-slide slide level1 center">
+<h1>We all make mistakes</h1>
+<p>It’s how we deal with them that matters. Same in Python: understanding and handling errors is the key to good code.</p>
 </section>
-<section id="helpfully" class="slide level2 smaller">
+<section id="helpfully" class="slide level2">
 <h2>Helpfully…</h2>
-<p>Python will always try to tell you what it <strong>thinks</strong> when wrong: “I didn’t understand what you meant by this…” or “I’m sorry, I can’t let you do that Dave…”</p>
-<p>The challenges are: 1. Python tends to give you a <em>lot</em> of information about the error: this can be very helpful for programmers dealing with complex problems and <strong>totally overwhelming</strong> for beginners. 2. That what Python thinks the problem is doesn’t always line up with where the problem <em>actually</em> is. In cases of syntax, for instance, the problem <em>could</em> be an unclosed parenthesis <strong>three lines earlier</strong>!</p>
+<p>Python will always try to tell you what it <em>thinks</em> went wrong: “I didn’t understand what you meant by this…” or “I’m sorry, I can’t let you do that Dave…”</p>
+<p>The challenges are:</p>
+<ol type="1">
+<li>Python tends to give you a <em>lot</em> of information about the error: this can be very helpful for programmers dealing with complex problems and <em>totally overwhelming</em> for beginners.</li>
+<li>That what Python thinks the problem is doesn’t always line up with where the problem <em>actually</em> is. In cases of syntax, for instance, the problem <em>could</em> be an unclosed parenthesis <em>three lines earlier</em>!</li>
+</ol>
 </section>
-<section id="challenge-1" class="slide level2 smaller">
+<section id="challenge-1" class="slide level2">
 <h2>Challenge 1</h2>
 <p>That the ‘error’ isn’t always the error…</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>total <span class="op">=</span> <span class="dv">0</span></span>
@@ -415,17 +418,79 @@
 <span id="cb2-4"><a href="#cb2-4"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,<span class="dv">10</span>):</span>
 <span id="cb2-5"><a href="#cb2-5"></a>                        <span class="op">^</span></span>
 <span id="cb2-6"><a href="#cb2-6"></a><span class="pp">SyntaxError</span>: invalid syntax</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section></section>
+<section>
+<section id="dealing-with-errors" class="title-slide slide level1 center">
+<h1>Dealing with Errors</h1>
+
 </section>
 <section id="errors-have-types" class="slide level2">
 <h2>Errors Have Types</h2>
-<blockquote>
-<p>In the same way that variables have types, so do errors. These types give us insight into the issue, but they also allow us to distinguish between different types of errors.</p>
-</blockquote>
-<p><img data-src="mi_question_answer.png"> Why might the ability to distinguish between different types of errors be helpful?</p>
-</section>
-<section id="trapping-errors" class="slide level2">
-<h2>Trapping Errors</h2>
+<p>In the same way that variables have types, so do errors:</p>
+<ul>
+<li>ModuleNotFoundError</li>
+<li>IndexError</li>
+<li>KeyError</li>
+<li>OSError</li>
+<li>…</li>
+</ul>
+<p>We can add our own messages:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="cf">raise</span> <span class="pp">Exception</span>(<span class="st">"Sorry, I can't let you do that, Dave."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+<aside class="notes">
+<p>Why might different types of errors be <em>useful</em>?</p>
 <p>We might reasonably want to distinguish between errors that we could reasonably <strong>expect</strong> or that are <strong>not serious</strong>, from those that <strong>we did not expect</strong> or that <strong>call the results of the program into question</strong>.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+<aside><div>
+<p>Lots more built-in error types in the <a href="https://docs.python.org/3/library/exceptions.html">Python documentation</a> and imported packages will provide their own as well.</p>
+</div></aside></section>
+<section id="custom-errors" class="slide level2">
+<h2>Custom Errors</h2>
+<p>We can create our own types (<em>classes</em>) of error:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">class</span> CustomError(<span class="pp">Exception</span>):</span>
+<span id="cb4-2"><a href="#cb4-2"></a>  <span class="cf">pass</span> <span class="co"># We do nothing except create a new type</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This can then be triggered with:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="cf">raise</span> CustomError(<span class="st">"Our custom error"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>And (very importantly) this can be caught with:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="cf">except</span> CustomError: </span>
+<span id="cb6-2"><a href="#cb6-2"></a>  <span class="co">#... do something with CustomError ...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This means that exceptions could accept custom arguments, perform tidying-up or rollback operations, etc.</p>
+<aside class="notes">
+<p>Some of the intricacies of errors can seem quite confusing. What’s the point of having a <code>finally</code> (which we’ll get to in a moment), for instance? Well, if your application is connected to a database then <code>finally</code> gives your application a chance to disconnect cleanly (freeing up resources for the database) and even to rollback incomplete changes (e.g.&nbsp;a new user whose details were only partially inputted when the application crashed).</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="so-errors-can-be-trapped" class="slide level2">
+<h2>So Errors can be Trapped</h2>
+<p>Python calls errors <em>exceptions</em>, so this leads to:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="cf">try</span>:</span>
+<span id="cb7-2"><a href="#cb7-2"></a>  <span class="co">#... some code that might fail...</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="cf">except</span> <span class="op">&lt;</span>Named_Error_Type<span class="op">&gt;</span>:</span>
+<span id="cb7-4"><a href="#cb7-4"></a>  <span class="co">#... what do it if it fails for a specific reason...</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="cf">except</span>:</span>
+<span id="cb7-6"><a href="#cb7-6"></a>  <span class="co">#... what to do if it fails for any other reason...</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a><span class="cf">finally</span>:</span>
+<span id="cb7-8"><a href="#cb7-8"></a>  <span class="co">#... always do this, even if it fails...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You can use <em>any</em> or <em>all</em> of these together: you can have multiple named <code>except</code>s to handle different types of errors from a single block of code; you do not <em>have</em> to have a catch-all <code>except</code> or a <code>finally</code>.</p>
 <aside class="notes">
 <p>So it makes sense to think: “Well, let’s <strong>try</strong> this and see what happens. If we have a problem of <em>this</em> type then it’s not serious and we should carry on. But if we have a problem <em>that</em> type then we need to stop what we’re doing right away.”</p>
 <style type="text/css">
@@ -440,69 +505,57 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="pythons-approach" class="slide level2 smaller">
-<h2>Python’s Approach</h2>
-<p>Python calls errors <strong>exceptions</strong>, so this leads to:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="cf">try</span>:</span>
-<span id="cb3-2"><a href="#cb3-2"></a>  ... some code that might fail...</span>
-<span id="cb3-3"><a href="#cb3-3"></a><span class="cf">except</span> <span class="op">&lt;</span>Named Error Type<span class="op">&gt;</span>:</span>
-<span id="cb3-4"><a href="#cb3-4"></a>  ... what do it <span class="cf">if</span> it fails <span class="cf">for</span> a specific reason...</span>
-<span id="cb3-5"><a href="#cb3-5"></a><span class="cf">except</span>:</span>
-<span id="cb3-6"><a href="#cb3-6"></a>  ... what to do <span class="cf">if</span> it fails <span class="cf">for</span> <span class="bu">any</span> other reason...</span>
-<span id="cb3-7"><a href="#cb3-7"></a><span class="cf">finally</span>:</span>
-<span id="cb3-8"><a href="#cb3-8"></a>  ... always do this, even <span class="cf">if</span> it fails...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>We can even <em>create</em> our own problems:</p>
-<pre><code>raise Exception("Sorry, I can't let you do that, Dave.")</code></pre>
+<section id="trapping-errors" class="slide level2">
+<h2>Trapping Errors</h2>
+<p>This code fails:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>x,y <span class="op">=</span> <span class="dv">10</span>,<span class="dv">0</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="bu">print</span>(x<span class="op">/</span>y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>And it generates this error:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="op">&gt;</span> Traceback (most recent call last):</span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="op">&gt;</span>   File <span class="st">"&lt;stdin&gt;"</span>, line <span class="dv">1</span>, <span class="kw">in</span> <span class="op">&lt;</span>module<span class="op">&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="op">&gt;</span> <span class="pp">ZeroDivisionError</span>: division by zero</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="for-example" class="slide level2 smaller">
-<h2>For Example</h2>
-<p>If <code>x=10</code> and <code>y=0</code> then:</p>
-<pre><code>print(x/y)
-&gt; Traceback (most recent call last):
-&gt;   File "&lt;stdin&gt;", line 1, in &lt;module&gt;
-&gt; ZeroDivisionError: division by zero</code></pre>
+<section id="trapping-errors-contd" class="slide level2">
+<h2>Trapping Errors (cont’d)</h2>
 <p>But if you ‘trap’ the error using <code>except</code> then:</p>
-<pre><code>try:
-  print(x/y)
-except ZeroDivisionError:
-  print("You can't divide by zero!")
-except:
-  print("Something has gone wrong.")
-finally: 
-  print("Division is fun!")
-
-&gt; You can't divide by zero!
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>x,y <span class="op">=</span> <span class="dv">10</span>,<span class="dv">0</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="cf">try</span>:</span>
+<span id="cb10-3"><a href="#cb10-3"></a>  <span class="bu">print</span>(x<span class="op">/</span>y)</span>
+<span id="cb10-4"><a href="#cb10-4"></a><span class="cf">except</span> <span class="pp">ZeroDivisionError</span>:</span>
+<span id="cb10-5"><a href="#cb10-5"></a>  <span class="bu">print</span>(<span class="st">"You can't divide by zero!"</span>)</span>
+<span id="cb10-6"><a href="#cb10-6"></a><span class="cf">except</span>:</span>
+<span id="cb10-7"><a href="#cb10-7"></a>  <span class="bu">print</span>(<span class="st">"Something has gone very wrong."</span>)</span>
+<span id="cb10-8"><a href="#cb10-8"></a><span class="cf">finally</span>: </span>
+<span id="cb10-9"><a href="#cb10-9"></a>  <span class="bu">print</span>(<span class="st">"Division is fun!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This will print</p>
+<pre><code>&gt; You can't divide by zero!
 &gt; Division is fun!</code></pre>
+
+<aside><div>
 <p><em>Note:</em> if we need to access the <em>actual</em> exception: <code>except ZeroDivisionError as e:</code></p>
-</section>
-<section id="im-just-creating-problems-now" class="slide level2 smaller">
-<h2>I’m Just Creating Problems Now</h2>
+</div></aside></section>
+<section id="raising-hell" class="slide level2">
+<h2>Raising Hell</h2>
 <p>You can trigger your <em>own</em> exceptions using <code>raise</code>.</p>
-<pre><code>try:
-  print(x/y)
-except ZeroDivisionError:
-  print("You can't divide by zero!")
-  raise Exception("Please don't do that again!")
-finally: 
-  print("Division is fun!")</code></pre>
-</section>
-<section id="errors-more-errors" class="slide level2 smaller">
-<h2>Errors &amp; More Errors!</h2>
-<p>If <code>x=10</code> and <code>y=0</code> then the previous slide’s code produces:</p>
-<pre><code>You can't divide by zero!
-Division is fun!
-Traceback (most recent call last):
-  File "&lt;stdin&gt;", line 2, in &lt;module&gt;
-ZeroDivisionError: division by zero
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "&lt;stdin&gt;", line 5, in &lt;module&gt;
-Exception: Please don't do that again!</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>x,y <span class="op">=</span> <span class="dv">10</span>,<span class="dv">0</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="cf">try</span>:</span>
+<span id="cb12-3"><a href="#cb12-3"></a>  <span class="bu">print</span>(x<span class="op">/</span>y)</span>
+<span id="cb12-4"><a href="#cb12-4"></a><span class="cf">except</span> <span class="pp">ZeroDivisionError</span>:</span>
+<span id="cb12-5"><a href="#cb12-5"></a>  <span class="bu">print</span>(<span class="st">"You can't divide by zero!"</span>)</span>
+<span id="cb12-6"><a href="#cb12-6"></a>  <span class="cf">raise</span> <span class="pp">Exception</span>(<span class="st">"Please don't do that again!"</span>)</span>
+<span id="cb12-7"><a href="#cb12-7"></a><span class="cf">finally</span>: </span>
+<span id="cb12-8"><a href="#cb12-8"></a>  <span class="bu">print</span>(<span class="st">"Division is fun!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="understanding-multiple-errors" class="slide level2 smaller">
 <h2>Understanding Multiple Errors</h2>
+<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>x,y <span class="op">=</span> <span class="dv">10</span>,<span class="dv">0</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="cf">try</span>:</span>
+<span id="cb13-3"><a href="#cb13-3"></a>  <span class="bu">print</span>(x<span class="op">/</span>y)</span>
+<span id="cb13-4"><a href="#cb13-4"></a><span class="cf">except</span> <span class="pp">ZeroDivisionError</span>:</span>
+<span id="cb13-5"><a href="#cb13-5"></a>  <span class="bu">print</span>(<span class="st">"You can't divide by zero!"</span>)</span>
+<span id="cb13-6"><a href="#cb13-6"></a>  <span class="cf">raise</span> <span class="pp">Exception</span>(<span class="st">"Please don't do that again!"</span>)</span>
+<span id="cb13-7"><a href="#cb13-7"></a><span class="cf">finally</span>: </span>
+<span id="cb13-8"><a href="#cb13-8"></a>  <span class="bu">print</span>(<span class="st">"Division is fun!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ol type="1">
 <li>The code we <code>try</code> triggers the <code>ZeroDivisionError</code> block.</li>
 <li>This prints <code>"You can't divide by zero!"</code></li>
@@ -511,79 +564,77 @@ Exception: Please don't do that again!</code></pre>
 <li>Python exits with the message from our newly <strong>raised</strong> Exception.</li>
 </ol>
 <p>Thus: ‘During handling of above (ZeroDivisionError) another exception (our Exception) occurred…’</p>
-</section>
-<section id="typed-errors" class="slide level2 smaller">
-<h2>Typed Errors</h2>
-<p>We can create our own classes of error very easily:</p>
-<pre><code>class CustomError(Exception):
-  pass</code></pre>
-<p>This can then be triggered with:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="cf">raise</span> CustomError(<span class="st">"Our custom error"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>And (very importantly) this can be caught with:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="cf">except</span> CustomError: </span>
-<span id="cb11-2"><a href="#cb11-2"></a>  ... do something ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This means that exceptions could accept custom arguments, perform tidying-up or rollback operations, etc.</p>
-</section>
-<section class="slide level2">
+</section></section>
+<section>
+<section id="understanding-exceptions-is-critical-to-fixing-problems-instead-of-being-overwhelmed-by-them" class="title-slide slide level1 center">
+<h1>Understanding exceptions is critical to fixing problems, instead of being overwhelmed by them!</h1>
 
-<blockquote>
-<p>Understanding exceptions is critical to fixing problems, instead of being overwhelmed by them!</p>
-</blockquote>
 </section>
-<section id="test-based-development" class="slide level2 smaller">
+<section id="test-based-development" class="slide level2">
 <h2>Test-Based Development</h2>
-<p>We can actually think of exceptions as a way to <strong>develop</strong> our code; for example:</p>
-<pre><code># Testing the 'addition' operator
-test(1+1, 2)           # Should equal 2
-test(1+'1', TypeError) # Should equal TypeError
-test('1'+'1', '11')    # Should equal '11'
-test(-1+1, 0)          # Should equal 0 </code></pre>
-<p>Our <code>test(A,B)</code> function takes an input (A) and the <strong>expected</strong> output (B) and then compares them. The test returns <code>True</code> if A==B and <code>False</code> otherwise.</p>
+<p>We can actually think of exceptions as a way to <em>develop</em> our code.</p>
+<p>Here’s some ‘pseudo-code’:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># Testing the 'addition' operator</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a>test(<span class="dv">1</span><span class="op">+</span><span class="dv">1</span>, <span class="dv">2</span>)           <span class="co"># Should equal 2</span></span>
+<span id="cb14-3"><a href="#cb14-3"></a>test(<span class="dv">1</span><span class="op">+</span><span class="st">'1'</span>, <span class="pp">TypeError</span>) <span class="co"># Should equal TypeError</span></span>
+<span id="cb14-4"><a href="#cb14-4"></a>test(<span class="st">'1'</span><span class="op">+</span><span class="st">'1'</span>, <span class="st">'11'</span>)    <span class="co"># Should equal '11'</span></span>
+<span id="cb14-5"><a href="#cb14-5"></a>test(<span class="op">-</span><span class="dv">1</span><span class="op">+</span><span class="dv">1</span>, <span class="dv">0</span>)          <span class="co"># Should equal 0 </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Our <code>test(A,B)</code> function takes an input (A) and the <em>expected</em> output (B) and then compares them. The test returns <code>True</code> if A==B and <code>False</code> otherwise.</p>
 </section>
-<section id="unit-tests" class="slide level2 smaller">
+<section id="unit-tests" class="slide level2">
 <h2>Unit Tests</h2>
-<p>Each <code>test</code> is called a <strong>Unit Test</strong> because it tests <em>one thing</em> and one thing <em>only</em>. So if you had three functions to ‘do stuff’ then you’d need at least three unit tests. A Unit Test may be composed of one or more <strong>assertions</strong>. Our code on the previous slide contained 4 assertions.</p>
-<p>A Unit Test does not mean that your code is correct or will perform properly under all circumstances. It means that your code returns the expected value for a specified set of inputs.</p>
+<p>Each <code>test</code> is a <strong>Unit Test</strong> because it tests <em>one thing</em> and <em>one thing only</em>. So if you had three functions to ‘do stuff’ then you’d need at least three unit tests.</p>
+<p>A Unit Test may be composed of one or more <strong>assertions</strong>. Our pseudo-code on the previous slide contained 4 assertions.</p>
+<p>A Unit Test does not mean that your code is correct or will perform properly under all circumstances. It means that your code returns the expected value for a specified input.</p>
 <p>Python considers this approach so important that it’s <strong>built in</strong>.</p>
 </section>
 <section id="approach-1" class="slide level2 smaller">
 <h2>Approach 1</h2>
 <p>This is an explict assertion to test <code>fun</code>:</p>
-<pre><code>import unittest
-
-def fun(x):
-  return x + 1
-
-class MyTest(unittest.TestCase):
-  def test(self):
-    self.assertEqual(fun(3), 4)
-    self.assertEqual(fun(3), 5)
-
-m = MyTest()
-m.test()</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a><span class="im">import</span> unittest</span>
+<span id="cb15-2"><a href="#cb15-2"></a></span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="kw">def</span> fun(x):</span>
+<span id="cb15-4"><a href="#cb15-4"></a>  <span class="cf">return</span> x <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb15-5"><a href="#cb15-5"></a></span>
+<span id="cb15-6"><a href="#cb15-6"></a><span class="kw">class</span> MyTest(unittest.TestCase):</span>
+<span id="cb15-7"><a href="#cb15-7"></a>  <span class="kw">def</span> test(<span class="va">self</span>):</span>
+<span id="cb15-8"><a href="#cb15-8"></a>    <span class="va">self</span>.assertEqual(fun(<span class="dv">3</span>), <span class="dv">4</span>)</span>
+<span id="cb15-9"><a href="#cb15-9"></a>    <span class="bu">print</span>(<span class="st">"Assertion 1 passed."</span>)</span>
+<span id="cb15-10"><a href="#cb15-10"></a>    <span class="va">self</span>.assertEqual(fun(<span class="dv">3</span>), <span class="dv">5</span>)</span>
+<span id="cb15-11"><a href="#cb15-11"></a>    <span class="bu">print</span>(<span class="st">"Assertion 2 passed."</span>)</span>
+<span id="cb15-12"><a href="#cb15-12"></a></span>
+<span id="cb15-13"><a href="#cb15-13"></a>m <span class="op">=</span> MyTest()</span>
+<span id="cb15-14"><a href="#cb15-14"></a>m.test()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The critical output is:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="pp">AssertionError</span>: <span class="dv">4</span> <span class="op">!=</span> <span class="dv">5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="approach-2" class="slide level2 smaller">
 <h2>Approach 2</h2>
 <p>This approach uses the ‘docstring’ (the bits between <code>"""</code>) to test the results of the function. This is intended to encourage good documentation of functions using examples:</p>
-<pre><code>def square(x):
-    """Return the square of x.
+<div class="sourceCode" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="kw">def</span> square(x):</span>
+<span id="cb17-2"><a href="#cb17-2"></a>    <span class="co">"""Return the square of x.</span></span>
+<span id="cb17-3"><a href="#cb17-3"></a></span>
+<span id="cb17-4"><a href="#cb17-4"></a><span class="co">    &gt;&gt;&gt; square(2)</span></span>
+<span id="cb17-5"><a href="#cb17-5"></a><span class="co">    4</span></span>
+<span id="cb17-6"><a href="#cb17-6"></a><span class="co">    &gt;&gt;&gt; square(-2)</span></span>
+<span id="cb17-7"><a href="#cb17-7"></a><span class="co">    4</span></span>
+<span id="cb17-8"><a href="#cb17-8"></a><span class="co">    &gt;&gt;&gt; square(-1)</span></span>
+<span id="cb17-9"><a href="#cb17-9"></a><span class="co">    2</span></span>
+<span id="cb17-10"><a href="#cb17-10"></a><span class="co">    """</span></span>
+<span id="cb17-11"><a href="#cb17-11"></a>    <span class="cf">return</span> x <span class="op">*</span> x</span>
+<span id="cb17-12"><a href="#cb17-12"></a></span>
+<span id="cb17-13"><a href="#cb17-13"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">'__main__'</span>:</span>
+<span id="cb17-14"><a href="#cb17-14"></a>    <span class="im">import</span> doctest</span>
+<span id="cb17-15"><a href="#cb17-15"></a>    doctest.testmod()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
-    &gt;&gt;&gt; square(2)
-    4
-    &gt;&gt;&gt; square(-2)
-    4
-    """
-    return x * x
-
-if __name__ == '__main__':
-    import doctest
-    doctest.testmod()</code></pre>
-</section>
-<section id="collaboration-continuous-integration" class="slide level2 smaller">
+<aside><div>
+<p>Notice the <code>__name__</code> (what could that <em>possibly</em> mean???) is tested to see if it’s <code>'__main__'</code>. The <code>doctest</code> code only runs when this code is executed in <code>'__main__'</code>.</p>
+</div></aside></section>
+<section id="collaboration-continuous-integration" class="slide level2">
 <h2>Collaboration &amp; Continuous Integration</h2>
-<p>The Unit Test approach is often used on collaborative projects, especially in the Open Source world.</p>
-<p>A commit, merge, or pull on GitHub can all be used to trigger the testing process for the <em>entire</em> software ‘stack’: the running of all tests for multiple components is called ‘integration testing’.</p>
-<p>GitHub offers this service as ‘TravisCI’, with CI standing for Continuous Integration.</p>
+<p>The Unit Test approach is often used on collaborative projects, especially in the Open Source world. PySAL, <a href="https://pysal.org/notebooks/viz/splot/intro.html#Contributing-to-splot">for instance</a>, asks for unit tests with every new feature or integration.</p>
+<p>The running of all tests for multiple components is called ‘integration testing’.</p>
+<p>A commit, merge, or pull on GitHub can trigger the unit testing process for the <em>entire</em> software ‘stack’. This is known as <em>Continuous Integration</em> because you are <em>always</em> checking that the code works as expected, rather than leaving testing to the end.</p>
 <aside class="notes">
 <p>This is heavily used by PySAL and other robust FOSS projects since TravisCI is free for FOSS projects!</p>
 <style type="text/css">
@@ -598,15 +649,24 @@ if __name__ == '__main__':
           display:block!important;
       }</style></aside>
 </section>
+<section class="slide level2">
+
+
+<img data-src="https://images-na.ssl-images-amazon.com/images/I/61BZKS00V7L.jpg" class="r-stretch"></section>
 <section id="resources" class="slide level2 smaller">
 <h2>Resources</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
 <ul>
 <li><a href="https://www.linkedin.com/learning/python-essential-training-2/handling-exceptions">Handling exceptions</a></li>
 <li><a href="https://www.linkedin.com/learning/python-essential-training-2/reporting-errors">Reporting errors</a></li>
 <li><a href="https://www.programiz.com/python-programming/user-defined-exception">Python Custom Exceptions</a></li>
 <li><a href="https://www.codementor.io/@sheena/how-to-write-python-custom-exceptions-du107ufv9">Writing and Using Custom Exceptions in Python</a></li>
 <li><a href="https://docs.python.org/3/tutorial/errors.html">Python Documentation</a></li>
-<li><a href="https://towardsdatascience.com/how-to-define-custom-exception-classes-in-python-bfa346629bca">Towards Data Science</a></li>
+<li><a href="https://towardsdatascience.com/how-to-define-custom-exception-classes-in-python-bfa346629bca">How to Define Custom Exception Classes</a></li>
+</ul>
+</div><div class="column" style="width:50%;">
+<ul>
 <li><a href="https://www.datacamp.com/community/tutorials/unit-testing-python">Unit Testing in Python</a></li>
 <li><a href="https://jeffknupp.com/blog/2013/12/09/improve-your-python-understanding-unit-testing/">Understanding Unit Testing</a></li>
 <li><a href="https://docs.python-guide.org/writing/tests/">Testing Your Code</a></li>
@@ -614,7 +674,9 @@ if __name__ == '__main__':
 <li><a href="https://docs.python.org/3/library/unittest.html">Python’s <code>unittest</code> Library</a></li>
 <li><a href="https://www.youtube.com/watch?v=6tNS--WetLI">Video: Unit Testing Your Code</a></li>
 </ul>
-</section>
+</div>
+</div>
+</section></section>
 <section id="thank-you" class="title-slide slide level1 center">
 <h1>Thank you!</h1>
 

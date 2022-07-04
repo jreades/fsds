@@ -389,16 +389,18 @@
   <p class="author">Jon Reades</p>
 </section>
 
-<section class="slide level2">
-
+<section>
+<section id="variables" class="title-slide slide level1 center">
+<h1>Variables</h1>
 <aside class="notes">
 <p>At heart, <em>all</em> programming is about:</p>
 <ul>
-<li><p>Storing data (or references to data) in variables,</p></li>
-<li><p>Feeding those variables into operations,</p></li>
-<li><p>Assigning the results to new variables,</p></li>
-<li><p>Reporting back.</p></li>
+<li>Storing data (or references to data) in variables,</li>
+<li>Feeding those data into operations,</li>
+<li>Reporting back.</li>
 </ul>
+<p>Over time we just get better and better at each of those steps!</p>
+<p>Let’s start with storing data…</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -411,14 +413,9 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="variables-have-types" class="slide level2 smaller">
-<h2>Variables Have Types</h2>
+<section id="variables-have-types" class="slide level2">
+<h2>Variables Have Types…</h2>
 <table>
-<colgroup>
-<col style="width: 7%">
-<col style="width: 29%">
-<col style="width: 63%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>Name</th>
@@ -468,8 +465,8 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="we-can-change-those-types" class="slide level2 smaller">
-<h2>We Can Change Those Types</h2>
+<section id="but-we-can-change-that" class="slide level2">
+<h2>… But We Can Change That</h2>
 <p>Message starts as a string:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>msg <span class="op">=</span> <span class="st">'42'</span></span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="bu">type</span>(msg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -479,21 +476,45 @@
 <p>And back to a string:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>msg <span class="op">=</span> <span class="bu">str</span>(msg)</span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="bu">type</span>(msg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>And notice:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="bu">print</span>(<span class="bu">str</span>(<span class="bu">int</span>(<span class="st">'42'</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<aside class="notes">
+<p>That last line of code is intended to start familiarising you with Python syntax: programmers rarely do one operation per line of code if they can do <em>more</em> than one so you’ll often see nested parentheses like this and you need to learn how to read this kind of code starting from the inner-most parentheses (the <code>int()</code>) and working outwards from there to <code>str()</code> and finally <code>print()</code>.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="variables-have-names" class="slide level2 smaller">
-<h2>Variables Have Names</h2>
+<section id="and-they-are-all-objects" class="slide level2">
+<h2>…And They Are <em>All</em> Objects</h2>
+<p>One to remember for the session on objects and classes:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="bu">isinstance</span>(msg,<span class="bu">object</span>)     <span class="co"># True</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="bu">isinstance</span>(answer,<span class="bu">object</span>)  <span class="co"># True</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="bu">isinstance</span>(pi,<span class="bu">object</span>)      <span class="co"># True</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="bu">isinstance</span>(c,<span class="bu">object</span>)       <span class="co">#&nbsp;True</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="bu">isinstance</span>(correct,<span class="bu">object</span>) <span class="co"># True</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="variables-have-names" class="slide level2">
+<h2>Variables Have Names…</h2>
 <p>Rules for variable names:</p>
 <ul>
-<li>They cannot start with a number (e.g.&nbsp;<code>3items</code> is invalid)</li>
-<li>White space and symbols (e.g.&nbsp;<code>$</code>, <code>+</code>, etc.) are <strong>not</strong> allowed, but <code>_</code> (underscore) <em>is</em> allowed (e.g.&nbsp;<code>my_variable</code> is fine)</li>
+<li>They cannot start with a number: <code>item3</code> is valid, <code>3items</code> is not.</li>
+<li>White space and symbols are <em>not</em> allowed, but <code>_</code> <em>is</em> allowed: <code>my_variable</code> is valid, <code>my-variable</code>, <code>my$variable</code>, and <code>my variable</code> are not.</li>
 <li>Case matters: <code>myVar</code> is different from both <code>myvar</code> and <code>MYVAR</code></li>
-<li>Be consistent: <code>my_var</code> is more ‘Pythonic’, though <code>myVar</code> is also widely used, but don’t mix these!</li>
-<li>Variable names should be long enough to be clear but not so long as to be impractical: <code>bldg_height</code> vs.&nbsp;<code>bh</code> vs.&nbsp;<code>max_building_height_at_eaves</code>.</li>
+<li>Be consistent: <code>my_var</code> is more ‘Pythonic’, though <code>myVar</code> is also widely used; but don’t mix these!</li>
+<li>Variable names should be <em>long enough</em> to be clear but not <em>so long</em> as to be impractical: <code>bldg_height</code> vs.&nbsp;<code>bh</code> vs.&nbsp;<code>max_building_height_at_eaves</code>.</li>
 </ul>
 </section>
-<section id="we-cant-use-these-names" class="slide level2 smaller">
-<h2>We Can’t Use These Names</h2>
-<p>You should not try to use <em>any</em> of these words as a variable. Python <em>may</em> not complain, but strange things will happen when you run your code.</p>
+<section id="but-not-all-words-are-allowed" class="slide level2">
+<h2>…But Not All Words Are Allowed</h2>
+<p>Do not try to use <em>any</em> of these as variable names. Python <em>may</em> not complain, but strange things will happen when you run your code.</p>
 <table>
 <tbody>
 <tr class="odd">
@@ -547,13 +568,13 @@
 </tr>
 </tbody>
 </table>
-</section>
+</section></section>
 <section>
 <section id="operators" class="title-slide slide level1 center">
 <h1>Operators</h1>
 
 </section>
-<section id="simple-operations-on-variables" class="slide level2 smaller">
+<section id="simple-operations-on-variables" class="slide level2">
 <h2>Simple Operations on Variables</h2>
 <p>Let’s start with <code>x=10</code> and <code>y=5</code>…</p>
 <table>
@@ -586,7 +607,7 @@
 <td style="text-align: right;"><code>2.0</code></td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Floored Quotient</td>
+<td style="text-align: left;">‘Floored’ Quotient</td>
 <td style="text-align: right;"><code>x // y</code></td>
 <td style="text-align: right;"><code>2</code></td>
 </tr>
@@ -608,10 +629,9 @@
 </tbody>
 </table>
 </section>
-<section id="strings-are-different" class="slide level2 smaller">
+<section id="strings-are-different" class="slide level2">
 <h2>Strings Are Different</h2>
-<p>When you do things with strings the answers can look a little different…</p>
-<p>Let’s start with <code>x="Hello"</code> and <code>y="You"</code> and <code>z=2</code>…</p>
+<p>When you do things with strings the answers can look a little different. Let’s start with <code>x="Hello"</code> and <code>y="You"</code> and <code>z=2</code>…</p>
 <table>
 <thead>
 <tr class="header">
@@ -644,16 +664,22 @@
 </tbody>
 </table>
 </section>
-<section id="using-strings-to-output-information" class="slide level2 smaller">
+<section id="using-strings-to-output-information" class="slide level2">
 <h2>Using Strings to Output Information</h2>
-<p>Obviously, a really common requirement that programmers have is ‘output a nicely formatted string containing information about the variables in my program’.</p>
-<p>Over time, Python has acquired no fewer than three ways to do this: 1) string concatenation using <code>+</code>; 2) string formatting using <code>&lt;str&gt;.format(&lt;variables&gt;)</code>; and 3) the new f-strings using f”{variable_1}… {variable_n}“. There are pros and cons to each:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>x <span class="op">=</span> <span class="dv">24</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a>y <span class="op">=</span> <span class="st">'Something'</span></span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="bu">print</span>(<span class="st">"The value of "</span> <span class="op">+</span> y <span class="op">+</span> <span class="st">" is "</span> <span class="op">+</span> <span class="bu">str</span>(x))</span>
-<span id="cb4-4"><a href="#cb4-4"></a><span class="bu">print</span>(<span class="st">"The value of </span><span class="sc">{0}</span><span class="st"> is </span><span class="sc">{1}</span><span class="st">"</span>.<span class="bu">format</span>(y, x))</span>
-<span id="cb4-5"><a href="#cb4-5"></a><span class="bu">print</span>(<span class="ss">f"The value of </span><span class="sc">{</span>y<span class="sc">}</span><span class="ss"> is </span><span class="sc">{</span>x<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Python has no fewer than three ways output information:</p>
+<ol type="1">
+<li>string concatenation using <code>+</code>;</li>
+<li>string formatting using <code>&lt;str&gt;.format(&lt;variables&gt;)</code>; and</li>
+<li>f-strings using <code>f"{variable_1} some text {variable_n}"</code>.</li>
+</ol>
+<p>There are pros and cons to each:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>x <span class="op">=</span> <span class="dv">24</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>y <span class="op">=</span> <span class="st">'Something'</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="bu">print</span>(<span class="st">"The value of "</span> <span class="op">+</span> y <span class="op">+</span> <span class="st">" is "</span> <span class="op">+</span> <span class="bu">str</span>(x))</span>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="bu">print</span>(<span class="st">"The value of </span><span class="sc">{0}</span><span class="st"> is </span><span class="sc">{1}</span><span class="st">"</span>.<span class="bu">format</span>(y, x))</span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="bu">print</span>(<span class="ss">f"The value of </span><span class="sc">{</span>y<span class="sc">}</span><span class="ss"> is </span><span class="sc">{</span>x<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <aside class="notes">
+<p>Obviously, a really common requirement that programmers have is ‘output a nicely formatted string containing information about the variables in my program’.</p>
 <p>I rather like f-strings because they can actually contain any code you like (you could, for instance, write `f”The square root of {y} is {x**(1/2)}” and it would work. However, concatenation is the easiest to learn.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
@@ -667,21 +693,22 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="operators-assemble" class="slide level2 smaller">
+<section id="operators-assemble" class="slide level2">
 <h2>Operators Assemble!</h2>
-<p>Operators follow clear rules about <em>precedence</em>: what calculations are performed in what order. For instance, the following lines of code are <em>not</em> the same:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>x <span class="op">+</span> y <span class="op">*</span> <span class="dv">2</span>         <span class="co"># == 20</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a>(x <span class="op">+</span> y) <span class="op">*</span> <span class="dv">2</span>       <span class="co"># == 30</span></span>
-<span id="cb5-3"><a href="#cb5-3"></a>x <span class="op">+</span> y <span class="op">*</span> <span class="dv">2</span> <span class="op">/</span> <span class="dv">3</span>     <span class="co"># == 13.3333333333334</span></span>
-<span id="cb5-4"><a href="#cb5-4"></a>x <span class="op">+</span> y <span class="op">*</span> (<span class="dv">2</span><span class="op">/</span><span class="dv">3</span>)     <span class="co"># == 13.3333333333332</span></span>
-<span id="cb5-5"><a href="#cb5-5"></a>(x <span class="op">+</span> y) <span class="op">*</span> (<span class="dv">2</span><span class="op">/</span><span class="dv">3</span>)   <span class="co"># == 10.0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Always pay attention to <em>precedence</em>:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>x, y <span class="op">=</span> <span class="dv">10</span>, <span class="dv">5</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>x <span class="op">+</span> y <span class="op">*</span> <span class="dv">2</span>         <span class="co"># == 20</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a>(x <span class="op">+</span> y) <span class="op">*</span> <span class="dv">2</span>       <span class="co"># == 30</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a>x <span class="op">+</span> y <span class="op">*</span> <span class="dv">2</span> <span class="op">/</span> <span class="dv">3</span>     <span class="co"># == 13.3333333333334</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a>x <span class="op">+</span> y <span class="op">*</span> (<span class="dv">2</span><span class="op">/</span><span class="dv">3</span>)     <span class="co"># == 13.3333333333332</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a>(x <span class="op">+</span> y) <span class="op">*</span> (<span class="dv">2</span><span class="op">/</span><span class="dv">3</span>)   <span class="co"># == 10.0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>And here’s a subtle one:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>(x <span class="op">*</span> y) <span class="op">**</span> <span class="dv">2</span><span class="op">/</span><span class="dv">3</span>    <span class="co"># == 833.333333333334</span></span>
-<span id="cb6-2"><a href="#cb6-2"></a>(x <span class="op">*</span> y) <span class="op">**</span> (<span class="dv">2</span><span class="op">/</span><span class="dv">3</span>)  <span class="co"># == 13.5720880829745</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>(x <span class="op">*</span> y) <span class="op">**</span> <span class="dv">2</span><span class="op">/</span><span class="dv">3</span>    <span class="co"># == 833.333333333334</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a>(x <span class="op">*</span> y) <span class="op">**</span> (<span class="dv">2</span><span class="op">/</span><span class="dv">3</span>)  <span class="co"># == 13.5720880829745</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The full list is <a href="https://docs.python.org/3/reference/expressions.html#operator-precedence">here</a>.</p>
 <aside class="notes">
-<p>If you’re a little rusty on exponents, that last example is the cube root of <code>(x*y)**2</code>. So <code>x**(1/2) * x**(1/2) == x)</code>.</p>
-<p>Also notice that with <em>floats</em> you do not always get the same result from operations that <em>should</em> give the same answer. This is because non-terminating decimals (<em>e.g.</em> <code>1/3</code>) will always be rounded by the computer because it doesn’t have infinite memory. The process of rounding means that you need to be <em>very</em> careful comparing (more on this later) floats.</p>
+<p>If you’re a little rusty on exponents, that last example is the cube root of <code>(x*y)**2</code>. But the key point is that <em>formatting</em> is not what matters here, it’s operator precedence: one has parentheses, the other does not, so they are evaluated differently. To make the first one more clear we might use <code>(x * y)**2 / 3</code> or even <code>((x*y)**2)/3</code>.</p>
+<p>Also notice that with the two <em>floats</em> in the first block you do not always get the same result from operations that <em>should</em> give the same answer. Non-terminating decimals (<em>e.g.</em> <code>1/3</code>) will always be rounded, unpredictably, by the computer because it doesn’t have infinite memory. The process of rounding means that you need to be <em>very</em> careful comparing floats (more on this later).</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -694,9 +721,9 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="comparing-variables" class="slide level2 smaller">
+<section id="comparing-variables" class="slide level2">
 <h2>Comparing Variables</h2>
-<p>When variables are of the same type then comparing them is easy. Let’s go back to <code>x=10</code> and <code>y=5</code>…</p>
+<p>For numeric variables comparisons are easy.</p>
 <table>
 <thead>
 <tr class="header">
@@ -708,31 +735,28 @@
 <tbody>
 <tr class="odd">
 <td style="text-align: left;"><code>==</code></td>
-<td style="text-align: right;"><code>x == y</code></td>
+<td style="text-align: right;"><code>10 == 5</code></td>
 <td style="text-align: right;"><code>False</code></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><code>!=</code></td>
-<td style="text-align: right;"><code>x != y</code></td>
+<td style="text-align: right;"><code>10 != 5</code></td>
 <td style="text-align: right;"><code>True</code></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><code>&lt;</code>, <code>&lt;=</code></td>
-<td style="text-align: right;"><code>x &lt; y</code></td>
+<td style="text-align: right;"><code>10 &lt; 5</code></td>
 <td style="text-align: right;"><code>False</code></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><code>&gt;</code>, <code>&gt;=</code></td>
-<td style="text-align: right;"><code>x &gt; y</code></td>
+<td style="text-align: right;"><code>10 &gt; 5</code></td>
 <td style="text-align: right;"><code>True</code></td>
 </tr>
 </tbody>
 </table>
-<p>But notice, if <code>x='4a'</code>, <code>y='365'</code>, and <code>z='42'</code>:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>x <span class="op">&gt;</span> y   <span class="co"># True</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a>x <span class="op">&gt;</span> z   <span class="co"># True</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <aside class="notes">
-<p>Notice that the result of any (successful) comparison is a Boolean (True/False). We can save the output of this comparison to a new variable (<em>e.g.</em> <code>z = x &gt; y</code>).</p>
+<p>The result of any (successful) comparison is a Boolean (True/False). We can save the output of this comparison to a new variable (<em>e.g.</em> <code>z = x &gt; y</code>).</p>
 <p>This last example has to do with the way that strings are compared.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
@@ -746,31 +770,54 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="danger-will-robinson" class="slide level2 smaller">
-<h2>Danger, Will Robinson!</h2>
-<p>Notice the <em>very</em> <strong>subtle difference</strong> between <code>=</code> and <code>==</code>!</p>
-<p>Confusing these two operators is the most common source of mistakes early on when learning to code in Python! One (<code>=</code>) does <em>assignment</em>, the other (<code>==</code>) does <em>comparison</em>.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>x <span class="op">=</span> <span class="dv">5</span></span>
-<span id="cb8-2"><a href="#cb8-2"></a>z <span class="op">=</span> <span class="dv">10</span></span>
-<span id="cb8-3"><a href="#cb8-3"></a>x <span class="op">=</span> z   <span class="co"># Probably a mistake: setting x to the value of z</span></span>
-<span id="cb8-4"><a href="#cb8-4"></a>x <span class="op">==</span> z  <span class="co"># True, because x and z are now both set to the value of 10</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><strong>Remember this!</strong></p>
+<section id="strings-are-different-1" class="slide level2">
+<h2>Strings Are Different</h2>
+<p>But notice:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>w, x, y, z <span class="op">=</span> <span class="st">'4a'</span>,<span class="st">'4a'</span>,<span class="st">'365'</span>,<span class="st">'42'</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a>w <span class="op">==</span> x  <span class="co"># True</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a>w <span class="op">!=</span> y  <span class="co"># True</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a>x <span class="op">&gt;</span> y   <span class="co"># True</span></span>
+<span id="cb9-5"><a href="#cb9-5"></a>x <span class="op">&gt;</span> z   <span class="co"># True</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Why is <code>4a</code> greater than <em>both</em> <code>365</code> and <code>42</code>?</p>
 </section>
-<section id="forcing-a-change-in-type" class="slide level2 smaller">
-<h2>Forcing a Change in Type</h2>
-<p>A really common mistake is to think that string (<code>str</code>) <code>"42"</code> is the same as the integer (<code>int</code>) <code>42</code>. Here’s the output from some attempts at comparison:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>x<span class="op">=</span><span class="st">'42'</span></span>
-<span id="cb9-2"><a href="#cb9-2"></a>y<span class="op">=</span><span class="dv">42</span></span>
-<span id="cb9-3"><a href="#cb9-3"></a>x<span class="op">==</span>y   <span class="co"># False</span></span>
-<span id="cb9-4"><a href="#cb9-4"></a>x<span class="op">&gt;</span>y</span>
-<span id="cb9-5"><a href="#cb9-5"></a>Traceback (most recent call last):</span>
-<span id="cb9-6"><a href="#cb9-6"></a>  File <span class="st">"&lt;stdin&gt;"</span>, line <span class="dv">1</span>, <span class="kw">in</span> <span class="op">&lt;</span>module<span class="op">&gt;</span></span>
-<span id="cb9-7"><a href="#cb9-7"></a><span class="pp">TypeError</span>: <span class="st">'&gt;'</span> <span class="kw">not</span> supported between instances of <span class="st">'str'</span> <span class="kw">and</span> <span class="st">'int'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>If we want to compare them then we’ll need to <em>change</em> their type:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>x <span class="op">&gt;</span> <span class="bu">str</span>(y)  <span class="co"># False</span></span>
-<span id="cb10-2"><a href="#cb10-2"></a><span class="bu">int</span>(x) <span class="op">&lt;=</span> y <span class="co"># True</span></span>
-<span id="cb10-3"><a href="#cb10-3"></a>x <span class="op">&gt;=</span> <span class="bu">str</span>(y) <span class="co"># Also True</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="danger-will-robinson" class="slide level2">
+<h2>Danger, Will Robinson!</h2>
+<p>Notice the <em>very</em> subtle <em>visual</em> difference between <code>=</code> and <code>==</code>!</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>x <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a>y <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb10-3"><a href="#cb10-3"></a>x <span class="op">=</span> y   <span class="co"># Probably a mistake: setting x to the value of y</span></span>
+<span id="cb10-4"><a href="#cb10-4"></a>x <span class="op">==</span> y  <span class="co"># True, because x and z are now both set to 10</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Remember this!</strong></p>
 <aside class="notes">
+<p>Confusing these two operators is the most common source of mistakes early on when learning to code in Python! One (<code>=</code>) does <em>assignment</em>, the other (<code>==</code>) does <em>comparison</em>.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="common-mistakes" class="slide level2">
+<h2>Common Mistakes</h2>
+<p>Here’s the output from some attempts at comparison:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>x, y <span class="op">=</span> <span class="st">'42'</span>, <span class="dv">42</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a>x<span class="op">==</span>y   <span class="co"># False</span></span>
+<span id="cb11-3"><a href="#cb11-3"></a>x<span class="op">&gt;</span>y    <span class="co"># An error!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This last line produces:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>Traceback (most recent call last):</span>
+<span id="cb12-2"><a href="#cb12-2"></a>  File <span class="st">"&lt;stdin&gt;"</span>, line <span class="dv">1</span>, <span class="kw">in</span> <span class="op">&lt;</span>module<span class="op">&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3"></a><span class="pp">TypeError</span>: <span class="st">'&gt;'</span> <span class="kw">not</span> supported between instances of <span class="st">'str'</span> <span class="kw">and</span> <span class="st">'int'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>If we want to compare them then we’ll need to <em>change</em> their type:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>x <span class="op">&gt;</span> <span class="bu">str</span>(y)   <span class="co"># False</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="bu">int</span>(x) <span class="op">&lt;=</span> y  <span class="co"># True</span></span>
+<span id="cb13-3"><a href="#cb13-3"></a>x <span class="op">&gt;</span> <span class="op">=</span> <span class="bu">str</span>(y) <span class="co"># Also True</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<aside class="notes">
+<p>A really common mistake is to think that string (<code>str</code>) <code>"42"</code> is the same as the integer (<code>int</code>) <code>42</code>.</p>
 <p>Notice that in the first example we <em>can</em> say that 42 is clearly <em>not</em> the same as ‘42’, but we can’t say whether it’s more or less because that’s non-sensical in this context. So this is a computer being <em>totally</em> logical but not always <em>sensible</em>.</p>
 <p>Also notice the syntax for this: we have <code>str(&lt;something&gt;)</code> and <code>int(&lt;something&gt;)</code> to convert between types. These are functions, which we’ll spend a lot more time on next week!</p>
 <p>Why might it be (fractionally) faster to compare integers than strings?</p>
@@ -791,35 +838,47 @@
 <h1>Conditions</h1>
 
 </section>
-<section id="conditions-consequences" class="slide level2 smaller">
+<section id="conditions-consequences" class="slide level2">
 <h2>Conditions &amp; Consequences</h2>
-<p>No matter how complex, conditions always ultimately evaluate to <code>True</code> or <code>False</code>.</p>
 <p>The simplest condition only considers one outcome:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="cf">if</span> <span class="op">&lt;</span>condition <span class="kw">is</span> true<span class="op">&gt;</span>:</span>
-<span id="cb11-2"><a href="#cb11-2"></a>    ...do something...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="cf">if</span> <span class="op">&lt;</span>condition <span class="kw">is</span> true<span class="op">&gt;</span>:</span>
+<span id="cb14-2"><a href="#cb14-2"></a>    <span class="co">#...do something...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>But you’ll often needs something a little more sophisticated:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="cf">if</span> <span class="op">&lt;</span>condition <span class="kw">is</span> true<span class="op">&gt;</span>:</span>
-<span id="cb12-2"><a href="#cb12-2"></a>    ...do something...</span>
-<span id="cb12-3"><a href="#cb12-3"></a><span class="cf">elif</span> <span class="op">&lt;</span>some other condition <span class="kw">is</span> true<span class="op">&gt;</span>:</span>
-<span id="cb12-4"><a href="#cb12-4"></a>    ...do something <span class="cf">else</span>...</span>
-<span id="cb12-5"><a href="#cb12-5"></a><span class="cf">else</span>:</span>
-<span id="cb12-6"><a href="#cb12-6"></a>    ...<span class="cf">if</span> no conditions are true...</span>
-<span id="cb12-7"><a href="#cb12-7"></a></span>
-<span id="cb12-8"><a href="#cb12-8"></a>...code continues...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a><span class="cf">if</span> <span class="op">&lt;</span>condition <span class="kw">is</span> true<span class="op">&gt;</span>:</span>
+<span id="cb15-2"><a href="#cb15-2"></a>    <span class="co">#...do something...</span></span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="cf">elif</span> <span class="op">&lt;</span>some other condition <span class="kw">is</span> true<span class="op">&gt;</span>:</span>
+<span id="cb15-4"><a href="#cb15-4"></a>    <span class="co">#...do something else...</span></span>
+<span id="cb15-5"><a href="#cb15-5"></a><span class="cf">else</span>:</span>
+<span id="cb15-6"><a href="#cb15-6"></a>    <span class="co">#...if no conditions are true...</span></span>
+<span id="cb15-7"><a href="#cb15-7"></a></span>
+<span id="cb15-8"><a href="#cb15-8"></a><span class="co">#...code continues...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<aside class="notes">
+<p>But no matter how complex, conditions always ultimately evaluate to <code>True</code> or <code>False</code>.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="for-example" class="slide level2 smaller">
+<section id="for-example" class="slide level2">
 <h2>For Example</h2>
-<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="cf">if</span> x <span class="op">&lt;</span> y:</span>
-<span id="cb13-2"><a href="#cb13-2"></a>  <span class="bu">print</span>(<span class="st">"x is less than y"</span>)</span>
-<span id="cb13-3"><a href="#cb13-3"></a><span class="cf">else</span>:</span>
-<span id="cb13-4"><a href="#cb13-4"></a>  <span class="bu">print</span>(<span class="st">"x is not less than y"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="cf">if</span> x <span class="op">&lt;</span> y:</span>
+<span id="cb16-2"><a href="#cb16-2"></a>  <span class="bu">print</span>(<span class="st">"x is less than y"</span>)</span>
+<span id="cb16-3"><a href="#cb16-3"></a><span class="cf">else</span>:</span>
+<span id="cb16-4"><a href="#cb16-4"></a>  <span class="bu">print</span>(<span class="st">"x is not less than y"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Or:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="cf">if</span> x <span class="op">&lt;</span> y:</span>
-<span id="cb14-2"><a href="#cb14-2"></a>  <span class="bu">print</span>(<span class="st">"x is less than y"</span>)</span>
-<span id="cb14-3"><a href="#cb14-3"></a><span class="cf">elif</span> x <span class="op">&gt;</span> y:</span>
-<span id="cb14-4"><a href="#cb14-4"></a>  <span class="bu">print</span>(<span class="st">"x is greater than y"</span>)</span>
-<span id="cb14-5"><a href="#cb14-5"></a><span class="cf">else</span>:</span>
-<span id="cb14-6"><a href="#cb14-6"></a>  <span class="bu">print</span>(<span class="st">"x equals y"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="cf">if</span> x <span class="op">&lt;</span> y:</span>
+<span id="cb17-2"><a href="#cb17-2"></a>  <span class="bu">print</span>(<span class="st">"x is less than y"</span>)</span>
+<span id="cb17-3"><a href="#cb17-3"></a><span class="cf">elif</span> x <span class="op">&gt;</span> y:</span>
+<span id="cb17-4"><a href="#cb17-4"></a>  <span class="bu">print</span>(<span class="st">"x is greater than y"</span>)</span>
+<span id="cb17-5"><a href="#cb17-5"></a><span class="cf">else</span>:</span>
+<span id="cb17-6"><a href="#cb17-6"></a>  <span class="bu">print</span>(<span class="st">"x equals y"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="conditional-syntax" class="slide level2">
 <h2>Conditional Syntax</h2>
@@ -831,41 +890,41 @@
 <li>Incorrect <strong>logic</strong>.</li>
 </ol>
 </section>
-<section id="all-of-them-together-input" class="slide level2 smaller">
+<section id="all-of-them-together-input" class="slide level2">
 <h2>All of Them Together (Input)!</h2>
-<div class="sourceCode" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a><span class="cf">if</span> hours <span class="op">&gt;=</span> <span class="dv">0</span>:</span>
-<span id="cb15-2"><a href="#cb15-2"></a><span class="bu">print</span>(<span class="st">"Hours were worked."</span>)</span>
-<span id="cb15-3"><a href="#cb15-3"></a><span class="cf">else</span></span>
-<span id="cb15-4"><a href="#cb15-4"></a>    <span class="bu">print</span> <span class="st">"No hours were worked."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="cf">if</span> hours <span class="op">&gt;=</span> <span class="dv">0</span>:</span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="bu">print</span>(<span class="st">"Hours were worked."</span>)</span>
+<span id="cb18-3"><a href="#cb18-3"></a><span class="cf">else</span></span>
+<span id="cb18-4"><a href="#cb18-4"></a>    <span class="bu">print</span> <span class="st">"No hours were worked."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>All <strong>four errors</strong> can be found here, can you spot them?</p>
 </section>
-<section id="all-of-them-together-output" class="slide level2 smaller">
+<section id="all-of-them-together-output" class="slide level2">
 <h2>All of Them Together (Output)!</h2>
 <p>Output from the Python interpreter:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="cf">if</span> hours <span class="op">&gt;=</span> <span class="dv">0</span>:</span>
-<span id="cb16-2"><a href="#cb16-2"></a>... <span class="bu">print</span>(<span class="st">"Hours were worked."</span>)</span>
-<span id="cb16-3"><a href="#cb16-3"></a>  File <span class="st">"&lt;stdin&gt;"</span>, line <span class="dv">2</span></span>
-<span id="cb16-4"><a href="#cb16-4"></a>    <span class="bu">print</span>(<span class="st">"Hours were worked."</span>)</span>
-<span id="cb16-5"><a href="#cb16-5"></a>    <span class="op">^</span></span>
-<span id="cb16-6"><a href="#cb16-6"></a><span class="pp">IndentationError</span>: expected an indented block</span>
-<span id="cb16-7"><a href="#cb16-7"></a><span class="op">&gt;&gt;&gt;</span> <span class="cf">else</span></span>
-<span id="cb16-8"><a href="#cb16-8"></a>  File <span class="st">"&lt;stdin&gt;"</span>, line <span class="dv">1</span></span>
-<span id="cb16-9"><a href="#cb16-9"></a>    <span class="cf">else</span></span>
-<span id="cb16-10"><a href="#cb16-10"></a>    <span class="op">^</span></span>
-<span id="cb16-11"><a href="#cb16-11"></a><span class="pp">SyntaxError</span>: invalid syntax</span>
-<span id="cb16-12"><a href="#cb16-12"></a><span class="op">&gt;&gt;&gt;</span>     <span class="bu">print</span> <span class="st">"No hours were worked."</span>)</span>
-<span id="cb16-13"><a href="#cb16-13"></a>  File <span class="st">"&lt;stdin&gt;"</span>, line <span class="dv">1</span></span>
-<span id="cb16-14"><a href="#cb16-14"></a>    <span class="bu">print</span> <span class="st">"No hours were worked."</span>)</span>
-<span id="cb16-15"><a href="#cb16-15"></a>    <span class="op">^</span></span>
-<span id="cb16-16"><a href="#cb16-16"></a><span class="pp">IndentationError</span>: unexpected indent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="cf">if</span> hours <span class="op">&gt;=</span> <span class="dv">0</span>:</span>
+<span id="cb19-2"><a href="#cb19-2"></a>... <span class="bu">print</span>(<span class="st">"Hours were worked."</span>)</span>
+<span id="cb19-3"><a href="#cb19-3"></a>  File <span class="st">"&lt;stdin&gt;"</span>, line <span class="dv">2</span></span>
+<span id="cb19-4"><a href="#cb19-4"></a>    <span class="bu">print</span>(<span class="st">"Hours were worked."</span>)</span>
+<span id="cb19-5"><a href="#cb19-5"></a>    <span class="op">^</span></span>
+<span id="cb19-6"><a href="#cb19-6"></a><span class="pp">IndentationError</span>: expected an indented block</span>
+<span id="cb19-7"><a href="#cb19-7"></a><span class="op">&gt;&gt;&gt;</span> <span class="cf">else</span></span>
+<span id="cb19-8"><a href="#cb19-8"></a>  File <span class="st">"&lt;stdin&gt;"</span>, line <span class="dv">1</span></span>
+<span id="cb19-9"><a href="#cb19-9"></a>    <span class="cf">else</span></span>
+<span id="cb19-10"><a href="#cb19-10"></a>    <span class="op">^</span></span>
+<span id="cb19-11"><a href="#cb19-11"></a><span class="pp">SyntaxError</span>: invalid syntax</span>
+<span id="cb19-12"><a href="#cb19-12"></a><span class="op">&gt;&gt;&gt;</span>     <span class="bu">print</span> <span class="st">"No hours were worked."</span>)</span>
+<span id="cb19-13"><a href="#cb19-13"></a>  File <span class="st">"&lt;stdin&gt;"</span>, line <span class="dv">1</span></span>
+<span id="cb19-14"><a href="#cb19-14"></a>    <span class="bu">print</span> <span class="st">"No hours were worked."</span>)</span>
+<span id="cb19-15"><a href="#cb19-15"></a>    <span class="op">^</span></span>
+<span id="cb19-16"><a href="#cb19-16"></a><span class="pp">IndentationError</span>: unexpected indent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="thats-better" class="slide level2 smaller">
+<section id="thats-better" class="slide level2">
 <h2>That’s Better!</h2>
-<p>Notice that it’s <em>relatively</em> straightforward to figure out the <strong>syntax errors</strong>, but the <strong>logical error</strong> is much less obvious. Over time, you become far <em>more</em> likely to make logical errors than syntactical ones.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="cf">if</span> hours <span class="op">&gt;=</span> <span class="dv">0</span>:</span>
-<span id="cb17-2"><a href="#cb17-2"></a>    <span class="bu">print</span>(<span class="st">"Hours were worked."</span>)</span>
-<span id="cb17-3"><a href="#cb17-3"></a><span class="cf">else</span>:</span>
-<span id="cb17-4"><a href="#cb17-4"></a>    <span class="bu">print</span>(<span class="st">"No hours were worked."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>It’s <em>relatively</em> straightforward to figure out the <strong>syntax errors</strong>, but the <strong>logical error</strong> is much less obvious. Over time, you become far <em>more</em> likely to make logical errors than syntactical ones.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a><span class="cf">if</span> hours <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb20-2"><a href="#cb20-2"></a>    <span class="bu">print</span>(<span class="st">"Hours were worked."</span>)</span>
+<span id="cb20-3"><a href="#cb20-3"></a><span class="cf">else</span>:</span>
+<span id="cb20-4"><a href="#cb20-4"></a>    <span class="bu">print</span>(<span class="st">"No hours were worked."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section></section>
 <section>
 <section id="comment-your-code" class="title-slide slide level1 center">
@@ -884,7 +943,7 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="make-your-life-easy-well-easier" class="slide level2 smaller">
+<section id="make-your-life-easy-well-easier" class="slide level2">
 <h2>Make Your Life Easy (Well, Easier)</h2>
 <p>Always comment your code:</p>
 <ol type="1">
@@ -907,52 +966,88 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="different-comment-styles" class="slide level2 smaller">
-<h2>Different comment styles</h2>
-<div class="sourceCode" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># This is a short comment</span></span>
-<span id="cb18-2"><a href="#cb18-2"></a><span class="bu">print</span>(<span class="st">"Foo"</span>)</span>
-<span id="cb18-3"><a href="#cb18-3"></a><span class="bu">print</span>(<span class="st">"Bar"</span>) <span class="co"># Also a short comment</span></span>
-<span id="cb18-4"><a href="#cb18-4"></a></span>
-<span id="cb18-5"><a href="#cb18-5"></a><span class="co"># You can have comments span multiple</span></span>
-<span id="cb18-6"><a href="#cb18-6"></a><span class="co"># lines just by adding more '#' at the </span></span>
-<span id="cb18-7"><a href="#cb18-7"></a><span class="co"># start of the line.</span></span>
-<span id="cb18-8"><a href="#cb18-8"></a></span>
-<span id="cb18-9"><a href="#cb18-9"></a><span class="co"># You can keep code from running</span></span>
-<span id="cb18-10"><a href="#cb18-10"></a><span class="co"># print("Baz")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="different-comment-styles" class="slide level2">
+<h2>Different Comment Styles</h2>
+<div class="sourceCode" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a><span class="co"># This is a short comment</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a><span class="bu">print</span>(<span class="st">"Foo"</span>)</span>
+<span id="cb21-3"><a href="#cb21-3"></a><span class="bu">print</span>(<span class="st">"Bar"</span>) <span class="co"># Also a short comment</span></span>
+<span id="cb21-4"><a href="#cb21-4"></a></span>
+<span id="cb21-5"><a href="#cb21-5"></a><span class="co"># ------- New Section --------</span></span>
+<span id="cb21-6"><a href="#cb21-6"></a><span class="co"># You can have comments span multiple</span></span>
+<span id="cb21-7"><a href="#cb21-7"></a><span class="co"># lines just by adding more '#' at the </span></span>
+<span id="cb21-8"><a href="#cb21-8"></a><span class="co"># start of the line.</span></span>
+<span id="cb21-9"><a href="#cb21-9"></a></span>
+<span id="cb21-10"><a href="#cb21-10"></a><span class="co"># You can keep code from running</span></span>
+<span id="cb21-11"><a href="#cb21-11"></a><span class="co"># print("Baz")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="comments-should-follow-indentation" class="slide level2 smaller">
-<h2>Comments should follow indentation</h2>
-<div class="sourceCode" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># Function for processing occupational data</span></span>
-<span id="cb19-2"><a href="#cb19-2"></a><span class="co"># from the 2001 and 2011 Censuses.</span></span>
-<span id="cb19-3"><a href="#cb19-3"></a><span class="kw">def</span> occ_data(df):</span>
-<span id="cb19-4"><a href="#cb19-4"></a>    <span class="co">#  Columns of interest in data set</span></span>
-<span id="cb19-5"><a href="#cb19-5"></a>    occ <span class="op">=</span> [<span class="st">'Managerial'</span>,<span class="st">'Professional'</span>,<span class="st">'Technical'</span>,</span>
-<span id="cb19-6"><a href="#cb19-6"></a>           <span class="st">'Administrative'</span>,<span class="st">'Skilled'</span>,<span class="st">'Personal Service'</span>,</span>
-<span id="cb19-7"><a href="#cb19-7"></a>           <span class="st">'Customer Service'</span>,<span class="st">'Operators'</span>,<span class="st">'Elementary'</span>]</span>
-<span id="cb19-8"><a href="#cb19-8"></a>    </span>
-<span id="cb19-9"><a href="#cb19-9"></a>    <span class="co"># Integrate results into single dataset -- </span></span>
-<span id="cb19-10"><a href="#cb19-10"></a>    <span class="co"># right now we don't replicate Jordan's approach of</span></span>
-<span id="cb19-11"><a href="#cb19-11"></a>    <span class="co"># grouping them into 'knowledge worker' and 'other'. </span></span>
-<span id="cb19-12"><a href="#cb19-12"></a>    occ_data <span class="op">=</span> pd.DataFrame()</span>
-<span id="cb19-13"><a href="#cb19-13"></a>    ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="comments-follow-indentation" class="slide level2">
+<h2>Comments Follow Indentation</h2>
+<div class="sourceCode" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># Function for processing occupational data</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a><span class="co"># from the 2001 and 2011 Censuses.</span></span>
+<span id="cb22-3"><a href="#cb22-3"></a><span class="kw">def</span> occ_data(df):</span>
+<span id="cb22-4"><a href="#cb22-4"></a>  <span class="co">#  Columns of interest</span></span>
+<span id="cb22-5"><a href="#cb22-5"></a>  cols <span class="op">=</span> [<span class="st">'Managerial'</span>,<span class="st">'Professional'</span>,<span class="st">'Technical'</span>]</span>
+<span id="cb22-6"><a href="#cb22-6"></a>    </span>
+<span id="cb22-7"><a href="#cb22-7"></a>  <span class="co"># Integrate results into single dataset -- </span></span>
+<span id="cb22-8"><a href="#cb22-8"></a>  <span class="co"># right now we don't replicate Jordan's approach of</span></span>
+<span id="cb22-9"><a href="#cb22-9"></a>  <span class="co"># grouping them into 'knowledge worker' and 'other'. </span></span>
+<span id="cb22-10"><a href="#cb22-10"></a>  <span class="cf">for</span> i <span class="kw">in</span> df.iterrows():</span>
+<span id="cb22-11"><a href="#cb22-11"></a>    <span class="co"># For each column...</span></span>
+<span id="cb22-12"><a href="#cb22-12"></a>    <span class="cf">for</span> j <span class="kw">in</span> cols:</span>
+<span id="cb22-13"><a href="#cb22-13"></a>      <span class="co"># Do something</span></span>
+<span id="cb22-14"><a href="#cb22-14"></a>      ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="easier-multi-line-comments" class="slide level2 smaller">
+<section id="easier-multi-line-comments" class="slide level2">
 <h2>Easier Multi-Line Comments</h2>
 <p>The below are not <em>real</em> comments, but they can help when you have a really long comment that you want to make. They are also used to help explain what a function does (called a <code>docstring</code>).</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a><span class="co">"""</span></span>
-<span id="cb20-2"><a href="#cb20-2"></a><span class="co">So I was thinking that what we need here is </span></span>
-<span id="cb20-3"><a href="#cb20-3"></a><span class="co">a way to handle the case where the data is</span></span>
-<span id="cb20-4"><a href="#cb20-4"></a><span class="co">incomplete or contains an observation that we</span></span>
-<span id="cb20-5"><a href="#cb20-5"></a><span class="co">weren't expecting (e.g. "N/A" instead of "0").</span></span>
-<span id="cb20-6"><a href="#cb20-6"></a><span class="co">"""</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a><span class="co">"""</span></span>
+<span id="cb23-2"><a href="#cb23-2"></a><span class="co">So I was thinking that what we need here is </span></span>
+<span id="cb23-3"><a href="#cb23-3"></a><span class="co">a way to handle the case where the data is</span></span>
+<span id="cb23-4"><a href="#cb23-4"></a><span class="co">incomplete or contains an observation that we</span></span>
+<span id="cb23-5"><a href="#cb23-5"></a><span class="co">weren't expecting (e.g. "N/A" instead of "0").</span></span>
+<span id="cb23-6"><a href="#cb23-6"></a><span class="co">"""</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="commenting-tips" class="slide level2 smaller">
-<h2>Commenting Tips</h2>
-<p>Some useful tips for commenting your code: - Include general information at the top of your programming file. - Assume the person reading the code is a coder themselves. - Good commenting is sparse in the sense that it is used judiciously, and concise without being gnomic. - Use comments to track the logic of your code (especially in conditionals and loops)</p>
+<section id="tips" class="slide level2">
+<h2>Tips</h2>
+<p>Some useful tips for commenting your code:</p>
+<ul>
+<li>Include general information at the top of your programming file.</li>
+<li>Assume the person reading the code is a coder themselves.</li>
+<li>Good commenting is sparse in the sense that it is used judiciously, and concise without being gnomic.</li>
+<li>Use comments to track the logic of your code (especially in conditionals and loops)</li>
+</ul>
 </section>
 <section id="more-resources" class="slide level2 smaller">
 <h2>More Resources</h2>
-<p>Here are some links to videos on LinkedIn Learning that might help, and YouTube will undoubtedly have lots more options and styles of learning… - <a href="https://www.linkedin.com/learning/python-quick-start/types-of-data">Types of Data</a> - <a href="https://www.linkedin.com/learning/learning-python-2/variables-and-expressions">Variables and expressions</a> - <a href="https://www.linkedin.com/learning/python-for-students/strings">Strings</a> - <a href="https://www.linkedin.com/learning/python-essential-training-2/the-string-type">The string type</a> - <a href="https://www.linkedin.com/learning/python-essential-training-2/common-string-methods">Common string methods</a> - <a href="https://www.linkedin.com/learning/python-essential-training-2/formatting-strings">Formatting strings</a> - <a href="https://www.linkedin.com/learning/python-essential-training-2/splitting-and-joining">Splitting and joining</a> - <a href="https://www.linkedin.com/learning/python-essential-training-2/numeric-types">Numeric types</a> - <a href="https://www.linkedin.com/learning/python-essential-training-2/the-bool-type">The bool type</a> - <a href="https://www.linkedin.com/learning/python-quick-start/store-data-using-variables">Storing Data in Variables</a> - <a href="https://www.linkedin.com/learning/learning-python-2/conditional-structures">Conditional structures</a> - <a href="https://www.linkedin.com/learning/python-quick-start/if-statement">If Statements</a> - <a href="https://www.linkedin.com/learning/python-quick-start/if-else-statement">If-Else Statements</a> - <a href="https://www.linkedin.com/learning/python-quick-start/if-elif-and-if-elif-else-statements">If-Elif</a> - <a href="https://www.linkedin.com/learning/python-essential-training-2/whitespace-and-comments">Whitespace and comments</a> - <a href="https://www.linkedin.com/learning/python-essential-training-2/using-print">Using print()</a> - <a href="https://www.linkedin.com/learning/python-essential-training-2/conditional-syntax">Conditional syntax</a> - <a href="https://www.linkedin.com/learning/python-essential-training-2/conditional-operators">Conditional operators</a> - <a href="https://www.linkedin.com/learning/python-essential-training-2/conditional-assignment">Conditional assignment</a></p>
+<p>Here are some links to videos on LinkedIn Learning that might help, and YouTube will undoubtedly have lots more options and styles of learning:</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li><a href="https://www.linkedin.com/learning/python-quick-start/types-of-data">Types of Data</a></li>
+<li><a href="https://www.linkedin.com/learning/learning-python-2/variables-and-expressions">Variables and expressions</a></li>
+<li><a href="https://www.linkedin.com/learning/python-for-students/strings">Strings</a></li>
+<li><a href="https://www.linkedin.com/learning/python-essential-training-2/the-string-type">The string type</a></li>
+<li><a href="https://www.linkedin.com/learning/python-essential-training-2/common-string-methods">Common string methods</a></li>
+<li><a href="https://www.linkedin.com/learning/python-essential-training-2/formatting-strings">Formatting strings</a></li>
+<li><a href="https://www.linkedin.com/learning/python-essential-training-2/splitting-and-joining">Splitting and joining</a></li>
+<li><a href="https://www.linkedin.com/learning/python-essential-training-2/numeric-types">Numeric types</a></li>
+<li><a href="https://www.linkedin.com/learning/python-essential-training-2/the-bool-type">The bool type</a></li>
+<li><a href="https://www.linkedin.com/learning/python-quick-start/store-data-using-variables">Storing Data in Variables</a></li>
+</ul>
+</div><div class="column" style="width:50%;">
+<ul>
+<li><a href="https://www.linkedin.com/learning/learning-python-2/conditional-structures">Conditional structures</a></li>
+<li><a href="https://www.linkedin.com/learning/python-quick-start/if-statement">If Statements</a></li>
+<li><a href="https://www.linkedin.com/learning/python-quick-start/if-else-statement">If-Else Statements</a></li>
+<li><a href="https://www.linkedin.com/learning/python-quick-start/if-elif-and-if-elif-else-statements">If-Elif</a></li>
+<li><a href="https://www.linkedin.com/learning/python-essential-training-2/whitespace-and-comments">Whitespace and comments</a></li>
+<li><a href="https://www.linkedin.com/learning/python-essential-training-2/using-print">Using print()</a></li>
+<li><a href="https://www.linkedin.com/learning/python-essential-training-2/conditional-syntax">Conditional syntax</a></li>
+<li><a href="https://www.linkedin.com/learning/python-essential-training-2/conditional-operators">Conditional operators</a></li>
+<li><a href="https://www.linkedin.com/learning/python-essential-training-2/conditional-assignment">Conditional assignment</a></li>
+</ul>
+</div>
+</div>
 </section></section>
 <section id="thank-you" class="title-slide slide level1 center">
 <h1>Thank you!</h1>

@@ -1,0 +1,276 @@
+---
+format:
+  revealjs:
+    theme: [serif, slides.scss]
+author: "Jon Reades"
+title: "Randomness"
+footer: "Randomness • Jon Reades"
+highlight-style: github
+code-copy: true
+code-line-numbers: true
+slide-level: 2
+title-slide-attributes:
+  data-background-image: ../img/CASA_Logo_no_text.png
+  data-background-size: cover
+  data-background-position: center
+  data-background-opacity: .17
+logo: ../img/CASA_logo.png
+history: false
+css: slides.css
+---
+
+# Many things are surprisingly *non*-random...
+
+---
+
+![](./img/Benford.png){height=550}
+
+[Benford's Law](https://en.wikipedia.org/wiki/Benford%27s_law#:~:text=Benford's%20law%2C%20also%20called%20the,life%20sets%20of%20numerical%20data.&text=If%20the%20digits%20were%20distributed,about%2011.1%25%20of%20the%20time), which has [applications in data science](https://towardsdatascience.com/what-is-benfords-law-and-why-is-it-important-for-data-science-312cb8b61048) and [fraud detection](https://www.journalofaccountancy.com/issues/2017/apr/excel-and-benfords-law-to-detect-fraud.html).
+
+::: {.notes}
+
+Genuine randomness is *hard*. Most of us, both humans and computers, tend to use shortcuts when generating random numbers.
+
+People are *really* bad at generating random numbers. Bendford's law is used by auditors to look for abnormalities in financial returns.
+
+Computers are better, but they are also lazy.
+
+:::
+
+## Reproducibility: Good or Bad?
+
+Depends on the problem:
+
+- Banking and encryption?
+- Sampling and testing?
+- Reproducing research/documentation?
+
+::: {.notes}
+
+OK, technically, even encryption needs to be reproducible to allow for *de*cryption, but you sure don't want it to be *easy*.
+
+:::
+
+## Not Very Good Encryption
+
+| Cyphertext | Output |
+| :-------------- | :----- |
+| ROT0 | To be or not to be, That is the question | 
+| ROT1 | Up cf ps opu up cf, Uibu jt uif rvftujpo | 
+| ROT2 | Vq dg qt pqv vq dg, Vjcv ku vjg swguvkqp |
+| ... | ... |
+| ROT9 | Cx kn xa wxc cx kn, Cqjc rb cqn zdnbcrxw |
+
+ROT is known as the Caesar Cypher, but since the transformation is simple (`A..Z+=x`) decryption is easy now. How can we make this harder?
+
+
+## Python is Random
+
+```python
+import random
+random.randint(0,10)
+random.randint(0,10)
+random.randint(0,10)
+random.randint(0,10)
+```
+
+See also: `random.randrange`, `random.choice`, `random.sample`, `random.random`, `random.gauss`, etc.
+
+
+## And Repeat...
+
+```python
+import random
+size = 10
+results = [0] * size
+
+tests = 100000
+while tests > 0:
+    results[random.randint(0,len(results)-1)] += 1
+    tests -= 1
+
+for i in range(0,len(results)):
+    print(f"{i} -> {results[i]}")
+```
+
+::: {.notes}
+
+What will this return? 
+
+Will it hold for more than 10 numbers?
+
+:::
+
+## Aaaaaaaaaaand Repeat {.smaller}
+
+```python
+import random 
+from matplotlib import pyplot as plt
+import numpy as np
+
+size = 1000
+data = [0] * size
+
+tests = 10000000
+while tests > 0:
+    data[random.randint(0,len(data)-1)] += 1
+    tests -= 1
+
+fig = plt.figure()
+plt.bar(np.arange(0,len(data)), data)
+fig.savefig('Random.png', dpi=150, transparent=True)
+```
+
+
+## Aaaaaaaaaaand Repeat
+
+![](./img/Random.png)
+
+
+# Seeding Keys
+
+Computers actually use *pseudo*-random number generators. If they are initialised with a *seed* the will generate the *same* sequence.
+
+::: {.notes}
+
+You might look at that uniform distribution and think 'not bad', but that's not good enough for encryption and it's also not good for reproducibility.
+
+:::
+
+## Setting a Seed
+
+Two main libraries where seeds are set:
+```python
+import random
+random.seed(42)
+
+import numpy as np
+np.random.seed(42)
+```
+
+::: {.notes}
+
+Why do you often see 42 used as a seed?
+
+:::
+
+## Seeds and State
+
+```python
+import random
+random.seed(42)
+st = random.getstate()
+for r in range(0,3):
+    random.setstate(st)
+    print(f"Repetition {r}:")
+    ints = []
+    for i in range(0,10):
+        ints.append(random.randint(0,10))
+    print(f"\t{ints}")
+```
+
+
+# Question!
+
+Where would you use a mix of randomness and reproducbility as part of a *data* analysis process?
+
+
+
+::: {.notes}
+
+Hint: With a large data set it will often be useful to be able draw a random... what? But for reproducible analysis we will that random... what?... to be the same each time!
+
+:::
+
+# Other Applications
+
+## Hashing {.smaller}
+
+Checking for changes (usally in a security context).
+```python
+import hashlib # Can take a 'salt' (similar to a 'seed')
+
+r1 = hashlib.md5('CASA Intro to Programming'.encode())
+print(f"The hashed equivalent of r1 is: {r1.hexdigest()}")
+
+r2 = hashlib.md5('CASA Intro to Programming '.encode())
+print(f"The hashed equivalent of r2 is: {r2.hexdigest()}")
+
+r3 = hashlib.md5('CASA Intro to Programming'.encode())
+print(f"The hashed equivalent of r3 is: {r3.hexdigest()}")
+```
+
+Outputs:
+```bash
+"The hashed equivalent of r1 is: acd601db5552408851070043947683ef"
+"The hashed equivalent of r2 is: 4458e89e9eb806f1ac60acfdf45d85b6"
+"The hashed equivalent of r3 is: acd601db5552408851070043947683ef"
+```
+
+
+## And Note... {.smaller}
+```python
+import requests
+night = requests.get("http://www.gutenberg.org/ebooks/1514.txt.utf-8")
+print(f"The text is {night.text[30:70]}")
+print(f"The text is {len(night.text):,} characters long")
+hash = hashlib.md5(night.text.encode())
+print(f"This can be hashed into: {hash.hexdigest()}")
+```
+
+Outputs:
+```bash
+"The text is A Midsummer Night's Dream by Shakespeare"
+"The text is 112,127 characters long"
+"This can be hashed into: cce0d35b8b2c4dafcbde3deb983fec0a"
+```
+
+::: {.notes}
+
+Can be applied to *anything*: even one byte's difference (e.g. in a application) can lead to a different hash output.
+
+But notice that hashes are always the same length. This property is quite useful for databases and verifying the integrity of applications (MD5 Checksums).
+
+:::
+
+## JupyterLab Password {.smaller}
+
+You may have noticed this in Docker:
+```bash
+'sha1:5b1c205a53e14e:0ce169b9834984347d62b20b9a82f6513355f72d'
+```
+
+How this was generated:
+```python
+import uuid, hashlib
+salt = uuid.uuid4().hex[:16] # Truncate salt
+password = 'casa2021'        # Set password
+
+# Here we combine the password and salt to 
+# 'add complexity' to the hash
+hashed_password = hashlib.sha1(password.encode() + 
+                  salt.encode()).hexdigest()
+print(':'.join(['sha1',salt,hashed_password]))
+```
+
+::: {.aside}
+Don't set your passwords [this way](https://edition.cnn.com/2019/04/22/uk/most-common-passwords-scli-gbr-intl/index.html).
+:::
+
+::: {.notes}
+Then you can replace the `JUPYTER_PWD` parameter in the start-up string for Docker if you want to set a password.
+:::
+
+
+## Encryption & Security
+
+Simple hashing algorithms are not normally secure enough for full encryption. Genuine security training takes a whole degree + years of experience.
+
+Areas to look at if you get involved in applications:
+
+- Public and Private Key Encryption (esp. OpenSSL)
+- Privileges used by Applications (esp. Docker)
+- Revocable Tokens (e.g. for APIs)
+- Injection Attacks (esp. for SQL using NULL-byte and similar)
+
+# Thank you!

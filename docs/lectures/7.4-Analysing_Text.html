@@ -389,9 +389,51 @@
   <p class="author">Jon Reades</p>
 </section>
 
-<section class="slide level2">
-
-<p>May already be familiar with concept as ‘dummy variables’ in economics/regression:</p>
+<section id="dummy-variables" class="slide level2">
+<h2>Dummy Variables</h2>
+<p>The concept of ‘dummy variables’ in economics/regression is a useful point to start thinking about text:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Topic</th>
+<th>Dummy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>News</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>Culture</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>Politics</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>Entertainment</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+<aside class="notes">
+<p>What’s the problem with this approach when you’re thinking about the topics in a document? You either have to assign each document to one, and only one, topic, or you need a <em>lot</em> of dummies.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="one-hot-encoders" class="slide level2">
+<h2>One-Hot Encoders</h2>
 <table>
 <thead>
 <tr class="header">
@@ -404,28 +446,28 @@
 </thead>
 <tbody>
 <tr class="odd">
-<td>News</td>
+<td>News item</td>
 <td>1</td>
 <td>1</td>
 <td>0</td>
 <td>1</td>
 </tr>
 <tr class="even">
-<td>Culture</td>
+<td>Culture item</td>
 <td>0</td>
 <td>1</td>
 <td>1</td>
 <td>0</td>
 </tr>
 <tr class="odd">
-<td>Politics</td>
+<td>Politics item</td>
 <td>1</td>
 <td>0</td>
 <td>0</td>
 <td>1</td>
 </tr>
 <tr class="even">
-<td>Entertainment</td>
+<td>Entertainment item</td>
 <td>1</td>
 <td>1</td>
 <td>1</td>
@@ -434,8 +476,8 @@
 </tbody>
 </table>
 <aside class="notes">
-<p>Certainly One-Hot encoders are rarely, if ever, used this way, but for keyword detection this might be appropriate: i.e.&nbsp;this word was used in this document!</p>
-<p>Only difference is One Hot == <span class="math display">\[n\]</span> variables, Dummy == <span class="math display">\[n-1\]</span>.</p>
+<p>One-Hot encoders are not <em>often</em> used this way, but for keyword detection or keyword-based classification this might be appropriate: i.e.&nbsp;this keyword was used in this document!</p>
+<p>So the big difference is One Hot == <span class="math inline">\(n\)</span> variables, Dummy == <span class="math inline">\(n-1\)</span>.</p>
 <p>Definitely some ‘gotchas’ in deployment: one-hot models shouldn’t have an intercept unless you apply a ‘ridge shrinkage penalty’. Standardisation affects whether or not an intercept is needed.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
@@ -449,9 +491,9 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="the-bag-of-words" class="slide level2 smaller">
+<section id="the-bag-of-words" class="slide level2">
 <h2>The ‘Bag of Words’</h2>
-<p>Could simply be seen as an extension of binarised approach on preceding slide:</p>
+<p>Just like a one-hot (binarised approach) on preceding slide but now we count occurences:</p>
 <table>
 <thead>
 <tr class="header">
@@ -464,28 +506,28 @@
 </thead>
 <tbody>
 <tr class="odd">
-<td>News</td>
+<td>News item</td>
 <td>4</td>
 <td>2</td>
 <td>0</td>
 <td>6</td>
 </tr>
 <tr class="even">
-<td>Culture</td>
+<td>Culture item</td>
 <td>0</td>
 <td>4</td>
 <td>7</td>
 <td>0</td>
 </tr>
 <tr class="odd">
-<td>Politics</td>
+<td>Politics item</td>
 <td>3</td>
 <td>0</td>
 <td>0</td>
 <td>3</td>
 </tr>
 <tr class="even">
-<td>Entertainment</td>
+<td>Entertainment item</td>
 <td>3</td>
 <td>4</td>
 <td>8</td>
@@ -494,42 +536,50 @@
 </tbody>
 </table>
 </section>
-<section id="bow-in-practice" class="slide level2 smaller">
+<section id="bow-in-practice" class="slide level2">
 <h2>BoW in Practice</h2>
 <p>Enter, stage left, <a href="https://scikit-learn.org/stable/">scikit-learn</a>:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> CountVectorizer</span>
 <span id="cb1-2"><a href="#cb1-2"></a>vectorizer <span class="op">=</span> CountVectorizer()</span>
 <span id="cb1-3"><a href="#cb1-3"></a></span>
-<span id="cb1-4"><a href="#cb1-4"></a>vectorizer.fit(texts)</span>
-<span id="cb1-5"><a href="#cb1-5"></a>vectors <span class="op">=</span> vectorizer.transform(texts)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co"># Non-reusable transformer</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a>vectors <span class="op">=</span> vectorizer.fit_transform(texts)</span>
 <span id="cb1-6"><a href="#cb1-6"></a></span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="co"># Same thing:</span></span>
-<span id="cb1-8"><a href="#cb1-8"></a><span class="co"># vectors = vectorizer.fit_transform(texts)</span></span>
-<span id="cb1-9"><a href="#cb1-9"></a></span>
-<span id="cb1-10"><a href="#cb1-10"></a><span class="bu">print</span>(<span class="ss">f'Vocabulary: </span><span class="sc">{</span>vectorizer<span class="sc">.</span>vocabulary_<span class="sc">}</span><span class="ss">'</span>)</span>
-<span id="cb1-11"><a href="#cb1-11"></a><span class="bu">print</span>(<span class="ss">f'Full vector: </span><span class="sc">{</span>vectors<span class="sc">.</span>toarray()<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="co"># Reusable transformer</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a>vectorizer.fit(texts)</span>
+<span id="cb1-9"><a href="#cb1-9"></a>vectors1 <span class="op">=</span> vectorizer.transform(texts1)</span>
+<span id="cb1-10"><a href="#cb1-10"></a>vectors2 <span class="op">=</span> vectorizer.transform(texts2)</span>
+<span id="cb1-11"><a href="#cb1-11"></a></span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="bu">print</span>(<span class="ss">f'Vocabulary: </span><span class="sc">{</span>vectorizer<span class="sc">.</span>vocabulary_<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb1-13"><a href="#cb1-13"></a><span class="bu">print</span>(<span class="ss">f'All vectors: </span><span class="sc">{</span>vectors<span class="sc">.</span>toarray()<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="tfidf" class="slide level2 smaller">
+<section id="tfidf" class="slide level2">
 <h2>TF/IDF</h2>
 <p>Builds on Count Vectorisation by normalising the document frequency measure by the overall corpus frequency. Common words receive a large penalty:</p>
 <p><span class="math display">\[
 W(t,d) = TF(t,d) / log(N/DF_{t})
 \]</span></p>
-<p>For example: if the term ‘cat’ appears 3 times in a document of 100 words then <span class="math inline">\(TF(t,d)=3/100\)</span>. If there are 10,000 documents and cat appears in 1,000 documents then <span class="math inline">\(N/DF_{t}=10000/1000\)</span> and <span class="math inline">\(log(10)=1\)</span>, so IDF=1 and TF/IDF=0.03.</p>
+<p>For example:</p>
+<ul>
+<li>If the term ‘cat’ appears 3 times in a document of 100 words then Term Frequency given by: <span class="math inline">\(TF(t,d)=3/100\)</span>, and</li>
+<li>If there are 10,000 documents and cat appears in 1,000 documents then Normalised Document Frequency given by: <span class="math inline">\(N/DF_{t}=10000/1000\)</span> so the Inverse Document Frequency is <span class="math inline">\(log(10)=1\)</span>,</li>
+<li>So IDF=1 and TF/IDF=0.03.</li>
+</ul>
 </section>
-<section id="tfidf-in-practice" class="slide level2 smaller">
+<section id="tfidf-in-practice" class="slide level2">
 <h2>TF/IDF in Practice</h2>
 <div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> TfidfVectorizer</span>
 <span id="cb2-2"><a href="#cb2-2"></a>vectorizer <span class="op">=</span> TfidfVectorizer()</span>
 <span id="cb2-3"><a href="#cb2-3"></a></span>
-<span id="cb2-4"><a href="#cb2-4"></a>vectorizer.fit(texts)</span>
-<span id="cb2-5"><a href="#cb2-5"></a>vectors <span class="op">=</span> vectorizer.transform(texts)</span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co"># Non-reusable form:</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a>vectors<span class="op">=</span>vectorizer.fit_transform(texts)</span>
 <span id="cb2-6"><a href="#cb2-6"></a></span>
-<span id="cb2-7"><a href="#cb2-7"></a><span class="co"># Same thing:</span></span>
-<span id="cb2-8"><a href="#cb2-8"></a><span class="co"># vectors=vectorizer.fit_transform(texts)</span></span>
-<span id="cb2-9"><a href="#cb2-9"></a></span>
-<span id="cb2-10"><a href="#cb2-10"></a><span class="bu">print</span>(<span class="ss">f'Vocabulary: </span><span class="sc">{</span>vectorizer<span class="sc">.</span>vocabulary_<span class="sc">}</span><span class="ss">'</span>)</span>
-<span id="cb2-11"><a href="#cb2-11"></a><span class="bu">print</span>(<span class="ss">f'Full vector: </span><span class="sc">{</span>vectors<span class="sc">.</span>toarray()<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="co"># Reusable form:</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a>vectorizer.fit(texts)</span>
+<span id="cb2-9"><a href="#cb2-9"></a>vectors <span class="op">=</span> vectorizer.transform(texts)</span>
+<span id="cb2-10"><a href="#cb2-10"></a></span>
+<span id="cb2-11"><a href="#cb2-11"></a><span class="bu">print</span>(<span class="ss">f'Vocabulary: </span><span class="sc">{</span>vectorizer<span class="sc">.</span>vocabulary_<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb2-12"><a href="#cb2-12"></a><span class="bu">print</span>(<span class="ss">f'Full vector: </span><span class="sc">{</span>vectors<span class="sc">.</span>toarray()<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <aside class="notes">
 <p>What do you notice about how this code differs from the CountVectorizer?</p>
 <style type="text/css">
@@ -546,7 +596,7 @@ W(t,d) = TF(t,d) / log(N/DF_{t})
 </section>
 <section id="term-co-occurence-matrix-tcm" class="slide level2 smaller">
 <h2>Term Co-Occurence Matrix (TCM)</h2>
-<p>Three input texts:</p>
+<p>Three input texts with a distance weighting (<span class="math inline">\(d/2\)</span>, where <span class="math inline">\(d&lt;3\)</span>):</p>
 <ul>
 <li>the cat sat on the mat</li>
 <li>the cat sat on the fluffy mat</li>
@@ -639,18 +689,51 @@ W(t,d) = TF(t,d) / log(N/DF_{t})
 </tbody>
 </table>
 </section>
-<section id="text2vec" class="slide level2 smaller">
-<h2>Text2Vec</h2>
-<p>Typically some kind of 2 or 3-layer neural network that ‘learns’ (using as big a training data set as possible) how to embed the TCM into a lower-dimension representation.</p>
-<p>Conceptual similarities to PCA in terms of what we’re trying to achieve, but the <em>process</em> is utterly different.</p>
-<p>Many different approaches, but <a href="https://nlp.stanford.edu/projects/glove/">GloVe</a> (Stanford), <a href="https://code.google.com/archive/p/word2vec/">word2vec</a> (Google), <a href="https://fasttext.cc/docs/en/english-vectors.html">fastText</a> (Facebook), and <a href="https://allennlp.org/elmo">ELMo</a> (Allen) or <a href="https://github.com/google-research/bert">BERT</a> (Google) are probably the best-known.</p>
+<section id="how-big-is-a-tcm" class="slide level2">
+<h2>How Big is a TCM?</h2>
+<p>The problem:</p>
+<ul>
+<li>A corpus with 10,000 words has a TCM of size <span class="math inline">\(10,000^{2}\)</span> (100,000,000)</li>
+<li>A corpus with 50,000 words has a TCM of size <span class="math inline">\(50,000^{2}\)</span> (2,500,000,000)</li>
+</ul>
+<p>Cleaning is <em>necessary</em>, but it’s not <em>sufficient</em> to create a tractable TCM on a large corpus.</p>
+<aside class="notes">
+<p>Although usually used in the context of clustering, there’s also a curse of dimensionality here!</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="sentiment-analysis" class="slide level2 smaller">
+<section id="enter-document-embeddings" class="slide level2">
+<h2>Enter Document Embeddings</h2>
+<p>Typically, some kind of 2 or 3-layer neural network that ‘learns’ how to <em>embed</em> the TCM into a lower-dimension representation: from <span class="math inline">\(m \times m\)</span> to <span class="math inline">\(m \times n, n &lt;&lt; m\)</span>.</p>
+<p>Similar to PCA in terms of what we’re trying to achieve, but the <em>process</em> is utterly different.</p>
+<aside class="notes">
+<p>Many different approaches, but <a href="https://nlp.stanford.edu/projects/glove/">GloVe</a> (Stanford), <a href="https://code.google.com/archive/p/word2vec/">word2vec</a> (Google), <a href="https://fasttext.cc/docs/en/english-vectors.html">fastText</a> (Facebook), and <a href="https://allennlp.org/elmo">ELMo</a> (Allen) or <a href="https://github.com/google-research/bert">BERT</a> (Google) are probably the best-known.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="sentiment-analysis" class="slide level2">
 <h2>Sentiment Analysis</h2>
 <p>Requires us to deal in great detail with bi- and tri-grams because <em>negation</em> and <em>sarcasm</em> are hard. Also tends to require training/labelled data.</p>
-<div data-align="center">
-<p><a href="https://medium.com/@tomyuz/a-sentiment-analysis-approach-to-predicting-stock-returns-d5ca8b75a42"> <img src="https://raw.githubusercontent.com/jreades/i2p/master/lectures/img/Sentiment_Analysis.png" width="500"> </a></p>
-</div>
+
+<img data-src="./img/Sentiment_Analysis.png" width="450" class="r-stretch"><p><a href="https://medium.com/@tomyuz/a-sentiment-analysis-approach-to-predicting-stock-returns-d5ca8b75a42">Source</a>.</p>
 </section>
 <section id="clustering" class="slide level2 smaller">
 <h2>Clustering</h2>

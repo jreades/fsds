@@ -391,74 +391,77 @@
 
 <section class="slide level2">
 
-<h3 id="with-pysal-geopandas">(With PySAL &amp; GeoPandas)</h3>
-<p><a href="https://pysal.org/documentation">Read the Docs</a>.</p>
-<p>{{Mind-Map}} PySAL libpysal weights Distance Weights Continguity Weights explore esda inequality pointpats … model mgwr spglm spreg … viz legendgram mapclassify splot</p>
+
+<img data-src="https://pysal.org/pysal1.png" class="r-stretch"><p>For this one, you really need to <a href="https://pysal.org/docs/users/">read the docs</a>.</p>
 </section>
 <section id="getting-spatial-with-boroughs" class="slide level2 smaller">
 <h2>Getting Spatial (with Boroughs)</h2>
 <div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
 <span id="cb1-2"><a href="#cb1-2"></a>url <span class="op">=</span> <span class="st">'https://bit.ly/3neINBV'</span></span>
 <span id="cb1-3"><a href="#cb1-3"></a>boros <span class="op">=</span> gpd.read_file(url, driver<span class="op">=</span><span class="st">'GPKG'</span>)</span>
-<span id="cb1-4"><a href="#cb1-4"></a>boros.plot(color<span class="op">=</span><span class="st">'none'</span>,edgecolor<span class="op">=</span><span class="st">'red'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4"></a>boros.plot(color<span class="op">=</span><span class="st">'none'</span>, edgecolor<span class="op">=</span><span class="st">'red'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 <img data-src="img/Borough_Map.png" class="r-stretch"></section>
-<section id="handy-recall" class="slide level2 smaller">
-<h2>Handy Recall</h2>
-<p>And if you are trying to follow along by writing code…</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb2-2"><a href="#cb2-2"></a>url <span class="op">=</span><span class="st">'https://bit.ly/3owocdI'</span></span>
-<span id="cb2-3"><a href="#cb2-3"></a>df  <span class="op">=</span> pd.read_csv(url) </span>
-<span id="cb2-4"><a href="#cb2-4"></a>df[<span class="st">'price'</span>] <span class="op">=</span> df.price.<span class="bu">str</span>.replace(<span class="st">'$'</span>,<span class="st">''</span>).astype(<span class="st">'float'</span>)</span>
-<span id="cb2-5"><a href="#cb2-5"></a>gdf <span class="op">=</span> gpd.GeoDataFrame(df, </span>
-<span id="cb2-6"><a href="#cb2-6"></a>        geometry<span class="op">=</span>gpd.points_from_xy(</span>
-<span id="cb2-7"><a href="#cb2-7"></a>          df[<span class="st">'longitude'</span>], df[<span class="st">'latitude'</span>], crs<span class="op">=</span><span class="st">'epsg:4326'</span></span>
-<span id="cb2-8"><a href="#cb2-8"></a>        )</span>
-<span id="cb2-9"><a href="#cb2-9"></a>      )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This will load the sampled Airbnb data from GitHub.</p>
-</section>
 <section id="convex-hull" class="slide level2">
 <h2>Convex Hull</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>boros[<span class="st">'hulls'</span>] <span class="op">=</span> boros.geometry.convex_hull</span>
-<span id="cb3-2"><a href="#cb3-2"></a>boros <span class="op">=</span> boros.set_geometry(<span class="st">'hulls'</span>)</span>
-<span id="cb3-3"><a href="#cb3-3"></a>boros.plot(column<span class="op">=</span><span class="st">'NAME'</span>, categorical<span class="op">=</span><span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>boros[<span class="st">'hulls'</span>] <span class="op">=</span> boros.geometry.convex_hull</span>
+<span id="cb2-2"><a href="#cb2-2"></a>boros <span class="op">=</span> boros.set_geometry(<span class="st">'hulls'</span>)</span>
+<span id="cb2-3"><a href="#cb2-3"></a>boros.plot(column<span class="op">=</span><span class="st">'NAME'</span>, categorical<span class="op">=</span><span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 <img data-src="img/Boroughs_Hull.png" class="r-stretch"></section>
 <section id="dissolve" class="slide level2 smaller">
 <h2>Dissolve</h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>boros[<span class="st">'region'</span>] <span class="op">=</span> <span class="st">'London'</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a>ldn <span class="op">=</span> boros.dissolve(by<span class="op">=</span><span class="st">'region'</span>)</span>
-<span id="cb4-3"><a href="#cb4-3"></a></span>
-<span id="cb4-4"><a href="#cb4-4"></a>f,ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">8</span>))</span>
-<span id="cb4-5"><a href="#cb4-5"></a>ldn.plot(ax<span class="op">=</span>ax)</span>
-<span id="cb4-6"><a href="#cb4-6"></a>gdf.plot(ax<span class="op">=</span>ax, column<span class="op">=</span><span class="st">'price'</span>, scheme<span class="op">=</span><span class="st">'HeadTailBreaks'</span>, cmap<span class="op">=</span><span class="st">'inferno'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-
-<img data-src="img/London.png" class="r-stretch"></section>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>boros[<span class="st">'region'</span>] <span class="op">=</span> <span class="st">'London'</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>boros <span class="op">=</span> boros.set_geometry(<span class="st">'geometry'</span>) <span class="co"># Set back to original geom</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a>ldn   <span class="op">=</span> boros.dissolve(by<span class="op">=</span><span class="st">'region'</span>)    <span class="co"># And dissolve to a single poly</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a></span>
+<span id="cb3-5"><a href="#cb3-5"></a>f,ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">8</span>))    <span class="co"># New plot</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a>ldn.plot(ax<span class="op">=</span>ax)                        <span class="co"># Add London layer to axis</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img data-src="img/London.png" height="400"></p>
+</section>
 <section id="simplify" class="slide level2">
 <h2>Simplify</h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>ldn.simplify(<span class="dv">250</span>).plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-
-<img data-src="img/London_Simplify.png" class="r-stretch"></section>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>ldn.simplify(<span class="dv">500</span>).plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img data-src="img/London_Simplify.png" height="500"></p>
+</section>
 <section id="buffer" class="slide level2">
 <h2>Buffer</h2>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>ldn.<span class="bu">buffer</span>(<span class="dv">500</span>).plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-
-<img data-src="img/London_Buffer.png" class="r-stretch"></section>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>ldn.<span class="bu">buffer</span>(<span class="dv">500</span>).plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img data-src="img/London_Buffer.png" height="500"></p>
+</section>
 <section id="buffer-simplify" class="slide level2">
 <h2>Buffer &amp; Simplify</h2>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>ldn.<span class="bu">buffer</span>(<span class="dv">1000</span>).simplify(<span class="dv">1000</span>).plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-
-<img data-src="img/London_Buffer_Simplify.png" class="r-stretch"></section>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>ldn.<span class="bu">buffer</span>(<span class="dv">1000</span>).simplify(<span class="dv">1000</span>).plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img data-src="img/London_Buffer_Simplify.png" height="500"></p>
+</section>
 <section id="difference" class="slide level2">
 <h2>Difference</h2>
 <p>And some nice chaining…</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>ldn.<span class="bu">buffer</span>(<span class="dv">3000</span>).simplify(<span class="dv">2500</span>).difference(ldn.geometry).plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-
-<img data-src="img/London_Buffer_Simplify_Diff.png" class="r-stretch"></section>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>ldn.<span class="bu">buffer</span>(<span class="dv">3000</span>).simplify(<span class="dv">2500</span>).difference(ldn.geometry).plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img data-src="img/London_Buffer_Simplify_Diff.png" height="500"></p>
+</section>
 <section id="legendgrams" class="slide level2">
 <h2>Legendgrams</h2>
+<p><img data-src="img/Legendgram.png" height="500"></p>
 
-<img data-src="img/Legendgram.png" class="r-stretch"></section>
+<aside><div>
+<p>Code begins on next slide.</p>
+</div></aside></section>
+<section id="handy-recall" class="slide level2 smaller">
+<h2>Handy Recall</h2>
+<p>Load the CSV file and convert to GeoDataFrame:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb8-2"><a href="#cb8-2"></a>url <span class="op">=</span> <span class="st">'https://bit.ly/3I0XDrq'</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a>df  <span class="op">=</span> pd.read_csv(url) </span>
+<span id="cb8-4"><a href="#cb8-4"></a>df[<span class="st">'price'</span>] <span class="op">=</span> df.price.<span class="bu">str</span>.replace(<span class="st">'$'</span>,<span class="st">''</span>,regex<span class="op">=</span><span class="va">False</span>).astype(<span class="st">'float'</span>)</span>
+<span id="cb8-5"><a href="#cb8-5"></a>df.set_index(<span class="st">'id'</span>,inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb8-6"><a href="#cb8-6"></a>gdf <span class="op">=</span> gpd.GeoDataFrame(df, </span>
+<span id="cb8-7"><a href="#cb8-7"></a>        geometry<span class="op">=</span>gpd.points_from_xy(</span>
+<span id="cb8-8"><a href="#cb8-8"></a>          df[<span class="st">'longitude'</span>], df[<span class="st">'latitude'</span>], crs<span class="op">=</span><span class="st">'epsg:4326'</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a>        )</span>
+<span id="cb8-10"><a href="#cb8-10"></a>      )</span>
+<span id="cb8-11"><a href="#cb8-11"></a>gdf <span class="op">=</span> gdf.to_crs(<span class="st">'epsg:27700'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
 <section id="implementing-legendgrams" class="slide level2 smaller">
 <h2>Implementing Legendgrams</h2>
 <div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="im">import</span> pysal <span class="im">as</span> ps</span>
@@ -498,19 +501,18 @@
 <h2>KNN Weights</h2>
 
 <img data-src="img/Airbnb_KNN.png" class="r-stretch"></section>
-<section class="slide level2">
-
-<h3 id="implementing-knn">Implementing KNN</h3>
+<section id="implementing-knn" class="slide level2 smaller">
+<h2>Implementing KNN</h2>
 <div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="im">from</span> pysal.lib <span class="im">import</span> weights</span>
 <span id="cb10-2"><a href="#cb10-2"></a>w <span class="op">=</span> weights.KNN.from_dataframe(gdf, k<span class="op">=</span><span class="dv">3</span>)</span>
 <span id="cb10-3"><a href="#cb10-3"></a>gdf[<span class="st">'w_price'</span>] <span class="op">=</span> weights.lag_spatial(w, gdf.price)</span>
 <span id="cb10-4"><a href="#cb10-4"></a>gdf[[<span class="st">'name'</span>,<span class="st">'price'</span>,<span class="st">'w_price'</span>]].sample(<span class="dv">5</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <table>
 <colgroup>
-<col style="width: 11%">
+<col style="width: 9%">
+<col style="width: 36%">
 <col style="width: 22%">
-<col style="width: 27%">
-<col style="width: 38%">
+<col style="width: 31%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -554,7 +556,7 @@
 </tbody>
 </table>
 </section>
-<section id="spatial-lag-of-distance-band" class="slide level2">
+<section id="spatial-lag-of-distance-band" class="slide level2 smaller">
 <h2>Spatial Lag of Distance Band</h2>
 
 <img data-src="img/Airbnb_DistanceBand.png" class="r-stretch"></section>

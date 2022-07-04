@@ -389,13 +389,13 @@
   <p class="author">Jon Reades</p>
 </section>
 
-<section id="say-what" class="slide level2">
-<h2>Say What?</h2>
-<blockquote>
-<p>Bye, bye, for loop!</p>
-</blockquote>
+<section>
+<section id="bye-bye-for-loop" class="title-slide slide level1 center">
+<h1>Bye, bye, for loop!</h1>
 <aside class="notes">
 <p>Another great example of something where what makes sense to a human is not always the fastest way to <em>get things done</em>.</p>
+<p>Code is <em>embarassingly parallel</em> if the problem so clearly lacks interconnections with other problems that the code can be <em>run</em> in parallel without any effort.</p>
+<p><em>Vectorisation</em> is the process (usually done ‘under the hood’ <em>for</em> you rather than explicitly <em>by</em> you) by which code that, by default, runs linearly is modified to run in parallel.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -408,13 +408,23 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="do-more-with-each-tick-tock" class="slide level2 smaller">
-<h2>Do More with Each Tick-Tock</h2>
+<section id="when-a-loop-is-not-best" class="slide level2">
+<h2>When a Loop Is Not Best</h2>
+<p>If you need to apply the same operation to lots of data why do it <em>sequentially</em>?</p>
 <ul>
-<li><p>Library/Package implements weak form of vectorisation or parallelisation, but some libraries do more.</p></li>
-<li><p>You must request it because it requires hardware or other support and it is highly optimsed.</p></li>
-<li><p>Multiple separate machines acting as one.</p></li>
-<li><p>Multiple GPUs acting as one.</p></li>
+<li>Your computer has many cores and can run many threads <em>in parallel</em>.</li>
+<li>The computer divides the work across the threads it sees fit.</li>
+<li>The computer reassemble the answer at the end from the threads.</li>
+</ul>
+<p>If you have 4 cores then parallelisation cuts analysis time by 75%.</p>
+</section>
+<section id="so-do-more-with-each-clock-cycle" class="slide level2">
+<h2>So Do More with Each Clock Cycle</h2>
+<ul>
+<li>Many libraries/packages implement weak forms of vectorisation or parallelisation, but some libraries do more.</li>
+<li>You must request it because it requires hardware or other support and it is highly optimsed.</li>
+<li>Multiple separate machines acting as one.</li>
+<li>Multiple GPUs acting as one.</li>
 </ul>
 <aside class="notes">
 <p>Conceptually, these get challenging if you can’t clearly separate/parallelise tasks.</p>
@@ -430,37 +440,56 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="pandas.apply-vs.-numpy" class="slide level2 smaller">
+<section id="pandas.apply-vs.-numpy" class="slide level2">
 <h2>Pandas.apply() vs.&nbsp;Numpy</h2>
-<p>Numpy is fully vectorised and will almost <em>always</em> out-perform operations like Pandas <code>apply</code>, but both are massive improvements on for loops:</p>
+<p>Numpy is fully vectorised and will almost <em>always</em> out-perform Pandas <code>apply</code>, but both are massive improvements on for loops:</p>
 <ul>
 <li>Execute row-wise and column-wise operations.</li>
-<li>Apply any arbitrary function to individual elements or whole axes.</li>
-<li>Can make use of <code>lambda</code> functions too for ‘one off’ operations.</li>
+<li>Apply any arbitrary function to individual elements or whole axes (i.e.&nbsp;row or col).</li>
+<li>Can make use of <code>lambda</code> functions too for ‘one off’ operations (ad-ohoc functions).</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-2"><a href="#cb1-2"></a>df.<span class="bu">apply</span>(np.sqrt) <span class="co"># Square root of all values</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a>df.<span class="bu">apply</span>(np.<span class="bu">sum</span>, axis<span class="op">=</span><span class="dv">0</span>) <span class="co"># Sum by row</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="lambda-functions" class="slide level2 smaller">
 <h2>Lambda Functions</h2>
 <p>Functional equivalent of list comprehensions: 1-line, anonymous functions.</p>
 <p>For example:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="op">&gt;&gt;&gt;</span> x <span class="op">=</span> <span class="kw">lambda</span> a : a <span class="op">+</span> <span class="dv">10</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a><span class="op">&gt;&gt;&gt;</span> <span class="bu">print</span>(x(<span class="dv">5</span>))</span>
-<span id="cb2-3"><a href="#cb2-3"></a><span class="dv">15</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>x <span class="op">=</span> <span class="kw">lambda</span> a : a <span class="op">+</span> <span class="dv">10</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="bu">print</span>(x(<span class="dv">5</span>)) <span class="co"># 15</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Or:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="op">&gt;&gt;&gt;</span> full_name <span class="op">=</span> <span class="kw">lambda</span> first, last: <span class="ss">f'Full name: </span><span class="sc">{</span>first<span class="sc">.</span>title()<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span>last<span class="sc">.</span>title()<span class="sc">}</span><span class="ss">'</span></span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="op">&gt;&gt;&gt;</span> full_name(<span class="st">'guido'</span>, <span class="st">'van rossum'</span>)</span>
-<span id="cb3-3"><a href="#cb3-3"></a><span class="co">'Guido Van Rossum'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>full_name <span class="op">=</span> <span class="kw">lambda</span> first, last: <span class="ss">f'Full name: </span><span class="sc">{</span>first<span class="sc">.</span>title()<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span>last<span class="sc">.</span>title()<span class="sc">}</span><span class="ss">'</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="bu">print</span>(full_name(<span class="st">'guido'</span>, <span class="st">'van rossum'</span>)) <span class="co"># 'Guido Van Rossum'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>These are very useful with pandas.</p>
 </section>
+<section id="lets-compare" class="slide level2 smaller">
+<h2>Let’s Compare</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="im">import</span> time</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="kw">def</span> func(a,b):</span>
+<span id="cb3-4"><a href="#cb3-4"></a>  c <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(a)): c <span class="op">+=</span> a[i]<span class="op">*</span>b[i]</span>
+<span id="cb3-6"><a href="#cb3-6"></a>  <span class="cf">return</span> c</span>
+<span id="cb3-7"><a href="#cb3-7"></a></span>
+<span id="cb3-8"><a href="#cb3-8"></a>a <span class="op">=</span> np.random.rand(<span class="dv">1000000</span>)</span>
+<span id="cb3-9"><a href="#cb3-9"></a>b <span class="op">=</span> np.random.rand(<span class="dv">1000000</span>)</span>
+<span id="cb3-10"><a href="#cb3-10"></a>t1 <span class="op">=</span> time.time()</span>
+<span id="cb3-11"><a href="#cb3-11"></a><span class="bu">print</span>(func(a,b))</span>
+<span id="cb3-12"><a href="#cb3-12"></a>t2 <span class="op">=</span> time.time()</span>
+<span id="cb3-13"><a href="#cb3-13"></a><span class="bu">print</span>(np.dot(a,b))</span>
+<span id="cb3-14"><a href="#cb3-14"></a>t3 <span class="op">=</span> time.time()</span>
+<span id="cb3-15"><a href="#cb3-15"></a></span>
+<span id="cb3-16"><a href="#cb3-16"></a><span class="bu">print</span>(<span class="ss">f"For loop took </span><span class="sc">{</span>(t2<span class="op">-</span>t1)<span class="op">*</span><span class="dv">1000</span><span class="sc">:.0f}</span><span class="ss"> milliseconds"</span>)</span>
+<span id="cb3-17"><a href="#cb3-17"></a><span class="bu">print</span>(<span class="ss">f"Numpy took </span><span class="sc">{</span>(t3<span class="op">-</span>t2)<span class="op">*</span><span class="dv">1000</span><span class="sc">:.0f}</span><span class="ss"> milliseconds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Generally, I get <code>numpy</code> taking 86ms, while the <code>for</code> loop takes 331ms!</p>
+
+<aside><div>
+<p>/ht to <a href="https://thelastbyteblog.wordpress.com/2020/06/09/vectorization-vs-parallelization-making-you-code-run-faster/">The Last Byte</a> for inspiration.</p>
+</div></aside></section></section>
 <section>
 <section id="dealing-with-structured-text" class="title-slide slide level1 center">
 <h1>Dealing with Structured Text</h1>
 
 </section>
-<section id="beautiful-soup-selenium" class="slide level2 smaller">
+<section id="beautiful-soup-selenium" class="slide level2">
 <h2>Beautiful Soup &amp; Selenium</h2>
 <p>Two stages to acquiring web-based documents:</p>
 <ol type="1">
@@ -475,7 +504,7 @@
 <ul>
 <li>For very large corpora, you might want one document at a time (batch).</li>
 <li>For very large files, you might want one line at a time (streaming).</li>
-<li>For large files in large corpora, you might want more than one machine.</li>
+<li>For large files in large corpora, you might want more than one ‘machine’.</li>
 </ul>
 <aside class="notes">
 <p>See the <a href="https://blogs.bl.uk/digital-scholarship/2020/05/searching-etheses-for-the-openvirus-project.html">OpenVirus Project</a>.</p>
@@ -508,9 +537,9 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="starting-points" class="slide level2 smaller">
+<section id="starting-points" class="slide level2">
 <h2>Starting Points</h2>
-<p>These strategies can be sued singly or all-together:</p>
+<p>These strategies can be used singly or all-together:</p>
 <ul>
 <li>Stopwords</li>
 <li>Case</li>
@@ -518,8 +547,6 @@
 <li>Punctuation</li>
 <li>Numbers</li>
 </ul>
-<p>Sample stopwords:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>{<span class="st">'further'</span>, <span class="st">'her'</span>, <span class="st">'their'</span>, <span class="st">'we'</span>, <span class="st">'just'</span>, <span class="st">'why'</span>, <span class="st">'or'</span>, <span class="st">'each'</span>, <span class="st">'s'</span>, <span class="st">"it's"</span>, <span class="st">'ma'</span>, <span class="st">'below'</span>, <span class="st">'am'</span>, <span class="st">'more'</span>, <span class="st">"couldn't"</span>, <span class="st">"should've"</span>, <span class="st">'was'</span>, <span class="st">"mightn't"</span>, <span class="st">'weren'</span>, <span class="st">'ourselves'</span>, <span class="st">'have'</span>, <span class="st">'if'</span>, <span class="st">'then'</span>, <span class="st">'from'</span>, ...}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>But these are just a <em>starting</em> point!</p>
 <aside class="notes">
 <p>What’s the semantic difference between 1,000,000 and 999,999?</p>
@@ -539,8 +566,8 @@
 <h2>Distributional Pruning</h2>
 <p>We can prune from both ends of the distribution:</p>
 <ul>
-<li>Overly rare words: what does a word used in <em>one</em> document help us to do?</li>
-<li>Overly common ones: what does a word used in <em>every</em> document help us to do?</li>
+<li>Overly <em>rare</em> words: what does a word used in <em>one</em> document help us to understand about a corpus?</li>
+<li>Overly <em>common</em> ones: what does a word used in <em>every</em> document help us to understand about a corpus?</li>
 </ul>
 <aside class="notes">
 <p>Again, no hard-and-fast rules: can be done on raw counts, percentage of all documents, etc. Choices will, realistically, depend on the nature of the data.</p>
@@ -561,14 +588,16 @@
 <h1>Stemming &amp; Lemmatisation</h1>
 
 </section>
-<section id="why-stem-or-lemmatise" class="slide level2 smaller">
-<h2>Why Stem or Lemmatise?</h2>
-<p>Reduce the breadth of human expression:</p>
+<section id="different-approaches" class="slide level2">
+<h2>Different Approaches</h2>
+<p>Humans use a <em>lot</em> of words/concepts<sup>1</sup>:</p>
 <ul>
-<li>Porter &amp; Snowball Stemming: rules-based truncation to a stem (can be augmented by language awareness).</li>
-<li>Lemmatisation: dictionary-based ‘deduplication’ to a lemma (can be augmented by POS-tagging).</li>
+<li>Stemming: rules-based truncation to a stem (can be augmented by language awareness).</li>
+<li>Lemmatisation: usually dictionary-based ‘deduplication’ to a lemma (can be augmented by POS-tagging).</li>
 </ul>
-<p>Compare:</p>
+<aside><ol class="aside-footnotes"><li id="fn1" role="doc-endnote"><p>A recent digitsation effort by Harvard and Google estimated 1,022,000 unique word-forms in English <em>alone</em> (<a href="https://englishlive.ef.com/blog/language-lab/many-words-english-language/">Source</a>).</p></li></ol></aside></section>
+<section id="different-outcomes" class="slide level2">
+<h2>Different Outcomes</h2>
 <table>
 <thead>
 <tr class="header">
@@ -605,6 +634,14 @@
 </tr>
 </tbody>
 </table>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">from</span> nltk.stem.porter <span class="im">import</span> PorterStemmer</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="im">from</span> nltk.stem.snowball <span class="im">import</span> SnowballStemmer</span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="im">from</span> nltk.stem <span class="im">import</span> WordNetLemmatizer</span>
+<span id="cb4-4"><a href="#cb4-4"></a>wnl <span class="op">=</span> WordNetLemmatizer()</span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="cf">for</span> w <span class="kw">in</span> [<span class="st">'monkeys'</span>,<span class="st">'cities'</span>,<span class="st">'complexity'</span>,<span class="st">'Reades'</span>]:</span>
+<span id="cb4-6"><a href="#cb4-6"></a>    <span class="bu">print</span>(<span class="ss">f"Porter: </span><span class="sc">{</span>PorterStemmer()<span class="sc">.</span>stem(w)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb4-7"><a href="#cb4-7"></a>    <span class="bu">print</span>(<span class="ss">f"Snowball: </span><span class="sc">{</span>SnowballStemmer(<span class="st">'english'</span>)<span class="sc">.</span>stem(w)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb4-8"><a href="#cb4-8"></a>    <span class="bu">print</span>(<span class="ss">f"Lemmatisation: </span><span class="sc">{</span>wnl<span class="sc">.</span>lemmatize(w)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="resources" class="slide level2 smaller">
 <h2>Resources</h2>
@@ -617,7 +654,6 @@
 <li><a href="https://www.kdnuggets.com/2018/08/practitioners-guide-processing-understanding-text-2.html">KD Nuggets: A Practitioner’s Guide to NLP</a></li>
 <li><a href="https://www.kdnuggets.com/2020/08/linguistic-fundamentals-natural-language-processing.html">KD Nuggets: Linguistic Fundamentals for Natural Language Processing: 100 Essentials from Semantics and Pragmatics</a></li>
 <li><a href="https://www.kdnuggets.com/2020/10/roadmap-natural-language-processing-nlp.html">Roadmap to Natural Language Processing (NLP)</a></li>
-<li></li>
 </ul>
 </section></section>
 <section id="thank-you" class="title-slide slide level1 center">
@@ -628,6 +664,8 @@
 <p>Cleaning Text • Jon Reades</p>
 </div>
 </section>
+
+
     </div>
   </div>
 

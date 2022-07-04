@@ -389,20 +389,26 @@
   <p class="author">Jon Reades</p>
 </section>
 
+<section>
+<section id="pandas-learns-about-maps" class="title-slide slide level1 center">
+<h1>Pandas Learns about Maps</h1>
+
+</section>
 <section class="slide level2">
 
-<h3 id="pandas-learns-about-maps">Pandas Learns about Maps</h3>
 <h3 id="geopandas">Geopandas</h3>
 <p>‘Geospatial Pandas’ provides a set of tools for working with <em>geo-data</em> in a pandas-like way. See: <a href="https://geopandas.org/">GeoPandas.org</a> and <a href="https://geopandas.readthedocs.io/en/latest/docs.html">Read the Docs</a>.</p>
 <h3 id="pysal">PySAL</h3>
 <p>The Python Spatial Analysis Library provides an array of tools for performing spatial <em>analysis</em>. Now uses geo-pandas as default data structure. See: <a href="https://pysal.org/">PySAL.org</a> and <a href="https://splot.readthedocs.io/en/stable/index.html">Read the Docs</a>.</p>
-</section>
+<h3 id="moving-pandas">Moving Pandas</h3>
+<p>A newer library that builds on Geopandas to offer <a href="https://anitagraser.github.io/movingpandas/">movement analysis tools</a>.</p>
+</section></section>
 <section>
 <section id="basic-functionality" class="title-slide slide level1 center">
 <h1>Basic Functionality</h1>
 
 </section>
-<section id="reading-writing" class="slide level2 smaller">
+<section id="reading-writing" class="slide level2">
 <h2>Reading &amp; Writing</h2>
 <p>Supported file formats:</p>
 <table>
@@ -443,23 +449,24 @@
 </table>
 <p>Additionally, it is possible to read only <a href="https://geopandas.org/io.html#reading-subsets-of-the-data">subsets of the data</a> using row, column, geometry, and bbox filters.</p>
 </section>
-<section id="reading-remote-files" class="slide level2 smaller">
+<section id="reading-remote-files" class="slide level2">
 <h2>Reading (Remote Files)</h2>
 <p>Again, depending on file size you may want to save these locally, but…</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
 <span id="cb1-2"><a href="#cb1-2"></a>gpkg_src <span class="op">=</span> <span class="st">'https://bit.ly/2K4JcsB'</span></span>
 <span id="cb1-3"><a href="#cb1-3"></a>world <span class="op">=</span> gpd.read_file(gpkg_src)</span>
-<span id="cb1-4"><a href="#cb1-4"></a>world.plot(facecolor<span class="op">=</span><span class="st">'white'</span>, edgecolor<span class="op">=</span><span class="st">'darkblue'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co"># The ';' suppresses matplotlib output</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a>world.plot(facecolor<span class="op">=</span><span class="st">'white'</span>, edgecolor<span class="op">=</span><span class="st">'darkblue'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 <img data-src="./img/World_Demo.png" class="r-stretch"></section>
-<section id="writing-local-files" class="slide level2 smaller">
+<section id="writing-local-files" class="slide level2">
 <h2>Writing (Local Files)</h2>
-<p>Can apparently write any OGR-supported <a href="https://gdal.org/drivers/vector/index.html">vector drivers</a>.</p>
-<pre><code>world.to_file('world.gpkg', driver='GPKG')
-world.to_file('world.shp') # driver='ESRI Shapefile'
-world.to_file('world.geojson', driver='GeoJSON')</code></pre>
+<p>Write any OGR-supported <a href="https://gdal.org/drivers/vector/index.html">vector drivers</a>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>world.to_file(<span class="st">'world.gpkg'</span>, driver<span class="op">=</span><span class="st">'GPKG'</span>)</span>
+<span id="cb2-2"><a href="#cb2-2"></a>world.to_file(<span class="st">'world.shp'</span>, driver<span class="op">=</span><span class="st">'ESRI Shapefile'</span>)</span>
+<span id="cb2-3"><a href="#cb2-3"></a>world.to_file(<span class="st">'world.geojson'</span>, driver<span class="op">=</span><span class="st">'GeoJSON'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <aside class="notes">
-<p>If you forget to specify the driver this writes shapefiles to a directory called <code>world.gpkg</code>!</p>
+<p>If you forget to specify the driver it writes shapefiles by default. This is mainly an issue if you try to write a GeoPackage or GeoJSON file but then end up writing a shapefile to a directory called <code>world.gpkg</code>!</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -472,9 +479,9 @@ world.to_file('world.geojson', driver='GeoJSON')</code></pre>
           display:block!important;
       }</style></aside>
 </section>
-<section id="data-structures" class="slide level2 smaller">
+<section id="data-structures" class="slide level2">
 <h2>Data Structures</h2>
-<p>GeoPandas does all this by adding two new classes:</p>
+<p>GeoPandas does all this by adding just <em>two</em> new classes:</p>
 <ul>
 <li><a href="https://geopandas.org/data_structures.html#geodataframe">GeoDataFrame</a></li>
 <li><a href="https://geopandas.org/data_structures.html#geoseries">GeoSeries</a></li>
@@ -486,20 +493,22 @@ world.to_file('world.geojson', driver='GeoJSON')</code></pre>
 <li>Polygons / Multi-Polygons</li>
 </ol>
 </section>
-<section id="consider" class="slide level2 smaller">
+<section id="consider" class="slide level2">
 <h2>Consider</h2>
 <p>Recall that we can ask if a particular object is an <em><a href="https://www.w3schools.com/python/ref_func_isinstance.asp">instance</a></em> of any given class:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="bu">print</span>(<span class="bu">isinstance</span>(world, <span class="bu">str</span>))</span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="bu">print</span>(<span class="bu">isinstance</span>(world, gpd.GeoDataFrame))</span>
-<span id="cb3-3"><a href="#cb3-3"></a><span class="bu">print</span>(<span class="bu">isinstance</span>(world, pd.DataFrame))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="bu">print</span>(<span class="bu">isinstance</span>(world, <span class="bu">str</span>))</span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="bu">print</span>(<span class="bu">isinstance</span>(world, pd.DataFrame))</span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="bu">print</span>(<span class="bu">isinstance</span>(world, gpd.GeoDataFrame))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Prints: <code>False</code>, <code>True</code>, <code>True</code>.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="bu">print</span>(<span class="bu">isinstance</span>(world.geometry, <span class="bu">str</span>))</span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="bu">print</span>(<span class="bu">isinstance</span>(world.geometry, pd.Series))</span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="bu">print</span>(<span class="bu">isinstance</span>(world.geometry, gpd.GeoSeries))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="bu">print</span>(<span class="bu">isinstance</span>(world.geometry, <span class="bu">str</span>))</span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="bu">print</span>(<span class="bu">isinstance</span>(world.geometry, pd.Series))</span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="bu">print</span>(<span class="bu">isinstance</span>(world.geometry, gpd.GeoSeries))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Also prints: <code>False</code>, <code>True</code>, <code>True</code>.</p>
 <aside class="notes">
 <p>So converting from Pandas to GeoPandas works well because GeoPandas knows all about Pandas.</p>
-<p>You can use a GeoDataFrame anywhere you’d use a DataFrame with no loss of functionality! Same for a GeoSeries, though in this case a GeoSeries cannot perform the same statistical operations.</p>
+<p>You can use a GeoDataFrame anywhere you’d use a DataFrame with <em>no</em> loss of functionality! Same for a GeoSeries, though in this case a GeoSeries cannot perform the same statistical operations.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -515,58 +524,39 @@ world.to_file('world.geojson', driver='GeoJSON')</code></pre>
 <section id="projections" class="slide level2 smaller">
 <h2>Projections</h2>
 <p>Depending on your data source, you may or may not have projection information attached to your GeoDataFrame:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="bu">print</span>(world.crs)</span>
-<span id="cb5-2"><a href="#cb5-2"></a>epsg:<span class="dv">4326</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>But:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="op">&gt;&gt;&gt;</span> world.crs</span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="op">&lt;</span>Geographic <span class="dv">2</span><span class="er">D</span> CRS: EPSG:<span class="dv">4326</span><span class="op">&gt;</span></span>
-<span id="cb6-3"><a href="#cb6-3"></a>Name: WGS <span class="dv">84</span></span>
-<span id="cb6-4"><a href="#cb6-4"></a>Axis Info [ellipsoidal]:</span>
-<span id="cb6-5"><a href="#cb6-5"></a><span class="op">-</span> Lat[north]: Geodetic latitude (degree)</span>
-<span id="cb6-6"><a href="#cb6-6"></a><span class="op">-</span> Lon[east]: Geodetic longitude (degree)</span>
-<span id="cb6-7"><a href="#cb6-7"></a>Area of Use:</span>
-<span id="cb6-8"><a href="#cb6-8"></a><span class="op">-</span> name: World</span>
-<span id="cb6-9"><a href="#cb6-9"></a><span class="op">-</span> bounds: (<span class="op">-</span><span class="fl">180.0</span>, <span class="op">-</span><span class="fl">90.0</span>, <span class="fl">180.0</span>, <span class="fl">90.0</span>)</span>
-<span id="cb6-10"><a href="#cb6-10"></a>Datum: World Geodetic System <span class="dv">1984</span></span>
-<span id="cb6-11"><a href="#cb6-11"></a><span class="op">-</span> Ellipsoid: WGS <span class="dv">84</span></span>
-<span id="cb6-12"><a href="#cb6-12"></a><span class="op">-</span> Prime Meridian: Greenwich</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="bu">print</span>(world.crs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>outputs <code>epsg:4326</code>, but:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>world.crs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>outputs:</p>
+<pre><code>&lt;Geographic 2D CRS: EPSG:4326&gt;
+Name: WGS 84
+Axis Info [ellipsoidal]:
+- Lat[north]: Geodetic latitude (degree)
+- Lon[east]: Geodetic longitude (degree)
+Area of Use:
+- name: World
+- bounds: (-180.0, -90.0, 180.0, 90.0)
+Datum: World Geodetic System 1984
+- Ellipsoid: WGS 84
+- Prime Meridian: Greenwich</code></pre>
 </section>
 <section id="finding-projections" class="slide level2 smaller">
 <h2>Finding Projections</h2>
-<p>You can pretty much find any EPSG you might need at <a href="http://epsg.io/">epsg.io</a>. By far the most commonly-used <em>here</em> are:</p>
+<p>You’ll have already covered this in GIS, but you can find nearly any EPSG you might need at <a href="http://epsg.io/">epsg.io</a>. By far the most commonly-used <em>here</em> are:</p>
 <ul>
 <li><a href="http://epsg.io/4326">EPSG:4326</a> for the World Geodetic System 84 used in GPS.</li>
 <li><a href="http://epsg.io/27700">EPSG:27700</a> for OSGB 1936/British National Grid used in the UK.</li>
 </ul>
-<p><em>Note</em>: large territories (such as Canada, China and Russia) may well have <em>multiple</em> projections at the state of provincial level.</p>
+<p><em>Note</em>: recall that large territories (such as Canada, China and Russia) may well have <em>multiple</em> projections at the state of provincial level.</p>
 </section>
-<section id="reprojection" class="slide level2 smaller">
+<section id="reprojection" class="slide level2">
 <h2>Reprojection</h2>
-<p>For data sets <em>without</em> projection information (i.e.&nbsp;anything loaded from a shapefile) you must <code>gdf.set_crs(&lt;spec&gt;)</code>. For all others you should <code>gdf.to_crs(&lt;spec&gt;)</code>.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>world2 <span class="op">=</span> world.to_crs(<span class="st">'ESRI:54030'</span>)</span>
-<span id="cb7-2"><a href="#cb7-2"></a>world2.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>For data sets <em>without</em> projection information (i.e.&nbsp;often anything loaded from a shapefile) you must <code>gdf.set_crs(&lt;spec&gt;)</code>. For all others you should <code>gdf.to_crs(&lt;spec&gt;)</code>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>world2 <span class="op">=</span> world.to_crs(<span class="st">'ESRI:54030'</span>)</span>
+<span id="cb8-2"><a href="#cb8-2"></a>world2.plot()<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><img data-src="img/World_Reprojected.png"></p>
 <aside class="notes">
-<p>Different geometry columns can have different projections.</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
-</section>
-<section id="standards" class="slide level2">
-<h2>Standards?</h2>
-<blockquote>
-<p>Can you think why the <em>European Petroleum Standards Group</em> is one of the big drivers behind (and users of) high-quality projection data?</p>
-</blockquote>
-<aside class="notes">
-<p><em>Hint</em>: you <em>really</em> don’t want to miss <em>what</em>?</p>
+<p>Unlike a shapefile, you can have more than one geometry column, each with a different projection. However, only <em>one</em> will be plotted (the one named <code>geometry</code> or specified via <code>set_geometry()</code>).</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -582,8 +572,13 @@ world.to_file('world.geojson', driver='GeoJSON')</code></pre>
 <section id="the-spatial-index" class="slide level2 smaller">
 <h2>The Spatial Index</h2>
 <p>We can use GeoSeries’ spatial index directly to perform simple spatial queries:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>wslice <span class="op">=</span> world.cx[<span class="op">-</span><span class="dv">50</span>:<span class="dv">50</span>, <span class="op">-</span><span class="dv">20</span>:<span class="dv">20</span>]</span>
-<span id="cb8-2"><a href="#cb8-2"></a>ax <span class="op">=</span> wslice.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb9-2"><a href="#cb9-2"></a>wslice <span class="op">=</span> world.cx[<span class="op">-</span><span class="dv">50</span>:<span class="dv">50</span>, <span class="op">-</span><span class="dv">20</span>:<span class="dv">20</span>] <span class="co"># cx = coordinate index</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a>ax <span class="op">=</span> wslice.plot()</span>
+<span id="cb9-4"><a href="#cb9-4"></a>plt.axvline(<span class="op">-</span><span class="dv">50</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span><span class="st">'red'</span>)</span>
+<span id="cb9-5"><a href="#cb9-5"></a>plt.axvline(<span class="dv">50</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span><span class="st">'red'</span>)</span>
+<span id="cb9-6"><a href="#cb9-6"></a>plt.axhline(<span class="op">-</span><span class="dv">20</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span><span class="st">'red'</span>)</span>
+<span id="cb9-7"><a href="#cb9-7"></a>plt.axhline(<span class="dv">20</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span><span class="st">'red'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 <img data-src="img/geo-index.png" class="r-stretch"></section>
 <section id="attributes" class="slide level2">
@@ -597,7 +592,7 @@ world.to_file('world.geojson', driver='GeoJSON')</code></pre>
 <li><code>is_valid</code> — if you need to test</li>
 </ul>
 </section>
-<section id="methods" class="slide level2 smaller">
+<section id="methods" class="slide level2">
 <h2>Methods</h2>
 <p>Additional GeoSeries methods icnlude:</p>
 <ul>
@@ -634,22 +629,22 @@ world.to_file('world.geojson', driver='GeoJSON')</code></pre>
 <h1>Point Data</h1>
 
 </section>
-<section id="converting-non-spatial-data-1" class="slide level2 smaller">
+<section id="converting-non-spatial-data-1" class="slide level2">
 <h2>Converting Non-Spatial Data 1</h2>
-<p>Lat/Long and Northing/Easting benefit from a helper function:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>url <span class="op">=</span> <span class="st">'https://bit.ly/3owocdI'</span></span>
-<span id="cb9-2"><a href="#cb9-2"></a>df  <span class="op">=</span> pd.read_csv(url)</span>
-<span id="cb9-3"><a href="#cb9-3"></a></span>
-<span id="cb9-4"><a href="#cb9-4"></a>gdf <span class="op">=</span> gpd.GeoDataFrame(df, </span>
-<span id="cb9-5"><a href="#cb9-5"></a>            geometry<span class="op">=</span>gpd.points_from_xy(</span>
-<span id="cb9-6"><a href="#cb9-6"></a>                        df[<span class="st">'longitude'</span>], </span>
-<span id="cb9-7"><a href="#cb9-7"></a>                        df[<span class="st">'latitude'</span>], </span>
-<span id="cb9-8"><a href="#cb9-8"></a>                        crs<span class="op">=</span><span class="st">'epsg:4326'</span></span>
-<span id="cb9-9"><a href="#cb9-9"></a>            )</span>
-<span id="cb9-10"><a href="#cb9-10"></a>      )</span>
-<span id="cb9-11"><a href="#cb9-11"></a>gdf.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Lat/Long and Northing/Easting benefit from a helper function <code>gpd.points_from_xy()</code>:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>url <span class="op">=</span> <span class="st">'https://bit.ly/3I0XDrq'</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a>df  <span class="op">=</span> pd.read_csv(url)</span>
+<span id="cb10-3"><a href="#cb10-3"></a></span>
+<span id="cb10-4"><a href="#cb10-4"></a>gdf <span class="op">=</span> gpd.GeoDataFrame(df, </span>
+<span id="cb10-5"><a href="#cb10-5"></a>            geometry<span class="op">=</span>gpd.points_from_xy(</span>
+<span id="cb10-6"><a href="#cb10-6"></a>                        df[<span class="st">'longitude'</span>], </span>
+<span id="cb10-7"><a href="#cb10-7"></a>                        df[<span class="st">'latitude'</span>], </span>
+<span id="cb10-8"><a href="#cb10-8"></a>                        crs<span class="op">=</span><span class="st">'epsg:4326'</span></span>
+<span id="cb10-9"><a href="#cb10-9"></a>            )</span>
+<span id="cb10-10"><a href="#cb10-10"></a>      )</span>
+<span id="cb10-11"><a href="#cb10-11"></a>gdf.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <aside class="notes">
-<p>You can also use list comprehensions (<code>[x for x in list]</code>) and <code>zip</code> to combine two lists!</p>
+<p>You can also use list comprehensions (<code>[x for x in list]</code>) and <code>zip</code> to combine two lists but then need to specify the CRS as a separate step!</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -679,16 +674,21 @@ world.to_file('world.geojson', driver='GeoJSON')</code></pre>
           display:block!important;
       }</style></aside>
 </section>
-<section id="converting-non-spatial-data-2" class="slide level2 smaller">
+<section id="converting-non-spatial-data-2" class="slide level2">
 <h2>Converting Non-Spatial Data 2</h2>
-<p>Other feature types need to be in some kind of regular format such as <a href="https://www.vertica.com/docs/9.2.x/HTML/Content/Authoring/AnalyzingData/Geospatial/Spatial_Definitions/WellknownTextWKT.htm">Well-Known Text</a> (WKT), <a href="https://geojson.org/">GeoJSON</a>, or something readable as a Shapely geometry.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>bbox <span class="op">=</span> <span class="st">'POLYGON((5000000.0 2500000.0, 5000000.0 -2500000.0, -5000000.0 -2500000.0, -5000000.0 2500000.0, 5000000.0 2500000.0))'</span></span>
-<span id="cb10-2"><a href="#cb10-2"></a></span>
-<span id="cb10-3"><a href="#cb10-3"></a><span class="im">from</span> shapely <span class="im">import</span> wkt</span>
-<span id="cb10-4"><a href="#cb10-4"></a>bgdf <span class="op">=</span> gpd.GeoDataFrame(</span>
-<span id="cb10-5"><a href="#cb10-5"></a>                {<span class="st">'id'</span>:[<span class="dv">0</span>], <span class="st">'coordinates'</span>:bbox})</span>
-<span id="cb10-6"><a href="#cb10-6"></a>bgdf[<span class="st">'geometry'</span>] <span class="op">=</span> bgdf.coordinates.<span class="bu">apply</span>(wkt.loads)</span>
-<span id="cb10-7"><a href="#cb10-7"></a>bgdf <span class="op">=</span> bgdf.set_crs(<span class="st">'ESRI:54030'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Other feature types need to be in some kind of regular format such as <a href="https://www.vertica.com/docs/9.2.x/HTML/Content/Authoring/AnalyzingData/Geospatial/Spatial_Definitions/WellknownTextWKT.htm">Well-Known Text</a> (WKT), <a href="https://geojson.org/">GeoJSON</a>, or something readable <em>as</em> a Shapely geometry.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="im">from</span> shapely <span class="im">import</span> wkt</span>
+<span id="cb11-2"><a href="#cb11-2"></a></span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="co"># Notice coordinate pairs and last point is same as first one</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a>bbox <span class="op">=</span> <span class="st">'POLYGON((5000000.0 2500000.0, 5000000.0 -2500000.0, -5000000.0 -2500000.0, -5000000.0 2500000.0, 5000000.0 2500000.0))'</span></span>
+<span id="cb11-5"><a href="#cb11-5"></a></span>
+<span id="cb11-6"><a href="#cb11-6"></a><span class="co"># Create GeoPandas from dict just like Pandas</span></span>
+<span id="cb11-7"><a href="#cb11-7"></a>bgdf <span class="op">=</span> gpd.GeoDataFrame({<span class="st">'id'</span>:[<span class="dv">0</span>], <span class="st">'coordinates'</span>:bbox})</span>
+<span id="cb11-8"><a href="#cb11-8"></a></span>
+<span id="cb11-9"><a href="#cb11-9"></a><span class="co"># Turn it into a geometry</span></span>
+<span id="cb11-10"><a href="#cb11-10"></a>bgdf[<span class="st">'geometry'</span>] <span class="op">=</span> bgdf.coordinates.<span class="bu">apply</span>(wkt.loads)</span>
+<span id="cb11-11"><a href="#cb11-11"></a>bgdf <span class="op">=</span> bgdf.set_crs(<span class="st">'ESRI:54030'</span>)</span>
+<span id="cb11-12"><a href="#cb11-12"></a>bgdf.plot() <span class="co"># Not very interesting but...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <aside class="notes">
 <p>These are more rarely used for our purposes but knowing that they exist is useful.</p>
 <style type="text/css">
@@ -705,12 +705,12 @@ world.to_file('world.geojson', driver='GeoJSON')</code></pre>
 </section>
 <section id="from-text-to-bounding-box" class="slide level2 smaller">
 <h2>From Text to Bounding Box</h2>
-<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>scale <span class="op">=</span> <span class="bu">int</span>(<span class="bu">float</span>(<span class="st">'1e7'</span>))</span>
-<span id="cb11-2"><a href="#cb11-2"></a>f,ax<span class="op">=</span>plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">4</span>))</span>
-<span id="cb11-3"><a href="#cb11-3"></a>world2.plot(ax<span class="op">=</span>ax)</span>
-<span id="cb11-4"><a href="#cb11-4"></a>bgdf.plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'none'</span>, edgecolor<span class="op">=</span><span class="st">'r'</span>)</span>
-<span id="cb11-5"><a href="#cb11-5"></a>ax.set_xlim([<span class="op">-</span><span class="fl">0.75</span><span class="op">*</span>scale, <span class="op">+</span><span class="fl">0.75</span><span class="op">*</span>scale])</span>
-<span id="cb11-6"><a href="#cb11-6"></a>ax.set_ylim([<span class="op">-</span><span class="dv">3</span><span class="op">*</span>scale<span class="op">/</span><span class="dv">10</span>, <span class="op">+</span><span class="dv">3</span><span class="op">*</span>scale<span class="op">/</span><span class="dv">10</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>scale <span class="op">=</span> <span class="bu">int</span>(<span class="bu">float</span>(<span class="st">'1e7'</span>))</span>
+<span id="cb12-2"><a href="#cb12-2"></a>f,ax<span class="op">=</span>plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">4</span>))</span>
+<span id="cb12-3"><a href="#cb12-3"></a>world2.plot(ax<span class="op">=</span>ax)</span>
+<span id="cb12-4"><a href="#cb12-4"></a>bgdf.plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'none'</span>, edgecolor<span class="op">=</span><span class="st">'r'</span>)</span>
+<span id="cb12-5"><a href="#cb12-5"></a>ax.set_xlim([<span class="op">-</span><span class="fl">0.75</span><span class="op">*</span>scale, <span class="op">+</span><span class="fl">0.75</span><span class="op">*</span>scale])</span>
+<span id="cb12-6"><a href="#cb12-6"></a>ax.set_ylim([<span class="op">-</span><span class="dv">3</span><span class="op">*</span>scale<span class="op">/</span><span class="dv">10</span>, <span class="op">+</span><span class="dv">3</span><span class="op">*</span>scale<span class="op">/</span><span class="dv">10</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 <img data-src="img/WKT_Example.png" class="r-stretch"></section>
 <section id="resources" class="slide level2">
@@ -719,7 +719,6 @@ world.to_file('world.geojson', driver='GeoJSON')</code></pre>
 <li><a href="https://geopandas.readthedocs.io/en/latest/docs.html">GeoPandas on ReadTheDocs</a></li>
 <li><a href="https://darribas.org/gds_course/content/home.html">Dani’s GDS Course</a></li>
 <li><a href="http://darribas.org/wmn/">Dani’s Web Mapping Course</a></li>
-<li><a href="http://darribas.org/gds19/">Dani’s GDS’19 Course</a></li>
 </ul>
 </section></section>
 <section id="thank-you" class="title-slide slide level1 center">

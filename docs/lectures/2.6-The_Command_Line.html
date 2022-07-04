@@ -389,24 +389,11 @@
   <p class="author">Jon Reades</p>
 </section>
 
-<section class="slide level2">
-
-<p>Obviously, the first question most new programmers want to ask about the Command Line is: <strong>why?</strong></p>
-<p>As in: 1. Why are you torturing me with this arcane knowledge? 2. Why do I need to do this when we have slick IDEs now?</p>
-</section>
-<section id="the-answer" class="slide level2 smaller">
-<h2>The Answer?</h2>
-<p>No matter how long you <em>try</em> to avoid it, eventually you’ll find things that can <em>only</em> be solved (or can be much more <em>quickly</em> solved) using the Command Line.</p>
-<p>Things like:</p>
-<ul>
-<li>Interacting with <code>git</code> is actually <em>easier</em> on the Command Line.</li>
-<li>Installing and/or running developer-oriented tools (e.g.&nbsp;<code>docker</code>, <code>GDAL</code>, <code>proj4/6</code>).</li>
-<li>Bulk operations, peeking and poking at (large) files, navigating the File System…</li>
-<li>Command-chaining/scripting: automate things that would be hard/annoying to do manually…</li>
-</ul>
-<p>A lot of this ties back to <strong>data</strong> and <strong>servers</strong>.</p>
+<section>
+<section id="first-question-why" class="title-slide slide level1 center">
+<h1>First Question: Why???</h1>
 <aside class="notes">
-<p>True story: 25 years ago I used to process more than 40GB of compressed plain-text data every day from my Titanium PowerBook. But that’s because it was all running on a server in New Jersey while I was in Manhattan. Everything was done using the Command Line and SSH (secure shell).</p>
+<p>The first question most new programmers want to ask about the Command Line is: <strong>why?</strong></p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -419,12 +406,58 @@
           display:block!important;
       }</style></aside>
 </section>
+<section id="as-in" class="slide level2">
+<h2>As in…</h2>
+<ol type="1">
+<li>Why are you torturing me with this arcane knowledge?</li>
+<li>Why do I need to do this when we have slick IDEs now?</li>
+</ol>
+</section>
+<section id="the-answer" class="slide level2">
+<h2>The Answer?</h2>
+<p>No matter how long you <em>try</em> to avoid it, eventually you’ll find things that can <em>only</em> be solved (or that can be much more <em>quickly</em> solved) using the Command Line Interface (CLI).</p>
+<p>Things like:</p>
+<ul>
+<li>Interacting with <code>git</code> is actually <em>easier</em> on the Command Line.</li>
+<li>Making the most of developer-oriented tools (e.g.&nbsp;<code>docker</code>, <code>GDAL</code>, <code>proj4/6</code>).</li>
+<li>Peeking and poking at (large) files <em>efficiently</em>…</li>
+<li>Automating things that would be hard/annoying to do manually…</li>
+</ul>
+<p>A lot of this ties back to <strong>data</strong> and <strong>servers</strong>.</p>
+<aside class="notes">
+<p>True story: 25 years ago I used to process more than 40GB of compressed plain-text data every day from my Titanium PowerBook. But that’s because it was all running on a server in New Jersey while I was in Manhattan. Everything was done using the Command Line and SSH (secure shell).</p>
+<p>More recently, processing OSM data for the <em>entire</em> UK was possible on my MacBook Air using GDAL and bash scripts but <em>not</em> possible using R/RStudio directly. Basically, the work took so long (&gt; 13 hours) that RStudio thought the script had died and tried to kill it.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="anatomy-of-a-command" class="slide level2">
+<h2>Anatomy of a Command</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="ex">curl</span> <span class="at">-L</span> http://bit.ly/2vrUFKi <span class="kw">|</span> </span>
+<span id="cb1-2"><a href="#cb1-2"></a>  <span class="fu">head</span> <span class="at">-3</span> <span class="kw">|</span>  </span>
+<span id="cb1-3"><a href="#cb1-3"></a>  <span class="fu">awk</span> <span class="at">-F</span><span class="st">","</span> <span class="st">'{ print $2, $4, $6; }'</span> <span class="op">&gt;</span> results.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This command does <em>four</em> things in one ‘line’ on the CLI:</p>
+<ol type="1">
+<li><code>curl</code> downloads the file and passes the contents to…</li>
+<li><code>head</code> which takes the first three rows and passes those to…</li>
+<li><code>awk</code> which splits the rows on <code>","</code> and takes the 2nd, 4th, and 6th fields and redirects them into…</li>
+<li>A ‘new’ file called <code>results.txt</code></li>
+</ol>
+</section></section>
 <section>
 <section id="core-commands" class="title-slide slide level1 center">
 <h1>Core Commands</h1>
 
 </section>
-<section id="interacting-with-files" class="slide level2 smaller">
+<section id="interacting-with-files" class="slide level2">
 <h2>Interacting with Files</h2>
 <table>
 <thead>
@@ -452,35 +485,13 @@
 </tr>
 <tr class="even">
 <td style="text-align: left;"><code>mv</code></td>
-<td style="text-align: left;">Move</td>
+<td style="text-align: left;">Rename/Move file <code>a</code> to <code>b</code></td>
 <td style="text-align: left;"><code>mv a.txt b.txt</code></td>
 </tr>
-</tbody>
-</table>
-<p>You’ll also notice some ‘shortcuts’ here:</p>
-<table>
-<colgroup>
-<col style="width: 61%">
-<col style="width: 38%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Shortcut</th>
-<th style="text-align: left;">Means</th>
-</tr>
-</thead>
-<tbody>
 <tr class="odd">
-<td style="text-align: left;"><code>.</code></td>
-<td style="text-align: left;">The <em>current</em> directory where commands will be executed.</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><code>..</code></td>
-<td style="text-align: left;">The directory <em>above</em> the current one (or ‘containing’, if you prefer).</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"><code>~</code></td>
-<td style="text-align: left;">The current user’s <em>home</em> directory</td>
+<td style="text-align: left;"><code>find</code></td>
+<td style="text-align: left;">Find files matching some criteria</td>
+<td style="text-align: left;"><code>find . -name "*.md"</code></td>
 </tr>
 </tbody>
 </table>
@@ -498,31 +509,106 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="a-simulated-perambulation-across-my-laptop" class="slide level2 smaller">
-<h2>A Simulated Perambulation Across My Laptop</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="bu">cd</span> ~</span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="bu">pwd</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="op">&gt;</span> /Users/casa</span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="fu">ls</span></span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="op">&gt;</span> Applications  <span class="ex">Desktop</span>  Dropbox  ...</span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="bu">cd</span> Dropbox</span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="bu">pwd</span></span>
-<span id="cb1-8"><a href="#cb1-8"></a><span class="op">&gt;</span> /Users/casa/Dropbox</span>
-<span id="cb1-9"><a href="#cb1-9"></a><span class="fu">ls</span></span>
-<span id="cb1-10"><a href="#cb1-10"></a><span class="op">&gt;</span> CASA  <span class="ex">Lectures</span>  Practicals ...</span>
-<span id="cb1-11"><a href="#cb1-11"></a><span class="bu">cd</span> /</span>
-<span id="cb1-12"><a href="#cb1-12"></a><span class="bu">pwd</span></span>
-<span id="cb1-13"><a href="#cb1-13"></a><span class="op">&gt;</span> /</span>
-<span id="cb1-14"><a href="#cb1-14"></a><span class="fu">ls</span></span>
-<span id="cb1-15"><a href="#cb1-15"></a><span class="op">&gt;</span> Applications  <span class="ex">Library</span>  System  Users Volumes ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="common-shortcuts" class="slide level2">
+<h2>Common Shortcuts</h2>
+<table>
+<colgroup>
+<col style="width: 13%">
+<col style="width: 54%">
+<col style="width: 31%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Shortcut</th>
+<th style="text-align: left;">Means</th>
+<th style="text-align: left;">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>.</code></td>
+<td style="text-align: left;">The <em>current</em> working directory</td>
+<td style="text-align: left;"><code>ls .</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>..</code></td>
+<td style="text-align: left;">The directory <em>above</em> the current working one</td>
+<td style="text-align: left;"><code>cd ..</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>~</code></td>
+<td style="text-align: left;">The current user’s <em>home</em> directory.</td>
+<td style="text-align: left;"><code>cd ~</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>/</code></td>
+<td style="text-align: left;">The ‘root’ directory for the <em>entire computer</em></td>
+<td style="text-align: left;"><code>ls /</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>"*"</code></td>
+<td style="text-align: left;">A ‘wildcard’ meaning any number of characters in a filename</td>
+<td style="text-align: left;"><code>find . -name "*.md"</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>"?"</code></td>
+<td style="text-align: left;">A ‘wildcard’ meaning one character in a filename</td>
+<td style="text-align: left;"><code>find . -name "2.?-*.md"</code></td>
+</tr>
+</tbody>
+</table>
+<aside class="notes">
+<p>The main reason we care about all this is that all data is stored <em>somewhere</em> and all code executes <em>somewhere</em>. So we want a way to traverse the device efficiently when looking in directories, creating new files, writing different types of data to different places, and so forth. These shortcuts therefore crop up all over the place ‘in the wild’–if you don’t know what they’re telling you then you’ll wonder why your code doesn’t run or you can’t find the data you saved!</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="a-simulated-walk-across-my-laptop" class="slide level2 smaller">
+<h2>A Simulated Walk Across My Laptop</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="bu">cd</span> /</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="bu">pwd</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="op">&gt;</span> /</span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="fu">ls</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="op">&gt;</span> Applications  <span class="ex">Library</span>  System  Users Volumes ...</span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="bu">cd</span> ~</span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="bu">pwd</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a><span class="op">&gt;</span> /Users/casa</span>
+<span id="cb2-9"><a href="#cb2-9"></a><span class="fu">ls</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="op">&gt;</span> Applications  <span class="ex">Desktop</span>  Dropbox  ...</span>
+<span id="cb2-11"><a href="#cb2-11"></a><span class="bu">cd</span> Dropbox</span>
+<span id="cb2-12"><a href="#cb2-12"></a><span class="bu">pwd</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a><span class="op">&gt;</span> /Users/casa/Dropbox</span>
+<span id="cb2-14"><a href="#cb2-14"></a><span class="fu">ls</span></span>
+<span id="cb2-15"><a href="#cb2-15"></a><span class="op">&gt;</span> CASA  <span class="ex">Lectures</span>  Practicals ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<aside class="notes">
+<p>Modern computers (especially if you’ve grown up around iPhones and Android phones/tablets) are really good at hiding this fact, but that’s because people using phones or tablets really don’t want to be thinking about <em>where</em> their data is being stored, they just want to click save. But when you start coding then you need to start caring a lot more about <em>where</em> something is happening.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="finding-things-in-files" class="slide level2 smaller">
 <h2>Finding Things in Files</h2>
 <table>
 <colgroup>
-<col style="width: 38%">
-<col style="width: 22%">
-<col style="width: 38%">
+<col style="width: 20%">
+<col style="width: 41%">
+<col style="width: 37%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -554,20 +640,38 @@
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><code>wc</code></td>
-<td style="text-align: left;">Count things (rows, words, etc.</td>
+<td style="text-align: left;">Count things (rows, words, etc.)</td>
 <td style="text-align: left;"><code>wc -l file.txt</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>sed</code>/<code>awk</code></td>
+<td style="text-align: left;">Complicated, but powerful, things</td>
+<td style="text-align: left;"><code>awk -F"," '{ print $1, $3; }' file.csv</code></td>
 </tr>
 </tbody>
 </table>
+<aside class="notes">
+<p>The really crucial thing about all of these utilities is that they <em>don’t</em> load the entire file into memory. So you can ‘peek’ into a 15GB text file instantly without waiting four hours for it to load into memory (and then crash your machine). It’s kind of like the anti-Excel.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="time-to-escape" class="slide level2 smaller">
 <h2>Time to Escape!</h2>
 <p>Some characters are ‘special’ and need to be <strong>escaped</strong>. You’ll encounter these both in the shell (a.k.a. command line) and in Python:</p>
 <table>
 <colgroup>
-<col style="width: 35%">
-<col style="width: 23%">
-<col style="width: 41%">
+<col style="width: 12%">
+<col style="width: 43%">
+<col style="width: 43%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -610,9 +714,9 @@
 </tbody>
 </table>
 <p>This also becomes relevant when you’re dealing with quotes:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="st">""</span><span class="ex">This</span> is a problem,<span class="st">" she said."</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="st">""</span><span class="ex">This</span> is a problem,<span class="st">" she said."</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>vs.&nbsp;</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="st">"</span><span class="dt">\"</span><span class="st">This is a problem,</span><span class="dt">\"</span><span class="st"> she said."</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1"></a><span class="st">"</span><span class="dt">\"</span><span class="st">This is a problem,</span><span class="dt">\"</span><span class="st"> she said."</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <aside class="notes">
 <p>The carriage return is only ever encountered on files that have been opened on Windows machines.</p>
 <style type="text/css">
@@ -627,9 +731,14 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="compressingdecompressing-files" class="slide level2 smaller">
+<section id="compressingdecompressing-files" class="slide level2">
 <h2>Compressing/Decompressing Files</h2>
 <table>
+<colgroup>
+<col style="width: 18%">
+<col style="width: 36%">
+<col style="width: 45%">
+</colgroup>
 <thead>
 <tr class="header">
 <th style="text-align: left;">Command</th>
@@ -646,30 +755,49 @@
 <tr class="even">
 <td style="text-align: left;"><code>gunzip</code></td>
 <td style="text-align: left;">Decompress files</td>
-<td style="text-align: left;"><code>gunzip file.txt.gz</code>[ ^1 ]</td>
+<td style="text-align: left;"><code>gunzip file.txt.gz</code><sup>1</sup></td>
 </tr>
 </tbody>
 </table>
-<p>But we can make this more useful by chaining commands together using the ‘pipe’ (<code>|</code>):</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu">gzip</span> <span class="at">-cd</span> very_lg_file.txt.gz <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n</span> 500 <span class="kw">|</span> <span class="fu">grep</span> <span class="st">"pattern"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<aside><ol class="aside-footnotes"><li id="fn1" role="doc-endnote"><p>This can also be done using ‘switches’ passed to gzip: <code>gzip -cd</code> (where <code>-d</code> means ‘decompress’).</p></li></ol></aside></section>
+<section id="chaining-commands" class="slide level2">
+<h2>Chaining Commands</h2>
+<p>The CLI becomes much useful with command chaining:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">gzip</span> <span class="at">-cd</span> very_lg_file.txt.gz <span class="kw">|</span> </span>
+<span id="cb5-2"><a href="#cb5-2"></a>  <span class="fu">head</span> <span class="at">-n</span> 500 <span class="kw">|</span> </span>
+<span id="cb5-3"><a href="#cb5-3"></a>  <span class="fu">grep</span> <span class="st">"pattern"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The ‘pipe’ (<code>|</code>) takes output from command and ‘pipes’ (aka. passes) it to another.</p>
+<aside class="notes">
 <p>This will give you an ‘answer’ much, much, much faster than trying to open the whole file in, say, Excel, Numbers, or even Python.</p>
-<p>[ ^1 ]: This can also be done using ‘switches’ passed to gzip: <code>gzip -cd</code> (where <code>-d</code> means ‘decompress’).</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="redirecting-output" class="slide level2 smaller">
+<section id="redirecting-output" class="slide level2">
 <h2>Redirecting Output</h2>
 <p>We can redirect outputs <em>in to</em> new files with <code>&gt;</code>, and inputs <em>out of</em> existing files using <code>&lt;</code>:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">gzip</span> <span class="at">-cd</span> very_lg_file.txt.gz <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n</span> 500 <span class="kw">|</span> <span class="fu">grep</span> <span class="st">"pattern"</span> <span class="op">&gt;</span> matches.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This directs all of the output from the previous commands into <code>matches.txt</code> as plain-text. The reverse <code>&lt;</code> is only used in very special circumstances so you probably won’t encounter it very often.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">gzip</span> <span class="at">-cd</span> very_lg_file.txt.gz <span class="kw">|</span> </span>
+<span id="cb6-2"><a href="#cb6-2"></a>  <span class="fu">head</span> <span class="at">-n</span> 500 <span class="kw">|</span> </span>
+<span id="cb6-3"><a href="#cb6-3"></a>  <span class="fu">grep</span> <span class="st">"pattern"</span> <span class="op">&gt;</span> matches.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>So the output from the previous commands goes into <code>matches.txt</code> as plain-text. The reverse <code>&lt;</code> is only used in very special circumstances so you probably won’t encounter it very often.</p>
 </section>
 <section id="a-complex-example" class="slide level2 smaller">
 <h2>A (Complex) Example</h2>
 <p>I do <em>not</em> expect you to understand this, but I do want you to understand why this is important:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1"></a><span class="ex">docker</span> run <span class="at">-v</span> conda:/home/jovyan/work <span class="at">--rm</span> <span class="va">${DOCKER_NM}</span> start.sh <span class="dt">\</span></span>
-<span id="cb6-2"><a href="#cb6-2"></a>   conda env export <span class="at">-n</span> <span class="va">${ENV_NM}</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">'1d;$d'</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">'$d'</span> <span class="dt">\</span></span>
-<span id="cb6-3"><a href="#cb6-3"></a>   <span class="kw">|</span> <span class="fu">perl</span> <span class="at">-p</span> <span class="at">-e</span> <span class="st">'s/^([^=]+=)([^=]+)=.+$/$1$2/m'</span> <span class="dt">\</span></span>
-<span id="cb6-4"><a href="#cb6-4"></a>   <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-Ev</span> <span class="st">'\- _|cpp|backports|\- lib|\- tk|\- xorg'</span> <span class="op">&gt;</span> conda/environment_py.yml</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1"></a><span class="ex">docker</span> run <span class="at">-v</span> conda:/home/jovyan/work <span class="at">--rm</span> <span class="va">${DOCKER_NM}</span> start.sh <span class="dt">\</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>   conda env export <span class="at">-n</span> <span class="va">${ENV_NM}</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">'1d;$d'</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">'$d'</span> <span class="dt">\</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a>   <span class="kw">|</span> <span class="fu">perl</span> <span class="at">-p</span> <span class="at">-e</span> <span class="st">'s/^([^=]+=)([^=]+)=.+$/$1$2/m'</span> <span class="dt">\</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a>   <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-Ev</span> <span class="st">'\- _|cpp|backports|\- lib|\- tk|\- xorg'</span> <span class="op">&gt;</span> conda/environment_py.yml</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <aside class="notes">
-<p>This is how I generated the YAML file used by Anaconda Python installers: it is running a command on a virtual machine, collecting the output, filtering out lines by both row number and textual pattern, and directing this all in the <code>environment_py.yml</code> file. This can be run as part of my ‘build’ of the programming environment. It’s <strong>all</strong> automated!</p>
+<p>This is how I generated the YAML file used by Anaconda Python installers: it is running a command on a virtual machine, collecting the output, filtering out lines by both row number and textual pattern, and directing this all in the <code>environment_py.yml</code> file. This can be run as part of my ‘build’ of the programming environment. It’s <em>all</em> automated!</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -689,9 +817,27 @@
 </section>
 <section id="useful-videos" class="slide level2 smaller">
 <h2>Useful Videos</h2>
-<p>The Shell/Terminal in general: - <a href="https://www.youtube.com/watch?v=aKRYQsKR46I">Absolute BEGINNER Guide to the Mac OS Terminal</a> - <a href="https://www.youtube.com/watch?app=desktop&amp;v=gR2bFNrYmD0">Linux Bash Shell for Beginners: Tutorial 1</a> - <a href="https://www.youtube.com/watch?app=desktop&amp;v=oxuRxtrO2Ag">Beginner’s Guide to the Bash Terminal</a> - <a href="http://swcarpentry.github.io/shell-novice/">Shell Novice</a> - <a href="https://www.taniarascia.com/how-to-use-the-command-line-for-apple-macos-and-linux/">How to use the Command Line</a></p>
-<p>Some specific commands: - <a href="https://www.youtube.com/watch?app=desktop&amp;v=nK4028I3N5U">Cat</a> - <a href="https://www.youtube.com/watch?v=EWONqLqSxYc">Gzip/Tar</a> (also a good point about spaces in a file name!) - <a href="https://www.youtube.com/watch?v=VGgTmxXp7xQ">Grep</a> - <a href="https://www.youtube.com/watch?v=KCVaNb_zOuw">Find</a></p>
-<p>Some useful videos: - <a href="https://www.linkedin.com/learning/learning-python-2/using-file-system-shell-methods">Using file system and shell commands</a></p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>The Shell/Terminal in general:</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=aKRYQsKR46I">Absolute BEGINNER Guide to the Mac OS Terminal</a></li>
+<li><a href="https://www.youtube.com/watch?app=desktop&amp;v=gR2bFNrYmD0">Linux Bash Shell for Beginners: Tutorial 1</a></li>
+<li><a href="https://www.youtube.com/watch?app=desktop&amp;v=oxuRxtrO2Ag">Beginner’s Guide to the Bash Terminal</a></li>
+<li><a href="http://swcarpentry.github.io/shell-novice/">Shell Novice</a></li>
+<li><a href="https://www.taniarascia.com/how-to-use-the-command-line-for-apple-macos-and-linux/">How to use the Command Line</a></li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p>Some specific commands:</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?app=desktop&amp;v=nK4028I3N5U">Cat</a></li>
+<li><a href="https://www.youtube.com/watch?v=EWONqLqSxYc">Gzip/Tar</a> (also a good point about spaces in a file name!)</li>
+<li><a href="https://www.youtube.com/watch?v=VGgTmxXp7xQ">Grep</a></li>
+<li><a href="https://www.youtube.com/watch?v=KCVaNb_zOuw">Find</a></li>
+</ul>
+</div>
+</div>
+<p>And lots more here on <a href="https://www.linkedin.com/learning/learning-python-2/using-file-system-shell-methods">using the file system and shell commands</a></p>
 </section></section>
 <section id="thank-you" class="title-slide slide level1 center">
 <h1>Thank you!</h1>
@@ -701,6 +847,8 @@
 <p>The Command Line • Jon Reades</p>
 </div>
 </section>
+
+
     </div>
   </div>
 

@@ -389,9 +389,14 @@
   <p class="author">Jon Reades</p>
 </section>
 
+<section>
+<section id="many-things-are-surprisingly-non-random" class="title-slide slide level1 center">
+<h1>Many things are surprisingly <em>non</em>-random…</h1>
+
+</section>
 <section class="slide level2">
 
-<p><img data-src="./img/Benford.png"></p>
+<p><img data-src="./img/Benford.png" height="550"></p>
 <p><a href="https://en.wikipedia.org/wiki/Benford%27s_law#:~:text=Benford's%20law%2C%20also%20called%20the,life%20sets%20of%20numerical%20data.&amp;text=If%20the%20digits%20were%20distributed,about%2011.1%25%20of%20the%20time">Benford’s Law</a>, which has <a href="https://towardsdatascience.com/what-is-benfords-law-and-why-is-it-important-for-data-science-312cb8b61048">applications in data science</a> and <a href="https://www.journalofaccountancy.com/issues/2017/apr/excel-and-benfords-law-to-detect-fraud.html">fraud detection</a>.</p>
 <aside class="notes">
 <p>Genuine randomness is <em>hard</em>. Most of us, both humans and computers, tend to use shortcuts when generating random numbers.</p>
@@ -413,9 +418,9 @@
 <h2>Reproducibility: Good or Bad?</h2>
 <p>Depends on the problem:</p>
 <ul>
-<li>Banking and Encryption: bad</li>
-<li>Sampling and testing: could go either way</li>
-<li>Reproducing research/documentation: good</li>
+<li>Banking and encryption?</li>
+<li>Sampling and testing?</li>
+<li>Reproducing research/documentation?</li>
 </ul>
 <aside class="notes">
 <p>OK, technically, even encryption needs to be reproducible to allow for <em>de</em>cryption, but you sure don’t want it to be <em>easy</em>.</p>
@@ -431,7 +436,7 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="not-very-good-encryption" class="slide level2 smaller">
+<section id="not-very-good-encryption" class="slide level2">
 <h2>Not Very Good Encryption</h2>
 <table>
 <thead>
@@ -463,33 +468,30 @@
 </tr>
 </tbody>
 </table>
-<p>Known as the Caesar Cypher, but since the transformation is simple (<code>A..Z+=x</code>) decryption is easy. How can we make this harder?</p>
+<p>ROT is known as the Caesar Cypher, but since the transformation is simple (<code>A..Z+=x</code>) decryption is easy now. How can we make this harder?</p>
 </section>
-<section id="python-is-random" class="slide level2 smaller">
+<section id="python-is-random" class="slide level2">
 <h2>Python is Random</h2>
 <div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> random</span>
 <span id="cb1-2"><a href="#cb1-2"></a>random.randint(<span class="dv">0</span>,<span class="dv">10</span>)</span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="op">&gt;</span> <span class="dv">8</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a>random.randint(<span class="dv">0</span>,<span class="dv">10</span>)</span>
 <span id="cb1-4"><a href="#cb1-4"></a>random.randint(<span class="dv">0</span>,<span class="dv">10</span>)</span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="op">&gt;</span> <span class="dv">4</span></span>
-<span id="cb1-6"><a href="#cb1-6"></a>random.randint(<span class="dv">0</span>,<span class="dv">10</span>)</span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="op">&gt;</span> <span class="dv">0</span></span>
-<span id="cb1-8"><a href="#cb1-8"></a>random.randint(<span class="dv">0</span>,<span class="dv">10</span>)</span>
-<span id="cb1-9"><a href="#cb1-9"></a><span class="op">&gt;</span> <span class="dv">8</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5"></a>random.randint(<span class="dv">0</span>,<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>See also: <code>random.randrange</code>, <code>random.choice</code>, <code>random.sample</code>, <code>random.random</code>, <code>random.gauss</code>, etc.</p>
 </section>
-<section id="and-repeat" class="slide level2 smaller">
+<section id="and-repeat" class="slide level2">
 <h2>And Repeat…</h2>
 <div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">import</span> random</span>
 <span id="cb2-2"><a href="#cb2-2"></a>size <span class="op">=</span> <span class="dv">10</span></span>
-<span id="cb2-3"><a href="#cb2-3"></a>data <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> size</span>
+<span id="cb2-3"><a href="#cb2-3"></a>results <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> size</span>
 <span id="cb2-4"><a href="#cb2-4"></a></span>
 <span id="cb2-5"><a href="#cb2-5"></a>tests <span class="op">=</span> <span class="dv">100000</span></span>
 <span id="cb2-6"><a href="#cb2-6"></a><span class="cf">while</span> tests <span class="op">&gt;</span> <span class="dv">0</span>:</span>
-<span id="cb2-7"><a href="#cb2-7"></a>    data[random.randint(<span class="dv">0</span>,<span class="bu">len</span>(data)<span class="op">-</span><span class="dv">1</span>)] <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>    results[random.randint(<span class="dv">0</span>,<span class="bu">len</span>(results)<span class="op">-</span><span class="dv">1</span>)] <span class="op">+=</span> <span class="dv">1</span></span>
 <span id="cb2-8"><a href="#cb2-8"></a>    tests <span class="op">-=</span> <span class="dv">1</span></span>
 <span id="cb2-9"><a href="#cb2-9"></a></span>
-<span id="cb2-10"><a href="#cb2-10"></a><span class="bu">print</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="bu">len</span>(results)):</span>
+<span id="cb2-11"><a href="#cb2-11"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss"> -&gt; </span><span class="sc">{</span>results[i]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <aside class="notes">
 <p>What will this return?</p>
 <p>Will it hold for more than 10 numbers?</p>
@@ -526,11 +528,11 @@
 <section id="aaaaaaaaaaand-repeat-1" class="slide level2">
 <h2>Aaaaaaaaaaand Repeat</h2>
 
-<img data-src="./img/Random.png" class="r-stretch"></section>
-<section id="seeding-keys" class="slide level2">
-<h2>Seeding Keys</h2>
-<p>Technically, computers use <em>pseudo</em>-random number generators. These are initialised with a <strong>seed</strong> to generate <strong>sequences</strong>.</p>
-<p>The <em>same</em> seed will yield the <em>same</em> sequence.</p>
+<img data-src="./img/Random.png" class="r-stretch"></section></section>
+<section>
+<section id="seeding-keys" class="title-slide slide level1 center">
+<h1>Seeding Keys</h1>
+<p>Computers actually use <em>pseudo</em>-random number generators. If they are initialised with a <em>seed</em> the will generate the <em>same</em> sequence.</p>
 <aside class="notes">
 <p>You might look at that uniform distribution and think ‘not bad’, but that’s not good enough for encryption and it’s also not good for reproducibility.</p>
 <style type="text/css">
@@ -545,7 +547,7 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="setting-a-seed" class="slide level2 smaller">
+<section id="setting-a-seed" class="slide level2">
 <h2>Setting a Seed</h2>
 <p>Two main libraries where seeds are set:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">import</span> random</span>
@@ -567,7 +569,7 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="seeds-and-state" class="slide level2 smaller">
+<section id="seeds-and-state" class="slide level2">
 <h2>Seeds and State</h2>
 <div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="im">import</span> random</span>
 <span id="cb5-2"><a href="#cb5-2"></a>random.seed(<span class="dv">42</span>)</span>
@@ -579,12 +581,10 @@
 <span id="cb5-8"><a href="#cb5-8"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">10</span>):</span>
 <span id="cb5-9"><a href="#cb5-9"></a>        ints.append(random.randint(<span class="dv">0</span>,<span class="dv">10</span>))</span>
 <span id="cb5-10"><a href="#cb5-10"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="sc">{</span>ints<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="question" class="slide level2">
-<h2>Question!</h2>
-<blockquote>
-<p>Where would you use a mix of randomness and reproducbility as part of a <strong>data</strong> analysis process?</p>
-</blockquote>
+</section></section>
+<section id="question" class="title-slide slide level1 center">
+<h1>Question!</h1>
+<p>Where would you use a mix of randomness and reproducbility as part of a <em>data</em> analysis process?</p>
 <aside class="notes">
 <p>Hint: With a large data set it will often be useful to be able draw a random… what? But for reproducible analysis we will that random… what?… to be the same each time!</p>
 <style type="text/css">
@@ -599,6 +599,7 @@
           display:block!important;
       }</style></aside>
 </section>
+
 <section>
 <section id="other-applications" class="title-slide slide level1 center">
 <h1>Other Applications</h1>
@@ -607,35 +608,36 @@
 <section id="hashing" class="slide level2 smaller">
 <h2>Hashing</h2>
 <p>Checking for changes (usally in a security context).</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="im">import</span> hashlib</span>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="im">import</span> hashlib <span class="co"># Can take a 'salt' (similar to a 'seed')</span></span>
 <span id="cb6-2"><a href="#cb6-2"></a></span>
 <span id="cb6-3"><a href="#cb6-3"></a>r1 <span class="op">=</span> hashlib.md5(<span class="st">'CASA Intro to Programming'</span>.encode())</span>
-<span id="cb6-4"><a href="#cb6-4"></a><span class="bu">print</span>(<span class="st">"The hex equivalent of r1 is: "</span>, end<span class="op">=</span><span class="st">""</span>)</span>
-<span id="cb6-5"><a href="#cb6-5"></a><span class="bu">print</span>(r1.hexdigest())</span>
-<span id="cb6-6"><a href="#cb6-6"></a></span>
-<span id="cb6-7"><a href="#cb6-7"></a>r2 <span class="op">=</span> hashlib.md5(<span class="st">'CASA Intro to Programming '</span>.encode())</span>
-<span id="cb6-8"><a href="#cb6-8"></a><span class="bu">print</span>(<span class="st">"The hex equivalent of r2 is: "</span>, end<span class="op">=</span><span class="st">""</span>)</span>
-<span id="cb6-9"><a href="#cb6-9"></a><span class="bu">print</span>(r2.hexdigest())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="bu">print</span>(<span class="ss">f"The hashed equivalent of r1 is: </span><span class="sc">{</span>r1<span class="sc">.</span>hexdigest()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-5"><a href="#cb6-5"></a></span>
+<span id="cb6-6"><a href="#cb6-6"></a>r2 <span class="op">=</span> hashlib.md5(<span class="st">'CASA Intro to Programming '</span>.encode())</span>
+<span id="cb6-7"><a href="#cb6-7"></a><span class="bu">print</span>(<span class="ss">f"The hashed equivalent of r2 is: </span><span class="sc">{</span>r2<span class="sc">.</span>hexdigest()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-8"><a href="#cb6-8"></a></span>
+<span id="cb6-9"><a href="#cb6-9"></a>r3 <span class="op">=</span> hashlib.md5(<span class="st">'CASA Intro to Programming'</span>.encode())</span>
+<span id="cb6-10"><a href="#cb6-10"></a><span class="bu">print</span>(<span class="ss">f"The hashed equivalent of r3 is: </span><span class="sc">{</span>r3<span class="sc">.</span>hexdigest()<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Outputs:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1"></a><span class="st">"The hex equivalent of r1 is: acd601db5552408851070043947683ef"</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a><span class="st">"The hex equivalent of r2 is: 4458e89e9eb806f1ac60acfdf45d85b6"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1"></a><span class="st">"The hashed equivalent of r1 is: acd601db5552408851070043947683ef"</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="st">"The hashed equivalent of r2 is: 4458e89e9eb806f1ac60acfdf45d85b6"</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="st">"The hashed equivalent of r3 is: acd601db5552408851070043947683ef"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="and-note" class="slide level2 smaller">
 <h2>And Note…</h2>
 <div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="im">import</span> requests</span>
 <span id="cb8-2"><a href="#cb8-2"></a>night <span class="op">=</span> requests.get(<span class="st">"http://www.gutenberg.org/ebooks/1514.txt.utf-8"</span>)</span>
-<span id="cb8-3"><a href="#cb8-3"></a><span class="bu">print</span>(night.text[<span class="dv">30</span>:<span class="dv">70</span>])</span>
-<span id="cb8-4"><a href="#cb8-4"></a><span class="bu">print</span>(<span class="bu">len</span>(night.text))</span>
-<span id="cb8-5"><a href="#cb8-5"></a>r3 <span class="op">=</span> hashlib.md5(night.text.encode())</span>
-<span id="cb8-6"><a href="#cb8-6"></a><span class="bu">print</span>(<span class="st">"The hex equivalent of r3 is: "</span>, end<span class="op">=</span><span class="st">""</span>) </span>
-<span id="cb8-7"><a href="#cb8-7"></a><span class="bu">print</span>(r3.hexdigest())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="bu">print</span>(<span class="ss">f"The text is </span><span class="sc">{</span>night<span class="sc">.</span>text[<span class="dv">30</span>:<span class="dv">70</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="bu">print</span>(<span class="ss">f"The text is </span><span class="sc">{</span><span class="bu">len</span>(night.text)<span class="sc">:,}</span><span class="ss"> characters long"</span>)</span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="bu">hash</span> <span class="op">=</span> hashlib.md5(night.text.encode())</span>
+<span id="cb8-6"><a href="#cb8-6"></a><span class="bu">print</span>(<span class="ss">f"This can be hashed into: </span><span class="sc">{</span><span class="bu">hash</span><span class="sc">.</span>hexdigest()<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Outputs:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1"></a><span class="ex">112127</span></span>
-<span id="cb9-2"><a href="#cb9-2"></a><span class="st">"A Midsummer Night's Dream by Shakespeare"</span></span>
-<span id="cb9-3"><a href="#cb9-3"></a><span class="st">"The hex equivalent of r3 is: acd601db5552408851070043947683ef"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1"></a><span class="st">"The text is A Midsummer Night's Dream by Shakespeare"</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="st">"The text is 112,127 characters long"</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="st">"This can be hashed into: cce0d35b8b2c4dafcbde3deb983fec0a"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <aside class="notes">
 <p>Can be applied to <em>anything</em>: even one byte’s difference (e.g.&nbsp;in a application) can lead to a different hash output.</p>
-<p>But notice too that hashes are always the same length.</p>
+<p>But notice that hashes are always the same length. This property is quite useful for databases and verifying the integrity of applications (MD5 Checksums).</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -650,19 +652,36 @@
 </section>
 <section id="jupyterlab-password" class="slide level2 smaller">
 <h2>JupyterLab Password</h2>
-<p>You may have noticed this in Vagrantfile/Docker:</p>
+<p>You may have noticed this in Docker:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1"></a><span class="st">'sha1:5b1c205a53e14e:0ce169b9834984347d62b20b9a82f6513355f72d'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>How this was generated:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="im">import</span> uuid, hashlib</span>
 <span id="cb11-2"><a href="#cb11-2"></a>salt <span class="op">=</span> uuid.uuid4().<span class="bu">hex</span>[:<span class="dv">16</span>] <span class="co"># Truncate salt</span></span>
-<span id="cb11-3"><a href="#cb11-3"></a>password <span class="op">=</span> <span class="st">'casa2021'</span></span>
-<span id="cb11-4"><a href="#cb11-4"></a>hashed_password <span class="op">=</span> hashlib.sha1(password.encode() <span class="op">+</span> </span>
-<span id="cb11-5"><a href="#cb11-5"></a>                  salt.encode()).hexdigest()</span>
-<span id="cb11-6"><a href="#cb11-6"></a><span class="bu">print</span>(<span class="st">':'</span>.join([<span class="st">'sha1'</span>,salt,hashed_password]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Replace the <code>JUPYTER_PWD</code> parameter in the start-up string for Docker or Vagrant.</p>
+<span id="cb11-3"><a href="#cb11-3"></a>password <span class="op">=</span> <span class="st">'casa2021'</span>        <span class="co"># Set password</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a></span>
+<span id="cb11-5"><a href="#cb11-5"></a><span class="co"># Here we combine the password and salt to </span></span>
+<span id="cb11-6"><a href="#cb11-6"></a><span class="co"># 'add complexity' to the hash</span></span>
+<span id="cb11-7"><a href="#cb11-7"></a>hashed_password <span class="op">=</span> hashlib.sha1(password.encode() <span class="op">+</span> </span>
+<span id="cb11-8"><a href="#cb11-8"></a>                  salt.encode()).hexdigest()</span>
+<span id="cb11-9"><a href="#cb11-9"></a><span class="bu">print</span>(<span class="st">':'</span>.join([<span class="st">'sha1'</span>,salt,hashed_password]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+<aside class="notes">
+<p>Then you can replace the <code>JUPYTER_PWD</code> parameter in the start-up string for Docker if you want to set a password.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+<aside><div>
 <p>Don’t set your passwords <a href="https://edition.cnn.com/2019/04/22/uk/most-common-passwords-scli-gbr-intl/index.html">this way</a>.</p>
-</section>
-<section id="encryption-security" class="slide level2 smaller">
+</div></aside></section>
+<section id="encryption-security" class="slide level2">
 <h2>Encryption &amp; Security</h2>
 <p>Simple hashing algorithms are not normally secure enough for full encryption. Genuine security training takes a whole degree + years of experience.</p>
 <p>Areas to look at if you get involved in applications:</p>
@@ -670,7 +689,7 @@
 <li>Public and Private Key Encryption (esp.&nbsp;OpenSSL)</li>
 <li>Privileges used by Applications (esp.&nbsp;Docker)</li>
 <li>Revocable Tokens (e.g.&nbsp;for APIs)</li>
-<li>Injection Attacks (esp.&nbsp;for SQL)</li>
+<li>Injection Attacks (esp.&nbsp;for SQL using NULL-byte and similar)</li>
 </ul>
 </section></section>
 <section id="thank-you" class="title-slide slide level1 center">

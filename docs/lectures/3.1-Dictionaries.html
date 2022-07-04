@@ -389,11 +389,9 @@
   <p class="author">Jon Reades</p>
 </section>
 
-<section class="slide level2">
-
-<blockquote>
-<p>A Python dictionary is just like a real dictionary: you can find things (values) using a word (key) instead of having to read the whole book. So: key <img data-src="mi_arrow_forward.png" alt="m"> value.</p>
-</blockquote>
+<section>
+<section id="a-python-dictionary-is-like-a-real-dictionary-you-find-things-values-using-a-word-key-instead-of-having-to-read-the-whole-book." class="title-slide slide level1 center">
+<h1>A Python dictionary is like a real dictionary: you find things (values) using a word (key) instead of having to read the whole book.</h1>
 <aside class="notes">
 <p>What advantages might this have over a list?</p>
 <style type="text/css">
@@ -408,10 +406,19 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="how-does-it-work" class="slide level2">
-<h2>How Does it Work?</h2>
-<p>The key can be <em>almost</em> anything—an integer, a string, a variable…—that is <em>unique</em> in the dictionary and <strong>immutable</strong>.</p>
-<p>A list is not immutable, so you can’t use a list as a dictionary key.</p>
+<section id="so-key---value" class="slide level2">
+<h2>So: Key -&gt; Value</h2>
+<p>The key can be <em>almost</em> anything that is <em>immutable</em> (aka. hashable). So these are all ‘legit’:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>lookup[<span class="dv">1</span>]             <span class="co"># Int</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a>lookup(<span class="fl">52.1</span>)          <span class="co"># Float</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a>lookup[<span class="st">'1'</span>]           <span class="co"># String</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a>lookup[<span class="st">'Jon Reades'</span>]  <span class="co"># String</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a>k <span class="op">=</span> <span class="st">'Jon Reades'</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a>lookup[k]             <span class="co"># String variable</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a>lookup[(<span class="fl">52.1</span>, <span class="op">-</span><span class="fl">0.04</span>)] <span class="co"># Tuple</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>But this is not:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>lookup[[<span class="st">'Jon'</span>,<span class="st">'Reades'</span>]] <span class="co"># Error, unhashable type</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>That’s because a list is <em>not</em> immutable.</p>
 <aside class="notes">
 <p>Again, just like a real dictionary: you don’t have multiple entries for ‘dog’, otherwise the dictionary wouldn’t <em>work</em>. You might have multiple definitions: which is to say, the key might return multiple values.</p>
 <style type="text/css">
@@ -426,36 +433,40 @@
           display:block!important;
       }</style></aside>
 </section>
-<section class="slide level2">
-
+<section id="deliberately-similar" class="slide level2">
+<h2>Deliberately Similar</h2>
+<p>Notice the differences when <em>creating</em> them, and the absence of difference when <em>accessing</em> them.</p>
 <div class="columns">
-<div class="column" style="width:50%;">
+<div class="column" style="width:43%;">
 <h3 id="list">List</h3>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>stuff <span class="op">=</span> [</span>
-<span id="cb1-2"><a href="#cb1-2"></a>  <span class="st">'San Francisco'</span>,</span>
-<span id="cb1-3"><a href="#cb1-3"></a>  <span class="st">'USA'</span>,</span>
-<span id="cb1-4"><a href="#cb1-4"></a>  <span class="dv">837442</span>]</span>
-<span id="cb1-5"><a href="#cb1-5"></a>  </span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="co"># Population:</span></span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="bu">print</span>(stuff[<span class="dv">2</span>]) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div><div class="column" style="width:50%;">
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>cities <span class="op">=</span> [</span>
+<span id="cb3-2"><a href="#cb3-2"></a>  <span class="st">'San Francisco'</span>,</span>
+<span id="cb3-3"><a href="#cb3-3"></a>  <span class="st">'London'</span>,</span>
+<span id="cb3-4"><a href="#cb3-4"></a>  <span class="st">'Paris'</span>,</span>
+<span id="cb3-5"><a href="#cb3-5"></a>  <span class="st">'Beijing'</span>]</span>
+<span id="cb3-6"><a href="#cb3-6"></a>  </span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="co"># Prints London</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="bu">print</span>(cities[<span class="dv">2</span>]) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div><div class="column" style="width:57%;">
 <h3 id="dict">Dict</h3>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>stuff <span class="op">=</span> {</span>
-<span id="cb2-2"><a href="#cb2-2"></a>  <span class="st">'city'</span>: <span class="st">'San Francisco'</span>,</span>
-<span id="cb2-3"><a href="#cb2-3"></a>  <span class="st">'country'</span>: <span class="st">'USA'</span>,</span>
-<span id="cb2-4"><a href="#cb2-4"></a>  <span class="st">'pop'</span>: <span class="dv">837442</span>}</span>
-<span id="cb2-5"><a href="#cb2-5"></a></span>
-<span id="cb2-6"><a href="#cb2-6"></a><span class="co"># Population</span></span>
-<span id="cb2-7"><a href="#cb2-7"></a><span class="bu">print</span>(stuff[<span class="st">'pop'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>cities <span class="op">=</span> {</span>
+<span id="cb4-2"><a href="#cb4-2"></a>  <span class="st">'San Francisco'</span>: <span class="dv">837442</span>,</span>
+<span id="cb4-3"><a href="#cb4-3"></a>  <span class="st">'London'</span>: <span class="dv">8673713</span>,</span>
+<span id="cb4-4"><a href="#cb4-4"></a>  <span class="st">'Paris'</span>: <span class="dv">837442</span>,</span>
+<span id="cb4-5"><a href="#cb4-5"></a>  <span class="st">'Beijing'</span>: <span class="dv">21700000</span>}</span>
+<span id="cb4-6"><a href="#cb4-6"></a></span>
+<span id="cb4-7"><a href="#cb4-7"></a><span class="co"># Prints pop of London</span></span>
+<span id="cb4-8"><a href="#cb4-8"></a><span class="bu">print</span>(cities[<span class="st">'London'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <aside class="notes">
-<p>Technically, we get the same answer from both of these and you will get the answer slightly faster from the list; so why might we prefer the dictionary?</p>
+<p>So why might we prefer the dictionary?</p>
 <ol type="1">
-<li><p>Dicts are <strong>created</strong> using: <code>d = { key: value, key: value }</code></p></li>
-<li><p>Dicts are <strong>accessed</strong> using: <code>d[key]</code></p></li>
+<li>Dicts are <strong>created</strong> using: <code>d = { key: value, key: value }</code></li>
+<li>Dicts are <strong>accessed</strong> using: <code>d[key]</code></li>
 </ol>
 <p>So the only difference between lists and dicts is: <code>[...]</code> and <code>{...}</code> when they are created.</p>
+<p>Over the next couple of weeks we’ll see ways that you can store more information in a list and also why lists are <em>sometimes</em> more powerful than you realise… <em>if</em> you can think about your data in an entirely new way. But for simple key/value stuff it’s hard to beat a dictionary!</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -468,8 +479,9 @@
           display:block!important;
       }</style></aside>
 </section>
-<section class="slide level2">
-
+<section id="its-all-about-access" class="slide level2">
+<h2>It’s All About Access</h2>
+<p>Specifically: do we need sequential or random access?</p>
 <div class="columns">
 <div class="column" style="width:50%;">
 <h3 id="list-1">List</h3>
@@ -530,75 +542,95 @@
 </div>
 </div>
 </section>
-<section id="manipulating-dictionaries" class="slide level2 smaller">
-<h2>Manipulating Dictionaries</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>cities <span class="op">=</span> {</span>
-<span id="cb3-2"><a href="#cb3-2"></a>&nbsp; <span class="st">'San Francisco'</span>: <span class="dv">837442</span>,</span>
-<span id="cb3-3"><a href="#cb3-3"></a>&nbsp; <span class="st">'London'</span>: <span class="dv">8673713</span>,</span>
-<span id="cb3-4"><a href="#cb3-4"></a>&nbsp; <span class="st">'Paris'</span>: <span class="dv">2229621</span>, </span>
-<span id="cb3-5"><a href="#cb3-5"></a>&nbsp; <span class="st">'Beijing'</span>: <span class="dv">21700000</span></span>
-<span id="cb3-6"><a href="#cb3-6"></a>}</span>
-<span id="cb3-7"><a href="#cb3-7"></a>c <span class="op">=</span> <span class="st">'Beijing'</span></span>
-<span id="cb3-8"><a href="#cb3-8"></a><span class="bu">print</span>(<span class="ss">f"The population of </span><span class="sc">{</span>c<span class="sc">}</span><span class="ss"> is </span><span class="sc">{</span>cities[<span class="st">'Beijing'</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="getting-values" class="slide level2">
+<h2>Getting Values</h2>
+<p>There are two ways to retrieve values from a dictionary:</p>
+<ol type="1">
+<li><code>cities['Beijing']</code></li>
+<li><code>cities.get('Beijing')</code></li>
+</ol>
+<p>Why have two? Consider:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>cities <span class="op">=</span> {</span>
+<span id="cb5-2"><a href="#cb5-2"></a>  <span class="st">'San Francisco'</span>: <span class="dv">837442</span>,</span>
+<span id="cb5-3"><a href="#cb5-3"></a>  <span class="st">'London'</span>: <span class="dv">8673713</span>,</span>
+<span id="cb5-4"><a href="#cb5-4"></a>  <span class="st">'Paris'</span>: <span class="dv">837442</span>,</span>
+<span id="cb5-5"><a href="#cb5-5"></a>  <span class="st">'Beijing'</span>: <span class="dv">21700000</span>}</span>
+<span id="cb5-6"><a href="#cb5-6"></a></span>
+<span id="cb5-7"><a href="#cb5-7"></a><span class="bu">print</span>(cities[<span class="st">'Sao Paulo'</span>])     <span class="co"># Throws KeyError</span></span>
+<span id="cb5-8"><a href="#cb5-8"></a><span class="bu">print</span>(cities.get(<span class="st">'Sao Paulo'</span>)) <span class="co"># Returns None</span></span>
+<span id="cb5-9"><a href="#cb5-9"></a><span class="bu">print</span>(cities.get(<span class="st">'Sao Paulo'</span>,<span class="st">'No Data'</span>)) <span class="co"># Returns 'No Data'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<aside class="notes">
+<p>The first triggers an <strong>error</strong>, the second returns <code>None</code>. Errors <em>can</em> be unfriendly: do you want your entire Python program to fail because a single city is missing, or would you rather than it did something a little more sensible such as… skipping the row or returning a sensible default?</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="getting-values-contd" class="slide level2">
+<h2>Getting Values (cont’d)</h2>
+<p>If we want to think about whether a value is <em>in</em> the dictionary (as opposed to just retrieving it) then notice these options:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>c <span class="op">=</span> cities.get(<span class="st">'Sao Paulo'</span>)</span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="cf">if</span> <span class="kw">not</span> c:</span>
+<span id="cb6-3"><a href="#cb6-3"></a>&nbsp;&nbsp;print(<span class="st">"Sorry, no city by that name."</span>)</span>
+<span id="cb6-4"><a href="#cb6-4"></a></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="cf">if</span> <span class="st">'Beijing'</span> <span class="kw">in</span> cities:</span>
+<span id="cb6-6"><a href="#cb6-6"></a>  <span class="bu">print</span>(<span class="st">"Found Beijing!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<aside class="notes">
+<p>The first example works because <code>cities.get</code> returns <code>None</code>, which is the same as ‘undefined’ for Python. So we can use ‘not’ to imply ‘if c is not defined then do something…’</p>
+<p>The second example works because we are implicitly treating the <em>keys</em> in the cities dictionary as a list and looking to see if Beijing is one of the values in that list.</p>
+<p>Python often benefits <em>and</em> suffers from TMTOWTDI (There’s More Than One Way To Do It): think of these as being different ways to say the same thing, but depending on where you want to put the emphasis you would choose one or the other.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="setting-values" class="slide level2 smaller">
 <h2>Setting Values</h2>
 <p>It’s the same process to update an existing value or create a new one:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>cities[<span class="st">'Beijing'</span>] <span class="op">=</span> <span class="dv">21716620</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a>cities[<span class="st">'Toronto'</span>] <span class="op">=</span> <span class="dv">2930000</span></span>
-<span id="cb4-3"><a href="#cb4-3"></a></span>
-<span id="cb4-4"><a href="#cb4-4"></a><span class="bu">print</span>(cities[<span class="st">'Beijing'</span>])</span>
-<span id="cb4-5"><a href="#cb4-5"></a><span class="bu">print</span>(cities[<span class="st">'Toronto'</span>])</span>
-<span id="cb4-6"><a href="#cb4-6"></a><span class="kw">del</span> cities[<span class="st">'Toronto'</span>] <span class="co"># Key is deleted immediately</span></span>
-<span id="cb4-7"><a href="#cb4-7"></a>cities.pop(<span class="st">'Toronto'</span>,<span class="va">None</span>) <span class="co"># Does not return error if key doesn't exist; returns None</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="getting-values" class="slide level2 smaller">
-<h2>Getting Values</h2>
-<p>There are two ways to retrieve values from a dictionary: 1. <code>cities['Beijing']</code> 2. <code>cities.get('Beijing')</code></p>
-<p>Why have two? Consider:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="bu">print</span>(cities[<span class="st">'Sao Paulo'</span>])</span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="op">&gt;</span> Traceback (most recent call last):</span>
-<span id="cb5-3"><a href="#cb5-3"></a><span class="op">&gt;</span>  File <span class="st">"&lt;stdin&gt;"</span>, line <span class="dv">1</span>, <span class="kw">in</span> <span class="op">&lt;</span>module<span class="op">&gt;</span></span>
-<span id="cb5-4"><a href="#cb5-4"></a><span class="op">&gt;</span> <span class="pp">KeyError</span>: <span class="st">'Sao Paulo'</span></span>
-<span id="cb5-5"><a href="#cb5-5"></a><span class="bu">print</span>(cities.get(<span class="st">'Sao Paulo'</span>))</span>
-<span id="cb5-6"><a href="#cb5-6"></a><span class="op">&gt;</span> <span class="va">None</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<aside class="notes">
-<p>The first triggers an <strong>error</strong>, the second returns <code>None</code>. Errors <em>can</em> be unfriendly: do you want your entire Python program to fail because a single city is missing, or would you rather than it did something a little more sensible such as… skipping the row?</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
-</section>
-<section id="getting-values-contd" class="slide level2 smaller">
-<h2>Getting Values (cont’d)</h2>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="bu">print</span>(cities[<span class="st">'Sao Paulo'</span>])</span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="op">&gt;</span> <span class="pp">KeyError</span>: ‘Sao Paulo’</span>
-<span id="cb6-3"><a href="#cb6-3"></a></span>
-<span id="cb6-4"><a href="#cb6-4"></a>c <span class="op">=</span> cities.get(<span class="st">'Sao Paulo'</span>)</span>
-<span id="cb6-5"><a href="#cb6-5"></a><span class="cf">if</span> <span class="kw">not</span> c:</span>
-<span id="cb6-6"><a href="#cb6-6"></a>&nbsp;&nbsp;print(<span class="st">"Sorry, no city by that name."</span>)</span>
-<span id="cb6-7"><a href="#cb6-7"></a><span class="op">&gt;</span> <span class="st">"Sorry, no city by that name."</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>cities <span class="op">=</span> {}  <span class="co"># Empty dictionary</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>cities[<span class="st">'Beijing'</span>] <span class="op">=</span> <span class="dv">21716620</span>    <span class="co"># Sets key-&gt;value</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a>cities[<span class="st">'Toronto'</span>] <span class="op">=</span> <span class="dv">2930000</span>     <span class="co"># Sets key-&gt;value</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a></span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="bu">print</span>(cities[<span class="st">'Toronto'</span>])        <span class="co"># Prints 2930000</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a><span class="kw">del</span> cities[<span class="st">'Toronto'</span>]           <span class="co"># Deletes Toronto key (and value)</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a>cities.pop(<span class="st">'Toronto'</span>,<span class="st">'Default'</span>) <span class="co"># Prints 'Default' b/c key not found</span></span>
+<span id="cb7-8"><a href="#cb7-8"></a><span class="bu">print</span>(cities)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This last command outputs:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>{<span class="st">'Beijing'</span>: <span class="dv">21716620</span>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="iterating" class="slide level2 smaller">
 <h2>Iterating</h2>
 <p>Similar to iterating over lists but…</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="cf">for</span> c <span class="kw">in</span> cities:</span>
-<span id="cb7-2"><a href="#cb7-2"></a>  <span class="bu">print</span>(c)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>cities <span class="op">=</span> {</span>
+<span id="cb9-2"><a href="#cb9-2"></a>  <span class="st">'San Francisco'</span>: <span class="dv">837442</span>,</span>
+<span id="cb9-3"><a href="#cb9-3"></a>  <span class="st">'London'</span>: <span class="dv">8673713</span>,</span>
+<span id="cb9-4"><a href="#cb9-4"></a>  <span class="st">'Paris'</span>: <span class="dv">837442</span>,</span>
+<span id="cb9-5"><a href="#cb9-5"></a>  <span class="st">'Beijing'</span>: <span class="dv">21700000</span>}</span>
+<span id="cb9-6"><a href="#cb9-6"></a></span>
+<span id="cb9-7"><a href="#cb9-7"></a><span class="cf">for</span> c <span class="kw">in</span> cities:</span>
+<span id="cb9-8"><a href="#cb9-8"></a>  <span class="bu">print</span>(c)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Prints:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="co">'San Francisco'</span></span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="co">'London'</span></span>
-<span id="cb8-3"><a href="#cb8-3"></a><span class="co">'Paris'</span></span>
-<span id="cb8-4"><a href="#cb8-4"></a><span class="co">'Beijing'</span></span>
-<span id="cb8-5"><a href="#cb8-5"></a><span class="co">'Toronto'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="co">'San Francisco'</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="co">'London'</span></span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="co">'Paris'</span></span>
+<span id="cb10-4"><a href="#cb10-4"></a><span class="co">'Beijing'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <aside class="notes">
-<p>How would we print out the populations?</p>
+<p>One <em>really</em> important point to note: here, the cities are printed out in the <em>same</em> order that they were added to the dictionary, but that is <em>not</em> guaranteed! Unlike lists, dictionaries are <strong>unordered</strong>.</p>
+<p>Also, how would we print out the population of each city?</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -611,29 +643,36 @@
           display:block!important;
       }</style></aside>
 </section>
-<section class="slide level2">
-
+<section id="section" class="slide level2 smaller">
+<h2></h2>
 <div class="columns">
-<div class="column" style="width:50%;">
+<div class="column" style="width:33%;">
 <h3 id="keys">Keys</h3>
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="cf">for</span> k <span class="kw">in</span> cities.keys():</span>
-<span id="cb9-2"><a href="#cb9-2"></a>  <span class="bu">print</span>(k)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="cf">for</span> k <span class="kw">in</span> cities.keys():</span>
+<span id="cb11-2"><a href="#cb11-2"></a>  <span class="bu">print</span>(k)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Prints:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="co">'San Francisco'</span></span>
-<span id="cb10-2"><a href="#cb10-2"></a><span class="co">'London'</span></span>
-<span id="cb10-3"><a href="#cb10-3"></a><span class="co">'Paris'</span></span>
-<span id="cb10-4"><a href="#cb10-4"></a><span class="co">'Beijing'</span></span>
-<span id="cb10-5"><a href="#cb10-5"></a><span class="co">'Toronto'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div><div class="column" style="width:50%;">
+<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="co">'San Francisco'</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="co">'London'</span></span>
+<span id="cb12-3"><a href="#cb12-3"></a><span class="co">'Paris'</span></span>
+<span id="cb12-4"><a href="#cb12-4"></a><span class="co">'Beijing'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div><div class="column" style="width:33%;">
 <h3 id="values">Values</h3>
-<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="cf">for</span> v <span class="kw">in</span> cities.values():</span>
-<span id="cb11-2"><a href="#cb11-2"></a>  <span class="bu">print</span>(v)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="cf">for</span> v <span class="kw">in</span> cities.values():</span>
+<span id="cb13-2"><a href="#cb13-2"></a>  <span class="bu">print</span>(v)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Prints:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="dv">837442</span></span>
-<span id="cb12-2"><a href="#cb12-2"></a><span class="dv">8673713</span></span>
-<span id="cb12-3"><a href="#cb12-3"></a><span class="dv">2229621</span></span>
-<span id="cb12-4"><a href="#cb12-4"></a><span class="dv">21716620</span></span>
-<span id="cb12-5"><a href="#cb12-5"></a><span class="dv">2930000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="dv">837442</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="dv">8673713</span></span>
+<span id="cb14-3"><a href="#cb14-3"></a><span class="dv">2229621</span></span>
+<span id="cb14-4"><a href="#cb14-4"></a><span class="dv">21716620</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div><div class="column" style="width:33%;">
+<h3 id="both">Both</h3>
+<div class="sourceCode" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a><span class="cf">for</span> k,v <span class="kw">in</span> cities.items():</span>
+<span id="cb15-2"><a href="#cb15-2"></a>  <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>k<span class="sc">}</span><span class="ss"> -&gt; </span><span class="sc">{</span>v<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Prints:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>San Francisco <span class="op">-&gt;</span> <span class="dv">837442</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a>London <span class="op">-&gt;</span> <span class="dv">8673713</span></span>
+<span id="cb16-3"><a href="#cb16-3"></a>Paris <span class="op">-&gt;</span> <span class="dv">837442</span></span>
+<span id="cb16-4"><a href="#cb16-4"></a>Beijing <span class="op">-&gt;</span> <span class="dv">21700000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -645,14 +684,26 @@
 </section>
 <section id="a-final-note" class="slide level2 smaller">
 <h2>A Final Note!</h2>
-<blockquote>
-<p>Keys can be <strong>almost</strong> anything, and so can values!</p>
-</blockquote>
-<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>cities <span class="op">=</span> {</span>
-<span id="cb13-2"><a href="#cb13-2"></a>  <span class="st">'San Francisco'</span>: [<span class="fl">37.77</span>, <span class="op">-</span><span class="fl">122.43</span>, <span class="st">'SFO'</span>]</span>
-<span id="cb13-3"><a href="#cb13-3"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Values can be almost anything, including a dictionary or list! This opens up some interesting possibilities:</p>
+<div class="columns">
+<div class="column" style="width:42%;">
+<div class="sourceCode" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a>cities <span class="op">=</span> {</span>
+<span id="cb17-2"><a href="#cb17-2"></a>  <span class="st">'San Francisco'</span>: </span>
+<span id="cb17-3"><a href="#cb17-3"></a>    [<span class="fl">37.77</span>, <span class="op">-</span><span class="fl">122.43</span>, <span class="st">'SFO'</span>]</span>
+<span id="cb17-4"><a href="#cb17-4"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div><div class="column" style="width:58%;">
+<div class="sourceCode" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a>cities <span class="op">=</span> {</span>
+<span id="cb18-2"><a href="#cb18-2"></a>  <span class="st">'San Francisco'</span>: {</span>
+<span id="cb18-3"><a href="#cb18-3"></a>    <span class="st">'lat'</span>: <span class="fl">37.77</span>,</span>
+<span id="cb18-4"><a href="#cb18-4"></a>    <span class="st">'lon'</span>: <span class="op">-</span><span class="fl">122.43</span>,</span>
+<span id="cb18-5"><a href="#cb18-5"></a>    <span class="st">'airport'</span>:<span class="st">'SFO'</span>}</span>
+<span id="cb18-6"><a href="#cb18-6"></a>}</span>
+<span id="cb18-7"><a href="#cb18-7"></a><span class="bu">print</span>(cities[<span class="st">'San Francisco'</span>][<span class="st">'lat'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<p><em>Spoiler</em>: you’re going to encounter this kind of thing a <em>lot</em>.</p>
 <aside class="notes">
-<p>What is this starting to look like?</p>
+<p>What is this starting to look like? This is <em>basically</em> what JSON is.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -664,27 +715,16 @@
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
-</section>
-<section id="and-also" class="slide level2 smaller">
-<h2>And Also…</h2>
-<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>cities <span class="op">=</span> {</span>
-<span id="cb14-2"><a href="#cb14-2"></a>  <span class="st">'San Francisco'</span>: {</span>
-<span id="cb14-3"><a href="#cb14-3"></a>    <span class="st">'lat'</span>: <span class="fl">37.77</span>,</span>
-<span id="cb14-4"><a href="#cb14-4"></a>    <span class="st">'lon'</span>: <span class="op">-</span><span class="fl">122.43</span>,</span>
-<span id="cb14-5"><a href="#cb14-5"></a>    <span class="st">'airport'</span>:<span class="st">'SFO'</span>}</span>
-<span id="cb14-6"><a href="#cb14-6"></a>}</span>
-<span id="cb14-7"><a href="#cb14-7"></a><span class="bu">print</span>(cities[<span class="st">'San Francisco'</span>][<span class="st">'lat'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This is <em>basically</em> what JSON is.</p>
-</section>
+</section></section>
 <section>
-<section id="one-more-thing" class="title-slide slide level1 smaller center">
+<section id="one-more-thing" class="title-slide slide level1 center">
 <h1>One More Thing…</h1>
 <p>You may come across this:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>s <span class="op">=</span> {<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>s <span class="op">=</span> {<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>It <em>looks</em> like a dictionary, but where are the keys?</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="bu">type</span>(s)</span>
-<span id="cb16-2"><a href="#cb16-2"></a><span class="op">&gt;</span> <span class="op">&lt;</span><span class="kw">class</span> <span class="st">'set'</span><span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>A set is just a group of unique keys <em>without</em> values attached. They have many uses!</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a><span class="bu">type</span>(s)</span>
+<span id="cb20-2"><a href="#cb20-2"></a><span class="op">&gt;</span> <span class="op">&lt;</span><span class="kw">class</span> <span class="st">'set'</span><span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>A set is just a group of unique keys (no values attached). They have many uses!</p>
 <aside class="notes">
 <p>It looks like a cross between a list and a dictionary because, conceptually for our purposes, that’s not far from the truth.</p>
 <p>Sets can be used, for instance, to generate categories from a column in a data set: we don’t worry about what order the categories come in, we only care about them as <em>unique entries</em> in the column!</p>

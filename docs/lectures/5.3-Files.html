@@ -326,8 +326,8 @@
   <p class="author">Jon Reades</p>
 </section>
 
-<section class="slide level2">
-
+<section id="from-files-to-data" class="slide level2">
+<h2>From Files to Data</h2>
 <p>In order to read a file you need to know a few things:</p>
 <ul>
 <li>What distinguishes <strong>one record</strong> from another?</li>
@@ -337,13 +337,13 @@
 <li>Is the metadata in a separate file or embedded in the file?</li>
 </ul>
 </section>
-<section id="structure-of-a-tabular-data-file" class="slide level2 smaller">
+<section id="structure-of-a-tabular-data-file" class="slide level2">
 <h2>Structure of a Tabular Data File</h2>
 <p>Row and column names make it a lot easier to find and refer to data (<em>e.g.</em> the ‘East of England row’ or the ‘Total column’) but they are <strong>not data</strong> and don’t belong in the data set itself.</p>
 <p>Usually, one record (a.k.a. observation) finishes and the next one starts with a ‘newline’ (<code>\n</code>) or ’carriage return (<code>\r</code>) or both (<code>\r\n</code>) but it <em>could</em> be anything (e.g.&nbsp;<code>EOR</code>).</p>
 <p>Usually, one field (a.k.a. attribute or value) finishes and the next one starts with a comma (<code>,</code>) which gives rise to CSV (Comma-Separate Values), but it could be tabs (<code>\t</code>) or anything else too (<code>;</code> or <code>|</code> or <code>EOF</code>).</p>
-<p><img data-src="mi_question_answer.png"> How would we <strong>choose</strong> a good field separator?</p>
 <aside class="notes">
+<p>How would we <strong>choose</strong> a good field separator?</p>
 <p><em>Pro tip</em>: if we store column and row names separately from the data then we can access everything easily without having to factor in any ‘special’ values!</p>
 <p>Noice also the nd here. This is the escape sequence again that you also encountered when dealing with the Shell as well. Remember that <code>\</code> is necessary if you have a space in your file name or path.</p>
 <style type="text/css">
@@ -358,11 +358,10 @@
           display:block!important;
       }</style></aside>
 </section>
-<section class="slide level2">
-
-<blockquote>
-<p>Reading data is a <strong>very</strong> common challenge so… chances are that there is a package or class that can help us to do this! You <strong>don’t</strong> need to tell Python how to read Excel files, SQL files, web pages… find a package that does it for you!</p>
-</blockquote>
+<section>
+<section id="dont-reinvent-the-wheel" class="title-slide slide level1 center">
+<h1>Don’t Reinvent the Wheel</h1>
+<p>Reading data is a <em>very</em> common challenge so… there is a probably a package or class for that! You <em>don’t</em> need to tell Python how to read Excel files, SQL files, web pages… find a package that does it for you!</p>
 <aside class="notes">
 <p>What you <em>do</em> want, if possible, is a tool that makes it easy to take the ‘native’ data types of another format and sensibly convert those to the closest equivalent in Python with minimal effort.</p>
 <style type="text/css">
@@ -397,7 +396,7 @@
 <tbody>
 <tr class="odd">
 <td><code>.csv</code></td>
-<td><code>,</code> but can appear in fields enclosed by <code>"</code>.</td>
+<td><code>,</code> but separator can appear in fields enclosed by <code>"</code>.</td>
 <td><code>\n</code> but could be <code>\r</code> or <code>\r\n</code>.</td>
 <td><code>csv</code></td>
 </tr>
@@ -419,11 +418,30 @@
 <td>Binary, you need a library to read.</td>
 <td><code>pyreadstat</code></td>
 </tr>
+<tr class="odd">
+<td><code>.json</code>, <code>.geojson</code></td>
+<td>Complex (<code>,</code>, <code>[]</code>, <code>{}</code>), but plain text.</td>
+<td>Complex (<code>,</code>, <code>[]</code>, <code>{}</code>), but plain text</td>
+<td><code>json</code>, <code>geojson</code></td>
+</tr>
+<tr class="even">
+<td><code>.feather</code></td>
+<td>Binary, you need a library to read.</td>
+<td>Binary, you need a library to read.</td>
+<td><code>pyarrow</code>, <code>geofeather</code></td>
+</tr>
+<tr class="odd">
+<td><code>.parquet</code></td>
+<td>Binary, you need a library to read.</td>
+<td>Binary, you need a library to read.</td>
+<td><code>pyarrow</code></td>
+</tr>
 </tbody>
 </table>
 <aside class="notes">
-<p>One of the reasons we like CSV and TSV files is that they can be opened and interacted with using the Command Line directly. As soon as you get into binary file formats you either need the original tool (and then export) or you need a tool that can <em>read</em> those formats. So the complexity level rises very quickly.</p>
+<p>One of the reasons we like CSV and TSV files is that they can be opened and interacted with using the Command Line (as well as Excel/Numbers/etc.) directly. As soon as you get into binary file formats you either need the original tool (and then export) or you need a tool that can <em>read</em> those formats. So the complexity level rises very quickly.</p>
 <p>Of course, sometimes you can gain (e.g.&nbsp;SPSS or SAS) in terms of obtaining information about variable types, levels, etc. but usually you use these when that’s all that’s available <em>or</em> when you want to <strong>write</strong> a file for others to use.</p>
+<p>The two formats at the bottom of the table are there because they are useful: the feather format was designed for fast reads and for data interachange with R, while Parquet is a highly-compressed, column-oriented storage format for large data. So for modest-sized data sets (a few hundred MB), or situations where you are working across R and Python, then Feather cannot be beat. For ‘big data’ where you need access to parts of the data set and want to do lazy loading, then parquet is the winner.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -497,14 +515,15 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="testing-a-mapping" class="slide level2 smaller">
+<section id="testing-a-mapping" class="slide level2">
 <h2>Testing a Mapping</h2>
-<p>As we’ll see over the remainder of the term, working out an <em>appropriate</em> mapping (representation of the data) can take up <em>enormous</em> amounts of time. <strong>You should never assume that the data matches the spec.</strong></p>
+<p>Working out an <em>appropriate</em> mapping (representation of the data) is hugely time-consuming.</p>
 <blockquote>
 <p>It’s commonly held that 80% of data science is <em>data cleaning</em>.</p>
 </blockquote>
 <p>The Unix utilities (<code>grep</code>, <code>awk</code>, <code>tail</code>, <code>head</code>) can be very useful for quickly exploring the data in order to develop a <em>basic</em> understanding of the data and to catch <em>obvious</em> errors.</p>
-</section>
+<p><strong>You should never assume that the data matches the spec.</strong></p>
+</section></section>
 <section>
 <section id="why-this-isnt-easy" class="title-slide slide level1 center">
 <h1>Why This Isn’t Easy</h1>
@@ -528,9 +547,9 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="label-these" class="slide level2 smaller">
+<section id="label-these" class="slide level2">
 <h2>Label These</h2>
-<p><img data-src="../Users/jreades/Documents/git/i2p/lectures/img/ONS_Excel_File-Layout.png"></p>
+<p><img data-src="../lectures/img/ONS_Excel_File-Layout.png" height="600"></p>
 
 <!--
 
@@ -607,9 +626,8 @@ How would you divide this up into: Metadata; Column Names; Row Names; and Data?
           display:block!important;
       }</style></aside>
 </section>
-<section id="why-this-isnt-easy-part-2" class="slide level2 smaller">
-<h2>Why This Isn’t Easy (Part 2)</h2>
-<h3 id="things-that-can-go-wrong">Things That Can Go Wrong…</h3>
+<section id="things-that-can-go-wrong" class="slide level2">
+<h2>Things That Can Go Wrong…</h2>
 <p>A selection of <em>real</em> issues I’ve seen in my life:</p>
 <ol type="1">
 <li>Truncation: server ran out of diskspace or memory, or a file transfer was interrupted.</li>

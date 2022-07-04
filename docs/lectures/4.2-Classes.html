@@ -389,11 +389,9 @@
   <p class="author">Jon Reades</p>
 </section>
 
-<section class="slide level2">
-
-<blockquote>
-<p>A tight <strong>coupling</strong> or association of data structures with the methods or functions that act on the data.</p>
-</blockquote>
+<section>
+<section id="a-tight-coupling-of-the-data-and-the-functions-that-act-on-the-data." class="title-slide slide level1 center">
+<h1>A tight <em>coupling</em> of the data, and the functions that act on the data.</h1>
 <aside class="notes">
 <p>It is the <strong>template</strong> for producing new objects…</p>
 <style type="text/css">
@@ -410,20 +408,24 @@
 </section>
 <section id="whats-an-object" class="slide level2">
 <h2>What’s an Object?</h2>
-<p>Objects are <strong>instantiated</strong> versions of classes: <code>"hello world"</code> is an <strong>instance</strong> of a string, and <code>['A','B',1,3]</code> is an <strong>instance</strong> of a list.</p>
-<p>Or: the class is your recipe, the object is your 🍕…</p>
+<p>Objects are <strong>instantiated</strong> versions of classes:</p>
+<ul>
+<li><code>"hello world"</code> is an <strong>instance</strong> of a string, and</li>
+<li><code>['A','B',1,3]</code> is an <strong>instance</strong> of a list.</li>
+</ul>
+<p>The class is your recipe, the object is your 🍕…</p>
 </section>
 <section id="really-like-a-pizza" class="slide level2 smaller">
 <h2>Really… Like a Pizza!</h2>
 <div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">class</span> pizza(<span class="bu">object</span>):</span>
 <span id="cb1-2"><a href="#cb1-2"></a>  base <span class="op">=</span> <span class="st">'sourdough'</span></span>
 <span id="cb1-3"><a href="#cb1-3"></a>  </span>
-<span id="cb1-4"><a href="#cb1-4"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, sauce<span class="op">=</span><span class="st">'tomato'</span>, cheese<span class="op">=</span><span class="st">'mozzarella'</span>):</span>
+<span id="cb1-4"><a href="#cb1-4"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, sauce:<span class="bu">str</span><span class="op">=</span><span class="st">'tomato'</span>, cheese:<span class="bu">str</span><span class="op">=</span><span class="st">'mozzarella'</span>):</span>
 <span id="cb1-5"><a href="#cb1-5"></a>    <span class="va">self</span>.toppings <span class="op">=</span> []</span>
 <span id="cb1-6"><a href="#cb1-6"></a>    <span class="va">self</span>.sauce <span class="op">=</span> sauce</span>
 <span id="cb1-7"><a href="#cb1-7"></a>    <span class="va">self</span>.cheese <span class="op">=</span> cheese</span>
 <span id="cb1-8"><a href="#cb1-8"></a>    </span>
-<span id="cb1-9"><a href="#cb1-9"></a>  <span class="kw">def</span> add_topping(<span class="va">self</span>, topping: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb1-9"><a href="#cb1-9"></a>  <span class="kw">def</span> add_topping(<span class="va">self</span>, topping:<span class="bu">str</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
 <span id="cb1-10"><a href="#cb1-10"></a>    <span class="va">self</span>.toppings.insert(<span class="bu">len</span>(<span class="va">self</span>.toppings), topping)</span>
 <span id="cb1-11"><a href="#cb1-11"></a>  </span>
 <span id="cb1-12"><a href="#cb1-12"></a>  <span class="kw">def</span> get_pizza(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="bu">list</span>:</span>
@@ -431,26 +433,29 @@
 <span id="cb1-14"><a href="#cb1-14"></a>    ingredients.extend(<span class="va">self</span>.toppings)</span>
 <span id="cb1-15"><a href="#cb1-15"></a>    <span class="cf">return</span> ingredients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="class-definition" class="slide level2 smaller">
+<section id="class-definition" class="slide level2">
 <h2>Class Definition</h2>
 <div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">class</span> pizza(<span class="bu">object</span>):</span>
 <span id="cb2-2"><a href="#cb2-2"></a></span>
 <span id="cb2-3"><a href="#cb2-3"></a>    base <span class="op">=</span> <span class="st">'sourdough'</span></span>
 <span id="cb2-4"><a href="#cb2-4"></a>    ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Follows the pattern: <code>class &lt;name&gt;(&lt;parent class&gt;):</code>.</p>
+<p>Follows the pattern: <code>class &lt;name&gt;(&lt;parent class&gt;)</code>.</p>
 <p>You can find many examples in: <code>/opt/conda/envs/sds2020/lib/python3.7/site-packages</code> (Docker).</p>
 </section>
-<section id="the-constructor" class="slide level2 smaller">
+<section id="the-constructor" class="slide level2">
 <h2>The Constructor</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, sauce<span class="op">=</span><span class="st">'tomato'</span>, cheese<span class="op">=</span><span class="st">'mozzarella'</span>):</span>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, sauce:<span class="bu">str</span><span class="op">=</span><span class="st">'tomato'</span>, cheese:<span class="bu">str</span><span class="op">=</span><span class="st">'mozzarella'</span>):</span>
 <span id="cb3-2"><a href="#cb3-2"></a>    <span class="va">self</span>.toppings <span class="op">=</span> []</span>
-<span id="cb3-3"><a href="#cb3-3"></a>    <span class="va">self</span>.sauce <span class="op">=</span> sauce</span>
-<span id="cb3-4"><a href="#cb3-4"></a>    <span class="va">self</span>.cheese <span class="op">=</span> cheese</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Follows the pattern: <code>def __init__(self, &lt;params&gt;):</code></p>
-</section>
+<span id="cb3-3"><a href="#cb3-3"></a>    <span class="va">self</span>.sauce    <span class="op">=</span> sauce</span>
+<span id="cb3-4"><a href="#cb3-4"></a>    <span class="va">self</span>.cheese   <span class="op">=</span> cheese</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Follows the pattern: <code>def __init__(self, &lt;params&gt;)</code></p>
+
+<aside><div>
+<p>Notice also the <em>namespace</em>: the parameters <code>sauce</code> and <code>cheese</code> are the same as the instance variables <code>self.sauce</code> and <code>self.cheese</code> because they occupy different namespaces.</p>
+</div></aside></section>
 <section id="adding-toppings" class="slide level2">
 <h2>Adding Toppings</h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">def</span> add_topping(<span class="va">self</span>, topping: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">def</span> add_topping(<span class="va">self</span>, topping:<span class="bu">str</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
 <span id="cb4-2"><a href="#cb4-2"></a>    <span class="va">self</span>.toppings.insert(<span class="bu">len</span>(<span class="va">self</span>.toppings), topping)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Follows the pattern: <code>def &lt;function&gt;(self, &lt;params&gt;):</code></p>
 </section>
@@ -465,9 +470,9 @@
 <h2>Pizza in Action</h2>
 <div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>p <span class="op">=</span> pizza(sauce<span class="op">=</span><span class="st">'white'</span>)</span>
 <span id="cb6-2"><a href="#cb6-2"></a>p.add_topping(<span class="st">'peppers'</span>)</span>
-<span id="cb6-3"><a href="#cb6-3"></a>p.add_topping(<span class="st">'chilis'</span>)</span>
+<span id="cb6-3"><a href="#cb6-3"></a>p.add_topping(<span class="st">'chillis'</span>)</span>
 <span id="cb6-4"><a href="#cb6-4"></a>p.get_pizza()</span>
-<span id="cb6-5"><a href="#cb6-5"></a><span class="op">&gt;</span> [<span class="st">'sourdough'</span>, <span class="st">'white'</span>, <span class="st">'mozzarella'</span>, <span class="st">'peppers'</span>, <span class="st">'chilis'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="op">&gt;</span> [<span class="st">'sourdough'</span>, <span class="st">'white'</span>, <span class="st">'mozzarella'</span>, <span class="st">'peppers'</span>, <span class="st">'chillis'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="check-it-out" class="slide level2 smaller">
 <h2>Check it Out</h2>
@@ -488,15 +493,15 @@
 <section class="slide level2">
 
 <h3 id="but">But…</h3>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>pizza.base<span class="op">=</span><span class="st">'Crusty'</span> <span class="co"># &lt;- Like changing a package var!</span></span>
-<span id="cb8-2"><a href="#cb8-2"></a>p1.get_pizza()  <span class="co"># &lt;- Base has changed</span></span>
-<span id="cb8-3"><a href="#cb8-3"></a><span class="op">&gt;</span> [<span class="st">'Crusty'</span>, <span class="st">'white'</span>, <span class="st">'mozzarella'</span>, <span class="st">'peppers'</span>, <span class="st">'chilis'</span>]</span>
-<span id="cb8-4"><a href="#cb8-4"></a>p2.get_pizza()  <span class="co"># &lt;- Base has not changed!</span></span>
-<span id="cb8-5"><a href="#cb8-5"></a><span class="op">&gt;</span> [<span class="st">'Plain old base'</span>, <span class="st">'tomato'</span>, <span class="st">'mozzarella'</span>, <span class="st">'pineapple'</span>, <span class="st">'ham'</span>]</span>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>pizza.base<span class="op">=</span><span class="st">'Crusty'</span> <span class="co"># Like changing a package var!</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a>p1.get_pizza()      <span class="co"># Base has changed</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="co"># ['Crusty', 'white', 'mozzarella', 'peppers', 'chilis']</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a>p2.get_pizza()      <span class="co"># Base has not changed!</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="co"># ['Plain old base', 'tomato', 'mozzarella', 'pineapple', 'ham']</span></span>
 <span id="cb8-6"><a href="#cb8-6"></a></span>
 <span id="cb8-7"><a href="#cb8-7"></a>p3 <span class="op">=</span> pizza()</span>
-<span id="cb8-8"><a href="#cb8-8"></a>p3.get_pizza()  <span class="co"># &lt;- Base has changed</span></span>
-<span id="cb8-9"><a href="#cb8-9"></a><span class="op">&gt;</span> [<span class="st">'Crusty'</span>, <span class="st">'tomato'</span>, <span class="st">'mozzarella'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-8"><a href="#cb8-8"></a>p3.get_pizza()      <span class="co"># Base has changed</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a><span class="co"># ['Crusty', 'tomato', 'mozzarella']</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="recap-how-to-make-a-pizza" class="slide level2 smaller">
 <h2>Recap: How to Make a Pizza</h2>
@@ -504,27 +509,30 @@
 <div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">class</span> <span class="op">&lt;</span>name<span class="op">&gt;</span>(<span class="op">&lt;</span>parent <span class="kw">class</span>):</span>
 <span id="cb9-2"><a href="#cb9-2"></a>  ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>A class is initialised by:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">&lt;</span><span class="bu">any</span> parameters<span class="op">&gt;</span>):</span>
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">&lt;</span>any_parameters<span class="op">&gt;</span>):</span>
 <span id="cb10-2"><a href="#cb10-2"></a>    ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>All methods <em>have</em> to have this:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>  <span class="kw">def</span> <span class="op">&lt;</span>method<span class="op">&gt;</span>(<span class="va">self</span>, <span class="op">&lt;</span><span class="bu">any</span> parameters<span class="op">&gt;</span>):</span>
+<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>  <span class="kw">def</span> <span class="op">&lt;</span>method<span class="op">&gt;</span>(<span class="va">self</span>, <span class="op">&lt;</span>any_parameters<span class="op">&gt;</span>):</span>
 <span id="cb11-2"><a href="#cb11-2"></a>    ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="recap-how-to-make-a-pizza-contd" class="slide level2 smaller">
 <h2>Recap: How to Make a Pizza (cont’d)</h2>
 <p>This is an <em>instance</em> variable:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>  <span class="va">self</span>.<span class="op">&lt;</span>var<span class="op">&gt;</span> <span class="op">=</span> <span class="op">&lt;</span>something<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This is a <em>class</em> variable:</p>
+<p>This is a <em>class</em> variable (in the class definition):</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>  <span class="op">&lt;</span>var<span class="op">&gt;</span> <span class="op">=</span> <span class="op">&lt;</span>something<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="recap-remember-your-self" class="slide level2">
-<h2>Recap: Remember Your <em>Self</em></h2>
+</section></section>
+<section>
+<section id="respect-your-self" class="title-slide slide level1 center">
+<h1>Respect Your <em>Self</em></h1>
 <blockquote>
-<p>So the keyword <code>self</code> refers to the <em>instantiated</em> object: the object always passes a reference to itself as the <strong>first parameter</strong> in any method. And <code>self</code> in a variable definition (<code>self.base</code>) is an <strong>instance</strong> variable, while <code>base</code> is a class variable.</p>
+<p>So the keyword <code>self</code> refers to the <em>instantiated</em> object: the object always passes a reference to itself as the <strong>first parameter</strong> in any method.</p>
 </blockquote>
 </section>
 <section id="resources" class="slide level2 smaller">
 <h2>Resources</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
 <ul>
 <li><a href="https://www.linkedin.com/learning/learning-python-2/classes">Classes</a></li>
 <li><a href="https://www.linkedin.com/learning/python-essential-training-2/objects">Objects</a></li>
@@ -532,6 +540,9 @@
 <li><a href="https://www.linkedin.com/learning/python-object-oriented-programming/instance-methods-and-attributes">Instance methods and attributes</a></li>
 <li><a href="https://www.linkedin.com/learning/python-object-oriented-programming/checking-instance-types">Checking instance types</a></li>
 <li><a href="https://www.linkedin.com/learning/python-object-oriented-programming/class-methods-and-members">Class methods and members</a></li>
+</ul>
+</div><div class="column" style="width:50%;">
+<ul>
 <li><a href="https://www.linkedin.com/learning/python-essential-training-2/creating-a-class">Creating a class</a></li>
 <li><a href="https://www.linkedin.com/learning/python-essential-training-2/constructing-an-object">Constructing an object</a></li>
 <li><a href="https://www.linkedin.com/learning/python-essential-training-2/class-methods">Class methods</a></li>
@@ -539,7 +550,9 @@
 <li><a href="https://www.linkedin.com/learning/python-essential-training-2/object-data">Object data</a></li>
 <li><a href="https://www.linkedin.com/learning/python-essential-training-2/inheritance">Inheritance</a></li>
 </ul>
-</section>
+</div>
+</div>
+</section></section>
 <section id="thank-you" class="title-slide slide level1 center">
 <h1>Thank you!</h1>
 
