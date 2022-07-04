@@ -389,20 +389,21 @@
   <p class="author">Jon Reades</p>
 </section>
 
-<section class="slide level2">
-
-<h3 id="curse-and-blessing">Curse and Blessing…</h3>
+<section id="curse-and-blessing" class="slide level2">
+<h2>Curse and Blessing…</h2>
 <ul>
 <li>More dimensions means <strong>more information</strong>.</li>
 <li>More dimensions makes for <strong>easier seperation</strong>.</li>
 <li>More dimensions <strong>inflates distance</strong>.</li>
 <li>More dimensions increases the <strong>risk of overfitting</strong>.</li>
 </ul>
+<div class="fragment">
 <p>Or as <a href="https://analyticsindiamag.com/curse-of-dimensionality-and-what-beginners-should-do-to-overcome-it/">Analytics India Magazine</a> puts it:</p>
 <ul>
 <li>High-dimensional spaces have geometrical properties that are counter-intuitive and far from the properties observed in two- or three-dimensional spaces.</li>
 <li>Data analysis tools are often designed with intuitive properties and low-dimensional spaces in mind.</li>
 </ul>
+</div>
 </section>
 <section>
 <section id="dimensionality-reduction" class="title-slide slide level1 center">
@@ -413,11 +414,11 @@
 <h2>PCA</h2>
 <p>Workhorse dimensionality reduction method: simple, fast, and effective. Can be thought of as freely rotating axes to align with directions of maximum variance. I like this summary:</p>
 <blockquote>
-<p>PCA (Principal Components Analysis) gives us our ideal set of features. It creates a set of principal components that are <strong>rank ordered by variance</strong> (the first component has higher variance than the second, the second has higher variance than the third, and so on), <strong>uncorrelated</strong> (all components are orthogonal), and <strong>low in number</strong> (we can throw away the lower ranked components as they contain little signal).</p>
+<p>PCA (Principal Components Analysis) gives us our ‘ideal’ set of features. It creates a set of principal components that are <strong>rank ordered by variance</strong> (the first component has higher variance than the second, the second has higher variance than the third, and so on), <strong>uncorrelated</strong> (all components are orthogonal), and <strong>low in number</strong> (we can throw away the lower ranked components as they <em>usually</em> contain little signal).</p>
 </blockquote>
 <p>But I particularly liked <a href="https://towardsdatascience.com/understanding-pca-fae3e243731d">this exposition</a> in Towards Data Science.</p>
 </section>
-<section id="in-practice" class="slide level2 smaller">
+<section id="in-practice" class="slide level2">
 <h2>In Practice…</h2>
 <div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
 <span id="cb1-2"><a href="#cb1-2"></a>pca <span class="op">=</span> PCA(n_components<span class="op">=</span><span class="dv">2</span>)</span>
@@ -427,15 +428,27 @@
 <span id="cb1-6"><a href="#cb1-6"></a>pca.transform(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>See also: <a href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.KernelPCA.html#sklearn.decomposition.KernelPCA">Kernel PCA</a> for non-linear problems.</p>
 </section>
-<section id="rtfm" class="slide level2 smaller">
+<section id="rtfm" class="slide level2">
 <h2>RT(F)M</h2>
-<p>Why was I banging on about transformations?</p>
+<p>Why was I banging on about transformations? Well, what does this <em>assume</em> about the data?</p>
 <blockquote>
-<p>Linear dimensionality reduction using Singular Value Decomposition of the data to project it to a lower dimensional space. The input data is <strong>centered but not scaled</strong> for each feature before applying the SVD.</p>
+<p>Linear dimensionality reduction using Singular Value Decomposition projects data into to a lower dimensional space. The input data is <strong>centered but not scaled</strong> for each feature before applying the SVD.</p>
 </blockquote>
+<aside class="notes">
 <p>I found a nice explanation of PCA using dinner conversation over several bottles of wine as an example on <a href="https://stats.stackexchange.com/a/140579">Stats.StackExhcange.com</a>. There are <a href="https://stats.stackexchange.com/a/385782">many good illustrations</a> of this process on <a href="https://stats.stackexchange.com/questions/385775/normalizing-vs-scaling-before-pca">stats.stackexchange.com</a>.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="other-considerations" class="slide level2 smaller">
+<section id="other-considerations" class="slide level2">
 <h2>Other Considerations</h2>
 <blockquote>
 <p>PCA is a form of unsupervised learning that does not take output labels into account. Other approaches (such as Linear Discriminant Analysis [note: <em>not</em> Latent Dirichlet Allocation]) consider the output as part of the transformation. PCA is also deterministic.</p>
@@ -445,26 +458,60 @@
 <section id="t-sne" class="slide level2">
 <h2>t-SNE</h2>
 <p>t-Distributed Stochastic Neighbour Embedding is best understood as a <strong>visualisation</strong> technique, not an <strong>analytical</strong> one. This is because it is <em>probabilistic</em> and not <em>deterministic</em>.</p>
-
-<img data-src="img/tsne-fashion.png" class="r-stretch"></section>
-<section id="in-practice-1" class="slide level2 smaller">
+<img data-src="img/tsne-fashion.png" class="r-stretch">
+</section>
+<section id="in-practice-1" class="slide level2">
 <h2>In Practice…</h2>
 <div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">from</span> sklearn.manifold <span class="im">import</span> TSNE</span>
-<span id="cb2-2"><a href="#cb2-2"></a>TSNE().fit_transform(<span class="op">&lt;</span>data<span class="op">&gt;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>However, the choice of <code>perplexity</code> and <code>n_iter</code> at instantiation <em>matters</em>. In practice you will need to experiment with both.</p>
-<p>t-SNE is also <em>much</em> harder computationally and it may be preferrable on very high-D data sets to <strong>apply PCA <em>first</em> and then t-SNE to the reduced data set</strong>! The output could then be fed to a clustering algorithm to make predictions about where new observations belong, but do not confuse that with <em>meaning</em>.</p>
-<p><em>Note:</em> I have also installed the <a href="https://github.com/DmitryUlyanov/Multicore-TSNE">Multicore-TSNE</a> module in the Docker/Vagrant image.</p>
+<span id="cb2-2"><a href="#cb2-2"></a>embedded <span class="op">=</span> TSNE(n_components<span class="op">=</span>d).fit_transform(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The choice of <code>perplexity</code> and <code>n_iter</code> <em>matter</em>, and so does the <code>metric</code>. In practice you will need to experiment with <a href="https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html">these</a>.</p>
+<aside class="notes">
+<p>t-SNE is also <em>much</em> harder computationally than PCA and it may be preferrable on very high-D data sets to <strong>apply PCA <em>first</em> and then t-SNE to the reduced data set</strong>! The output could then be fed to a clustering algorithm to make predictions about where new observations belong, but do not confuse that with <em>meaning</em>.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="umap" class="slide level2 smaller">
+<section id="umap" class="slide level2">
 <h2>UMAP</h2>
-<p>Promising (non-deterministic) alternative to PCA that supports non-linear reduction while preserving both local and global structure. Not currently installed in Docker/Vagrant, but available under <code>umap-learn</code> (<code>conda install -c conda-forge umap-learn</code>). See examples on <a href="https://umap.scikit-tda.org/parameters.html">umap.scikit-tda.org</a>.</p>
+<p>Non-linear dimensionality reduction that tries to preserve both local <em>and</em> global structure. Puts it <em>between</em> PCA and t-SNE.</p>
+<img data-src="https://umap.scikit-tda.org/_images/SupervisedUMAP_22_1.png" class="r-stretch">
 
-<img data-src="https://umap.scikit-tda.org/_images/SupervisedUMAP_22_1.png" class="r-stretch"></section>
-<section id="gotcha" class="slide level2 smaller">
+<aside class="notes">
+<p>See examples on <a href="https://umap.scikit-tda.org/parameters.html">umap.scikit-tda.org</a>.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+<aside><div>
+<p>Note that the library is called <code>umap-learn</code>.</p>
+</div></aside></section>
+<section id="in-pracice" class="slide level2">
+<h2>In Pracice…</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="im">import</span> umap</span>
+<span id="cb3-2"><a href="#cb3-2"></a>transformer <span class="op">=</span> umap.UMAP(n_components<span class="op">=</span>d)</span>
+<span id="cb3-3"><a href="#cb3-3"></a>embedded <span class="op">=</span> transformer.fit_transform(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The choice of <code>n_neighbors</code>, <code>min_dist</code>, and <code>metric</code> <em>matter</em>. In practice you may need to experiment with <a href="https://umap.scikit-tda.org/parameters.html#basic-umap-parameters">these</a>.</p>
+</section>
+<section id="gotcha" class="slide level2">
 <h2>Gotcha!</h2>
-<p>Both t-SNE and UMAP require very careful handling:</p>
+<p>t-SNE (less so UMAP) requires very careful handling:</p>
 <ol type="1">
-<li>Hyperparameters matter</li>
+<li>Hyperparameters matter a <em>lot</em></li>
 <li>Cluster size means nothing</li>
 <li>Cluster distances mean nothing</li>
 <li>Clusters may mean nothing (low neighbour count/perplexity)</li>
@@ -472,7 +519,7 @@
 </ol>
 <p>Both likely require repeated testing and experimentation.</p>
 </section>
-<section id="other-approaches" class="slide level2 smaller">
+<section id="other-approaches" class="slide level2">
 <h2>Other Approaches</h2>
 <ul>
 <li>Feature selection, including forwards/backwards (<code>sklearn.feature_selection</code> <a href="https://scikit-learn.org/stable/modules/classes.html#module-sklearn.feature_selection">here</a>)</li>
@@ -485,14 +532,21 @@
 </section>
 <section id="resources" class="slide level2 smaller">
 <h2>Resources</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
 <ul>
 <li>Rethinking ‘distance’ in New York City <em>Medium</em> <a href="https://medium.com/topos-ai/rethinking-distance-in-new-york-city-d17212d24919">URL</a></li>
-<li>Five Boroughs for the 21<span class="math display">\[^{st}\]</span> Century <em>Medium</em> <a href="https://medium.com/topos-ai/five-boroughs-for-the-21st-century-8da941f53618">URL</a></li>
+<li>Five Boroughs for the 21<span class="math inline">\(^{st}\)</span> Century <em>Medium</em> <a href="https://medium.com/topos-ai/five-boroughs-for-the-21st-century-8da941f53618">URL</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Curse_of_dimensionality">Curse of Dimensionality</a></li>
 <li><a href="https://towardsdatascience.com/the-curse-of-dimensionality-50dc6e49aa1e">The Curse of Dimensionality</a></li>
+<li><a href="https://www.mygreatlearning.com/blog/understanding-curse-of-dimensionality/">Understanding Curse of Dimensionality</a></li>
+<li><a href="https://towardsdatascience.com/curse-of-dimensionality-a-curse-to-machine-learning-c122ee33bfeb">Curse of Dimensionality – A ‘Curse’ to Machine Learning</a></li>
 <li><a href="https://scikit-learn.org/stable/auto_examples/preprocessing/plot_scaling_importance.html">Importance of Feature Scaling</a></li>
 <li><a href="https://towardsdatascience.com/understanding-pca-fae3e243731d">Understanding PCA</a></li>
 <li><a href="https://www.datacamp.com/community/tutorials/introduction-t-sne">Introduction to t-SNE in Python</a></li>
+</ul>
+</div><div class="column" style="width:50%;">
+<ul>
 <li><a href="https://distill.pub/2016/misread-tsne/">How to Use t-SNE Effectively</a></li>
 <li><a href="https://towardsdatascience.com/how-to-tune-hyperparameters-of-tsne-7c0596a18868">How to tune the Hyperparameters of t-SNE</a></li>
 <li><a href="https://pair-code.github.io/understanding-umap/">Understanding UMAP</a> (Compares to t-SNE)</li>
@@ -501,6 +555,8 @@
 <li><a href="https://www.youtube.com/watch?v=nq6iPZVUxZU">UMAP for Dimensionality Reduction</a> (Video)</li>
 <li><a href="https://www.youtube.com/watch?v=9iol3Lk6kyU">A Bluffer’s Guide to Dimensionality Reduction</a> (Video)</li>
 </ul>
+</div>
+</div>
 </section></section>
 <section id="thank-you" class="title-slide slide level1 center">
 <h1>Thank you!</h1>

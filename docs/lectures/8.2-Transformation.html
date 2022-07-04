@@ -389,9 +389,10 @@
   <p class="author">Jon Reades</p>
 </section>
 
-<section class="slide level2">
-
+<section id="what-is-it" class="slide level2">
+<h2>What is it?</h2>
 <p>Data <em>transformation</em> just means changing the raw data in some way to make it more tractable for analysis.</p>
+<p>For example:</p>
 <ul>
 <li>Centering the mean on zero is an obvious example.</li>
 <li>But we can also do quite complicated things (with caution!) in order to get a distribution that we can work with using statistical tests that have certain expectations about the data we’re feeding them.</li>
@@ -412,14 +413,42 @@
 </section>
 <section id="transformation-in-1d" class="slide level2">
 <h2>Transformation in 1D</h2>
-
-<img data-src="img/Transform-1D.png" class="r-stretch"></section>
-<section id="transformation-in-1d-1" class="slide level2">
-<h2>Transformation in 1D</h2>
+<img data-src="img/Transform-1D.png" class="r-stretch">
+<div class="fragment">
 <p><span class="math display">\[
 x-\bar{x}
 \]</span></p>
-<p><img data-src="img/Transform-1D-post.png"></p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Input</th>
+<th style="text-align: right;">Output</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">-2</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">-1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">+1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">+2</td>
+</tr>
+</tbody>
+</table>
+</div>
 <aside class="notes">
 <p>How is this any different?</p>
 <style type="text/css">
@@ -440,37 +469,38 @@ x-\bar{x}
 <p>Transformations are <strong>mathematical operations</strong> applied to every observation in a data set that preserve <strong>some</strong> of the relationships between them.</p>
 </blockquote>
 </section>
-<section id="for-example" class="slide level2 smaller">
+<section id="for-example" class="slide level2">
 <h2>For Example</h2>
 <p>If we subtract the mean from everyone’s height then we <em>can</em> immediately tell if someone is taller or shorter <em>than we would expect</em>.</p>
 <p>If we subtract the mean from everyone’s income then we <em>cannot</em> immediately tell if someone is earning more or less <em>that we would expect</em>.</p>
 <p>So what is a <strong>useful transformation</strong> in one context, may not be in another!</p>
 </section>
-<section id="fleshing-this-out" class="slide level2 smaller">
+<section id="fleshing-this-out" class="slide level2">
 <h2>Fleshing This Out</h2>
-<p><em>Question</em>: How can you tell if you did <em>better</em> <strong>than everyone else</strong> on the <em>Quiz</em> or on the <em>Data Set Biography</em>?</p>
+<p><em>Question</em>: How can you tell if you did <em>better</em> <strong>than everyone else</strong> on the <em>Quiz</em> or on the <em>Final Report</em>?</p>
+<div class="fragment">
 <p><em>Answer</em>: Just subtracting the mean is <em>not enough</em> because the distributions are not the same. For <em>that</em> we also need to standardise the data in some way.</p>
 <p><span class="math display">\[
 z = \dfrac{x-\bar{x}}{\sigma}
 \]</span></p>
 <p>Divide through by the distribution!</p>
+</div>
 </section>
 <section>
 <section id="standardisation" class="title-slide slide level1 center">
 <h1>Standardisation</h1>
 
 </section>
-<section id="z-score-standardisation" class="slide level2 smaller">
+<section id="z-score-standardisation" class="slide level2">
 <h2>Z-Score Standardisation</h2>
 <p><span class="math display">\[
 \dfrac{x-\bar{x}}{\sigma}
 \]</span></p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
 <span id="cb1-2"><a href="#cb1-2"></a>scaler <span class="op">=</span> StandardScaler()</span>
-<span id="cb1-3"><a href="#cb1-3"></a>scaler.fit(data)</span>
+<span id="cb1-3"><a href="#cb1-3"></a>scaler.fit(x)</span>
 <span id="cb1-4"><a href="#cb1-4"></a><span class="bu">print</span>(scaler.mean_)</span>
-<span id="cb1-5"><a href="#cb1-5"></a>scaler.transform(data)</span>
-<span id="cb1-6"><a href="#cb1-6"></a>scaler.transform(<span class="op">&lt;</span>new data<span class="op">&gt;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5"></a>scaler.transform(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <aside class="notes">
 <p>The important thing to note is that if transform data that has not been fit <em>and</em> you get values outside the range used for fitting then you can no longer assume a standard normal.</p>
 <style type="text/css">
@@ -485,17 +515,17 @@ z = \dfrac{x-\bar{x}}{\sigma}
           display:block!important;
       }</style></aside>
 </section>
-<section id="interquartile-standardisation" class="slide level2 smaller">
+<section id="interquartile-standardisation" class="slide level2">
 <h2>Interquartile Standardisation</h2>
 <p><span class="math display">\[
 \dfrac{x_{i}-x_{Q2}}{x_{Q3}-x_{Q1}}
 \]</span></p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> RobustScaler</span>
 <span id="cb2-2"><a href="#cb2-2"></a>trf <span class="op">=</span> RobustScaler(</span>
-<span id="cb2-3"><a href="#cb2-3"></a>        quantile_range<span class="op">=</span>(<span class="fl">25.0</span>,<span class="fl">75.0</span>)).fit(<span class="op">&lt;</span>data<span class="op">&gt;</span>)</span>
-<span id="cb2-4"><a href="#cb2-4"></a>trf.transform(<span class="op">&lt;</span>data<span class="op">&gt;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-3"><a href="#cb2-3"></a>        quantile_range<span class="op">=</span>(<span class="fl">25.0</span>,<span class="fl">75.0</span>)).fit(x)</span>
+<span id="cb2-4"><a href="#cb2-4"></a>trf.transform(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="interdecile-standardisation" class="slide level2 smaller">
+<section id="interdecile-standardisation" class="slide level2">
 <h2>Interdecile Standardisation</h2>
 <p><span class="math display">\[
 \dfrac{x_{i}-x_{50^{th}}}{x_{90^{th}}-x_{10^{th}}}
@@ -504,9 +534,9 @@ z = \dfrac{x-\bar{x}}{\sigma}
 <aside class="notes">
 <p>Why standardise:</p>
 <ul>
-<li><p>We understand the properties of normal-ish distributions, and can simulate them easily.</p></li>
-<li><p>More ‘power’ in the statistical tools available.</p></li>
-<li><p>Many analyses assume that ‘error’ is random and symmetric (homoscedastic, not skewed).</p></li>
+<li>We understand the properties of normal-ish distributions, and can simulate them easily.</li>
+<li>More ‘power’ in the statistical tools available.</li>
+<li>Many analyses assume that ‘error’ is random and symmetric (homoscedastic, not skewed).</li>
 </ul>
 <style type="text/css">
         span.MJX_Assistive_MathML {
@@ -519,35 +549,27 @@ z = \dfrac{x-\bar{x}}{\sigma}
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
-</section>
-<section class="slide level2">
+</section></section>
+<section>
+<section id="what-is-the-danger-of-not-standardising-by-age-when-looking-at-long-term-illness" class="title-slide slide level1 center">
+<h1>What is the danger of <em>not</em> standardising by age when looking at long-term illness?</h1>
 
-<blockquote>
-<p>What is the danger of <em>not</em> standardising by age when looking at long-term illness?</p>
-</blockquote>
 </section>
-<section id="group-standardisation" class="slide level2 smaller">
+<section id="group-standardisation" class="slide level2">
 <h2>Group Standardisation</h2>
 <p><span class="math display">\[
 x'_{a,i} = \dfrac{x_{ai}}{\sum_{g} r_{N,g} P_{a,g}}
 \]</span></p>
-<aside class="notes">
-<p><span class="math display">\[x_{a,i}\]</span> = Value of attribute <em>i</em> in area <em>a</em>.</p>
-<p><span class="math display">\[P_{a,g}\]</span> = Population of group <em>g</em> in area <em>a</em>.</p>
-<p><span class="math display">\[r_{N,g}\]</span> = National ration <em>N</em> of group <em>g</em></p>
-<p><span class="math display">\[\sum\]</span> = Sum for all groups.</p>
-<p><span class="math display">\[x'_{a,i}\]</span> = Standardised value of <em>i</em> in area <em>a</em>.</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
+<div class="fragment">
+<p>Details:</p>
+<ul>
+<li><span class="math inline">\(x_{a,i}\)</span> = Value of attribute <em>i</em> in area <em>a</em>.</li>
+<li><span class="math inline">\(P_{a,g}\)</span> = Population of group <em>g</em> in area <em>a</em>.</li>
+<li><span class="math inline">\(r_{N,g}\)</span> = National ration <em>N</em> of group <em>g</em></li>
+<li><span class="math inline">\(\sum\)</span> = Sum for all groups.</li>
+<li><span class="math inline">\(x'_{a,i}\)</span> = Standardised value of <em>i</em> in area <em>a</em>.</li>
+</ul>
+</div>
 </section></section>
 <section>
 <section id="normalisation" class="title-slide slide level1 center">
@@ -566,29 +588,42 @@ x'_{a,i} = \dfrac{x_{ai}}{\sum_{g} r_{N,g} P_{a,g}}
           display:block!important;
       }</style></aside>
 </section>
-<section id="proportional-normalisation" class="slide level2 smaller">
+<section id="proportional-normalisation" class="slide level2">
 <h2>Proportional Normalisation</h2>
-<p>$$</p>
-<p>$$</p>
+<p><span class="math display">\[
+\dfrac{x_{i}}{\sum{x}_{i=1}^{n}}
+\]</span></p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb4-2"><a href="#cb4-2"></a>data <span class="op">=</span> <span class="op">&lt;</span><span class="bu">list</span><span class="op">&gt;</span></span>
-<span id="cb4-3"><a href="#cb4-3"></a>data<span class="op">/</span>np.<span class="bu">sum</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-2"><a href="#cb4-2"></a>x<span class="op">/</span>np.<span class="bu">sum</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<aside class="notes">
+<p>Numpy has a <a href="https://numpy.org/doc/stable/reference/generated/numpy.log.html">fair few options</a> for implementing this, but note that <code>log</code> <em>means</em> natural log, not <code>log10</code>!</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="range-normalisation" class="slide level2 smaller">
+<section id="range-normalisation" class="slide level2">
 <h2>Range Normalisation</h2>
-<p>$$</p>
-<p>$$</p>
+<p><span class="math display">\[
+\dfrac{x_{i}-x_{min}}{x_{max}-x_{min}}
+\]</span></p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> MinMaxScaler</span>
 <span id="cb5-2"><a href="#cb5-2"></a>scaler <span class="op">=</span> MinMaxScaler()</span>
-<span id="cb5-3"><a href="#cb5-3"></a>scaler.fit(data)</span>
+<span id="cb5-3"><a href="#cb5-3"></a>scaler.fit(x)</span>
 <span id="cb5-4"><a href="#cb5-4"></a><span class="bu">print</span>(scaler.data_max_)</span>
-<span id="cb5-5"><a href="#cb5-5"></a>scaler.transform(data)</span>
-<span id="cb5-6"><a href="#cb5-6"></a>scaler.transform(<span class="op">&lt;</span>new data<span class="op">&gt;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-5"><a href="#cb5-5"></a>scaler.transform(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <aside class="notes">
 <p>Normalisation helps in several ways:</p>
 <ul>
-<li><p>Scaling is important for comparability</p></li>
-<li><p>Clustering is particularly sensitive to scale</p></li>
+<li>Scaling is important for comparability</li>
+<li>Clustering is particularly sensitive to scale</li>
 </ul>
 <style type="text/css">
         span.MJX_Assistive_MathML {
@@ -611,10 +646,12 @@ x'_{a,i} = \dfrac{x_{ai}}{\sum_{g} r_{N,g} P_{a,g}}
 <h2>Log Transformation</h2>
 <p>Recall: logs are the <em>inverse</em> of exponentiation!</p>
 <ul>
-<li>So if <span class="math display">\[10^{3} = 1,000\]</span> then <span class="math display">\[log_{10}(1,000) = 3\]</span>.</li>
-<li>And if <span class="math display">\[10^{0} = 1\]</span> then <span class="math display">\[log_{10}(1) = 0\]</span></li>
+<li>So if <span class="math inline">\(10^{3} = 1,000\)</span> then <span class="math inline">\(log_{10}(1,000) = 3\)</span>.</li>
+<li>And if <span class="math inline">\(10^{0} = 1\)</span> then <span class="math inline">\(log_{10}(1) = 0\)</span></li>
 </ul>
-<p>The Natural Log (<span class="math display">\[e\]</span>) has certain advantages over other logs.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb6-2"><a href="#cb6-2"></a>xhat <span class="op">=</span> np.log(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
 <aside class="notes">
 <p>Why is this so common? Esp. in social sciences?</p>
 <style type="text/css">
@@ -628,15 +665,17 @@ x'_{a,i} = \dfrac{x_{ai}}{\sum_{g} r_{N,g} P_{a,g}}
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
-</section>
+<aside><div>
+<p>Note that <code>numpy</code> uses the <em>natural</em> log in base <span class="math inline">\(e\)</span>.</p>
+</div></aside></section>
 <section id="why-log-transform" class="slide level2">
 <h2>Why Log Transform?</h2>
-<p>Consider:</p>
+<p>Let’s assume that <span class="math inline">\(x = \{10, 100, 1000, 10000\}\)</span>, consider what happens if:</p>
 <ul>
-<li>The formula for the mean is <span class="math display">\[\frac{\sum{x}}{n}\]</span>.</li>
-<li>The formula for variance is <span class="math display">\[\frac{(x-\bar{x})^{2}}{n}\]</span>.</li>
+<li>The formula for the mean is <span class="math inline">\(\frac{\sum{x}}{n}\)</span>.</li>
+<li>The formula for variance is <span class="math inline">\(\frac{(x-\bar{x})^{2}}{n}\)</span>.</li>
 </ul>
-<p>Consider what happens if <span class="math display">\[(x-\bar{x})\]</span> is 10, 100, 1,000, or 10,000?</p>
+<p>The Natural Log (<span class="math inline">\(e\)</span>) has certain advantages over other logs and should probably be your default choice for log transformations.</p>
 </section>
 <section id="other-transforms" class="slide level2">
 <h2>Other Transforms…</h2>
@@ -649,10 +688,10 @@ x'_{a,i} = \dfrac{x_{ai}}{\sum_{g} r_{N,g} P_{a,g}}
 </ul>
 <aside class="notes">
 <ul>
-<li><p>To report measures of central tendency it’s usually helpful to convert back to the original units.</p></li>
-<li><p>The more extreme the transformation the less meaningful measures of dispersion.</p></li>
-<li><p>Correlation can be significantly affected in either direction.</p></li>
-<li><p>Count data can be tricky because you should not have negative values (especially <span class="math display">\[-\infty\]</span>).</p></li>
+<li>To report measures of central tendency it’s usually helpful to convert back to the original units.</li>
+<li>The more extreme the transformation the less meaningful measures of dispersion.</li>
+<li>Correlation can be significantly affected in either direction.</li>
+<li>Count data can be tricky because you should not have negative values (especially <span class="math inline">\(-\infty\)</span>).</li>
 </ul>
 <style type="text/css">
         span.MJX_Assistive_MathML {
@@ -666,12 +705,12 @@ x'_{a,i} = \dfrac{x_{ai}}{\sum_{g} r_{N,g} P_{a,g}}
           display:block!important;
       }</style></aside>
 </section>
-<section id="when-transforms-dont-help" class="slide level2 smaller">
+<section id="when-transforms-dont-help" class="slide level2">
 <h2>When Transforms Don’t Help</h2>
 <p>Arbitrarily transforming data isn’t a panacea. ‘Robust’ tests can be another approach when all else fails and two common approaches are:</p>
 <ul>
-<li>Working with the ‘Trimmed Mean’: cutting off, say, the top and bottom 5% of scores would start to remove skew and offer a more useful view of the central tendency of the data.</li>
-<li>Bootstrapping: by taking many sub-samples (usually of <span class="math display">\[n-1\]</span> data points or similar) we can build a picture of how certain metrics vary.</li>
+<li><strong>Trimming</strong>: cutting off, say, the top and bottom 5% of scores would start to remove skew and offer a more useful view of the central tendency of the data.</li>
+<li><strong>Bootstrapping</strong>: taking many sub-samples (usually of <span class="math inline">\(n-1\)</span> data points or similar) we can build a picture of how certain metrics vary.</li>
 </ul>
 </section>
 <section id="one-last-note" class="slide level2 smaller">
@@ -714,7 +753,8 @@ x'_{a,i} = \dfrac{x_{ai}}{\sum_{g} r_{N,g} P_{a,g}}
 <section class="slide level2">
 
 <blockquote>
-<p>Are spatial (a.k.a. geometrical) transformations any different from the other mathematical transformations covered in this session? Data exists in a ‘space’ that we can transform and manipulate in various ways <strong>using functions</strong> to serve our exploratory and analytical purposes.</p>
+<p>Are spatial (a.k.a. geometrical) transformations any different from the other mathematical transformations covered in this session?</p>
+<p>Data exists in a ‘space’ that we can transform and manipulate in various ways <strong>using functions</strong> to serve our exploratory and analytical purposes.</p>
 </blockquote>
 </section>
 <section id="resources" class="slide level2 smaller">
@@ -728,6 +768,7 @@ x'_{a,i} = \dfrac{x_{ai}}{\sum_{g} r_{N,g} P_{a,g}}
 <li><a href="https://youtu.be/_-x90wGBD8U">Logarithms - What is <code>e</code>?</a></li>
 <li><a href="https://scikit-learn.org/stable/modules/classes.html#module-sklearn.preprocessing">sklearn API reference</a></li>
 <li><a href="https://scikit-learn.org/stable/auto_examples/preprocessing/plot_all_scaling.html#sphx-glr-auto-examples-preprocessing-plot-all-scaling-py">Compare effects of different scalers on data with outliers</a></li>
+<li><a href="https://www.youtube.com/watch?v=dr2sIoD7eeU">The things you’ll find in higher dimensions</a> (useful brief discussion of manifolds)</li>
 </ul>
 </section></section>
 <section id="thank-you" class="title-slide slide level1 center">
