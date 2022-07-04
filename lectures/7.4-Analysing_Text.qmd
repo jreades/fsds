@@ -19,44 +19,53 @@ history: false
 css: slides.css
 ---
 
+## Dummy Variables
 
+The concept of 'dummy variables' in economics/regression is a useful point to start thinking about text:
 
-May already be familiar with concept as 'dummy variables' in economics/regression:
+| Topic         | Dummy | 
+| ------------- | ----- | 
+| News          | 0     | 
+| Culture       | 1     | 
+| Politics      | 2     | 
+| Entertainment | 3     | 
 
-| Document      | UK   | Top  | Pop  | Coronavirus |
-| ------------- | ---- | ---- | ---- | ----------- |
-| News          | 1    | 1    | 0    | 1           |
-| Culture       | 0    | 1    | 1    | 0           |
-| Politics      | 1    | 0    | 0    | 1           |
-| Entertainment | 1    | 1    | 1    | 1           |
+::: {.notes}
+What's the problem with this approach when you're thinking about the topics in a document? You either have to assign each document to one, and only one, topic, or you need a _lot_ of dummies.
+:::
 
+## One-Hot Encoders
 
-
-
+| Document           | UK   | Top  | Pop  | Coronavirus |
+| ------------------ | ---- | ---- | ---- | ----------- |
+| News item          | 1    | 1    | 0    | 1           |
+| Culture item       | 0    | 1    | 1    | 0           |
+| Politics item      | 1    | 0    | 0    | 1           |
+| Entertainment item | 1    | 1    | 1    | 1           |
 
 ::: {.notes}
 
-Certainly One-Hot encoders are rarely, if ever, used this way, but for keyword detection this might be appropriate: i.e. this word was used in this document!
+One-Hot encoders are not _often_ used this way, but for keyword detection or keyword-based classification this might be appropriate: i.e. this keyword was used in this document! 
 
-Only difference is One Hot == $$n$$ variables, Dummy == $$n-1$$.
+So the big difference is One Hot == $n$ variables, Dummy == $n-1$.
 
 Definitely some 'gotchas' in deployment: one-hot models shouldn't have an intercept unless you apply a 'ridge shrinkage penalty'. Standardisation affects whether or not an intercept is needed.
 
 :::
 
-## The 'Bag of Words' {.smaller}
+## The 'Bag of Words'
 
-Could simply be seen as an extension of binarised approach on preceding slide:
+Just like a one-hot (binarised approach) on preceding slide but now we count occurences:
 
-| Document      | UK   | Top  | Pop  | Coronavirus |
-| ------------- | ---- | ---- | ---- | ----------- |
-| News          | 4    | 2    | 0    | 6           |
-| Culture       | 0    | 4    | 7    | 0           |
-| Politics      | 3    | 0    | 0    | 3           |
-| Entertainment | 3    | 4    | 8    | 1           |
+| Document           | UK   | Top  | Pop  | Coronavirus |
+| ------------------ | ---- | ---- | ---- | ----------- |
+| News item          | 4    | 2    | 0    | 6           |
+| Culture item       | 0    | 4    | 7    | 0           |
+| Politics item      | 3    | 0    | 0    | 3           |
+| Entertainment item | 3    | 4    | 8    | 1           |
 
 
-## BoW in Practice {.smaller}
+## BoW in Practice
 
 Enter, stage left, [scikit-learn](https://scikit-learn.org/stable/):
 
@@ -64,18 +73,20 @@ Enter, stage left, [scikit-learn](https://scikit-learn.org/stable/):
 from sklearn.feature_extraction.text import CountVectorizer
 vectorizer = CountVectorizer()
 
-vectorizer.fit(texts)
-vectors = vectorizer.transform(texts)
+# Non-reusable transformer
+vectors = vectorizer.fit_transform(texts)
 
-# Same thing:
-# vectors = vectorizer.fit_transform(texts)
+# Reusable transformer
+vectorizer.fit(texts)
+vectors1 = vectorizer.transform(texts1)
+vectors2 = vectorizer.transform(texts2)
 
 print(f'Vocabulary: {vectorizer.vocabulary_}')
-print(f'Full vector: {vectors.toarray()}')
+print(f'All vectors: {vectors.toarray()}')
 ```
 
 
-## TF/IDF {.smaller}
+## TF/IDF
 
 Builds on Count Vectorisation by normalising the document frequency measure by the overall corpus frequency. Common words receive a large penalty:
 
@@ -83,27 +94,30 @@ $$
 W(t,d) = TF(t,d) / log(N/DF_{t})
 $$
 
-For example: if the term 'cat' appears 3 times in a document of 100 words then $TF(t,d)=3/100$. If there are 10,000 documents and cat appears in 1,000 documents then $N/DF_{t}=10000/1000$ and $log(10)=1$, so IDF=1 and TF/IDF=0.03.
+For example: 
+
+- If the term 'cat' appears 3 times in a document of 100 words then Term Frequency given by: $TF(t,d)=3/100$, and
+- If there are 10,000 documents and cat appears in 1,000 documents then Normalised Document Frequency given by: $N/DF_{t}=10000/1000$ so the Inverse Document Frequency is $log(10)=1$,
+- So IDF=1 and TF/IDF=0.03.
 
 
-## TF/IDF in Practice {.smaller}
+## TF/IDF in Practice
 
 
 ```python
 from sklearn.feature_extraction.text import TfidfVectorizer
 vectorizer = TfidfVectorizer()
 
+# Non-reusable form:
+vectors=vectorizer.fit_transform(texts)
+
+# Reusable form:
 vectorizer.fit(texts)
 vectors = vectorizer.transform(texts)
-
-# Same thing:
-# vectors=vectorizer.fit_transform(texts)
 
 print(f'Vocabulary: {vectorizer.vocabulary_}')
 print(f'Full vector: {vectors.toarray()}')
 ```
-
-
 
 ::: {.notes}
 
@@ -113,8 +127,7 @@ What do you notice about how this code differs from the CountVectorizer?
 
 ## Term Co-Occurence Matrix (TCM) {.smaller}
 
-
-Three input texts:
+Three input texts with a distance weighting ($d/2$, where $d<3$):
 
 - the cat sat on the mat
 - the cat sat on the fluffy mat
@@ -131,24 +144,36 @@ Three input texts:
 | the    |        |      |        |      |      |      |      |
 
 
-## Text2Vec {.smaller}
+## How Big is a TCM?
 
-Typically some kind of 2 or 3-layer neural network that 'learns' (using as big a training data set as possible) how to embed the TCM into a lower-dimension representation. 
+The problem:
 
-Conceptual similarities to PCA in terms of what we're trying to achieve, but the *process* is utterly different.
+- A corpus with 10,000 words has a TCM of size $10,000^{2}$ (100,000,000)
+- A corpus with 50,000 words has a TCM of size $50,000^{2}$ (2,500,000,000)
 
+Cleaning is _necessary_, but it's not _sufficient_ to create a tractable TCM on a large corpus.
+
+::: {.notes}
+Although usually used in the context of clustering, there's also a curse of dimensionality here!
+:::
+
+## Enter Document Embeddings
+
+Typically, some kind of 2 or 3-layer neural network that 'learns' how to _embed_ the TCM into a lower-dimension representation: from $m \times m$ to $m \times n, n << m$. 
+
+Similar to PCA in terms of what we're trying to achieve, but the *process* is utterly different.
+
+::: {.notes}
 Many different approaches, but [GloVe](https://nlp.stanford.edu/projects/glove/) (Stanford), [word2vec](https://code.google.com/archive/p/word2vec/) (Google), [fastText](https://fasttext.cc/docs/en/english-vectors.html) (Facebook), and [ELMo](https://allennlp.org/elmo) (Allen) or [BERT](https://github.com/google-research/bert) (Google) are probably the best-known.
+:::
 
-
-## Sentiment Analysis {.smaller}
+## Sentiment Analysis 
 
 Requires us to deal in great detail with bi- and tri-grams because *negation* and *sarcasm* are hard. Also tends to require training/labelled data.
 
-<div align="center">
-<a href="https://medium.com/@tomyuz/a-sentiment-analysis-approach-to-predicting-stock-returns-d5ca8b75a42">
-<img src="https://raw.githubusercontent.com/jreades/i2p/master/lectures/img/Sentiment_Analysis.png" width="500" />
-</a>
-</div>
+![](./img/Sentiment_Analysis.png){width="450"}
+
+[Source](https://medium.com/@tomyuz/a-sentiment-analysis-approach-to-predicting-stock-returns-d5ca8b75a42).
 
 
 ## Clustering {.smaller}
