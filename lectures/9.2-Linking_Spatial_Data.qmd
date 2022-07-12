@@ -19,14 +19,11 @@ history: false
 css: slides.css
 ---
 
-
-
-> Data sets with spatial attributes can be connected in more complex ways than those without such attributes, consequently the ability to link such data unlocks even more exciting new applications!
-
+# > Data sets with spatial attributes can be connected in more complex ways than those without such attributes; consequently the ability to link such data unlocks even more exciting new applications!
 
 # Non-Spatial Linkages can be Spatial
 
----
+## {.smaller}
 
 :::: {.columns}
 ::: {.column width="50%"}
@@ -41,6 +38,13 @@ css: slides.css
 | 4        | 51.5073  | -0.1122   |
 | 5        | 51.5072  | 0.1589    |
 
+```python
+df = pd.DataFrame({
+  'SensorID': [1,2,3,4,5],
+  'Latitude': [51.5070, 51.5071, 51.5074, 51.5073, 51.5073],
+  'Longitude': [-0.1347, -0.0042, -0.1223, -0.1122, 0.1589]
+})
+```
 :::
 ::: {.column width="50%"}
 
@@ -54,13 +58,23 @@ css: slides.css
 | 4        | Temperature | 7ºC   |
 | 6        | Humidity    | 18%   |
 
+```python
+df1 = pd.DataFrame({
+  'SensorID': [1,2,3,4,5],
+  'Parameter': ['Temperature','Humidity','Temperature','Temperature','Humidity'], 
+  'Value': ['5ºC', '15%', '7ºC', '7ºC', '18%']
+})
+```
 :::
 ::::
 
+
+::: {.aside}
+This wouldn't be a particularly *good* design for a data structure... why?
+:::
+
 ::: {.notes}
-
 Obviously, we can use non-spatial operations on spatial data sets.
-
 :::
 
 ## Sjoin vs. Join {.smaller}
@@ -92,13 +106,13 @@ rs.plot(ax=ax, column='NAME', legend=True)
 ![](img/Hackney-Left.png)
 
 
-## Merging Data {.smaller}
+## Merging Data
 
 These [merge operators](https://geopandas.org/mergingdata.html#merging-data) apply where `a` is the *left* set of features (in a GeoSeries or GeoDataFrame) and `b` is the *right* set:
 
-- Contains: Returns `True` if no points of b lie outside of a and *at least one point* of b lies inside a.
-- Within: Returns `True` if a’s boundary and interior intersect only with the interior of b (not its boundary or exterior).
-- Intersects: Returns `True` if the boundary or interior of a intersects in any way with those of b.
+- **Contains**: Returns `True` if no points of b lie outside of a and *at least one point* of b lies inside a.
+- **Within**: Returns `True` if a’s boundary and interior intersect only with the interior of b (not its boundary or exterior).
+- **Intersects**: Returns `True` if the boundary or interior of a intersects in any way with those of b.
 
 All [binary predicates](https://shapely.readthedocs.io/en/latest/manual.html#binary-predicates) are supported by features of GeoPandas, though *only* these three options are available in `sjoin` directly.
 
@@ -177,14 +191,15 @@ So, when you have multiple joins...
 
 Q. Find me a nearby family-style Italian restaurant...
 
-{{Org-Chart}}
-- City = New York
-	- Cuisine = Italian
-		- Style = Family
-			- Location = Within Neighbourhood
+A. Here's how I'd do this:
+
+- City = New York (probably a key)
+	- Cuisine = Italian (probably a key)
+		- Style = Family (probably an enumeration/free text)
+			- Location = Within Distance of X from Request (probably a buffered spatial query)
 
 
-## Mis-matched Scales {.smaller}
+## Mis-matched Scales
 
 Keep in mind:
 
@@ -194,13 +209,10 @@ And that:
 
 > With large data sets, rasterising the smaller and more ‘abundant’ geometry can speed things up a lot.
 
-
-## Long-Term View
-
-> Ultimately, if you continue to work with large spatial data sets you’ll need to look into web services and spatial databases.
+# > Long term: if you continue to work with large spatial data sets you’ll need to look into web services and spatial databases.
 
 
-## Web Services {.smaller}
+## Web Services
 
 | Acronym | Means                | Does                                                         |
 | ------- | -------------------- | ------------------------------------------------------------ |
@@ -214,9 +226,9 @@ And that:
 
 There are many flavours:
 
-- [Oracle](https://blogs.oracle.com/oraclespatial/spatial-now-free-with-all-editions-of-oracle-database): good enterprise support; reasonably feature-rich.
-- [MySQL](https://www.mysql.com/): free; *was* feature-poor ([though this looks to have changed with MySQL8](https://dev.mysql.com/doc/refman/8.0/en/spatial-function-reference.html)).
-- [PostreSQL](https://www.postgresql.org/): free; standards-setting/compliant; heavyweight (requires [PostGIS](https://postgis.net/)).
+- [Oracle](https://blogs.oracle.com/oraclespatial/spatial-now-free-with-all-editions-of-oracle-database): good enterprise support; reasonably feature-rich, but £££ for commercial use.
+- [MySQL](https://www.mysql.com/): free, unless you want dedicated support; *was* feature-poor ([though this looks to have changed with MySQL8](https://dev.mysql.com/doc/refman/8.0/en/spatial-function-reference.html)); heavyweight.
+- [PostreSQL](https://www.postgresql.org/): free, unless you want dedicated support; standards-setting/compliant; heavyweight (requires [PostGIS](https://postgis.net/)).
 - Microsoft Access: um, no. 
 - SpatiaLite: free; standards-setting/compliant; lightweight
 
