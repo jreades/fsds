@@ -110,8 +110,8 @@ This should be looking *eerily* familiar:
 
 ```python
 print(type(df['Latitude']))          # type for column
-print(type(df['Latitude'].values))   # type for values
-print(df['Latitude'].values[:5])     # first five values
+print(type(df['Latitude'].array))    # type for values
+print(df['Latitude'].array[:5])     # first five values
 print(f"1: {df['Latitude'].mean()}") # summarise a series/column
 print(f"2: {df.Latitude.mean()}")    # if no spaces in name
 ```
@@ -311,12 +311,12 @@ Examples of `strftime` conventions include:
 
 So that is why:
 ```python
-pd.to_datetime(df.Date.values, format="%m/%d/%Y %H:%M:%S %p")
+pd.to_datetime(df.Date.array, format="%m/%d/%Y %H:%M:%S %p")
 ```
 Note the other things happening here:
 
 1. `pd.to_datetime(...)` is *not* a method, it's a function from the `pandas` package.
-2. `df.Date.values` gives access to the *data* directly, whereas `df.Date` gives access to the *Series*.
+2. `df.Date.array` (and `df.Date.to_numpy()` and `df.Data.tolist()`) gives access to the *data* directly, whereas `df.Date` gives access to the *Series*.
 
 ---
 
