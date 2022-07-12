@@ -19,8 +19,7 @@ history: false
 css: slides.css
 ---
 
-
----
+## Spot the Difference
 
 :::: {.columns}
 ::: {.column width="50%"}
@@ -28,9 +27,9 @@ css: slides.css
 
 - Allocates *n* samples to *k* groups
 - Works for different values of *k* 
-- Different algorithms *A* present different views of group relationships
+- Different algorithms (*A*) present different views of group relationships
 - Poor choices of *A* and *k* lead to weak understanding of data
-- Typically works in 1–2 dimensions
+- Typically works best in 1–2 dimensions
 
 :::
 ::: {.column width="50%"}
@@ -41,34 +40,40 @@ css: slides.css
 - Works for different values of *k*
 - Different algorithms *A* present different views of group relationships
 - Poor choices of *A* and *k* lead to weak understanding of data
-- Typically works in 3+ dimensions
+- Typically works best in < 9 dimensions
 
 :::
 ::::
 
-## World's First Geodemographic Classification?
+::: {.notes}
 
-![](/Users/jreades/Documents/git/i2p/lectures/img/Booth.png)
+Clustering algorithms can suffer from the 'curse of dimensionality' such that high-dimensional spaces cluster poorly without *either* dimensionality reduction *or* the use of specialist algorithms such as [Spherical *k*-Means](https://coclust.readthedocs.io/en/v0.2.1/api/clustering.html#module-coclust.clustering.spherical_kmeans).
+
+:::
+
+## The First Geodemographic Classification?
+
+![](./img/Booth.png)
 
 Source: [booth.lse.ac.uk/map/](https://booth.lse.ac.uk/map/)
 
 
 ## More than 100 Years Later
 
-![](/Users/jreades/Documents/git/i2p/lectures/img/Booth-Today.png)
+![](./img/Booth-Today.png)
 
 Source: [vis.oobrien.com/booth/](http://vis.oobrien.com/booth/)
 
 
-## Intimately Linked to Rise of The State {.smaller}
+## Intimately Linked to Rise of The State
 
-- Geodemographics only possible in context of a State – without a Census it simply wouldn’t work… until now?
-- Clearly tied to social and economic ‘control’ and intervention: regeneration, poverty & exclusion, crime, etc.
-- Presumes that *areas* are the relevant unit of analysis; in geodemographics these are usually called *neighbourhoods*… which should ring a few bells.
-- In practice, we are in the realm of ‘homophily’, a.k.a. Tobler's First Law of Geography
+- Geodemographics only possible in context of a State -- without a Census it simply wouldn't work... until now?
+- Clearly tied to social and economic 'control' and intervention: regeneration, poverty & exclusion, crime, etc.
+- Presumes that *areas* are the relevant unit of analysis; in geodemographics these are usually called *neighbourhoods*... which should ring a few bells.
+- In practice, we are in the realm of 'homophily', a.k.a. Tobler's *First Law of Geography*
 
 
-## Where is it used? {.smaller}
+## Where is it used?
 
 Anything involving grouping individuals, households, or areas into larger 'groups'…
 
@@ -89,22 +94,14 @@ Could see it as a subset of *customer segmentation*.
 | Unsupervised | Dimensionality Reduction | Clustering     |
 
 
-
-
 ::: {.notes}
 
-In classification we 'know' the answer (labels).
-
-In clustering we don't 'know' the answer (clusters).
+- In classification we 'know' the answer (we test against labels).
+- In clustering we don't 'know' the answer (we look for clusters).
 
 :::
 
----
-
-
-> What is a cluster?
-
-
+# > What is a cluster?
 
 ::: {.notes}
 
@@ -112,11 +109,7 @@ A group of *similar* data points.
 
 :::
 
----
-
-
-> What is the purpose of clustering?
-
+# > What is the purpose of clustering?
 
 
 ::: {.notes}
@@ -130,89 +123,89 @@ To *generalise* from 'raw' data.
 > Usually working towards an 'objective criterion' for quality... these are known as cohesion and separation measures.
 
 
-## How Your Data Looks... {.smaller}
+## How Your Data Looks...
 
-Clustering is one area where standardisation (and, frequently, normalisation) are essential:
+Clustering is one area where standardisation (and, frequently, normalisation) are *essential*:
 
 - You don't (normally) want scale in any one dimension to matter more than scale in another.
 - You don't want differences between values in one dimension to matter more than differences in another.
 - You don't want skew in one dimension to matter more than skew in another.
 
-You also want *uncorrelated* variables… why?
+You also want *uncorrelated* variables... why?
 
 
-## First Steps {.smaller}
+## First Steps
 
-You will normally want a *continuous* variable… *why*? 
-
-These types of data are especially problematic: 
+You will normally want a *continuous* variable... so these types of data are especially problematic: 
 
 - Dummies / One-Hot Encoded
 - Categorical / Ordinal
 - Possible solutions: *k*-modes, CCA, etc.
 
-
-
-## Typical Performance
+## Performance
 
 Typically about trade-offs between:
 
+:::: {.columns}
+::: {.column width="25%"}
 - Accuracy
 - Generalisation
-
+:::
+::: {.column width="75%"}
 ![](img/Performance.png)
+:::
+::::
+
+## Trade-Offs
+
+Need to balance:
+
+- Ability to cluster at *speed*.
+- Ability to *replicate* results.
+- Ability to cope with *fuzzy/indeterminate* boundaries.
+- Ability to cope with *curse of dimensionality*.
+- Underlying *representation* of group membership...
 
 
-## Choosing a Clustering Algorithm
+## Visualising the Trade-Offs
 
-Need to consider trade-offs between:
+![](https://scikit-learn.org/stable/_images/sphx_glr_plot_cluster_comparison_001.png){width="80%"}
 
-- Ability to cluster at speed.
-- Ability to replicate clustering results.
-- Ability to cope with fuzzy/indeterminate boundaries.
-- Ability to cope with curse of dimensionality.
-- Underlying representation of group membership...
-
-
----
-
-
-<div style="width:80%;text-align:center;"><img src="https://scikit-learn.org/stable/_images/sphx_glr_plot_cluster_comparison_0011.png" /></div>
-
+::: {.aside}
 Details on [scikit-learn.org](https://scikit-learn.org/stable/modules/clustering.html).
-
-
+:::
 
 ::: {.notes}
 
 Notice the limitations to *k*-means: it may be fast but it's got problems if your data is non-linear/non-Gaussian.
 
+And this doesn't even include options like HDBSCAN, HAC/Hierarchical Clustering, and many more!
+
 :::
 
 ---
 
+![](./img/ML_Learning.png){width="70%"}
 
-<div style="width:60%;text-align:center;"><img src="https://github.com/jreades/i2p/blob/master/lectures/img/ML_Learning.png?raw=true" /></div>
+::: {.aside}
 
 [Interactive Demo](https://jeff3dx.github.io/mlearning/).
 
+:::
 
 ## Putting it All into Context
 
 ![](https://scikit-learn.org/stable/_static/ml_map.png)
 
 
-# Inserting Geography
+# Adding Geography
 
 ## Space Adds Complexity
 
-We now have to consider two types of clustering:
+We now have to consider *two more* types of clustering:
 
 1. With respect to polygons: regions are built from adjacent zones that are more similar to one another than to other adjacent zones.
 2. With respect to points: points are distributed in a way that indicates 'clumping' at particular scales.
-
-
-
 
 ::: {.notes}
 
@@ -222,17 +215,14 @@ Type 2 is point pattern analysis and should be considered a substantially differ
 
 :::
 
-## The trade-offs... {.smaller}
+## Trade-offs (Again)...
 
 Consider:
 
 - Clustering algorithms are *inherently* spatial.
 - Clustering algorithms do not take ~~space~~ *geography* into account.
 
-**Does this matter?** 
-
-
-
+Does this *matter*?
 
 ::: {.notes}
 
@@ -244,35 +234,35 @@ Spatially-aware clustering algorithms exist but are generally much more computat
 
 ## Different Approaches {.smaller}
 
-| Algorithm                                                    | Pros                                | Cons                                                         | Geographically Aware?            |
-| ------------------------------------------------------------ | ----------------------------------- | ------------------------------------------------------------ | -------------------------------- |
-| [k-Means](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html) | Fast. Deterministic.                | Every observation to cluster.                                | N.                               |
-| [DBSCAN](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.DBSCAN.html#sklearn.cluster.DBSCAN) | Allows for clusters *and* outliers. | Slower. Choice of $$\epsilon$$ critical. Can end up with all outliers. | N, but implicit in $$\epsilon$$. |
-| [OPTICS](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.OPTICS.html#sklearn.cluster.OPTICS) | Fewer parameters than DBSCAN.       | Even slower.                                                 | N, but implicit in $$\epsilon$$. |
-| [Hierarchical](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.AgglomerativeClustering.html#sklearn.cluster.AgglomerativeClustering) | Can cut at any number of clusters.  | No 'ideal' solution.                                         | Y, with connectivity parameter   |
-| [ADBSCAN](https://pysal.org/esda/generated/esda.adbscan.ADBSCAN.html) | Scales. Confidence levels.          | May need large data set to be useful. Choice of $$\epsilon$$ critical. | Y.                               |
-| [Max-p](https://splot.readthedocs.io/en/stable/users/tutorials/region.html#max-p) | Coherent regions returned.          | Very slow if model poorly specified.                         | Y.                               |
+| Algorithm | Pros | Cons  | Geographically Aware? |
+|:----|:----------------|:----------------|:-------| 
+| [k-Means](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html) | Fast. Deterministic. | Every observation to a cluster. | N. |
+| [DBSCAN](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.DBSCAN.html) | Allows for clusters *and* outliers. | Slower. Choice of $\epsilon$ critical. Can end up with all outliers. | N, but implicit in $\epsilon$. |
+| [OPTICS](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.OPTICS.html) | Fewer parameters than DBSCAN. | Even slower. | N, but implicit in $\epsilon$. |
+| [Hierarchical](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.AgglomerativeClustering.htmlg)/ [HDBSCAN](https://hdbscan.readthedocs.io/en/latest/) | Can cut at any number of clusters. | No 'ideal' solution. | Y, with connectivity parameter. |
+| [ADBSCAN](https://pysal.org/esda/generated/esda.adbscan.ADBSCAN.html) | Scales. Confidence levels. | May need large data set to be useful. Choice of $\epsilon$ critical. | Y. |
+| [Max-p](https://splot.readthedocs.io/en/stable/users/tutorials/region.html#max-p) | Coherent regions returned. | Very slow if model poorly specified. | Y. |
 
 
-## Setting the Relevant Distance {.smaller}
+## Setting the Relevant Distance
 
-Many clustering algorithms rely on a distance specification (usually $$\epsilon$$). So how do we set this threshold?
+Many clustering algorithms rely on a distance specification (usually $\epsilon$). So to set this threshold:
 
 - In high-dimensional spaces this threshold will need to be large.
 - In high-dimensional spaces the scale will be meaningless (i.e. not have a real-world meaning, only an abstract one).
 - In 2- or 3-dimensional (geographical) space this threshold *could* be meaningful (i.e. a value in metres *could* work).
 
 
-## Choosing a Distance Metric {.smaller}
+## Choosing a Distance Metric
 
-| *n*-Dimensions | How to Set                                                   | Examples                                                     |
-| -------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| 2 or 3         | Theory/Empirical Data                                        | Walking speed; Commute distance                              |
-| 2 or 3         | [K/L Measures](https://pysal.org/notebooks/explore/pointpats/distance_statistics.html#Interevent-Distance-Functions) | Plot with Simulation for CIs to identify significant 'knees'. |
-| 3              | [Marked Point Pattern?](https://pysal.org/notebooks/explore/pointpats/marks.html#Marked-Point-Pattern) |                                                              |
-| > 3            | [kNN](https://towardsdatascience.com/machine-learning-clustering-dbscan-determine-the-optimal-value-for-epsilon-eps-python-example-3100091cfbc) | Calculate average kNN distance based on some expectation of connectivity. |
+| *n* Dimensions | How to Set | Examples |
+|:-------------|:---------------|:------------|
+| 2 or 3 | Theory/Empirical Data | Walking speed; Commute distance |
+| 2 or 3 | [K/L Measures](https://pysal.org/notebooks/explore/pointpats/distance_statistics.html#Interevent-Distance-Functions) | Plot with Simulation for CIs to identify significant 'knees'. |
+| 3 | [Marked Point Pattern?](https://pysal.org/notebooks/explore/pointpats/marks.html#Marked-Point-Pattern) |
+| > 3 | [kNN](https://towardsdatascience.com/machine-learning-clustering-dbscan-determine-the-optimal-value-for-epsilon-eps-python-example-3100091cfbc) | Calculate average kNN distance based on some expectation of connectivity. |
 
-
+: {tbl-colwidths="[25,25,50]"}
 
 ::: {.notes}
 
@@ -280,19 +270,17 @@ Remember: inter-observation distance increases with dimensionality!
 
 :::
 
-## So What's the *Best* Way?
-
-> There is **no *one* best way**, it's all about **judgement**.
+# > There is *no* 'best' clustering algorithm, it's all about *judgement*.
 
 
 # Geodemographics as a Business
 
-## Experian {.smaller}
+## Experian
 
 Specialist in consumer segmentation and geodemographics ([bit.ly/2jMRhAW](http://bit.ly/2jMRhAW)).
 
 - Market cap: £14.3 *billion*.
-- Mosaic: “synthesises of 850 million pieces of information… to create a segmentation that allocates 49 million individuals and 26 million households into one of 15 Groups and 66 detailed Types.”
+- Mosaic: "synthesises of 850 million pieces of information… to create a segmentation that allocates 49 million individuals and 26 million households into one of 15 Groups and 66 detailed Types.""
 - More than 450 variables used.
 
 Most retail companies will have their own segmentation scheme. Competitors: CACI, Nielsen, etc.
@@ -300,12 +288,12 @@ Most retail companies will have their own segmentation scheme. Competitors: CACI
 
 ## Experian Groups
 
-![](/Users/jreades/Documents/git/i2p/lectures/img/Experian.png)
+![](./img/Experian.png)
 
 
 ## Experian Mapping
 
-![](/Users/jreades/Documents/git/i2p/lectures/img/Experian_Maps.png)
+![](./img/Experian_Maps.png)
 
 
 ## Output Area Classification
