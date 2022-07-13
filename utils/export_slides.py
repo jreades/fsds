@@ -12,7 +12,7 @@ print(f"Working in: {os.getcwd()}")
 remote_path = 'lectures'
 
 reveal_path = os.path.join('docs',remote_path) # Because we're hosting on GitHub pages
-reveal_files = [f for f in os.listdir(reveal_path) if os.path.isfile(os.path.join(reveal_path,f))] and f.startswith('3.1')]
+reveal_files = [f for f in os.listdir(reveal_path) if os.path.isfile(os.path.join(reveal_path,f))] # and f.startswith('3.1')]
 #print(reveal_files)
 
 export_path = os.path.join('export')
