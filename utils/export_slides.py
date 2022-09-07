@@ -1,4 +1,5 @@
 #! /Users/jreades/opt/anaconda3/bin/python
+DEBUG = False
 
 # Convert Reveal.js slides to PDF and PNG
 # You will need to have installed decktape for
@@ -31,22 +32,25 @@ export_path = os.path.join('export')
 quarto_url = 'http://localhost:4200'
 
 # All the potential reveal files... 
-reveal_files = [f for f in os.listdir(reveal_path) if os.path.isfile(os.path.join(reveal_path,f))] 
+reveal_files = [f for f in os.listdir(reveal_path) if os.path.isfile(os.path.join(reveal_path,f))]
 
 # And everything on the exported site
 slides = [f for f in os.listdir(export_path) if os.path.isdir(os.path.join(export_path,f)) and f.endswith('.pdf') ]
 
 for src in reveal_files:
 
-    print(f"Source reveal.js slide deck: {src}")
+    print(f"Source slide deck: {src}")
+
+    # When was the original last modified? Note 
+    # that we check the locally stored HTML file
+    # and *don't* run this through the web service.
+    in_file    = os.path.join(reveal_path,src)
+    in_modtime = os.path.getmtime(in_file)
+    if DEBUG: print(f"  Input HTML file ({in_file}) last modified on {in_modtime}")
 
     # Where are we sending the output (the PNG files)
     sub_dir = os.path.join(export_path,src.replace('.html',''))
-    #print(f"Writing to sub directory: {sub_dir}")
-
-    # When was the original last modified?
-    original = os.path.getmtime(os.path.join(reveal_path,src))
-    #print(f"  Has mod time {original}")
+    if DEBUG: print(f"    All output will be written to sub-directory: {sub_dir}")
 
     # When was the output last modified (if it exists)?
     # The reason we're looking for a PDF file even though
@@ -57,31 +61,31 @@ for src in reveal_files:
     # against the original QMD file to see which is more 
     # recently-modified.
     try:
-        converted = os.path.getmtime(os.path.join(sub_dir,src.replace('.html','.pdf')))
-        #print(f"Converted PDF file: {os.path.join(sub_dir,src.replace('.html','.pdf'))}")
-        #print(f"  Has mod time {converted}")
+        out_file    = os.path.join(sub_dir,src.replace('.html','.pdf'))
+        out_modtime = os.path.getmtime(out_file)
+        if DEBUG: print(f"  Output PDF file: {out_file} last modified on {out_modtime}")
     except FileNotFoundError:
-        converted = 0
-        #print(f"  Has not been created yet.")
+        out_modtime = 0
+        if DEBUG: print(f"  No output PDF file found.")
 
     # Now check the last modified of the input and
     # output files to see if we need to update the
     # output.
-    if converted - original > 0:
-        print(f"Found recent converted copy of {src}")
+    if out_modtime - in_modtime > 0:
+        print(f"  Output PDF {out_file} is more recent than source HTML file, skipping...")
     else:
         # Notice the assumption here that all lectures/files
         # to be converted start with this regex!
         if re.match(r'\d+\.\d+-',src):
 
-            #print(f"Converting {src}")
+            if DEBUG: print(f"  Converting {src}")
 
             if not os.path.exists(sub_dir):
                 os.makedirs(sub_dir)
 
             # Access the Quarto server
             reveal_url = "/".join([quarto_url,remote_path,src])
-            #print(f"URL: {reveal_url}")
+            if DEBUG: print(f"URL: {reveal_url}")
 
             # Call Decktape -- slightly annoyingly this also 
             # creates a PDF file even if we ask it not to do so.
@@ -98,6 +102,6 @@ for src in reveal_files:
             try:
                 os.rename(src.replace('.html','.pdf'), os.path.join(sub_dir,src.replace('.html','.pdf')))
             except FileNotFoundError:
-                print(f"Couldn't move file {src.replace('.html','.pdf')} to {sub_dir}")
+                print(f"  Couldn't move file {src.replace('.html','.pdf')} to {sub_dir}")
             
 print('Done!')
