@@ -6,7 +6,7 @@ const sectionChanged = new CustomEvent("quarto-sectionChanged", {
 });
 
 window.document.addEventListener("DOMContentLoaded", function (_event) {
-  const tocEl = window.document.querySelector('nav[role="doc-toc"]');
+  const tocEl = window.document.querySelector('nav.toc-active[role="doc-toc"]');
   const sidebarEl = window.document.getElementById("quarto-sidebar");
   const leftTocEl = window.document.getElementById("quarto-sidebar-toc-left");
   const marginSidebarEl = window.document.getElementById(
@@ -21,6 +21,17 @@ window.document.addEventListener("DOMContentLoaded", function (_event) {
       return false;
     }
   };
+
+  // fire slideEnter for bootstrap tab activations (for htmlwidget resize behavior)
+  function fireSlideEnter(e) {
+    const event = window.document.createEvent("Event");
+    event.initEvent("slideenter", true, true);
+    window.document.dispatchEvent(event);
+  }
+  const tabs = window.document.querySelectorAll('a[data-bs-toggle="tab"]');
+  tabs.forEach((tab) => {
+    tab.addEventListener("shown.bs.tab", fireSlideEnter);
+  });
 
   // Track scrolling and mark TOC links as active
   // get table of contents and sidebar (bail if we don't have at least one)
@@ -264,6 +275,7 @@ window.document.addEventListener("DOMContentLoaded", function (_event) {
         const convertToMenu = () => {
           for (const child of el.children) {
             child.style.opacity = 0;
+            child.style.overflow = "hidden";
           }
 
           const toggleContainer = window.document.createElement("div");
@@ -301,6 +313,7 @@ window.document.addEventListener("DOMContentLoaded", function (_event) {
 
             const clone = child.cloneNode(true);
             clone.style.opacity = 1;
+            clone.style.display = null;
             toggleContents.append(clone);
           }
           toggleContents.style.height = "0px";
@@ -365,6 +378,7 @@ window.document.addEventListener("DOMContentLoaded", function (_event) {
         const convertToSidebar = () => {
           for (const child of el.children) {
             child.style.opacity = 1;
+            child.style.overflow = null;
           }
 
           const placeholderEl = window.document.getElementById(
@@ -413,7 +427,10 @@ window.document.addEventListener("DOMContentLoaded", function (_event) {
       const margin = lastBottom - top;
       marginChild.style.marginTop = `${margin}px`;
     }
-    lastBottom = top + marginChild.getBoundingClientRect().height;
+    const styles = window.getComputedStyle(marginChild);
+    const marginTop = parseFloat(styles["marginTop"]);
+
+    lastBottom = top + marginChild.getBoundingClientRect().height + marginTop;
   }
 
   // Manage the visibility of the toc and the sidebar
@@ -634,6 +651,99 @@ window.document.addEventListener("DOMContentLoaded", function (_event) {
   );
   hideOverlappedSidebars();
   highlightReaderToggle(isReaderMode());
+});
+
+// grouped tabsets
+window.addEventListener("pageshow", (_event) => {
+  function getTabSettings() {
+    const data = localStorage.getItem("quarto-persistent-tabsets-data");
+    if (!data) {
+      localStorage.setItem("quarto-persistent-tabsets-data", "{}");
+      return {};
+    }
+    if (data) {
+      return JSON.parse(data);
+    }
+  }
+
+  function setTabSettings(data) {
+    localStorage.setItem(
+      "quarto-persistent-tabsets-data",
+      JSON.stringify(data)
+    );
+  }
+
+  function setTabState(groupName, groupValue) {
+    const data = getTabSettings();
+    data[groupName] = groupValue;
+    setTabSettings(data);
+  }
+
+  function toggleTab(tab, active) {
+    const tabPanelId = tab.getAttribute("aria-controls");
+    const tabPanel = document.getElementById(tabPanelId);
+    if (active) {
+      tab.classList.add("active");
+      tabPanel.classList.add("active");
+    } else {
+      tab.classList.remove("active");
+      tabPanel.classList.remove("active");
+    }
+  }
+
+  function toggleAll(selectedGroup, selectorsToSync) {
+    for (const [thisGroup, tabs] of Object.entries(selectorsToSync)) {
+      const active = selectedGroup === thisGroup;
+      for (const tab of tabs) {
+        toggleTab(tab, active);
+      }
+    }
+  }
+
+  function findSelectorsToSyncByLanguage() {
+    const result = {};
+    const tabs = Array.from(
+      document.querySelectorAll(`div[data-group] a[id^='tabset-']`)
+    );
+    for (const item of tabs) {
+      const div = item.parentElement.parentElement.parentElement;
+      const group = div.getAttribute("data-group");
+      if (!result[group]) {
+        result[group] = {};
+      }
+      const selectorsToSync = result[group];
+      const value = item.innerHTML;
+      if (!selectorsToSync[value]) {
+        selectorsToSync[value] = [];
+      }
+      selectorsToSync[value].push(item);
+    }
+    return result;
+  }
+
+  function setupSelectorSync() {
+    const selectorsToSync = findSelectorsToSyncByLanguage();
+    Object.entries(selectorsToSync).forEach(([group, tabSetsByValue]) => {
+      Object.entries(tabSetsByValue).forEach(([value, items]) => {
+        items.forEach((item) => {
+          item.addEventListener("click", (_event) => {
+            setTabState(group, value);
+            toggleAll(value, selectorsToSync[group]);
+          });
+        });
+      });
+    });
+    return selectorsToSync;
+  }
+
+  const selectorsToSync = setupSelectorSync();
+  for (const [group, selectedName] of Object.entries(getTabSettings())) {
+    const selectors = selectorsToSync[group];
+    // it's possible that stale state gives us empty selections, so we explicitly check here.
+    if (selectors) {
+      toggleAll(selectedName, selectors);
+    }
+  }
 });
 
 function throttle(func, wait) {

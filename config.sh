@@ -6,7 +6,7 @@ QUARTO_PORT=4200
 
 # Are we using Dask or Quarto?
 DASK=false
-QUARTO=false
+QUARTO=true
 
 # If you want to launch the container with
 # work mounting in different places then use this...
@@ -18,7 +18,7 @@ WORK_DIR="$HOME/Documents/git/"
 # copies at the same time.
 DOCKER_NM="fsds"
 # The name of the Docker image to run
-DOCKER_IMG="jreades/sds:2022c"
+DOCKER_IMG="jreades/sds:2022"
 
 # If you want an actual password then you set this using something
 # like the following (see end of file for how to generate a new one):

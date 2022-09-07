@@ -389,19 +389,18 @@
   <p class="author">Jon Reades</p>
 </section>
 
-<section class="slide level2">
+<section id="data-sets-with-spatial-attributes-can-be-connected-in-more-complex-ways-than-those-without-such-attributes-consequently-the-ability-to-link-such-data-unlocks-even-more-exciting-new-applications" class="title-slide slide level1 center">
+<h1>&gt; Data sets with spatial attributes can be connected in more complex ways than those without such attributes; consequently the ability to link such data unlocks even more exciting new applications!</h1>
 
-<blockquote>
-<p>Data sets with spatial attributes can be connected in more complex ways than those without such attributes, consequently the ability to link such data unlocks even more exciting new applications!</p>
-</blockquote>
 </section>
+
 <section>
 <section id="non-spatial-linkages-can-be-spatial" class="title-slide slide level1 center">
 <h1>Non-Spatial Linkages can be Spatial</h1>
 
 </section>
-<section class="slide level2">
-
+<section id="section" class="slide level2 smaller">
+<h2></h2>
 <div class="columns">
 <div class="column" style="width:50%;">
 <h3 id="data-set-1">Data Set 1</h3>
@@ -441,6 +440,11 @@
 </tr>
 </tbody>
 </table>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb1-2"><a href="#cb1-2"></a>  <span class="st">'SensorID'</span>: [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>],</span>
+<span id="cb1-3"><a href="#cb1-3"></a>  <span class="st">'Latitude'</span>: [<span class="fl">51.5070</span>, <span class="fl">51.5071</span>, <span class="fl">51.5074</span>, <span class="fl">51.5073</span>, <span class="fl">51.5073</span>],</span>
+<span id="cb1-4"><a href="#cb1-4"></a>  <span class="st">'Longitude'</span>: [<span class="op">-</span><span class="fl">0.1347</span>, <span class="op">-</span><span class="fl">0.0042</span>, <span class="op">-</span><span class="fl">0.1223</span>, <span class="op">-</span><span class="fl">0.1122</span>, <span class="fl">0.1589</span>]</span>
+<span id="cb1-5"><a href="#cb1-5"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div><div class="column" style="width:50%;">
 <h3 id="data-set-2">Data Set 2</h3>
 <table>
@@ -479,8 +483,14 @@
 </tr>
 </tbody>
 </table>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>df1 <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb2-2"><a href="#cb2-2"></a>  <span class="st">'SensorID'</span>: [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>],</span>
+<span id="cb2-3"><a href="#cb2-3"></a>  <span class="st">'Parameter'</span>: [<span class="st">'Temperature'</span>,<span class="st">'Humidity'</span>,<span class="st">'Temperature'</span>,<span class="st">'Temperature'</span>,<span class="st">'Humidity'</span>], </span>
+<span id="cb2-4"><a href="#cb2-4"></a>  <span class="st">'Value'</span>: [<span class="st">'5ºC'</span>, <span class="st">'15%'</span>, <span class="st">'7ºC'</span>, <span class="st">'7ºC'</span>, <span class="st">'18%'</span>]</span>
+<span id="cb2-5"><a href="#cb2-5"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
+
 <aside class="notes">
 <p>Obviously, we can use non-spatial operations on spatial data sets.</p>
 <style type="text/css">
@@ -494,33 +504,35 @@
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
-</section>
+<aside><div>
+<p>This wouldn’t be a particularly <em>good</em> design for a data structure… why?</p>
+</div></aside></section>
 <section id="sjoin-vs.-join" class="slide level2 smaller">
 <h2>Sjoin vs.&nbsp;Join</h2>
 <p>Sjoin adds an <em>operator</em> (<code>['intersects','contains','within']</code>) and example code can be <a href="https://github.com/jreades/i2p/blob/master/lectures/8.2-Linking_Spatial_Data.ipynb">found on GitHub</a>.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>gdf <span class="op">=</span> gpd.GeoDataFrame(df, </span>
-<span id="cb1-2"><a href="#cb1-2"></a>            geometry<span class="op">=</span>gpd.points_from_xy(df.longitude, df.latitude,</span>
-<span id="cb1-3"><a href="#cb1-3"></a>            crs<span class="op">=</span><span class="st">'epsg:4326'</span>)).to_crs(<span class="st">'epsg:27700'</span>)</span>
-<span id="cb1-4"><a href="#cb1-4"></a>hackney <span class="op">=</span> boros[boros.NAME<span class="op">==</span><span class="st">'Hackney'</span>]</span>
-<span id="cb1-5"><a href="#cb1-5"></a>rs <span class="op">=</span> gpd.sjoin(gdf, hackney, op<span class="op">=</span><span class="st">'within'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>gdf <span class="op">=</span> gpd.GeoDataFrame(df, </span>
+<span id="cb3-2"><a href="#cb3-2"></a>            geometry<span class="op">=</span>gpd.points_from_xy(df.longitude, df.latitude,</span>
+<span id="cb3-3"><a href="#cb3-3"></a>            crs<span class="op">=</span><span class="st">'epsg:4326'</span>)).to_crs(<span class="st">'epsg:27700'</span>)</span>
+<span id="cb3-4"><a href="#cb3-4"></a>hackney <span class="op">=</span> boros[boros.NAME<span class="op">==</span><span class="st">'Hackney'</span>]</span>
+<span id="cb3-5"><a href="#cb3-5"></a>rs <span class="op">=</span> gpd.sjoin(gdf, hackney, op<span class="op">=</span><span class="st">'within'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 <img data-src="img/Hackney.png" class="r-stretch"></section>
 <section id="combining-operators-how" class="slide level2 smaller">
 <h2>Combining Operators &amp; How</h2>
 <p>Changing how to <code>left</code>, <code>right</code>, or <code>inner</code> changes the join’s behaviour:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>rs <span class="op">=</span> gpd.sjoin(gdf, hackney, how<span class="op">=</span><span class="st">'left'</span>, op<span class="op">=</span><span class="st">'within'</span>)</span>
-<span id="cb2-2"><a href="#cb2-2"></a>rs.NAME.fillna(<span class="st">'None'</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb2-3"><a href="#cb2-3"></a>ax <span class="op">=</span> boros[boros.NAME<span class="op">==</span><span class="st">'Hackney'</span>].plot(edgecolor<span class="op">=</span><span class="st">'k'</span>, facecolor<span class="op">=</span><span class="st">'none'</span>, figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">8</span>))</span>
-<span id="cb2-4"><a href="#cb2-4"></a>rs.plot(ax<span class="op">=</span>ax, column<span class="op">=</span><span class="st">'NAME'</span>, legend<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>rs <span class="op">=</span> gpd.sjoin(gdf, hackney, how<span class="op">=</span><span class="st">'left'</span>, op<span class="op">=</span><span class="st">'within'</span>)</span>
+<span id="cb4-2"><a href="#cb4-2"></a>rs.NAME.fillna(<span class="st">'None'</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-3"><a href="#cb4-3"></a>ax <span class="op">=</span> boros[boros.NAME<span class="op">==</span><span class="st">'Hackney'</span>].plot(edgecolor<span class="op">=</span><span class="st">'k'</span>, facecolor<span class="op">=</span><span class="st">'none'</span>, figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">8</span>))</span>
+<span id="cb4-4"><a href="#cb4-4"></a>rs.plot(ax<span class="op">=</span>ax, column<span class="op">=</span><span class="st">'NAME'</span>, legend<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 <img data-src="img/Hackney-Left.png" class="r-stretch"></section>
-<section id="merging-data" class="slide level2 smaller">
+<section id="merging-data" class="slide level2">
 <h2>Merging Data</h2>
 <p>These <a href="https://geopandas.org/mergingdata.html#merging-data">merge operators</a> apply where <code>a</code> is the <em>left</em> set of features (in a GeoSeries or GeoDataFrame) and <code>b</code> is the <em>right</em> set:</p>
 <ul>
-<li>Contains: Returns <code>True</code> if no points of b lie outside of a and <em>at least one point</em> of b lies inside a.</li>
-<li>Within: Returns <code>True</code> if a’s boundary and interior intersect only with the interior of b (not its boundary or exterior).</li>
-<li>Intersects: Returns <code>True</code> if the boundary or interior of a intersects in any way with those of b.</li>
+<li><strong>Contains</strong>: Returns <code>True</code> if no points of b lie outside of a and <em>at least one point</em> of b lies inside a.</li>
+<li><strong>Within</strong>: Returns <code>True</code> if a’s boundary and interior intersect only with the interior of b (not its boundary or exterior).</li>
+<li><strong>Intersects</strong>: Returns <code>True</code> if the boundary or interior of a intersects in any way with those of b.</li>
 </ul>
 <p>All <a href="https://shapely.readthedocs.io/en/latest/manual.html#binary-predicates">binary predicates</a> are supported by features of GeoPandas, though <em>only</em> these three options are available in <code>sjoin</code> directly.</p>
 <aside class="notes">
@@ -563,7 +575,7 @@
 <p>It is also possible to apply GIS-type ‘overlay’ operations:</p>
 <p><img data-src="https://geopandas.org/_images/overlay_operations.png"></p>
 <p><a href="https://geopandas.org/set_operations.html#set-operations-with-overlay">These operations</a> return indexes for <code>gdf1</code> and <code>gdf2</code> (either could be a <code>NaN</code>) together with a geometry and (usually?) columns from both data frames:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>rs_union <span class="op">=</span> geopandas.overlay(gdf1, gdf2, how<span class="op">=</span><span class="st">'union'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>rs_union <span class="op">=</span> geopandas.overlay(gdf1, gdf2, how<span class="op">=</span><span class="st">'union'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The set of operations includes: <code>union</code>, <code>intersection</code>, <code>difference</code>, <code>symmetric_difference</code>, and <code>identity</code>.</p>
 <aside class="notes">
 <p>A notebook example <a href="https://nbviewer.jupyter.org/github/geopandas/geopandas/blob/master/examples/overlays.ipynb">can be found here</a>.</p>
@@ -602,9 +614,21 @@
 <section id="whats-the-right-order" class="slide level2">
 <h2>What’s the ‘Right’ Order?</h2>
 <p>Q. Find me a nearby family-style Italian restaurant…</p>
-<p>{{Org-Chart}} - City = New York - Cuisine = Italian - Style = Family - Location = Within Neighbourhood</p>
+<p>A. Here’s how I’d do this:</p>
+<ul>
+<li>City = New York (probably a key)
+<ul>
+<li>Cuisine = Italian (probably a key)
+<ul>
+<li>Style = Family (probably an enumeration/free text)
+<ul>
+<li>Location = Within Distance of X from Request (probably a buffered spatial query)</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
 </section>
-<section id="mis-matched-scales" class="slide level2 smaller">
+<section id="mis-matched-scales" class="slide level2">
 <h2>Mis-matched Scales</h2>
 <p>Keep in mind:</p>
 <blockquote>
@@ -614,14 +638,13 @@
 <blockquote>
 <p>With large data sets, rasterising the smaller and more ‘abundant’ geometry can speed things up a lot.</p>
 </blockquote>
+</section></section>
+<section>
+<section id="long-term-if-you-continue-to-work-with-large-spatial-data-sets-youll-need-to-look-into-web-services-and-spatial-databases." class="title-slide slide level1 center">
+<h1>&gt; Long term: if you continue to work with large spatial data sets you’ll need to look into web services and spatial databases.</h1>
+
 </section>
-<section id="long-term-view" class="slide level2">
-<h2>Long-Term View</h2>
-<blockquote>
-<p>Ultimately, if you continue to work with large spatial data sets you’ll need to look into web services and spatial databases.</p>
-</blockquote>
-</section>
-<section id="web-services" class="slide level2 smaller">
+<section id="web-services" class="slide level2">
 <h2>Web Services</h2>
 <table>
 <colgroup>
@@ -664,9 +687,9 @@
 <h2>Spatial Databases</h2>
 <p>There are many flavours:</p>
 <ul>
-<li><a href="https://blogs.oracle.com/oraclespatial/spatial-now-free-with-all-editions-of-oracle-database">Oracle</a>: good enterprise support; reasonably feature-rich.</li>
-<li><a href="https://www.mysql.com/">MySQL</a>: free; <em>was</em> feature-poor (<a href="https://dev.mysql.com/doc/refman/8.0/en/spatial-function-reference.html">though this looks to have changed with MySQL8</a>).</li>
-<li><a href="https://www.postgresql.org/">PostreSQL</a>: free; standards-setting/compliant; heavyweight (requires <a href="https://postgis.net/">PostGIS</a>).</li>
+<li><a href="https://blogs.oracle.com/oraclespatial/spatial-now-free-with-all-editions-of-oracle-database">Oracle</a>: good enterprise support; reasonably feature-rich, but £££ for commercial use.</li>
+<li><a href="https://www.mysql.com/">MySQL</a>: free, unless you want dedicated support; <em>was</em> feature-poor (<a href="https://dev.mysql.com/doc/refman/8.0/en/spatial-function-reference.html">though this looks to have changed with MySQL8</a>); heavyweight.</li>
+<li><a href="https://www.postgresql.org/">PostreSQL</a>: free, unless you want dedicated support; standards-setting/compliant; heavyweight (requires <a href="https://postgis.net/">PostGIS</a>).</li>
 <li>Microsoft Access: um, no.</li>
 <li>SpatiaLite: free; standards-setting/compliant; lightweight</li>
 </ul>

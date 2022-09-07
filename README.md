@@ -18,4 +18,4 @@ In order to make use of these materials you will need to download and install th
 - Standardise delivery of practical content by TAs: should have consistent approach across practicals.
 - Point to cross-module content/recaps.
 - Joint reading list?
-- Investigate [CoCalc](https://cocalc.com/software/python) as an alternative. What is situation with JupyterHub at UCL.
+

@@ -1,10 +1,17 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-  <meta charset="utf-8">
-  <meta name="generator" content="quarto-0.9.492">
+<link href="..//img/favicon.ico" rel="icon">
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.1.189">
 
   <meta name="author" content="Jon Reades">
-  <title>Foundations of Spatial Data Science - Linking Data</title>
+  <title>Foundations of Spatial Data Science - Visualising Data</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -13,10 +20,15 @@
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    span.underline{text-decoration: underline;}
-    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
     pre > code.sourceCode { white-space: pre; position: relative; }
     pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -43,43 +55,44 @@
         -khtml-user-select: none; -moz-user-select: none;
         -ms-user-select: none; user-select: none;
         padding: 0 4px; width: 4em;
-        color: #aaaaaa;
       }
-    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    pre.numberSource { margin-left: 3em;  padding-left: 4px; }
     div.sourceCode
-      {   }
+      { color: #24292e;  }
     @media screen {
     pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
     }
-    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-    code span.at { color: #7d9029; } /* Attribute */
-    code span.bn { color: #40a070; } /* BaseN */
-    code span.bu { } /* BuiltIn */
-    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-    code span.ch { color: #4070a0; } /* Char */
-    code span.cn { color: #880000; } /* Constant */
-    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-    code span.dt { color: #902000; } /* DataType */
-    code span.dv { color: #40a070; } /* DecVal */
-    code span.er { color: #ff0000; font-weight: bold; } /* Error */
-    code span.ex { } /* Extension */
-    code span.fl { color: #40a070; } /* Float */
-    code span.fu { color: #06287e; } /* Function */
-    code span.im { } /* Import */
-    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-    code span.op { color: #666666; } /* Operator */
-    code span.ot { color: #007020; } /* Other */
-    code span.pp { color: #bc7a00; } /* Preprocessor */
-    code span.sc { color: #4070a0; } /* SpecialChar */
-    code span.ss { color: #bb6688; } /* SpecialString */
-    code span.st { color: #4070a0; } /* String */
-    code span.va { color: #19177c; } /* Variable */
-    code span.vs { color: #4070a0; } /* VerbatimString */
-    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    code span { color: #24292e; } /* Normal */
+    code span.al { color: #ff5555; font-weight: bold; } /* Alert */
+    code span.an { color: #6a737d; } /* Annotation */
+    code span.at { color: #d73a49; } /* Attribute */
+    code span.bn { color: #005cc5; } /* BaseN */
+    code span.bu { color: #d73a49; } /* BuiltIn */
+    code span.cf { color: #d73a49; } /* ControlFlow */
+    code span.ch { color: #032f62; } /* Char */
+    code span.cn { color: #005cc5; } /* Constant */
+    code span.co { color: #6a737d; } /* Comment */
+    code span.cv { color: #6a737d; } /* CommentVar */
+    code span.do { color: #6a737d; } /* Documentation */
+    code span.dt { color: #d73a49; } /* DataType */
+    code span.dv { color: #005cc5; } /* DecVal */
+    code span.er { color: #ff5555; text-decoration: underline; } /* Error */
+    code span.ex { color: #d73a49; font-weight: bold; } /* Extension */
+    code span.fl { color: #005cc5; } /* Float */
+    code span.fu { color: #6f42c1; } /* Function */
+    code span.im { color: #032f62; } /* Import */
+    code span.in { color: #6a737d; } /* Information */
+    code span.kw { color: #d73a49; } /* Keyword */
+    code span.op { color: #24292e; } /* Operator */
+    code span.ot { color: #6f42c1; } /* Other */
+    code span.pp { color: #d73a49; } /* Preprocessor */
+    code span.re { color: #6a737d; } /* RegionMarker */
+    code span.sc { color: #005cc5; } /* SpecialChar */
+    code span.ss { color: #032f62; } /* SpecialString */
+    code span.st { color: #032f62; } /* String */
+    code span.va { color: #e36209; } /* Variable */
+    code span.vs { color: #032f62; } /* VerbatimString */
+    code span.wa { color: #ff5555; } /* Warning */
   </style>
   <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto.css" id="theme">
   <link rel="stylesheet" href="slides.css">
@@ -371,677 +384,231 @@
       margin-right: 0; 
     }
   </style>
-<link href="..//img/favicon.ico" rel="icon">
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-html/tabby.min.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-html.min.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 </head>
-<body>
+<body class="quarto-light">
   <div class="reveal">
     <div class="slides">
 
 <section id="title-slide" data-background-image="../img/CASA_Logo_no_text.png" data-background-opacity="0.17" data-background-position="center" data-background-size="cover" class="center">
-  <h1 class="title">Linking Data</h1>
+  <h1 class="title">Visualising Data</h1>
   <p class="author">Jon Reades</p>
 </section>
 
-<section id="data-sets-in-isolation-are-of-limited-use-but-the-ability-to-link-data-unlocks-all-kinds-of-new-possibilities" class="title-slide slide level1 center">
-<h1>&gt; Data sets in isolation are of limited use, but the ability to link data unlocks all kinds of new possibilities!</h1>
+<section id="choices-choices" class="slide level2">
+<h2>Choices, Choices…</h2>
+<ol type="1">
+<li><strong><a href="https://matplotlib.org"><code>matplotlib</code></a></strong>: the ‘big beast’ of visualisation in Python. Similar to MATLAB. Highly customisable. Very complex.</li>
+<li><strong><a href="https://seaborn.pydata.org"><code>seaborn</code></a></strong>: a layer that sits over top of <a href="https://matplotlib.org"><code>matplotlib</code></a> and makes it easier to produce good-quality graphics.</li>
+<li><strong><a href="https://docs.bokeh.org/en/latest/"><code>bokeh</code></a></strong>: web-based visualisation tool that can integrate with Jupyter or output to static HTML files.</li>
+<li><strong><a href="https://plotly.com"><code>plotly</code></a></strong>: another web-based visualisation tool that can integrate with Jupyter.</li>
+</ol>
+<p>More emerging all the time: <a href="https://vega.github.io/vega/"><code>Vega</code></a>/<a href="https://altair-viz.github.io"><code>Altair</code></a>, <a href="https://holoviews.org"><code>HoloViews</code></a>, etc.</p>
 
-</section>
-
-<section>
-<section id="non-spatial-linkages" class="title-slide slide level1 center">
-<h1>Non-Spatial Linkages</h1>
-
-</section>
-<section class="slide level2">
-
-<div class="columns">
-<div class="column" style="width:50%;">
-<h3 id="data-set-1">Data Set 1</h3>
-<table>
-<thead>
-<tr class="header">
-<th>SensorID</th>
-<th>Place</th>
-<th>Owner</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1</td>
-<td>LHR</td>
-<td>BAA</td>
-</tr>
-<tr class="even">
-<td>2</td>
-<td>LGA</td>
-<td>GIP</td>
-</tr>
-<tr class="odd">
-<td>3</td>
-<td>STA</td>
-<td>MAG</td>
-</tr>
-<tr class="even">
-<td>4</td>
-<td>LUT</td>
-<td>Luton LA</td>
-</tr>
-<tr class="odd">
-<td>5</td>
-<td>SEN</td>
-<td>Stobart</td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python code-overflow-wrap smaller number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>df1 <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb1-2"><a href="#cb1-2"></a>  <span class="st">'SensorID'</span>: [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>],</span>
-<span id="cb1-3"><a href="#cb1-3"></a>  <span class="st">'Place'</span>: [<span class="st">'LHR'</span>,<span class="st">'LGA'</span>,<span class="st">'STA'</span>,<span class="st">'LUT'</span>,<span class="st">'SEN'</span>],</span>
-<span id="cb1-4"><a href="#cb1-4"></a>  <span class="st">'Owner'</span>: [<span class="st">'BAA'</span>,<span class="st">'GIP'</span>,<span class="st">'MAG'</span>,<span class="st">'Luton LA'</span>,<span class="st">'Stobart'</span>]</span>
-<span id="cb1-5"><a href="#cb1-5"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div><div class="column" style="width:50%;">
-<h3 id="data-set-2">Data Set 2</h3>
-<table>
-<thead>
-<tr class="header">
-<th>SensorID</th>
-<th>Parameter</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1</td>
-<td>Temperature</td>
-<td>5ºC</td>
-</tr>
-<tr class="even">
-<td>1</td>
-<td>Humidity</td>
-<td>15%</td>
-</tr>
-<tr class="odd">
-<td>3</td>
-<td>Temperature</td>
-<td>7ºC</td>
-</tr>
-<tr class="even">
-<td>4</td>
-<td>Temperature</td>
-<td>7ºC</td>
-</tr>
-<tr class="odd">
-<td>6</td>
-<td>Humidity</td>
-<td>18%</td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python code-overflow-wrap number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>df2 <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb2-2"><a href="#cb2-2"></a>  <span class="st">'SensorID'</span>: [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>],</span>
-<span id="cb2-3"><a href="#cb2-3"></a>  <span class="st">'Parameter'</span>: [<span class="st">'Temperature'</span>,<span class="st">'Humidity'</span>,<span class="st">'Temperature'</span>,<span class="st">'Temperature'</span>,<span class="st">'Humidity'</span>],</span>
-<span id="cb2-4"><a href="#cb2-4"></a>  <span class="st">'Value'</span>: [<span class="st">'5ºC'</span>,<span class="st">'15%'</span>,<span class="st">'7ºC'</span>,<span class="st">'7ºC'</span>,<span class="st">'18%'</span>]</span>
-<span id="cb2-5"><a href="#cb2-5"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-<aside class="notes">
-<p>How do we connect these?</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
-</section>
-<section id="general-join-syntax" class="slide level2">
-<h2>General Join Syntax</h2>
-<p>A <strong>join</strong> refers to the merging of two (or more) data tables using one (or more) matching columns:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>pd.merge(df1, df2, on<span class="op">=</span><span class="st">'SensorID'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<aside class="notes">
-<p>Note that if you want to use the index column which isn’t, technically, a column then you need to use <code>left_index=True</code> and <code>right_index=True</code> — where left is the first data set in the join.</p>
-<p>Note that the <em>default</em> behaviour is an inner join (i.e.&nbsp;defaults to <code>how='inner'</code>)</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
-</section>
-<section id="inner-join" class="slide level2">
-<h2>Inner Join</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<h3 id="data-set-1-1">Data Set 1</h3>
-<table>
-<thead>
-<tr class="header">
-<th>SensorID</th>
-<th>Place</th>
-<th>Owner</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1 ⇒</td>
-<td>LHR</td>
-<td>BAA</td>
-</tr>
-<tr class="even">
-<td>2 ✘</td>
-<td>LGA</td>
-<td>GIP</td>
-</tr>
-<tr class="odd">
-<td>3 ⇒</td>
-<td>STA</td>
-<td>MAG</td>
-</tr>
-<tr class="even">
-<td>4 ⇒</td>
-<td>LUT</td>
-<td>Luton LA</td>
-</tr>
-<tr class="odd">
-<td>5 ✘</td>
-<td>SEN</td>
-<td>Stobart</td>
-</tr>
-</tbody>
-</table>
-</div><div class="column" style="width:50%;">
-<h3 id="data-set-2-1">Data Set 2</h3>
-<table>
-<thead>
-<tr class="header">
-<th>SensorID</th>
-<th>Parameter</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1 ⇐</td>
-<td>Temperature</td>
-<td>5ºC</td>
-</tr>
-<tr class="even">
-<td>1 ⇐</td>
-<td>Humidity</td>
-<td>15%</td>
-</tr>
-<tr class="odd">
-<td>3 ⇐</td>
-<td>Temperature</td>
-<td>7ºC</td>
-</tr>
-<tr class="even">
-<td>4 ⇐</td>
-<td>Temperature</td>
-<td>7ºC</td>
-</tr>
-<tr class="odd">
-<td>6 ✘</td>
-<td>Humidity</td>
-<td>18%</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</section>
-<section id="inner-join-result" class="slide level2">
-<h2>Inner Join Result</h2>
-<p>On an <strong>Inner Join</strong> all non-matching rows are dropped:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>pd.merge(df1, df2, </span>
-<span id="cb4-2"><a href="#cb4-2"></a>         how <span class="op">=</span> <span class="st">'inner'</span>,</span>
-<span id="cb4-3"><a href="#cb4-3"></a>         on  <span class="op">=</span> <span class="st">'SensorID'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>&nbsp;</p>
-<table>
-<thead>
-<tr class="header">
-<th>SensorID</th>
-<th>Place</th>
-<th>Owner</th>
-<th>Parameter</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1</td>
-<td>LHR</td>
-<td>BAA</td>
-<td>Temperature</td>
-<td>5ºC</td>
-</tr>
-<tr class="even">
-<td>1</td>
-<td>LHR</td>
-<td>BAA</td>
-<td>Humidity</td>
-<td>15%</td>
-</tr>
-<tr class="odd">
-<td>3</td>
-<td>STA</td>
-<td>MAG</td>
-<td>Temperature</td>
-<td>7ºC</td>
-</tr>
-<tr class="even">
-<td>4</td>
-<td>LUT</td>
-<td>Luton LA</td>
-<td>Temperature</td>
-<td>7ºC</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="but-what-if" class="slide level2">
-<h2>But What If…</h2>
-<p>If Data Set 2 had a <code>SensorKey</code> instead of a <code>SensorID</code> then:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>pd.merge(df1, df2, </span>
-<span id="cb5-2"><a href="#cb5-2"></a>         how      <span class="op">=</span> <span class="st">'inner'</span>,</span>
-<span id="cb5-3"><a href="#cb5-3"></a>         left_on  <span class="op">=</span> <span class="st">'SensorID'</span>,</span>
-<span id="cb5-4"><a href="#cb5-4"></a>         right_on <span class="op">=</span> <span class="st">'SensorKey'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>&nbsp;</p>
-<p>We will get an ‘extra’ field:</p>
-<table>
-<thead>
-<tr class="header">
-<th>SensorID</th>
-<th>Place</th>
-<th>Owner</th>
-<th>SensorKey</th>
-<th>Parameter</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1</td>
-<td>LHR</td>
-<td>BAA</td>
-<td>1</td>
-<td>Temperature</td>
-<td>5ºC</td>
-</tr>
-<tr class="even">
-<td>1</td>
-<td>LHR</td>
-<td>BAA</td>
-<td>1</td>
-<td>Humidity</td>
-<td>15%</td>
-</tr>
-<tr class="odd">
-<td>3</td>
-<td>STA</td>
-<td>MAG</td>
-<td>3</td>
-<td>Temperature</td>
-<td>7ºC</td>
-</tr>
-<tr class="even">
-<td>4</td>
-<td>LUT</td>
-<td>Luton LA</td>
-<td>4</td>
-<td>Temperature</td>
-<td>7ºC</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="outer-join" class="slide level2">
-<h2>Outer Join</h2>
-<p>On an <strong>Outer Join</strong> all rows are retained, including ones with no match:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>pd.merge(df1, df2,</span>
-<span id="cb6-2"><a href="#cb6-2"></a>         how <span class="op">=</span> <span class="st">'outer'</span>,</span>
-<span id="cb6-3"><a href="#cb6-3"></a>         on  <span class="op">=</span> <span class="st">'SensorID'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>&nbsp;</p>
-<table>
-<thead>
-<tr class="header">
-<th>SensorID</th>
-<th>Place</th>
-<th>Owner</th>
-<th>Parameter</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1</td>
-<td>LHR</td>
-<td>BAA</td>
-<td>Temp.</td>
-<td>5℃</td>
-</tr>
-<tr class="even">
-<td>1</td>
-<td>LHR</td>
-<td>BAA</td>
-<td>Hum.</td>
-<td>15%</td>
-</tr>
-<tr class="odd">
-<td>2</td>
-<td>LGA</td>
-<td>GIP</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr class="even">
-<td>3</td>
-<td>STA</td>
-<td>MAG</td>
-<td>Temp.</td>
-<td>7℃</td>
-</tr>
-<tr class="odd">
-<td>4</td>
-<td>LUT</td>
-<td>Luton Borough</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr class="even">
-<td>5</td>
-<td>SEN</td>
-<td>Stobart</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr class="odd">
-<td>6</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>Hum.</td>
-<td>20%</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="left-join" class="slide level2">
-<h2>Left Join</h2>
-<p>On a <strong>Left Join</strong> all rows on the left table are retained, including ones with no match, but unmatched right rows are dropped:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>pd.merge(df1, df2, </span>
-<span id="cb7-2"><a href="#cb7-2"></a>        how <span class="op">=</span> <span class="st">'left'</span>,</span>
-<span id="cb7-3"><a href="#cb7-3"></a>        on  <span class="op">=</span> <span class="st">'SensorID'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>&nbsp;</p>
-<table>
-<thead>
-<tr class="header">
-<th>SensorID</th>
-<th>Place</th>
-<th>Owner</th>
-<th>Parameter</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1</td>
-<td>LHR</td>
-<td>BAA</td>
-<td>Temp.</td>
-<td>5℃</td>
-</tr>
-<tr class="even">
-<td>1</td>
-<td>LHR</td>
-<td>BAA</td>
-<td>Hum.</td>
-<td>15%</td>
-</tr>
-<tr class="odd">
-<td>2</td>
-<td>LGA</td>
-<td>GIP</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr class="even">
-<td>3</td>
-<td>STA</td>
-<td>MAG</td>
-<td>Temp.</td>
-<td>7℃</td>
-</tr>
-<tr class="odd">
-<td>4</td>
-<td>LUT</td>
-<td>Luton Borough</td>
-<td>NaN</td>
-<td>NULL</td>
-</tr>
-<tr class="even">
-<td>5</td>
-<td>SEN</td>
-<td>Stobart</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-</tbody>
-</table>
-</section></section>
-<section>
-<section id="any-guesses-for-the-fourth-type" class="title-slide slide level1 center">
-<h1>&gt; Any guesses for the fourth type?</h1>
-
-</section>
-<section id="append-concat" class="slide level2">
-<h2>Append &amp; Concat</h2>
-<p>Pandas has two <em>additional</em> join-<em>like</em> functions:</p>
+<aside><div>
+<p>If you’re really wedded to <code>ggplot</code>, <a href="https://plotnine.readthedocs.io/en/stable/"><code>plotnine</code></a> is a clone of ggplot’s interface (Grammer of Graphics) in Python. A <a href="https://mode.com/blog/python-data-visualization-libraries/">brief overview</a> of visualisation libraries could be helpful.</p>
+</div></aside></section>
+<section id="seaborn" class="slide level2">
+<h2>Seaborn</h2>
+<p>Designed to provide ggplot-<em>like</em> quality output using matplotlib:</p>
 <ul>
-<li><strong>Append</strong>: can be used to add a dict, Series, or DataFrame to the ‘bottom’ of an existing <em>df</em>. It’s <em>not</em> advisable to extend a <em>df</em> one row at a time (<strong>do bulk concatenations instead</strong>).</li>
-<li><strong>Concat</strong>: can be used to concatenate two <em>dfs</em> together along <em>either</em> axis (rows or columns) “while performing optional set logic (union or intersection) of the indexes (if any) on the other axes.”</li>
+<li>Improve on default colourmaps and colour defaults.</li>
+<li>Integration with pandas data frames (<em>Note: not geopandas!</em>).</li>
+<li>Offers more plot types out of the box.</li>
+<li>Still offers access to matplotlib’s back-end.</li>
 </ul>
 </section>
-<section id="concat" class="slide level2 smaller">
-<h2>Concat</h2>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>df3 <span class="op">=</span> pd.DataFrame.from_dict({</span>
-<span id="cb8-2"><a href="#cb8-2"></a>    <span class="st">'SensorID'</span>: [<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">8</span>,<span class="dv">9</span>,<span class="dv">10</span>],</span>
-<span id="cb8-3"><a href="#cb8-3"></a>    <span class="st">'Place'</span>: [<span class="st">'STA'</span>,<span class="st">'LUT'</span>,<span class="st">'BHX'</span>,<span class="st">'MAN'</span>,<span class="st">'INV'</span>],</span>
-<span id="cb8-4"><a href="#cb8-4"></a>    <span class="st">'Owner'</span>: [<span class="st">'BAA'</span>,<span class="st">'Luton LA'</span>,<span class="st">'???'</span>,<span class="st">'???'</span>,<span class="st">'???'</span>]</span>
-<span id="cb8-5"><a href="#cb8-5"></a>})</span>
-<span id="cb8-6"><a href="#cb8-6"></a>pd.concat([df1, df3], ignore_index<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Outputs:</p>
+<section id="plot-types" class="slide level2">
+<h2>Plot Types</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="https://seaborn.pydata.org/_images/function_overview_8_0.png"></p>
+<p></p><figcaption>Partial Overview of Seaborn Plots</figcaption><p></p>
+</figure>
+</div>
+
+<aside><div>
+<p>For the fuller overview see <a href="https://seaborn.pydata.org/tutorial/function_overview.html?highlight=function%20overview">Overview of seaborn plotting functions</a> and the <a href="https://seaborn.pydata.org/api.html">full API reference</a>.</p>
+</div></aside></section>
+<section id="in-practice" class="slide level2 smaller">
+<h2>In Practice</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-2"><a href="#cb1-2"></a>sns.set_theme(style<span class="op">=</span><span class="st">"darkgrid"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3"></a>fmri <span class="op">=</span> sns.load_dataset(<span class="st">"fmri"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4"></a>sns.lineplot(x<span class="op">=</span><span class="st">"timepoint"</span>, y<span class="op">=</span><span class="st">"signal"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5"></a>             hue<span class="op">=</span><span class="st">"region"</span>, style<span class="op">=</span><span class="st">"event"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6"></a>             data<span class="op">=</span>fmri)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+<img data-src="https://seaborn.pydata.org/_images/errorband_lineplots.png" class="r-stretch"></section>
+<section id="in-practice-2" class="slide level2 smaller">
+<h2>In Practice 2</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>sns.set_theme(style<span class="op">=</span><span class="st">"whitegrid"</span>, palette<span class="op">=</span><span class="st">"muted"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2"></a>df <span class="op">=</span> sns.load_dataset(<span class="st">"penguins"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3"></a></span>
+<span id="cb2-4"><a href="#cb2-4"></a>ax <span class="op">=</span> sns.swarmplot(data<span class="op">=</span>df, x<span class="op">=</span><span class="st">"body_mass_g"</span>, y<span class="op">=</span><span class="st">"sex"</span>, hue<span class="op">=</span><span class="st">"species"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5"></a>ax.<span class="bu">set</span>(ylabel<span class="op">=</span><span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+<img data-src="https://seaborn.pydata.org/_images/scatterplot_categorical.png" class="r-stretch"></section>
+<section id="configuring-seaborn" class="slide level2 smaller">
+<h2>Configuring Seaborn</h2>
+<p>Seaborn ‘themes’ act as shortcuts for setting multiple matplotlib parameters:</p>
 <table>
 <thead>
 <tr class="header">
-<th style="text-align: right;"></th>
-<th style="text-align: right;">SensorID</th>
-<th style="text-align: right;">Place</th>
-<th style="text-align: right;">Owner</th>
+<th>Seaborn Command</th>
+<th>Accomplishes</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">LHR</td>
-<td style="text-align: right;">BAA</td>
+<td><a href="https://seaborn.pydata.org/generated/seaborn.set_theme.html#seaborn.set_theme"><code>set_theme(...)</code></a></td>
+<td>Set multiple theme parameters in one step.</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;"><span class="math inline">\(\vdots\)</span></td>
-<td style="text-align: right;"><span class="math inline">\(\vdots\)</span></td>
-<td style="text-align: right;"><span class="math inline">\(\vdots\)</span></td>
-<td style="text-align: right;"><span class="math inline">\(\vdots\)</span></td>
+<td><a href="https://seaborn.pydata.org/generated/seaborn.axes_style.html#seaborn.axes_style"><code>axes_style(...)</code></a></td>
+<td>Return a parameter dict for the aesthetic style of the plots.</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">SEN</td>
-<td style="text-align: right;">Stobart</td>
+<td><a href="https://seaborn.pydata.org/generated/seaborn.set_style.html#seaborn.set_style"><code>set_style(...)</code></a></td>
+<td>Set the aesthetic style of the plots.</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">STA</td>
-<td style="text-align: right;">BAA</td>
+<td><a href="https://seaborn.pydata.org/generated/seaborn.plotting_context.html#seaborn.plotting_context"><code>plotting_context(...)</code></a></td>
+<td>Return a parameter dict to scale elements of the figure.</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">LUT</td>
-<td style="text-align: right;">GIP</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">7</td>
-<td style="text-align: right;">8</td>
-<td style="text-align: right;">BHX</td>
-<td style="text-align: right;">???</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">8</td>
-<td style="text-align: right;">9</td>
-<td style="text-align: right;">MAN</td>
-<td style="text-align: right;">???</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">9</td>
-<td style="text-align: right;">10</td>
-<td style="text-align: right;">INV</td>
-<td style="text-align: right;">???</td>
+<td><a href="https://seaborn.pydata.org/generated/seaborn.set_context.html#seaborn.set_context"><code>set_context(...)</code></a></td>
+<td>Set the plotting context parameters.</td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="append" class="slide level2 smaller">
-<h2>Append</h2>
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>to_append <span class="op">=</span> [</span>
-<span id="cb9-2"><a href="#cb9-2"></a>    {<span class="st">'SensorID'</span>: <span class="dv">0</span>, <span class="st">'Parameter'</span>: <span class="dv">5</span>,  <span class="st">'Humidity'</span>, <span class="st">'Value'</span>: <span class="fl">0.45</span>},</span>
-<span id="cb9-3"><a href="#cb9-3"></a>    {<span class="st">'SensorID'</span>: <span class="dv">1</span>, <span class="st">'Parameter'</span>: <span class="dv">5</span>,  <span class="st">'Humidity'</span>, <span class="st">'Value'</span>: <span class="fl">0.31</span>},</span>
-<span id="cb9-4"><a href="#cb9-4"></a>    {<span class="st">'SensorID'</span>: <span class="dv">2</span>, <span class="st">'Parameter'</span>: <span class="dv">4</span>, <span class="st">'Temperature'</span>, <span class="st">'Value'</span>: <span class="dv">2</span>},</span>
-<span id="cb9-5"><a href="#cb9-5"></a>    {<span class="st">'SensorID'</span>: <span class="dv">3</span>, <span class="st">'Parameter'</span>: <span class="dv">3</span>, <span class="st">'Temperature'</span>, <span class="st">'Value'</span>: <span class="dv">3</span>}]</span>
-<span id="cb9-6"><a href="#cb9-6"></a>df2.append(to_append)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Outputs:</p>
-<table>
-<thead>
-<tr class="header">
-<th style="text-align: right;">SensorID</th>
-<th style="text-align: right;">Parameter</th>
-<th style="text-align: right;">Value</th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">Temperature</td>
-<td>5.00</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;"><span class="math inline">\(\vdots\)</span></td>
-<td style="text-align: right;"><span class="math inline">\(\vdots\)</span></td>
-<td style="text-align: right;"><span class="math inline">\(\vdots\)</span></td>
-<td><span class="math inline">\(\vdots\)</span></td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">Humidity</td>
-<td>0.18</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">Humidity</td>
-<td>0.45</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">Humidity</td>
-<td>0.31</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">Temperature</td>
-<td>2.00</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">Temperature</td>
-<td>3.00</td>
-</tr>
-</tbody>
-</table>
-<aside class="notes">
-<p>Note that a Dictionary-of-Lists would also work for an append and that appending a column that doesn’t exist (for vertical appends) will cause the column to be created while appending a row that doesn’t exist (for horizontal appends) with cause the row to be created.</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
-</section>
-<section id="merge-vs.-append-vs.-concat-vs.-join" class="slide level2 smaller">
-<h2>Merge vs.&nbsp;Append vs.&nbsp;Concat vs.&nbsp;Join?</h2>
-<p>As usual, <a href="https://stackoverflow.com/questions/38256104/differences-between-merge-and-concat-in-pandas">Stack Overflow to the rescue</a>:</p>
-<blockquote>
-<p>A very high level difference is that <code>merge()</code> is used to combine two (or more) dataframes on the basis of values of common columns (indices can also be used, use <code>left_index=True</code> and/or <code>right_index=True</code>), and <code>concat()</code> is used to append one (or more) dataframes one below the other (or sideways, depending on whether the axis option is set to 0 or 1).</p>
-</blockquote>
-<blockquote>
-<p><code>join()</code> is used to merge 2 dataframes on the basis of the index; instead of using <code>merge()</code> with the option <code>left_index=True</code> we can use <code>join()</code>.</p>
-</blockquote>
-<p><em><a href="https://railsware.com/blog/python-for-machine-learning-pandas-axis-explained/">Hint</a>:</em> <code>axis=0</code> refers to the row index &amp; <code>axis=1</code> to the column index.</p>
-</section>
-<section id="merge-vs.-append-vs.-concat-vs.-join-1" class="slide level2 smaller">
-<h2>Merge vs.&nbsp;Append vs.&nbsp;Concat vs.&nbsp;Join?</h2>
-<p>These achieve the same thing, but they are <em>not</em> always equivalent:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>pd.merge(df1, df2, left_index<span class="op">=</span><span class="va">True</span>, right_index<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb10-2"><a href="#cb10-2"></a>pd.concat([df1, df2], axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb10-3"><a href="#cb10-3"></a>df1.join(df2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Generally:</p>
+<p>You can also access:</p>
 <ul>
-<li><strong>Concat</strong> expects the number of columns in all data frames to match (if concatenating vertically) and the number of rows in all data frames to match (if concatenating horizontally). It does <em>not</em> deal well with <em>linking</em>.</li>
-<li><strong>Append</strong> assumes that <em>either</em> the columns or the rows will match.</li>
-<li><strong>Join</strong> is basically a functionality-restricted merge.</li>
+<li><a href="https://seaborn.pydata.org/tutorial/color_palettes.html">Palettes</a>: colormaps can be generated using <code>sns.color_palette(...)</code> and set using <code>sns.set_palette(...)</code>.</li>
+<li><a href="https://seaborn.pydata.org/generated/seaborn.axes_style.html#seaborn.axes_style">Axes Styles</a>: includes <code>darkgrid</code>, <code>whitegrid</code>, <code>dark</code>, <code>white</code>, <code>ticks</code>.</li>
 </ul>
+</section>
+<section id="anatomy-of-a-figure" class="slide level2">
+<h2>Anatomy of a Figure</h2>
+<img data-src="https://matplotlib.org/_images/sphx_glr_anatomy_001.png" class="r-stretch">
+<p><a href="https://matplotlib.org/gallery/showcase/anatomy.html#anatomy-of-a-figure">Source</a>.</p>
+</section>
+<section id="writing-a-figure" class="slide level2">
+<h2>Writing a Figure</h2>
+<p>There are <em>multiple</em> ways to access/write elements of a plot:</p>
+<ul>
+<li><strong>Figure</strong>: high-level features (<em>e.g.</em> title, padding, etc.). Can be accessed via <code>plt.gcf()</code> (<strong>g</strong>et <strong>c</strong>urrent <strong>f</strong>igure) or upon creation (e.g.&nbsp;<code>f, ax = plt.subplots(1,1)</code> or <code>f = plt.figure()</code>).</li>
+<li><strong>Axes</strong>: axis-level features (e.g.&nbsp;labels, tics, spines, limits, etc.). Can be accessed via <code>plt.gca()</code> (<strong>g</strong>et <strong>c</strong>urrent <strong>a</strong>xes) or upon creation (e.g.&nbsp;<code>f, ax = plt.subplots(1,1)</code> or <code>ax = f.add_subplot(1,1,1)</code>).</li>
+</ul>
+<p>Annotations, artists, and other features are <em>typically</em> written into the axes <em>using the coordinate space of the figure</em> (e.g.&nbsp;decimal degrees for lat/long, metres for BNG, etc.).</p>
+</section>
+<section id="adding-a-3rd-dimension" class="slide level2 smaller">
+<h2>Adding a 3rd Dimension</h2>
+<p>This ‘feature’ is less well-developed but <em>does</em> work:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="im">from</span> mpl_toolkits.mplot3d <span class="im">import</span> Axes3D</span>
+<span id="cb3-2"><a href="#cb3-2"></a>fig <span class="op">=</span> plt.figure()</span>
+<span id="cb3-3"><a href="#cb3-3"></a>ax  <span class="op">=</span> plt.axes(projection<span class="op">=</span><span class="st">'3d'</span>)</span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="co"># OR</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a>fig <span class="op">=</span> plt.figure()</span>
+<span id="cb3-6"><a href="#cb3-6"></a>ax  <span class="op">=</span> fig.add_subplot(<span class="dv">111</span>, projection<span class="op">=</span><span class="st">'3d'</span>)</span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="co"># THEN</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a>ax.contour3D(X, Y, Z, ...)</span>
+<span id="cb3-9"><a href="#cb3-9"></a>ax.plot_surface(x, y, z, ...)</span>
+<span id="cb3-10"><a href="#cb3-10"></a>ax.plot3D(xline, yline, zline, ...)</span>
+<span id="cb3-11"><a href="#cb3-11"></a>ax.scatter3D(x, y, z, ...)</span>
+<span id="cb3-12"><a href="#cb3-12"></a><span class="co"># ax.plot_surface and ax.plot_wire also give you 3D renderings</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You can then set the elevation and azimuth using: <code>ax.view_init(&lt;elevation&gt;, &lt;azimuth&gt;)</code>.</p>
+</section>
+<section id="saving-outputs" class="slide level2 smaller">
+<h2>Saving Outputs</h2>
+<p>Straightforward via <a href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.savefig.html">save figure</a> function, but lots of options!</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>plt.savefig(fname, dpi<span class="op">=</span><span class="va">None</span>, facecolor<span class="op">=</span><span class="st">'w'</span>, edgecolor<span class="op">=</span><span class="st">'w'</span>,</span>
+<span id="cb4-2"><a href="#cb4-2"></a>    orientation<span class="op">=</span><span class="st">'portrait'</span>, papertype<span class="op">=</span><span class="va">None</span>, <span class="bu">format</span><span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb4-3"><a href="#cb4-3"></a>    transparent<span class="op">=</span><span class="va">False</span>, bbox_inches<span class="op">=</span><span class="va">None</span>, pad_inches<span class="op">=</span><span class="fl">0.1</span>,</span>
+<span id="cb4-4"><a href="#cb4-4"></a>    frameon<span class="op">=</span><span class="va">None</span>, metadata<span class="op">=</span><span class="va">None</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The format can be largely determined by the file extension in the <code>fname</code> (file name) and the supported formats depends on what you’ve installed! You can find out what’s available to you using: <code>plt.gcf().canvas.get_supported_filetypes()</code>.</p>
+</section>
+<section id="jupyter" class="slide level2">
+<h2>Jupyter</h2>
+<p>By default, Jupyter’s output is static matplotlib, but we can extend this in three ways:</p>
+<ol type="1">
+<li>Make the static plot zoomable and pannable using <code>%matplotlib widget</code> (declare this at the top of your notebook).</li>
+<li>Make the plot more directly interactive using <code>ipywidgets</code> (import <code>interact</code> and related libs as needed).</li>
+<li>Use a browser-based visualisation tool such as <code>bokeh</code>, <code>plotly</code>, <code>altair</code>/<code>vega</code>, <code>holoviews</code>, or even <code>d3</code> (format may be very, very different from what you are ‘used to’ in Python).</li>
+</ol>
+</section>
+<section id="widgets" class="slide level2 smaller">
+<h2>Widgets</h2>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="op">%</span>matplotlib widget</span>
+<span id="cb5-2"><a href="#cb5-2"></a>rs <span class="op">=</span> gpd.sjoin(gdf, hackney, how<span class="op">=</span><span class="st">'left'</span>, op<span class="op">=</span><span class="st">'within'</span>)</span>
+<span id="cb5-3"><a href="#cb5-3"></a>rs.NAME.fillna(<span class="st">'None'</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-4"><a href="#cb5-4"></a>ax <span class="op">=</span> hackney.plot(edgecolor<span class="op">=</span><span class="st">'k'</span>, facecolor<span class="op">=</span><span class="st">'none'</span>)</span>
+<span id="cb5-5"><a href="#cb5-5"></a>rs.plot(ax<span class="op">=</span>ax, column<span class="op">=</span><span class="st">'NAME'</span>, legend<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+<img data-src="img/Matplotlib_Widget.png" class="r-stretch"></section>
+<section id="interact" class="slide level2 smaller">
+<h2>Interact()</h2>
+<p>Taking an example from <a href="https://darribas.org/gds_course/content/bH/lab_H.html#advanced-plotting">Dani’s work</a>:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="im">from</span> ipywidgets <span class="im">import</span> interact</span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="co"># Alternatives: interactive, fixed, interact_manual</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a>interact(</span>
+<span id="cb6-4"><a href="#cb6-4"></a>    <span class="op">&lt;</span>function<span class="op">&gt;</span>, <span class="co"># Function to make interactive</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a>    <span class="op">&lt;</span>param0<span class="op">&gt;</span>,   <span class="co"># e.g. Data to use</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a>    <span class="op">&lt;</span>param1<span class="op">&gt;</span>,   <span class="co"># e.g. Range start/end/step</span></span>
+<span id="cb6-7"><a href="#cb6-7"></a>    <span class="op">&lt;</span>param2<span class="op">&gt;</span>    <span class="co"># e.g. Fixed value</span></span>
+<span id="cb6-8"><a href="#cb6-8"></a>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="bokeh" class="slide level2">
+<h2>Bokeh</h2>
+
+<img data-src="./img/Bokeh.png" class="r-stretch"></section>
+<section id="automation" class="slide level2 smaller">
+<h2>Automation</h2>
+<p>Plots built on top of matploblib can, to some extent, be automated using functions. For example, to draw circles and place text:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">def</span> circle(ax, x, y, radius<span class="op">=</span><span class="fl">0.15</span>):</span>
+<span id="cb7-2"><a href="#cb7-2"></a>    <span class="im">from</span> matplotlib.patches <span class="im">import</span> Circle</span>
+<span id="cb7-3"><a href="#cb7-3"></a>    <span class="im">from</span> matplotlib.patheffects <span class="im">import</span> withStroke</span>
+<span id="cb7-4"><a href="#cb7-4"></a>    circle <span class="op">=</span> Circle((x, y), radius, clip_on<span class="op">=</span><span class="va">False</span>, zorder<span class="op">=</span><span class="dv">10</span>, </span>
+<span id="cb7-5"><a href="#cb7-5"></a>                    linewidth<span class="op">=</span><span class="dv">1</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>, </span>
+<span id="cb7-6"><a href="#cb7-6"></a>                    facecolor<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">.0125</span>),</span>
+<span id="cb7-7"><a href="#cb7-7"></a>                    path_effects<span class="op">=</span>[withStroke(linewidth<span class="op">=</span><span class="dv">5</span>, </span>
+<span id="cb7-8"><a href="#cb7-8"></a>                                  foreground<span class="op">=</span><span class="st">'w'</span>)])</span>
+<span id="cb7-9"><a href="#cb7-9"></a>    ax.add_artist(circle)</span>
+<span id="cb7-10"><a href="#cb7-10"></a></span>
+<span id="cb7-11"><a href="#cb7-11"></a><span class="kw">def</span> text(ax, x, y, text):</span>
+<span id="cb7-12"><a href="#cb7-12"></a>    ax.text(x, y, text, backgroundcolor<span class="op">=</span><span class="st">"white"</span>,</span>
+<span id="cb7-13"><a href="#cb7-13"></a>         ha<span class="op">=</span><span class="st">'center'</span>, va<span class="op">=</span><span class="st">'top'</span>, weight<span class="op">=</span><span class="st">'bold'</span>, color<span class="op">=</span><span class="st">'blue'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="resources" class="slide level2 smaller">
 <h2>Resources</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
 <ul>
-<li><a href="https://pandas.pydata.org/pandas-docs/stable/user_guide/merging.html">Pandas Guide to Merges</a></li>
-<li><a href="https://pandas.pydata.org/pandas-docs/stable/user_guide/merging.html#database-style-dataframe-or-named-series-joining-merging">Database-style joining/merging</a></li>
-<li><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.concat.html">Pandas Concat</a></li>
-<li><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.append.html?highlight=append#pandas.DataFrame.append">Pandas Append</a></li>
+<li><a href="https://matplotlib.org/3.1.0/tutorials/introductory/pyplot.html">Introduction to PyPlot</a> (includes lots of parameter information)</li>
+<li><a href="https://jakevdp.github.io/PythonDataScienceHandbook/04.14-visualization-with-seaborn.html">Visualisation with Seaborn</a></li>
+<li><a href="https://jakevdp.github.io/PythonDataScienceHandbook/04.14-visualization-with-seaborn.htmlhttps://seaborn.pydata.org/tutorial.htmlhttps://elitedatascience.com/python-seaborn-tutorialhttps://www.datacamp.com/community/tutorials/seaborn-python-tutorial">Seaborn Tutorial</a></li>
+<li><a href="https://elitedatascience.com/python-seaborn-tutorial">Elite Data Science Seaborn Tutorial</a></li>
+<li><a href="https://www.datacamp.com/community/tutorials/seaborn-python-tutorial">Datacamp Seaborn Tutorial</a></li>
+<li><a href="https://jakevdp.github.io/PythonDataScienceHandbook/04.12-three-dimensional-plotting.html">Three-Dimensional Plotting in Matplotlib</a></li>
+<li><a href="https://towardsdatascience.com/an-easy-introduction-to-3d-plotting-with-matplotlib-801561999725">An easy introduction to 3D plotting with Matplotlib</a></li>
 </ul>
-</section></section>
+</div><div class="column" style="width:50%;">
+<ul>
+<li><a href="https://docs.bokeh.org/en/latest/docs/gallery.html#gallery">Bokeh Gallery</a></li>
+<li><a href="https://docs.bokeh.org/en/latest/docs/user_guide.html#userguide">Bokeh User Guide</a></li>
+<li><a href="https://programminghistorian.org/en/lessons/visualizing-with-bokeh">Programming Historian: Visualizing Data with Bokeh and Pandas</a></li>
+<li><a href="https://realpython.com/python-data-visualization-bokeh/">Real Python: Data Viz with Bokeh</a></li>
+<li><a href="https://towardsdatascience.com/data-visualization-with-bokeh-in-python-part-one-getting-started-a11655a467d4">Towards Data Science: Data Viz with Bokeh Part 1</a></li>
+<li><a href="https://ipywidgets.readthedocs.io/en/latest/examples/Using%20Interact.html#">Using Interact</a></li>
+</ul>
+</div>
+</div>
+</section>
 <section id="thank-you" class="title-slide slide level1 center">
 <h1>Thank you!</h1>
 
 
 <img src="../img/CASA_logo.png" class="slide-logo r-stretch"><div class="footer footer-default">
-<p>Linking Data • Jon Reades</p>
+<p>Visualising Data • Jon Reades</p>
 </div>
 </section>
     </div>
@@ -1257,6 +824,24 @@
     </script>
     <script id="quarto-html-after-body" type="application/javascript">
     window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
       const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
       tabsets.forEach(function(tabset) {
         const tabby = new Tabby('#' + tabset.id);
@@ -1305,7 +890,8 @@
       for (var i=0; i<noterefs.length; i++) {
         const ref = noterefs[i];
         tippyHover(ref, function() {
-          let href = ref.getAttribute('href');
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
           try { href = new URL(href).hash; } catch {}
           const id = href.replace(/^#\/?/, "");
           const note = window.document.getElementById(id);
