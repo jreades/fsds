@@ -18,4 +18,9 @@ In order to make use of these materials you will need to download and install th
 - Standardise delivery of practical content by TAs: should have consistent approach across practicals.
 - Point to cross-module content/recaps.
 - Joint reading list?
+- Look into automating movie generation. This code appears to generate something that is Mac-compatible from a PNG file:
+
+```bash
+ffmpeg -r 0.01 -loop 1 -i image.jpg -i audio.mp3 -c:v libx264 -tune stillimage -preset  ultrafast -ss 00:00:00 -t 00:00:27   -c:a aac  -b:a 96k -pix_fmt yuv420p  -shortest out.mp4 -y
+```
 
