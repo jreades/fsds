@@ -1,0 +1,173 @@
+---
+format:
+  revealjs:
+    theme: [serif, slides.scss]
+author: "Jon Reades"
+title: "LoLs"
+footer: "LoLs • Jon Reades"
+highlight-style: github
+code-copy: true
+code-line-numbers: true
+slide-level: 2
+title-slide-attributes:
+  data-background-image: ../img/CASA_Logo_no_text.png
+  data-background-size: cover
+  data-background-position: center
+  data-background-opacity: '0.17'
+logo: ../img/CASA_logo.png
+history: false
+css: slides.css
+---
+
+# What the heck is *this*?
+```python
+my_list = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+```
+How about if we rewrote it like *this*?
+```python
+my_list = [
+  [1, 2, 3], 
+  [4, 5, 6], 
+  [7, 8, 9]
+]
+```
+
+::: {.notes}
+What does this *look* like?
+:::
+
+## Making Sense of This
+
+We can 'unpack' `my_list` in stages in order to make sense of it:
+
+```python
+my_list = [
+  [1, 2, 3], 
+  [4, 5, 6], 
+  [7, 8, 9]
+]
+
+for i in my_list:
+  print(i)
+```
+
+What do you **think** this will print?
+
+## Debugging Our Thinking
+
+Let's make it a little more obvious:
+```python
+a = [1, 2, 3]
+b = [4, 5, 6]
+c = [7, 8, 9]
+
+my_list = [a, b, c]
+
+for i in my_list:
+  print(i) # Prints a, b, c in turn...
+```
+
+## The Next Step
+We could then try this:
+```python
+for i in my_list:
+  print(f" >> {i}")
+  for j in i: # Remember that i is a list!
+    print(j)
+```
+This produces:
+```python
+ >> [1, 2, 3]
+1
+2
+3
+ >> [4, 5, 6]
+4
+...
+```
+
+## Putting It Together {.smaller}
+
+Some observations:
+
+- We can access `i` in `my_list` using *either* `for i in my_list` (every element in turn) or `my_list[i]` (one element only). 
+- We can access `j` in list `i` using `for j in i` (every element in turn) or `i[j]` (one element only). 
+
+Does that mean we can *also* do this:
+```python
+my_list = [
+  [1, 2, 3], 
+  [4, 5, 6], 
+  [7, 8, 9]
+]
+
+i,j = 0,1
+print(my_list[i][j])
+```
+
+## Let's Talk It Out!
+
+So if we write:
+```python
+i,j = 0,1
+print(my_list[i][j])
+```
+
+Then:
+
+1. `my_list[i]` returns `[1,2,3]` (because `i==0` and the first list is `[1,2,3]`), and
+2. `my_list[i][j]` returns `2` (because `j==1` and the `[1,2,3][1]==2`).
+
+Similarly, `my_list[2]` grabs the third list (`[7,8,9]`) and then `my_list[2][2]` tells Python to get the third item in that third list (i.e. `9`).
+
+::: {.notes}
+How you print the number 5 from this *list-of-lists*?
+:::
+
+## Making This Useful
+
+If I rewrite the list *this way* perhaps it looks a little more useful?
+```python
+my_cities = [
+  ['London', 51.5072, 0.1275, +0], 
+  ['New York', 40.7127, 74.0059, -5], 
+  ['Tokyo', 35.6833, 139.6833, +8]
+]
+```
+Now we have something that is starting to look like *data*!
+
+# Things are about to get... weird.
+
+## Down the Rabbit Hole
+![](img/Alice.png)
+
+## LOLs of LOLs
+
+This is *also* a legitimate list in Python. 
+```python
+my_cities = [
+  ['London', [51.5072, 0.1275], +0], 
+  ['New York', [40.7127, 74.0059], -5], 
+  ['Tokyo', [35.6833, 139.6833], +8]
+]
+print(my_cities[0][0])
+> London
+print(my_cities[0][1][0])
+> 51.5072
+```
+
+::: {.notes}
+Why might it be a *better* choice of *data structure* than the earlier version?
+:::
+
+# How Deep Can You Go?
+
+> There is no real limit to how many lists you can nest inside of other lists, but it's *hard* to make sense of: `my_cities[0][1][4][1][8]`!
+
+::: {.notes}
+
+That's why most sane people rarely use more then three levels of lists. You will see developers iterate over them using `i`, `j`, and `k`.
+
+:::
+
+# Thank you!
