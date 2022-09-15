@@ -10,6 +10,7 @@ In order to make use of these materials you will need to download and install th
 
 ## To Dos
 
+- Move Debugging Manifesto in Lecture 2.5 and re-render video.
 - [Shift away from .values](https://stackoverflow.com/questions/17241004/how-do-i-convert-a-pandas-series-or-index-to-a-numpy-array/54324513#54324513)
 - Swap Weeks 8 (Visualising Data) and 9 (Dimensions in Data) + explain rationale to students.
 - Shift focus of (new) Week 9 & 10 to review/discussing the final assessment. Content still available to view/practice but not required/delivered.
