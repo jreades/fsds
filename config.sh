@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
 # What port should Docker listen on?
 JUPYTER_PORT=8888
-DASK_PORT=8787
+#DASK_PORT=8787
 QUARTO_PORT=4200
-
-# Are we using Dask or Quarto?
-DASK=false
-QUARTO=true
 
 # If you want to launch the container with
 # work mounting in different places then use this...
