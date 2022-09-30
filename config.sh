@@ -2,13 +2,13 @@
 # What port should Docker listen on?
 JUPYTER_PORT=8888
 #DASK_PORT=8787
-QUARTO_PORT=4200
+QUARTO_PORT=4201
 
 # If you want to launch the container with
 # work mounting in different places then use this...
 #WORK_DIR="${PWD}"
 # Otherwise, specify the path here:
-WORK_DIR="$HOME/Documents/git/"
+WORK_DIR="$HOME/Documents/git/fsds/"
 
 # A name for the container to avoid running multiple
 # copies at the same time.
