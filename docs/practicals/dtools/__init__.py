@@ -1,9 +1,7 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-from urllib.request import urlopen
-import csv
 import os
+import csv
+from urllib.request import urlopen
+import numpy as np
 
 def get_url(src, dest):
     
@@ -35,54 +33,40 @@ def get_url(src, dest):
     else:
         print(f"Found {dest} locally!")
     
-    with open(dest, 'r') as f:
-        return f.read().splitlines()
+    return dest
 
-# Notice that it doesn't make sense to use `dest` as the 
-# parameter name here because we always read *from* a data
-# source. Your names can be whatever you want, but they 
-# should be logical wherever possible!
-def to_lol(lst):
+def read_csv(src:str) -> dict:
+    """
+    Converts a CSV file to a dictionary-of-lists (dol),
+    using the first row to create column names.
     
-    # Rest of code to read file and convert it goes here
-    csvdata = []
+    :param src: a local CSV file
+    :returns: a dictionary-of-lists
+    """
+    csvdata = {} # An empty dictionary-of-lists
     
-    # This is the same code that you used last week, but 
-    # you'll have to rename some vars to get things to
-    # work for you here.
-    csvfile  = csv.reader(lst)
-    for row in csvfile:              
-        csvdata.append( row )
+    with open(src, 'r') as f:
+        csvr = csv.reader(f)
+        
+        # Read in our column names and
+        # initialise the dictionary-of-lists
+        csvcols = next(csvr) 
+        for c in csvcols:
+            csvdata[c] = []
+        
+        # Notice this code is still the same, 
+        # we just used next(csvr) to get the 
+        # header row first!
+        for r in csvr: 
+            # Although you can often assume that the order 
+            # of the keys is the same, Python doesn't 
+            # guarantee it; this way we will always make
+            # the correct assignment.
+            for idx, c in enumerate(csvcols):
+                csvdata[c].append(r[idx])
     
-    # Return list of lists
+    # Return dictionary of lists
     return csvdata
-
-def to_dol(lol):
-    """
-    Converts a list-of-lists (LoL) to a dict-of-lists (dol)
-    using the first element in the LoL to create column names.
-    
-    :param lol: a list-of-lists where each element of the list represents a row of data
-    :returns: a dict-of-lists
-    """
-    # Create empty dict-of-lists
-    ds = {}
-
-    # I had a version of this code that used
-    # lol.pop(0) since it made the for loop
-    # easier to read. But I changed my mind...
-    #
-    # Can you think why?
-    col_names = lol[0]
-    for c in col_names:
-        ds[c] = []
-
-    # Then values into a list attached to each key
-    for row in lol[1:]:
-        for c in range(0,len(col_names)):
-            ds[ col_names[c] ].append( row[c] )
-            
-    return ds
 
 # Convert the raw data to data of the appropriate
 # type: 'column data' (cdata) -> 'column type' (ctype)
@@ -110,5 +94,15 @@ def to_type(cdata, ctype):
                 fdata.append( c )
         return fdata
 
-
+def find_val(col:list, val:str):
+    """
     
+    """
+    if val in dir(np) and callable(getattr(np, val)):
+        func = getattr(np, val)
+        if val in ['min','max']:
+            return np.where(col==func(col))[0][0]
+        else:
+            return func(col)
+    else:
+        return np.nan
