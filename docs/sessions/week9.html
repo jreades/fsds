@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Foundations of Spatial Data Science - Visualising Data</title>
+<title>Foundations of Spatial Data Science - Grouping Data</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -160,11 +160,11 @@ div.csl-indent {
   </li>  
         <li>
     <a class="dropdown-item" href="../sessions/week9.html">
- <span class="dropdown-text">9. Visualising Data</span></a>
+ <span class="dropdown-text">9. Grouping Data</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../sessions/week10.html">
- <span class="dropdown-text">10. Grouping Data</span></a>
+ <span class="dropdown-text">10. Visualising Data</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../references.html">
@@ -212,7 +212,7 @@ div.csl-indent {
     </nav>
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">Visualising Data</h1>
+      <h1 class="quarto-secondary-nav-title">Grouping Data</h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -305,12 +305,12 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../sessions/week9.html" class="sidebar-item-text sidebar-link active">9. Visualising Data</a>
+  <a href="../sessions/week9.html" class="sidebar-item-text sidebar-link active">9. Grouping Data</a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../sessions/week10.html" class="sidebar-item-text sidebar-link">10. Grouping Data</a>
+  <a href="../sessions/week10.html" class="sidebar-item-text sidebar-link">10. Visualising Data</a>
   </div>
 </li>
       </ul>
@@ -340,7 +340,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">Visualising Data</h1>
+<h1 class="title d-none d-lg-block">Grouping Data</h1>
 </div>
 
 
@@ -356,28 +356,29 @@ div.csl-indent {
 
 <section id="overview" class="level2">
 <h2 class="anchored" data-anchor-id="overview">Overview</h2>
-<p>In order to visualise (geo-)data we often need to link different data sets together, so this week begins by looking at how to join data together in both spatial and non-spatial contexts. As well, since most Python visualisation libraries ultimately depend on matplotlib which is both incredibly powerful and intensely counter-intuitive if you are used to R’s ggplot, through maps and charts we’ll examine how to interact with data visualisations in Python.</p>
+<p>This week we will be looking at various ways of grouping data, whether it is by variable or by algorithm. So we begin by covering how data can be aggregated in Python using Pandas before turning to the practical challenges of classification (labeled data) and clustering (unlabeled data). This ‘completes’ the pipeline begun in Week 4 using the tools introduced in Weeks 1 and 2, but if you remember your ‘epicycles of analysis’ illustration then you’ll realise that this is, at best, a first pass through the data science process and there are <em>multiple</em> places where insights derived from the practicals (on outliers/problematic records, on data quality issues, on data selection, etc.) could be fed <em>back</em> through the pipeline to adjust and improve the analytical outputs.</p>
+<p>We will also begin shifting our focus in the live session to planning for the <a href="../assessments/briefing.html">Data+Policy Briefing</a> and <a href="../assessments/individual.html">Individual Reflection</a>, but you should <em>also</em> be looking at how this module connects and integrates ideas covered in CASA0001 (UST), CASA0005 (GIS), and CASA0007 (QM). So there will be only a minimal live-coding session in order to leave as much time as possible for the groups to meet and start working on their final projects.</p>
 <div class="callout-important callout callout-style-default callout-captioned">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-caption-container flex-fill">
-Learning Outcomes
+Learning Objectives
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <ol type="1">
-<li>You have familiarised yourselves with how to join and group data in Python.</li>
-<li>You are beginning to think about developing derived variables and proxies from raw data.</li>
-<li>You have broadened your thinking about the purpose of data visualisation.</li>
-<li>You are beginning to think about the final project.</li>
+<li>An understanding of the differences between aggregation, classification, and clustering.</li>
+<li>An appreciation of the utility of deriving grouped variables and proxies from raw data.</li>
+<li>An appreciation of how clustering as <em>part of an analytical pipeline</em> differs from the material covered in CASA0007 and so enhances our understanding of ‘paradigms’ in CASA0001.</li>
+<li>A general appreciation of how different clustering algorithms work and how this differs from classifcation.</li>
 </ol>
 </div>
 </div>
 <section id="lectures" class="level3">
 <h3 class="anchored" data-anchor-id="lectures">Lectures</h3>
-<p>You are <em>strongly</em> advised to watch these videos on linking data and spatial data, as well how to group data within pandas; <em>however</em>, you will not be asked to present any of these because our attention is now shifting towards the final assessments. You should, by now, be familiar with the concept of how to join data from the GIS module (<a href="https://andrewmaclachlan.github.io/CASA0005repo/">CASA0005</a>), so this is simply a quick tour of how to <em>do</em> this in Python.</p>
+<p>You should, by now, be familiar with the concept of how to cluster data from the QM module (CASA0007), so this week is actually focussed on how to move beyond <em>k</em>-means. The point is to contextualise these approaches as part of a data science ‘pipeline’ and to contrast to them with the more theoretical aspects covered elsewhere. We are less interested in the <em>mathematical</em> and <em>technical</em> aspects, and more interested in how one might go about selecting the <em>appropriate</em> algorithm for a particular problem.</p>
 <table class="table">
 <thead>
 <tr class="header">
@@ -388,24 +389,19 @@ Learning Outcomes
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Linking Data</td>
-<td style="text-align: left;"><a href="https://web.microsoftstream.com/video/22358047-2d33-4a67-bd75-2f3dd08f6e56">Video</a></td>
-<td style="text-align: left;"><a href="../lectures/9.1-Linking_Data.html">Slides</a></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Linking Spatial Data</td>
-<td style="text-align: left;"><a href="https://web.microsoftstream.com/video/1e0fc630-8050-4fc6-826d-72f2ad46150a">Video</a></td>
-<td style="text-align: left;"><a href="../lectures/9.2-Linking_Spatial_Data.html">Slides</a></td>
-</tr>
-<tr class="odd">
 <td style="text-align: left;">Grouping Data</td>
 <td style="text-align: left;"><a href="https://web.microsoftstream.com/video/3017c080-8348-4b2a-b71f-b7ab03473489">Video</a></td>
 <td style="text-align: left;"><a href="../lectures/9.3-Grouping_Data.html">Slides</a></td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Data Visualisation</td>
-<td style="text-align: left;"><a href="https://web.microsoftstream.com/video/7c49fc4a-84db-4fd1-a7ad-335f75e3c25f">Video</a></td>
-<td style="text-align: left;"><a href="../lectures/9.4-Visualising_Data.html">Slides</a></td>
+<td style="text-align: left;">Classification</td>
+<td style="text-align: left;"><a href="https://web.microsoftstream.com/video/64b984fa-06a8-40a9-a559-36d1c5f95f35">Video</a></td>
+<td style="text-align: left;"><a href="../lectures/10.1-Classification.html">Slides</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Clustering</td>
+<td style="text-align: left;"><a href="https://web.microsoftstream.com/video/5d7048ec-b04c-44ee-9789-5b4fe509e787">Video</a></td>
+<td style="text-align: left;"><a href="../lectures/10.2-Clustering.html">Slides</a></td>
 </tr>
 </tbody>
 </table>
@@ -413,20 +409,18 @@ Learning Outcomes
 <section id="other-preparatory-activities" class="level3">
 <h3 class="anchored" data-anchor-id="other-preparatory-activities">Other Preparatory Activities</h3>
 <ul>
-<li>You should <em>still</em> come to class prepared to present/discuss:
+<li>You should come to class prepared to present/discuss:
 <ul>
 <li><span class="citation" data-cites="dignazio:2020">D’Ignazio and Klein (<a href="#ref-dignazio:2020" role="doc-biblioref">2020</a>)</span>, chap.&nbsp;3, <em>On Rational, Scientific, Objective Viewpoints from Mythical, Imaginary, Impossible Standpoints</em> &lt;<a href="https://ucl.primo.exlibrisgroup.com/discovery/fulldisplay?docid=alma9931206723604761&amp;context=L&amp;vid=44UCL_INST:UCL_VU2&amp;lang=en&amp;search_scope=UCLLibraryCatalogue&amp;adaptor=Local%20Search%20Engine&amp;isFrbr=true&amp;tab=UCLLibraryCatalogue&amp;query=any,contains,D%5C%27Ignazio%20Data%20Feminism&amp;sortby=date_d&amp;facet=frbrgroupid,include,9041340239229546206&amp;offset=0">URL</a>&gt;</li>
 <li><span class="citation" data-cites="badger:2019">Badger, Bui, and Gebeloff (<a href="#ref-badger:2019" role="doc-biblioref">2019</a>)</span> &lt;<a href="https://www.nytimes.com/interactive/2019/04/27/upshot/diversity-housing-maps-raleigh-gentrification.html">URL</a>&gt;</li>
 <li><span class="citation" data-cites="Massey:1996">Massey (<a href="#ref-Massey:1996" role="doc-biblioref">1996</a>)</span> &lt;<a href="https://www.tandfonline.com/doi/abs/10.1080/14702549608554458">URL</a>&gt;</li>
 </ul></li>
-<li>Complete the <a href="https://moodle.ucl.ac.uk/mod/quiz/view.php?id=4338257">short Moodle quiz</a> associated with this week’s activities.</li>
-<li>Student Dialogue: <a href="https://moodle.ucl.ac.uk/mod/url/view.php?id=4389765&amp;forceview=1">Mentimeter poll</a> to be completed by the start of class.</li>
 </ul>
 </section>
 </section>
 <section id="practical" class="level2">
 <h2 class="anchored" data-anchor-id="practical">Practical</h2>
-<p>The practical will…</p>
+<p>The previous week has set up nicely for approaching aggregation, classification, and clustering as functions of the (transformed and reduced) data space. With this, you have essentially covered a full data science analytical pipeline from start (setting up) to finish (cluster/classification analysis) and can hopefully see how these pieces fit together to support one another, and how there is no such thing as a ‘right’ way to approach an analysis… just better and worse.</p>
 <div class="callout-tip callout callout-style-default callout-captioned">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -439,16 +433,18 @@ Connections
 <div class="callout-body-container callout-body">
 <p>The practical focusses on:</p>
 <ul>
-<li>Linking and grouping data as part of a visualisation process.</li>
-<li>Automating the production of map outputs in Python to create an ‘atlas’.</li>
-<li>Thinking about proxies; e.g.&nbsp;why would you find ppsqm more/less useful than price? what are you <em>really</em> measuring?</li>
+<li>How to group and aggregate data.</li>
+<li>The connections between classification and clustering.</li>
+<li>The use of classification as a predictive process with labeled data.</li>
+<li>The choice of <em>k</em> in <em>k</em>-means and extraction of representative centroids.</li>
+<li>The use of alternative clustering algorithms (DBSCAN, OPTICS, Self-Organising Maps, and ADBSCAN).</li>
 </ul>
 </div>
 </div>
 <p>To access the practical:</p>
 <ol type="1">
-<li><a href="https://github.com/jreades/fsds/tree/master/practicals/Practical-09-Visualising_Data.ipynb">Preview on GitHub</a></li>
-<li><a href="https://raw.githubusercontent.com/jreades/fsds/master/practicals/Practical-09-Visualising_Data.ipynb">Download the Notebook</a></li>
+<li><a href="https://github.com/jreades/fsds/tree/master/practicals/Practical-09-Grouping_Data.ipynb">Preview on GitHub</a></li>
+<li><a href="https://raw.githubusercontent.com/jreades/fsds/master/practicals/Practical-09-Grouping_Data.ipynb">Download the Notebook</a></li>
 </ol>
 </section>
 <section id="references" class="level2">
@@ -575,7 +571,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
   <div class="nav-page nav-page-next">
       <a href="../sessions/week10.html" class="pagination-link">
-        <span class="nav-page-text">10. Grouping Data</span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text">10. Visualising Data</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
