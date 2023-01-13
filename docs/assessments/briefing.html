@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.1.189">
+<meta name="generator" content="quarto-1.2.280">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -85,13 +85,17 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html">Welcome</a>
+    <a class="nav-link" href="../index.html">
+ <span class="menu-text">Welcome</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../setup/index.html">Setup</a>
+    <a class="nav-link" href="../setup/index.html">
+ <span class="menu-text">Setup</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-week-by-week" role="button" data-bs-toggle="dropdown" aria-expanded="false">Week-by-Week</a>
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-week-by-week" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Week-by-Week</span>
+    </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-week-by-week">    
         <li>
     <a class="dropdown-item" href="../sessions/index.html">
@@ -154,7 +158,9 @@ ul.task-list li input[type="checkbox"] {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-assessments" role="button" data-bs-toggle="dropdown" aria-expanded="false">Assessments</a>
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-assessments" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Assessments</span>
+    </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-assessments">    
         <li>
     <a class="dropdown-item" href="../assessments/index.html">
@@ -177,7 +183,8 @@ ul.task-list li input[type="checkbox"] {
     </ul>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="../help.html">Getting Help</a>
+    <a class="nav-link" href="../help.html">
+ <span class="menu-text">Getting Help</span></a>
   </li>  
 </ul>
               <div class="quarto-toggle-container">
@@ -295,6 +302,7 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-title-meta">
 
     
+  
     
   </div>
   
@@ -328,7 +336,7 @@ Write for Your Audience
 </section>
 <section id="preparing-your-submission" class="level2">
 <h2 class="anchored" data-anchor-id="preparing-your-submission">Preparing Your Submission</h2>
-<p>You are expected to use sustainable authorship tools for this submission. You may be asked to provide evidence of this. You are free use the <a href="https://github.com/jreades/fsds/blob/master/assessments/Data_Biography.qmd">Data Biography Template</a> as a starting point if you wish, but should probably look at the <a href="https://quarto.org/docs/guide/">Quarto Guide</a> and, in particular, the <a href="https://quarto.org/docs/output-formats/pdf-basics.html">PDF options</a> in order to customise your project. Full LaTeX is also an option.</p>
+<p>You are expected to use sustainable authorship tools for this submission. You may be asked to provide evidence of this. You are free use the <a href="https://github.com/jreades/fsds/blob/master/assessments/Data_Audit.qmd">Data Audit Template</a> as a starting point if you wish, but should probably look at the <a href="https://quarto.org/docs/guide/">Quarto Guide</a> and, in particular, the <a href="https://quarto.org/docs/output-formats/pdf-basics.html">PDF options</a> in order to customise your project. Full LaTeX is also an option.</p>
 <p>You must develop and maintain the submission in GitHub so that we can review contributions if necessary.</p>
 </section>
 <section id="supporting-documents" class="level2">
@@ -383,7 +391,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     button.classList.add('code-copy-button-checked');
     var currentTitle = button.getAttribute("title");
     button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
     setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
       button.setAttribute("title", currentTitle);
       button.classList.remove('code-copy-button-checked');
     }, 1000);
@@ -419,24 +444,42 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
   var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
   for (var i=0; i<bibliorefs.length; i++) {
     const ref = bibliorefs[i];
-    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
-    tippyHover(ref, function() {
-      var popup = window.document.createElement('div');
-      cites.forEach(function(cite) {
-        var citeDiv = window.document.createElement('div');
-        citeDiv.classList.add('hanging-indent');
-        citeDiv.classList.add('csl-entry');
-        var biblioDiv = window.document.getElementById('ref-' + cite);
-        if (biblioDiv) {
-          citeDiv.innerHTML = biblioDiv.innerHTML;
-        }
-        popup.appendChild(citeDiv);
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
       });
-      return popup.innerHTML;
-    });
+    }
   }
 });
 </script>
