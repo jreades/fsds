@@ -23,6 +23,122 @@ decktape --screenshots --screenshots-directory $LECTURE --screenshots-size 1280x
 
 [Programming Historian](https://programminghistorian.org/) has a useful [Introduction to ffmpeg](https://programminghistorian.org/en/lessons/introduction-to-ffmpeg#basic-structure-and-syntax-of-ffmpeg-commands). It doesn't cover this use case but it is nonetheless a nice orientation to the basic structure of ffmpeg commands. See also: [Demystifying ffmpeg](https://github.com/privatezero/NDSR/blob/master/Demystifying_FFmpeg_Slides.pdf), the [ffmpeg Presentation](https://docs.google.com/presentation/d/1NuusF948E6-gNTN04Lj0YHcVV9-30PTvkh_7mqyPPv4/present?ueb=true&slide=id.g2974defaca_0_231) and [ffmpeg Wiki](https://trac.ffmpeg.org/wiki/WikiStart) alongside [the documentation](https://www.ffmpeg.org/ffmpeg.html). 
 
+### Creating the Intro
+
+#### Creating a Background
+
+See [this answer](https://stackoverflow.com/questions/36962458/making-a-green-screen-background-in-ffmpeg) on Stack Overflow:
+
+```bash
+export INTROTIME=15
+export FRAMERATE=30
+export FRAMESIZE="1280x720"
+ffmpeg -f lavfi -i color=color=white:s=$FRAMESIZE -t $INTROTIME -r $FRAMERATE intro_bg.mp4
+```
+
+#### Adding Text/Image Overlays
+
+To add a copyright/datestamp at the start and/or end [this StackOverflow thread](https://stackoverflow.com/questions/17623676/text-on-video-ffmpeg) contains a lot of useful information.
+
+#### Text Position
+
+```bash
+ffplay -vf "drawtext=font='Amethyst':text='Stack Overflow':fontcolor=white:fontsize=44:box=1:boxcolor=black@0.5:boxborderw=5:x=(w-text_w)/2:y=(h-text_h)/2" intro_bg.mp4
+```
+
+This next one positions the text bottom-right:
+
+```bash
+ffplay -vf "drawtext=text='Jon Reades':font='Times New Roman':x=(main_w-text_w-10):y=(main_h-text_h-10):fontsize=62:fontcolor=black:box=1:boxcolor=red@0.5:boxborderw=5" intro_bg.mp4
+```
+
+#### Adding Time
+
+Now let's bring it in between 2 and 5 seconds:
+
+```bash
+ffplay -vf "drawtext=font='Amethyst':text='Stack Overflow':fontcolor=white:fontsize=44:box=1:boxcolor=black@0.2:boxborderw=5:x=(w-text_w)/2:y=(h-text_h)/2:enable='between(t,2,5)" out1.mp4
+```
+
+Fading text in is much more complex, to the point [where there is a web site to help](http://ffmpeg.shanewhite.co/):
+
+```bash
+export TEXT="CASA"
+export STARTIN=0.25
+export FADEIN=1.5
+export FADEOUT=0.75
+export SHOWLEN=3+$STARTIN+$FADEIN
+export STOPAT=$SHOWLEN+$FADEOUT
+ffmpeg -i intro_bg.mp4 -pix_fmt=yuv420p -filter_complex "[0:v]drawtext=font='Amethyst':text='$TEXT':fontcolor=black:fontsize=64:x=(w-text_w)/2:y=(h-text_h)/2:alpha='if(lt(t,$(($STARTIN))),0,if(lt(t,$(($STARTIN+$FADEIN))),(t-$(($STARTIN)))/$(($FADEIN)),if(lt(t,$(($SHOWLEN))),1,if(lt(t,$(($STOPAT))),($(($FADEOUT))-(t-$(($SHOWLEN))))/$(($FADEOUT)),0))))'" intro.mp4
+```
+
+#### Fading in a Logo
+
+Here's a [relevant answer](https://stackoverflow.com/questions/50515822/ffmpeg-overlay-image-with-fade-in-and-fade-out) from Stack Overflow:
+
+```bash
+# Works, no fading
+ffmpeg -i intro_bg.mp4 -i CASA_logo.png -filter_complex "[0:v][1:v] overlay=W-w:H-h" -pix_fmt yuv420p intro.mp4
+
+# Works, with fade-in
+ffmpeg -i intro_bg.mp4 -loop 1 -i CASA_logo.png -filter_complex "[1]fade=in:st=0:d=1:alpha=1[logo]; [0][logo]overlay=W-w:H-h:shortest=1" -c:v libx264 intro.mp4
+
+# Works, with fade-in and fade-out
+ffmpeg -i intro_bg.mp4 -loop 1 -i CASA_logo.png -filter_complex "[1:v]fade=in:st=0.25:d=2:alpha=1,fade=out:st=4:d=1:alpha=1 [logo]; [0:v][logo] overlay=W-w:H-h:shortest=1" -c:v libx264 -pix_fmt yuv420p intro.mp4
+
+# Works, with fade-in and fade-out 
+# and correct positioning (horizontally-centred 
+# and 4/5ths of way down)
+ffmpeg -i intro_bg.mp4 -loop 1 -i CASA_logo.png -filter_complex "[1:v]fade=in:st=0.25:d=2:alpha=1,fade=out:st=4:d=1:alpha=1 [logo]; [0:v][logo] overlay=x=main_w/2-overlay_w/2:y=main_h*4/5-overlay_h/2:shortest=1" -c:v libx264 -pix_fmt yuv420p intro.mp4
+```
+
+Integrating that with the above:
+
+```bash
+export TEXT="CASA"
+export STARTIN=0.25
+export FADEIN=1.5
+export FADEOUT=0.75
+export SHOWLEN=3+$STARTIN+$FADEIN
+export STOPAT=$SHOWLEN+$FADEOUT
+ffmpeg -i intro_bg.mp4 -loop 1 -i CASA_logo.png -filter_complex " [1:v]fade=in:st=$(($STARTIN)):d=$(($FADEIN)):alpha=1,fade=out:st=$(($SHOWLEN)):d=$(($FADEOUT)):alpha=1[logo]; \
+  [0][logo] overlay=x=main_w/2-overlay_w/2:y=main_h*4/5-overlay_h/2:shortest=1, \
+  drawtext=font='Amethyst':text='$TEXT':fontcolor=black:fontsize=64:\
+  x=(w-text_w)/2:y=(h-text_h)/2:\
+  alpha='if(lt(t,$(($STARTIN))),0,if(lt(t,$(($STARTIN+$FADEIN))),(t-$(($STARTIN)))/$(($FADEIN)),if(lt(t,$(($SHOWLEN))),1,if(lt(t,$(($STOPAT))),($(($FADEOUT))-(t-$(($SHOWLEN))))/$(($FADEOUT)),0))))'" -c:v libx264 -pix_fmt yuv420p  intro.mp4
+```
+
+### Finalising the Intro
+
+By default we're using [Barlow](https://fonts.google.com/specimen/Barlow/) for the title of the video since that's what we use in Quarto. And note that here we've managed to set up the background colour on the fly so now there's no need for `intro_bg.mp4`:
+
+```bash
+export YEARTEXT="2023/24"
+export COURSETEXT1="Foundations of"
+export COURSETEXT2="Spatial Data Science"
+export FONT="Barlow"
+export FONTCOLOR="4f3d57"
+export STARTIN=0.15
+export FADEIN=0.6
+export FADEOUT=0.6
+export SHOWLEN=0.75+$STARTIN+$FADEIN
+export STOPAT=$SHOWLEN+$FADEOUT
+export INTROLEN=$STOPAT+0.05
+export FRAMERATE=30
+export FRAMESIZE="1280x720"
+
+ffmpeg -loop 1 -i CASA_logo.png -t $(($STOPAT)) -filter_complex "\
+  color=white:s=$FRAMESIZE [bg]; \
+  [0:v]fade=in:st=$(($STARTIN)):d=$(($FADEIN)):alpha=1,  fade=out:st=$(($SHOWLEN)):d=$(($FADEOUT)):alpha=1 [logo]; \
+  [bg][logo] overlay=x=main_w/2-overlay_w/2:y=main_h/2+overlay_h*0.125:shortest=1, \
+  drawtext=font='$FONT':text='$YEARTEXT':fontcolor=$FONTCOLOR:fontsize=24:x=(w-text_w)/2:y=(h-text_h)/2:alpha='if(lt(t,$(($STARTIN))),0,if(lt(t,$(($STARTIN+$FADEIN))),(t-$(($STARTIN)))/$(($FADEIN)),if(lt(t,$(($SHOWLEN))),1,if(lt(t,$(($STOPAT))),($(($FADEOUT))-(t-$(($SHOWLEN))))/$(($FADEOUT)),0))))', \
+  drawtext=font='$FONT':text='$COURSETEXT1':fontcolor=$FONTCOLOR:fontsize=48:x=(w-text_w)/2:y=(h/3-text_h/1.5):alpha='if(lt(t,$(($STARTIN))),0,if(lt(t,$(($STARTIN+$FADEIN))),(t-$(($STARTIN)))/$(($FADEIN)),if(lt(t,$(($SHOWLEN))),1,if(lt(t,$(($STOPAT))),($(($FADEOUT))-(t-$(($SHOWLEN))))/$(($FADEOUT)),0))))', \
+  drawtext=font='$FONT':text='$COURSETEXT2':fontcolor=$FONTCOLOR:fontsize=48:x=(w-text_w)/2:y=(h/3+text_h/1.5):alpha='if(lt(t,$(($STARTIN))),0,if(lt(t,$(($STARTIN+$FADEIN))),(t-$(($STARTIN)))/$(($FADEIN)),if(lt(t,$(($SHOWLEN))),1,if(lt(t,$(($STOPAT))),($(($FADEOUT))-(t-$(($SHOWLEN))))/$(($FADEOUT)),0))))'" \
+  -c:v libx264 -pix_fmt yuv420p -tune stillimage intro.mp4
+```
+
+### Generating the Movie
+
 For my particular application there is a useful example of generating a _very_ high-quality output (i.e. very large file) from static input images on [StackOverflow](https://stackoverflow.com/a/73073276/4041902); however, note that the output isn't widely compatible either so it's more about using this is a framework for thinking about the parameters and options.
 
 Here is the Stack Overflow code that _works_:
@@ -40,11 +156,7 @@ This code appears to generate something that is Mac-compatible from a PNG file:
 ffmpeg -r 0.01 -loop 1 -i image.jpg -i audio.mp3 -c:v libx264 -tune stillimage -preset  ultrafast -ss 00:00:00 -t 00:00:27   -c:a aac  -b:a 96k -pix_fmt yuv420p  -shortest out.mp4 -y
 ```
 
-### Adding Text/Image Overlays
-
-To add a copyright/datestamp at the start and/or end [this StackOverflow thread](https://stackoverflow.com/questions/17623676/text-on-video-ffmpeg) contains a lot of useful information.
-
-First, to create a video file from a static PNG:
+This seems to be what I need:
 
 ```bash
 ffmpeg -r 30 -t 25 -loop 1 \
@@ -54,30 +166,7 @@ ffmpeg -r 30 -t 25 -loop 1 \
 	out1.mp4
 ```
 
-Now add some text in the centre of the Fram:
-
-```bash
-ffplay -vf "drawtext=font='Amethyst':text='Stack Overflow':fontcolor=white:fontsize=44:box=1:boxcolor=black@0.5:boxborderw=5:x=(w-text_w)/2:y=(h-text_h)/2" out1.mp4
-```
-
-But you *cannot* render the PNG to a movie file *and* add the text at the same time. So this doesn't work:
-
-```bash
-ffmpeg -r 10 -t 30 -loop 1 \
-  -i 1.1-Getting_Oriented_19_1280x720.png \
-  -vf "drawtext=text='Jon Reades':font='Times New Roman':x=(main_w-text_w-10):y=(main_h-text_h-10):fontsize=32:fontcolor=black:box=1:boxcolor=red@0.5:boxborderw=5" \ 
-	-tune stillimage -preset ultrafast out1.mp4
-```
-
-This next one positions the text bottom-right:
-
-```bash
-ffplay -vf "drawtext=text='Jon Reades':font='Times New Roman':x=(main_w-text_w-10):y=(main_h-text_h-10):fontsize=62:fontcolor=black:box=1:boxcolor=red@0.5:boxborderw=5" out1.mp4
-```
-
-
-
-### Working out the ffmpeg code
+#### Working out the ffmpeg code
 
 The below seems to generate an mp4 file with audio track that sounds like what I’d expect. The length seems to be automatically set to the length of the audio track (so `-t 75` is ignored, which is probably for the best). So what we get here is a merge of the two files into one video file. 
 
@@ -137,6 +226,36 @@ ffmpeg -r 30 \
 ```
 
 But the only examples I can find involve a [transparent overlay](https://stackoverflow.com/questions/35251122/using-ffmpeg-to-add-overlay-with-opacity). Also this [example](https://stackoverflow.com/questions/55455922/ffmpeg-using-video-filter-with-complex-filter).
+
+```bash
+ffmpeg -r 30 \
+  -loop 1 -i 2.3-Python_the_Basics_1_1280x720.png \
+  -i 2.3-1.m4a \
+  -filter_complex "[0:v] [1:a] concat=n=2:v=1:a=1 [v] [a1]" \
+  -map "[v]" -map "[a1]" \
+  -c:v libx264 -tune stillimage -pix_fmt yuv420p \
+  -c:a aac -b:a 64k \
+  output.mp4
+```
+
+
+
+```bash
+ffmpeg -r 30 \
+  -loop 1 -i 2.3-Python_the_Basics_1_1280x720.png \
+  -loop 1 -i 2.3-Python_the_Basics_2_1280x720.png \
+  -loop 1 -i 2.3-Python_the_Basics_3_1280x720.png \
+  -i 2.3-1.m4a \
+  -i 2.3-2.m4a \
+  -i 2.3-3.m4a \
+  -filter_complex "[0:v] [1:v] [2:v] [0:a] [1:a] [2:a] concat=n=3:v=1:a=1 [vvv] [aaa]" \
+  -map "[vvv]" -map "[aaa]" \
+  -c:v libx264 -tune stillimage -pix_fmt yuv420p \
+  -c:a aac -b:a 64k \
+  out1.mp4
+```
+
+
 
 ### Adding Filters
 
