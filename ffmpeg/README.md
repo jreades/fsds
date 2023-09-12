@@ -1,5 +1,26 @@
 # ffmpeg and Rendering Pre-Recorded Lectures
 
+## Exporting from Quarto
+
+To create the outputs we need to export the Quarto presentations to PNG files. This can be done using [decktape](https://github.com/astefanutti/decktape), which is a node (hisssss!) application. To install:
+
+```bash
+npm install -g decktape
+decktape
+```
+
+Then to extract:
+
+```bash
+export LECTURE='1.1-Getting_Oriented'
+mkdir $LECTURE
+decktape --screenshots --screenshots-directory $LECTURE --screenshots-size 1280x720 --screenshots-format png --headless true -p 500   http://localhost:4200/lectures/$LECTURE.html $LECTURE.pdf
+```
+
+## Using ffmpeg
+
+### Orientation
+
 [Programming Historian](https://programminghistorian.org/) has a useful [Introduction to ffmpeg](https://programminghistorian.org/en/lessons/introduction-to-ffmpeg#basic-structure-and-syntax-of-ffmpeg-commands). It doesn't cover this use case but it is nonetheless a nice orientation to the basic structure of ffmpeg commands. See also: [Demystifying ffmpeg](https://github.com/privatezero/NDSR/blob/master/Demystifying_FFmpeg_Slides.pdf), the [ffmpeg Presentation](https://docs.google.com/presentation/d/1NuusF948E6-gNTN04Lj0YHcVV9-30PTvkh_7mqyPPv4/present?ueb=true&slide=id.g2974defaca_0_231) and [ffmpeg Wiki](https://trac.ffmpeg.org/wiki/WikiStart) alongside [the documentation](https://www.ffmpeg.org/ffmpeg.html). 
 
 For my particular application there is a useful example of generating a _very_ high-quality output (i.e. very large file) from static input images on [StackOverflow](https://stackoverflow.com/a/73073276/4041902); however, note that the output isn't widely compatible either so it's more about using this is a framework for thinking about the parameters and options.
@@ -19,7 +40,44 @@ This code appears to generate something that is Mac-compatible from a PNG file:
 ffmpeg -r 0.01 -loop 1 -i image.jpg -i audio.mp3 -c:v libx264 -tune stillimage -preset  ultrafast -ss 00:00:00 -t 00:00:27   -c:a aac  -b:a 96k -pix_fmt yuv420p  -shortest out.mp4 -y
 ```
 
-### Working FFMPEG code
+### Adding Text/Image Overlays
+
+To add a copyright/datestamp at the start and/or end [this StackOverflow thread](https://stackoverflow.com/questions/17623676/text-on-video-ffmpeg) contains a lot of useful information.
+
+First, to create a video file from a static PNG:
+
+```bash
+ffmpeg -r 30 -t 25 -loop 1 \
+  -i 1.1-Getting_Oriented_19_1280x720.png \
+	-c:v libx264 -tune stillimage -preset ultrafast -pix_fmt yuv420p \
+	-b:a 64k \
+	out1.mp4
+```
+
+Now add some text in the centre of the Fram:
+
+```bash
+ffplay -vf "drawtext=font='Amethyst':text='Stack Overflow':fontcolor=white:fontsize=44:box=1:boxcolor=black@0.5:boxborderw=5:x=(w-text_w)/2:y=(h-text_h)/2" out1.mp4
+```
+
+But you *cannot* render the PNG to a movie file *and* add the text at the same time. So this doesn't work:
+
+```bash
+ffmpeg -r 10 -t 30 -loop 1 \
+  -i 1.1-Getting_Oriented_19_1280x720.png \
+  -vf "drawtext=text='Jon Reades':font='Times New Roman':x=(main_w-text_w-10):y=(main_h-text_h-10):fontsize=32:fontcolor=black:box=1:boxcolor=red@0.5:boxborderw=5" \ 
+	-tune stillimage -preset ultrafast out1.mp4
+```
+
+This next one positions the text bottom-right:
+
+```bash
+ffplay -vf "drawtext=text='Jon Reades':font='Times New Roman':x=(main_w-text_w-10):y=(main_h-text_h-10):fontsize=62:fontcolor=black:box=1:boxcolor=red@0.5:boxborderw=5" out1.mp4
+```
+
+
+
+### Working out the ffmpeg code
 
 The below seems to generate an mp4 file with audio track that sounds like what I’d expect. The length seems to be automatically set to the length of the audio track (so `-t 75` is ignored, which is probably for the best). So what we get here is a merge of the two files into one video file. 
 
@@ -40,7 +98,7 @@ file 'out3.mp4'
 ffmpeg -f concat -safe 0 -i list.txt -c copy out4.mp4
 ```
 
-This looks promising: [Documentation for concat](https://ffmpeg.org/ffmpeg-filters.html#toc-Examples-153):
+This [documentation for concat](https://ffmpeg.org/ffmpeg-filters.html#toc-Examples-153) looks promising:
 
 ```bash
 ffmpeg -i opening.mkv -i episode.mkv -i ending.mkv -filter_complex \
