@@ -141,104 +141,62 @@ ffmpeg -loop 1 -i CASA_logo.png -t $(($STOPAT)) -filter_complex "\
 
 For my particular application there is a useful example of generating a _very_ high-quality output (i.e. very large file) from static input images on [StackOverflow](https://stackoverflow.com/a/73073276/4041902); however, note that the output isn't widely compatible either so it's more about using this is a framework for thinking about the parameters and options.
 
-Here is the Stack Overflow code that _works_:
-```bash
-ffmpeg -framerate 30 -i input.jpg -t 15 \
-    -c:v libx265 -x265-params lossless=1 \
-    -pix_fmt yuv420p -vf "scale=3840:2160,loop=-1:1" \
-    -movflags faststart \
-    out.mp4
-```
+#### Base Case (1 Output)
 
-This code appears to generate something that is Mac-compatible from a PNG file:
-
-```bash
-ffmpeg -r 0.01 -loop 1 -i image.jpg -i audio.mp3 -c:v libx264 -tune stillimage -preset  ultrafast -ss 00:00:00 -t 00:00:27   -c:a aac  -b:a 96k -pix_fmt yuv420p  -shortest out.mp4 -y
-```
-
-This seems to be what I need:
-
-```bash
-ffmpeg -r 30 -t 25 -loop 1 \
-  -i 1.1-Getting_Oriented_19_1280x720.png \
-	-c:v libx264 -tune stillimage -preset ultrafast -pix_fmt yuv420p \
-	-b:a 64k \
-	out1.mp4
-```
-
-#### Working out the ffmpeg code
-
-The below seems to generate an mp4 file with audio track that sounds like what I’d expect. The length seems to be automatically set to the length of the audio track (so `-t 75` is ignored, which is probably for the best). So what we get here is a merge of the two files into one video file. 
-
-```bash
-ffmpeg -r 30 -t 75 -loop 1 \
-  -i 1.1-Getting_Oriented_19_1280x720.png -i test.m4a \
-	-c:v libx264 -tune stillimage -preset ultrafast -pix_fmt yuv420p \
-	-c:a aac -b:a 64k \
-	out1.mp4
-```
-
-We need to repeat this for *every* slide in the deck and *then* merge the videos together into one long video. This approach does *not* re-encode the data so it’s probably faster and less prone to creating artefacts; however it also generates errors and seems to leave a blank spot at the start.
-
-```bash
-$ cat list.txt
-file 'out2.mp4'
-file 'out3.mp4'
-ffmpeg -f concat -safe 0 -i list.txt -c copy out4.mp4
-```
-
-This [documentation for concat](https://ffmpeg.org/ffmpeg-filters.html#toc-Examples-153) looks promising:
-
-```bash
-ffmpeg -i opening.mkv -i episode.mkv -i ending.mkv -filter_complex \
-  '[0:0] [0:1] [0:2] [1:0] [1:1] [1:2] [2:0] [2:1] [2:2]
-   concat=n=3:v=1:a=2 [v] [a1] [a2]' \
-  -map '[v]' -map '[a1]' -map '[a2]' output.mkv
-```
-
-And:
-
-```bash
-movie=part1.mp4, scale=512:288 [v1] ; amovie=part1.mp4 [a1] ;
-movie=part2.mp4, scale=512:288 [v2] ; amovie=part2.mp4 [a2] ;
-[v1] [v2] concat [outv] ; [a1] [a2] concat=v=0:a=1 [outa]
-```
-
-*This* seems to work:
-
-```bash
-ffmpeg -i out2.mp4 -i out3.mp4 \
--filter_complex "[0:v] [0:a] [1:v] [1:a] concat=n=2:v=1:a=1 [vv] [aa]" \
--map "[vv]" -map "[aa]" out5.mp4
-```
-
-This is headed in the right direction… I think:
-
-```bash 
-ffmpeg -r 30 \
-  -i 1.1-Getting_Oriented_19_1280x720.png -i 1.1-Getting_Oriented_18_1280x720.png \
-  -i test.m4a -i test2.m4a \
-  -filter_complex "[0:v] [1:v] [0:a] [1:a] concat=n=2:v=1:a=1 [vv] [aa]" \
-  -map "[vv]" -map "[aa]" \
-  -c:v libx264 -tune stillimage -preset ultrafast -pix_fmt yuv420p \
-  -c:a aac -b:a 64k \
-  out1.mp4
-```
-
-But the only examples I can find involve a [transparent overlay](https://stackoverflow.com/questions/35251122/using-ffmpeg-to-add-overlay-with-opacity). Also this [example](https://stackoverflow.com/questions/55455922/ffmpeg-using-video-filter-with-complex-filter).
+This assembles separate audio and video tracks into one output:
 
 ```bash
 ffmpeg -r 30 \
   -loop 1 -i 2.3-Python_the_Basics_1_1280x720.png \
   -i 2.3-1.m4a \
-  -filter_complex "[0:v] [1:a] concat=n=2:v=1:a=1 [v] [a1]" \
-  -map "[v]" -map "[a1]" \
-  -c:v libx264 -tune stillimage -pix_fmt yuv420p \
-  -c:a aac -b:a 64k \
-  output.mp4
+	-c:v libx264 -tune stillimage -shortest -pix_fmt yuv420p \
+	-b:a 64k \
+	out1.mp4
+
+ffmpeg -r 30 \
+  -loop 1 -i 2.3-Python_the_Basics_2_1280x720.png \
+  -i 2.3-2.m4a \
+	-c:v libx264 -tune stillimage -shortest -pix_fmt yuv420p \
+	-b:a 64k \
+	out2.mp4
+
+ffmpeg -r 30 \
+  -loop 1 -i 2.3-Python_the_Basics_3_1280x720.png \
+  -i 2.3-3.m4a \
+	-c:v libx264 -tune stillimage -shortest -pix_fmt yuv420p \
+	-b:a 64k \
+	out3.mp4
 ```
 
+#### Combining Multiple Outputs
 
+We need to repeat the above a+v merge for *every* slide in the deck and *then* merge all of the output videos together into one long video. This approach does *not* re-encode the data so it’s probably faster and less prone to creating artefacts; however it also generates errors and seems to leave a black frame at the start.
+
+```bash
+$ cat list.txt
+file 'out1.mp4'
+file 'out2.mp4'
+file 'out3.mp4'
+ffmpeg -f concat -safe 0 -i list.txt -c copy out4.mp4
+```
+
+The black frame at the start can be trimmed as follows:
+
+```bash
+ffmpeg -ss 00:00:01.250 -i out4.mp4 -t 10:00:00 -c:v copy -c:a copy out5.mp4
+```
+
+And it looks like I could do the same [at the end](https://shotstack.io/learn/use-ffmpeg-to-trim-video/) using negative numbers.
+
+From [Stack Overflow](https://stackoverflow.com/a/53857401/1600439): 
+
+```bash
+ffmpeg -i input-a.mp4 -i input-a.mp3 -i input-b.mp4 -i input-b.mp3 -filter_complex "[0:v][1:a][2:v][3:a]concat=n=2:v=1:a=1[v][a]" -map "[v]" -map "[a]" output.mp4
+```
+
+But see [this example](https://trac.ffmpeg.org/wiki/Concatenate) (which makes a bit more sense).
+
+This code runs, but it never completes because the loops never end on the PNG files:
 
 ```bash
 ffmpeg -r 30 \
@@ -248,66 +206,28 @@ ffmpeg -r 30 \
   -i 2.3-1.m4a \
   -i 2.3-2.m4a \
   -i 2.3-3.m4a \
-  -filter_complex "[0:v] [1:v] [2:v] [0:a] [1:a] [2:a] concat=n=3:v=1:a=1 [vvv] [aaa]" \
+  -filter_complex "[0:v][3:a] [1:v][4:a] [2:v][5:a] concat=n=3:v=1:a=1 [vvv][aaa]" \
   -map "[vvv]" -map "[aaa]" \
   -c:v libx264 -tune stillimage -pix_fmt yuv420p \
   -c:a aac -b:a 64k \
-  out1.mp4
+  output.mp4
 ```
 
-
-
-### Adding Filters
-
-I think I’ll need to this later: [see docs](https://trac.ffmpeg.org/wiki/FilteringGuide).
-
-Ooooh, and a [cheatsheet](https://gist.github.com/martinruenz/537b6b2d3b1f818d500099dde0a38c5f)
-
-#### New Approach
-
-This approach will join short video segments created from PNG files with audio files not merged. However, there seems to be a keyframe or other issue in the later video – so you can’t scan forward, although it does seem to view properly if you don’t fast forward.
+I *could* address this by setting `-t` on every PNG file. For that to work I'd need something like this to get the duration of the m4a file in seconds:
 
 ```bash
-ffmpeg -r 30 -t 5 -loop 1 \
-  -i 1.1-Getting_Oriented_19_1280x720.png \
-  -c:v libx264 -tune stillimage -preset ultrafast -pix_fmt yuv420p \
-  slide1.mp4
-ffmpeg -r 30 -t 5 -loop 1 \
-  -i 1.1-Getting_Oriented_20_1280x720.png \
-  -c:v libx264 -tune stillimage -preset ultrafast -pix_fmt yuv420p \
-  slide2.mp4
-ffmpeg \
-  -i slide1.mp4 -i slide2.mp4 \
-  -i test.m4a -i test2.m4a \
-  -filter_complex "[0:v:0][2:a:0][1:v:0][3:a:0] concat=n=2:v=1:a=1[outv][outa]" \
-  -map "[outv]" -map "[outa]" \
-  -c:v libx264 -tune stillimage -preset ultrafast -pix_fmt yuv420p \
-  -c:a aac -b:a 64k \
-  out6.mp4
+ffprobe -sexagesimal -show_entries format=duration 2.3-1.m4a
 ```
 
-#### Also Works
+This produces:
 
-This works well to and may be the easiest: it’s a straightforward concatenation.
-
-```bash
-ffmpeg -r 30 -loop 1 \
-  -i 1.1-Getting_Oriented_19_1280x720.png -i test.m4a \
-	-c:v libx264 -tune stillimage -preset ultrafast -pix_fmt yuv420p \
-	-c:a aac -b:a 64k \
-	out1.mp4
-ffmpeg -r 30 -loop 1 \
-  -i 1.1-Getting_Oriented_20_1280x720.png -i test2.m4a \
-	-c:v libx264 -tune stillimage -preset ultrafast -pix_fmt yuv420p \
-	-c:a aac -b:a 64k \
-	out2.mp4
-$ cat list.txt
-file 'out2.mp4'
-file 'out3.mp4'
-ffmpeg -f concat -safe 0 -i list.txt -c copy out4.mp4
+```
+[FORMAT]
+duration=0:00:41.937000
+[/FORMAT]
 ```
 
-How about:
+### Previous Approaches
 
 ```bash
 ffmpeg \
@@ -321,9 +241,13 @@ ffmpeg \
   out7.mp4
 ```
 
-**Something** happening here and in other ones where I try to merge PNG images into one video: at about 3:39 the preview goes black and if you fast forward or rewind in that area you get no picture.
+**Something** happening here and in other ones where I try to merge PNG images into one video: the preview goes black and if you fast forward or rewind in that area you get no picture. I think this problem disappears if the `-t` option is longer than the audio file for input>0. But then you get video with no audio past the point where the recording stopped. So you kind of need to set the time to the *exact* length of the related audio file.
 
-*Failing *OK**! So this problem disappears if the `-t` option is longer than the audio file for input>0. But then you get video with no audio past the point where the recording stopped. So you kind of need to set the time to the length of the related audio file.
+### Adding Filters
+
+I think I’ll need to this later: [see docs](https://trac.ffmpeg.org/wiki/FilteringGuide).
+
+Ooooh, and a [cheatsheet](https://gist.github.com/martinruenz/537b6b2d3b1f818d500099dde0a38c5f)
 
 Consider also adding filters on audio and video channeles:
 
