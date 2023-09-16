@@ -196,6 +196,8 @@ ffmpeg -i input-a.mp4 -i input-a.mp3 -i input-b.mp4 -i input-b.mp3 -filter_compl
 
 But see [this example](https://trac.ffmpeg.org/wiki/Concatenate) (which makes a bit more sense).
 
+#### The Cleaner Approach
+
 This code runs, but it never completes because the loops never end on the PNG files:
 
 ```bash
