@@ -211,20 +211,79 @@ Also have to consider trade-offs around mapping the full column names on to some
 
 :::
 
-## Things That Can Go Wrong...
+## Things That Can Go Wrong... {.smaller}
 
 A selection of *real* issues I've seen in my life:
 
-1. Truncation: server ran out of diskspace or memory, or a file transfer was interrupted.
-2. Translation: headers don't line up with data.
-3. Swapping: column order differs from spec.
-4. Incompleteness: range of real values differs from spec.
-5. Corruption: field delimitters included in field values.
-6. Errors: data entry errors resulted in incorrect values or the spec is downright *wrong*.
-7. Irrelevance: fields that simply aren't relevant to your analysis.
+1. **Truncation**: server ran out of diskspace or memory, or a file transfer was interrupted.
+2. **Translation**: headers don't line up with data.
+3. **Swapping**: column order differs from spec.
+4. **Incompleteness**: range of real values differs from spec.
+5. **Corruption**: field delimitters included in field values.
+6. **Errors**: data entry errors resulted in incorrect values or the spec is downright *wrong*.
+7. **Irrelevance**: fields that simply aren't relevant to your analysis.
 
 These will generally require you to engage with columns and rows (via sampling) on an *individual* level.
 
+# > Why We Need an Arrow, a Duck, and a Parquet
+
+::: {.notes}
+
+These three interconnected technologies (and there are others too!) have changed my life. Sad as that sounds, it has reduced the time need to load and query large data sets from minutes to milliseconds. And it has solved many of the errors that I just listed above!
+
+:::
+
+## Arrow and Parquet
+
+- **Arrow** is an *in-memory* columnar format for data. Data is stored in a structured way *in RAM* making it blazingly fast for operations.
+- **Parquet** is a highly-compressed columnar *file* format for data. Data is stored in a structured way *on your hard drive*.
+- **Feather** is a raw storage format for Arrow.
+
+TL;DR: for most applications Parquet will give nice, small files on disk and the benefits of columnar file storage; for computationally intensive applications where disk space and interoperability with other systems isn't an issue then Feather might work.
+
+## What About the Duck?
+
+:::: {.columns}
+
+::: {.column width="30%"}
+
+![](./img/DuckDB.png)
+
+:::
+
+::: {.column width="69%"}
+
+- Serverless SQL queries against Parquet files
+- Queries returned as Pandas data frames
+- Select and filter *before* loading
+- Fast conversion between CSV and Parquet via Arrow
+
+:::
+
+::::
+
+## For (Later) Reference {.smaller}
+
+```python
+# Notice the engine and dtype_backend options
+df = pandas.read_csv(fname, engine='pyarrow', 
+                dtype_backend='pyarrow')
+
+# And for parquet files
+df = pandas.read_parquet(fname, columns=[...])
+
+# And for DuckDB we can actually joing two
+# files before they even get to Python!
+q = f'''
+  SELECT * FROM 
+    read_parquet('epc-ppd-2022-*.parquet') as ppd, 
+    read_parquet('epc-ldd-2022-*.parquet') as ldd,
+  WHERE ppd.uid=ldd.uid
+'''
+df = duckdb.query(q).df()
+```
+
+P.S. There's also a command-line tool for DuckDB so you don't even need Python.
 
 ## Resources {.smaller}
 
@@ -237,5 +296,7 @@ These will generally require you to engage with columns and rows (via sampling) 
 - [Text vs. binary mode](https://www.linkedin.com/learning/python-essential-training-2/text-vs-binary-mode)
 - [Text files](https://www.linkedin.com/learning/python-essential-training-2/text-files)
 - [petl](https://petl.readthedocs.io/en/stable/)
+- [pandas 2.0 and the Arrow revolution (Part 1)](https://datapythonista.me/blog/pandas-20-and-the-arrow-revolution-part-i)
+- [DuckDB Documentation](https://duckdb.org/docs/)
 
 # Thank you!

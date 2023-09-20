@@ -1,0 +1,92 @@
+---
+bibliography: bio.bib
+csl: harvard-cite-them-right.csl
+title: Group Name's Group Project
+execute:
+  echo: false
+jupyter: python3
+format: 
+  pdf:
+    include-in-header:
+      text: |
+        \addtokomafont{disposition}{\rmfamily}
+    #documentclass: report
+    # If using Quarto in Docker, available fonts are: `fc-list : family | sort | uniq`
+    # If using Quarto on local machine then you can usually pick them from the list of installed fonts
+    mainfont: "Spectral" # https://fonts.google.com/specimen/Spectral
+    sansfont: "Roboto"   # https://fonts.google.com/specimen/Roboto?category=Sans+Serif
+    monofont: "Inconsolata" # https://fonts.google.com/specimen/Inconsolata
+    papersize: a4
+    geometry:
+      - top=25mm
+      - left=40mm
+      - right=30mm
+      - bottom=25mm
+      - heightrounded
+    toc: false
+    number-sections: false
+    colorlinks: true
+    highlight-style: github
+---
+
+## Declaration of Authorship {.unnumbered .unlisted}
+
+We, [insert your group's names], confirm that the work presented in this assessment is our own. Where information has been derived from other sources, we confirm that this has been indicated in the work. Where a Large Language Model such as ChatGPT has been used we confirm that we have made its contribution to the final submission clear.
+
+Date:
+
+Student Numbers: 
+
+## Brief Group Reflection
+
+| What Went Well | What Was Challenging |
+| -------------- | -------------------- |
+| A              | B                    |
+| C              | D                    |
+
+## Priorities for Feedback
+
+Are there any areas on which you would appreciate more detailed feedback if we're able to offer it?
+
+{{< pagebreak >}}
+
+# Response to Questions
+
+```{python}
+import os
+import pandas as pd
+```
+
+```{python}
+host = 'https://orca.casa.ucl.ac.uk'
+path = '~jreades/data'
+file = '2022-09-10-listings.csv.gz'
+url  = f'{host}/{path}/{file}'
+
+if os.path.exists(file):
+  df = pd.read_csv(file, compression='gzip', low_memory=False)
+else: 
+  df = pd.read_csv(url, compression='gzip', low_memory=False)
+  df.to_csv(file)
+```
+
+## 1. Who collected the data?
+
+An inline citation: As discussed on @insideairbnb, there are many...
+
+A parenthetical citation: There are many ways to research Airbnb [see, for example, @insideairbnb]... 
+
+## 2. Why did they collect it?
+
+```{python}
+print(f"Data frame is {df.shape[0]:,} x {df.shape[1]:,}")
+```
+
+```{python}
+ax = df.host_listings_count.plot.hist(bins=50);
+ax.set_xlim([0,500]);
+```
+
+
+
+## References
