@@ -57,7 +57,7 @@ ffplay -vf "drawtext=text='Jon Reades':font='Times New Roman':x=(main_w-text_w-1
 Now let's bring it in between 2 and 5 seconds:
 
 ```bash
-ffplay -vf "drawtext=font='Amethyst':text='Stack Overflow':fontcolor=white:fontsize=44:box=1:boxcolor=black@0.2:boxborderw=5:x=(w-text_w)/2:y=(h-text_h)/2:enable='between(t,2,5)" out1.mp4
+ffplay -vf "drawtext=font='Amethyst':text='Stack Overflow':fontcolor=white:fontsize=44:box=1:boxcolor=black@0.2:boxborderw=5:x=(w-text_w)/2:y=(h-text_h)/2:enable='between(t,2,5)" intro_bg.mp4
 ```
 
 Fading text in is much more complex, to the point [where there is a web site to help](http://ffmpeg.shanewhite.co/):
@@ -69,7 +69,7 @@ export FADEIN=1.5
 export FADEOUT=0.75
 export SHOWLEN=3+$STARTIN+$FADEIN
 export STOPAT=$SHOWLEN+$FADEOUT
-ffmpeg -i intro_bg.mp4 -pix_fmt=yuv420p -filter_complex "[0:v]drawtext=font='Amethyst':text='$TEXT':fontcolor=black:fontsize=64:x=(w-text_w)/2:y=(h-text_h)/2:alpha='if(lt(t,$(($STARTIN))),0,if(lt(t,$(($STARTIN+$FADEIN))),(t-$(($STARTIN)))/$(($FADEIN)),if(lt(t,$(($SHOWLEN))),1,if(lt(t,$(($STOPAT))),($(($FADEOUT))-(t-$(($SHOWLEN))))/$(($FADEOUT)),0))))'" intro.mp4
+ffmpeg -i intro_bg.mp4 -filter_complex "[0:v]drawtext=font='Amethyst':text='$TEXT':fontcolor=black:fontsize=64:x=(w-text_w)/2:y=(h-text_h)/2:alpha='if(lt(t,$(($STARTIN))),0,if(lt(t,$(($STARTIN+$FADEIN))),(t-$(($STARTIN)))/$(($FADEIN)),if(lt(t,$(($SHOWLEN))),1,if(lt(t,$(($STOPAT))),($(($FADEOUT))-(t-$(($SHOWLEN))))/$(($FADEOUT)),0))))'" out.mp4 # -pix_fmt=yuv420p 
 ```
 
 #### Fading in a Logo
