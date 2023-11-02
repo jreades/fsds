@@ -8,10 +8,52 @@ Unless you are presenting (and citing) a figure from another source as part of y
 
 ## Word Counts
 
-Each figure or table in the *Policy Briefing* **counts for 150 words**, and so students should give careful consideration to the trade-offs involved: more figures may serve to illustrate your points but leave you with much less space to synthesise and present and argument.
+Each figure or table **counts for 150 words**, and so students should give careful consideration to the trade-offs involved: more figures may serve to illustrate your points but leave you with much less space to synthesise and present and argument.
 
 ## A/B Figures
 
 A figure **with A/B/C elements** will count as one figure, but only where the parts parts are conceptually related (e.g. before/after; non-spatial/spatial distribution; type 1 and type 2; etc.). The output from PySAL's LISA analysis library, for instance, is pre-formatted as 3 figures. Seaborn's `jointplot` will only be considered to be *one* plot even though it is *technically* three because the distribution plots in the margin are related to the scatter plot that is the focus of the plot.
 
 **In principle**, a briefing with 16 figures would have no space for any text or interpretation; this choice is deliberate because its purpose is to focus your attention on which charts and tables *best*-communicate your findings. **In practice**, using A/B/C figure layouts then you are looking at up to 48 separate figures before hitting the limit, though you would at this point be producing an infographic and not a briefing.
+
+## Referencing
+
+You will need to reference various documents as part of this submission. It is possible to write these 'by hand', but we will award higher reproducibility marks to submissions making use of BibTeX and Markdown referencing in Quarto. The Docker image that we have provided has Quarto pre-installed and this will simplify generation of the output because the Python kernel (which will execute your code) has all of the libraries you've been using available. 
+
+::: {.callout-tip}
+## Referencing in Quarto 
+
+If you want to make use of BibTeX to automate referencing You'll need [BibDesk](https://bibdesk.sourceforge.io) (Mac) or [JabRef](https://www.jabref.org) (Mac/Windows) or similar (Zotero shuould also work) to edit the BibTeX file (outside of Docker). You would ordinarily add/edit/remove works outside of Docker, but by placing your BibTeX file in the same folder as your Quarto document and putting all of that in Git/GitHub you will enable the built-in version to generate the references for you and ensure that your Quarto document can download the file when we run the QMD on our side.
+
+:::
+
+## The Template(s)
+
+To get you started, we've created a set of templates that you'll want to place together in your Git/GitHub repo:
+
+1. The template file (`.qmd`) that we have provided: [Group_Work.qmd](https://github.com/jreades/fsds/blob/master/assessments/Group_Work.qmd).
+2. The CSL file (`.csl`) that governs how references are done: [harvard-cite-them-right.csl](https://github.com/jreades/fsds/blob/master/assessments/harvard-cite-them-right.csl).
+3. The BibTeX file (`.bib`) that will contain any references you use: [bio.bib](https://github.com/jreades/fsds/blob/master/assessments/bio.bib) (you may also make use of [the one used for the module](https://github.com/jreades/fsds/blob/master/bib/Readings.bib) to simplify the creation/management of your bibliography)
+
+:::{.callout-note}
+## Really Look at the Template!
+
+You'll notice that the template specifies three fonts (`mainfont`, `monofont`, `sansfont`). These are installed in Docker, and I've added links in the template to show how you can download them for your own computer.
+
+You are welcome to change the fonts used and can see what's available in the existing Docker image by asking `matplotlib` or [using the Terminal](https://askubuntu.com/questions/552979/how-can-i-determine-which-fonts-are-installed-from-the-command-line-and-what-is)... which will help you to learn about font-management. 
+
+:::
+
+
+## Rendering
+
+These three files together will enable you to 'render' the [Quarto Markdown Document](https://github.com/jreades/fsds/blob/master/assessments/Group_Work.qmd) as a PDF for submission. To do this, ensure that all three files above are in the *same* folder (e.g. `~/git/fsds-group-project/`), in which case you'd see *something* like:
+
+```bash
+cd ~/< your local copy of the repo >
+ls . # Should show a .qmd file, a .csl file, and a .bib file
+quarto render Group_<simple_version_of_your_group_name>_Submission.qmd
+```
+
+This should render the PDF with a look something like [this example output](./Group_Work.pdf).
+

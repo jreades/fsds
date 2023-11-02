@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -299,6 +333,9 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#figures-tables" id="toc-figures-tables" class="nav-link active" data-scroll-target="#figures-tables">Figures &amp; Tables</a></li>
   <li><a href="#word-counts" id="toc-word-counts" class="nav-link" data-scroll-target="#word-counts">Word Counts</a></li>
   <li><a href="#ab-figures" id="toc-ab-figures" class="nav-link" data-scroll-target="#ab-figures">A/B Figures</a></li>
+  <li><a href="#referencing" id="toc-referencing" class="nav-link" data-scroll-target="#referencing">Referencing</a></li>
+  <li><a href="#the-templates" id="toc-the-templates" class="nav-link" data-scroll-target="#the-templates">The Template(s)</a></li>
+  <li><a href="#rendering" id="toc-rendering" class="nav-link" data-scroll-target="#rendering">Rendering</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/jreades/fsds/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -328,12 +365,60 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="word-counts" class="level2">
 <h2 class="anchored" data-anchor-id="word-counts">Word Counts</h2>
-<p>Each figure or table in the <em>Policy Briefing</em> <strong>counts for 150 words</strong>, and so students should give careful consideration to the trade-offs involved: more figures may serve to illustrate your points but leave you with much less space to synthesise and present and argument.</p>
+<p>Each figure or table <strong>counts for 150 words</strong>, and so students should give careful consideration to the trade-offs involved: more figures may serve to illustrate your points but leave you with much less space to synthesise and present and argument.</p>
 </section>
 <section id="ab-figures" class="level2">
 <h2 class="anchored" data-anchor-id="ab-figures">A/B Figures</h2>
 <p>A figure <strong>with A/B/C elements</strong> will count as one figure, but only where the parts parts are conceptually related (e.g.&nbsp;before/after; non-spatial/spatial distribution; type 1 and type 2; etc.). The output from PySAL’s LISA analysis library, for instance, is pre-formatted as 3 figures. Seaborn’s <code>jointplot</code> will only be considered to be <em>one</em> plot even though it is <em>technically</em> three because the distribution plots in the margin are related to the scatter plot that is the focus of the plot.</p>
 <p><strong>In principle</strong>, a briefing with 16 figures would have no space for any text or interpretation; this choice is deliberate because its purpose is to focus your attention on which charts and tables <em>best</em>-communicate your findings. <strong>In practice</strong>, using A/B/C figure layouts then you are looking at up to 48 separate figures before hitting the limit, though you would at this point be producing an infographic and not a briefing.</p>
+</section>
+<section id="referencing" class="level2">
+<h2 class="anchored" data-anchor-id="referencing">Referencing</h2>
+<p>You will need to reference various documents as part of this submission. It is possible to write these ‘by hand’, but we will award higher reproducibility marks to submissions making use of BibTeX and Markdown referencing in Quarto. The Docker image that we have provided has Quarto pre-installed and this will simplify generation of the output because the Python kernel (which will execute your code) has all of the libraries you’ve been using available.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Referencing in Quarto
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you want to make use of BibTeX to automate referencing You’ll need <a href="https://bibdesk.sourceforge.io">BibDesk</a> (Mac) or <a href="https://www.jabref.org">JabRef</a> (Mac/Windows) or similar (Zotero shuould also work) to edit the BibTeX file (outside of Docker). You would ordinarily add/edit/remove works outside of Docker, but by placing your BibTeX file in the same folder as your Quarto document and putting all of that in Git/GitHub you will enable the built-in version to generate the references for you and ensure that your Quarto document can download the file when we run the QMD on our side.</p>
+</div>
+</div>
+</section>
+<section id="the-templates" class="level2">
+<h2 class="anchored" data-anchor-id="the-templates">The Template(s)</h2>
+<p>To get you started, we’ve created a set of templates that you’ll want to place together in your Git/GitHub repo:</p>
+<ol type="1">
+<li>The template file (<code>.qmd</code>) that we have provided: <a href="https://github.com/jreades/fsds/blob/master/assessments/Group_Work.qmd">Group_Work.qmd</a>.</li>
+<li>The CSL file (<code>.csl</code>) that governs how references are done: <a href="https://github.com/jreades/fsds/blob/master/assessments/harvard-cite-them-right.csl">harvard-cite-them-right.csl</a>.</li>
+<li>The BibTeX file (<code>.bib</code>) that will contain any references you use: <a href="https://github.com/jreades/fsds/blob/master/assessments/bio.bib">bio.bib</a> (you may also make use of <a href="https://github.com/jreades/fsds/blob/master/bib/Readings.bib">the one used for the module</a> to simplify the creation/management of your bibliography)</li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Really Look at the Template!
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You’ll notice that the template specifies three fonts (<code>mainfont</code>, <code>monofont</code>, <code>sansfont</code>). These are installed in Docker, and I’ve added links in the template to show how you can download them for your own computer.</p>
+<p>You are welcome to change the fonts used and can see what’s available in the existing Docker image by asking <code>matplotlib</code> or <a href="https://askubuntu.com/questions/552979/how-can-i-determine-which-fonts-are-installed-from-the-command-line-and-what-is">using the Terminal</a>… which will help you to learn about font-management.</p>
+</div>
+</div>
+</section>
+<section id="rendering" class="level2">
+<h2 class="anchored" data-anchor-id="rendering">Rendering</h2>
+<p>These three files together will enable you to ‘render’ the <a href="https://github.com/jreades/fsds/blob/master/assessments/Group_Work.qmd">Quarto Markdown Document</a> as a PDF for submission. To do this, ensure that all three files above are in the <em>same</em> folder (e.g.&nbsp;<code>~/git/fsds-group-project/</code>), in which case you’d see <em>something</em> like:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/<span class="op">&lt;</span> your local copy of the repo <span class="op">&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> . <span class="co"># Should show a .qmd file, a .csl file, and a .bib file</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render Group_<span class="op">&lt;</span>simple_version_of_your_group_name<span class="op">&gt;</span>_Submission.qmd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This should render the PDF with a look something like <a href="./Group_Work.pdf">this example output</a>.</p>
 
 
 </section>
