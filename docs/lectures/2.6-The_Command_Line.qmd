@@ -1,0 +1,279 @@
+---
+format:
+  revealjs:
+    theme: [serif, slides.scss]
+  html:
+    embed-resources: true
+author: "Jon Reades"
+title: "The Command Line"
+footer: "The Command Line • Jon Reades"
+highlight-style: github
+code-copy: true
+code-line-numbers: true
+slide-level: 2
+title-slide-attributes:
+  data-background-image: ../img/CASA_Logo_no_text.png
+  data-background-size: cover
+  data-background-position: center
+  data-background-opacity: '0.17'
+logo: ../img/CASA_logo.png
+history: false
+css: slides.css
+---
+
+# First Question: Why???
+
+::: {.notes}
+
+The first question most new programmers want to ask about the Command Line is: **why?**
+
+:::
+
+
+## As in... 
+
+1. Why are you torturing me with this arcane knowledge? 
+2. Why do I need to do this when we have slick IDEs now?
+
+## The Answer?
+
+No matter how long you *try* to avoid it, eventually you'll find things that can *only* be solved (or that can be much more *quickly* solved) using the Command Line Interface (CLI). 
+
+Things like:
+
+- Interacting with `git` is actually _easier_ on the Command Line.
+- Making the most of developer-oriented tools (e.g. `docker`, `GDAL`, `proj4/6`).
+- Peeking and poking at (large) files *efficiently*... 
+- Automating things that would be hard/annoying to do manually... 
+
+A lot of this ties back to **data** and **servers**.
+
+::: {.notes}
+
+True story: 25 years ago I used to process more than 40GB of compressed plain-text data every day from my Titanium PowerBook. But that's because it was all running on a server in New Jersey while I was in Manhattan. Everything was done using the Command Line and SSH (secure shell).
+
+More recently, processing OSM data for the *entire* UK was possible on my MacBook Air using GDAL and bash scripts but *not* possible using R/RStudio directly. Basically, the work took so long (> 13 hours) that RStudio thought the script had died and tried to kill it.
+
+:::
+
+## Anatomy of a Command
+
+```bash
+curl -L http://bit.ly/2vrUFKi | 
+  head -3 |  
+  awk -F"," '{ print $2, $4, $6; }' > results.txt
+```
+
+This command does *four* things in one 'line' on the CLI:
+
+1. `curl` downloads the file and passes the contents to...
+2. `head` which takes the first three rows and passes those to...
+3. `awk` which splits the rows on `","` and takes the 2nd, 4th, and 6th fields and directs them into...
+4. A file called `results.txt` 
+
+::: {.notes}
+
+Note that `results.txt` is created if it doesn't *already* exist, or overwritten if it does.
+
+If you wanted to *append* to an existing file you would use `>>` instead of `>`.
+
+:::
+
+# Core Commands
+
+## Interacting with Files
+
+| Command | Does | Example |
+| :-- | :-------- | :------ |
+| `ls` | List | `ls .` |
+| `cd` | Change Directory | `cd $HOME` or `cd ~` |
+| `pwd` | Print Working Directory | `pwd` |
+| `mv` | Rename/Move file `a` to `b` | `mv a.txt b.txt` |
+| `find` | Find files matching some criteria | `find . -name "*.md"` |
+
+::: {.notes}
+
+Notice that most commands on the Command Line involve typing mnemonics (the shortest possible combination of letters that is unique memorable).
+
+:::
+
+## Common Shortcuts
+
+| Shortcut | Means | Example |
+| :-- | :----------- | :------ |
+| `.` | The _current_ working directory | `ls .` |
+| `..` | The directory _above_ the current working one | `cd ..` |
+| `~`^[This may be easier to remember and write as `cd $HOME`, which does the same thing.] | The current user's _home_ directory. | `cd ~` |
+| `/` | The 'root' directory for the _entire computer_ | `ls /` |
+| `"*"` | A 'wildcard' meaning any number of characters in a filename | `find . -name "*.md"` |
+| `"?"` | A 'wildcard' meaning one character in a filename | `find . -name "2.?-*.md"` |
+
+::: {.notes}
+
+The main reason we care about all this is that all data is stored *somewhere* and all code executes *somewhere*. So we want a way to traverse the device efficiently when looking in directories, creating new files, writing different types of data to different places, and so forth. These shortcuts therefore crop up all over the place 'in the wild'--if you don't know what they're telling you then you'll wonder why your code doesn't run or you can't find the data you saved!
+
+:::
+
+## A Simulated Walk Across My Laptop {.smaller}
+
+```bash
+cd /
+pwd
+> /
+ls
+> Applications  Library  System  Users Volumes ...
+cd $HOME
+pwd
+> /Users/casa
+ls
+> Applications  Desktop  Dropbox  ...
+cd Dropbox
+pwd
+> /Users/casa/Dropbox
+ls
+> CASA  Lectures  Practicals ...
+```
+
+::: {.notes}
+
+Modern computers (especially if you've grown up around iPhones and Android phones/tablets) are really good at hiding this fact, but that's because people using phones or tablets really don't want to be thinking about *where* their data is being stored, they just want to click save. But when you start coding then you need to start caring a lot more about *where* something is happening.
+
+:::
+
+
+## Finding Things in Files {.smaller}
+
+| Command | Does | Example |
+| :---- | :--------- | :-------- |
+| `less` | Peek at contents of a text file | `less file.txt` |
+| `grep` | Find lines matching a 'pattern' in a file | `grep 'pattern' file.txt` |
+| `head` | Peek at first `x` rows of a text file | `head -n 10 file.txt` |
+| `tail` | Peek at last `x` rows of a text file | `tail -n 10 file.txt` |
+| `wc` | Count things (rows, words, etc.) | `wc -l file.txt` |
+| `sed`/`awk` | Complicated, but powerful, things | `awk -F"," '{ print $1, $3; }' file.csv` |
+
+::: {.notes}
+
+The really crucial thing about all of these utilities is that they *don't* load the entire file into memory. So you can 'peek' into a 15GB text file instantly without waiting four hours for it to load into memory (and then crash your machine). It's kind of like the anti-Excel.
+
+:::
+
+## Time to Escape! {.smaller}
+
+Some characters are 'special' and need to be **escaped**. You'll encounter these both in the shell (a.k.a. command line) and in Python:
+
+| Escape | Does | Example |
+| :- | :------ | :------ |
+| `\ `   | Allows spaces in file names | `less My\ File\ with\ Spaces.txt` |
+| `\t`   | Creates/matches a tab character | `\tThe start of a paragraph...` |
+| `\n`   | Creates/matches a newline character | `The end of a row/para...\n` |
+| `\r`   | Creates/matches a carriange return | `The end of a row/para...\r\n` |
+| `\$`   | Literal dollar sign (since `$` often marks a variable) | `It costs \$1,000,000` |
+| `\!`   | Literal exclamation mark (since `!` can mean a number of things) | `Don't forget me\!` |
+
+This also becomes relevant when you're dealing with quotes:
+```bash
+""This is a problem," she said."
+```
+vs. 
+```bash
+"\"This is a problem,\" she said."
+```
+
+
+::: {.notes}
+
+The carriage return is only ever encountered on files that have been opened on Windows machines.
+
+:::
+
+## Compressing/Decompressing Files
+
+| Command | Does | Example |
+| :--- | :------- | :--------- |
+| `gzip` | Compress/Decompress files | `gzip file.txt` |
+| `gunzip` | Decompress files | `gunzip file.txt.gz`^[This can also be done using 'switches' passed to gzip: `gzip -cd` (where `-d` means 'decompress').] |
+
+## Chaining Commands
+
+The CLI becomes much useful with command chaining:
+```bash
+gzip -cd very_lg_file.txt.gz | 
+  head -n 500 | 
+  grep "pattern"
+```
+The 'pipe' (`|`) takes output from command and 'pipes' (aka. passes) it to another. 
+
+::: {.notes}
+
+This will give you an 'answer' much, much, much faster than trying to open the whole file in, say, Excel, Numbers, or even Python.
+
+:::
+
+## Redirecting Output
+
+We can redirect outputs *in to* new files with `>`, and inputs *out of* existing files using `<`:
+```bash
+gzip -cd very_lg_file.txt.gz | 
+  head -n 500 | 
+  grep "pattern" > matches.txt
+```
+
+So the output from the previous commands goes into `matches.txt` as plain-text. The reverse `<` is only used in very special circumstances so you probably won't encounter it very often.
+
+
+## A (Complex) Example {.smaller}
+
+I do _not_ expect you to understand this, but I do want you to understand why this is important:
+```bash
+docker run -v conda:/home/jovyan/work --rm ${DOCKER_NM} start.sh \
+   conda env export -n ${ENV_NM} | sed '1d;$d' | sed '$d' \
+   | perl -p -e 's/^([^=]+=)([^=]+)=.+$/$1$2/m' \
+   | grep -Ev '\- _|cpp|backports|\- lib|\- tk|\- xorg' > conda/environment_py.yml
+```
+
+
+::: {.notes}
+
+This is how I generated the YAML file used by Anaconda Python installers: it is running a command on a virtual machine, collecting the output, filtering out lines by both row number and textual pattern, and directing this all in the `environment_py.yml` file. This can be run as part of my 'build' of the programming environment. It's *all* automated!
+
+:::
+
+## Getting Help
+
+The [Software Carpentry](https://software-carpentry.org/lessons/) people have a whole set of lessons around working with 'the shell' (a.k.a. Command Line) that might help you.
+
+- [The UNIX Shell](https://librarycarpentry.org/lc-shell/).
+- [MIT's 'Missing Semester' on Vim](https://missing.csail.mit.edu/2020/editors/)
+
+Indeed *all* of MIT's [Missing Semester](https://missing.csail.mit.edu) content could be useful!
+
+## Useful Videos {.smaller}
+
+:::: {.columns}
+
+::: {.column width="50%"}
+The Shell/Terminal in general:
+
+- [Absolute BEGINNER Guide to the Mac OS Terminal](https://www.youtube.com/watch?v=aKRYQsKR46I)
+- [Linux Bash Shell for Beginners: Tutorial 1](https://www.youtube.com/watch?app=desktop&v=gR2bFNrYmD0)
+- [Beginner's Guide to the Bash Terminal](https://www.youtube.com/watch?app=desktop&v=oxuRxtrO2Ag)
+- [Shell Novice](http://swcarpentry.github.io/shell-novice/)
+- [How to use the Command Line](https://www.taniarascia.com/how-to-use-the-command-line-for-apple-macos-and-linux/)
+:::
+
+::: {.column width="50%"}
+Some specific commands:
+
+- [Cat](https://www.youtube.com/watch?app=desktop&v=nK4028I3N5U)
+- [Gzip/Tar](https://www.youtube.com/watch?v=EWONqLqSxYc) (also a good point about spaces in a file name!)
+- [Grep](https://www.youtube.com/watch?v=VGgTmxXp7xQ)
+- [Find](https://www.youtube.com/watch?v=KCVaNb_zOuw)
+:::
+
+::::
+
+And lots more here on [using the file system and shell commands](https://www.linkedin.com/learning/learning-python-2/using-file-system-shell-methods)
+
+
+# Thank you!

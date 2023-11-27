@@ -1,0 +1,163 @@
+---
+title: "Dealing with Conflict"
+author: 
+  - name: Hamish Gibbs
+    affiliations:
+      - id: geog
+        name: UCL Department of Geography
+        city: London
+  - name: Francesco Terenzi
+    affiliations:
+      - id: qmul
+        name: QMUL
+        city: London
+  - name: Chukun Gao
+    affiliations:
+      - id: casa
+        name: UCL Centre for Advanced Spatial Analysis
+        city: London
+---
+
+Working on a group project through Git and GitHub will invetiably result in version control conflicts: two (or more) students will have made changes that need to be reconciled using Git's conflict resolution mechanisms. Depending on the nature of the conflict, these can be trivial or very, very hard to resolve. If you think about it, the obvious conflicts will *broadly* fall into three classes:
+
+1. You've made changes to *one file* and someone else in the group has made changes to *a different file*. This is easy to resolve: often running `git pull` before you try to `git push` will deal with this.
+2. You've made changes to one *section of a file* and someone else in the group has made changes to *a different section of the same file*. This is slightly less easy to resolve because now Git needs to work out how to align the changed lines between the two files^[For example: you've deleted lines 6-9 and changed line 10, the other person has modified lines 17-18 of the same file, so Git needs to determine that 17-18 of the other change maps on to 14-15 of your change.]: you might need to `git merge` before you try to `git add`, `commit`, and `push`.
+3. You've both made changes to *the same section of the same file*. This is likely impossible for Git to resolve automatically because whose changes should take precedence? You will need to manually decide which set of changes take priorities (or whether it's some combination of both) and to do this Git will show the conflicts directly in the file requiring you to edit/delete them.
+
+Making this all a lot harder is that a 'change' could be anything from a direct edit to a section of a line, to deleting a file or folder! There's a lot more to this, and there are undoubtedly lots of good examples of about (e.g. [Example 1](https://www.atlassian.com/git/tutorials/using-branches/merge-conflicts), [Example 2](https://wincent.com/wiki/Git_merge_conflict_cheatsheet)).
+
+::: {.callout-tip}
+
+### Starting Over
+
+If all else fails, remember that you can check out a *fresh* copy of the repository and resolve conflicts that way. There is *nothing* stopping you from having two, three, or four copies of the *same* repository on your computer at the same time. The important thing, if you can't resolve the conflicts caused by your current changes, is *not* to delete it, check out the fresh copy and make the changes *there*.
+
+:::
+
+## Spotting a Conflict
+
+You will most likely discover a conflict when pushing local changes or pulling remote changes. So let's imagine that you've done something like this:
+
+```{}
+git add [file]
+git commit -m "[your message]"
+git push
+```
+
+You then see the message:  
+
+```
+failed to push some refs to [url].
+Updates were rejected because the remote contains work that you do not have locally.  
+```
+
+Since you can't push, what do you do?
+
+## Option 1: Hope for the Best
+
+If you're *lucky* then some conflicts can be resolved simply with a `git pull`. This works when there are remote changes that have zero impact on your local changes. Pulling the remote changes will update your local copy and then you can just turn around and `push` your local changes back to the remote (usually: GitHub).
+
+What do you do if *that* doesn't work?
+
+## Option 2: Resolve Conflicts Locally
+
+**Fetch** the latest changes from the remote repository:
+
+`git fetch origin`
+
+**Merge** the remote version of the repository (that you just fetched) with the local version:
+
+`git merge origin/main` (or `git merge origin/master`)
+
+::: {.callout-warning}
+
+### What Branch?
+
+The command above assumes that you are working in the `main` branch, which is the *most likely* branch unless your group is very, very advanced. But how do you know what branch you're working on?
+
+Running `git branch --show-current` will give you the currently active branch. The other way (`git branch`) shows you a list of local branches, the one with a `*` next to it is the one you're currently using. To exit the list of branches just hit the letter `q` for 'Quit'.
+
+:::
+
+You will likely then see a message similar to: 
+
+`CONFLICT (content): Merge conflict in your-file.md`
+
+### Format of a Conflict
+
+When you have a conflict, the format of a conflict is (roughly) as follows^[Taken from: https://stackoverflow.com/a/7901901]:
+
+```
+<<<<<<< HEAD:file.txt
+Hello world
+=======
+Goodbye
+>>>>>>> 77976da35a11db4580b80ae27e8d65caf5208086:file.txt
+```
+
+The first section (from `<<<< HEAD` to `====`) is what you have in *your* local file. The second section (from `====` to `>>>> <hexadecimal number>`) is the change that is coming from the remote repository that Git wants to merge on to your local file but can't because of the changes that you've made locally.
+
+Open the conflicting files and manually edit them. You will see annotations like this indicating where there are conflicts: 
+
+```{}
+<<<<<<< origin/main
+Change #1
+=======
+Change #2
+>>>>>>> main
+```
+
+Resolve the conflicts and remove the annotations (the `<<<...`, `===...` and `>>>...` lines):
+
+```{}
+Change #1
+Change #2
+```
+
+Commit your changes and push the merged results back to the remote repository.
+
+## Option 3: Open a Pull Request
+
+To resolve, create a new branch:
+
+`git checkout -b new-branch-name`
+
+Check that you are in the new branch:
+
+`git branch -v`
+
+Check that your local changes are committed on to the new branch and then push the new branch to the remote repository:
+
+`git push --set-upstream origin new-branch-name`
+
+You then create a **Pull Request** on Github (you will see a green button pop up "Compare & Pull Request"):
+
+- Git will say "Can't automatically merge". That's OK. Click "Create pull request".
+- Git will "Check for ability to merge automatically" and will then say:
+  - "This branch has conflicts that must be resolved"
+  - Click "Resolve conflicts"
+  - Git will show you text like this that shows the conflicting changes in each branch and the resolution process is the same as above:
+
+```{}
+<<<<<<< new-branch-name
+Yet another one
+=======
+Another one
+>>>>>>> main
+```
+
+- Now that you've resolved the conflict, click "Mark as resolved" and "Commit merge".
+- Then, "Merge pull request" and "Confirm merge".
+
+When you go back to the main page of your repository, you will see the new changes.
+
+One more thing! On your computer, make sure to exit your branch and return to the `main` (or `master`) branch.
+
+`git checkout main`
+
+Then, pull your latest changes from the Github repository.
+
+`git pull`
+
+Congratulations (&#127881;), you have successfully resolved a merge conflict!
+

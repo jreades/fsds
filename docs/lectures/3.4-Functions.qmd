@@ -1,0 +1,273 @@
+---
+format:
+  revealjs:
+    theme: [serif, slides.scss]
+  html:
+    embed-resources: true
+author: "Jon Reades"
+title: "Functions"
+footer: "Functions • Jon Reades"
+highlight-style: github
+code-copy: true
+code-line-numbers: true
+slide-level: 2
+title-slide-attributes:
+  data-background-image: ../img/CASA_Logo_no_text.png
+  data-background-size: cover
+  data-background-position: center
+  data-background-opacity: '0.17'
+logo: ../img/CASA_logo.png
+history: false
+css: slides.css
+---
+
+# Let's Get Lazy!
+
+> Functions 'encapsulate' a task (they combine many instructions into a single line of code). Most programming languages provide many built-in functions that would otherwise require many steps to accomplish, for example computing the square root of a number. In general, **we don't care how a function does what it does**, **only that it 'does it'**! 
+
+::: {.notes}
+
+Why do any work you don't **need** to?
+
+Functions allow us to re-use our code!
+
+Bonus: they can also make our code more **legible**.
+
+:::
+
+## What Does a Function Look Like?
+
+#### `len(<some_list>)` is a function
+
+So `len(...)` encapsulates the process of figuring out how long something with 'countable units' actually is, whether it’s a string or a list.
+
+#### `print(<some_value>)` is *also* a function
+
+Because `print(...)` encapsulates the process of sending output to the command line, a file, or even a database or API!
+
+
+::: {.notes}
+
+`len(123)` is a Type Error.
+
+`len(‘123’)` is not.
+
+Can you think why?
+
+:::
+
+## So What Does a Function Look like?
+
+All function 'calls' looking something like this:
+```python
+function_name(...)
+```
+Where the '`...`' are the inputs to the function; it could be one variable, 25 variables, a list, even another function! 
+
+And if the function 'returns' something it will look like this:
+```python
+return_data = function_name(...)
+```
+
+
+---
+
+:::: {.columns}
+::: {.column width="50%"}
+
+### As Code 
+```python
+data = [1,25,-4,14,7,9]
+total = 0.0
+count = len(data)
+for i in data:
+  total += i
+
+print(total/count)
+```
+
+:::
+::: {.column width="50%"}
+### As Function
+```python
+def calc_mean(numbers):
+  total = 0.0
+  count = len(numbers)
+  for i in numbers:
+    total += i
+  return total/count
+
+data = [1,25,-4,14,7,9]
+print(calc_mean(data))
+```
+
+:::
+::::
+
+
+::: {.notes}
+
+The advantage of the function is that I can keep sending new lists to `calc_mean` without writing *any* new code. Whereas the other approach requires me to copy+paste repeatedly.
+
+Where this really makes a difference is when you realise you made a mistake in your code: if you've made good use of functions this will mean correction *only* the place where you made the logical mistake. If you've not used functions then this is a tedious search and replace that is likely to be error-prone.
+
+:::
+
+## In Action! {.smaller}
+
+```python
+def calc_mean(numbers):
+  total = 0.0
+  count = len(numbers)
+  for i in numbers:
+    total += i
+  return total/count
+
+data = [1,25,-4,14,7,9]
+print(calc_mean(data)) # 8.666666666666666
+data2 = [200000,2500000,-4,1400000,70,900000]
+print(calc_mean(data2)) # 833344.3333333334
+```
+
+
+## But Notice! {.smaller}
+
+```python
+data    = [1,25,-4,14,7,9]
+total   = 1
+numbers = []
+
+def calc_mean(numbers):
+  total = 0.0
+  count = len(numbers)
+  for i in numbers:
+    total += i
+  return total/count
+
+print(calc_mean(data))
+
+# Why haven't these changed????
+print(total)
+print(numbers)
+```
+
+::: {.notes}
+
+Functions *encapsulate* information: the `total` and `numbers` used within the function are *different* from the variables with the *same name* that we created outside the function. When we get to libraries and packages you'll understand why, but the key concept here is 'namespace' and that these variables might have the same *name* but they sit in different *namespaces*.
+
+:::
+
+## Simple Function
+
+By 'simple' I don't mean *easy*, I mean it does *one* thing only:
+```python
+def hello():
+  print("Hello world!")
+```
+We then run it with:
+```python
+hello()
+```
+And that produces:
+```python
+Hello world!
+```
+
+
+## Passing in Information
+
+We can pass information _to_ a function if we tell the function what to expect:
+```python
+def hello(name:str):
+  print(f"Hello {name}!")
+```
+Now we can do this:
+```python
+hello("new programmers")
+```
+
+And that produces:
+```python
+Hello new programmers!
+```
+
+
+## Getting Information Out 
+
+We can also get information *out* of them!
+```python
+def hello(name:str) -> str:
+  return f"Hello {name}!"
+```
+Now we can do this:
+```python
+output = hello("new programmers")
+print(output.title())
+# Same as: print(hello("new programmers").title())
+```
+
+And this produces:
+```python
+'Hello New Programmers!'
+```
+
+## Writing a Function {.smaller}
+
+```python
+def <function_name>(<var_name>: <var_type>) -> <var_type>:
+  ...
+  return <var>
+```
+This can also be written:
+```python
+def <function_name>(<var_name>):
+  ...
+  return <var>
+```
+Python is 'friendly' in the sense that all of the `<var_type>` information is optional, but it will help you (and Python) to know what you were *expecting* to see happen.
+
+
+## Complicating Things... {.smaller}
+
+```python
+ds2 = {
+  'lat':[51.51,40.71,35.69],
+  'lon':[0.13,74.01,139.68],
+  'tz': [+0,-5,+8],
+  'name':['London','New York','Tokyo']
+}
+
+def get_city_info(city:str, field:str, city_lookup:str='name', data:dict=ds2) -> str:
+  return str(data[field][ data[city_lookup].index(city) ])
+
+city = 'New York'
+print(f"The latitude of {city} is {get_city_info(city,'lat')}")
+# The latitude of New York is 40.71
+```
+
+
+# Any time you type the *same* code more than twice... *consider* a function!
+
+## Resources {.smaller}
+
+:::: {.columns}
+::: {.column width="50%"}
+- [What is a function?](https://www.linkedin.com/learning/python-quick-start/what-is-a-function)
+- [Python functions](https://www.linkedin.com/learning/learning-python-2/python-functions)
+- [Built-in functions](https://www.linkedin.com/learning/python-quick-start/built-in-functions-in-python)
+- [Define your own functions](https://www.linkedin.com/learning/python-quick-start/define-and-call-your-own-functions)
+- [Types of functions](https://www.linkedin.com/learning/python-quick-start/types-of-functions)
+- [Defining a function](https://www.linkedin.com/learning/python-essential-training-2/defining-a-function)
+:::
+::: {.column width="50%"}
+- [Function arguments](https://www.linkedin.com/learning/python-essential-training-2/function-arguments)
+- [Argument lists](https://www.linkedin.com/learning/python-essential-training-2/argument-lists)
+- [Keyword arguments](https://www.linkedin.com/learning/python-essential-training-2/keyword-arguments)
+- [Return values](https://www.linkedin.com/learning/python-essential-training-2/return-values)
+- [Decorators](https://www.linkedin.com/learning/python-essential-training-2/decorators)
+- [Variable Scopes](https://realpython.com/python-namespaces-scope/)
+- [Robust Python with Type Hints](https://towardsdatascience.com/robust-python-with-type-hints-a86632ff56cc)
+:::
+::::
+
+# Thank you!
