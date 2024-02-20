@@ -1,13 +1,10 @@
 ---
-title: Task 1 (Revisited). Why 'Obvious' is Not Always 'Right'
+title: "Practical 4: Object-Oriented Programming"
+subtitle: "Getting to grips with Functions & Packages"
 jupyter: python3
 ---
 
-<div style="float:left">
-    <h1 style="width:450px">Practical 4: Object-Oriented Programming</h1>
-    <h2 style="width:450px">Getting to grips with Functions &amp; Packages</h2>
-</div>
-<div style="float:right"><img width="100" src="https://github.com/jreades/i2p/raw/master/img/casa_logo.jpg" /></div>
+![](https://github.com/jreades/i2p/raw/master/img/casa_logo.jpg){width:100}
 
 | Complete | Part 1: Foundations | Part 2: Data | Part 3: Analysis |     |
 | :------- | :------------------ | :----------- | :--------------- | --: |
@@ -20,27 +17,34 @@ In this notebook the priorities here should be **Tasks 1–4** because they take
 **Task 6** will help you to understand <i>how</i> to build your own classes in greater detail, but it is enough to understand that classes exist in hierarchies (as this was also covered in the live session).
 
 <div class="alert alert-block alert-warning">
-    <b>&#9888; Important</b>: This is a very long practical and it's <em>not</em> expected that you will get through it in the alloted time.</div> 
+    <b>&#9888; Important</b>: This is a very long practical and it's <em>not</em> expected that you will get through it in the alloted time.
+</div> 
 
 <div class="alert alert-block alert-success">
-    <b>&#128161; Group Sign-Up</b>: You should now make it a priority <a href="https://forms.office.com/e/2ij0sWHnpR">Sign Up</a>!</div>
-
+    <b>&#128161; Group Sign-Up</b>: You should now make it a priority <a href="https://forms.office.com/e/2ij0sWHnpR">Sign Up</a>!
+</div>
 
 Practical 3 is hard, so I want to provide _another_ chance for the concepts to bed in before we use them in an *object-oriented way through Pandas*. Yes, Week 5 will show how we combine concepts covered over the preceding two weeks in *practice* to do data science. 
 
 So remember the finding from last week: if we don't really care about column order, then a dictionary of lists would be a nice way to handle data. And why should we care about column order? With our CSV file we saw what a pain it was to fix things when even a tiny thing like the layout of the columns changed. But if, instead, we could just reference the 'Description' column in the data set then it doesn't matter where that column actually is *and* we would know that all the descriptions would be *text*, while all the populations or prices would be *numbers*. Why is that? 
 
 <div class="alert alert-block alert-info">
-    <b>&#128279; Connections</b>: This task briefly recaps the final part of <a href="https://jreades.github.io/fsds/sessions/week3.html#practical">Practical 2</a> and builds on the <a href="https://jreades.github.io/fsds/sessions/week3.html#lectures">DOLs to Data</a> and <a href="https://jreades.github.io/fsds/sessions/week3.html#lectures">Functions</a> lectures.</div>
+    <b>&#128279; Connections</b>: This task briefly recaps the final part of <a href="https://jreades.github.io/fsds/sessions/week3.html#practical">Practical 2</a> and builds on the <a href="https://jreades.github.io/fsds/sessions/week3.html#lectures">DOLs to Data</a> and <a href="https://jreades.github.io/fsds/sessions/week3.html#lectures">Functions</a> lectures.
+</div>
 
+
+## Task 1 (Revisited). Why 'Obvious' is Not Always 'Right'
 
 ### Task 1.1 The Way That Doesn't Work
 
-<div class="alert alert-block alert-success"><b>Difficulty level</b>: Low (this time around).</div>
+<div class="alert alert-block alert-success">
+    <b>Difficulty level</b>: Low (this time around).
+</div>
 
 Here are four rows of 'data' for city sizes organised by _row_ as a list-of-lists. Try printing out *just* the cities contained in the data:
 
 ```{python}
+#| echo: true
 myData = [
     ['id', 'Name', 'Rank', 'Longitude', 'Latitude', 'Population'], 
     ['1', 'Greater London', '1', '-18162.92767', '6711153.709', '9787426'], 
@@ -51,9 +55,13 @@ myData = [
 
 #### 1.1.1 Print a List of Cities
 
+::: {.panel-tabset}
+
+### Question 
+
 Print out a list of every city in the data set:
 
-```{python}
+```python
 cities = []
 
 ???
@@ -61,11 +69,30 @@ cities = []
 print("The cities in the data set are: " + ", ".join(cities))
 ```
 
+### Answer
+
+Print out a list of every city in the data set:
+
+```{python}
+cities = []
+
+col    = myData[0].index('Name')
+for i in range(1, len(myData)):
+    cities.append(myData[i][col])
+
+print("The cities in the data set are: " + ", ".join(cities))
+```
+::: 
+
 #### 1.1.2 Is Edinburgh in the List?
 
 Now write code to find out if `Edinburgh` is included in the list of data:
 
-```{python}
+::: {.panel-tabset}
+
+### Question 
+
+```python
 col   = myData[0].index('Name')
 found = False
 for i in range(1, len(??)):
@@ -78,13 +105,20 @@ if found == ??:
     print("Didn't find Edinburgh in the data set.")
 ```
 
+### Answer
+
+:::
+
 ### Task 1.2 The Way That Does Work
 
-<div class="alert alert-block alert-success"><b>Difficulty level</b>: Low (this time around).</div>
+<div class="alert alert-block alert-success">
+    <b>Difficulty level</b>: Low (this time around).
+</div>
 
 Compare that code to how it works for a dictionary-of-lists organised by _column_. Now try printing out the cities in the data:
 
 ```{python}
+#| echo: true
 myData = {
     'id'         : [0, 1, 2, 3, 4, 5],
     'Name'       : ['Greater London', 'Greater Manchester', 'Birmingham','Edinburgh','Inverness','Lerwick'],
@@ -99,7 +133,7 @@ myData = {
 
 Print out a list of every city in the data set:
 
-```{python}
+```{{python}}
 # What cities are in the data set?
 print(", ".join(??))
 ```
@@ -108,7 +142,7 @@ print(", ".join(??))
 
 Now write code to find out if `Edinburgh` is included in the list of data:
 
-```{python}
+```{{python}}
 if 'Edinburgh' in ??:
     print("Found Edinburgh in the data set!")
 else:
@@ -135,11 +169,13 @@ It's the same thing, just different notation.
 
 ### Task 2.1 Calculate Mean & Std Dev
 
-<div class="alert alert-block alert-success"><b>Difficulty level</b>: Low-ish.</div>
+<div class="alert alert-block alert-success">
+    <b>Difficulty level</b>: Low-ish.
+</div>
 
 Let's start by calculating the sample mean and standard deviation (use Google: `Python numpy mean...`):
 
-```{python}
+```{{python}}
 import numpy as np
 # Use numpy functions to calculate mean and standard deviation
 mean = np.??(myData['Population'])
@@ -151,7 +187,9 @@ print(f"City distribution has a mean {mean:,.0f} and standard deviation of {std:
 
 ### Task 2.2 For Loops Without For Loops
 
-<div class="alert alert-block alert-warning"><b>Difficulty level</b>: Medium.</div>
+<div class="alert alert-block alert-warning">
+    <b>Difficulty level</b>: Medium.
+</div>
 
 Now we're going to see something called a **List Comprehension**.
 
@@ -159,32 +197,34 @@ In Python you will see code like this a lot: `[x for x in list]`. This syntax is
 
 Here's a quick example just to show you what's going on:
 
-```{python}
+```{{python}}
 demo = range(0,10) # <- a *range* of numbers between 0 and 9 (stop at 10)
 print([x**2 for x in demo]) # square every element of demo
 ```
 
 Now let's apply this to our problem. We calculated the the mean and standard deviation above, so now we want to apply the z-score formula to every element of the Population list... 
 
-```{python}
+```{{python}}
 rs = [(x - ??)/?? for x in myData['Population']] # rs == result set
 print([f"{x:.3f}" for x in rs])
 ```
 
 ### Task 2.3 Appending
 
-<div class="alert alert-block alert-success"><b>Difficulty level</b>: trivial</div>
+<div class="alert alert-block alert-success">
+    <b>Difficulty level</b>: trivial
+</div>
 
 And now let's add it to the data set:
 
-```{python}
+```{{python}}
 myData['Std. Population'] = ??
 print(myData['Std. Population'])
 ```
 
 And just to show how everything is in a single data structure:
 
-```{python}
+```{{python}}
 for c in myData['Name']:
     idx = myData['Name'].index(c)
     print(f"{c} has a population of {myData['Population'][idx]:,} and standardised score of {myData['Std. Population'][idx]:.3f}")
@@ -207,11 +247,13 @@ Let's focus on the first part *first* because that's the precondition for everyt
 
 #### 3.1.1 Finding an Existing Answer
 
-<div class="alert alert-block alert-success"><b>Difficulty level</b>: Low</div>
+<div class="alert alert-block alert-success">
+    <b>Difficulty level</b>: Low
+</div>
 
 First, let's be sensibly lazy--we've already written code to read a file from the Internet and turn it into a list of lists. So I've copy+pasted that into the code block below since we're going to start from this point; however, just to help you check your own understanding, I've removed a few bits and replaced them with `??`. Sorry, it's good practice. 😈
 
-```{python}
+```{{python}}
 from urllib.request import urlopen
 import csv
 
@@ -233,7 +275,9 @@ You should get `urlData has 11 rows and 4 columns.` and a row that looks like th
 
 #### 3.1.2 Getting Organised
 
-<div class="alert alert-block alert-success"><b>Difficulty level</b>: Low</div>
+<div class="alert alert-block alert-success">
+    <b>Difficulty level</b>: Low
+</div>
 
 Let's take the code above and modify it so that it is:
 
@@ -246,7 +290,7 @@ You will find that the `os` module helps here because of the `path` function. An
 
 I would start by setting my inputs:
 
-```{python}
+```{{python}}
 import os
 url = "https://raw.githubusercontent.com/jreades/fsds/master/data/src/Wikipedia-Cities-simple.csv"
 out = os.path.join('data','Wikipedia-Cities.csv') # Print `out` if you aren't sure what this has done!
@@ -254,11 +298,13 @@ out = os.path.join('data','Wikipedia-Cities.csv') # Print `out` if you aren't su
 
 #### 3.1.3 Sketching the Function
 
-<div class="alert alert-block alert-success"><b>Difficulty level</b>: Low, if you've watched the videos...</div>
+<div class="alert alert-block alert-success">
+    <b>Difficulty level</b>: Low, if you've watched the videos...
+</div>
 
 Then I would sketch out how my function will work using comments. And the simplest thing to start with is checking whether the file has already been downloaded:
 
-```{python}
+```{{python}}
 from urllib.request import urlopen
 
 def get_url(src, dest):
@@ -276,11 +322,13 @@ get_url(url, out)
 
 #### 3.1.4 Fleshing Out the Function 
 
-<div class="alert alert-block alert-warning"><b>Difficulty level</b>: Medium, if you really explore what's going on in the function rather than just running it and moving on.</div>
+<div class="alert alert-block alert-warning">
+    <b>Difficulty level</b>: Medium, if you really explore what's going on in the function rather than just running it and moving on.
+</div>
 
 I would then flesh out the code so that it downloads the file if it isn't found and then, either way, returns the *local* file path for our CSV reader to extract:
 
-```{python}
+```{{python}}
 def get_url(src, dest):
     
     # Check if dest does *not* exist -- that
@@ -328,7 +376,7 @@ src = get_url(url, out)
 
 Now we turn to the next task: parsing the file if it's a CSV. This implies that it *might* not be so that's something we should also consider!
 
-```{python}
+```{{python}}
 import csv
 
 def read_csv(src):
@@ -370,7 +418,7 @@ You should get:
 
 Now we can focus on converting the CSV data to a dictionary-of-lists! We're going to start with the *same* function name but expand what the function *does*. This kind of *iteration* is common in software development.
 
-```{python}
+```{{python}}
 def read_csv(src):
     
     csvdata = {} # An empty dictionary-of-lists
@@ -425,7 +473,7 @@ We've assumed that the first row of our data set is always a _header_ (i.e. list
 1. Used the docstring support offered by Python. You'll be able to use `help(...)` and get back the docstring help!
 2. Provided hints to Python about the expected input and output data types. This can help to ensure consistency and is also critical in testing / continuous integration when working with others on a codebase.
 
-```{python}
+```{{python}}
 def read_csv(src:str) -> dict:
     """
     Converts a CSV file to a dictionary-of-lists (dol),
@@ -462,11 +510,11 @@ def read_csv(src:str) -> dict:
 ds = read_csv(src)
 ```
 
-```{python}
+```{{python}}
 help(??)
 ```
 
-```{python}
+```{{python}}
 print("Columns are: " + ", ".join(ds.keys()))
 print(f"First two cities are: {ds['City'][:2]}")
 print(f"First two populations are: {ds['Population'][:2]}")
@@ -495,7 +543,7 @@ If you look closely at the above, you'll see that *everything* is a string, incl
 
 <div class="alert alert-block alert-success"><b>Difficulty level</b>: Low</div>
 
-```{python}
+```{{python}}
 cols  = ['City', 'Population', 'Latitude', 'Longitude'] # <- Column name
 dtype = [??, ??, ??, float]                        # <- Column data type
 
@@ -544,7 +592,7 @@ def to_type(cdata, ctype):
         return fdata
 ```
 
-```{python}
+```{{python}}
 # Now apply this! We'll copy the data to 
 # new data structure only so that we know
 # we're not overwriting `ds` until we're sure
@@ -558,14 +606,14 @@ for col in zip(cols, dtype):
 
 Compare the output here to the output from these two cells *carefully* (what has changed?):
 
-```{python}
+```{{python}}
 print("DS columns are: " + ", ".join(ds.keys()))
 print(f"First two cities are: {ds['City'][:2]}")
 print(f"First two populations are: {ds['Population'][:2]}")
 print(f"First two latitudes are: {ds['Latitude'][:2]}")
 ```
 
-```{python}
+```{{python}}
 print("DS2 columns are: " + ", ".join(ds2.keys()))
 print(f"First two cities are: {ds2['City'][:2]}")
 print(f"First two populations are: {ds2['Population'][:2]}")
@@ -586,7 +634,7 @@ First two latitudes are: [56.39583, 54.3499]
 
 Now that we've got our data structure all set up correctly (appropriate names, data types, etc.) let's see if it works by testing out some of our previous operations:
 
-```{python}
+```{{python}}
 import numpy as np # We'll need this to apply functions to lists easily
 
 print(f"Average population is {np.mean(ds2['Population']):,.2f}")
@@ -611,7 +659,7 @@ There are a few things to understand here:
 
 **Notice** that we do *all* of this without using a `for` loop or variables to keep track of what we've found... You *could* also use a `for` loop to answer each of these questions (see the example below), but hopefully you see what the way we've used above is more *elegant* (it's also faster):
 
-```{python}
+```{{python}}
 min_long = 180
 min_idx  = -1
 
@@ -635,7 +683,7 @@ At this point it's worth asking: was all this *worth* it? Let's see!
 
 The best way to test is to use a *different* data set and see if we've solved the 'hard-coding' problem.
 
-```{python}
+```{{python}}
 url = "https://raw.githubusercontent.com/jreades/fsds/master/data/src/Wikipedia-Cities.csv"
 out = os.path.join('data','Wikipedia-Cities-full.csv')
 
@@ -651,7 +699,7 @@ for col in zip(cols, dtype):
     typed_dol[ colname ] = to_type(untyped_dol[??], ??)
 ```
 
-```{python}
+```{{python}}
 print(f"Average population is {np.mean(typed_dol['Population']):,.2f}")
 print(f"Westernmost city is {typed_dol['City'][np.where(typed_dol['Longitude']==np.min(typed_dol['Longitude']))[0][0]]}")
 print(f"Northernmost city is {typed_dol['City'][np.where(typed_dol['Latitude']==np.max(typed_dol['Latitude']))[0][0]]}")
@@ -681,7 +729,7 @@ Here is the skeleton of a function to replace the `np.where(column==np.[min|max|
 
 I have gone with a combination of 1 and 2, but you will need to really read the code to understand how it works. I've left the docstring for you to complete. This isn't the best function since it makes some assumptions about the types of data that it might be passed to the function: this is where *Object-Oriented Programming* could come to the rescue! If we had different column *types* (e.g. String, Float, Int) then we could have different *versions* of `find_val` that performed the same *function* (find a value) but did this completely differently depending on the data. This is what *methods* do!
 
-```{python}
+```{{python}}
 import numpy as np
 
 def find_val(col:list, val:str):
@@ -701,7 +749,7 @@ print(find_val(typed_dol['Latitude'], 'min'))
 print(find_val(typed_dol['Latitude'], 'median'))
 ```
 
-```{python}
+```{{python}}
 print(f"Average population is {find_val(typed_dol['Population'],'mean'):,.2f}")
 print(f"Westernmost city is {typed_dol['City'][find_val(typed_dol['Longitude'],'min')]}")
 print(f"Northernmost city is {typed_dol['City'][find_val(typed_dol['Latitude'],'max')]}")
@@ -790,21 +838,21 @@ help(dtools.read_csv)
 
 #### 5.4.2 Use Read_CSV
 
-```{python}
+```{{python}}
 url = 'https://github.com/jreades/fsds/raw/master/data/2019-sample-crime.csv'
 out = os.path.join('data','crime-sample.csv')
 
 ds = ??.read_csv(??.get_url(url, out))
 ```
 
-```{python}
+```{{python}}
 print(f"ds has {len(ds.keys())} columns, these are: " + ", ".join(ds.keys()))
 print(f"There are {len(ds['ID'])} rows of data")
 ```
 
 #### 5.4.3 Use To_Type
 
-```{python}
+```{{python}}
 cols  = ['Latitude', 'Longitude'] 
 dtype = [float, float]
 
@@ -817,11 +865,11 @@ for col in zip(cols, dtype): # <- This only copies these two columns to typed_d
 
 #### 5.4.4 Use Find_Val
 
-```{python}
+```{{python}}
 idx = find_val(typed_ds['Latitude'], 'min')
 ```
 
-```{python}
+```{{python}}
 print(ds['Case Number'][idx])
 print(ds['Description'][idx])
 ```
@@ -856,7 +904,7 @@ This class appears to do very little, but there are two things to notice:
 1. It provides a constructor (`__init__`) that sets the `shape_type` to the name of the class automatically (so a `square` object has `shape_type='Square'`) and it stores the critical dimension of the shape in `self.dim`.
 2. It provides methods (which only raise exceptions) that will allow one shape to be used in the place of any other shape that inherits from `shape`.
 
-```{python}
+```{{python}}
 from math import pi
 
 # Base class shape
@@ -887,7 +935,7 @@ Implements a cube:
 2. A cube's volume is given by $d^{3}$.
 3. A cube's surface area will be the sum of its six faces: $6d^{2}$.
 
-```{python}
+```{{python}}
 # Cube class
 class cube(shape): # Inherit from shape 
     def __init__(self, dim:float):
@@ -932,7 +980,7 @@ But this requires a _height_ method that is specific to pyramids:
 
 Note that this has a class variable called `has_mummies` since Egyptian regular pyramids are plagued by them! 
 
-```{python}
+```{{python}}
 # Pyramid class
 class pyramid(shape): # Inherit from shape
     
@@ -981,7 +1029,7 @@ Triangular pyramids do *not* have a problem with mummies.
 
 If you've implemented everything correctly then the following code should run.
 
-```{python}
+```{{python}}
 # How would you test these changes?
 s = sphere(10)
 print(s.type())
@@ -1103,7 +1151,7 @@ Underneath the line `def type(self):`, add:
         """
 ```
 
-```{python}
+```{{python}}
 import shapes # <-- Change this if you didn't call your package `shapes`!
 help(shapes.shape)
 help(shapes.shape.type)

@@ -1,13 +1,34 @@
 ---
-title: 'Task 0: Installing the Tools'
+title: 'Practical 1: Getting Started'
+subtitle: 'Getting to grips with Jupyter, Git and Markdown'
 jupyter: python3
+format:
+  pdf: 
+    mainfont: "Spectral" # https://fonts.google.com/specimen/Spectral
+    sansfont: "Roboto"   # https://fonts.google.com/specimen/Roboto
+    monofont: "Inconsolata" # https://fonts.google.com/specimen/Inconsolata
+    papersize: a4
+    geometry:
+      - top=25mm
+      - left=40mm
+      - right=30mm
+      - bottom=25mm
+      - heightrounded
+    toc: true
+    toc-depth: 1
+    toc-title: "This Week"
+    number-sections: true
+    colorlinks: true
+    highlight-style: github
+  html:
+    toc: true
+    toc-depth: 2
+    number-sections: true
+    number-depth: 3
+    toc-title: "This Week"
 ---
 
-<div style="float:left">
-            <h1 style="width:450px">Practical 1: Getting Started</h1>
-            <h2 style="width:450px">Getting to grips with Jupyter, Git and Markdown</h2>
-</div>
-<div style="float:right"><img width="100" src="https://jreades.github.io/fsds/img/casa_logo.jpg" /></div>
+![](../img/casa_logo.jpg){width=100}
 
 | Complete | Part 1: Foundations | Part 2: Data | Part 3: Analysis |     |
 | :------- | :------------------ | :----------- | :--------------- | --: |
@@ -15,16 +36,19 @@ jupyter: python3
 
 This week’s practical is focussed on getting you set up with the tools and accounts that you’ll need to across many of the CASA modules in Terms 1 and 2, and familiarising you with ‘how people do data science’. Outside of academia, it’s rare to find a data scientist who works entirely on their own: most code is collaborative, as is most analysis! But collaborating effectively requires tools that: get out of the way of doing ‘stuff’; support teams in negotating conflicts in code; make it easy to share results; and make it easy to ensure that everyone is ‘on the same page’.
 
-<div class="alert alert-class alert-warning">
-<b>&#9888; On Windows</b>: please use <b>Power Shell</b> instead of the <b>Command Prompt</b> (cmd). Power Shell behaves much more like the Terminal in macOS and Linux, so the results are more consistent and easier to 'debug'.
-</div>
+::: {.callout-warning}
+### Windows Users 
 
+Please use **Power Shell** instead of the **Command Prompt** (`cmd`). Power Shell behaves much more like the Terminal in macOS and Linux, so the results are more consistent and easier to 'debug'.
+
+:::
 
 If you haven't done this already, you need to follow the instructions for installing all of the tools listed on on the [CASA Computing Environment](https://jreades.github.io/sds_env/setup/install_fest.html) web page. This process will take time, so please keep reading or work on other things to do while you wait!
 
-<div class="alert alert-block alert-info">
-<b>&#9888; Tip:</b> if you need help understanding how to use the Command Line or want to be able to do <i>much more</i> there are a wide range of tutorials out there (see below).
-</div>
+::: {.callout-tip collapse=true}
+### Tips on Using the Command Line 
+
+If you need help understanding how to use the Command Line or want to be able to do *much more* there are a wide range of tutorials available.
 
 Here are some starting points for learning more:
     
@@ -32,10 +56,11 @@ Here are some starting points for learning more:
 - **I *still* need help understanding**: the [Programming Historian](https://programminghistorian.org/) is another good place to look! And they _also_ have an entire tutorial titled [An Introduction to Bash](https://programminghistorian.org/en/lessons/intro-to-bash).
 - **I want to do *more* on the Command Line**: O'Reilly has produced an online book called [Data Science at the Command Line](https://datascienceatthecommandline.com/2e/chapter-2-getting-started.html) that will take you much, much further.
 
+:::
 
-## Task 1: Running Docker
+# Running Docker
 
-### 1.1 Starting Up 'Right'
+## Starting Up 'Right'
 
 One of the most confusing things about starting a Docker container with a "local volume mount" (i.e. a location on your computer that Docker *connects* to the container's file system) is that it seems like magic and it's often hard to understand why you're seeing what you are under the `work` directory.
 
@@ -50,63 +75,59 @@ On both a Mac and a PC you should be able to run the following:
 6. `cd casa` -- you are now changing into the `casa` directory.
 7. `echo $pwd` -- this should show you the 'full path' to your new `casa` directory (e.g. `/Users/<your username>/Documents/casa` or something like that).
 
-We're going to start the container here in Task 1.3 using `docker run...`.
-
 Perhaps a video will help clarify?
 
-<div style="width:500px">
-    <a href="https://www.youtube.com/embed/5IkwUrYTY78">
-        <img style="width:500px" alt="Docker and You" src="./img/Docker_and_You.png" />
-    </a>
-</div>
+{{< video https://www.youtube.com/embed/5IkwUrYTY78 >}}
 
-### 1.2 Configuring the SDS2023 Image
+## Configuring the {{< var docker.name >}} Image
 
 During the '[install festival](https://jreades.github.io/sds_env/setup/install_fest.html)' you should have installed Docker and, time permitting, 'pulled' the image appropriate to your system. If you haven't, then you should do so as a priority *now* using either:
 
 On Windows or Intel Macs:
 ```bash
-docker pull jreades/sds:2023
+docker pull {{< var docker.all >}}
 ```
-or M1 or M2 Macs:
+or M1, M2 or M3 Macs:
 ```bash
-docker pull jreades/sds:2023-silicon
+docker pull {{< var docker.mac >}}
 ```
 This command is run either in the macOS **`Terminal`** application (in the Utilties directory of your Applications folder) or using the Windows **`Power Shell`** (_not_ the Command Prompt). 
 
 We'd _strongly_ encourage you to ensure that you're able to run Docker and use one of the above images as soon as possible so that we have as long as possible to help you over any hurdles before we get to week 3 where it will be essential that you are running the environment successfully. In our experience, the students who put off trying to get the environment running end up falling quickly behind as they are unable to complete basic tasks successfully. 
 
-### 1.3 Running Docker
+## Running Docker
 
 By default, the best way to start Docker is from the Terminal or Power Shell.
 
-#### On Windows
+### On Windows
 
 Using the Power Shell copy and paste the following *all on one line*:
 
 ```bash
-docker run --rm -d --name sds2023 -p 8888:8888 -v "$(pwd):/home/jovyan/work" jreades/sds:2023 start.sh jupyter lab --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
+docker run --rm -d --name {{< var docker.name >}} -p 8888:8888 
+  -v "$(pwd):/home/jovyan/work" {{< var docker.all >}} start.sh jupyter lab 
+  --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
 ```
-<div class="alert alert-class alert-warning">
-<b>&#9888; On Windows</b>: <tt>$(pwd)</tt> is actually a <em>command</em>, you are asking the Power Shell to use the <i>current working directory</i> (<tt>pwd</tt> == <i>print wording directory</i>) as the 'mount point' for the <tt>work</tt> directory. The Command Prompt doesn't support <tt>pwd</tt>, but the Power Shell <i>should</i>. You can check this by simply typing <tt>pwd</tt> and hitting enter (&#9166;) to see if you get an error.
-</div>
+::: {.callout-warning}
 
-#### On macOS
+### Windows Commands and Docker
 
-Using the Terminal or iTerm2 copy and past the following::
+`$(pwd)` is actually a *command*, you are asking the Power Shell to use the current working directory* (`pwd` == `print working directory`) as the 'mount point' for the `work` directory. The Command Prompt doesn't support `pwd`, but the Power Shell *should*. You can check this by simply typing `pwd` and hitting enter (&#9166;) to see if you get an error.
+
+:::
+
+### On macOS
+
+Using the Terminal or iTerm2 copy and past the following (change the docker image to `{{< var docker.all >}}` if using an older Intel Mac):
 
 ```bash
-docker run --rm -d --name sds2023 -p 8888:8888 \
+docker run --rm -d --name {{< var docker.name >}} -p 8888:8888 \
    -v "$(pwd):/home/jovyan/work" \
-  jreades/sds:2023 start.sh jupyter lab \
+  {{<var docker.mac >}} start.sh jupyter lab \
   --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
 ```
 
-<div class="alert alert-block alert-success">
-<b>&#128161; M1/M2 Macs</b>: remember to add <tt>-silicon</tt> to the image name: <tt>jreades/sds:2023-silicon</tt>
-</div>
-
-### 1.4 How do I Know it Worked?
+## How do I Know it Worked?
 
 With Docker running, you will _mainly_ interact with Python through a web page (unless you choose the VSCode IDE). To check if it's running, we just have to visit the web page and see what happens.
 
@@ -114,11 +135,14 @@ It is likely that the page you want is: [http://localhost:8888/lab/tree/work/](h
 
 ![Screenshot of Jupyter Lab](https://github.com/jreades/fsds/raw/master/practicals/img/1.8-Jupyter_Lab.png)
 
-<div class="alert alert-block alert-success">
-<b>&#128161; Note:</b> once you have started a Docker container using any of the above, the machine <b>will continue running</b> until you either restart the computer or tell Docker to stop the container. This <i>can</i> consume memory and battery power indefinitely.
-</div>
+::: {.callout-note}
+### See Docker Run (and Run)...
 
-## Task 2: Organising Your Workspace
+Once you have started a Docker container using any of the above, the machine **will continue running** until you either restart the computer or tell Docker to stop the container. This *can* consume memory and battery power indefinitely.
+
+:::
+
+# Organising Your Workspace
 
 Before we start trying to code, I'd suggest organising a 'workspace' on your computer so that it's easy to find/load data and 'Jupyter notebooks' (the tool we'll be using to write and rung code). The easiest way to do this is to start from your `Documents` folder and set directories there to hold your code and data. Why? Because leaving everything in the Downloads folder or in random locations all over you computer is likely to be a disaster, especially when you're under time pressure.
 
@@ -128,58 +152,65 @@ Here's _one_ way of organising things, and I'm also taking the opportunity to sh
 - Click on the `Terminal` tile (in the `Other` section) or select `File` > `New` > `Terminal` to open a new shell.
 - This should open a new, empty window with a flashing cursor next to something *like* `(base) jovyan@5a4d5a7f2f50:~$`.
 
-This short video will show you how to create a directory called `CASA` in your Documents folder (or `My\ Documents` on some Windows machines). If the video isn't showing, then you can also follow this link directly: [www.youtube.com/embed/Fnna4YMdLw4](https://www.youtube.com/embed/Fnna4YMdLw4).
+This short video will show you how to create a directory called `CASA` in your Documents folder (or `My\ Documents` on some Windows machines):
 
-```{python}
-from IPython.display import YouTubeVideo
-YouTubeVideo("Fnna4YMdLw4", width=700)
-```
+{{< video https://www.youtube.com/embed/Fnna4YMdLw4 >}}
 
 The commands we used were:
 
-| Command        | Means                                                                           |
-| :------------- | :------------------------------------------------------------------------------ |
-| cd             | Change directory                                                                |
-| cd $HOME       | Change to the home directory (you can find out where this is using `echo $HOME` |
-| cd Documents   | Change to a directory called Documents in the current location                  |
-| ls             | List the files in the current directory                                         |
-| mkdir CASA     | Make a directory called `CASA`                                                  |
-| touch test.txt | Create an empty file called `test.txt` by 'touching' that file                  |
+| Command          | Means                                  |
+| :--------------- | :------------------------------------- |
+| `cd`             | Change directory                       |
+| `cd $HOME`       | Change to the home directory (wherever shown by `echo $HOME`) |
+| `cd Documents`   | Change directory to Documents from the current location |
+| `ls`             | List the files in the current directory |
+| `mkdir CASA`     | Make a directory called `CASA`          |
+| `touch test.txt` | Create an empty file by 'touching' it   |
 
-Note: `$HOME` may not be available on Windows machines; however, the Terminal provided in the SDS2023 container _does_ allow this because it is a full Linux system running on your computer.
+Note: `$HOME` may not be available on Windows machines; however, the Terminal provided in the {{< var docker.name >}} container _does_ allow this because it is a full Linux system running on your computer.
 
-<div class="alert alert-block alert-warning">
-<b>&#9888; Tip:</b> On some Windows machines you might not have a <tt>Documents</tt> folder and will need to decide whether to create one or use the Windows-equivalent (probably <tt>My\ Documents</tt> -- notice the "<tt>\</tt>" instead of a "<tt>/</tt>").
-</div>
+::: {.callout-warning collapse=true}
+### Where are My (Windows) Documents?
 
-<div class="alert alert-block alert-info">
-<b>&#9888; Tip:</b> There are any number of ways to organise your CASA work, what's important is that you are <i>logical</i> about things like names and hierarchy. This will make it much easier to access files and notebooks using Docker, Quarto, <i>and</i> Python.
-</div>
+On some Windows machines you might not have a `Documents` folder and will need to decide whether to create one or use the Windows-equivalent (probably `My\ Documents` -- notice the "`\`" instead of a "`/`").
 
-## Task 3: Setting Up GitHub
+:::
+
+::: {.callout-note}
+### Organising Your Work 
+
+There are any number of ways to organise your CASA work, what's important is that you are *logical* about things like names and hierarchy. This will make it much easier to access files and notebooks using Docker, Quarto, *and* Python.
+
+:::
+
+# Setting Up GitHub
 
 Understanding how to use Git and GitHub effectively is a core element of learning to code. So one of the _first_ things that we are going to do is set you up with an account and a new project.
 
 So in order to complete this task you need to:
+
 1. Create a login with [GitHub](https://github.com). 
 2. Create a new **private** project on GitHub. 
 3. Edit the `README.md` and `.gitignore` files for your new project.
 4. Save the changes (this is called a 'commit') and say in a general way what edits you did.
 5. Work out how to compare the original and edited versions of any file in your browser.
 
-### 3.1 Your New GitHub Account
+## Your New GitHub Account
 
 You may wish to set up your new GitHub account with your UCL email. GitHub 'knows' about educational users and will give you access to more features for free if you use a `.ac.uk` email address. Once you've done this, you can then link a personal email address as well.
 
 From a security standpoint you should _also_ enable 2-factor authentication so that you receive a text message when you log in on a new machine and are asked to confirm a code.
 
-### 3.2 Creating a Private Repository
+## Creating a Private Repository
 
 To create a repository, click on the `+` at the upper-right corner of the GitHub web page and select `New Repository`. You might as well call your 'repo' `fsds` or `foundations` since that's a lot shorter than `foundations_of_spatial_data_science`. 
 
-<div class="alert alert-block alert-warning">
-    <b>&#9888; Note:</b> for the purposes of this tutorial (and all subsequent tutorials) I will assume that your repository is called <tt>fsds</tt>. You can call it whatever you like, in which case you will <em>always</em> need to substitute the name that <em>you</em> chose wherever you see me write <tt>fsds</tt>.
-</div>
+::: {.callout-important}
+### Your Repo Name
+
+For the purposes of this tutorial (and all subsequent tutorials) I will assume that your repository is called `fsds`. You can call it whatever you like, in which case you will *always* need to substitute the name that *you* chose wherever you see me write `fsds`.
+
+:::
 
 It's always helpful to provide some basic information about what's in the project (_e.g._ your notes and practicals for the _Foundations_ module). And finally, make sure you:
 
@@ -193,7 +224,7 @@ Click `Create Repository` and you should end up on a page that looks like this:
 
 Your new repository has been created (on GitHub)!
 
-## Task 4: Updating the .gitignore File
+# Updating the .gitignore File
 
 The `.gitignore` file tells Git what files to ignore by default. Unless you _force_ Git to add an ignored file it will happily live in your _local_ repository alongside files that are version-controlled and 'shared' with GitHub.
 
@@ -201,7 +232,7 @@ The Python template for `.gitignore` includes a lot of useful files and folders 
 
 ![Editing the .gitignore file](https://github.com/jreades/fsds/raw/master/practicals/img/1.4-Editing_Gitignore.png)
 
-### 4.1 Exclude Data Files
+## Exclude Data Files
 
 We want to make it hard to accidentally add a large data file to our repository. Git/GitHub isn't designed for large, binary files (you can't 'read' a Parquet file) and we assume that data is backed up or available elsewhere, but our _code_ is not! So as a first step we want to exclude files that are likely to just be 'data':
 
@@ -216,7 +247,7 @@ We want to make it hard to accidentally add a large data file to our repository.
 
 Here's another hint: `C extensions` are _already_ excluded by the `.gitignore` file, so maybe look to see how that's done to help you figure out how to exlcude `.zip`, `.gz`, and `.csv` files...
 
-### 4.2 Exclude a Data Directory
+## Exclude a Data Directory
 
 To make it even _less_ like that we accidentally include data, let's also exclude a `data` directory from our repository. As a clue, nearly everything in the `Distribution / packaging` section of the `.gitignore` file is a directory to be excluded from Git.
 
@@ -224,11 +255,14 @@ So how would you indicate that `data` is a directory? Once you're sure, add the 
 
 When you are done, don't forget to add a 'commit message' (e.g. 'Added data files to .gitignore') at the bottom and then click `Commit changes`.
 
-<div class="alert alert-block alert-info">
-    <b>&#9888; Answers</b>: I don't want you to get hung up on this <i>one</i> thing in Practical 1, so if you just can't make sense of what you're being asked to do here, have a look at the <a href="#Answers">Answers</a> at the bottom of this page.
-</div>
+::: {.callout-tip collapse=true}
+### Quick Answer
 
-### 4.3 Check Your Changes
+I don't want you to get hung up on this *one* thing in Practical 1, so if you just can't make sense of what you're being asked to do here, have a look at the <a href="#Answers">Answers</a> at the bottom of this page.
+
+:::
+
+## Check Your Changes
 
 Once you have committed your changes, you should be back to the default view of the `.gitignore` file but there should be a message to the effect of `Latest commit <some hexadecimal number> 10 seconds ago` and, next to that, a `History` button.
 
@@ -238,21 +272,22 @@ Click on 'History' and let's go back in time!
 
 On the history page you can browse every edit to your file. Whenever you `commit` a file, this like taking a snapshot at a point in time. Using the 'History' you can compare two different snapshots in order to see what has changed. This would help you to work out how you broke something, check that requested changes have been made, or see how an error might have been introduced.
 
-You can mouseover the buttons to see what they do. Why don't you try to find `See commmit details` and check what edits you made to the `.gitignore` file? Yo ushould see at least _three_ plusses in the history view representing three new lines in the `.gitignore` file.
+::: {.callout-tip}
+### Viewing Your Commit History
 
-<div class="alert alert-block alert-info">
-<b>&#9888; Tip:</b> You can mouseover the buttons to see what they do. Why don't you try to find `See commmit details` and check what edits you made to the <tt>.gitignore</tt> file? You should see at least <em>three</em> plusses in the history view representing three new lines in the <tt>.gitignore</tt> file.
-</div>
+You can mouseover the buttons to see what they do. Why don't you try to find `See commmit details` and check what edits you made to the `.gitignore` file? You should see at least *three* plusses in the history view representing three new lines in the `.gitignore` file.
 
-## Task 5: Creating Your First Remote File
+:::
+
+# Creating Your First Remote File
 
 To get some practice with Markdown let's write up some notes direclty into our GitHub repository (aka 'repo'). You'll notice that we've not yet hit the *BIG GREEN BUTTON* marked `Add a README`... Let's do that now!
 
 This will take you to an editing page for the new `README.md` file. You can type directly into this web page and it will update the repository, but _only_ once you `commit` your edits.
 
-### 5.1 Working on Your Markdown
+## Working on Your Markdown
 
-Write your README file using _at least_ the following Markdown features:
+Write your `README` file using _at least_ the following Markdown features:
 
 - A level-1 header (`#`)
 - A level-3 header (`###`)
@@ -264,7 +299,7 @@ Write your README file using _at least_ the following Markdown features:
 If you're unsure how these work, just double-click on _this text_ and you'll see Markdown in a Jupyter notebook. Here's some sample text to get you started:
 
 ```markdown
-## Foundations of Spatial Data Science
+### Foundations of Spatial Data Science
 
 This repository contains practicals and notes from the _Foundations_ module. 
 
@@ -273,7 +308,7 @@ You can find the original [here](https://jreades.github.io/fsds/).
 
 **Don't forget to check out the "Preview" tab!**
 
-### 5.2 Commiting a Change
+## Commiting a Change
 
 Once you're happy with how your text looks and works, it's time to commit! Scroll down to where you see something like this (you will see your _own_ GitHub username, not mine):
 
@@ -281,20 +316,20 @@ Once you're happy with how your text looks and works, it's time to commit! Scrol
   
 You can just accept the description (_e.g._ `Create README.md`) or you can write your own. You can also provide an extended description if you choose. Then click `Commit new file` and you will see your new README appear.
 
-## Task 6: Setting Up Git Locally
+# Setting Up Git Locally
 
-I have [created a video](https://web.microsoftstream.com/video/29a31977-ff9e-4b53-92d3-ee3bb2a769f6) on Microsoft Streams that runs you through Tasks 6.1 and 6.2 (below). You can refer ot it if you find the written instructions hard to follow for any reason or would like a visual check that you're doing the right thing!
+I have [created a video](https://web.microsoftstream.com/video/29a31977-ff9e-4b53-92d3-ee3bb2a769f6) on Microsoft Streams that runs you through Tasks 6.1 and 6.2 (below). You can refer to it if you find the written instructions hard to follow for any reason or would like a visual check that you're doing the right thing!
 
-### 6.1 Configuring Defaults
+## Configuring Defaults
 
 The first thing to do is set up the default username and email for GitHub. These can be changed on a project-by-project basis, but to begin with it's best to set up the _global defaults_. Using either the Terminal or Bash enter the following (replacing `<...>` with _your_ details):
+
 ```bash
-cd 
 git config --global user.email '<your GitHub email address>'
 git config --global user.name '<your GibHub username>'
 ```
 
-### 6.2 Creating a Personal Access Token
+## Creating a Personal Access Token
 
 You do not want to have to enter your GitHub password every time you copy changes up to/down from GitHub, and you _don't_ want to paste your password in plain text into your code! The Personal Access Token is a way to manage this by issuing special passwords that allow only limited access to your account.
 
@@ -305,18 +340,24 @@ To create a Personal Access Token:
 - Scroll down the [settings page](https://github.com/settings/profile) until you get to `Developer settings`
 - Click the `Developer settings` link to reach [the 'apps' page](https://github.com/settings/apps) and then click on the `Personal access tokens` link.
 
-<div class="alert alert-block alert-danger">
-<b>&#9888; Type of Personal Tokens:</b> You now need to choose the type of token to generate. I <i>personally</i> find the old type of tokens easier to work with because the 'new' fine-grained tokens are intended to support complex workflows when all we're trying to do is allow one computer to push/pull from Git. 
-</div>
+::: {.callout-tip}
+### Types of Personal Tokens
+
+You now need to choose the type of token to generate. I *personally* find the old type of tokens easier to work with because the 'new' fine-grained tokens are intended to support complex workflows when all we're trying to do is allow one computer to push/pull from Git. 
+
+:::
   
 - Click the `Generate new token` button and set up the token so that it has **read/write `repo` privileges (full control of private repositories)**. You can change other settings (read/write packages, gists, and notifications) but this is not necessary.
 - Save the resulting token somewhere safe as you will need it again!
 
-<div class="alert alert-block alert-danger">
-<b>&#9888; Keep your Personal Token safe:</b> you will need it at least twice in this tutorial and may want to use it again on other computers. You can always create a new one, but then you'll need to update every computer where you access your GitHub repositories.
-</div>
+::: {.callout-warning}
+### Keep your Personal Token Safe
 
-### 6.3 Cloning Your Repository
+You will need it at least twice in this tutorial and may want to use it again on other computers. You can always create a new one, but then you'll need to update every computer where you access your GitHub repositories.
+
+:::
+
+## Cloning Your Repository
 
 Now we are going to `clone` (i.e. copy) the repository that you just created on to your own computer. This is surprisingly straightforward provided that you have installed the command line tools.
 
@@ -330,11 +371,13 @@ You should then copy the URL (visible in my screenshot as `https://github.com/jr
 cd $HOME/work/Documents/CASA/
 git clone <the_url_that_you_copied_from_the_browser>
 ```
+
 The first time that you do this, you will likely need to provide login information. Use your GitHub username and the Personal Access Token that you just created.
 
-### 6.4 Storing Credentials & 'Pulling'
+## Storing Credentials & 'Pulling'
 
 You can now activate the credtial helper that will store your Personal Access Token:
+
 ```bash
 cd fsds
 git config credential.helper store
@@ -343,7 +386,7 @@ git pull
 
 When you type `git pull` you _should_ be asked _again_ for your username and password. You should (again) use the Personal Access Token as your password. You should not be asked again for pushing or pulling data into this GitHub repository. If you are _not_ asked for your Personal Access Token then this likely means that your token is already saved and ready to use on all future 'actions'.
 
-### 6.5 Adding a Local File to Your Repository
+## Adding a Local File to Your Repository
 
 In order to tie together the different concepts covered above, we are now going add Practical 1 (_this_ practical) to _your_ GitHub repo. The easiest way to do this is to open the practicals as `Raw text` in your browser: so navigate to the [Practical 1](https://github.com/jreades/fsds/blob/master/practicals/Practical-01-Getting_Started.ipynb) page on GitHub and then click `Raw` to see something like this:
 
@@ -354,9 +397,12 @@ So, starting with the 'raw' notebook:
 1. Save this file to your computer as a notebook with the extension `.ipynb`. 
 2. Move the file to your repostiory folder (_e.g._ `$HOME/work/Documents/CASA/fsds/`).
 
-<div class="alert alert-block alert-success">
-    <b>&#128161; Extensions:</b> It is <em>highly</em> likely that your browser automatically added a <tt>.txt</tt> extension when you saved the Notebook file to your computer. You need to remove that ending to your file name or Jupyter won't be able to run it. You can rename a file by <em>moving</em> (bash: <tt>mv</tt>) from one name to another: <tt>mv <notebook_name>.ipynb.txt <notebook_name.ipynb</tt>
-</div>
+::: {.callout-tip}
+### File Extensions
+
+It is *highly* likely that your browser automatically added a `.txt` extension when you saved the Notebook file to your computer. You need to remove that ending to your file name or Jupyter won't be able to run it. You can rename a file by *moving* (bash: `mv`) from one name to another: `mv <notebook_name>.ipynb.txt <notebook_name.ipynb`
+
+:::
 
 In the Terminal/Bash we now need `add` this file to Git so that it knows to keep track of it. Unlike Dropbox or OneDrive, just putting a file in a repo directory does _not_ mean that Git will pay attention to it:
 
@@ -366,11 +412,16 @@ git add Practical-01-Getting_Started.ipynb
 git commit -m "Adding notebook 1 to repo."
 ```
 
-<div class="alert alert-block alert-danger">
-    <b>&#9888; Remember:</b> Unless you have <em>added</em> and <em>committed</em> a file to Git then it is <em>not</em> version controlled.
-</div>
+::: {.callout-warning}
+### Add, Commit, Push, Repeat 
 
-### 6.6 Status Check
+Unless you have *added* and *committed* a file to Git then it is *not* version controlled.
+
+Unless you have *pushed* your committed files to GitHub they are only backed up locally.
+
+:::
+
+## Status Check
 
 We now want to check that the file has been successfully added to Git. We do this with a `status` check in the repository directory (_i.e._ `cd $HOME/work/Documents/CASA/fsds/`):
 
@@ -379,6 +430,7 @@ git status
 ```
 
 You should see something like:
+
 ```bash
 On branch master
 Your branch is ahead of 'origin/master' by 1 commit.
@@ -387,7 +439,7 @@ Your branch is ahead of 'origin/master' by 1 commit.
 
 This is telling you that your local computer is 1 commit (the one that you _just_ completed) ahead of the 'origin', which is on GitHub. GitHub doesn't _have_ to be the origin (nor does the repository have to be one that we created in order to be an origin) but _conceptually_ and _practically_ it's easier to create new repositories on GitHub and clone them to our computer.
 
-### 6.7 Keep Pushing
+## Keep Pushing
 
 To synchronise the changes we just made, let's follow Git's advice:
 
@@ -413,11 +465,14 @@ To https://github.com/jreades/i2p.git
 
 If you now go over to your browser and visit your GitHub repo page (_e.g._ `https://github.com/jreades/fsds`) --- pressing the `Reload` button if you had the page open already --- then you should see that the file you added _on your computer_ is also showing up on the GitHub site as well! This means it's now fully version-controlled and backed-up.
 
-<div class="alert alert-block alert-danger">
-    <b>&#9888; Remember:</b> Unless have <em>pushed</em> your commits to GitHub they are <em>only</em> stored on <em>your</em> computer. So your files can be properly version-controlled, but without a <em>push</em> if you lose your computer you <em>still</em> lose everything!
-</div>
+::: {.callout-warning}
+### Keep Pushing
 
-### 6.8 More About Git
+Unless have *pushed* your commits to GitHub they are *only* stored on *your* computer. So your files can be properly version-controlled, but without a *push* if you lose your computer you *still* lose everything!
+
+:::
+
+## More About Git
 
 From here on out you can keep changes made either directly on GitHub or locally on your computer (or any _other_ computer to which you `clone` your repository) in synch by using `git push` (to _push_ changes from a local computer _up_ to the origin on GitHub) and `git pull` (to _pull_ changes available on the origin _down_ to the local computer).
 
@@ -432,50 +487,20 @@ That said, you can do a _lot_ more than just push/pull to your own repository an
 - [Learn Git Branching](https://learngitbranching.js.org) focusses on a key concept for software _collaboration_.
 - [Git Immersion](https://gitimmersion.com) provides a 'guided tour' of the fundamentals.
 
-<div class="alert alert-block alert-success">
-    <b>&#128161; Tip</b>: For the <a href="https://jreades.github.io/fsds/assessments/group.html">Group Work</a> every member of your group will need to make contributions to a GitHub repository. This will require learning how to invite others to be contributors, how to merge changes, and how to deal with conflicts of the coding kind.
-</div>
+::: {.callout-tip}
 
-## Task 7: Using Quarto
+For the <a href="https://jreades.github.io/fsds/assessments/group.html">Group Work</a> every member of your group will need to make contributions to a GitHub repository. This will require learning how to invite others to be contributors, how to merge changes, and how to deal with conflicts of the coding kind.
 
-Although we have also installed Quarto in the Docker image (see [Task 7](#Task-7:-Getting-Set-Up-with-Docker)), it is easier to use Quarto with fonts if you are running it directly on your computer, so that's what we're going to do now:
+:::
 
-1. [Download the Article Summary Template](https://github.com/jreades/sds_env/blob/master/skills/Article_Summary.qmd) and then click on the `Raw` button to access the Markdown.
-2. Save it somewhere accessible and rename it if you like (e.g. `$HOME/work/Documents/CASA/fsds/articles/Template.qmd`)
+# Other Ways of Using Docker
 
-At this point you _should_ be able to turn the template file into a PDF as follows:
+::: {.callout-tip}
+### Advanced Content Warning 
 
-```bash
-cd $HOME/work/Documents/CASA/fsds/
-quarto render articles/Template.qmd 
-```
+The two techniques below are: 1) advanced; and 2) not essential to using Docker for this module. We will offer limited support for this if we can, but you will be a lower priority for support since these are *entirely* at your discretion.
 
-You should then see a number of messages appear and, eventually, 
-```bash
-Output created: Template.pdf
-```
-
-Open this PDF file and you _should_ see the Markdown content from `Template.qmd` converted into a well-formatted, if not particularly attractive, [PDF like this](https://jreades.github.io/sds_env/skills/Article_Summary.pdf). We'll see in later sesesions how to specify fonts and do a good deal more. But this is enough to show that you have quarto installed and running successfully! 
-
-<div class="alert alert-block alert-info">
-    <b>&#9888; Notice:</b> we are steadily adding files and directories to the <tt>fsds</tt> folder that we originally created. We have an <tt>articles</tt> folder now (though we have <i>not</i> yet added it to Git. And we have the practical... as time goes on more and more files and folders will live your Git directory!
-</div>
-
-To add the articles and template QMD file to Git it's the same process as it was for the practical:
-
-```bash
-git add articles # Will automatically add files under articles/
-git commit -m "Adding article template"
-git push
-```
-
-If you visit the GitHub web page for your FSDS repository you should now see this folder and file there as well!
-
-## Other Ways of Using Docker
-
-<div class="alert alert-block alert-warning">
-<b>&#9888; Warning</b>: The two techniques below are: 1) advanced; and 2) not essential to using Docker for this module. We will offer limited support for this if we can, but you will be a lower priority for support since these are <em>entirely</em> at your discretion.
-</div>
+:::
 
 There are two _other_ ways of running Docker:
 
@@ -489,6 +514,7 @@ There are two _other_ ways of running Docker:
 - [Markdown Guide](https://www.markdownguide.org/basic-syntax/), which helpfully includes do's and don'ts.
 
 Finally, these are a bit overkill but the bits about setting up and installing `git`, `bash`/`zsh`, and so on may come in handy later:
+
 - [Setting Up a New Mac](https://www.taniarascia.com/setting-up-a-brand-new-mac-for-development/)
 - [Beginner's Guide to Setting Up Windows 10](https://medium.com/@mfosullivan/a-beginners-guide-to-setting-up-a-modern-web-development-environment-on-windows-10-4d75cd94cde8)
 - [Setting up Windows without Linux](https://dev.to/jozsefsallai/how-i-ve-set-up-my-windows-machine-as-a-development-environment-without-wsl-2kcl)
@@ -496,7 +522,7 @@ Finally, these are a bit overkill but the bits about setting up and installing `
 
 # Answers
 
-Normally, I will provide 'answers' later in the week, but for _this_ week it makes sense to provide them right away if you need them...
+Normally, we will provide 'answers' later in the week, but for _this_ week it makes sense to provide them right away if you need them...
 
 ## .Gitignore
 
@@ -515,6 +541,3 @@ data/
 ```
 
 That's it. 
-
-## 
-
