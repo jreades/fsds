@@ -1,13 +1,10 @@
 ---
-title: Preamble
+title: "Practical 6: Spatial Data"
+subtitle: "Getting to grips with Geo-Data using Geopandas"
 jupyter: python3
 ---
 
-<div style="float:left">
-    <h1 style="width:450px">Practical 6: Spatial Data</h1>
-    <h2 style="width:450px">Getting to grips with Geo-Data using Geopandas</h2>
-</div>
-<div style="float:right"><img width="100" src="https://github.com/jreades/i2p/raw/master/img/casa_logo.jpg" /></div>
+:::
 
 | Complete | Part 1: Foundations | Part 2: Data | Part 3: Analysis |     |
 | :------- | :------------------ | :----------- | :--------------- | --: |
@@ -16,10 +13,14 @@ jupyter: python3
 Last week we did some initial processing on the Inside Airbnb listings data, focussing on its *numeric* properties. This week we are going to focus on the *spatial* properties of the data set.
 
 
-<div class="alert alert-block alert-success"><b>&#128161; Tip</b>: It makes life a lot easier if you gather all of the library import commands and configuration information (here having to do with `matplotlib`) in the first exectuable code block in a notebook or script. That way it's easy for you for others to see what what it is necessary to have installed before getting started!.</div>
+::: {.callout-tip}
+**&#128161; Tip**: It makes life a lot easier if you gather all of the library import commands and configuration information (here having to do with `matplotlib`) in the first exectuable code block in a notebook or script. That way it's easy for you for others to see what what it is necessary to have installed before getting started!.
 
+:::
 
-```{python}
+# Preamble
+
+```python
 import os
 import numpy as np
 import pandas as pd
@@ -28,11 +29,12 @@ import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 ```
 
-## Task 1. Reading Geo-Data
+# Reading Geo-Data
 
-<div class="alert alert-block alert-info">
-    <b>&#128279; Connections</b>: We're building on the work done in <a href="Practical-05-Numeric_Data.ipynb">Practical 5</a> and <a href="Practical-04-Objects.ipynb">Practical 4</a> (with a particular nod to the <a href="https://jreades.github.io/fsds/sessions/week5.html#lectures">lecture on Data</a>) to create some useful functions that we can call on at-need to improve the ease of doing data analysis.
-</div>
+::: {.callout-note}
+
+    **&#128279; Connections**: We're building on the work done in [Practical 5](Practical-05-Numeric_Data.ipynb) and [Practical 4](Practical-04-Objects.ipynb) (with a particular nod to the [lecture on Data](https://jreades.github.io/fsds/sessions/week5.html#lectures)) to create some useful functions that we can call on at-need to improve the ease of doing data analysis.
+:::
 
 I find GeoPackages and GeoParquet to be by far the easiest way to distribute geo-data now: they are a single file (in a database-like format that supports multiple types of data), include the projection information by default, and in some cases QGIS can even embed information about rendering style! 
 
@@ -40,15 +42,21 @@ We're going to do something _similar_ to the `get_url` function in `dtools` in o
 
 You'll need to add the documentation yourself and I've left a few `??` to challenge you.
 
-### Task 1.1: Caching Data Files
+##: Caching Data Files
 
 I've used the Numpy-style comments here, but the Google-style also look good in this context and all styles of answer are acceptable so long as they *work*. See overview of commenting styles [on DataCamp](https://www.datacamp.com/community/tutorials/docstrings-python).
 
-<div class="alert alert-block alert-success"><b>&#128161; Tip</b>: Use this as an opportunity to improve your ability to read code and to learn through documentation.</div>
+::: {.callout-tip}
+**&#128161; Tip**: Use this as an opportunity to improve your ability to read code and to learn through documentation.
 
-<div class="alert alert-block alert-warning"><b>Difficulty level</b>: Moderate</div>
+:::
 
-```{python}
+::: {.callout-warning}
+**Difficulty level**: Moderate
+
+:::
+
+```python
 import os
 from requests import get
 from urllib.parse import urlparse
@@ -87,13 +95,16 @@ def cache_data(src:str, dest:str) -> str:
 help(cache_data) # <- This should show the docstring you've written
 ```
 
-### Task 1.2: Read Remote Geo-Data
+##: Read Remote Geo-Data
 
-<div class="alert alert-block alert-success"><b>Difficult level</b>: Low, if your function works!</div>
+::: {.callout-tip}
+**Difficult level**: Low, if your function works!
+
+:::
 
 Use the function above to download and cache the GeoPackage files found [on GitHub](https://github.com/jreades/fsds/tree/master/data/src) for Boroughs, Water, and Greenspace, then pass the output of these to GeoPandas. If you have been having trouble downloading files from GitHub, then use the understanding of the function developed above to download the file manually and place it where this function expects to find it!
 
-```{python}
+```python
 ddir  = os.path.join('data','geo') # destination directory
 spath = 'https://github.com/jreades/i2p/blob/master/data/src/' # source path
 
@@ -104,41 +115,53 @@ green = gpd.read_file( ??(spath+'Greenspace.gpkg?raw=true', ddir) )
 print('Done.')
 ```
 
-### Task 1.3: Check the Projection
+##: Check the Projection
 
-<div class="alert alert-block alert-success"><b>Difficult level</b>: Low</div>
+::: {.callout-tip}
+**Difficult level**: Low
+
+:::
 
 Check the projection of each GeoDataFrame using a for loop and the `crs` attribute.
 
-```{python}
+```python
 for g in [??]:
     print(g.??)
 ```
 
 You should see that all three are in the [EPSG:27700 CRS](https://epsg.io/27700) which is a common one for analysis using GB data.
 
-### Task 1.4: Check the Data
+##: Check the Data
 
-<div class="alert alert-block alert-success"><b>Difficult level</b>: Low</div>
+::: {.callout-tip}
+**Difficult level**: Low
+
+:::
 
 We'll see how you control figure-making more effectively later, but for now let's just see what they look like using plot:
 
-```{python}
+```python
 for ??:
     ??.plot()
 ```
 
-## Task 2. An Introduction to Mapping
+# An Introduction to Mapping
 
 These files all contain polygons, and the adjustments for points are different, but it's worth seeing how you can tweak these before we start combining them. Behind the scenes, GeoPandas is using `matplotlib` to render the map, so let's play with the colours to get the _start_ of something map-like. 
 
 You will want to look both at [how to make maps in GeoPandas](https://geopandas.org/mapping.html) and  at the different ways to [specify colours in Matplotlib](https://matplotlib.org/3.1.1/tutorials/colors/colors.html#specifying-colors). For the greenspace map you are looking for information about tuples... which can have three or four elements.
 
-### Task 2.1: Work Out the Colour Scheme
+##: Work Out the Colour Scheme
 
-<div class="alert alert-block alert-warning"><b>Difficulty level</b>: Moderate</div>
+::: {.callout-warning}
+**Difficulty level**: Moderate
 
-<div class="alert alert-block alert-danger"><b>&#9888; Warning</b>: R and Python take <i>very</i> different approaches to plotting. Do <i>not</i> think of Python's output as being 'maps' in the GIS sense, they are composed of 'patches' of color on abstract 'axes' that can use any arbitrary coordinate space. So colours are 'really' triplet (or quadruplet if you have alpha-blending transparency) values in the range 0.0-1.0. Annotations are then added in similarly abstract fashion.</div>
+:::
+
+::: {.callout-caution}
+**&#9888; Warning**: R and Python take *very</i> different approaches to plotting. Do <i>not</i> think of Python's output as being 'maps' in the GIS sense, they are composed of 'patches' of color on abstract 'axes' that can use any arbitrary coordinate space. So colours are 'really' triplet (or quadruplet if you have alpha-blending transparency) values in the range 0.0-1.0. Annotations are then added in similarly abstract fashion.
+
+:::
 
 I'd **suggest** the following colour scheme as a way to test out different ways of specifying colour (though anything you like is fine so long as you manipulate the colours):
 
@@ -146,7 +169,7 @@ I'd **suggest** the following colour scheme as a way to test out different ways 
 - The water should have no edges and XKCD Lightblue fill.
 - The greenspace should have edges and faces specified using different 'alpha blending' (i.e. transparency) levels.
 
-#### 2.1.1 Boroughs
+### Boroughs
 
 By way of a hint, matplotlib uses `edgecolor` and `facecolor` for controlling 'patches' (which is what polygons are considered), but the thicker-than-default line-width is specified differently (you'll need to look this up). So the intention is:
 
@@ -155,33 +178,36 @@ By way of a hint, matplotlib uses `edgecolor` and `facecolor` for controlling 'p
 
 Just to drive home how different this is from R, you can find the answer to question 1 [on the page for bar plots](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.bar.html).
 
-```{python}
+```python
 boros.plot(??)
 ```
 
-#### 2.1.2: Water
+###: Water
 
 The process is the same as above, but I'd like you to work out how to specify:
 1. _No_ color for an edge, and 
 2. An XKCD color for the face.
 
-```{python}
+```python
 water.plot(??)
 ```
 
-#### 2.1.3 Greenspace
+### Greenspace
 
 The process is _also_ the same as above, but I'd like you to work out how to specify colours and transparency using RGBA (red-green-blue-alpha transparency) tuples. So we're looking for:
 1. No edge color.
 2. A partially transparent green specified as a 'tuple' (4 numbers in parentheses in the range 0.0-1.0).
 
-```{python}
+```python
 green.plot(??)
 ```
 
-### Task 2.2 Combining Layers
+## Combining Layers
 
-<div class="alert alert-block alert-warning"><b>&#9888; Note</b>: R and Python take <i>very</i> different approaches to plotting. Do <i>not</i> think of Python's output as being 'maps' in the GIS sense, they are composed of 'patches' of color on abstract 'axes' that can use any arbitrary coordinate space. So colours are 'really' numerical triplets (or quadruplets if you have transparency as well) in the range 0.0-1.0. Annotations are then added in similarly abstract fashion.</div>
+::: {.callout-warning}
+**&#9888; Note**: R and Python take *very</i> different approaches to plotting. Do <i>not</i> think of Python's output as being 'maps' in the GIS sense, they are composed of 'patches' of color on abstract 'axes' that can use any arbitrary coordinate space. So colours are 'really' numerical triplets (or quadruplets if you have transparency as well) in the range 0.0-1.0. Annotations are then added in similarly abstract fashion.
+
+:::
 
 Now that we've got our layers looking roughly how we want them, it's time to combine them. This is also reliant on `matplotlib` and basically involves plotting items to _shared axes_ which is done by passing in `ax=<axis object>` to each `plot(...)`. By convention, if you only have a single figure (e.g. a single map) then you create an axis object and name it `ax` so you will see a lot of `ax=ax` code in graphing libraries, but `=ax` is just saying 'assign to the axis object that I created'.
 
@@ -195,11 +221,17 @@ You can set these limits before or after you start adding layers to the 'map', b
 3. Work out how to change the width of the edges for the boroughs layer. 
 4. Save it somewhere local so that you could, say, load it into a Markdown file!
 
-<div class="alert alert-block alert-success"><b>&#128161; Hint</b>: This is a first pass at a map, over the next few weeks we'll see how to add things like axis labels and titles to make it more 'map-like'. We don't have quite the built-in functionality of `ggplot` alas, but Python is advancing very quickly in this area. There is even <a href="https://github.com/yhat/ggpy">an implementation of ggplot in Python</a>, but it's functionality is more limited. In fact, there's <a href="https://github.com/has2k1/plotnine">more than one</a>...</div>
+::: {.callout-tip}
+**&#128161; Hint**: This is a first pass at a map, over the next few weeks we'll see how to add things like axis labels and titles to make it more 'map-like'. We don't have quite the built-in functionality of `ggplot` alas, but Python is advancing very quickly in this area. There is even [an implementation of ggplot in Python](https://github.com/yhat/ggpy), but it's functionality is more limited. In fact, there's [more than one](https://github.com/has2k1/plotnine)...
 
-<div class="alert alert-block alert-danger"><b>Difficulty level</b>: Hard</div>
+:::
 
-```{python}
+::: {.callout-caution}
+**Difficulty level**: Hard
+
+:::
+
+```python
 # Creates a new figure with specified number of
 # subplots (we'll see more of this later) and 
 # and the specified size (in inches by default).
@@ -221,7 +253,7 @@ You may wish for a different look, but here's one version of the output:
 
 ![](https://github.com/jreades/i2p/raw/master/practicals/img/Map-First_Pass.png)
 
-## Task 3. 'Creating' Geo-Data
+# 'Creating' Geo-Data
 
 Of course, you will also often encounter geo-data that is not yet 'geographically enabled'; the two most frequent contexts for this are:
 
@@ -230,13 +262,16 @@ Of course, you will also often encounter geo-data that is not yet 'geographicall
 
 We'll tackle each of these eventually, but for now we're going to focus on the first option.
 
-### Task 3.1: Parquet Pandas
+##: Parquet Pandas
 
 Let's re-use our `cache_data` function to download and save the full Inside Airbnb data set. Again, if you have trouble with downloading via code, use your understanding of the function to work out where to save your own copy of this file so that the function works as expected.
 
-<div class="alert alert-block alert-success"><b>Difficulty level</b>: Low</div>
+::: {.callout-tip}
+**Difficulty level**: Low
 
-```{python}
+:::
+
+```python
 # Set download URL
 host = 'https://orca.casa.ucl.ac.uk'
 path = '~jreades/data/2023-09-06-listings.parquet'
@@ -249,15 +284,21 @@ print(f"Data frame is {df.shape[0]:,} x {df.shape[1]}")
 
 You should see that the file was 'not found' so 'downloading' happened and then the size of the data frame was printed out.
 
-### Task 3.2: Checking Lat/Long
+##: Checking Lat/Long
 
 Before we mindlessly convert the data it might make sense to sanity-check the data. In GeoPandas we have a `total_bounds` method that gives us the bounding box for a GeoSeries, but how would we do that in Pandas?
 
-<div class="alert alert-block alert-success"><b>&#128161; Hint</b>: Think about what the 'total bounds' (or 'envelope') of a point data set is. You have already seen the pandas functions you'll need to <em>find</em> these...</div>
+::: {.callout-tip}
+**&#128161; Hint**: Think about what the 'total bounds' (or 'envelope') of a point data set is. You have already seen the pandas functions you'll need to _find_ these...
 
-<div class="alert alert-block alert-warning"><b>Difficulty Level</b>: Moderate</div>
+:::
 
-```{python}
+::: {.callout-warning}
+**Difficulty Level**: Moderate
+
+:::
+
+```python
 print(f"The bottom-left corner is {??}, {??}")
 print(f"The top-right corner is {??}, {??}")
 ```
@@ -268,9 +309,12 @@ The bottom-left corner is -0.5, 51.3
 The top-right corner is 0.3, 51.7
 ```
 
-### Task 3.4: Embedding Web Maps
+##: Embedding Web Maps
 
-<div class="alert alert-block alert-danger"><b>Difficulty Level</b>: Hard</div>
+::: {.callout-caution}
+**Difficulty Level**: Hard
+
+:::
 
 This is more for the sake of demonstrating Python's features than because it's part of my workflow, but what the heck, let's do it! We will create and embed a zoomable web map in the notebook; to do _that_ we need to:
 
@@ -280,9 +324,12 @@ This is more for the sake of demonstrating Python's features than because it's p
 
 If your work is going well, perhaps you may also want to experiment with [different basemaps](https://ipyleaflet.readthedocs.io/en/latest/api_reference/basemaps.html).
 
-<div class="alert alert-block alert-success"><b>&#128161; Hint</b>: You can't use <tt>round</tt> here because it it could round up or down depending on what's closest and, consequently, cut off data on your map. So you'll have to look for two <i>other</i> functions that do this predictably (e.g. always rounding down, even if the value is 4.999999). However, those functions don't handle decimals like <tt>round</tt> does, so you need to think about how you could turn a number like 4.99 into a number that those functions <i>can</i> work with and then turn it <i>back</i> into the decimal...</div>
+::: {.callout-tip}
+**&#128161; Hint**: You can't use `round` here because it it could round up or down depending on what's closest and, consequently, cut off data on your map. So you'll have to look for two *other</i> functions that do this predictably (e.g. always rounding down, even if the value is 4.999999). However, those functions don't handle decimals like `round` does, so you need to think about how you could turn a number like 4.99 into a number that those functions <i>can</i> work with and then turn it <i>back</i> into the decimal...
 
-```{python}
+:::
+
+```python
 from math import floor, ceil
 
 # Calculate min and max to *two* decimal places
@@ -313,7 +360,7 @@ You'll see *why* this happens in the answer notebook.
 
 If you've managed the calculations above, then this code should simply run!
 
-```{python}
+```python
 from ipyleaflet import Map, basemaps, basemap_to_tiles, Rectangle, projections
 
 # Note the basemap can be easily changed
@@ -334,9 +381,12 @@ Your map should look like this:
 
 ![](https://github.com/jreades/i2p/raw/master/practicals/img/Stamen.png)
 
-### Task 3.5: Lat/Long to GeoSeries
+##: Lat/Long to GeoSeries
 
-<div class="alert alert-block alert-success"><b>Difficulty Level</b>: Low</div>
+::: {.callout-tip}
+**Difficulty Level**: Low
+
+:::
 
 Right, we're finally there! We need to convert our coordinates into some kind of geo-data. GeoPandas offers two ways to do this: the original way using `zip` and a new utility method called `points_from_xy`. Here's the old way:
 ```python
@@ -346,25 +396,28 @@ gdf = gpd.GeoDataFrame(df,
 ```
 Note, however, that this did not automatically set a projection, unlike the new approach with the 'helper function':
 
-```{python}
+```python
 gdf = gpd.GeoDataFrame(df, 
       geometry=gpd.??(df.??, df.??, crs='epsg:4326'))
 ```
 
-```{python}
+```python
 print(type(gdf))
 print(type(gdf.geometry))
 ```
 
-### Task 3.6: Plotting
+##: Plotting
 
-<div class="alert alert-block alert-success"><b>Difficulty Level</b>: Low</div>
+::: {.callout-tip}
+**Difficulty Level**: Low
+
+:::
 
 Now that we've converted the InsideAirbnb data to a GeoDataFrame, we can plot it, reproject it, etc.
 
 See if you can work out how to plot the points coloured by their price using the appropriate BNG projection.
 
-```{python}
+```python
 gdf.to_crs(??).plot(column=??, cmap=??, alpha=0.25, markersize=1, figsize=(12,8));
 ```
 
@@ -372,21 +425,27 @@ Using the Viridis colourmap I get the following:
 
 ![Viridis Chloropleth Map of InsideAirbnb Listings](https://github.com/jreades/fsds/raw/master/practicals/img/Viridis.png)
 
-### Task 3.7: Saving Geo-Data Locally
+##: Saving Geo-Data Locally
 
-<div class="alert alert-block alert-success"><b>Difficulty Level</b>: Low</div>
+::: {.callout-tip}
+**Difficulty Level**: Low
+
+:::
 
 Since there are _many_ formats in which to save geo-data, rather than have multiple `to_format_x` methods, GeoPandas has _one_ for local files (`to_file`). If you are reading/writing a filename than ends in a valid extension (e.g. `.shp`, `.gpkg`, or `.geojson`) then GeoPandas will 'do the right thing'. Where you *may* run into trouble is if you are reading/writing a **URL** (e.g. [https://github.com/jreades/fsds/blob/master/data/src/Boroughs.gpkg?raw=true](https://github.com/jreades/fsds/blob/master/data/src/Boroughs.gpkg?raw=true)). With this URL ending in `?raw=true` there's no extension that GeoPandas can read so you *will* need to specify a driver. If in doubt, specify the driver as below:
 
-<div class="alert alert-block alert-info"><b>Clarification</b>: in this example we are reading from GitHub and I'm saying that we need to specify the driver. So why didn't we need to do with the <tt>cache_data</tt> function earlier as well? Well, this was a side-benefit of using the standard URL library: it <i>automatically</i> stripped off the query string (<tt>?raw=true</tt>) when I asked it for the file name, so we saved the file locally as a GeoPackage with <tt>.gpkg</tt> extension, which means that GeoPandas could read it without any problems.</div>
+::: {.callout-note}
+**Clarification**: in this example we are reading from GitHub and I'm saying that we need to specify the driver. So why didn't we need to do with the `cache_data` function earlier as well? Well, this was a side-benefit of using the standard URL library: it *automatically</i> stripped off the query string (`?raw=true`) when I asked it for the file name, so we saved the file locally as a GeoPackage with `.gpkg` extension, which means that GeoPandas could read it without any problems.
+
+:::
 
 So the following two bits of code are equivalent:
 
-```{python}
+```python
 boros.to_file('test.gpkg') # This *may* not always do what we want, but should be fine for local files
 ```
 
-```{python}
+```python
 boros.to_file('test.gpkg', driver='GPKG') # This is safer if working across computers/the Internet
 ```
 
@@ -399,7 +458,7 @@ So we have two options:
 
 Notice the difference:
 
-```{python}
+```python
 print(f"Using '{fn}' as basis for saving data...")
 gdf.to_file(os.path.join('data','geo',fn.replace('.parquet','.gpkg')), driver='GPKG')
 ```
@@ -408,45 +467,48 @@ If you try to save as a GeoPackage file then the code above typically throws a `
 
 But the below, in which we specify as a 'geoparquet' because of the coordinate data, does not:
 
-```{python}
+```python
 print(f"Using '{fn}' as basis for saving data...")
 gdf.to_parquet(os.path.join('data','geo',fn.replace('.parquet','.geoparquet')))
 ```
 
-### Task 3.8: Compare
+##: Compare
 
 It's also worth comparing the output of a point with the output of a polygon or multi-polygon because you may well come across data in formats (e.g. WKT) resembling both of these in real data sets and they *can* be read as well. Notice too that we can use `loc` and `iloc` accessor methods to pull individual points and polygons out of a GeoDataFrame!
 
-```{python}
+```python
 print(gdf.geometry.iloc[1]) # Print out the object's contents
 gdf.geometry.iloc[1] # The object knows how to print itself as a point
 ```
 
-```{python}
+```python
 print(str(boros.geometry.iloc[1])[:399] + "...") # Object to string then print out first 399 characters
 boros.geometry.iloc[1] # So this is a multi-polygon boundary
 ```
 
 So each element of this Series has text indicating the type of shape the geometry applies to (e.g. _POLYGON_) followed by a bunch of numbers. These numbers are truncated here just to make things a little more legible.
 
-## Task 4. Dealing with (Geo)Data
+# Dealing with (Geo)Data
 
 Let's dig a little deeper into GeoPandas' features.
 
-### Task 4.1: Reprojection
+##: Reprojection
 
-<div class="alert alert-block alert-success"><b>Difficulty Level</b>: Low</div>
+::: {.callout-tip}
+**Difficulty Level**: Low
+
+:::
 
 Let's start by taking our InsideAirbnb data in its original projection...
 
-```{python}
+```python
 print(gdf.geometry.crs)
 print(gdf.total_bounds)
 ```
 
 ... and reprojecting this into the OSGB1936/BNG CRS:
 
-```{python}
+```python
 gdf = gdf.??(??) # There is no 'in_place=True' option here.
 print(gdf.geometry.crs)
 print(gdf.total_bounds)
@@ -454,30 +516,33 @@ print(gdf.total_bounds)
 
 Notice the change in total bounds from lat/long to Northing/Easting.
 
-### Task 4.2: More on Mapping
+##: More on Mapping
 
-<div class="alert alert-block alert-success"><b>Difficulty Level</b>: Low</div>
+::: {.callout-tip}
+**Difficulty Level**: Low
+
+:::
 
 As we saw above with the point-plot, in its original form the pricing data will not reveal much of interest because of the range of the data. However, as you will have seen in QM already (and as we explore in greater detail in Weeks 7/8), using *transformations* we can manipulate the data to increase its tractability for analysis.
 
-#### 4.2.1 Work out the Data Range
+### Work out the Data Range
 
 Let's start by getting a feel for the full data set in terms of the range of prices that it contains:
 
-```{python}
+```python
 print(f"The range of price is ${??:,.2f} to ${??:,.2f}")
 print(f"The mean and median of the price are ${??:,.2f} and ${??:,.2f}")
 ```
 
 Notice the neat little comma-separated thousands in there? That's fairly easy to do in English, but to use a thousands separator common to another language you would need to do something [a little more tricky](https://stackoverflow.com/questions/13082620/how-can-i-print-a-float-with-thousands-separators). 
 
-#### 4.2.2: Inheritance!
+###: Inheritance!
 
 We already know that GeoPandas _inherits_ functionality from Pandas, but let's formalise this... 
 
 First, let's check what class of object `gdf` is using the [`isinstance`](https://www.w3schools.com/python/ref_func_isinstance.asp) function:
 
-```{python}
+```python
 if isinstance(gdf, gpd.GeoDataFrame): # Is gdf a GeoDataFrame object?
     print("\tI'm a geopandas data frame!")
 
@@ -485,11 +550,11 @@ if isinstance(gdf, pd.DataFrame): # Is gdf *also* a DataFrame object?
     print("\tI'm a pandas data frame!")
 ```
 
-#### 4.2.3 Benefiting from Inheritance
+### Benefiting from Inheritance
 
 *That* result means that we can also investigate the data using, for instance, a pandas histogram:
 
-```{python}
+```python
 gdf.price.plot.??(bins=??, figsize=(13,3)); # Oooooh, let's use a *pandas* method here
 ```
 
@@ -499,21 +564,21 @@ We can see that there's very little data above (at a guess) about $2,000, but at
 
 Try adjusting the axis so that the x-range is 0..2500:
 
-```{python}
+```python
 ax = gdf.price.plot.??(bins=??, figsize=(13,3)); # Oooooh, let's use a *pandas* method here
 ax.??
 ```
 
 You can do the same thing with a boxplot:
 
-```{python}
+```python
 ax = gdf.price.plot.??(vert=False, figsize=(13,3))
 ax.??
 ```
 
 [More complex](https://stackoverflow.com/a/54023612/4041902) formatting is also possible if you really know your pandas and your matplotlib:
 
-```{python}
+```python
 gdf.price.plot(kind='box', vert=False, 
              color=dict(boxes='r', whiskers='r', medians='r', caps='r'),
              boxprops=dict(linestyle='-', linewidth=1.5),
@@ -524,11 +589,14 @@ gdf.price.plot(kind='box', vert=False,
              showfliers=False, grid=False, rot=0);
 ```
 
-### Task 4.3: Truncating and Transforming
+##: Truncating and Transforming
 
-<div class="alert alert-block alert-danger"><b>Difficulty Level</b>: Hard</div>
+::: {.callout-caution}
+**Difficulty Level**: Hard
 
-#### 4.3.1 Working it Out
+:::
+
+### Working it Out
 
 Anyway, drawing on everything we've seen over the past couple of weeks (and in *this* practical) I'd like you to:
 
@@ -540,11 +608,11 @@ Anyway, drawing on everything we've seen over the past couple of weeks (and in *
 6. Work out if other outliers need to be removed (use code from above).
 7. Remove outliers and then continue with your work...
 
-```{python}
+```python
 # Use this as a 'scratch space' to work out what's needed below...
 ```
 
-```{python}
+```python
 print(f"gdf has {gdf.shape[0]:,.0f} rows.")
 
 # ---------- Do the processing -------------
@@ -581,7 +649,7 @@ plt.title("Ln(Price) (Outliers not shown)")
 plt.show()
 ```
 
-#### 4.3.2 Plotting
+### Plotting
 
 Now plot the ln(price) as a chloropleth using:
 1. A figure size of 12 x 8
@@ -592,7 +660,7 @@ Now plot the ln(price) as a chloropleth using:
 
 I'd suggest [referring to the documentation](https://geopandas.org/mapping.html).
 
-```{python}
+```python
 ax = gdf.plot(figsize=??, marker='*', markersize=0.25, 
          column=??, cmap=??, 
          legend=??, legend_kwds=??);
@@ -603,15 +671,21 @@ Your map should look something like this:
     
 ![Plot of Natural Log of Nightly Price for Airbnb Listings (Outliers Removed)](https://github.com/jreades/fsds/raw/master/practicals/img/Airbnb-lnprice.png)
 
-### Task 4.4: Zooming In/Out
+##: Zooming In/Out
 
-<div class="alert alert-block alert-success"><b>Difficulty Level</b>: Low</div>
+::: {.callout-tip}
+**Difficulty Level**: Low
+
+:::
 
 That's a little hard to see, let's try zooming in on Central London! Very roughly, let's call that an Easting range of 525,000 to 535,000 and a Northing range of 178,000 to 185,000.
 
-<div class="alert alert-block alert-success"><b>&#128161; Hint</b>: You will need to remember that <tt>GeoDataFrame.plot()</tt> returns an axis object.</div>
+::: {.callout-tip}
+**&#128161; Hint**: You will need to remember that `GeoDataFrame.plot()` returns an axis object.
 
-```{python}
+:::
+
+```python
 ax = gdf.plot(figsize=(12,8), marker='*', markersize=0.25, 
          column='lnprice', cmap='viridis', 
          legend=True, legend_kwds={'label':'Natural Log of Price per Night ($)'});
@@ -626,13 +700,16 @@ You result should look something like this:
 
 That's a little better, but ideally we'd do more thinking about outliers... 
 
-### Task 4.5: Changing the Classification Scheme
+##: Changing the Classification Scheme
 
-<div class="alert alert-block alert-warning"><b>Difficulty Level</b>: Moderate (mainly computation time)</div>
+::: {.callout-warning}
+**Difficulty Level**: Moderate (mainly computation time)
+
+:::
 
 Let's give this one last try using a different classification scheme... such as Fisher-Jenks... for Central London!
 
-```{python}
+```python
 ax = gdf.plot(figsize=(12,8), marker='*', markersize=0.25, 
          column='lnprice', cmap='viridis', ??, k=5, 
          legend=True); # Note that the legend *label* had to go -- there are other ways to add it
@@ -643,13 +720,16 @@ ax.set_ylim([178000,185000])
 
 In which case we can...
 
-### Task 4.6: Bringing it All Together
+##: Bringing it All Together
 
-<div class="alert alert-block alert-danger"><b>Difficulty Level</b>: &#129327;</div>
+::: {.callout-caution}
+**Difficulty Level**: &#129327;
+
+:::
 
 And just to give a bit of a show of how we can put it all together:
 
-```{python}
+```python
 import pysal as p
 import mapclassify as mc
 import palettable.matplotlib as palmpl
@@ -761,7 +841,10 @@ I'll be honest, I do find ggplot easier for making good-quality; this _is_ more 
 
 Scalebars are awkward, and there's now a library that can help with this [on GitHub](https://github.com/ppinard/matplotlib-scalebar) that I've installed. But I'll leave that one to you.
 
-<div class="alert alert-block alert-success"><b>&#128161; Tip</b>: You can find a lot of <i>possible</i> solutions in <a href="https://stackoverflow.com/questions/32333870/how-can-i-show-a-km-ruler-on-a-cartopy-matplotlib-plot">this Stackoverflow thread</a> that <i>should</i> work without needing to install new libraries but I've not had a chance to test them each individually. You would undoubtedly want to put this in an external package and import it when needed rather than paste this code into every file. But you might find it easier to <i>test</i> the solutions by pasting. If you're looking for glory (and my gratitude) then working out which of these is most generalisable (i.e. would work with both lat/long <i>and</i> OSGB coordinates) would be quite the challenge!</div>
+::: {.callout-tip}
+**&#128161; Tip**: You can find a lot of *possible</i> solutions in [this Stackoverflow thread](https://stackoverflow.com/questions/32333870/how-can-i-show-a-km-ruler-on-a-cartopy-matplotlib-plot) that <i>should</i> work without needing to install new libraries but I've not had a chance to test them each individually. You would undoubtedly want to put this in an external package and import it when needed rather than paste this code into every file. But you might find it easier to <i>test</i> the solutions by pasting. If you're looking for glory (and my gratitude) then working out which of these is most generalisable (i.e. would work with both lat/long <i>and</i> OSGB coordinates) would be quite the challenge!
+
+:::
 
 ### Getting More Help/Applications
 

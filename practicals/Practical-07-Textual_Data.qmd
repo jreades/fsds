@@ -1,13 +1,10 @@
 ---
-title: Preamble
+title: "Practical 7: Working with Text"
+subtitle: "The basics of Text Mining and NLP"
 jupyter: python3
 ---
 
-<div style="float:left">
-    <h1 style="width:450px">Practical 7: Working with Text</h1>
-    <h2 style="width:450px">The basics of text mining and NLP</h2>
-</div>
-<div style="float:right"><img width="100" src="https://github.com/jreades/i2p/raw/master/img/casa_logo.jpg" /></div>
+:::
 
 | Complete | Part 1: Foundations | Part 2: Data | Part 3: Analysis |     |
 | :------- | :------------------ | :----------- | :--------------- | --: |
@@ -22,11 +19,12 @@ A lot of the content here is provided to help you *understand* what text-cleanin
 
 The later parts are largely complete and ready to run; however, that *doesn't* mean you should just skip over them and think you've grasped what's happening and it will be easy to apply in your own analyses. I would *not* pay as much attention to LDA topic mining since I don't think it's results are that good, but I've included it here as it's still commonly-used in the Digital Humanities and by Marketing folks. Word2Vec is much more powerful and forms the basis of the kinds of advances seen in ChatGPT and other LLMs.
 
-<div class="alert alert-block alert-info">
-    <b>&#128279; Connections</b>: working with text is unquestionably <em>hard</em>. In fact, <em>conceptually</em> this is probaly the most challenging practical of the term! But data scientists are <em>always</em> dealing with text because so much of the data that we collect (even more so thanks to the web) is not only text-based (URLs are text!) but, increasingly, unstructured (social media posts, tags, etc.). So while getting to grips with text is a challenge, it also uniquely positions you with respect to the skills and knowledge that other graduates are offering to employers.
-</div>
+::: {.callout-note}
 
+    **&#128279; Connections**: working with text is unquestionably _hard_. In fact, _conceptually_ this is probaly the most challenging practical of the term! But data scientists are _always_ dealing with text because so much of the data that we collect (even more so thanks to the web) is not only text-based (URLs are text!) but, increasingly, unstructured (social media posts, tags, etc.). So while getting to grips with text is a challenge, it also uniquely positions you with respect to the skills and knowledge that other graduates are offering to employers.
+:::
 
+# Preamble
 
 This practical has been written using `nltk`, but would be _relatively_ easy to rework using `spacy`. Most programmers tend to use one *or* the other, and the switch wouldn't be hard other than having to first load the requisite language models:
 ```python
@@ -35,21 +33,23 @@ nlp = spacy.load("en_core_web_sm") # `...web_md` and `...web_lg` are also option
 ```
 You can [read about the models](https://spacy.io/models/en), and note that they are also [available in other languages](https://spacy.io/usage/models) besides English.
 
-## Task 1. Setup
+# Setup
 
-<div class="alert alert-block alert-success">
-    <b>Difficulty Level</b>: easy, but only because this has been worked out for you. Starting from sctach in NLP is <em>hard</em> so people try to avoid it as much as possible.
-</div>
+::: {.callout-tip}
 
-### Task 1.1 Required Modules
+    **Difficulty Level**: easy, but only because this has been worked out for you. Starting from sctach in NLP is _hard_ so people try to avoid it as much as possible.
+:::
 
-<div class="alert alert-block alert-info">
-    Notice that the number of modules and functions that we import is steadily increasing week-on-week, and that for text processing we tend to draw on quite a wide range of utilies! That said, the three most commonly used are: <tt>sklearn</tt>, <tt>nltk</tt>, and <tt>spacy</tt>.
-</div>
+## Required Modules
+
+::: {.callout-note}
+
+    Notice that the number of modules and functions that we import is steadily increasing week-on-week, and that for text processing we tend to draw on quite a wide range of utilies! That said, the three most commonly used are: `sklearn`, `nltk`, and `spacy`.
+:::
 
 Standard libraries we've seen before.
 
-```{python}
+```python
 import os
 import numpy as np
 import pandas as pd
@@ -61,7 +61,7 @@ import matplotlib.pyplot as plt
 
 Vectorisers we will use from the 'big beast' of Python machine learning: Sci-Kit Learn.
 
-```{python}
+```python
 from sklearn.preprocessing import OneHotEncoder # We don't use this but I point out where you *could*
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
@@ -70,7 +70,7 @@ from sklearn.decomposition import LatentDirichletAllocation
 
 NLP-specific libraries that we will use for tokenisation, lemmatisation, and frequency analysis.
 
-```{python}
+```python
 import nltk
 import spacy
 from nltk.corpus import wordnet as wn
@@ -92,18 +92,18 @@ tokenizer = ToktokTokenizer()
 
 Remaining libraries that we'll use for processing and display text data. Most of this relates to dealing with the various ways that text data cleaning is *hard* because of the myriad formats it comes in.
 
-```{python}
+```python
 import string
 import unicodedata
 from bs4 import BeautifulSoup
 from wordcloud import WordCloud, STOPWORDS
 ```
 
-### Task 1.1: Configure
+##: Configure
 
 There isn't a lot to configure for this week, but you *will* want to examine the results from the first pass through the data in order to update the list of **stopwords**:
 
-```{python}
+```python
 #nltk.download('wordnet') # <-- These are done in a supporting tool, but in your own
 #nltk.download('averaged_perceptron_tagger') # application you'd need to import them
 stopword_list = set(stopwords.words('english'))
@@ -111,7 +111,7 @@ stopword_list = set(stopwords.words('english'))
 
 This next is just a small utility function that allows us to output Markdown (like this cell) instead of plain text:
 
-```{python}
+```python
 from IPython.display import display_markdown
 
 def as_markdown(head='', body='Some body text'):
@@ -123,15 +123,16 @@ def as_markdown(head='', body='Some body text'):
 as_markdown('Result!', "Here's my output...")
 ```
 
-### Task 1.2: Loading Data
+##: Loading Data
 
-<div class="alert alert-block alert-info">
-    <b>&#128279; Connections</b>: Because I generally want each practical to stand on its own (unless I'm trying to make a <em>point</em>), I've not moved this to a separate Python file (e.g. <tt>utils.py</tt>, but in line with what we covered back in the lectures on <a href="https://jreades.github.io/fsds/sessions/week3.html#lectures">Functions and Packages</a>, this sort of thing is a good candidate for being split out to a separate file to simplify re-use.
-</div>
+::: {.callout-note}
+
+    **&#128279; Connections**: Because I generally want each practical to stand on its own (unless I'm trying to make a _point_), I've not moved this to a separate Python file (e.g. `utils.py`, but in line with what we covered back in the lectures on [Functions and Packages](https://jreades.github.io/fsds/sessions/week3.html#lectures), this sort of thing is a good candidate for being split out to a separate file to simplify re-use.
+:::
 
 Remember this function from last week? We use it to save downloading files that we already have stored locally. But notice I've made some small changes... what do these do to help the user?
 
-```{python}
+```python
 import os
 from requests import get
 from urllib.parse import urlparse
@@ -202,13 +203,14 @@ def cache_data(src:str, dest:str) -> str:
     return dfn
 ```
 
-<div class="alert alert-block alert-success">
-    <b>&#128161; Tip</b>: for very large <em>non</em>-geographic data sets, remember that you can <tt>use_cols</tt> (or <tt>columns</tt> for feathers) to specify a subset of columns to load.
-</div>
+::: {.callout-tip}
+
+    **&#128161; Tip**: for very large _non_-geographic data sets, remember that you can `use_cols` (or `columns` for feathers) to specify a subset of columns to load.
+:::
 
 Load the main data set:
 
-```{python}
+```python
 # Set download URL
 host = 'https://orca.casa.ucl.ac.uk'
 path = '~jreades/data/'
@@ -220,13 +222,13 @@ gdf = gpd.read_parquet( cache_data(url, os.path.join('data','geo')),
                                'description', 'amenities', 'price'])
 ```
 
-```{python}
+```python
 print(f"gdf has {gdf.shape[0]:,} rows and CRS is {gdf.crs.name}.")
 ```
 
 Load supporting Geopackages:
 
-```{python}
+```python
 ddir  = os.path.join('data','geo') # destination directory
 spath = 'https://github.com/jreades/fsds/blob/master/data/src/' # source path
 
@@ -237,98 +239,106 @@ green = gpd.read_file( cache_data(spath+'Greenspace.gpkg?raw=true', ddir) )
 print('Done.')
 ```
 
-## Task 2. Exploratory Textual Analysis
+# Exploratory Textual Analysis
 
-<div class="alert alert-block alert-info">
-    <b>&#128279; Connections</b>: if you plan to work with data post-graduation then you will <em>need</em> to become comfortable with Regular Expressions (aka. regexes). These are the focus of the <a href="https://jreades.github.io/fsds/sessions/week7.html#lectures">Patterns in Text</a> lecture but they barely even scratch the surface of what regexes can do. They are <em>hard</em>, but they are powerful. 
-</div>
+::: {.callout-note}
 
-<div class="alert alert-block alert-success">
-    <b>&#128161; Tip</b>: In a full text-mining application I would spend a lot more time on this stage: sampling, looking at descriptions in full, performing my analysis (the rest of the steps) and then coming back with a deeper understanding of the data to make further changes to the analysis.
-</div>
+    **&#128279; Connections**: if you plan to work with data post-graduation then you will _need_ to become comfortable with Regular Expressions (aka. regexes). These are the focus of the [Patterns in Text](https://jreades.github.io/fsds/sessions/week7.html#lectures) lecture but they barely even scratch the surface of what regexes can do. They are _hard_, but they are powerful. 
+:::
+
+::: {.callout-tip}
+
+    **&#128161; Tip**: In a full text-mining application I would spend a lot more time on this stage: sampling, looking at descriptions in full, performing my analysis (the rest of the steps) and then coming back with a deeper understanding of the data to make further changes to the analysis.
+:::
 
 It's helpful to have a sense of what data look like before trying to do something with them, but by default pandas truncates quite a lot of output to keep it from overwhelming the display. For text processing, however, you should probably change the amount of preview text provided by pandas using the available options. *Note*: there are lots of other options that you can tweak in pandas.
 
-```{python}
+```python
 print(f"Default maximum column width: {pd.options.display.max_colwidth}") # What's this currently set to?
 pd.options.display.max_colwidth=250   # None = no maximum column width (you probably don't want to leave it at this)
 print(f"Now maximum column width set to: {???}")
 ```
 
-### Task 2.1: Investigate the Description Field
+##: Investigate the Description Field
 
-<div class="alert alert-block alert-warning">
-    <b>Difficulty Level</b>: Medium, because of the questions.
-</div>
+::: {.callout-warning}
+
+    **Difficulty Level**: Medium, because of the questions.
+:::
 
 To explore the description field properly you'll need to filter out any NA/NaN descriptions before sampling the result. *Hint*: you'll need to think about negation (`~`) of a method output that tells you if a field *is NA*.
 
-```{python}
+```python
 gdf[???].sample(5, random_state=42)[['description']]
 ```
 
-<div class="alert alert-block alert-danger">
-    <b>&#9888; Stop</b>: what do you notice about the above? Are they simple text? are there patterns of problems? Are there characters that represent things other than words and simple punctuation?
-</div>
+::: {.callout-caution}
 
-#### 2.1.1 Questions
+    **&#9888; Stop**: what do you notice about the above? Are they simple text? are there patterns of problems? Are there characters that represent things other than words and simple punctuation?
+:::
+
+### Questions
 
 - What patterns can you see that might need 'dealing with' for text-mining to work?
 - What non-text characters can you see? (Things *other* than A-Z, a-z, and simple punctuation!)
 
-### Task 2.2: Amenities Field
+##: Amenities Field
 
-<div class="alert alert-block alert-warning">
-    <b>Difficulty Level</b>: Medium, because of the questions.
-</div>
+::: {.callout-warning}
+
+    **Difficulty Level**: Medium, because of the questions.
+:::
 
 This field presents a subtle issue that might not be obvious here:
 
-```{python}
+```python
 gdf.amenities.sample(5, random_state=42)
 ```
 
 But look what happens now, can you see the issue a little more easily?
 
-```{python}
+```python
 gdf.amenities.iloc[0]
 ```
 
-#### 2.2.1 Questions
+### Questions
 
 - What's the implicit format of the Amenities columns?
 - How could you represent the data contained in the column?
 
-### Task 2.3: Remove NaN Values
+##: Remove NaN Values
 
-<div class="alert alert-block alert-warning">
-    <b>&#9888; Note</b>: I would be wary of doing the below in a 'proper' application without doing some careful research first, but to make our lives easier, we're going to drop rows where one of these values is NaN <em>now</em> so it will simplify the steps below. In reality, I would spend quite a bit more time investigating which values are NaN and why before simply dropping them.
-</div>
+::: {.callout-warning}
+
+    **&#9888; Note**: I would be wary of doing the below in a 'proper' application without doing some careful research first, but to make our lives easier, we're going to drop rows where one of these values is NaN _now_ so it will simplify the steps below. In reality, I would spend quite a bit more time investigating which values are NaN and why before simply dropping them.
+:::
 
 Anyway, drop all rows where *either* the description or amenities (or both) are NA:
 
-```{python}
+```python
 gdf = gdf.dropna(???)
 print(f"Now gdf has {gdf.shape[0]:,} rows.")
 ```
 
-## Task 3. Using Regular Expressions
+# Using Regular Expressions
 
-<div class="alert alert-block alert-info">
-    <b>&#128279; Connections</b>: We're building on the work done in <a href="Practical-05-Spatial_Data.ipynb">Practical 6</a>, but making use now of the lecture on <a href="https://jreades.github.io/fsds/sessions/week6.html#lectures">Patterns in Text</a>) to quickly sort through the listings.
-</div>
+::: {.callout-note}
+
+    **&#128279; Connections**: We're building on the work done in [Practical 6](Practical-05-Spatial_Data.ipynb), but making use now of the lecture on [Patterns in Text](https://jreades.github.io/fsds/sessions/week6.html#lectures)) to quickly sort through the listings.
+:::
 
 There is a _lot_ that can be done with Regular Expressions to identify relevant records in textual data and we're going to use this as a starting point for the rest of the analysis. I would normally consider the regexes here a 'first pass' at the data, but would look very carefully at the output of the TF/IDF vectorizer, Count vectorizer, and LDA to see if I could improve my regexes for further cycles of analysis... the main gain there is that regexes are _much_ faster than using the full NLP (Natural Language Processing) pipeline on the _full_ data set each time. As an alternative, you could develop the pipeline using a random subsample of the data and then process the remaining records sequentially -- in this context there is no justification for doing that, but with a larger corpus it might make sense.
 
-### Task 3.1: Luxury Accommodation
+##: Luxury Accommodation
 
-<div class="alert alert-block alert-danger">
-    <b>Difficulty Level</b>: Hard, because of the regular expression and questions.
-</div>
+::: {.callout-caution}
+
+    **Difficulty Level**: Hard, because of the regular expression and questions.
+:::
 
 I would like you to find listings that *might* (on the basis of word choice) indicate 'luxury' accommodation.
 
-#### 3.1.1 Create the Regular Expression
+### Create the Regular Expression
 
 You should start with variations on 'luxury' (i.e. luxurious, luxuriate, ...) and work out a **single regular expression** that works for variations on this *one* word. **Later**, I would encourage you to come back to this and consider what other words might help to signal 'luxury'... perhaps words like 'stunning' or 'prestigious'? Could you add those to the regex as well?
 
@@ -339,25 +349,25 @@ You should start with variations on 'luxury' (i.e. luxurious, luxuriate, ...) an
 
 In fact, in my real-world applications you might even need more than one group/non-capturing group in a *nested* structure.
 
-```{python}
+```python
 gdf[
     gdf.description.str.contains(r'???', regex=True, flags=re.IGNORECASE) # <-- The regex
 ].sample(5, random_state=42)[['description']]
 ```
 
-#### 3.1.2 Apply it to Select Data
+### Apply it to Select Data
 Assign it to a new data frame called `lux`:
 
-```{python}
+```python
 lux = gdf[gdf.description.str.contains(r'???', regex=True, flags=re.IGNORECASE)].copy()
 print(f"Found {lux.shape[0]:,} records for 'luxury' flats")
 ```
 
-#### 3.1.3 Plot the Data
+### Plot the Data
 
 Now we are going to create a more complex plot that will give space to both the spatial and price distributions using `subplot2grid`.
 
-```{python}
+```python
 help(plt.subplot2grid)
 ```
 
@@ -373,7 +383,7 @@ The critical thing here is to understand how we'er initialising a plot that has 
 
 Every time you call `subplot2grid` you are initialising a new axis-object into which you can then draw with your geopackage or pandas plotting methods.
 
-```{python}
+```python
 
 f,ax = plt.subplots(1,1,figsize=(12,8))
 ax.remove()
@@ -395,18 +405,19 @@ plt.tight_layout() # <-- Try creating the plot *without* this to see what it cha
 plt.show()
 ```
 
-#### 3.1.4 Questions
+### Questions
 
 - What does `suptitle` do and how is it different from `title`? Could you use this as part of your plot-making process?
 - What does `tight_layout` do?
 
-### Task 3.2: Budget Accommodation
+##: Budget Accommodation
 
-<div class="alert alert-block alert-success">
-    <b>Difficulty Level</b>: Easy, because you've worked out the hard bits already.
-</div>
+::: {.callout-tip}
 
-#### 3.2.1 Create the Regular Expression
+    **Difficulty Level**: Easy, because you've worked out the hard bits already.
+:::
+
+### Create the Regular Expression
 
 What words can you think of that might help you to spot affordable and budget accommodation? Start with just a couple of words and then I would encourage you to consider what _other_ words might help to signal 'affordability'... perhaps words like 'cosy' or 'charming' and then think about how you could you add those to the regex?
 
@@ -414,22 +425,22 @@ What words can you think of that might help you to spot affordable and budget ac
 
 1. I'd try adding word boundary markers to the regex (`\b`) where appropriate...
 
-```{python}
+```python
 gdf[
     gdf.description.str.contains(???, regex=True, flags=re.IGNORECASE)
 ].sample(5, random_state=42)[['description']]
 ```
 
-#### 3.2.2 Apply it to Select Data
+### Apply it to Select Data
 
-```{python}
+```python
 aff = gdf[gdf.description.str.contains(???, regex=True, flags=re.IGNORECASE)].copy()
 print(f"There are {aff.shape[0]:,} rows flagged as 'affordable'.")
 ```
 
-#### 3.2.3 Plot the Data
+### Plot the Data
 
-```{python}
+```python
 
 f,ax = plt.subplots(1,1,figsize=(12,8))
 ax.remove()
@@ -452,22 +463,23 @@ plt.savefig("Affordable_Listings.png", dpi=150)
 plt.show()
 ```
 
-#### 3.2.4 Questions
+### Questions
 
 - Do you think that this is a *good* way to select affordable options?
 - Do you understand what `dpi` means and how `savefig` works?
 - Copy the code from above but modify it to constrain the histogram on a more limited distribution by *filtering* out the outliers *before* drawing the plot. I would copy the cell above to one just below here so that you keep a working copy available and can undo any changes that break things.
 
-```{python}
+```python
 
 
 ```
 
-### Task 3.3: Near Bluespace
+##: Near Bluespace
 
-<div class="alert alert-block alert-warning">
-    <b>Difficulty Level</b>: Medium, because you're still learning about regexes.
-</div>
+::: {.callout-warning}
+
+    **Difficulty Level**: Medium, because you're still learning about regexes.
+:::
 
 Now see if you can work out a regular expression to find accommodation that emphasises accessibility to the Thames and other 'blue spaces' as part of the description? One thing you'll need to tackle is that some listings seem to say something about Thameslink and you wouldn't want those be returned as part of a regex looking for _rivers_. So by way of a hint:
 
@@ -475,17 +487,17 @@ Now see if you can work out a regular expression to find accommodation that emph
 - These will probably be *followed* by a qualifier like a 'view' (e.g. Thames-view) or a front (e.g. water-front).
 - But you need to rule out things like "close the Thameslink station..."
 
-#### 3.3.1 Create the regular Expression
+### Create the regular Expression
 
-```{python}
+```python
 gdf[
     gdf.description.str.contains(???, regex=???, flags=???)
 ].sample(5, random_state=42)[['description']]
 ```
 
-#### 3.3.2 Apply it to the Select Data
+### Apply it to the Select Data
 
-```{python}
+```python
 bluesp = gdf[
     (gdf.description.str.contains(???, regex=True, flags=re.IGNORECASE)) |
     (gdf.description.str.contains(???, regex=True, flags=re.IGNORECASE))
@@ -493,9 +505,9 @@ bluesp = gdf[
 print(f"Found {bluesp.shape[0]:,} rows.")
 ```
 
-#### 3.3.3 Plot the Data
+### Plot the Data
 
-```{python}
+```python
 
 f,ax = plt.subplots(1,1,figsize=(12,8))
 ax.remove()
@@ -518,23 +530,24 @@ plt.tight_layout()
 plt.show()
 ```
 
-#### 3.3.4 Questions
+### Questions
 
 - How else might you select listings with a view of the Thames or other bluespaces?
 
-## Task 4. Illustrative Text Cleaning
+# Illustrative Text Cleaning
 
 Now we're going to step through the _parts_ of the process that we apply to clean and transform text. We'll do this individually before using a function to apply them _all at once_.
 
-### Task 4.1: Downloading a Web Page
+##: Downloading a Web Page
 
-<div class="alert alert-block alert-success">
-    <b>Difficulty Level</b>: Easy.
-</div>
+::: {.callout-tip}
+
+    **Difficulty Level**: Easy.
+:::
 
 There is plenty of good economic geography research being done using web pages. Try using Google Scholar to look for work using the British Library's copy of the *Internet Archive*.
 
-```{python}
+```python
 from urllib.request import urlopen, Request
 
 # We need this so that the Bartlett web site 'knows'
@@ -558,15 +571,16 @@ html     = response.???.decode('utf-8') # The data u need
 print(html[:1000])
 ```
 
-### Task 4.2: Removing HTML
+##: Removing HTML
 
-<div class="alert alert-block alert-warning">
-    <b>Difficulty Level</b>: Medium, because what we're doing will seem really strange and uses some previously unseen libraries that you'll have to google.
-</div>
+::: {.callout-warning}
+
+    **Difficulty Level**: Medium, because what we're doing will seem really strange and uses some previously unseen libraries that you'll have to google.
+:::
 
 *Hint*: you need to need to **get the text** out of the each returned `<p>` and `<div>` element! I'd suggest also commenting this up since there is a *lot* going on on some of these lines of code!
 
-```{python}
+```python
 cleaned = []
 
 soup = BeautifulSoup(html)
@@ -581,24 +595,26 @@ for c in body.findChildren(recursive=False):
 cleaned
 ```
 
-### Task 4.3: Lower Case
+##: Lower Case
 
-<div class="alert alert-block alert-success">
-    <b>Difficulty Level</b>: Easy.
-</div>
+::: {.callout-tip}
 
-```{python}
+    **Difficulty Level**: Easy.
+:::
+
+```python
 lower = [c.???() for ??? in cleaned]
 lower
 ```
 
-### Task 4.4: Stripping 'Punctuation'
+##: Stripping 'Punctuation'
 
-<div class="alert alert-block alert-danger">
-    <b>Difficulty Level</b>: Hard, because you need to understand: 1) why we're <em>compiling</em> the regular expression and how to use character classes; and 2) how the NLTK tokenizer differs in approach to the regex.
-</div>
+::: {.callout-caution}
 
-#### 4.4.1 Regular Expression Approach
+    **Difficulty Level**: Hard, because you need to understand: 1) why we're _compiling_ the regular expression and how to use character classes; and 2) how the NLTK tokenizer differs in approach to the regex.
+:::
+
+### Regular Expression Approach
 
 We want to clear out punctuation using a regex that takes advantage of the `[...]` (character class) syntax. The really tricky part is remembering how to specify the 'punctuation' when some of that punctuation has 'special' meanings in a regular expression context. For instance, `.` means 'any character', while `[` and `]` mean 'character class'. So this is another *escaping* problem and it works the *same* way it did when we were dealing with the Terminal... 
 
@@ -607,23 +623,23 @@ We want to clear out punctuation using a regex that takes advantage of the `[...
 1. You will want to match more than one piece of punctuation at a time, so I'd suggest add a `+` to your pattern.
 2. You will need to look into *metacharacters* for creating a kind of 'any of the characters *in this class*' bag of possible matches.
 
-```{python}
+```python
 pattern = re.compile(r'[???]+')
 print(pattern)
 ```
 
-#### 4.4.2 Tokenizer
+### Tokenizer
 
 The other way to do this, which is probably *easier* but produces more complex output, is to draw on the tokenizers [already provided by NLTK](https://www.nltk.org/api/nltk.tokenize.html). For our purposes `word_tokenize` is probably fine, but depending on your needs there are other options and you can also write your own.
 
-```{python}
+```python
 from nltk.tokenize import word_tokenize
 print(word_tokenize)
 ```
 
-#### 4.4.3 Compare
+### Compare
 
-```{python}
+```python
 subbed = []
 tokens = []
 for l in lower:
@@ -637,18 +653,19 @@ for t in tokens:
     as_markdown("Tokenised", t)
 ```
 
-### Task 4.5: Stopword Removal
+##: Stopword Removal
 
-<div class="alert alert-block alert-warning">
-    <b>Difficulty Level</b>: Medium, because you need to remember how list comprehensions work to use the <tt>stopword_list</tt>.
-</div>
+::: {.callout-warning}
 
-```{python}
+    **Difficulty Level**: Medium, because you need to remember how list comprehensions work to use the `stopword_list`.
+:::
+
+```python
 stopword_list = set(stopwords.words('english'))
 print(stopword_list)
 ```
 
-```{python}
+```python
 stopped = []
 for p in tokens[2:4]: # <-- why do I just take these items from the list?
     stopped.append([x for x in p if x not in ??? and len(x) > 1])
@@ -657,19 +674,20 @@ for s in stopped:
     as_markdown("Line", s)
 ```
 
-### Task 4.6: Lemmatisation vs Stemming
+##: Lemmatisation vs Stemming
 
-<div class="alert alert-block alert-success">
-    <b>Difficulty Level</b>: Easy.
-</div>
+::: {.callout-tip}
 
-```{python}
+    **Difficulty Level**: Easy.
+:::
+
+```python
 from nltk.stem.porter import PorterStemmer
 from nltk.stem.snowball import SnowballStemmer
 from nltk.stem.wordnet import WordNetLemmatizer 
 ```
 
-```{python}
+```python
 lemmatizer = WordNetLemmatizer()
 print(lemmatizer.lemmatize('monkeys'))
 print(lemmatizer.lemmatize('cities'))
@@ -677,7 +695,7 @@ print(lemmatizer.lemmatize('complexity'))
 print(lemmatizer.lemmatize('Reades'))
 ```
 
-```{python}
+```python
 stemmer = PorterStemmer()
 print(stemmer.stem('monkeys'))
 print(stemmer.stem('cities'))
@@ -685,7 +703,7 @@ print(stemmer.stem('complexity'))
 print(stemmer.stem('Reades'))
 ```
 
-```{python}
+```python
 stemmer = SnowballStemmer(language='english')
 print(stemmer.stem('monkeys'))
 print(stemmer.stem('cities'))
@@ -693,7 +711,7 @@ print(stemmer.stem('complexity'))
 print(stemmer.stem('Reades'))
 ```
 
-```{python}
+```python
 lemmatizer = WordNetLemmatizer()
 lemmas  = []
 stemmed = []
@@ -714,7 +732,7 @@ for s in stemmed:
     as_markdown('Stemmed',s)
 ```
 
-```{python}
+```python
 # What are we doing here?
 for ix, p in enumerate(stopped):
     stopped_set = set(stopped[ix])
@@ -722,19 +740,20 @@ for ix, p in enumerate(stopped):
     print(sorted(stopped_set.symmetric_difference(lemma_set)))
 ```
 
-## Task 5. Applying Normalisation
+# Applying Normalisation
 
 The above approach is fairly hard going since you need to loop through every list element applying these changes one at a time. Instead, we could convert the column to a corpus (or use pandas `apply`) together with a function imported from a library to do the work.
 
-### Task 5.1: Downloading the Custom Module
+##: Downloading the Custom Module
 
-<div class="alert alert-block alert-success">
-    <b>Difficulty Level</b>: Easy.
-</div>
+::: {.callout-tip}
+
+    **Difficulty Level**: Easy.
+:::
 
 This custom module is not perfect, but it gets the job done... mostly and has some additional features that you could play around with for a final project (e.g. `detect_entities` and `detect_acronyms`).
 
-```{python}
+```python
 import urllib.request
 host  = 'https://orca.casa.ucl.ac.uk'
 turl  = f'{host}/~jreades/__textual__.py'
@@ -746,37 +765,38 @@ if not os.path.exists(tpath):
     urllib.request.urlretrieve(turl, tpath)
 ```
 
-### Task 5.2: Importing the Custom Module
+##: Importing the Custom Module
 
-<div class="alert alert-block alert-success">
-    <b>Difficulty Level</b>: Easy, since you didn't have to write the module! But the questions could be hard...
-</div>
+::: {.callout-tip}
+
+    **Difficulty Level**: Easy, since you didn't have to write the module! But the questions could be hard...
+:::
 
 Now let's import it.
 
-```{python}
+```python
 # This allows us to edit and reload the library
 %load_ext autoreload
 %autoreload 2
 ```
 
-```{python}
+```python
 from textual import *
 ```
 
-```{python}
+```python
 as_markdown('Input', cleaned)
 ```
 
-```{python}
+```python
 as_markdown('Normalised', [normalise_document(x, remove_digits=True) for x in ???])
 ```
 
-```{python}
+```python
 help(normalise_document)
 ```
 
-#### 5.1.1 Questions
+### Questions
 
 Let's assume that you want to analyse web page content... 
 
@@ -784,68 +804,72 @@ Let's assume that you want to analyse web page content...
 - Based on the above output, what should be removed but isn't?
 - Based on the above output, how do you think a computer can work with this text?
 
-<div class="alert alert-block alert-danger">
-    <b>&#9888; Stop!</b> Beyond this point, we are moving into Natural Language Processing. If you are already struggling with regular expressions, I would recommend <em>stopping here</em>. You can come back to revisit the NLP components and creation of word clouds later.
-</div>
+::: {.callout-caution}
 
-## Task 6. Revenons à Nos Moutons
+    **&#9888; Stop!** Beyond this point, we are moving into Natural Language Processing. If you are already struggling with regular expressions, I would recommend _stopping here_. You can come back to revisit the NLP components and creation of word clouds later.
+:::
+
+# Revenons à Nos Moutons
 
 Now that you've seen how the steps are applied to a 'random' HTML document, let's get back to the problem at hand (revenons à nos moutons == let's get back to our sheep).
 
-### Task 6.1: Process the Selected Listings
+##: Process the Selected Listings
 
-<div class="alert alert-block alert-success">
-    <b>Difficulty Level</b>: Easy, but you'll need to be patient!
-</div>
+::: {.callout-tip}
+
+    **Difficulty Level**: Easy, but you'll need to be patient!
+:::
 
 Notice the use of `%%time` here -- this will tell you how long each block of code takes to complete. It's a really useful technique for reminding *yourself* and others of how long something might take to run. I find that with NLP this is particularly important since you have to do a *lot* of processing on each document in order to normalise it.
 
-<div class="alert alert-block alert-success">
-    <b>&#128161; Tip</b>: Notice how we can change the default parameters for <tt>normalise_document</tt> even when using <tt>apply</tt>, but that the syntax is different. So whereas we'd use <tt>normalise_document(doc, remove_digits=True)</tt> if calling the function directly, here it's <tt>.apply(normalise_document, remove_digits=True)</tt>!
-</div>
+::: {.callout-tip}
 
-```{python}
+    **&#128161; Tip**: Notice how we can change the default parameters for `normalise_document` even when using `apply`, but that the syntax is different. So whereas we'd use `normalise_document(doc, remove_digits=True)` if calling the function directly, here it's `.apply(normalise_document, remove_digits=True)`!
+:::
+
+```python
 %%time 
 # I get about 1 minute on a M2 Mac
 lux['description_norm'] = lux.???.apply(???, remove_digits=True)
 ```
 
-```{python}
+```python
 %%time 
 # I get about 1 minute on a M2 Mac
 aff['description_norm'] = aff.???.apply(???, remove_digits=True)
 ```
 
-```{python}
+```python
 %%time  
 # I get about 2 seconds on a M2 Mac
 bluesp['description_norm'] = bluesp.???.apply(???, remove_digits=True)
 ```
 
-### Task 6.2: Select and Tokenise
+##: Select and Tokenise
 
-<div class="alert alert-block alert-success">
-    <b>Difficulty Level</b>: Easy, except the double list-comprehension.
-</div>
+::: {.callout-tip}
 
-#### 6.2.1 Select and Extract Corpus
+    **Difficulty Level**: Easy, except the double list-comprehension.
+:::
+
+### Select and Extract Corpus
 
 See useful tutorial [here](https://towardsdatascience.com/tf-idf-explained-and-python-sklearn-implementation-b020c5e83275). Although we shouldn't have any empty descriptions, by the time we've finished normalising the textual data we may have _created_ some empty values and we need to ensure that we don't accidentally pass a NaN to the vectorisers and frequency distribution functions.
 
-```{python}
+```python
 srcdf = bluesp # <-- you only need to change the value here to try the different selections
 ```
 
-```{python}
+```python
 corpus = srcdf.description_norm.fillna(' ').values
 print(corpus[0:3])
 ```
 
-#### 6.2.2 Tokenise
+### Tokenise
 
 There are different forms of tokenisation and different algorithms will expect differing inputs. Here are two:
 
-```{python}
+```python
 sentences = [nltk.sent_tokenize(text) for text in corpus]
 words     = [[nltk.tokenize.word_tokenize(sentence) 
                   for sentence in nltk.sent_tokenize(text)] 
@@ -854,25 +878,26 @@ words     = [[nltk.tokenize.word_tokenize(sentence)
 
 Notice how this has turned every sentence into an array and each document into an array of arrays:
 
-```{python}
+```python
 print(f"Sentences 0: {sentences[0]}")
 print()
 print(f"Words 0: {words[0]}")
 ```
 
-### Task 6.3: Frequencies and Ngrams
+##: Frequencies and Ngrams
 
-<div class="alert alert-block alert-warning">
-    <b>Difficulty Level</b>: Moderate.
-</div>
+::: {.callout-warning}
+
+    **Difficulty Level**: Moderate.
+:::
 
 One new thing you'll see here is the `ngram`: ngrams are 'simply' pairs, or triplets, or quadruplets of words. You may come across the terms unigram (`ngram(1,1)`), bigram (`ngram(2,2)`), trigram (`ngram(3,3)`)... typically, you will rarely find anything beyond trigrams, and these present real issues for text2vec algorithms because the embedding for `geographical`, `information`, and `systems` is _not_ the same as for `geographical information systetms`.
 
-#### 6.3.1 Build Frequency Distribution
+### Build Frequency Distribution
 
 Build counts for ngram range 1..3:
 
-```{python}
+```python
 fcounts = dict()
 
 # Here we replace all full-stops... can you think why we might do this?
@@ -885,41 +910,42 @@ for size in 1, 2, 3:
     fcounts[size] = pd.DataFrame.from_dict({f'Ngram Size {size}': fdist})
 ```
 
-#### 6.3.2 Output Top-n Ngrams
+### Output Top-n Ngrams
 
 And output the most common ones for each ngram range:
 
-```{python}
+```python
 for dfs in fcounts.???():
     print(dfs.sort_values(by=dfs.columns.values[0], ascending=???).head(10))
     print()
 ```
 
-#### 6.3.3 Questions
+### Questions
 
 - Can you think why we don't care about punctuation for frequency distributions and n-grams?
 - Do you understand what n-grams *are*?
 
-### Task 6.4: Count Vectoriser
+##: Count Vectoriser
 
-<div class="alert alert-block alert-success">
-    <b>Difficulty Level</b>: Easy, but the output needs some thought!
-</div>
+::: {.callout-tip}
+
+    **Difficulty Level**: Easy, but the output needs some thought!
+:::
 
 This is a big foray into sklearn (sci-kit learn) which is the main machine learning and clustering module for Python. For processing text we use *vectorisers* to convert terms to a vector representation. We're doing this on the smallest of the derived data sets because these processes can take a while to run and generate *huge* matrices (remember: one row and one column for each term!).
 
-#### 6.4.1 Fit the Vectoriser
+### Fit the Vectoriser
 
-```{python}
+```python
 cvectorizer = CountVectorizer(ngram_range=(1,3))
 cvectorizer.fit(corpus)
 ```
 
-#### 6.4.2 Brief Demonstration
+### Brief Demonstration
 
 Find the number associated with a word in the vocabulary and how many times it occurs in the original corpus:
 
-```{python}
+```python
 term = 'stratford'
 pd.options.display.max_colwidth=750
 # Find the vocabulary mapping for the term
@@ -931,42 +957,42 @@ for x in srcdf[srcdf.description_norm.str.contains(term)].description_norm:
     as_markdown('Stratford',x)
 ```
 
-#### 6.4.3 Transform the Corpus 
+### Transform the Corpus 
 
 You can only *tranform* the entire corpus *after* the vectoriser has been fitted. There is an option to `fit_transform` in one go, but I wanted to demonstrate a few things here and some vectorisers are don't support the one-shot fit-and-transform approach. **Note the type of the transformed corpus**:
 
-```{python}
+```python
 cvtcorpus = cvectorizer.transform(???)
 cvtcorpus # cvtcorpus for count-vectorised transformed corpus
 ```
 
-#### 6.4.4 Single Document
+### Single Document
 
 Here is the **first** document from the corpus:
 
-```{python}
+```python
 doc_df = pd.DataFrame(cvtcorpus[0].T.todense(), 
                       index=cvectorizer.get_feature_names_out(), columns=["Counts"]
                      ).sort_values('Counts', ascending=False)
 doc_df.head(10)
 ```
 
-#### 6.4.5 Transformed Corpus
+### Transformed Corpus
 
-```{python}
+```python
 cvdf = pd.DataFrame(data=cvtcorpus.toarray(),
                         columns=cvectorizer.get_feature_names_out())
 print(f"Raw count vectorised data frame has {cvdf.shape[0]:,} rows and {cvdf.shape[1]:,} columns.")
 cvdf.iloc[0:5,0:10]
 ```
 
-#### 6.4.6 Filter Low-Frequency Words
+### Filter Low-Frequency Words
 
 These are likely to be artefacts of text-cleaning or human input error. As well, if we're trying to look across an entire corpus then we might not want to retain words that only appear in a couple of documents.
 
 Let's start by getting the *column* sums:
 
-```{python}
+```python
 sums = cvdf.sum(axis=0)
 print(f"There are {len(sums):,} terms in the data set.")
 sums.head()
@@ -974,78 +1000,80 @@ sums.head()
 
 Remove columns (i.e. terms) appearing in less than 1% of documents. You can do this by thinking about what the shape of the data frame means (rows and/or columns) and how you'd get 1% of that!
 
-```{python}
+```python
 filter_terms = sums >= cvdf.shape[0] * ???
 ```
 
 Now see how we can use this to strip out the columns corresponding to low-frequency terms:
 
-```{python}
+```python
 fcvdf = cvdf.drop(columns=cvdf.columns[~filter_terms].values)
 print(f"Filtered count vectorised data frame has {fcvdf.shape[0]:,} rows and {fcvdf.shape[1]:,} columns.")
 fcvdf.iloc[0:5,0:10]
 ```
 
-```{python}
+```python
 fcvdf.sum(axis=0)
 ```
 
 We're going to pick this up again in Task 7.
 
-#### 6.4.7 Questions
+### Questions
 
 - Can you explain what `doc_df` contains?
 - What does `cvdf` contain? Explain the rows and columns.
 - What is the function of `filter_terms`?
 
-### Task 6.5: TF/IDF Vectoriser
+##: TF/IDF Vectoriser
 
-<div class="alert alert-block alert-warning">
-    <b>Difficulty Level</b>: Moderate, if you want to understand how <tt>max_df</tt> and <tt>min_df</tt> work!
-</div>
+::: {.callout-warning}
 
-#### 6.5.1 Fit and Transform
+    **Difficulty Level**: Moderate, if you want to understand how `max_df` and `min_df` work!
+:::
 
-```{python}
+### Fit and Transform
+
+```python
 tfvectorizer = TfidfVectorizer(use_idf=True, ngram_range=(1,3), 
                                max_df=0.75, min_df=0.01) # <-- these matter!
 tftcorpus    = tfvectorizer.fit_transform(corpus) # TF-transformed corpus
 ```
 
-#### 6.5.2 Single Document
+### Single Document
 
-```{python}
+```python
 doc_df = pd.DataFrame(tftcorpus[0].T.todense(), index=tfvectorizer.get_feature_names_out(), columns=["Weights"])
 doc_df.sort_values('Weights', ascending=False).head(10)
 ```
 
-#### 6.5.3 Transformed Corpus
+### Transformed Corpus
 
-```{python}
+```python
 tfidf = pd.DataFrame(data=tftcorpus.toarray(),
                         columns=tfvectorizer.get_feature_names_out())
 print(f"TF/IDF data frame has {tfidf.shape[0]:,} rows and {tfidf.shape[1]:,} columns.")
 tfidf.head()
 ```
 
-#### 6.5.4 Questions
+### Questions
 
 - What does the TF/IDF score *represent*?
 - What is the role of `max_df` and `min_df`?
 
-## Task 7. Word Clouds
+# Word Clouds
 
-### Task 7.1: For Counts
+##: For Counts
 
-<div class="alert alert-block alert-success">
-    <b>Difficulty Level</b>: Easy!
-</div>
+::: {.callout-tip}
 
-```{python}
+    **Difficulty Level**: Easy!
+:::
+
+```python
 fcvdf.sum().sort_values(ascending=False)
 ```
 
-```{python}
+```python
 plt.figure(figsize=(12, 12))
 Cloud = WordCloud(
     background_color="white", 
@@ -1056,17 +1084,18 @@ plt.imshow(Cloud)
 plt.axis("off");
 ```
 
-### Task 7.2: For TF/IDF Weighting
+##: For TF/IDF Weighting
 
-<div class="alert alert-block alert-success">
-    <b>Difficulty Level</b>: Easy, but you'll need to be patient!
-</div>
+::: {.callout-tip}
 
-```{python}
+    **Difficulty Level**: Easy, but you'll need to be patient!
+:::
+
+```python
 tfidf.sum().sort_values(ascending=False)
 ```
 
-```{python}
+```python
 plt.figure(figsize=(12, 12))
 Cloud = WordCloud(
     background_color="white", 
@@ -1077,26 +1106,27 @@ plt.imshow(Cloud)
 plt.axis("off");
 ```
 
-#### 7.2.3 Questions
+### Questions
 
 - What does the `sum` represent for the count vectoriser?
 - What does the `sum` represent for the TF/IDF vectoriser?
 
-## Task 8. Latent Dirchlet Allocation
+# Latent Dirchlet Allocation
 
-<div class="alert alert-block alert-success">
-    <b>&#128161; Tip</b>: I would give this a <em>low</em> priority. It's a commonly-used method, but on small data sets it really isn't much use and I've found its answers to be... unclear... even on large data sets.
-</div>
+::: {.callout-tip}
+
+    **&#128161; Tip**: I would give this a _low_ priority. It's a commonly-used method, but on small data sets it really isn't much use and I've found its answers to be... unclear... even on large data sets.
+:::
 
 Adapted from [this post](https://stackabuse.com/python-for-nlp-topic-modeling/) on doing LDA using sklearn. Most other examples use the `gensim` library.
 
-```{python}
+```python
 vectorizer = CountVectorizer(ngram_range=(1,2)) # Notice change to ngram range (try 1,1 and 1,2 for other options)
 ```
 
-### Task 8.1: Calculate Topics
+##: Calculate Topics
 
-```{python}
+```python
 vectorizer.fit(corpus) 
 tcorpus = vectorizer.transform(corpus) # tcorpus for transformed corpus
 
@@ -1104,7 +1134,7 @@ LDA = LatentDirichletAllocation(n_components=3, random_state=42) # Might want to
 LDA.fit(tcorpus)
 ```
 
-```{python}
+```python
 first_topic = LDA.components_[0]
 top_words = first_topic.argsort()[-25:]
 
@@ -1112,59 +1142,60 @@ for i in top_words:
     print(vectorizer.get_feature_names_out()[i])
 ```
 
-```{python}
+```python
 for i,topic in enumerate(LDA.components_):
     as_markdown(f'Top 10 words for topic #{i}', ', '.join([vectorizer.get_feature_names_out()[i] for i in topic.argsort()[-25:]]))
 ```
 
-### Task 8.2: Maximum Likelihood Topic
+##: Maximum Likelihood Topic
 
-```{python}
+```python
 topic_values = LDA.transform(tcorpus)
 topic_values.shape
 ```
 
-```{python}
+```python
 pd.options.display.max_colwidth=20
 srcdf['Topic'] = topic_values.argmax(axis=1)
 srcdf.head()
 ```
 
-```{python}
+```python
 pd.options.display.max_colwidth=75
 srcdf[srcdf.Topic==1].description_norm.head(10)
 ```
 
-```{python}
+```python
 vectorizer = CountVectorizer(ngram_range=(1,1), stop_words='english', analyzer='word', max_df=0.7, min_df=0.05)
 topic_corpus = vectorizer.fit_transform(srcdf[srcdf.Topic==1].description.values) # tcorpus for transformed corpus
 ```
 
-```{python}
+```python
 topicdf = pd.DataFrame(data=topic_corpus.toarray(),
                         columns=vectorizer.get_feature_names_out())
 ```
 
-```{python}
+```python
 plt.figure(figsize=(12, 12))
 Cloud = WordCloud(background_color="white", max_words=75).generate_from_frequencies(topicdf.sum())
 plt.imshow(Cloud) 
 plt.axis("off");
 ```
 
-## Task 9. Word2Vec
+# Word2Vec
 
-<div class="alert alert-block alert-danger">
-    <b>&#129327; Tip</b>: This algorithm works almost like magic. You should play with the configuration parameters and see how it changes your results.
-</div>
+::: {.callout-caution}
 
-### Task 9.1: Configure
+    **&#129327; Tip**: This algorithm works almost like magic. You should play with the configuration parameters and see how it changes your results.
+:::
 
-```{python}
+##: Configure
+
+```python
 from gensim.models.word2vec import Word2Vec
 ```
 
-```{python}
+```python
 dims = 100
 print(f"You've chosen {dims} dimensions.")
 
@@ -1176,9 +1207,9 @@ min_v_count = math.ceil(min_v_freq * srcdf.shape[0])
 print(f"With a minimum frequency of {min_v_freq} and {srcdf.shape[0]:,} documents, minimum vocab frequency is {min_v_count:,}.")
 ```
 
-### Task 9.2: Train
+##: Train
 
-```{python}
+```python
 %%time 
 
 corpus      = srcdf.description_norm.fillna(' ').values
@@ -1190,11 +1221,11 @@ model       = Word2Vec(sentences=corpus_sent, vector_size=dims, window=window, e
 model.save(f"word2vec-d{dims}-w{window}.model") # <-- You can then Word2Vec.load(...) which is useful with large corpora
 ```
 
-### Task 9.3: Explore Similarities
+##: Explore Similarities
 
 This next bit of code only runs if you have calculated the frequencies above in the [Frequencies and Ngrams](#frequencies-and-ngrams) section.
 
-```{python}
+```python
 pd.set_option('display.max_colwidth',150)
 
 df = fcounts[1] # <-- copy out only the unigrams as we haven't trained anything else
@@ -1237,40 +1268,44 @@ vecs = pd.DataFrame({
 vecs
 ```
 
-```{python}
+```python
 #print(model.wv.index_to_key) # <-- the full vocabulary that has been trained
 ```
 
-### Task 9.4: Apply
+##: Apply
 
 We're going to make *use* of this further next week...
 
-#### 9.4.1 Questions
+### Questions
 
 - What happens when *dims* is very small (e.g. 25) or very large (e.g. 300)?
 - What happens when *window* is very small (e.g. 2) or very large (e.g. 8)?
 
-## Task 10. Processing the Full File
+#0. Processing the Full File
 
-<div class="alert alert-block alert-danger">
-    <b>&#9888; Warning</b>: This code can take <i>some time</i> (<b>&gt; 5 minutes on a M2 Mac</b>) to run, so <b>don't run this</b> until you've understood what we did before!</div>
+::: {.callout-caution}
+
+    **&#9888; Warning**: This code can take *some time</i> (<b>&gt; 5 minutes on a M2 Mac</b>) to run, so <b>don't run this</b> until you've understood what we did before!
+
+:::
 
 You will get a warning about `"." looks like a filename, not markup` — this looks a little scary, but is basically suggesting that we have a description that consists only of a '.' or that looks like some kind of URL (which the parser thinks means you're trying to pass it something to download). 
 
-```{python}
+```python
 %%time 
 # This can take up to 8 minutes on a M2 Mac
 gdf['description_norm'] = ''
 gdf['description_norm'] = gdf.description.apply(normalise_document, remove_digits=True, special_char_removal=True)
 ```
 
-```{python}
+```python
 gdf.to_parquet(os.path.join('data','geo',f'{fn.replace(".","-with-nlp.")}'))
 ```
 
-<div class="alert alert-block alert-success">
-    <b>&#128161; Tip</b>: saving an intermediate file at this point is useful because you've done quite a bit of <em>expensive</em> computation. You <em>could</em> restart-and-run-all and then go out for the day, but probably easier to just save this output and then, if you need to restart your analysis at some point in the future, just remember to deserialise amenities back into a list format.
-</div>
+::: {.callout-tip}
+
+    **&#128161; Tip**: saving an intermediate file at this point is useful because you've done quite a bit of _expensive_ computation. You _could_ restart-and-run-all and then go out for the day, but probably easier to just save this output and then, if you need to restart your analysis at some point in the future, just remember to deserialise amenities back into a list format.
+:::
 
 ## Applications
 

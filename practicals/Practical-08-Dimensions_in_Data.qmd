@@ -1,13 +1,10 @@
 ---
-title: Preamble
+title: "Practical 8: Dimensions in Data"
+subtitle: "Transformation & Dimensionality Reduction"
 jupyter: python3
 ---
 
-<div style="float:left">
-    <h1 style="width:450px">Practical 8: Dimensions in Data</h1>
-    <h2 style="width:450px">Transformation &amp; Dimensionality Reduction</h2>
-</div>
-<div style="float:right"><img width="100" src="https://github.com/jreades/i2p/raw/master/img/casa_logo.jpg" /></div>
+:::
 
 | Complete | Part 1: Foundations | Part 2: Data | Part 3: Analysis |     |
 | :------- | :------------------ | :----------- | :--------------- | --: |
@@ -20,15 +17,16 @@ In this session the focus is on MSOA-level Census data from 2011. We're going to
 
 Ultimately, however, you don't *need* to use this for your analysis, this practical is intended as a demonstration of how transformation and dimensionality reduction work in practice and the kinds of issues that come up.
 
-<div class="alert alert-block alert-info">
-    <b>&#128279; Connections</b>: There are a <em>lot</em> of links across sessions now, as well as some <em>forward links</em> to stuff we've not yet covered (see: <tt>pandas.merge</tt>). We'll pick these up as we move through the notebook.
-</div>
+::: {.callout-note}
 
+    **&#128279; Connections**: There are a _lot_ of links across sessions now, as well as some _forward links_ to stuff we've not yet covered (see: `pandas.merge`). We'll pick these up as we move through the notebook.
+:::
+
+# Preamble
 
 Let's start with the usual bits of code to ensure plotting works, to import packages and load the data into memory.
 
-
-```{python}
+```python
 import os
 import re
 import numpy as np
@@ -47,7 +45,7 @@ import umap
 from kneed import knee_locator
 ```
 
-```{python}
+```python
 import os
 from requests import get
 from urllib.parse import urlparse
@@ -110,15 +108,17 @@ def cache_data(src:str, dest:str) -> str:
     return dfn
 ```
 
-## Task 1. Loading MSOA Census Data
+# Loading MSOA Census Data
 
-<div class="alert alert-block alert-info">
-    <b>&#128279; Connections</b>: By this point you should be fairly familiar with the UK's census geographies as you'll have encountered them in your GIS module. But in case you need a refresher, here's what the <a href="https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeographies/census2021geographies">Office for National Statistics</a> says.
-</div>
+::: {.callout-note}
 
-<div class="alert alert-block alert-success">
-    <b>&#128161; Tip:</b> We're going to mix in the London's MSOA 'Atlas' from the <a href="https://data.london.gov.uk/dataset">London Data Store</a>. I would <em>strongly</em> suggest that you have a look around the London Data Store as you develop your thinking for the group assessment -- you will likely find useful additional data there!
-</div>
+    **&#128279; Connections**: By this point you should be fairly familiar with the UK's census geographies as you'll have encountered them in your GIS module. But in case you need a refresher, here's what the [Office for National Statistics](https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeographies/census2021geographies) says.
+:::
+
+::: {.callout-tip}
+
+    **&#128161; Tip:** We're going to mix in the London's MSOA 'Atlas' from the [London Data Store](https://data.london.gov.uk/dataset). I would _strongly_ suggest that you have a look around the London Data Store as you develop your thinking for the group assessment -- you will likely find useful additional data there!
+:::
 
 Once you see how we deal with this MSOA Atlas data you will be in a position to work with any other similarly complex (in terms of the headings and indexes) data set. If you're feeling particularly ambitious you can actually do this _same_ work at the LSOA scale using the [LSOA Atlas](https://data.london.gov.uk/dataset/lsoa-atlas) and LSOA boundaries... the process should be the same, though you will have smaller samples in each LSOA than you do in the MSOAs and calculations will take a bit longer to complete. You could also search on the ONS Census web site for data from 2021.
 
@@ -127,15 +127,16 @@ There is a CSV file for the MSOA Atlas that would be easier to work with; howeve
 1. We have to specify a sheet name because the file contains multiple sheets.
 2. We have to specify not just _one_ header, we actually have to specify three of them which generates a multi-level index (row 0 is the top-level, row 1 is the second-level, etc.).
 
-### Task 1.1: Load MSOA Excel File
+##: Load MSOA Excel File
 
-<div class="alert alert-block alert-success">
-    <b>Difficulty level</b>: Low.
-</div>
+::: {.callout-tip}
+
+    **Difficulty level**: Low.
+:::
 
 You might like to load the cached copy of the file into Excel so that you can see how the next bit works. You can find the rest of the MSOA Atlas [here](https://data.london.gov.uk/dataset/msoa-atlas).
 
-```{python}
+```python
 src_url   = 'https://data.london.gov.uk/download/msoa-atlas/39fdd8eb-e977-4d32-85a4-f65b92f29dcb/msoa-data.xls'
 dest_path = os.path.join('data','msoa')
 
@@ -147,36 +148,38 @@ excel_atlas = pd.read_excel(
 
 Notice the format of the output and notice that all of the empty cells in the Excel sheet have come through as `Unnamed: <col_no>_level_<level_no>`:
 
-```{python}
+```python
 excel_atlas.head(1)
 ```
 
-```{python}
+```python
 print(f"Shape of the MSOA Atlas data frame is: {excel_atlas.shape[0]:,} x {excel_atlas.shape[1]:,}")
 ```
 
 You should get: `Shape of the MSOA Atlas data frame is: 984 x 207`, but how on earth are you going to access the data?
 
-### Task 1.2: Accessing MultiIndexes
+##: Accessing MultiIndexes
 
-<div class="alert alert-block alert-warning">
-    <b>Difficulty level</b>: Moderate, though the difficulty is conceptual, not technical.
-</div>
+::: {.callout-warning}
+
+    **Difficulty level**: Moderate, though the difficulty is conceptual, not technical.
+:::
 
 Until now we have understood the pandas index as a single column-like 'thing' in a data frame, but pandas also supports hierarchical and grouped indexes that allow us to interact with data in more complex ways... should we need it. Generally:
 
 - MultiIndex == hierarchical index on *columns*
 - DataFrameGroupBy == iterable pseudo-hierarchical index on *rows*
 
-<div class="alert alert-block alert-info">
-    <b>&#128279; Connections</b>: We'll be looking at <b>Grouping Data</b> in much more detail in <a href="https://jreades.github.io/fsds/sessions/week9.html#lectures">next week</a>, so the main thing to remember is that grouping is for rows, multi-indexing is about columns.
-</div>
+::: {.callout-note}
 
-#### 1.2.1 Direct Access
+    **&#128279; Connections**: We'll be looking at <b>Grouping Data</b> in much more detail in [next week](https://jreades.github.io/fsds/sessions/week9.html#lectures), so the main thing to remember is that grouping is for rows, multi-indexing is about columns.
+:::
+
+### Direct Access
 
 Of course, one way to get at the data is to use `.iloc[...]` since that refers to columns by *position* and ignores the complexity of the index. Try printing out the the first five rows of the first column using `iloc`:
 
-```{python}
+```python
 excel_atlas.iloc[???]
 ```
 
@@ -191,11 +194,11 @@ You should get:
 Name: (Unnamed: 0_level_0, Unnamed: 0_level_1, MSOA Code), dtype: object
 ```
 
-#### 1.2.2 Named Access
+### Named Access
 
 But to do it by name is a little trickier:
 
-```{python}
+```python
 excel_atlas.columns.tolist()[:5]
 ```
 
@@ -203,76 +206,77 @@ Notice how asking for the first five columns has given us a list of... what exac
 
 So to get the **same output** by column *name* what do you need to copy from above:
 
-```{python}
+```python
 excel_atlas.loc[0:5, ???]
 ```
 
 That's *really* awkward, so we're going to look for a better way...
 
-#### 1.2.3 Grouped Access
+### Grouped Access
 
 Despite this, *one* way that MultiIndexes can be useful is for accessing column-slices from a wide dataframe. We can, for instance, select all of the Age Structure columns in one go and it will be *simpler* than what we did above.
 
-```{python}
+```python
 excel_atlas.loc[0:5, ('Age Structure (2011 Census)')]
 ```
 
-#### 1.2.4 Understanding Levels
+### Understanding Levels
 
 This works because the MultiIndex tracks the columns using *levels*, with level 0 at the 'top' and level 2 (in our case) at the bottom. These are the unique *values* for the top level:
 
-```{python}
+```python
 excel_atlas.columns.levels[0]
 ```
 
 These are the *values* for those levels across the actual columns in the data frame, notice the repeated 'Age Structure (2011 Census)':
 
-```{python}
+```python
 excel_atlas.columns.get_level_values(0)[:10]
 ```
 
-```{python}
+```python
 excel_atlas.columns.get_level_values(1)[:10]
 ```
 
 By extension, if we drop a level 0 index then *all* of the columns that it supports at levels 1 and 2 are _also_ dropped: so when we drop `Mid-year Estimate totals` from level 0 then all 11 of the 'Mid-year Estimate totals (2002...2012)' columns are dropped in one go.
 
-```{python}
+```python
 excel_atlas[['Mid-year Estimate totals']].head(3)
 ```
 
-```{python}
+```python
 test = excel_atlas.drop(columns=['Mid-year Estimate totals'], axis=1, level=0)
 ```
 
-```{python}
+```python
 print(f"Excel source had {excel_atlas.shape[1]} columns.")
 print(f"Test now has {test.shape[1]} columns.")
 ```
 
-```{python}
+```python
 # Tidy up
 if 'test' in locals():
     del(test)
 ```
 
-#### 1.2.5 Questions
+### Questions
 
 - What data type is used for storing/accessing MultiIndexes? 
 - *Why* is this is the appropriate data type?
 - How (conceptually) are the header rows in Excel are mapped on to levels in pandas?
 
-### Task 1.3: Tidying Up
+##: Tidying Up
 
-<div class="alert alert-block alert-success">
-    <b>Difficulty level</b>: Low, though there's a lot of dealing with column names.
-</div>
+::: {.callout-tip}
 
-#### 1.3.1 Dropping Named Levels
+    **Difficulty level**: Low, though there's a lot of dealing with column names.
+:::
+
+### Dropping Named Levels
 
 There's a *lot* of data in the data frame that we don't need for our Airbnb work, so let's go a bit further with the dropping of column-groups using the MultiIndex.
 
-```{python}
+```python
 to_drop = ['Mid-year Estimate totals','Mid-year Estimates 2012, by age','Religion (2011)',
            'Land Area','Lone Parents (2011 Census)','Central Heating (2011 Census)','Health (2011 Census)',
            'Low Birth Weight Births (2007-2011)','Obesity','Incidence of Cancer','Life Expectancy',
@@ -283,27 +287,28 @@ print(f"Shape of the MSOA Atlas data frame is now: {tidy.shape[0]} x {tidy.shape
 
 This should drop you down to `984 x 111`. Notice below that the multi-level _index_ has not changed but the multi-level _values_ remaining have!
 
-```{python}
+```python
 print(f"There are {len(tidy.columns.levels[0].unique())} categories.") # The categories
 print(f"But only {len(tidy.columns.get_level_values(0).unique())} values.") # The actual values
 ```
 
-#### 1.3.2 Selecting Columns using a List Comprehension
+### Selecting Columns using a List Comprehension
 
 Now we need to drop all of the percentages from the data set. These can be found at level 1, though they are specified in a number of different ways so you'll need to come up with a way to find them in the level 1 values using a list comprehension... 
 
 I'd suggest looking for: "(%)", "%", and "Percentages". You may need to check both start and end. You could also use a regular expression here instead of multiple tests. Either *works*, but have a think about the tradeoffs between intelligibility, speed, and what *you* understand...
 
-<div class="alert alert-block alert-info">
-    <b>&#128279; Connections</b>: See how regular expressions keep coming <a href="https://jreades.github.io/fsds/sessions/week7.html#lectures">baaaaaaaaack</a>? That said, you can also use simple string functions like <tt>startswith</tt> and <tt>endswith</tt> for this problem.
-</div>
+::: {.callout-note}
 
-```{python}
+    **&#128279; Connections**: See how regular expressions keep coming [baaaaaaaaack](https://jreades.github.io/fsds/sessions/week7.html#lectures)? That said, you can also use simple string functions like `startswith` and `endswith` for this problem.
+:::
+
+```python
 to_drop = [x for x in tidy.columns.get_level_values(1) if (???)]
 print(to_drop)
 ```
 
-```{python}
+```python
 print([x for x in tidy.columns.get_level_values(1) if re.search(???, x)])
 ```
 
@@ -312,28 +317,28 @@ You should get:
 ['Percentages', 'Percentages', 'Percentages', 'Percentages', 'Percentages', 'White (%)', 'Mixed/multiple ethnic groups (%)', 'Asian/Asian British (%)', 'Black/African/Caribbean/Black British (%)', 'Other ethnic group (%)', 'BAME (%)', 'United Kingdom (%)', 'Not United Kingdom (%)', '% of people aged 16 and over in household have English as a main language', '% of households where no people in household have English as a main language', 'Owned: Owned outright (%)', 'Owned: Owned with a mortgage or loan (%)', 'Social rented (%)', 'Private rented (%)', 'Household spaces with at least one usual resident (%)', 'Household spaces with no usual residents (%)', 'Whole house or bungalow: Detached (%)', 'Whole house or bungalow: Semi-detached (%)', 'Whole house or bungalow: Terraced (including end-terrace) (%)', 'Flat, maisonette or apartment (%)', 'Economically active %', 'Economically inactive %', '% of households with no adults in employment: With dependent children', '% living in income deprived households reliant on means tested benefit', '% of people aged over 60 who live in pension credit households', 'No cars or vans in household (%)', '1 car or van in household (%)', '2 cars or vans in household (%)', '3 cars or vans in household (%)', '4 or more cars or vans in household (%)']
 ```
 
-#### 1.3.3 Drop by Level
+### Drop by Level
 
 You now need to drop these columns using the `level` keyword as part of your drop command. You have plenty of examples of how to drop values in place, but I'd suggest _first_ getting the command correct (maybe duplicate the cell below and change the code so that the result is saved to a dataframe called `test` before overwriting `tidy`?) and _then_ saving the change.
 
-```{python}
+```python
 tidy = tidy.drop(to_drop, axis=1, level=???)
 print(f"Shape of the MSOA Atlas data frame is now: {tidy.shape[0]} x {tidy.shape[1]}")
 ```
 
 The data frame is now `984 x 76`. This is a _bit_ more manageable though still a _lot_ of data columns. Depending on what you decide to do for your final project you might want to revisit some of the columns that we dropped above... 
 
-#### 1.3.4 Flattening the Index
+### Flattening the Index
 
 Although this ia big improvement, you'll have trouble saving or linking this data to other inputs. The problem is that Level 2 of the multi-index is mainly composed of 'Unnamed' values and so we need to merge it with Level 1 to simplify our data frame, and then merge _that_ with level 0...
 
-```{python}
+```python
 tidy.columns.values[:3]
 ```
 
 Let's use code to sort this out!
 
-```{python}
+```python
 new_cols = []
 for c in tidy.columns.values:
     
@@ -369,11 +374,12 @@ for c in tidy.columns.values:
 print(new_cols)
 ```
 
-<div class="alert alert-block alert-danger">
-    <b>&#9888; Stop</b>: Make sure you understand what is happening here before just moving on to the next thing. Try adding <tt>print()</tt> statements if it will help it to make sense. This sort of code comes up a <em>lot</em> in the real world.
-</div>
+::: {.callout-caution}
 
-```{python}
+    **&#9888; Stop**: Make sure you understand what is happening here before just moving on to the next thing. Try adding `print()` statements if it will help it to make sense. This sort of code comes up a _lot_ in the real world.
+:::
+
+```python
 tidy.columns = new_cols  # <- Blow away complex index, replace with simple
 tidy.head()
 ```
@@ -385,27 +391,29 @@ tidy['MSOA Code'].isna()
 tidy[tidy['MSOA Code'].isna()].index
 ```
 
-```{python}
+```python
 tidy.drop(index=tidy[tidy['MSOA Code'].isna()].index, inplace=True)
 ```
 
-### Task 1.4: Add Inner/Outer London Mapping
+##: Add Inner/Outer London Mapping
 
-<div class="alert alert-block alert-warning">
-    <b>Difficulty level</b>: Moderate, since I'm not giving you many clues.
-</div>
+::: {.callout-warning}
 
-<div class="alert alert-block alert-info">
-    <b>&#128279; Connections</b>: We touched on <tt>lambda</tt> functions last week; it's a 'trivial' function that we don't even want to bother defining with <tt>def</tt>. We also used the lambda function in the context of <tt>apply</tt> so this is just another chance to remind yourself how this works. This is quite advanced Python, so don't panic if you don't get it right away and have to do some Googling... 
-</div>
+    **Difficulty level**: Moderate, since I'm not giving you many clues.
+:::
+
+::: {.callout-note}
+
+    **&#128279; Connections**: We touched on `lambda` functions last week; it's a 'trivial' function that we don't even want to bother defining with `def`. We also used the lambda function in the context of `apply` so this is just another chance to remind yourself how this works. This is quite advanced Python, so don't panic if you don't get it right away and have to do some Googling... 
+:::
 
 We want to add the borough name and a 'subregion' name. We already have the borough name buried in a *separate* column, so step 1 is to extract that from the MSOA Name. Step 2 is to use the borough name as a lookup to the subregion name using a **lambda** function. The format for a lambda function is usually `lambda x: <code that does something with x and returns a value>`. Hint: you've got a dictionary and you know how to use it!
 
-#### 1.4.1 Add Boroughs
+### Add Boroughs
 
 We first need to extract the borough names from one of the existing fields in the data frame... a *regex* that does *replacement* would be fastest and easiest: focus on what you *don't* need from the MSOA Name **string** and **replacing** that using a **regex**...
 
-```{python}
+```python
 tidy['Borough'] = tidy['MSOA Name'].???
 tidy.Borough.unique()
 ```
@@ -422,11 +430,11 @@ array(['City of London', 'Barking and Dagenham', 'Barnet', 'Bexley',
        'Waltham Forest', 'Wandsworth', 'Westminster'], dtype=object)
 ```
 
-#### 1.4.2 Map Boroughs to Subregions
+### Map Boroughs to Subregions
 
 And now you need to understand how to *apply* the mapping ot the Borough field using a `lambda` function. It's fairly straightforward once you know the syntax: just a dictionary lookup. But as usual, you might want to first create a new cell and experiment with the output from the apply function before using it to write the `Subregion` field of the data frame...
 
-```{python}
+```python
 mapping = {}
 for b in ['Enfield','Waltham Forest','Redbridge','Barking and Dagenham','Havering','Greenwich','Bexley']:
     mapping[b]='Outer East and North East'
@@ -442,11 +450,11 @@ for b in ['Richmond upon Thames','Hounslow','Ealing','Hillingdon','Brent','Harro
 tidy['Subregion'] = tidy.Borough.apply(???)
 ```
 
-#### 1.4.3 And Save
+### And Save
 
 There's a little snipped of useful code to work out here: we need to check if the `clean` directory exists in the `data` directory; if we don't then the `tidy.to_parquet()` call will fail.
 
-```{python}
+```python
 #| tags: []
 if not os.path.???(os.path.join('data','clean')):
     os.makedirs(os.path.join('data','clean'))
@@ -454,49 +462,51 @@ tidy.to_parquet(os.path.join('data','clean','MSOA_Atlas.parquet'))
 print("Done.")
 ```
 
-#### 1.4.4 Questions
+### Questions
 
 - What are the advantages to `apply` and `lambda` functions over looping and named functions? 
 - When might you choose a named function over a lambda function?
 
-### Task 1.5: Merge Data & Geography
+##: Merge Data & Geography
 
-<div class="alert alert-block alert-success">
-    <b>Difficulty level</b>: Low, except for plotting.
-</div>
+::: {.callout-tip}
 
-<div class="alert alert-block alert-info">
-    <b>&#128279; Connections</b>: We'll cover joins (of which a <tt>merge</tt> is just one type) in the <a href="https://jreades.github.io/fsds/sessions/week10.html#lectures">final week's lectures</a>, but between what you'd done in GIS and what we have here there should be enough here for you to start being able to make sense of how they work so that you don't have to wait until Week 10 to think about how this could help you with your Group Assessment.
-</div>
+    **Difficulty level**: Low, except for plotting.
+:::
+
+::: {.callout-note}
+
+    **&#128279; Connections**: We'll cover joins (of which a `merge` is just one type) in the [final week's lectures](https://jreades.github.io/fsds/sessions/week10.html#lectures), but between what you'd done in GIS and what we have here there should be enough here for you to start being able to make sense of how they work so that you don't have to wait until Week 10 to think about how this could help you with your Group Assessment.
+:::
 
 First, we need to download the MSOA source file, which is a zipped archive of a Shapefile:
 
-```{python}
+```python
 # Oh look, we can read a Shapefile without needing to unzip it!
 msoas = gpd.read_file(
     cache_data('https://github.com/jreades/fsds/blob/master/data/src/Middle_Layer_Super_Output_Areas__December_2011__EW_BGC_V2-shp.zip?raw=true', 
                os.path.join('data','geo')), driver='ESRI Shapefile')
 ```
 
-#### 1.5.1 Identifying Matching Columns
+### Identifying Matching Columns
 
 Looking at the first few columns of each data frame, which one might allow us to link the two files together? You've done this in GIS. *Remember*: the column *names* don't need to match for us to use them in a join, it's the *values* that matter.
 
-```{python}
+```python
 print(f"Column names: {', '.join(tidy.columns.tolist()[:5])}")
 tidy.iloc[:3,:5]
 ```
 
-```{python}
+```python
 print(f"Column names: {', '.join(msoas.columns.tolist()[:5])}")
 msoas.iloc[:3,:5]
 ```
 
-#### 1.5.2 Merge
+### Merge
 
 One more thing: if you've got more than one choice I'd *always* go with a code over a name because one is intended for matching and other is not...
 
-```{python}
+```python
 gdf = pd.merge(msoas, tidy, left_on=???, right_on=???, how='inner')
 gdf = gdf.drop(columns=['MSOA11CD','MSOA11NM','OBJECTID'])
 
@@ -505,11 +515,11 @@ print(f"Final MSOA Atlas data frame has shape {gdf.shape[0]:,} x {gdf.shape[1]}"
 
 You should get `Final data frame has shape 983 x 86`.
 
-#### 1.5.3 Plot Choropleth
+### Plot Choropleth
 
 Let's plot the median income in 2011 column using the `plasma` colour ramp... The rest is to show you how to customise a legend.
 
-```{python}
+```python
 col = 'Median-2011'
 fig = gdf.plot(column=???, cmap='???', 
          scheme='FisherJenks', k=7, edgecolor='None', 
@@ -531,21 +541,22 @@ for lbl in leg.get_texts():
 plt.show();
 ```
 
-#### 1.5.4 Save
+### Save
 
-```{python}
+```python
 gdf.to_geoparquet(os.path.join('data','geo','MSOA_Atlas.geoparquet'))
 ```
 
-#### 1.5.5 Questions
+### Questions
 
 - Try changing the colour scheme, classification scheme, and number of classes to see if you feel there's a *better* opeion than the one shown above... Copy the cell (click on anywhere outside the code and then hit `C` to copy. Then click on this cell *once*, and hit `V` to paste.
 
-## Task 2. Splitting into Test & Train
+# Splitting into Test & Train
 
-<div class="alert alert-block alert-info">
-    <b>&#128279; Connections</b>: Here you will be using a standard approach in Machine Learningknown as <em>test/train  split</em>, although we <em>won't</em> be doing any actual ML (&#128517;). Here we are just going to use it to explore some issues raised by normalisation and standardisation in <a href="https://jreades.github.io/fsds/sessions/week8.html#lectures">this week's lectures</a>.
-</div>
+::: {.callout-note}
+
+    **&#128279; Connections**: Here you will be using a standard approach in Machine Learningknown as _test/train  split_, although we _won't_ be doing any actual ML (&#128517;). Here we are just going to use it to explore some issues raised by normalisation and standardisation in [this week's lectures](https://jreades.github.io/fsds/sessions/week8.html#lectures).
+:::
 
 A standard approach to Machine Learning, and something that is becoming more widely used elsewhere, is the splitting of a large data into set into testing and training components. Typically, you would take 80-90% of your data to 'train' your algorithm and withold between 10-20% for validation ('testing'). An even 'stricter' approach, in the sense of trying to ensure the robustness of your model against outlier effects, is [cross validation](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_validate.html) such as [k-folds cross-validation](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.KFold.html).
 
@@ -553,15 +564,16 @@ Sci-Kit Learn is probably *the* most important reason Python has become the *de 
 
 We're not building a model here (that's for Term 2!) so we'll just 'pretend' that we're trying to predict the price of a listing and will set that up as our `y` data set *so that* we can see how the choice of normalisation/standardisation technique affects the robustness of the model against 'new' data. Notice too that you can pass a data frame directly to Sci-Kit Learn and it will split it for you.
 
-### Task 2.1: Reload
+##: Reload
 
-<div class="alert alert-block alert-success">
-    <b>&#128161; Tip</b>: In future 'runs' of this notebook you can now just pick up here and skip all of Task 1.
-</div>
+::: {.callout-tip}
+
+    **&#128161; Tip**: In future 'runs' of this notebook you can now just pick up here and skip all of Task 1.
+:::
 
 On subsequent runs of this notebook you might just want to start here!
 
-```{python}
+```python
 # Notice this handy code: we check if the data is already
 # in memory. And notice this is just a list comprehension
 # to see what is locally loaded.
@@ -570,21 +582,22 @@ if 'gdf' not in locals():
 print(gdf.shape)
 ```
 
-```{python}
+```python
 categoricals = ['Borough','Subregion']
 for c in categoricals:
     gdf[c] = gdf[c].astype('category')
 ```
 
-### Task 2.2: Split
+##: Split
 
-<div class="alert alert-block alert-success">
-    <b>Difficulty level</b>: Low!
-</div>
+::: {.callout-tip}
+
+    **Difficulty level**: Low!
+:::
 
 For our purposes this is a little bit overkill as you could also use pandas' `sample(frac=0.2)` and the indexes, but it's useful to see how this works. You use test/train split to get **four** data sets out: the training data gives you two (predictors + target as separate data sets) and the testing data gives you two as well (predictors + target as separate data sets). These are sized accoridng to the `test_size` specfied in the `test_train_split` parameters.
 
-```{python}
+```python
 from sklearn.model_selection import train_test_split 
 
 pdf = gdf['Median-2011'].copy() # pdf for Median *P*rice b/c we need *something*
@@ -598,7 +611,7 @@ df_train, df_test, pr_train, pr_test = train_test_split(
 
 Below you should see that the data has been split roughly on the basis of the `test_size` parameter.
 
-```{python}
+```python
 print(f"Original data size: {gdf.shape[0]:,} x {gdf.shape[1]}")
 print(f"  Training data size: {df_train.shape[0]:,} x {df_train.shape[1]} ({(df_train.shape[0]/gdf.shape[0])*100:.0f}%)")
 print(f"  Testing data size:  {df_test.shape[0]:,} x {df_test.shape[1]} ({(df_test.shape[0]/gdf.shape[0])*100:.0f}%)")
@@ -606,22 +619,23 @@ print(f"  Testing data size:  {df_test.shape[0]:,} x {df_test.shape[1]} ({(df_te
 
 Also notice the indexes of each pair of data sets match:
 
-```{python}
+```python
 print(", ".join([str(x) for x in df_train.index[:10]]))
 print(", ".join([str(x) for x in pr_train.index[:10]]))
 ```
 
-### Task 2.3: Plot Test/Train Data
+##: Plot Test/Train Data
 
-<div class="alert alert-block alert-success">
-    <b>Difficulty level</b>: Low, but important!
-</div>
+::: {.callout-tip}
 
-```{python}
+    **Difficulty level**: Low, but important!
+:::
+
+```python
 boros = gpd.read_file(os.path.join('data','geo','Boroughs.gpkg'))
 ```
 
-```{python}
+```python
 f,axes = plt.subplots(1,2, figsize=(12,5))
 df_train.plot(ax=???)
 df_test.plot(ax=???)
@@ -636,18 +650,18 @@ axes[1].set_xlim(500000,565000)
 axes[1].set_yticks([]);
 ```
 
-#### 2.3.1 Questions
+### Questions
 
 - Why might it be useful to produce a *map* of a test/train split? 
 - Why might it matter *more* if you were dealing with user locations or behaviours?
 
-## Task 3. Normalisation
+# Normalisation
 
 The developers of [SciKit-Learn](https://scikit-learn.org/) define [normalisation](https://scikit-learn.org/stable/modules/preprocessing.html#normalization) as "scaling individual samples to have **unit norm**." There are a _lot_ of subtleties to this when you start dealing with 'sparse' data, but for the most part it's worthwhile to think of this as a rescaling of the raw data to have similar ranges in order achieve some kind of comparison. This is such a common problem that sklearn offers a range of such (re)scalers including: `MinMaxScaler`.
 
 Let's see what effect this has on the data!
 
-```{python}
+```python
 # Sets some handy 'keywords' to tweak the Seaborn plot
 kwds = dict(s=7,alpha=0.95,edgecolor="none")
 
@@ -656,50 +670,53 @@ kwds = dict(s=7,alpha=0.95,edgecolor="none")
 ho = ['Inner East','Inner West','Outer West and North West','Outer South','Outer East and North East']
 ```
 
-### Task 3.1: Select Columns
+##: Select Columns
 
-<div class="alert alert-block alert-success">
-    <b>Difficulty level</b>: Low.
-</div>
+::: {.callout-tip}
+
+    **Difficulty level**: Low.
+:::
 
 One thing you'll need to explain is why I keep writing `df[cols+['Subregion']` and why I don't just add it to the `cols` variable at the start? Don't try to answer this now, get through the rest of Tasks 3 and 4 and see what you think.
 
-```{python}
+```python
 cols = ['Tenure-Owned outright', 'Tenure-Owned with a mortgage or loan',
         'Tenure-Social rented', 'Tenure-Private rented']
 ```
 
 *Answer*: one part of the answer is that it makes it easy to change the columns we select without having to remember to keep `Subregion`, but the more important reason is that it allows us to re-use *this* 'definition' of `cols` elsewhere throughout the rest of this practical without needing to remember to *remove* `Subregion`.
 
-```{python}
+```python
 tr_raw  = df_train[cols+['Subregion']].copy() # train raw
 tst_raw = df_test[cols+['Subregion']].copy()  # test raw
 ```
 
-### Task 3.2: Fit to Data
+##: Fit to Data
 
-<div class="alert alert-block alert-warning">
-    <b>Difficulty level</b>: Moderate if you want to understand what <tt>reshape</tt> is doing.
-</div>
+::: {.callout-warning}
+
+    **Difficulty level**: Moderate if you want to understand what `reshape` is doing.
+:::
 
 Fit the training data:
 
-```{python}
+```python
 from sklearn.preprocessing import MinMaxScaler
 
 # Notice what this is doing! See if you can explain it clearly.
 scalers = [???.fit(???[x].values.reshape(-1,1)) for x in cols]
 ```
 
-### Task 3.3: Apply Transformations
+##: Apply Transformations
 
-<div class="alert alert-block alert-warning">
-    <b>Difficulty level</b>: Moderate.
-</div>
+::: {.callout-warning}
+
+    **Difficulty level**: Moderate.
+:::
 
 Train:
 
-```{python}
+```python
 tr_normed = tr_raw.copy()
 
 for i, sc in enumerate(scalers):
@@ -709,47 +726,49 @@ for i, sc in enumerate(scalers):
 
 Test:
 
-```{python}
+```python
 tst_normed = tst_raw.copy()
 
 for i, sc in enumerate(scalers):
     tst_normed[cols[i]] = sc.transform(df_???[cols[i]].values.reshape(-1,1))
 ```
 
-<div class="alert alert-block alert-info">
-    <b>&#128279; Connections</b>: You don't <em>have</em> to fully understand the next section, but if you are able to get your head around it then this will seriously help you to prepare for the use of more advanced techniques in modelling and programming.
-</div>
+::: {.callout-note}
+
+    **&#128279; Connections**: You don't _have_ to fully understand the next section, but if you are able to get your head around it then this will seriously help you to prepare for the use of more advanced techniques in modelling and programming.
+:::
 
 Check out the properties of `tst_normed` below. If you've understood what the `MinMaxScaler` is doing then you should be able to spot something unexpected in the transformed *test* outputs. If you've *really* understood this, you'll see why this result is problematic for *models*. *Hint*: one way to think of it is an issue of **extrapolation**.
 
-```{python}
+```python
 for c in cols:
     print(f"  Minimum: {tst_normed[c].min():.4f}")
     ???
 ```
 
-### Task 3.4: Plot Distributions
+##: Plot Distributions
 
-<div class="alert alert-block alert-warning">
-    <b>Difficulty level</b>: Moderate.
-</div>
+::: {.callout-warning}
 
-```{python}
+    **Difficulty level**: Moderate.
+:::
+
+```python
 tr_raw.columns     = [re.sub('(-|/)',"\n",x) for x in tr_raw.columns.values]
 tst_raw.columns    = [re.sub('(-|/)',"\n",x) for x in tst_raw.columns.values]
 tr_normed.columns  = [re.sub('(-|/)',"\n",x) for x in tr_normed.columns.values]
 tst_normed.columns = [re.sub('(-|/)',"\n",x) for x in tst_normed.columns.values]
 ```
 
-```{python}
+```python
 sns.pairplot(data=tr_raw, hue='Subregion', diag_kind='kde', corner=True, plot_kws=kwds, hue_order=ho);
 ```
 
-```{python}
+```python
 sns.pairplot(data=tr_normed, hue='Subregion', diag_kind='kde', corner=True, plot_kws=kwds, hue_order=ho);
 ```
 
-#### 3.4.1 Questions
+### Questions
 
 - Why do I keep writing `df[cols+['Subregion']`? Why I don't just add Subregions to the `cols` variable at the start?
 - What has changed between the two plots (of `tr_raw` and `tr_normed`)?
@@ -757,67 +776,71 @@ sns.pairplot(data=tr_normed, hue='Subregion', diag_kind='kde', corner=True, plot
 - Can you explain what this is doing: `[MinMaxScaler().fit(df_train[x].values.reshape(-1,1)) for x in cols]`?
 - Can you explain what *this* is doing: `sc.transform(df_test[cols[i]].values.reshape(-1,1))`?
 
-## Task 4. Standardisation 
+# Standardisation 
 
 Standardisation is typically focussed on rescaling data to have a mean (or median) of 0 and standard deviation or IQR of 1. That these approaches are conceptually tied to the idea of symmetric, unimodal data such as that encountered in the standard normal distribution. Rather confusingly, many data scientists will use standardisation and normalisation largely interchangeably!
 
-```{python}
+```python
 col = 'Vehicles-No cars or vans in hh'
 tr  = df_train[[col]].copy()
 tst = df_test[[col]].copy()
 ```
 
-### Task 4.1: Z-Score Standardisation
+##: Z-Score Standardisation
 
-<div class="alert alert-block alert-success">
-    <b>Difficulty level</b>: Low.
-</div>
+::: {.callout-tip}
 
-```{python}
+    **Difficulty level**: Low.
+:::
+
+```python
 stsc = StandardScaler().fit(tr[col].values.reshape(-1,1))
 
 tr[f"Z. {col}"]  = stsc.transform(???)
 tst[f"Z. {col}"] = stsc.transform(???)
 ```
 
-### Task 4.2: Inter-Quartile Standardisation
+##: Inter-Quartile Standardisation
 
-<div class="alert alert-block alert-success">
-    <b>Difficulty level</b>: Low.
-</div>
+::: {.callout-tip}
 
-```{python}
+    **Difficulty level**: Low.
+:::
+
+```python
 rs = ???(quantile_range=(25.0, 75.0)).fit(???)
 
 tr[f"IQR. {col}"] = rs.transform(???)
 tst[f"IQR. {col}"] = rs.transform(???)
 ```
 
-### Task 4.3: Plot Distributions
+##: Plot Distributions
 
-<div class="alert alert-block alert-info">
-    <b>&#128279; Connections</b>: The point of these next plots is simply to show that *linear* transformations (which are 'reversible') is about changing things like the magnitude/scale of our data but doesn't fundamentally change relationships *between* observations.
-</div>
+::: {.callout-note}
 
-<div class="alert alert-block alert-success">
-    <b>Difficulty level</b>: Low.
-</div>
+    **&#128279; Connections**: The point of these next plots is simply to show that *linear* transformations (which are 'reversible') is about changing things like the magnitude/scale of our data but doesn't fundamentally change relationships *between* observations.
+:::
 
-```{python}
+::: {.callout-tip}
+
+    **Difficulty level**: Low.
+:::
+
+```python
 sns.jointplot(data=tr, x=f"{col}", y=f"Z. {col}", kind='kde'); # hex probably not the best choice
 ```
 
-```{python}
+```python
 sns.jointplot(data=tr, x=f"{col}", y=f"IQR. {col}", kind='kde'); # hex probably not the best choice
 ```
 
-```{python}
+```python
 sns.jointplot(data=tr, x=f"Z. {col}", y=f"IQR. {col}", kind='hex'); # hex probably not the best choice
 ```
 
 Perhaps a little more useful...
 
-```{python}
+```python
 ax = sns.kdeplot(tr[f"Z. {col}"])
 sns.kdeplot(tr[f"IQR. {col}"], color='r', ax=ax)
 plt.legend(loc='upper right', labels=['Standard', 'Robust']) # title='Foo'
@@ -825,16 +848,17 @@ ax.ticklabel_format(useOffset=False, style='plain')
 ax.set_xlabel("Standardised Value for No cars or vans in hh")
 ```
 
-#### 4.2.1 Questions?
+### Questions?
 
 - Can you see the differences between these two rescalers? 
 - Can you explain why you might want to choose one over the other?
 
-## Task 5. Non-Linear Transformations
+# Non-Linear Transformations
 
-<div class="alert alert-block alert-info">
-    <b>&#128279; Connections</b>: Now *these* transformations are not directly revsersible because they change the actual relationships between observations in the data. We use these when we need to achieve particular 'behaviours' from our data in order to improve our model's 'predictive' ability. Even a simple regression is doing a kind of prediction ($y = \beta X + \epsilon$). You covered these concepts in <a href="https://jreades.github.io/fsds/sessions/week8.html#lectures">this week's lectures</a>.
-</div>
+::: {.callout-note}
+
+    **&#128279; Connections**: Now *these* transformations are not directly revsersible because they change the actual relationships between observations in the data. We use these when we need to achieve particular 'behaviours' from our data in order to improve our model's 'predictive' ability. Even a simple regression is doing a kind of prediction ($y = \beta X + \epsilon$). You covered these concepts in [this week's lectures](https://jreades.github.io/fsds/sessions/week8.html#lectures).
+:::
 
 So transformations are useful when a data series has features that make comparisons or analysis difficult, or that affect our ability to intuit meaningful difference. By manipulating the data using one or more mathematical operations we can sometimes make it more *tractable* for subsequent analysis. In other words, it's all about the _context_ of our data.
 
@@ -850,21 +874,22 @@ From looking at those theoretical distributions, we might make an initial guess 
 
 In the case of Median Income, taking a log-transform of the data might make it _appear_ more normal: you do **not** say that a transformation _makes_ data more normal, you say either that 'it allows us to treat the data as normally distributed' or that 'the transformed data follows a log-normal distribution'.
 
-### Task 5.1: The Normal Distribution
+##: The Normal Distribution
 
-<div class="alert alert-block alert-warning">
-    <b>Difficulty level</b>: Moderate.
-</div>
+::: {.callout-warning}
+
+    **Difficulty level**: Moderate.
+:::
 
 Z-scores are often associated with the normal distribution because their interpretation implicitly assumes a normal distribution. Or to put it another way... You can always calculate z-scores for your data (it's just a formula applied to data points), but their _intuitive meaning_ is lost if your data don't have something like a normal distribution (or follow the [68-95-99.7 rule](https://en.wikipedia.org/wiki/68–95–99.7_rule)).
 
 But... what if our data are non-normal? Well, Just because data are non-normal doesn't mean z-scores can't be calculated (we already did that above); we just have to be careful what we do with them... and sometimes we should just avoid them entirely. 
 
-#### 5.1.1 Creating a Normal Distribution
+### Creating a Normal Distribution
 
 Below is a function to create that theoretical normal distribution. See if you can understand what's going and add comments to the code to explain what each line does. 
 
-```{python}
+```python
 def normal_from_dist(series): 
     mu = ???          # mean of our data
     sd = ???          # standard deviation of our data
@@ -875,13 +900,13 @@ def normal_from_dist(series):
 
 To make it easier to understand what the function above is doing, let's use it! We'll use the function to plot both a distribution plot with both histogram and KDE for our data, and then add a _second_ overplot distplot to the same fig showing the theoretical normal distribution (in red). We'll do this in a loop for each of the three variables we want to examine.
 
-#### 5.1.2 Visual Comparisons
+### Visual Comparisons
 
 Looking at the output, which of the variables has a roughly normal distribution? Another way to think about this question is, for which of the variables are the mean and standard deviation _most_ appropriate as measures of centrality and spread?
 
 *Also*, how would you determine the _meaning_ of some of the departures from the normal distribution?
 
-```{python}
+```python
 selection = [x for x in df_train.columns.values if x.startswith('Composition')]
 
 for c in selection:
@@ -894,24 +919,25 @@ for c in selection:
     plt.show()
 ```
 
-#### 5.1.3 Questions
+### Questions
 
 - Which, if any, of the variables has a roughly normal distribution? Another way to think about this question is, for which of the variables are the mean and standard deviation _most_ appropriate as measures of centrality and spread?
 - How might you determine the _significance_ of some of the departures from the normal distribution?
 
-### Task 5.2: Logarithmic Transformations
+##: Logarithmic Transformations
 
-<div class="alert alert-block alert-warning">
-    <b>Difficulty level</b>: Moderate.
-</div>
+::: {.callout-warning}
+
+    **Difficulty level**: Moderate.
+:::
 
 To create a new series in the data frame containing the natural log of the original value it’s a similar process to what we've done before, but since pandas doesn't provide a log-transform operator (i.e. you can’t call `df['MedianIncome'].log()` ) we need to use the `numpy` package since pandas data series are just numpy arrays with some fancy window dressing that makes them even _more_ useful.
 
 Let's perform the transform then compare to the un-transformed data. Comment the code below to ensure that you understand what it is doing. 
 
-#### 5.2.1 Apply and Plot
+### Apply and Plot
 
-```{python}
+```python
 cols = ['Median-2012','Total Mean hh Income']
 
 for m in cols:
@@ -947,13 +973,14 @@ for m in cols:
 
 Hopefully, you can see that the transformed data do indeed look 'more normal'; the peak of the red and blue lines are closer together and the blue line at the lower extreme is also closer to the red line, but we can check this by seeing what has happened to the z-scores.
 
-### Task 5.3: Power Transformations 
+##: Power Transformations 
 
-<div class="alert alert-block alert-warning">
-    <b>Difficulty level</b>: Moderate.
-</div>
+::: {.callout-warning}
 
-```{python}
+    **Difficulty level**: Moderate.
+:::
+
+```python
 cols = ['Median-2012','Total Mean hh Income']
 pt = ???(method='yeo-johnson')
 
@@ -974,11 +1001,12 @@ for m in cols:
     plt.show();
 ```
 
-## Task 6. Principal Components Analysis
+# Principal Components Analysis
 
-<div class="alert alert-block alert-info">
-    <b>&#128279; Connections</b>: This is all about <em>dimensionality</em> and the different ways that we can reduce dimensionality in our data in order to improve our models' robustness and gain a better understanding of whether (or not) there is structure in our data. We'll start with linear decomposition and then look at non-linear decomposition, which we also demonstrated with UMAP last week.
-</div>
+::: {.callout-note}
+
+    **&#128279; Connections**: This is all about _dimensionality_ and the different ways that we can reduce dimensionality in our data in order to improve our models' robustness and gain a better understanding of whether (or not) there is structure in our data. We'll start with linear decomposition and then look at non-linear decomposition, which we also demonstrated with UMAP last week.
+:::
 
 Now we're going to ask the question: how can we represent our data using a smaller number of components that capture the variance in the original data. You should have covered PCA in Quantitative Methods.
 
@@ -986,54 +1014,55 @@ Now we're going to ask the question: how can we represent our data using a small
 
 Use this is your data gets messy...
 
-```{python}
+```python
 gdf = gpd.read_parquet(os.path.join('data','geo','MSOA_Atlas.geoparquet')).set_index('MSOA Code')
 print(gdf.shape)
 ```
 
-```{python}
+```python
 categoricals = ['Borough','Subregion']
 for c in categoricals:
     gdf[c] = gdf[c].astype('category')
 ```
 
-### Task 6.1: Calculating Shares
+##: Calculating Shares
 
-<div class="alert alert-block alert-danger">
-    <b>Difficulty level</b>: Hard.
-</div>
+::: {.callout-caution}
+
+    **Difficulty level**: Hard.
+:::
 
 Sadly, there's no transformer to work this out for you automatically, but let's start by converting the raw population and household figures to shares so that our later dimensionality reduction steps aren't impacted by the size of the MSOA.
 
-```{python}
+```python
 gdf[['Age-All Ages','Households-All Households']].head(5)
 ```
 
-#### 6.1.1 Specify Totals Columns
+### Specify Totals Columns
 
-```{python}
+```python
 total_pop = gdf['Age-All Ages']
 total_hh  = gdf['Households-All Households']
 total_vec = gdf['Vehicles-Sum of all cars or vans in the area']
 ```
 
-#### 6.1.2 Specify Columns for Pop or HH Normalisation
+### Specify Columns for Pop or HH Normalisation
 
-```{python}
+```python
 pop_cols  = ['Age-', 'Composition-', 'Qualifications-', 'Economic Activity-', 'White', 'Mixed/multiple',
              'Asian/Asian British', 'Black/African', 'BAME', 'Other ethnic',
              'Country of Birth-']
 hh_cols   = [???, ???, ???, 'Detached', 'Semi-detached', 'Terraced', 'Flat, ']
 ```
 
-```{python}
+```python
 popre = re.compile(r'^(?:' + "|".join(pop_cols) + r')')
 hhre  = re.compile(r'^(?:' + "|".join(???) + r')')
 ```
 
-#### 6.1.3 Apply to Columns
+### Apply to Columns
 
-```{python}
+```python
 tr_gdf = gdf.copy()
 tr_gdf['Mean hh size'] = tr_gdf['Age-All Ages']/tr_gdf['Households-All Households']
 
@@ -1052,11 +1081,12 @@ for c in gdf.columns:
         print("  Passing through.")
 ```
 
-### Task 6.2: Removing Columns
+##: Removing Columns
 
-<div class="alert alert-block alert-warning">
-    <b>Difficulty level</b>: Moderate.
-</div>
+::: {.callout-warning}
+
+    **Difficulty level**: Moderate.
+:::
 
 To perform dimensionality we can only have numeric data. In theory, categorical data can be converted to numeric and retained, but there are two issues:
 
@@ -1065,51 +1095,52 @@ To perform dimensionality we can only have numeric data. In theory, categorical 
 
 So in practice, it's probably a good idea to drop categorical data if you're planning to use PCA.
 
-#### 6.2.1 Drop Totals Columns
+### Drop Totals Columns
 
-```{python}
+```python
 pcadf = tr_gdf.drop(columns=['Age-All Ages', 'Households-All Households',
                              'Vehicles-Sum of all cars or vans in the area'])
 pcadf = pcadf.set_index('MSOA Code')
 ```
 
-#### 6.2.2 Drop Non-Numeric Columns
+### Drop Non-Numeric Columns
 
-```{python}
+```python
 pcadf.select_dtypes(['category','object']).columns
 ```
 
-```{python}
+```python
 pcadf.drop(columns=pcadf.select_dtypes(['category','object']).columns.to_list(), inplace=True)
 pcadf.drop(columns=['BNG_E','BNG_N','geometry', 'LONG', 'LAT','Shape__Are', 'Shape__Len'], inplace=True)
 ```
 
-```{python}
+```python
 pcadf.columns
 ```
 
-### Task 6.3: Rescale & Reduce
+##: Rescale & Reduce
 
-<div class="alert alert-block alert-warning">
-    <b>Difficulty level</b>: Moderate.
-</div>
+::: {.callout-warning}
+
+    **Difficulty level**: Moderate.
+:::
 
 In order to ensure that our results aren't dominated by a single scale (e.g. House Prices!) we need to rescale all of our data. You could easily try different scalers as well as a different parameters to see what effect this has on your results.
 
-#### 6.3.1 Robustly Rescale
+### Robustly Rescale
 
 Set up the Robust Rescaler for inter-decile standardisation: 10th and 90th quantiles.
 
-```{python}
+```python
 rs = ???
 
 for c in pcadf.columns.values:
     pcadf[c] = rs.fit_transform(pcadf[c].values.reshape(-1, 1))
 ```
 
-#### 6.3.2 PCA Reduce
+### PCA Reduce
 
-```{python}
+```python
 from sklearn.decomposition import PCA 
 
 pca = PCA(n_components=50, whiten=True) 
@@ -1120,23 +1151,23 @@ explained_variance = pca.explained_variance_ratio_
 singular_values = pca.singular_values_
 ```
 
-#### 6.3.3 Examine Explained Variance
+### Examine Explained Variance
 
-```{python}
+```python
 x = np.arange(1,???)
 plt.plot(x, explained_variance)
 plt.ylabel('Share of Variance Explained')
 plt.show()
 ```
 
-```{python}
+```python
 for i in range(0, 20):
     print(f"Component {i:>2} accounts for {explained_variance[i]*100:>2.2f}% of variance")
 ```
 
 You should get that Component 0 accounts for 31.35% of the variance and Component 19 accounts for 0.37%.
 
-#### 6.3.4: How Many Components?
+###: How Many Components?
 
 There are a number of ways that we could set a threshold for dimensionality reduction: 
 - The most common is to look for the 'knee' in the Explained Variance plot above. That would put us at about 5 retained components.
@@ -1145,7 +1176,7 @@ There are a number of ways that we could set a threshold for dimensionality redu
 
 In order to _do_ anything with these components we need to somehow reattach them to the MSOAs. So that entails taking the transformed results (`X_train` and `X_test`) 
 
-```{python}
+```python
 kn = knee_locator.KneeLocator(x, explained_variance, 
                               curve='convex', direction='decreasing', 
                               interp_method='interp1d')
@@ -1153,7 +1184,7 @@ print(f"Knee detected at: {kn.knee}")
 kn.plot_knee()
 ```
 
-```{python}
+```python
 keep_n_components = 7
 
 # If we weren't changing the number of components we
@@ -1179,64 +1210,67 @@ print(f"PCA df shape: {pcadf.shape[0]}")
 print(f"Row 0 of X-train contains {len(X_train[0])} elements.") 
 ```
 
-### Task 6.4: Components to Columns
+##: Components to Columns
 
-<div class="alert alert-block alert-warning">
-    <b>Difficulty level</b>: Moderate.
-</div>
+::: {.callout-warning}
+
+    **Difficulty level**: Moderate.
+:::
 
 You could actually do this more quickly (but less clearly) using `X_train.T` to transpose the matrix!
 
-```{python}
+```python
 for i in range(0,keep_n_components):
     s = pd.Series(X_train[:,???], index=pcadf.???)
     pcadf[f"Component {i+1}"] = s
 ```
 
-```{python}
+```python
 pcadf.sample(3).iloc[:,-10:-4]
 ```
 
-### Task 6.7: (Re)Attaching GeoData
+##: (Re)Attaching GeoData
 
-<div class="alert alert-block alert-warning">
-    <b>Difficulty level</b>: Moderate.
-</div>
+::: {.callout-warning}
 
-```{python}
+    **Difficulty level**: Moderate.
+:::
+
+```python
 msoas = gpd.read_file(os.path.join('data','geo','Middle_Layer_Super_Output_Areas__December_2011__EW_BGC_V2-shp.zip'), driver='ESRI Shapefile')
 msoas = msoas.set_index('MSOA11CD')
 print(msoas.columns)
 ```
 
-```{python}
+```python
 msoas.head(1)
 ```
 
-```{python}
+```python
 pcadf.head(1)
 ```
 
-```{python}
+```python
 gpcadf = pd.merge(msoas.set_index(['MSOA11CD'], drop=True), pcadf, left_index=True, right_index=True, how='inner')
 print(f"Geo-PCA df has shape {gpcadf.shape[0]} x {gpcadf.shape[1]}")
 ```
 
 You should get `PCA df has shape 983 x 89`.
 
-```{python}
+```python
 gpcadf['Borough'] = gpcadf.MSOA11NM.apply(???)
 ```
 
-### Task 6.8: Map the First _n_ Components
+##: Map the First _n_ Components
 
-<div class="alert alert-block alert-warning">
-    <b>Difficulty level</b>: Moderate.
-</div>
+::: {.callout-warning}
+
+    **Difficulty level**: Moderate.
+:::
 
 How would you automate this so that the loop creates one plot for each of the first 3 components? How do you interpret these?
 
-```{python}
+```python
 for comp in [f"Component {x}" for x in range(1,3)]:
     ax = gpcadf.plot(column=???, cmap='plasma', 
          scheme='FisherJenks', k=7, edgecolor='None', legend=True, figsize=(9,7));
@@ -1248,17 +1282,18 @@ Your first component map should look something like this:
     
 ![PCA Component 1](https://github.com/jreades/fsds/raw/master/practicals/img/PCA-Component-1.png)
 
-## Task 7. UMAP
+# UMAP
 
 UMAP is a non-linear dimensionality reduction technique. Technically, it's called *manifold* learning: imagine being able to roll a piece of paper up in more than just the 3rd dimension...). As a way to see if there is structure in your data this is a *much* better technique than one you might encounter in many tutorials: *t-SNE*. It has to do with how the two techniques 'learn' the manifold to use with your data. 
 
-### Task 7.1: UMAP on Raw Data
+##: UMAP on Raw Data
 
-<div class="alert alert-block alert-danger">
-    <b>Difficulty level</b>: Hard.
-</div>
+::: {.callout-caution}
 
-```{python}
+    **Difficulty level**: Hard.
+:::
+
+```python
 from umap import UMAP
 
 # You might want to experiment with all
@@ -1277,54 +1312,56 @@ X_embedded = u.fit_transform(???)
 print(X_embedded.shape)
 ```
 
-### Task 7.2: Write to Data Frame
+##: Write to Data Frame
 
-<div class="alert alert-block alert-success">
-    <b>Difficulty level</b>: Low.
-</div>
+::: {.callout-tip}
+
+    **Difficulty level**: Low.
+:::
 
 Can probably also be solved using `X_embedded.T`.
 
-```{python}
+```python
 for ix in range(0,X_embedded.shape[1]):
     print(ix)
     s = pd.Series(X_embedded[:,???], index=pcadf.???)
     gpcadf[f"Dimension {ix+1}"] = s
 ```
 
-### Task 7.3: Visualise!
+##: Visualise!
 
-<div class="alert alert-block alert-success">
-    <b>Difficulty level</b>: Low.
-</div>
+::: {.callout-tip}
 
-```{python}
+    **Difficulty level**: Low.
+:::
+
+```python
 rddf = gpcadf.copy() # Reduced Dimension Data Frame
 ```
 
-#### 7.3.1 Simple Scatter
+### Simple Scatter
 
-```{python}
+```python
 f,ax = plt.subplots(1,1,figsize=(8,6))
 sns.scatterplot(x=rddf[???], y=rddf[???], hue=rddf['Borough'], legend=False, ax=ax)
 ```
 
-#### 7.3.2 Seaborn Jointplot
+### Seaborn Jointplot
 
 That is *suggestive* of there being struccture in the data, but with 983 data points and 33 colours it's hard to make sense of what the structure *might* imply. Let's try this again using the Subregion instead and taking advantage of the Seaborn visualisation library's `jointplot` (joint distribution plot):
 
-```{python}
+```python
 rddf['Subregion'] = rddf.Borough.apply(lambda x: mapping[x])
 ```
 
-```{python}
+```python
 # Sets some handy 'keywords' to tweak the Seaborn plot
 kwds = dict(s=7,alpha=0.95,edgecolor="none")
 # Set the *hue order* so that all plots have some colouring by Subregion
 ho = ['Inner East','Inner West','Outer West and North West','Outer South','Outer East and North East']
 ```
 
-```{python}
+```python
 g = sns.jointplot(data=rddf, x=???, y=???, height=8, 
                   hue=???, hue_order=ho, joint_kws=kwds)
 g.ax_joint.legend(loc='upper right', prop={'size': 8});
@@ -1338,7 +1375,7 @@ What do you make of this?
 
 Maybe let's give this one last go splitting the plot out by subregion so that we can see how these vary:
 
-```{python}
+```python
 for r in rddf.Subregion.unique():
     g = sns.jointplot(data=rddf[rddf.Subregion==r], x='Dimension 1', y='Dimension 2', 
                   hue='Borough', joint_kws=kwds)
@@ -1352,13 +1389,14 @@ We can't unfortunately do any clustering at this point to create groups from the
 
 Next week we'll also add the listings data back in as part of the picture!
 
-### Task 7.4: Map the _n_ Dimensions
+##: Map the _n_ Dimensions
 
-<div class="alert alert-block alert-success">
-    <b>Difficulty level</b>: Low.
-</div>
+::: {.callout-tip}
 
-```{python}
+    **Difficulty level**: Low.
+:::
+
+```python
 for comp in [f"Dimension {x}" for x in range(1,3)]:
     f, ax = plt.subplots(1,1,figsize=(12,8))
     rddf.plot(???);
@@ -1370,13 +1408,13 @@ Your first dimension map should look something like this:
 
 ![UMAP Dimension 1](https://github.com/jreades/fsds/raw/master/practicals/img/UMAP-Dimension-1.png)
 
-### Task 7.5: And Save
+##: And Save
 
-```{python}
+```python
 rddf.to_parquet(os.path.join('data','clean','Reduced_Dimension_Data.geoparquet'))
 ```
 
-#### 7.5.1 Questions
+### Questions
 
 - How would you compare/contrast PCA components with UMAP dimensions? Why do they not seem to show the same thing even though *both* seem to show *something*?
 - What might you do with the output of either the PCA or UMAP processes?

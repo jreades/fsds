@@ -6,18 +6,21 @@ jupyter: python3
 <div style="float:left">
     <h1 style="width:450px">Practical 10: Grouping Data</h1>
     <h2 style="width:450px">Classification &amp; Clusters</h2>
-</div>
-<div style="float:right"><img width="100" src="https://github.com/jreades/i2p/raw/master/img/casa_logo.jpg" /></div>
+:::
+<div style="float:right"><img width="100" src="https://github.com/jreades/i2p/raw/master/img/casa_logo.jpg" />
+
+:::
 
 A common challenge in data analysis is how to group observations in a data set together in a way that allows for generalisation: _this_ group of observations are similar to one another, _that_ group is dissimilar to this group. But what defines similarity and difference? There is no _one_ answer to that question and so there are many different ways to cluster data, each of which has strengths and weaknesses that make them more, or less, appropriate in different contexts.
 
-<div class="alert alert-block alert-info">
-    <b>&#128279; Connections</b>: 
-</div>
+::: {.callout-note}
+
+    **&#128279; Connections**: 
+:::
 
 
 
-```{python}
+```python
 import numpy as np
 import pandas as pd
 import geopandas as gpd
@@ -55,7 +58,7 @@ pd.set_option('display.float_format', lambda x: '{:,.2f}'.format(x))
 
 ## Load GeoData for Display
 
-```{python}
+```python
 # Load Water GeoPackage
 w_path = os.path.join('data','geo','Water.gpkg')
 if not os.path.exists(w_path):
@@ -77,7 +80,7 @@ else:
 
 #### Useful Functions for Plotting
 
-```{python}
+```python
 def plt_ldn(w=water, b=boroughs):
     fig, ax = plt.subplots(1, figsize=(14, 12))
     w.plot(ax=ax, color='#79aef5', zorder=2)
@@ -116,15 +119,15 @@ def add_colorbar(mappable, ax, cmap, norm, breaks, outliers=False):
 
 Feel free to download this manually and load it locally rather that loading via the URL:
 
-```{python}
+```python
 vsize=100
 ```
 
-```{python}
+```python
 we = pd.read_csv(os.path.join('data','clean',f'2020-08-24-listing-description-w2v-{vsize}.csv.gz'), compression='gzip', low_memory=False)
 ```
 
-```{python}
+```python
 print(f"Data frame is {we.shape[0]:,} x {we.shape[1]}")
 we.head(3)
 ```
@@ -133,13 +136,13 @@ You should have: `Data frame is 74,184 x 101`.
 
 #### Link Back to Listings
 
-```{python}
+```python
 df = pd.read_csv(os.path.join('data','raw','2020-08-24-listings.csv.gz'), compression='gzip',
                 low_memory=False, usecols=['id','longitude','latitude','room_type','price'])
 df['price'] = df.price.str.replace('$','').str.replace(',','').astype(float)
 ```
 
-```{python}
+```python
 df.drop(df[((df.latitude.isna())|(df.longitude.isna()))].index, axis=0, inplace=True)
 df.drop(df[((df.latitude < 40)|(df.longitude > 1))].index, axis=0, inplace=True)
 df['id'] = df.id.astype(int)
@@ -147,7 +150,7 @@ df = df[df.room_type=='Entire home/apt']
 print(df.shape)
 ```
 
-```{python}
+```python
 df.set_index('id')
 wedf = pd.merge(df, we, on='id')
 gdf = gpd.GeoDataFrame(wedf, 
@@ -156,7 +159,7 @@ gdf = gdf.to_crs('epsg:27700').drop(columns=['longitude','latitude','room_type']
 print(gdf.shape)
 ```
 
-```{python}
+```python
 gdf.plot(column='WordVec 1', scheme='quantiles', k=5, 
          cmap='plasma', figsize=(10,8), markersize=1, alpha=0.5);
 ```
@@ -165,11 +168,11 @@ gdf.plot(column='WordVec 1', scheme='quantiles', k=5,
 
 Next, let's link all this using the MSOA Geography that we created last week and a mix or merge and sjoin!
 
-```{python}
+```python
 msoas = gpd.read_file(os.path.join('data','geo','London_MSOAs.gpkg'), driver='GPKG')
 ```
 
-```{python}
+```python
 # ml == MSOA Listings
 ml = gpd.sjoin(gdf, msoas[['MSOA11CD','geometry']], op='within').drop(columns=
     ['index_right','geometry']
@@ -177,7 +180,7 @@ ml = gpd.sjoin(gdf, msoas[['MSOA11CD','geometry']], op='within').drop(columns=
 ml.head()
 ```
 
-```{python}
+```python
 pcts = [0.15, 0.85]
 price_range = ml[['MSOA11CD','price']].groupby('MSOA11CD').describe(percentiles=pcts).reset_index().set_index('MSOA11CD')
 price_range.columns = price_range.columns.get_level_values(1)
@@ -186,29 +189,29 @@ print(price_range.shape)
 price_range.head()
 ```
 
-```{python}
+```python
 mlp = pd.merge(ml, price_range, left_on='MSOA11CD', right_index=True)
 mlp.head()[['price']+[f"{x*100:0.0f}%" for x in pcts]]
 ```
 
-```{python}
+```python
 mlp['keep'] = (mlp.price >= mlp[f"{pcts[0]*100:0.0f}%"]) & (mlp.price <= mlp[f"{pcts[1]*100:0.0f}%"])
 print(f"Keeping {mlp.keep.sum()} of {mlp.shape[0]} ({mlp.keep.sum()/mlp.shape[0]:0.3f})")
 ```
 
-```{python}
+```python
 mlg = mlp[mlp.keep==True].groupby('MSOA11CD').mean().reset_index().set_index('MSOA11CD')
 print(mlg.shape)
 mlg.head()
 ```
 
-```{python}
+```python
 #rs = RobustScaler(quantile_range=[2.5,97.5])
 ```
 
 You should see wide ranges of counts by roomt type in the first MSOA alone: the largest number of listings is for Entire home/apt but there are 242 multi-host listings compared to 'just' 156 non-multis. I believe this is the City of London though, which is quite unusual for a MSOA and should probably be treated as an outlier in most cases.
 
-```{python}
+```python
 tsne = TSNE(n_components=3, perplexity=40, early_exaggeration=3.0,
             learning_rate=9.0, n_iter=500, n_iter_without_progress=300,
             min_grad_norm=1e-07, metric='euclidean', init='random', verbose=0,
@@ -224,25 +227,25 @@ ax.scatter(dtsne.D1, dtsne.D2, dtsne.D3, marker='.')
 
 ## Clustering Data Frame
 
-```{python}
+```python
 dtsne.head()
 ```
 
-```{python}
+```python
 cldf = dtsne.set_index('MSOA11CD').copy()
 ```
 
-```{python}
+```python
 rs = pd.merge(msoas[['MSOA11CD','geometry']], cldf, on='MSOA11CD', how='inner').set_index('MSOA11CD')
 rs.head()
 ```
 
-```{python}
+```python
 cols_to_plot = np.random.choice(cldf.columns.values, 2, replace=False)
 print("Plotting cols: " + ", ".join(cols_to_plot))
 ```
 
-```{python}
+```python
 c_nm   = 'KMeans' # Clustering name
 k_pref = 4 # Number of clusters
 
@@ -259,7 +262,7 @@ ax = sns.histplot(data=rs, x=c_nm)
 plt.xticks(range(rs[c_nm].min(), math.ceil(rs[c_nm].max())+1));
 ```
 
-```{python}
+```python
 # Going to be a bit hard to read if 
 # we plot every variable against every
 # other variables, so we'll just pick a few
@@ -269,7 +272,7 @@ sns.pairplot(rs,
              hue=c_nm, markers=".", height=3, diag_kind='kde');
 ```
 
-```{python}
+```python
 fig, ax = plt_ldn()
 fig.suptitle(f"{c_nm} Results (k={k_pref})", fontsize=20, y=0.92)
 rs.plot(column=c_nm, ax=ax, linewidth=0, zorder=0, categorical=True, legend=True)
@@ -289,7 +292,7 @@ Either way, to evaluate this in a systematic way, we want to do multiple k-means
 
 Let's try it for a range of values...
 
-```{python}
+```python
 # Adapted from: http://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_silhouette_analysis.html
 from sklearn.metrics import silhouette_samples, silhouette_score
 
@@ -317,7 +320,7 @@ plt.plot(y, x)
 plt.gcf().suptitle("Average Silhouette Scores");
 ```
 
-```{python}
+```python
 k_pref=7
     
 #############
@@ -420,7 +423,7 @@ STOP. Make sure that you understand how the silhouette plot and value work, and 
 
 We can use the largest average silhouette score to determine the 'natural' number of clusters in the data, but that that's only if we don't have any kind of underlying theory, other empirical evidence, or even just a reason for choosing a different value... Again, we're now getting in areas where your judgement and your ability to communicate your rationale to readers is the key thing.
 
-```{python}
+```python
 fig, ax = plt_ldn()
 fig.suptitle(f"{c_nm} Results (k={k_pref})", fontsize=20, y=0.92)
 rs.plot(column=c_nm, ax=ax, linewidth=0, zorder=0, categorical=True, legend=True)
@@ -439,7 +442,7 @@ Find a Reasonable Value for Epsilon
 
 Before we an use DBSCAN it's useful to find a good value for Epsilon. We can look for the point of maximum 'curvature' in a nearest neigbhours plot. Which seems to be in the vicinity of 0.55. Tips on selecting min_pts can be found here.
 
-```{python}
+```python
 neigh = NearestNeighbors(n_neighbors=2)
 nbrs = neigh.fit(cldf)
 distances, indices = nbrs.kneighbors(cldf)
@@ -451,7 +454,7 @@ axes = plt.gca()
 axes.set_ylim([0.0,2.5])
 ```
 
-```{python}
+```python
 c_nm = 'DBSCAN'
 
 # Make numeric display a bit neater
@@ -497,7 +500,7 @@ pd.set_option('display.float_format', lambda x: '{:,.2f}'.format(x))
 print("Done.")
 ```
 
-```{python}
+```python
 odf = pd.DataFrame(columns=['Epsilon','Cluster','Count'])
 
 for i in range(0,len(edf.index)):
@@ -508,11 +511,11 @@ for i in range(0,len(edf.index)):
             odf = odf.append(d, ignore_index=True)
 ```
 
-```{python}
+```python
 odf['Count'] = odf.Count.astype(float)
 ```
 
-```{python}
+```python
 xmin = odf[odf.Cluster=='Cluster 0'].Epsilon.min()
 xmax = odf[(odf.Cluster=='Cluster -1') & (odf.Count < cldf.shape[0]/5)].Epsilon.min()
 
@@ -521,7 +524,7 @@ sns.lineplot(data=odf, x='Epsilon', y='Count', hue='Cluster', ax=ax);
 ax.vlines(0.97, 0, ax.get_ylim()[1], colors='r', linestyles='dashed', label='Epsilon');
 ```
 
-```{python}
+```python
 e = 0.97
 dbs = DBSCAN(eps=e, min_samples=cldf.shape[1]+1).fit(cldf.values)
 s = pd.Series(dbs.labels_, index=cldf.index, name=c_nm)
@@ -529,17 +532,17 @@ rs[c_nm] = s
 print(s.value_counts())
 ```
 
-```{python}
+```python
 fig, ax = plt_ldn()
 fig.suptitle(f"{c_nm} Results", fontsize=20, y=0.92)
 rs.plot(column=c_nm, ax=ax, linewidth=0, zorder=0, cmap='plasma', categorical=True, legend=True);
 ```
 
-```{python}
+```python
 from sompy.sompy import SOMFactory
 ```
 
-```{python}
+```python
 c_nm = 'SOM'
 
 sm = SOMFactory().build(
@@ -548,25 +551,25 @@ sm = SOMFactory().build(
 sm.train(n_job=4, verbose=False, train_rough_len=2, train_finetune_len=5)
 ```
 
-```{python}
+```python
 topographic_error  = sm.calculate_topographic_error()
 quantization_error = np.mean(sm._bmu[1])
 print("Topographic error = {0:0.5f}; Quantization error = {1:0.5f}".format(topographic_error, quantization_error))
 ```
 
-```{python}
+```python
 from sompy.visualization.mapview import View2D
 view2D = View2D(10, 10, "rand data", text_size=10)
 view2D.show(sm, col_sz=4, which_dim="all", denormalize=True)
 ```
 
-```{python}
+```python
 from sompy.visualization.bmuhits import BmuHitsView
 vhts = BmuHitsView(15, 15, "Hits Map", text_size=8)
 vhts.show(sm, anotate=True, onlyzeros=False, labelsize=9, cmap="plasma", logaritmic=False)
 ```
 
-```{python}
+```python
 from sompy.visualization.hitmap import HitMapView
 
 k_val = 4
@@ -575,7 +578,7 @@ hits  = HitMapView(15, 15, "Clustering", text_size=14)
 a     = hits.show(sm)
 ```
 
-```{python}
+```python
 # Get the labels for each BMU
 # in the SOM (15 * 10 neurons)
 clabs = sm.cluster_labels
@@ -592,7 +595,7 @@ s = pd.Series(clabs[bmus], index=rs.index, name=c_nm)
 rs[c_nm] = s
 ```
 
-```{python}
+```python
 fig, ax = plt_ldn()
 fig.suptitle(f"{c_nm} Results", fontsize=20, y=0.92)
 rs.plot(column=c_nm, ax=ax, linewidth=0, zorder=0, legend=True, categorical=True)
@@ -618,7 +621,7 @@ So you can undertake a spatial analysis using _either_ approach, it just depends
 
 #### Ensure Plotting Output
 
-```{python}
+```python
 import matplotlib as mpl
 mpl.use('TkAgg')
 %matplotlib inline
@@ -626,7 +629,7 @@ mpl.use('TkAgg')
 
 #### Importing the Libraries
 
-```{python}
+```python
 import numpy as np
 import pandas as pd
 import geopandas as gpd
@@ -666,7 +669,7 @@ np.random.seed(42) # For reproducibility
 pd.set_option('display.float_format', lambda x: '{:,.2f}'.format(x))
 ```
 
-```{python}
+```python
 src = 'https://github.com/kingsgeocomp/applied_gsa/blob/master/data/Census.zip?raw=true'
 dst = os.path.join('analysis','Census.zip')
 
@@ -690,14 +693,14 @@ print("Done.")
 
 You may need to make a few adjustments to the path to get the data loaded on your own computer. But notice what we're now able to do here: using the `zipfile` library we can extract a data file (or any other file) from the Zip archive without even having to open it. Saves even more time _and_ disk space!
 
-```{python}
+```python
 z = zipfile.ZipFile(os.path.join('analysis','Census.zip'))
 z.namelist()
 ```
 
 We're going to save each data set to a separate data frame to make it easier to work with during cleaning. But note that this code is fairly flexible since we stick each new dataframe in a dictionary (`d`) where we can retrieve them via an iterator.
 
-```{python}
+```python
 raw   = {}
 clean = {}
 total_cols = 0
@@ -722,7 +725,7 @@ for r in range(0, len(z.namelist())):
 print("There are {0} columns in all.".format(total_cols))
 ```
 
-```{python}
+```python
 nm  = 'Occupation'
 url = 'https://github.com/jreades/urb-studies-predicting-gentrification/raw/master/data/src/2011/ks610ew.csv.gz'
 
@@ -746,7 +749,7 @@ raw[nm] = df
 df.sample(3, random_state=42)
 ```
 
-```{python}
+```python
 nm  = 'Income'
 url  = 'https://data.london.gov.uk/download/household-income-estimates-small-areas/7c1099d9-327b-4f20-abb8-8c24a3c10c47/modelled-household-income-estimates-lsoa.csv'
 
@@ -759,7 +762,7 @@ raw[nm] = df
 df.sample(3, random_state=42)
 ```
 
-```{python}
+```python
 nm  = 'Housing'
 url = 'https://data.london.gov.uk/download/average-house-prices/9a92fbaf-c04e-498a-9f8c-6c85f280817e/land-registry-house-prices-LSOA.csv'
 
@@ -796,7 +799,7 @@ We also need to download the LSOA boundary data. A quick Google search on "2011 
 
 Again, in order to get you started more quickly I've already created a 'pack' for you. However, note that the format of this is a GeoPackage, this is a fairly new file format designed to replace ESRI's antique Shapefile format, and it allows us to include all kinds of useful information as part of the download as well as doing away with the need to unzip a download first! So here we load the data directly into a geopandas dataframe:
 
-```{python}
+```python
 src = 'https://github.com/kingsgeocomp/applied_gsa/raw/master/data/London%20LSOAs.gpkg'
 
 gdf = gpd.read_file(src)
@@ -848,7 +851,7 @@ If you're more interested in US Census data then there's a nice-looking (though 
 
 These are already clean, so we can just copy them over.
 
-```{python}
+```python
 for t in ['Occupation','Housing','Income']:
     raw[t].rename(columns={'Code':'mnemonic'}, inplace=True)
     print(raw[t].columns)
@@ -859,12 +862,12 @@ for t in ['Occupation','Housing','Income']:
 
 From dwellings we're mainly interested in the housing type since we would expect that housing typologies will be a determinant of the types of people who live in an area. We _could_ look at places with no usual residents as well, or explore the distribution of shared dwellings, but this is a pretty good start.
 
-```{python}
+```python
 t = 'Dwellings'
 raw[t].columns
 ```
 
-```{python}
+```python
 # Select the columns we're interested in analysing
 selection = ['mnemonic',
     'Whole house or bungalow: Detached', 
@@ -894,12 +897,12 @@ clean[t].sample(5, random_state=42)
 
 Clearly, some areas have more young people, some have older people, and some will be composed of families. A lot of these are going to be tied to 'lifestage' and so will help us to understand something about the types of areas in which they live.
 
-```{python}
+```python
 t = 'Age'
 raw[t].columns
 ```
 
-```{python}
+```python
 # Select the columns we're interested in analysing
 selection = ['mnemonic',
     'Age 0 to 14',
@@ -926,12 +929,12 @@ clean[t].sample(5, random_state=42)
 
 We might also think that the balance of ethnic groups might impact a categorisation of LSOAs in London.
 
-```{python}
+```python
 t = 'Ethnicity'
 raw[t].columns
 ```
 
-```{python}
+```python
 # Select the columns we're interested in analysing
 selection = ['mnemonic',
     'White', 
@@ -951,12 +954,12 @@ clean[t].sample(5, random_state=42)
 
 Let's next incorporate the amount of space available to each household.
 
-```{python}
+```python
 t = 'Rooms'
 raw[t].columns
 ```
 
-```{python}
+```python
 # Select the columns we're interested in analysing
 selection = ['mnemonic',
     'Occupancy rating (bedrooms) of -1 or less',
@@ -976,12 +979,12 @@ clean[t].sample(5, random_state=42)
 
 Car ownership and use is also known to be a good predictor of social and economic 'status': Guy Lansley's article on the DLVA's registration database offers a useful perpective on the usefulness of this approach.
 
-```{python}
+```python
 t = 'Vehicles'
 raw[t].columns
 ```
 
-```{python}
+```python
 # Select the columns we're interested in analysing
 selection = ['mnemonic',
     'No cars or vans in household', 
@@ -1003,12 +1006,12 @@ clean[t].sample(5, random_state=42)
 
 Ownership structure is another categorisation predictor.
 
-```{python}
+```python
 t = 'Tenure'
 raw[t].columns
 ```
 
-```{python}
+```python
 # Select the columns we're interested in analysing
 selection = ['mnemonic',
     'Owned', 
@@ -1029,12 +1032,12 @@ clean[t].sample(5, random_state=42)
 
 You can find out a bit more about qualifications [here](https://www.surreyi.gov.uk/2011-census/highest-level-of-qualification/#header-qualifications-categories).
 
-```{python}
+```python
 t = 'Qualifications'
 raw[t].columns
 ```
 
-```{python}
+```python
 # Select the columns we're interested in analysing
 selection = ['mnemonic',
     'Highest level of qualification: Below Level 3 qualifications',
@@ -1070,12 +1073,12 @@ clean[t].sample(5, random_state=42)
 
 ### Activity
 
-```{python}
+```python
 t = 'Activity'
 raw[t].columns
 ```
 
-```{python}
+```python
 # Select the columns we're interested in analysing
 selection = ['mnemonic',
     'Economically active: In employment',
@@ -1106,14 +1109,14 @@ clean[t].sample(5, random_state=42)
 
 Let's try standardising the data now:
 
-```{python}
+```python
 # Here's how we can rescale and transform data easily
 from sklearn.preprocessing import PowerTransformer
 from sklearn.preprocessing import RobustScaler
 from sklearn.preprocessing import MinMaxScaler
 ```
 
-```{python}
+```python
 random.seed(42)
 t   = random.sample(population=list(clean.keys()), k=1)[0]
 col = random.sample(population=list(clean[t].columns.values[1:]), k=1)[0]
@@ -1122,35 +1125,35 @@ print(f"Looking at {col} column from {t}.")
 
 Here's the 'original' distribution:
 
-```{python}
+```python
 plt.rcParams['figure.figsize']=(7,3)
 sns.distplot(clean[t][col], kde=False)
 ```
 
 Here's the version that has been re-scaled (standardised) using Min/Max rescaling:
 
-```{python}
+```python
 plt.rcParams['figure.figsize']=(7,3)
 sns.distplot(preprocessing.minmax_scale(clean[t][col].values.reshape(-1,1)), kde=False)
 ```
 
 Here's a version that has been robustly rescaled:
 
-```{python}
+```python
 plt.rcParams['figure.figsize']=(7,3)
 sns.distplot(preprocessing.robust_scale(clean[t][col].values.reshape(-1,1), quantile_range=[5.0, 95.0]), kde=False)
 ```
 
 And here's a version that has been Power Transformed... spot the difference!
 
-```{python}
+```python
 sns.distplot(
     preprocessing.power_transform(clean[t][col].values.reshape(-1,1), method='yeo-johnson'), kde=False)
 ```
 
 Combining transformation _and_ rescaling:
 
-```{python}
+```python
 sns.distplot(
     preprocessing.robust_scale(
         preprocessing.power_transform(
@@ -1161,7 +1164,7 @@ sns.distplot(
 )
 ```
 
-```{python}
+```python
 # Set up a new dictionary for the transforms
 transformed = {}
 
@@ -1204,7 +1207,7 @@ for k in set(clean.keys()).difference(suppress):
 
 Now that we've converted everything to percentages, it's time to bring the data together! We'll initialise the data frame using the first matching data set, and then iterate over the rest, merging the data frames as we go.
 
-```{python}
+```python
 matching = list(transformed.keys())
 print("Found the following data sets:\n\t" + ", ".join(matching))
 
@@ -1222,19 +1225,19 @@ scdf.to_csv(os.path.join('data','Scaled_and_Transformed.csv.gz'), compression='g
 lsoac.to_csv(os.path.join('data','Cleaned.csv.gz'), compression='gzip')
 ```
 
-```{python}
+```python
 print("Shape of full data frame is {0} by {1}".format(scdf.shape[0], scdf.shape[1]))
 ```
 
 With luck you still have 4,835 rows, but now you have rather fewer than 88 columns.
 
-```{python}
+```python
 random.seed(42)
 cols_to_plot = random.sample(population=list(scdf.columns.values), k=3)
 print("Columns to plot: " + ", ".join(cols_to_plot))
 ```
 
-```{python}
+```python
 # The data as it is now...
 sns.set(style="whitegrid")
 sns.pairplot(lsoac, 
@@ -1242,7 +1245,7 @@ sns.pairplot(lsoac,
              markers=".", height=3, diag_kind='kde')
 ```
 
-```{python}
+```python
 # The data as it is now...
 sns.set(style="whitegrid")
 sns.pairplot(scdf, 
@@ -1250,7 +1253,9 @@ sns.pairplot(scdf,
              markers=".", height=3, diag_kind='kde')
 ```
 
-<div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">STOP. Making sure that you understand how and why this results differns from the <i>same</i> plot above.</div>
+<div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">STOP. Making sure that you understand how and why this results differns from the *same</i> plot above.
+
+:::
 
 Right, so you can see that rescaling the dimension hasn't *actually* changed the relationships within each dimension, or even between dimensions, but it has changed the overall range so that the the data is broadly re-centered on 0 but we *still* have the original outliers from the raw data. You could _also_ do IQR standardisation (0.25 and 0.75) with the percentages, but in those cases you would have _more_ outliers and then _more_ extreme values skewing the results of the clustering algorithm.
 
@@ -1258,7 +1263,7 @@ Right, so you can see that rescaling the dimension hasn't *actually* changed the
 
 We now have quite a few variables/datasets in memory, so it's a good idea to free up some RAM by getting rid of anything we no longer need...
 
-```{python}
+```python
 in_scope  = set([x for x in dir() if not x.startswith('_')])
 to_delete = set(['raw','clean','transformed','col','k','c','lsoac','scdf'])
 z = list(in_scope.intersection(to_delete))
@@ -1271,7 +1276,9 @@ OK, we're finally here! It's time to cluster the cleaned, normalised, and standa
 
 The effectiveness of clustering algorithms is usually demonstrated using the 'iris data' -- it's available by default with both Seaborn and SciKit-Learn. This data doesn't usually need normalisation but it's a good way to start looking at the data across four dimensions and seeing how it varies and why some dimensions are 'good' for clustering, while others are 'not useful'...
 
-<div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">Unfortunately, our data is a <i>lot</i> messier and has many more dimensions (>25) than this.</div>
+<div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">Unfortunately, our data is a *lot</i> messier and has many more dimensions (>25) than this.
+
+:::
 
 
 
@@ -1287,21 +1294,21 @@ I would also consider using PCA on groups of related variables (_e.g._ the housi
 
 #### Create an Output Directory and Load the Data
 
-```{python}
+```python
 o_dir = os.path.join('outputs','clusters')
 if os.path.isdir(o_dir) is not True:
     print("Creating '{0}' directory.".format(o_dir))
     os.makedirs(o_dir)
 ```
 
-```{python}
+```python
 df = pd.read_csv(os.path.join('data','Scaled_and_Transformed.csv.gz'))
 df.rename(columns={'mnemonic':'lsoacd'}, inplace=True)
 df.set_index('lsoacd', inplace=True)
 df.describe()
 ```
 
-```{python}
+```python
 df.sample(3, random_state=42)
 ```
 
@@ -1313,7 +1320,7 @@ _Note:_ if reading these GeoPackages gives you errors then you will need to comm
     b.plot(ax=ax, edgecolor='#cc2d2d', facecolor='None', zorder=3)
 ```
 
-```{python}
+```python
 # Load Water GeoPackage
 w_path = os.path.join('data','Water.gpkg')
 if not os.path.exists(w_path):
@@ -1335,7 +1342,7 @@ else:
 
 #### Useful Functions for Plotting
 
-```{python}
+```python
 def plt_ldn(w=water, b=boroughs):
     fig, ax = plt.subplots(1, figsize=(14, 12))
     w.plot(ax=ax, color='#79aef5', zorder=2)
@@ -1370,7 +1377,7 @@ def add_colorbar(mappable, ax, cmap, norm, breaks, outliers=False):
 
 #### Select 4 Columns to Plot
 
-```{python}
+```python
 random.seed(42)
 cols_to_plot = random.sample(population=list(df.columns.values), k=4)
 print("Columns to plot: " + ", ".join(cols_to_plot))
@@ -1378,7 +1385,7 @@ print("Columns to plot: " + ", ".join(cols_to_plot))
 
 #### Storing Results
 
-```{python}
+```python
 result_set = None
 
 def add_2_rs(s, rs=result_set):
@@ -1393,7 +1400,7 @@ def add_2_rs(s, rs=result_set):
 
 #### Importing the Library
 
-```{python}
+```python
 from sklearn.cluster import KMeans
 #help(KMeans)
 ```
@@ -1402,7 +1409,7 @@ The next few code blocks may take a while to complete, largely because of the `p
 
 #### A First Cluster Analysis
 
-```{python}
+```python
 c_nm   = 'KMeans' # Clustering name
 k_pref = 6 # Number of clusters
 
@@ -1429,7 +1436,7 @@ sns.pairplot(cldf,
              hue=c_nm, markers=".", height=3, diag_kind='kde')
 ```
 
-```{python}
+```python
 cgdf = gdf.join(cldf, how='inner')
 
 breaks = np.arange(0,cldf[c_nm].max()+2,1)
@@ -1450,7 +1457,9 @@ del(cgdf)
 
 There's just _one_ little problem: what assumption did I make when I started this *k*-means cluster analysis? It's a huge one, and it's one of the reasons that *k*-means clustering _can_ be problematic when used naively...
 
-<div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">STOP. What critical assumption did we make when running this analysis?</div>
+<div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">STOP. What critical assumption did we make when running this analysis?
+
+:::
 
 #### The 'Right' Number of Clusters
 
@@ -1462,7 +1471,7 @@ Either way, to evaluate this in a systematic way, we want to do _multiple_ _k_-m
 
 Let's try it for the range 3-9.
 
-```{python}
+```python
 # Adapted from: http://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_silhouette_analysis.html
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_samples, silhouette_score
@@ -1572,7 +1581,9 @@ del(cldf)
 
 #### Interpreting the Results
 
-<div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">STOP. Make sure that you understand how the silhouette plot and value work, and why your results may diverge from mine.</div>
+<div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">STOP. Make sure that you understand how the silhouette plot and value work, and why your results may diverge from mine.
+
+:::
 
 We can use the largest average silhouette score to determine the 'natural' number of clusters in the data, but that that's only if we don't have any kind of underlying _theory_, other _empirical evidence_, or even just a _reason_ for choosing a different value... Again, we're now getting in areas where _your judgement_ and your ability to _communicate your rationale_ to readers is the key thing. 
 
@@ -1580,7 +1591,7 @@ We can use the largest average silhouette score to determine the 'natural' numbe
 
 Let's repeat the clustering process _one more time_ using the silhouette score as a guide and then map it.
 
-```{python}
+```python
 #| scrolled: true
 c_nm = 'KMeans'
 # Quick sanity check in case something hasn't
@@ -1602,7 +1613,7 @@ result_set=add_2_rs(s)
 
 #### Mapping Results
 
-```{python}
+```python
 cgdf = gdf.join(cldf, how='inner')
 
 breaks = np.arange(0,cldf[c_nm].max()+2,1)
@@ -1628,7 +1639,7 @@ You could also think of ways of plotting how these groups differ. For instance..
 
 To get a sense of how these clusters differ we can try to extract 'representative' centroids (mid-points of the multi-dimensional cloud that constitutes a cluster). In the case of _k_-means this will work quite will since the clusters are explicitly built around mean centroids. There's also a _k_-medoids clustering approach built around the median centroid.
 
-```{python}
+```python
 centroids = None
 for k in sorted(cldf[c_nm].unique()):
     print(f"Processing cluster {k}")
@@ -1658,7 +1669,7 @@ Of course, as we've said above _k_-means is just one way of clustering, DBScan i
 
 #### Importing the Library
 
-```{python}
+```python
 from sklearn.cluster import DBSCAN
 #?DSCAN
 ```
@@ -1667,7 +1678,7 @@ from sklearn.cluster import DBSCAN
 
 Before we an use DBSCAN it's useful to find a good value for Epsilon. We can [look for the point of maximum 'curvature'](https://towardsdatascience.com/machine-learning-clustering-dbscan-determine-the-optimal-value-for-epsilon-eps-python-example-3100091cfbc) in a nearest neigbhours plot. Which seems to be in the vicinity of 0.55. Tips on selecting `min_pts` can be [found here](https://towardsdatascience.com/how-dbscan-works-and-why-should-i-use-it-443b4a191c80).
 
-```{python}
+```python
 # Quick sanity check in case something hasn't
 # run successfully -- these muck up k-means
 cldf = df.drop(list(df.columns[df.isnull().any().values].values), axis=1)
@@ -1685,9 +1696,11 @@ plt.plot(distances)
 
 There are two values that need to be specified: `eps` and `min_samples`. Both seem to be set largely by trial and error. It's easiest to set `min_samples` first since that sets a floor for your cluster size and then `eps` is basically a distance metric that governs how far away something can be from a cluster and still be considered part of that cluster.
 
-<div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">WARNING. This next step may take quite a lot of time since we are iterating through many, many values of Epsilon to explore how the clustering result changes and how well this matches up with (or doesn't) the graph above.</div>
+<div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">WARNING. This next step may take quite a lot of time since we are iterating through many, many values of Epsilon to explore how the clustering result changes and how well this matches up with (or doesn't) the graph above.
 
-```{python}
+:::
+
+```python
 c_nm = 'DBSCAN'
 
 # Quick sanity check in case something hasn't
@@ -1736,7 +1749,7 @@ pd.set_option('display.float_format', lambda x: '{:,.2f}'.format(x))
 print("Done.")
 ```
 
-```{python}
+```python
 odf = pd.DataFrame(columns=['Epsilon','Cluster','Count'])
 
 for i in range(0,len(edf.index)):
@@ -1747,7 +1760,7 @@ for i in range(0,len(edf.index)):
             odf = odf.append(d, ignore_index=True)       
 ```
 
-```{python}
+```python
 xmin = odf[odf.Cluster=='Cluster 0'].Epsilon.min()
 xmax = odf[(odf.Cluster=='Cluster -1') & (odf.Count < cldf.shape[0]/5)].Epsilon.min()
 
@@ -1758,7 +1771,7 @@ sns.lineplot(data=odf, x='Epsilon', y='Count', hue='Cluster')
 
 #### Final Clustering
 
-```{python}
+```python
 e = 0.835
 dbs = DBSCAN(eps=e, min_samples=12, n_jobs=-1).fit(cldf.values)
 s = pd.Series(dbs.labels_, index=cldf.index, name=c_nm)
@@ -1767,7 +1780,7 @@ result_set=add_2_rs(s)
 print(s.value_counts())
 ```
 
-```{python}
+```python
 cgdf = gdf.join(cldf, how='inner')
 
 breaks = np.arange(cldf[c_nm].min(),cldf[c_nm].max()+2,1)
@@ -1789,7 +1802,7 @@ del(cgdf)
 
 To get a sense of how these clusters differ we can try to extract 'representative' centroids (mid-points of the multi-dimensional cloud that constitutes a cluster). For algorithms other than _k_-means it may be better to use medians than means.
 
-```{python}
+```python
 centroids = None
 for k in sorted(cldf[c_nm].unique()):
     print(f"Processing cluster {k}")
@@ -1822,15 +1835,17 @@ This is a fairly new addition to `sklearn` and is similar to DBSCAN in that ther
 
 #### Importing the Library
 
-```{python}
+```python
 from sklearn.cluster import OPTICS
 ```
 
 #### Final Clustering
 
-<div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">WARNING. This next step may take quite a lot of time since the algorithm is making far fewer assumptions about the structure of the data. On a 2018 MacBook Pro with 16GB of RAM it took about 5 minutes.</div>
+<div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">WARNING. This next step may take quite a lot of time since the algorithm is making far fewer assumptions about the structure of the data. On a 2018 MacBook Pro with 16GB of RAM it took about 5 minutes.
 
-```{python}
+:::
+
+```python
 c_nm = 'Optics'
 
 # Can try to set this from DBSCAN results
@@ -1856,9 +1871,11 @@ print(s.value_counts())
 
 #### Mapping Clustering Results
 
-<div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">WARNING. My sense is that these results are a bit rubbish: the majority of items are assigned to <i>one cluster</i>??? I've tried PCA on the standardised data and that made little difference. This should also have worked <i>better</i> but it seems that a small number of LSOAs are so utterly different that the more sophisticated clustering algorithm effectively 'chokes' on them.</div>
+<div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">WARNING. My sense is that these results are a bit rubbish: the majority of items are assigned to *one cluster</i>??? I've tried PCA on the standardised data and that made little difference. This should also have worked <i>better</i> but it seems that a small number of LSOAs are so utterly different that the more sophisticated clustering algorithm effectively 'chokes' on them.
 
-```{python}
+:::
+
+```python
 cgdf = gdf.join(cldf, how='inner')
 
 breaks = np.arange(cldf[c_nm].min(),cldf[c_nm].max()+2,1)
@@ -1880,7 +1897,7 @@ del(cgdf)
 
 To get a sense of how these clusters differ we can try to extract 'representative' centroids (mid-points of the multi-dimensional cloud that constitutes a cluster). For algorithms other than _k_-Means it may be better to use medians, not means.
 
-```{python}
+```python
 centroids = None
 for k in sorted(cldf[c_nm].unique()):
     print(f"Processing cluster {k}")
@@ -1904,7 +1921,9 @@ g = g.map(plt.plot, "Cluster", "Std. Value", marker=".")
 del(odf, centroids)
 ```
 
-<div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">STOP. Aside from the fact that we should probably reduce the number of dimensions on which we're clustering, what about the process of selecting variables (a.k.a. feature selection) might have led to the result that our results are a bit crap? <i>Hint: how did we decide what to keep and what to drop, and is this a robust approach?</i></div>
+<div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">STOP. Aside from the fact that we should probably reduce the number of dimensions on which we're clustering, what about the process of selecting variables (a.k.a. feature selection) might have led to the result that our results are a bit crap? *Hint: how did we decide what to keep and what to drop, and is this a robust approach?</i>
+
+:::
 
 ### HDBSCAN
 
@@ -1935,11 +1954,13 @@ SOMs offer a third type of clustering algorithm. They are a relatively 'simple' 
 
 #### (Re)Installing SOMPY
 
-<div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">WARNING. The maintainers of the main SOMPY library are fairly inactive, so we've had to write our own version that fixes a few Python3 bugs, but this means that it can't be installed the 'usual' way without also having Git installed. Consequently, I have left the output from SOMPY in place so that you can see what it will produce <i>even if you cannot successfully install SOMPY during this practical</i></div>. 
+<div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">WARNING. The maintainers of the main SOMPY library are fairly inactive, so we've had to write our own version that fixes a few Python3 bugs, but this means that it can't be installed the 'usual' way without also having Git installed. Consequently, I have left the output from SOMPY in place so that you can see what it will produce *even if you cannot successfully install SOMPY during this practical</i>
+
+:::. 
 
 To work out if there is an issue, check to see if the `import` statement below gives you errors:
 
-```{python}
+```python
 from sompy.sompy import SOMFactory
 ```
 
@@ -1967,11 +1988,11 @@ On Windows you probably drop the `conda` part of the command.
 
 We are going to actually train the SOM using the input data. This is where you specify the input parameters that have the main effect on the clustering results.
 
-```{python}
+```python
 from sompy.sompy import SOMFactory
 ```
 
-```{python}
+```python
 c_nm = 'SOM'
 
 # Quick sanity check in case something hasn't
@@ -1986,7 +2007,7 @@ sm.train(n_job=4, verbose=False, train_rough_len=2, train_finetune_len=5)
 
 How good is the fit?
 
-```{python}
+```python
 topographic_error  = sm.calculate_topographic_error()
 quantization_error = np.mean(sm._bmu[1])
 print("Topographic error = {0:0.5f}; Quantization error = {1:0.5f}".format(topographic_error, quantization_error))
@@ -1994,7 +2015,7 @@ print("Topographic error = {0:0.5f}; Quantization error = {1:0.5f}".format(topog
 
 How do the results look?
 
-```{python}
+```python
 from sompy.visualization.mapview import View2D
 view2D = View2D(10, 10, "rand data", text_size=10)
 view2D.show(sm, col_sz=4, which_dim="all", denormalize=True)
@@ -2003,13 +2024,15 @@ plt.savefig(os.path.join(o_dir, f"{c_nm}-Map.png"), dpi=200)
 
 #### Here's What I Got
 
-<div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">WARNING. These are the results from the approach that is closest to the one outlined in <i>Geocomputation</i>.</div>
+<div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">WARNING. These are the results from the approach that is closest to the one outlined in *Geocomputation</i>.
+
+:::
 
 <img src="https://github.com/kingsgeocomp/applied_gsa/raw/master/img/SOM-Map.png" alt="SOM Clustering Results" width="800" />
 
 How many data points were assigned to each BMU?
 
-```{python}
+```python
 from sompy.visualization.bmuhits import BmuHitsView
 vhts = BmuHitsView(15, 15, "Hits Map", text_size=8)
 vhts.show(sm, anotate=True, onlyzeros=False, labelsize=9, cmap="plasma", logaritmic=False)
@@ -2018,13 +2041,15 @@ plt.savefig(os.path.join(o_dir,f"{c_nm}-BMU Hit View.png"), dpi=200)
 
 #### BMU Hit Map
 
-<div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">WARNING. These are the results from the approach that is closest to the one outlined in <i>Geocomputation</i>.</div>
+<div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">WARNING. These are the results from the approach that is closest to the one outlined in *Geocomputation</i>.
+
+:::
 
 <img src="https://github.com/kingsgeocomp/applied_gsa/raw/master/img/SOM-BMU Hit View.png" alt="SOM Heat Map Results" width="800" />
 
 How many clusters do we want and where are they on the map?
 
-```{python}
+```python
 from sompy.visualization.hitmap import HitMapView
 
 k_val = 5
@@ -2036,13 +2061,15 @@ plt.savefig(os.path.join(o_dir,f"{c_nm}-Hit Map View.png"), dpi=200)
 
 #### Clustering the BMUs
 
-<div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">WARNING. These are the results from the approach that is closest to the one outlined in <i>Geocomputation</i>.</div>
+<div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">WARNING. These are the results from the approach that is closest to the one outlined in *Geocomputation</i>.
+
+:::
 
 <img src="https://github.com/kingsgeocomp/applied_gsa/raw/master/img/SOM-Hit Map View.png" alt="SOM Clustering Results" width="800" />
 
 Finally, let's get the cluster results and map them back on to the data points:
 
-```{python}
+```python
 # Get the labels for each BMU
 # in the SOM (15 * 10 neurons)
 clabs = sm.cluster_labels
@@ -2065,7 +2092,7 @@ cldf[c_nm] = s
 result_set = add_2_rs(s)
 ```
 
-```{python}
+```python
 cgdf = gdf.join(cldf, how='inner')
 
 breaks = np.arange(cldf[c_nm].min(),cldf[c_nm].max()+2,1)
@@ -2085,13 +2112,15 @@ del(cgdf)
 
 #### Result!
 
-<div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">WARNING. These are the results from the approach that is closest to the one outlined in <i>Geocomputation</i>.</div>
+<div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">WARNING. These are the results from the approach that is closest to the one outlined in *Geocomputation</i>.
+
+:::
 
 <img src="https://github.com/kingsgeocomp/applied_gsa/raw/master/img/SOM.png" alt="SOM Clustering Results Mapped" width="800" />
 
 #### Representative Centroids
 
-```{python}
+```python
 centroids = None
 for k in sorted(cldf[c_nm].unique()):
     print(f"Processing cluster {k}")
