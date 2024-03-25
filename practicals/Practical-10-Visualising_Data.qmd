@@ -4,8 +4,6 @@ subtitle: "Linking & Visualising Data"
 jupyter: python3
 ---
 
-:::
-
 | Complete | Part 1: Foundations | Part 2: Data | Part 3: Analysis |     |
 | :------- | :------------------ | :----------- | :--------------- | --: |
 | 90% | &#9619;&#9619;&#9619;&#9619;&#9619;&#9619;&#9619;&#9619; | &#9619;&#9619;&#9619;&#9619;&#9619;&#9619; | &#9619;&#9619;&#9619;&#9619;&#9619;&#9617; | 10/10
@@ -99,7 +97,7 @@ def cache_data(src:str, dest:str) -> str:
 
 # Spatial Joins (Recap)
 
-##: Load Geodata
+## Load Geodata
 
 A lot of useful geo-data can be accessed from the [GeoPortal](https://geoportal.statistics.gov.uk/). And see also [my discussion](https://jreades.github.io/fsds/lectures/9.2-Linking_Spatial_Data.html#/think-it-through) on [lookup tables](https://geoportal.statistics.gov.uk/datasets/postcode-to-output-area-to-lower-layer-super-output-area-to-middle-layer-super-output-area-to-local-authority-district-november-2018-lookup-in-the-uk-2/about).
 
@@ -120,7 +118,7 @@ msoas.plot();
 msoas.sample(3)
 ```
 
-##: Select London MSOAs
+## Select London MSOAs
 
 ::: {.callout-note}
 
@@ -224,7 +222,7 @@ except NameError:
 
 > 
 
-##: Append Names
+## Append Names
 
 We don't actually make use of these in this session, but *both* operations could be relevant to your final reports:
 
@@ -320,7 +318,7 @@ print(msoas.shape)
 msoas.to_parquet(os.path.join('data','geo','London_MSOA_Names.geoparquet'))
 ```
 
-##: Load InsideAirbnb Data
+## Load InsideAirbnb Data
 
 ```python
 host = 'http://orca.casa.ucl.ac.uk'
@@ -409,7 +407,7 @@ gdf_la.to_parquet(os.path.join('data','geo','Listings_with_LA.geoparquet'))
 
 > 
 
-##: Create LA Data
+## Create LA Data
 
 ###. Select LA
 
@@ -509,7 +507,7 @@ msoa_gdf.to_parquet(os.path.join('data','geo',f'{LA}-MSOA_data.geoparquet'))
 
 # Using Maplotlib
 
-##: Anatomy of a Figure
+## Anatomy of a Figure
 
 ::: {.callout-tip}
 
@@ -522,7 +520,7 @@ Nevertheless, the [core components of all matplotlib figures](https://matplotlib
 
 <img src="https://matplotlib.org/stable/_images/sphx_glr_anatomy_001.png" alt="Anatomy of a Figure" style="width:50%" />
 
-##: Finding Fonts
+## Finding Fonts
 
 I find matplotlib's use of fonts to be _profoundly_ weird. If you use `conda` and install directly on to the computer then you _might_ have access to all of your computer's fonts (though there are different *types* of fonts as well, not all of which will show up), but for most users it will be those that were installed into Docker. 
 
@@ -717,7 +715,7 @@ plt.figtext(x=0.025, y=0.92, linespacing=1.4, va='top', size=12,
 
 # Create an Atlas
 
-##: Adding Picture-in-Picture 
+## Adding Picture-in-Picture 
 
 We're now going to emulate a _bit_ of QGIS' Atlas function by creating two subplots and then adding a _third_ plot afterwards that shows where the borough is.
 
@@ -773,7 +771,7 @@ f.suptitle(LA, x=0.025, ha='left', size=24, **tfont)
 plt.figtext(x=0.025, y=0.65, s=f"Total listings: {listing_gdf['count'].sum():,.0f}", size=12, **bfont);
 ```
 
-##: Bonus Achievement Unlocked!
+## Bonus Achievement Unlocked!
 
 If you have the time and inclination, see if you can convert the above to an _actual_ atlas output: 
 
@@ -807,7 +805,7 @@ gdf_la = gpd.read_parquet(os.path.join('data','geo','Listings_with_LA.geoparquet
 msoas  = gpd.read_parquet(os.path.join('data','geo','London_MSOA_Names.geoparquet'))
 ```
 
-##: For a Chart
+## For a Chart
 
 Group the listings by Borough and Room Type, and aggregate by median price, also producing a count variable for the number of listings of each type in each Borough.
 
@@ -855,7 +853,7 @@ p.y_range.start = 0
 show(p)
 ```
 
-##: For a Map
+## For a Map
 
 This is not the prettiest code, but it should work...
 

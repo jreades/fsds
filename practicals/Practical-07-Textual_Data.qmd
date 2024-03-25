@@ -4,8 +4,6 @@ subtitle: "The basics of Text Mining and NLP"
 jupyter: python3
 ---
 
-:::
-
 | Complete | Part 1: Foundations | Part 2: Data | Part 3: Analysis |     |
 | :------- | :------------------ | :----------- | :--------------- | --: |
 | 60% | &#9619;&#9619;&#9619;&#9619;&#9619;&#9619;&#9619;&#9619; | &#9619;&#9619;&#9619;&#9619;&#9619;&#9617; | &#9617;&#9617;&#9617;&#9617;&#9617;&#9617; | 7/10
@@ -35,9 +33,10 @@ You can [read about the models](https://spacy.io/models/en), and note that they 
 
 # Setup
 
-::: {.callout-tip}
+::: {.callout-tip collapse="true"}
 
-    **Difficulty Level**: easy, but only because this has been worked out for you. Starting from sctach in NLP is _hard_ so people try to avoid it as much as possible.
+**Difficulty Level**: easy, but only because this has been worked out for you. Starting from sctach in NLP is _hard_ so people try to avoid it as much as possible.
+
 :::
 
 ## Required Modules
@@ -99,7 +98,7 @@ from bs4 import BeautifulSoup
 from wordcloud import WordCloud, STOPWORDS
 ```
 
-##: Configure
+## Configure
 
 There isn't a lot to configure for this week, but you *will* want to examine the results from the first pass through the data in order to update the list of **stopwords**:
 
@@ -123,7 +122,7 @@ def as_markdown(head='', body='Some body text'):
 as_markdown('Result!', "Here's my output...")
 ```
 
-##: Loading Data
+## Loading Data
 
 ::: {.callout-note}
 
@@ -259,11 +258,12 @@ pd.options.display.max_colwidth=250   # None = no maximum column width (you prob
 print(f"Now maximum column width set to: {???}")
 ```
 
-##: Investigate the Description Field
+## Investigate the Description Field
 
-::: {.callout-warning}
+::: {.callout-warning collapse="true"}
 
-    **Difficulty Level**: Medium, because of the questions.
+**Difficulty Level**: Medium, because of the questions.
+
 :::
 
 To explore the description field properly you'll need to filter out any NA/NaN descriptions before sampling the result. *Hint*: you'll need to think about negation (`~`) of a method output that tells you if a field *is NA*.
@@ -282,11 +282,12 @@ gdf[???].sample(5, random_state=42)[['description']]
 - What patterns can you see that might need 'dealing with' for text-mining to work?
 - What non-text characters can you see? (Things *other* than A-Z, a-z, and simple punctuation!)
 
-##: Amenities Field
+## Amenities Field
 
-::: {.callout-warning}
+::: {.callout-warning collapse="true"}
 
-    **Difficulty Level**: Medium, because of the questions.
+**Difficulty Level**: Medium, because of the questions.
+
 :::
 
 This field presents a subtle issue that might not be obvious here:
@@ -306,7 +307,7 @@ gdf.amenities.iloc[0]
 - What's the implicit format of the Amenities columns?
 - How could you represent the data contained in the column?
 
-##: Remove NaN Values
+## Remove NaN Values
 
 ::: {.callout-warning}
 
@@ -329,11 +330,12 @@ print(f"Now gdf has {gdf.shape[0]:,} rows.")
 
 There is a _lot_ that can be done with Regular Expressions to identify relevant records in textual data and we're going to use this as a starting point for the rest of the analysis. I would normally consider the regexes here a 'first pass' at the data, but would look very carefully at the output of the TF/IDF vectorizer, Count vectorizer, and LDA to see if I could improve my regexes for further cycles of analysis... the main gain there is that regexes are _much_ faster than using the full NLP (Natural Language Processing) pipeline on the _full_ data set each time. As an alternative, you could develop the pipeline using a random subsample of the data and then process the remaining records sequentially -- in this context there is no justification for doing that, but with a larger corpus it might make sense.
 
-##: Luxury Accommodation
+## Luxury Accommodation
 
-::: {.callout-caution}
+::: {.callout-caution collapse="true"}
 
-    **Difficulty Level**: Hard, because of the regular expression and questions.
+**Difficulty Level**: Hard, because of the regular expression and questions.
+
 :::
 
 I would like you to find listings that *might* (on the basis of word choice) indicate 'luxury' accommodation.
@@ -410,11 +412,12 @@ plt.show()
 - What does `suptitle` do and how is it different from `title`? Could you use this as part of your plot-making process?
 - What does `tight_layout` do?
 
-##: Budget Accommodation
+## Budget Accommodation
 
-::: {.callout-tip}
+::: {.callout-tip collapse="true"}
 
-    **Difficulty Level**: Easy, because you've worked out the hard bits already.
+**Difficulty Level**: Easy, because you've worked out the hard bits already.
+
 :::
 
 ### Create the Regular Expression
@@ -474,11 +477,12 @@ plt.show()
 
 ```
 
-##: Near Bluespace
+## Near Bluespace
 
-::: {.callout-warning}
+::: {.callout-warning collapse="true"}
 
-    **Difficulty Level**: Medium, because you're still learning about regexes.
+**Difficulty Level**: Medium, because you're still learning about regexes.
+
 :::
 
 Now see if you can work out a regular expression to find accommodation that emphasises accessibility to the Thames and other 'blue spaces' as part of the description? One thing you'll need to tackle is that some listings seem to say something about Thameslink and you wouldn't want those be returned as part of a regex looking for _rivers_. So by way of a hint:
@@ -538,11 +542,12 @@ plt.show()
 
 Now we're going to step through the _parts_ of the process that we apply to clean and transform text. We'll do this individually before using a function to apply them _all at once_.
 
-##: Downloading a Web Page
+## Downloading a Web Page
 
-::: {.callout-tip}
+::: {.callout-tip collapse="true"}
 
-    **Difficulty Level**: Easy.
+**Difficulty Level**: Easy.
+
 :::
 
 There is plenty of good economic geography research being done using web pages. Try using Google Scholar to look for work using the British Library's copy of the *Internet Archive*.
@@ -571,11 +576,12 @@ html     = response.???.decode('utf-8') # The data u need
 print(html[:1000])
 ```
 
-##: Removing HTML
+## Removing HTML
 
-::: {.callout-warning}
+::: {.callout-warning collapse="true"}
 
-    **Difficulty Level**: Medium, because what we're doing will seem really strange and uses some previously unseen libraries that you'll have to google.
+**Difficulty Level**: Medium, because what we're doing will seem really strange and uses some previously unseen libraries that you'll have to google.
+
 :::
 
 *Hint*: you need to need to **get the text** out of the each returned `<p>` and `<div>` element! I'd suggest also commenting this up since there is a *lot* going on on some of these lines of code!
@@ -595,11 +601,12 @@ for c in body.findChildren(recursive=False):
 cleaned
 ```
 
-##: Lower Case
+## Lower Case
 
-::: {.callout-tip}
+::: {.callout-tip collapse="true"}
 
-    **Difficulty Level**: Easy.
+**Difficulty Level**: Easy.
+
 :::
 
 ```python
@@ -607,11 +614,12 @@ lower = [c.???() for ??? in cleaned]
 lower
 ```
 
-##: Stripping 'Punctuation'
+## Stripping 'Punctuation'
 
-::: {.callout-caution}
+::: {.callout-caution collapse="true"}
 
-    **Difficulty Level**: Hard, because you need to understand: 1) why we're _compiling_ the regular expression and how to use character classes; and 2) how the NLTK tokenizer differs in approach to the regex.
+**Difficulty Level**: Hard, because you need to understand: 1) why we're _compiling_ the regular expression and how to use character classes; and 2) how the NLTK tokenizer differs in approach to the regex.
+
 :::
 
 ### Regular Expression Approach
@@ -653,11 +661,12 @@ for t in tokens:
     as_markdown("Tokenised", t)
 ```
 
-##: Stopword Removal
+## Stopword Removal
 
-::: {.callout-warning}
+::: {.callout-warning collapse="true"}
 
     **Difficulty Level**: Medium, because you need to remember how list comprehensions work to use the `stopword_list`.
+
 :::
 
 ```python
@@ -674,11 +683,12 @@ for s in stopped:
     as_markdown("Line", s)
 ```
 
-##: Lemmatisation vs Stemming
+## Lemmatisation vs Stemming
 
-::: {.callout-tip}
+::: {.callout-tip collapse="true"}
 
-    **Difficulty Level**: Easy.
+**Difficulty Level**: Easy.
+
 :::
 
 ```python
@@ -744,11 +754,12 @@ for ix, p in enumerate(stopped):
 
 The above approach is fairly hard going since you need to loop through every list element applying these changes one at a time. Instead, we could convert the column to a corpus (or use pandas `apply`) together with a function imported from a library to do the work.
 
-##: Downloading the Custom Module
+## Downloading the Custom Module
 
-::: {.callout-tip}
+::: {.callout-tip collapse="true"}
 
-    **Difficulty Level**: Easy.
+**Difficulty Level**: Easy.
+
 :::
 
 This custom module is not perfect, but it gets the job done... mostly and has some additional features that you could play around with for a final project (e.g. `detect_entities` and `detect_acronyms`).
@@ -765,11 +776,12 @@ if not os.path.exists(tpath):
     urllib.request.urlretrieve(turl, tpath)
 ```
 
-##: Importing the Custom Module
+## Importing the Custom Module
 
-::: {.callout-tip}
+::: {.callout-tip collapse="true"}
 
-    **Difficulty Level**: Easy, since you didn't have to write the module! But the questions could be hard...
+**Difficulty Level**: Easy, since you didn't have to write the module! But the questions could be hard...
+
 :::
 
 Now let's import it.
@@ -813,11 +825,12 @@ Let's assume that you want to analyse web page content...
 
 Now that you've seen how the steps are applied to a 'random' HTML document, let's get back to the problem at hand (revenons à nos moutons == let's get back to our sheep).
 
-##: Process the Selected Listings
+## Process the Selected Listings
 
-::: {.callout-tip}
+::: {.callout-tip collapse="true"}
 
-    **Difficulty Level**: Easy, but you'll need to be patient!
+**Difficulty Level**: Easy, but you'll need to be patient!
+
 :::
 
 Notice the use of `%%time` here -- this will tell you how long each block of code takes to complete. It's a really useful technique for reminding *yourself* and others of how long something might take to run. I find that with NLP this is particularly important since you have to do a *lot* of processing on each document in order to normalise it.
@@ -845,11 +858,12 @@ aff['description_norm'] = aff.???.apply(???, remove_digits=True)
 bluesp['description_norm'] = bluesp.???.apply(???, remove_digits=True)
 ```
 
-##: Select and Tokenise
+## Select and Tokenise
 
-::: {.callout-tip}
+::: {.callout-tip collapse="true"}
 
-    **Difficulty Level**: Easy, except the double list-comprehension.
+**Difficulty Level**: Easy, except the double list-comprehension.
+
 :::
 
 ### Select and Extract Corpus
@@ -884,11 +898,12 @@ print()
 print(f"Words 0: {words[0]}")
 ```
 
-##: Frequencies and Ngrams
+## Frequencies and Ngrams
 
-::: {.callout-warning}
+::: {.callout-warning collapse="true"}
 
-    **Difficulty Level**: Moderate.
+**Difficulty Level**: Moderate.
+
 :::
 
 One new thing you'll see here is the `ngram`: ngrams are 'simply' pairs, or triplets, or quadruplets of words. You may come across the terms unigram (`ngram(1,1)`), bigram (`ngram(2,2)`), trigram (`ngram(3,3)`)... typically, you will rarely find anything beyond trigrams, and these present real issues for text2vec algorithms because the embedding for `geographical`, `information`, and `systems` is _not_ the same as for `geographical information systetms`.
@@ -925,11 +940,12 @@ for dfs in fcounts.???():
 - Can you think why we don't care about punctuation for frequency distributions and n-grams?
 - Do you understand what n-grams *are*?
 
-##: Count Vectoriser
+## Count Vectoriser
 
-::: {.callout-tip}
+::: {.callout-tip collapse="true"}
 
-    **Difficulty Level**: Easy, but the output needs some thought!
+**Difficulty Level**: Easy, but the output needs some thought!
+
 :::
 
 This is a big foray into sklearn (sci-kit learn) which is the main machine learning and clustering module for Python. For processing text we use *vectorisers* to convert terms to a vector representation. We're doing this on the smallest of the derived data sets because these processes can take a while to run and generate *huge* matrices (remember: one row and one column for each term!).
@@ -1024,11 +1040,12 @@ We're going to pick this up again in Task 7.
 - What does `cvdf` contain? Explain the rows and columns.
 - What is the function of `filter_terms`?
 
-##: TF/IDF Vectoriser
+## TF/IDF Vectoriser
 
-::: {.callout-warning}
+::: {.callout-warning collapse="true"}
 
-    **Difficulty Level**: Moderate, if you want to understand how `max_df` and `min_df` work!
+**Difficulty Level**: Moderate, if you want to understand how `max_df` and `min_df` work!
+
 :::
 
 ### Fit and Transform
@@ -1062,11 +1079,12 @@ tfidf.head()
 
 # Word Clouds
 
-##: For Counts
+## For Counts
 
-::: {.callout-tip}
+::: {.callout-tip collapse="true"}
 
-    **Difficulty Level**: Easy!
+**Difficulty Level**: Easy!
+
 :::
 
 ```python
@@ -1084,11 +1102,12 @@ plt.imshow(Cloud)
 plt.axis("off");
 ```
 
-##: For TF/IDF Weighting
+## For TF/IDF Weighting
 
-::: {.callout-tip}
+::: {.callout-tip collapse="true"}
 
-    **Difficulty Level**: Easy, but you'll need to be patient!
+**Difficulty Level**: Easy, but you'll need to be patient!
+
 :::
 
 ```python
@@ -1124,7 +1143,7 @@ Adapted from [this post](https://stackabuse.com/python-for-nlp-topic-modeling/) 
 vectorizer = CountVectorizer(ngram_range=(1,2)) # Notice change to ngram range (try 1,1 and 1,2 for other options)
 ```
 
-##: Calculate Topics
+## Calculate Topics
 
 ```python
 vectorizer.fit(corpus) 
@@ -1147,7 +1166,7 @@ for i,topic in enumerate(LDA.components_):
     as_markdown(f'Top 10 words for topic #{i}', ', '.join([vectorizer.get_feature_names_out()[i] for i in topic.argsort()[-25:]]))
 ```
 
-##: Maximum Likelihood Topic
+## Maximum Likelihood Topic
 
 ```python
 topic_values = LDA.transform(tcorpus)
@@ -1189,7 +1208,7 @@ plt.axis("off");
     **&#129327; Tip**: This algorithm works almost like magic. You should play with the configuration parameters and see how it changes your results.
 :::
 
-##: Configure
+## Configure
 
 ```python
 from gensim.models.word2vec import Word2Vec
@@ -1207,7 +1226,7 @@ min_v_count = math.ceil(min_v_freq * srcdf.shape[0])
 print(f"With a minimum frequency of {min_v_freq} and {srcdf.shape[0]:,} documents, minimum vocab frequency is {min_v_count:,}.")
 ```
 
-##: Train
+## Train
 
 ```python
 %%time 
@@ -1221,7 +1240,7 @@ model       = Word2Vec(sentences=corpus_sent, vector_size=dims, window=window, e
 model.save(f"word2vec-d{dims}-w{window}.model") # <-- You can then Word2Vec.load(...) which is useful with large corpora
 ```
 
-##: Explore Similarities
+## Explore Similarities
 
 This next bit of code only runs if you have calculated the frequencies above in the [Frequencies and Ngrams](#frequencies-and-ngrams) section.
 
@@ -1272,7 +1291,7 @@ vecs
 #print(model.wv.index_to_key) # <-- the full vocabulary that has been trained
 ```
 
-##: Apply
+## Apply
 
 We're going to make *use* of this further next week...
 
@@ -1285,7 +1304,7 @@ We're going to make *use* of this further next week...
 
 ::: {.callout-caution}
 
-    **&#9888; Warning**: This code can take *some time</i> (<b>&gt; 5 minutes on a M2 Mac</b>) to run, so <b>don't run this</b> until you've understood what we did before!
+    **&#9888; Warning**: This code can take *some time* (**&gt; 5 minutes on a M2 Mac**) to run, so **don't run this** until you've understood what we did before!
 
 :::
 

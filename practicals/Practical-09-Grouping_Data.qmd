@@ -4,8 +4,6 @@ subtitle: "Aggregation, Classification & Clustering"
 jupyter: python3
 ---
 
-:::
-
 | Complete | Part 1: Foundations | Part 2: Data | Part 3: Analysis |     |
 | :------- | :------------------ | :----------- | :--------------- | --: |
 | 80% | &#9619;&#9619;&#9619;&#9619;&#9619;&#9619;&#9619;&#9619; | &#9619;&#9619;&#9619;&#9619;&#9619;&#9619; | &#9619;&#9619;&#9619;&#9617;&#9617;&#9617; | 9/10
@@ -14,7 +12,8 @@ A common challenge in data analysis is how to group observations in a data set t
 
 ::: {.callout-note}
 
-    **&#128279; Connections**: This practical pulls together many topics covered in other modules, and many of the ideas covered elsewhere in _this_ module: clustering, reproducibility, dimensionality reduction... but, above all, this practical is about the importance of <b>judgement</b>. Do _not_ take what we've done here as the ONE RIGHT WAY: a number of these results are questionnable at best because we haven't developed or defined an underlying hypothesis informed by a critical appraisal of the data. You should be _much_ more selective in how you deploy the data and the algorithms, as last week's [session on dimensionality](https://jreades.github.io/fsds/sessions/week8.html) should have shown.
+    **&#128279; Connections**: This practical pulls together many topics covered in other modules, and many of the ideas covered elsewhere in _this_ module: clustering, reproducibility, dimensionality reduction... but, above all, this practical is about the importance of **judgement**. Do _not_ take what we've done here as the ONE RIGHT WAY: a number of these results are questionnable at best because we haven't developed or defined an underlying hypothesis informed by a critical appraisal of the data. You should be _much_ more selective in how you deploy the data and the algorithms, as last week's [session on dimensionality](https://jreades.github.io/fsds/sessions/week8.html) should have shown.
+    
 :::
 
 # Preamble
@@ -73,6 +72,7 @@ pts  = PowerTransformer()
 ::: {.callout-note}
 
     **&#128279; Connections**: Here's an example of how you can use a function to do something a little more complex than just locally save some data. This is still largely a kind of 'stub', but if you are going to be producing a lot of plots of London why not automate away some of the pain of producing a good-looking basemap _each_ time: use a function to apply the formatting and then just return `f` and `ax` as if you'd done this all yourself.
+
 :::
 
 ```python
@@ -188,11 +188,12 @@ def cache_data(src:str, dest:str) -> str:
 
 # Load Data
 
-##: London Data Layers
+## London Data Layers
 
-::: {.callout-tip}
+::: {.callout-tip collapse="true"}
 
-    **Difficulty level**: Low.
+#### Difficulty: Low.
+
 :::
 
 ```python
@@ -214,11 +215,12 @@ msoa_nms = msoa_nms.to_crs(epsg=27700)
 print("Done.")
 ```
 
-##: Reduced Dimensionality MSOA Data
+## Reduced Dimensionality MSOA Data
 
-::: {.callout-tip}
+::: {.callout-tip collapse="true"}
 
-    **Difficulty level**: Low.
+#### Difficulty: Low.
+
 :::
 
 You should have this locally from last week, but just in case...
@@ -246,11 +248,12 @@ I get the results below, but note that the **Dimension values** may be slightly 
 | **E02000002** | -0.28 | 0.89 | 0.26 | Barking and Dagenham | 2.04 | 7.59 | Outer East and North East |
 | **E02000003** | -0.11 | 1.12 | 0.83 | Barking and Dagenham | 2.20 | 6.87 | Outer East and North East |
 
-##: Listings Data
+## Listings Data
 
-::: {.callout-tip}
+::: {.callout-tip collapse="true"}
 
-    **Difficulty level**: Low.
+#### Difficulty: Low.
+
 :::
 
 Let's also get the listings data from a few weeks back:
@@ -272,11 +275,12 @@ listings.plot(???, cmap='plasma', scheme='quantiles', k=10,
 
 # Aggregate Listings by MSOA
 
-##: Join Listings to MSOA
+## Join Listings to MSOA
 
-::: {.callout-warning}
+::: {.callout-warning collapse="true"}
 
-    **Difficulty level**: Medium-to-hard.
+#### Difficulty: Medium-to-hard.
+
 :::
 
 First, let's link all this using the MSOA Geography that we created last week and a mix or merge and sjoin!
@@ -319,11 +323,12 @@ Index(['listing_url', 'last_scraped', 'name', 'description', 'host_id',
       dtype='object')
 ```
 
-##: Price by MSOA 
+## Price by MSOA 
 
-::: {.callout-warning}
+::: {.callout-warning collapse="true"}
 
-    **Difficulty level**: Medium.
+#### Difficulty: Medium.
+
 :::
 
 Let's calculate the median price by MSOA... Notice that we have to specify the column we want after the `groupby` so the we don't get the median of *every* column returned
@@ -351,11 +356,12 @@ E02000005   100.00
 Name: price, dtype: float64
 ```
 
-##: Room Type by MSOA
+## Room Type by MSOA
 
-::: {.callout-warning}
+::: {.callout-warning collapse="true"}
 
-    **Difficulty level**: Medium.
+#### Difficulty: Medium.
+
 :::
 
 Now let's calculate the count of room types by MSOA and compare the effects of `reset_index` on the outputs below. And notice too that we can assign the aggregated value to a column name!
@@ -392,11 +398,12 @@ You should get something like:
 | 3 | E02000001 | Shared room | 1 |
 | 4 | E02000002 | Entire home/apt | 4 |
 
-##: Price by Room Type
+## Price by Room Type
 
-::: {.callout-caution}
+::: {.callout-caution collapse="true"}
 
-    **Difficulty level**: Hard.
+#### Difficulty: Hard.
+
 :::
 
 But perhaps median price/room type would make more sense? And do we want to retain values where there are no listings? For example, there are no hotel rooms listed for E02000001, how do we ensure that these *NAs are dropped*?
@@ -418,11 +425,12 @@ You should get something like:
 | 4 | E02000002 | Entire home/apt | 117.00 |
 | 6 | E02000002 | Private room | 42.00 |
 
-##: Explore Outlier Per-MSOA Prices
+## Explore Outlier Per-MSOA Prices
 
-::: {.callout-warning}
+::: {.callout-warning collapse="true"}
 
-    **Difficulty level**: Medium.
+#### Difficulty: Medium.
+
 :::
 
 Are there MSOAs what *look* like they might contain erroneous data?
@@ -476,9 +484,10 @@ On the whole, let's take a *guess* that there are a small number of implausibly 
 
 ### Filter Unlikely Listings
 
-::: {.callout-caution}
+::: {.callout-caution collapse="true"}
 
-    **Difficulty level**: Hard.
+#### Difficulty: Hard.
+
 :::
 
 See if you can filter out these less likely listings on the following criteria:
@@ -543,11 +552,12 @@ The `group_by` operation is *one* way to organise and aggregate our data, but pi
     **&#128279; Connections**: Notice that a pivot table is just a different kind of aggregation. Principally, it's about going from long to wide in your data frame. These issues should be familiar from R and it's `mutate` and other `data.table` methods. We just write them different in Python.
 :::
 
-##: Create Pivot Table
+## Create Pivot Table
 
-::: {.callout-caution}
+::: {.callout-caution collapse="true"}
 
-    **Difficulty level**: Hard.
+#### Difficulty: Hard.
+
 :::
 
 We can make use of the pivot table function to generate counts by MSOA in a 'wide' format.
@@ -570,11 +580,12 @@ The formatting will look a tiny bit different, but you should get something like
 | **E02000002** | 4 | 0 | 2 | 0 |
 | **E02000003** | 12 | 0 | 13 | 0 |
 
-##: Check Counts
+## Check Counts
 
-::: {.callout-tip}
+::: {.callout-tip collapse="true"}
 
-    **Difficulty level**: Low.
+#### Difficulty: Low.
+
 :::
 
 ```python
@@ -588,11 +599,12 @@ print(cleaned[cleaned.room_type=='Entire home/apt'].listing_url.count())
 print(cleaned[cleaned.room_type=='Private room'].listing_url.count())
 ```
 
-##: Tidy & Normalise
+## Tidy & Normalise
 
-::: {.callout-tip}
+::: {.callout-tip collapse="true"}
 
-    **Difficulty level**: Low.
+#### Difficulty: Low.
+
 :::
 
 My instinct at this point is that, looking at the pivot table, we see quite different levels of Airbnb penetration and it is hard to know how handle this difference: share would be unstable because of the low counts in some places and high counts in others; a derived variable that tells us something about density or mix could be interesting (e.g. HHI or LQ) but wouldn't quite capture the pattern of mixing.
@@ -637,11 +649,12 @@ pnm = pd.merge(msoas.set_index('MSOA11CD'), pivot_norm, left_index=True, right_i
 pnm.plot(column='Entire home/apt', cmap='viridis', edgecolor='none', legend=True, figsize=(12,8));
 ```
 
-##: PCA
+## PCA
 
-::: {.callout-warning}
+::: {.callout-warning collapse="true"}
 
-    **Difficulty level**: Moderate, though you might find the questions hard.
+#### Difficulty: Moderate, though you might find the questions hard.
+
 :::
 
 You can merge the output of this next step back on to the `rddf` data frame as part of a clustering process, though we'd really want to do some more thinking about what this data *means* and what transformations we'd need to do in order to make them *meaningful*. 
@@ -718,11 +731,12 @@ cldf.head()
 
 # First K-Means Clustering
 
-##: Perform Clustering
+## Perform Clustering
 
-::: {.callout-tip}
+::: {.callout-tip collapse="true"}
 
-    **Difficulty level**: Low.
+#### Difficulty: Low.
+
 :::
 
 ```python
@@ -738,11 +752,12 @@ Here are the results:
 print(kmeans.labels_) # The results
 ```
 
-##: Save Clusters to Data Frame
+## Save Clusters to Data Frame
 
-::: {.callout-tip}
+::: {.callout-tip collapse="true"}
 
-    **Difficulty level**: Low.
+#### Difficulty: Low.
+
 :::
 
 ### Write Series and Assign
@@ -791,11 +806,12 @@ rs.plot(column=???, ax=ax, linewidth=0, zorder=0, categorical=???, legend=True);
 
 # Second K-Means Clustering
 
-##: What's the 'Right' Number of Clusters?
+## What's the 'Right' Number of Clusters?
 
-::: {.callout-warning}
+::: {.callout-warning collapse="true"}
 
-    **Difficulty level**: Moderate.
+#### Difficulty: Moderate.
+
 :::
 
 There's more than one way to find the 'right' number of clusters. In Singleton's _Geocomputation_ chapter they use WCSS to pick the 'optimal' number of clusters. The idea is that you plot the average WCSS for each number of possible clusters in the range of interest (2...n) and then look for a 'knee' (i.e. kink) in the curve. The principle of this approach is that you look for the point where there is declining benefit from adding more clusters. The problem is that there is always some benefit to adding more clusters (the perfect clustering is k==n), so you don't always see a knee.
@@ -854,11 +870,12 @@ plt.gcf().suptitle("Average Silhouette Scores");
 
 We can use the largest average silhouette score to determine the 'natural' number of clusters in the data, but that that's only if we don't have any kind of underlying theory, other empirical evidence, or even just a reason for choosing a different value... Again, we're now getting in areas where your judgement and your ability to communicate your rationale to readers is the key thing.
 
-##: Final Clustering 
+## Final Clustering 
 
-::: {.callout-tip}
+::: {.callout-tip collapse="true"}
 
-    **Difficulty level**: Low.
+#### Difficulty: Low.
+
 :::
 
 So although we should probably pick the largest silhouette scores, that's `k=3` which kind of defeats the purpose of clustering in the first place. In the absence of a _compelling_ reason to pick 2 or 3 clusters, let's have a closer look at the _next_ maximum silhouetted score:
@@ -979,11 +996,12 @@ fig.suptitle(f"{c_nm} Results (k={k_pref})", fontsize=20, y=0.92)
 rs.plot(column=c_nm, ax=ax, linewidth=0, zorder=0, categorical=True, legend=True);
 ```
 
-##: 'Representative' Centroids
+## 'Representative' Centroids
 
-::: {.callout-warning}
+::: {.callout-warning collapse="true"}
 
-    **Difficulty level**: Moderate since, conceptually, there's a lot going on.
+#### Difficulty: Moderate since, conceptually, there's a lot going on.
+
 :::
 
 To get a sense of how these clusters differ we can try to extract 'representative' centroids (mid-points of the multi-dimensional cloud that constitutes a cluster). In the case of k-means this will work quite will since the clusters are explicitly built around mean centroids. There's also a k-medoids clustering approach built around the median centroid.
@@ -1057,11 +1075,12 @@ for c in [x for x in cldf.columns.to_list() if x.startswith('Dimension ')]:
 cldf2.head()
 ```
 
-##: Work out the Neighbour Distance
+## Work out the Neighbour Distance
 
-::: {.callout-warning}
+::: {.callout-warning collapse="true"}
 
-    **Difficulty level**: Moderate.
+#### Difficulty: Moderate.
+
 :::
 
 We normally look for some kind of 'knee' to set the distance.
@@ -1074,11 +1093,12 @@ distances = np.sort(distances, axis=0)
 distances = distances[:,1]
 ```
 
-##: Derive Approximate Knee
+## Derive Approximate Knee
 
-::: {.callout-tip}
+::: {.callout-tip collapse="true"}
 
-    **Difficulty level**: Low.
+#### Difficulty: Low.
+
 :::
 
 ```python
@@ -1095,11 +1115,12 @@ kn.plot_knee_normalized()
 print(f"Best guess at epsilon for DBSCAN is {distances[kn.knee]:0.4f}")
 ```
 
-##: Explore Epsilons
+## Explore Epsilons
 
-::: {.callout-warning}
+::: {.callout-warning collapse="true"}
 
-    **Difficulty level**: Moderate.
+#### Difficulty: Moderate.
+
 :::
 
 There are two values that need to be specified: `eps` and `min_samples`. Both seem to be set largely by trial and error, though we can use the above result as a target. It's easiest to set `min_samples` first since that sets a floor for your cluster size and then `eps` is basically a distance metric that governs how far away something can be from a cluster and still be considered part of that cluster.
@@ -1190,11 +1211,12 @@ plt.gcf().suptitle(f"Cluster sizes for various realisations of Epsilon");
 plt.tight_layout()
 ```
 
-##: Final Clustering
+## Final Clustering
 
-::: {.callout-warning}
+::: {.callout-warning collapse="true"}
 
-    **Difficulty level**: Moderate.
+#### Difficulty: Moderate.
+
 :::
 
 ###: Perform Clustering
@@ -1280,11 +1302,12 @@ There are [a lot of SOM implementations in Python](https://www.google.com/search
 
 And now for something completely different! This is section is **completely optional**, but I thought that you might find it helpful to have a look at how *supervised* learning (classification) differs from *unsupervised* learning (clustering). Here we're going to perform a fairly straightforward classification: predicting the `room_type` for randomly-selected listings. Of course we know the true answer, but this is for demonstration purposes!
 
-##: Additional Setup
+## Additional Setup
 
-::: {.callout-caution}
+::: {.callout-caution collapse="true"}
 
-    **Difficulty level**: Hard, as I've left out quite a bit of code.
+#### Difficulty: Hard, as I've left out quite a bit of code.
+
 :::
 
 ### Import Libraries
@@ -1351,11 +1374,12 @@ A quick check: we should only have one type per class and vice versa.
 classifier_in.groupby(by=['room_type','room_class']).host_id.agg('count').reset_index()
 ```
 
-##: Random Forest Classification
+## Random Forest Classification
 
-::: {.callout-caution}
+::: {.callout-caution collapse="true"}
 
-    **Difficulty level**: Hard.
+#### Difficulty: Hard.
+
 :::
 
 We're going to use a [Random Forest Classifier](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html) but the nice thing about `sklearn` is that you can quite easily swap in other classifiers if you'd like to explore further. This is one *big* advantage of Python over R in my book: whereas R tends to get new algorithms *first*, they are often implemented independently by many people and you can end up with incompatible data structures that require a lot of faff to reorganise for a different algorithm. Python is a bit more 'managed' and the dominance of `numpy` and `sklearn` and `pandas` means that people have an incentive to contribute to this library or, if it's genuinely novel, to create an implementation that works *like* it would if it were part of `sklearn`!
@@ -1404,9 +1428,10 @@ y_hat = rfc.predict(X_test)
 
 ## Validate
 
-::: {.callout-caution}
+::: {.callout-caution collapse="true"}
 
-    **Difficulty level**: Hard.
+#### Difficulty: Hard.
+
 :::
 
 ### Confusion Matrix
