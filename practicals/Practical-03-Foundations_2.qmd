@@ -12,13 +12,15 @@ In this notebook we are exploring basic (in the sense of fundamental) data struc
 
 ::: {.callout-tip}
 
-    You should download this notebook from GitHub and then save it to your own copy of the repository. I'd suggest adding it (`git add ...`) right away and then committing (e.g. `git commit -m "Just added."`). Do this again at the end of the class (`git add ...`, `git commit -m ...`) and you'll have a record of everything you did. Then you can `git push` everything to GitHub.
+You should download this notebook from GitHub and then save it to your own copy of the repository. I'd suggest adding it (`git add ...`) right away and then committing (e.g. `git commit -m "Just added."`). Do this again at the end of the class (`git add ...`, `git commit -m ...`) and you'll have a record of everything you did. Then you can `git push` everything to GitHub.
 
 :::
 
 ::: {.callout-tip}
 
-    **&#128161; Group Sign-Up**: While there's no benefit to signing up early, if you've already formed a group then you can now [Sign Up](https://forms.office.com/e/2ij0sWHnpR)!
+#### Group Sign-Up
+
+While there's no benefit to signing up early, if you've already formed a group then you can now [Sign Up](https://forms.office.com/e/2ij0sWHnpR)!
 
 :::
 
@@ -44,7 +46,9 @@ This should all be revision... because it's how we finished things up _last week
 
 ::: {.callout-note}
 
-    **&#9888; Hint**: As before, `??` will highlight where one or more bit of code are missing and need to be filled in...
+#### Hint
+
+As before, `??` will highlight where one or more bit of code are missing and need to be filled in...
 
 :::
 
@@ -60,7 +64,7 @@ To complete these tasks, all of the methods that you need are listed above, so t
 
 The next line creates a list of city names (each element is a string):
 
-```python
+```{python}
 cities = ["Bristol", "London", "Manchester", "Edinburgh", "Belfast", "York"]
 ```
 
@@ -68,31 +72,71 @@ cities = ["Bristol", "London", "Manchester", "Edinburgh", "Belfast", "York"]
 
 Replace the `??` so that it prints Belfast.
 
+:::: {.panel-tabset}
+
+#### Question
+
 ```python
 print(cities[?? + 2])
 ```
 
+#### Answer
+
+```{python}
+#| echo: true
+print(cities[2 + 2])
+```
+
+::::
+
 ### Negative List Arithmetic 
 
-Use a **negative** index to print *Belfast*
+Use a **negative** index to print *Belfast*:
+
+:::: {.panel-tabset}
+
+#### Question
 
 ```python
 print(cities[??])
 ```
 
+#### Answer
+
+```{python}
+#| echo: true
+print(cities[-2])
+```
+
+::::
+
 ### Finding a Position in a List
 
 Replace the `??` so that it prints the _index_ for Manchester in the list.
 
+:::: {.panel-tabset}
+
+#### Question
+
 ```python
 print("The position of Manchester in the list is: " + str( ?? ))
 ```
+
+#### Answer
+
+```{python}
+#| echo: true
+print("The position of Manchester in the list is: " + str( cities.index('Manchester') ))
+```
+
+::::
 
 ## Looking Across Lists
 
 ::: {.callout-note}
 
 **&#128279; Connections**: This section draws on the [LOLs](https://jreades.github.io/fsds/sessions/week3.html#lectures) lecture and you will also find Code Camp's [Loops](https://jreades.github.io/code-camp/lessons/Loops.html) session useful here.
+
 :::
     
 ::: {.callout-warning collapse="true"}
@@ -101,9 +145,10 @@ print("The position of Manchester in the list is: " + str( ?? ))
 
 :::
 
-Notice that the list of `temperatures` below is the same length as the list of `cities`, that's because these are (roughly) average temperatures for each city!
+Notice that the list of `temperatures` below is the same length as the list of `cities`, that's because these are (roughly) the average temperatures for each city.
 
-```python
+```{python}
+#| echo: true
 cities = ["Bristol", "London", "Manchester", "Edinburgh", "Belfast", "York"]
 temperatures = [15.6, 16.5, 13.4, 14.0, 15.2, 14.8]
 ```
@@ -115,6 +160,7 @@ Given what you know about `cities` and `temperatures`, how do you print:
 > "The average temperature in Manchester is 13.4 degrees."
 
 _without_ doing any of the following:
+
 1. Using a list index directly (*i.e.* `cities[2]` and `temperatures[2]`) or 
 2. Hard-coding the name of the city? 
 
@@ -122,7 +168,9 @@ To put it another way, **neither** of these solutions is the answer:
 ```python
 print("The average temperature in Manchester is " + str(temperatures[2]) + " degrees.")
 ```
+
 or 
+
 ```python
 city=2
 print("The average temperature in " + cities[city] + " is " + str(temperatures[city]) + " degrees.")
@@ -134,6 +182,10 @@ print("The average temperature in " + cities[city] + " is " + str(temperatures[c
 
 :::
 
+:::: {.panel-tabset}
+
+#### Question
+
 ```python
 city="Manchester" # Use this to get the solution...
 
@@ -144,18 +196,51 @@ print("The average temperature in " + ?? + " is " + str(??))
 print(f"The average temperature in {??} is {??}")
 ```
 
+#### Answer
+
+```{python}
+#| echo: true
+city="Manchester" # Use this to get the solution...
+
+# This way is perfectly fine
+print("The average temperature in " + city + " is " + str(temperatures[cities.index(city)]))
+
+# This way is more Python 3 and a bit easier to read
+print(f"The average temperature in {city} is {temperatures[cities.index(city)]}")
+```
+
+::::
+
 ### Double-Checking Your Solution
 
 You'll know that you got the 'right' answer to the question above if you can copy+paste your code and change only **one** thing in order to print out: "The average temperature in Belfast is 15.2 degrees"
+
+:::: {.panel-tabset}
+
+#### Question
 
 ```python
 city="Belfast"
 print(??)
 ```
 
+#### Answer
+
+```{python}
+#| echo: true
+city="Belfast"
+print(f"The average temperature in {city} is {temperatures[cities.index(city)]}")
+```
+
+::::
+
 ### A Functional Solution 
 
 Can you convert this to a simple function called `avg_tmp` with two inputs and then use this to print the average temperature for Edinburgh? 
+
+:::: {.panel-tabset}
+
+#### Question
 
 ```python
 def ??(??, temp):
@@ -167,9 +252,26 @@ avg_tmp(city, ??)
 
 The output should be: `The average temperature in Edinburgh is 14.0`
 
+#### Answer
+
+```{python}
+#| echo: true
+def avg_tmp(city, temp):
+    print(f"The average temperature in {city} is {temp}")
+
+city="Edinburgh"
+avg_tmp(city, temperatures[cities.index(city)])
+```
+
+::::
+
 ### Loops and Functions 
 
 Now use a `for` loop over the cities to print out the average temperature in each city using the function that we just created:
+
+:::: {.panel-tabset}
+
+#### Question
 
 ```python
 for c in cities:
@@ -186,11 +288,22 @@ The average temperature in Belfast is 15.2
 The average temperature in York is 14.8
 ```
 
+#### Answer
+
+```{python}
+#| echo: true
+for c in cities:
+    avg_tmp(c, temperatures[cities.index(c)])
+```
+
+::::
+
 # Dictionaries
 
 ::: {.callout-note}
 
-    **&#128279; Connections**: This section draws on the [Dictionaries](https://jreades.github.io/fsds/sessions/week3.html#lectures) lecture and Code Camp [[Dictonaries](https://jreades.github.io/code-camp/lessons/Dicts.html) session.
+**&#128279; Connections**: This section draws on the [Dictionaries](https://jreades.github.io/fsds/sessions/week3.html#lectures) lecture and Code Camp [Dictonaries](https://jreades.github.io/code-camp/lessons/Dicts.html) session.
+
 :::
 
 ::: {.callout-tip collapse="true"}
@@ -205,7 +318,8 @@ Remember that dictionaries (a.k.a. dicts) are like lists in that they are [data 
 
 The code below creates an Atlas using a dictionary. The dictionary `key` is a city name, and the `value` is the latitude, longitude, and main airport code.
 
-```python
+```{python}
+#| echo: true
 cities = {
     'San Francisco': [37.77, -122.43, 'SFO'],
     'London': [51.51, -0.08, 'LDN'],
@@ -218,17 +332,43 @@ cities = {
 
 Add a record to the dictionary for Chennai ([data here](https://en.wikipedia.org/wiki/Chennai))
 
+:::: {.panel-tabset}
+
+#### Question
+
 ```python
 ??
 ```
+
+#### Answer
+
+```{python}
+#| echo: true
+cities['Chennai'] = [13.08, 80.28, 'MAA']
+```
+
+::::
 
 ### Accessing a Dict 
 
 In *one* line of code, print out the airport code for Chennai (`MAA`):
 
+:::: {.panel-tabset}
+
+#### Question
+
 ```python
 ??
 ```
+
+#### Answer
+
+```{python}
+#| echo: true
+print(f"The airport code for Chennai is {cities['Chennai'][2]}")
+```
+
+::::
 
 ## Dealing With Errors
 
@@ -250,7 +390,7 @@ This section makes use of both the [Dictionaries](https://jreades.github.io/fsds
 
 ::: {.callout-tip}
 
-    In this section you'll need to look up (i.e. Google) and make use of a few new functions that apply to dictionaries: `&lt;dictionary&gt;.items()`, `&lt;dictionary&gt;.keys()`. *Remember*: if in doubt, add `print(...)` statements to see what is going on!
+In this section you'll need to look up (i.e. Google) and make use of a few new functions that apply to dictionaries: `<dictionary>.items()`, `<dictionary>.keys()`. *Remember*: if in doubt, add `print(...)` statements to see what is going on!
 
 :::
 
@@ -258,8 +398,12 @@ This section makes use of both the [Dictionaries](https://jreades.github.io/fsds
 
 Adapting the code below, print out the city name and airport code for every city in our Atlas.
 
+:::: {.panel-tabset}
+
+#### Question
+
 ```python
-for k, v in cities.items():
+for c in cities.keys():
     print(??)
 ```
 
@@ -272,11 +416,21 @@ Beijing -> BEI
 Chennai -> MAA
 ```
 
+#### Answer
+
+```{python}
+for c in cities.keys():
+    print(f"{c} -> {cities[c][2]}")
+```
+
+::::
+
 ### More Complex Dicts 
 
 How would your code need to change to produce the _same output_ from this data structure:
 
-```python
+```{python}
+#| echo: true
 cities = {
     'San Francisco': {
         'lat': 37.77, 
@@ -299,14 +453,33 @@ cities = {
         'lon': 80.28, 
         'airport': 'MAA'}
 }
+```
 
-for k, v in cities.items():
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+for c in cities.keys():
     print(??)
 ```
+
+#### Answer
+
+```{python}
+for c in cities.keys():
+    print(f"{c} -> {cities[c]['airport']}")
+```
+
+::::
 
 ### More Dictionary Action! 
 
 And how would it need to change to print out the name and latitude of every city?
+
+:::: {.panel-tabset}
+
+#### Question
 
 ```python
 for c in cities.keys():
@@ -314,6 +487,7 @@ for c in cities.keys():
 ```
 
 The output should be something like this:
+
 ```
 San Francisco is at latitude 37.77
 London is at latitude 51.51
@@ -322,11 +496,22 @@ Beijing is at latitude 39.92
 Chennai is at latitude 13.08
 ```
 
+#### Answer
+
+```{python}
+#| echo: true
+for c in cities.keys():
+    print(f"{c} is at latitude {cities[c]['lat']}")
+```
+
+::::
+
 ### And Another Way to Use a Dict 
 
 Now produce the _same output_ using this new data structure:
 
-```python
+```{python}
+#| echo: true
 cities_alt = [
     {'name':     'San Francisco',
      'position': [37.77, -122.43],
@@ -344,10 +529,36 @@ cities_alt = [
      'position': [13.08, 80.28],
       'airport': 'MAA'}
 ]
+```
 
+:::: {.panel-tabset}
+
+#### Question
+
+```python
 for c in cities_alt:
     print(??)
 ```
+
+The output should be something like this:
+
+```
+San Francisco is at latitude 37.77
+London is at latitude 51.51
+Paris is at latitude 48.86
+Beijing is at latitude 39.92
+Chennai is at latitude 13.08
+```
+
+#### Answer
+
+```{python}
+#| echo: true
+for c in cities_alt:
+    print(f"{c['name']} is at latitude {c['position'][0]}")
+```
+
+::::
 
 ### Think Data! 
 
@@ -355,7 +566,7 @@ What are some of the main differences that you can think of between `cities` and
 
 ::: {.callout-tip}
 
-    I just want you to think about these *as data*! If you were trying to use `cities` and `cities_alt` as data what differences would you find when accessing one or more 'records'?
+I just want you to think about these *as data*! If you were trying to use `cities` and `cities_alt` as data what differences would you find when accessing one or more 'records'?
 
 :::
 
@@ -368,6 +579,7 @@ What are some of the main differences that you can think of between `cities` and
 ::: {.callout-note}
 
 **&#128279; Connections**: You will find links here to the Code Camp sessions on [Functions](https://jreades.github.io/code-camp/lessons/Functions.html) and [Packages](https://jreades.github.io/code-camp/lessons/Packages.html), as well as to this week's lectures on [Functions](https://jreades.github.io/fsds/sessions/week3.html#lectures) and [Packages](https://jreades.github.io/fsds/sessions/week3.html#lectures).
+
 :::
 
 ::: {.callout-warning collapse="true"}
@@ -422,38 +634,55 @@ OK, so we need to break this _hard_ problem down into something simpler. We can 
 
 We can tackle each of those in turn, getting the first bit working, then adding the second bit, etc. It's just like using lego to build something: you take the same pieces and assemble them in different ways to produce different things.
 
-##. Reading a Remote File
+## Reading a Remote File
 
 So, we are going to [download a file from GitHub](https://github.com/jreades/fsds/blob/master/data/src/Wikipedia-Cities-simple.csv), but we **aren't going to to try to turn it into data** or otherwise make 'sense' of it yet, we just want to **read** it. We are then going to build from this first step towards the rest of the steps!
 
 Because we're accessing data from a 'URL' we need to use the `urlopen` [function](https://docs.python.org/3.0/library/urllib.request.html?highlight=urlopen#urllib.request.urlopen) from the `urllib.request` [package](https://docs.python.org/3.0/library/urllib.request.html). If you're wondering how we know to use this function and package, you might google something like: _read remote csv file python 3_ which in turn might get you to a StackOverflow question and answer like [this](https://stackoverflow.com/questions/36965864/opening-a-url-with-urllib-in-python-3). 
 
-::: {.callout-tip}
+<style type="text/css">
+.longform {
+    max-height: 500px;
+    overflow-y: scroll;
+}
+</style>
 
-    Remember that you can use `dir(...)` and `help(...)` to investigate what a package offers. You can also get help in Jupyter by typing `?` before the function that you want to call.
+::: {.longform}
+
+```{python}
+from urllib.request import urlopen
+help(urlopen)
+```
 
 :::
 
-```python
-from urllib.request import urlopen
-?urlopen
-```
-
 As you can see, there is _lot_ of information here about how things work. A _lot_ of it won't make much sense at the moment. That's ok. _Some_ of this doesn't make much sense to me, but that's because this is the _full_ documentation from Python so it's trying to cover _all_ the bases. You don't need to read every line of this, what you are looking is information about things like the 'signature' (what parameters the function accepts) and its output. Of course, you can also _just Google it_!
 
-::: {.callout-warning}
+::: {.callout-tip}
 
-    **&#9888; Note**: if you are working behind a firewall (esp. if working on this practical in, say, China) then there is a *chance* you will get a `URLError` (`&lt;urlopen error [Errno 110044] getaddrinfo failed&gt;`). This is a '[proxy error](https://stackoverflow.com/questions/7334199/getaddrinfo-failed-what-does-that-mean)' and in this case you may need to [configure your environment](https://stackoverflow.com/a/28153935) as follows:<br />
-`
-import os<br />
-os.environ['HTTP_PROXY'] = 'http://127.0.0.1:10809'<br />
-os.environ['HTTPS_PROXY'] = 'http://127.0.0.1:10809'<br />
-`
+Remember that you can use `dir(...)` and `help(...)` to investigate what a package offers. You can also get help in Jupyter by typing `?` before the function that you want to call.
+
+:::
+
+::: {.callout-warning collapse="true"}
+
+#### URLError?
+
+If you are working behind a firewall (esp. if working on this practical in, say, China) then there is a *chance* you will get a `URLError` (`<urlopen error [Errno 110044] getaddrinfo failed>`). This is a '[proxy error](https://stackoverflow.com/questions/7334199/getaddrinfo-failed-what-does-that-mean)' and in this case you may need to [configure your environment](https://stackoverflow.com/a/28153935) as follows:
+
+```
+import os
+os.environ['HTTP_PROXY'] = 'http://127.0.0.1:10809'
+os.environ['HTTPS_PROXY'] = 'http://127.0.0.1:10809'
+```
+
 :::
 
 Before you start working on the code, why not open the data file [directly in your browser](https://raw.githubusercontent.com/jreades/fsds/master/data/src/Wikipedia-Cities-simple.csv)? It's pretty small, and it will give you a sense of what is going on.
 
-```python
+```{python}
+#| echo: true
+
 from urllib.request import urlopen
 
 # Given the info you were given above, what do you 
@@ -473,71 +702,101 @@ response = urlopen(url)
 raw = response.read()
 
 print(f"'raw' variable is of type: '{raw.__class__.__name__}'.")
-print(f"Raw content is:\n{raw}\n")
+print(f"Raw content is:\n{raw[:75]}...\n")
 
 data = raw.decode('utf-8')
 
 print(f"'data' variable is of type: '{data.__class__.__name__}'.")
-print(f"Decoded content is:\n{data}")
+print(f"Decoded content is:\n{data[:75]}...")
 ```
 
 ::: {.callout-note}
 
-    **&#9888; Note**: Notice that the `raw` data has the format `b'...'` with all of the data seemingly on one line, while the _decoded_ version in `data` is 'correctly' structured with lines! The 'raw' data is in _bytecode_ format which is not, strictly, a `string`. It only becomes a string when we 'decode it' to `utf-8` (which is the 'encoding' of text that supports most human languages). While the computer doesn't particularly care, we do!
+Notice that the `raw` data has the format `b'...'` with all of the data seemingly on one line, while the _decoded_ version in `data` is 'correctly' structured with lines! The 'raw' data is in _bytecode_ format which is not, strictly, a `string`. It only becomes a string when we 'decode it' to `utf-8` (which is the 'encoding' of text that supports most human languages). While the computer doesn't particularly care, we do!
 
 :::
 
-Remember that you can treat strings *as lists*, so in when we `print` below we cut off the output at 100 characters.
+Remember that you can treat strings *as lists*, so when we `print` below we cut off the output using the `list[:<Some Number>]` syntax.
 
-```python
+```{python}
+#| echo: true
 print(f"There are {len(data)} characters in the data variable.")
 print(f"The first 125 characters are: '{data[:125]}'") # Notice that '\n' count here!
 ```
 
 So this is definitely text, but it doesn't (yet) look entirely like the data *we* see because it's still just one long string, and not *data* which has individual records on each line. To split the text into individual lines, we can use the handily named `.splitlines()` method (more on methods below):  
 
+:::: {.panel-tabset}
+
+#### Question
+
 ```python
 rows = ??.splitlines()
-
 print(f"'rows' variable is of type: {rows.__class__.__name__}'.")
 ```
 
+#### Answer
+
+```{python}
+#| echo: true
+rows = data.splitlines()
+print(f"'rows' variable is of type: {rows.__class__.__name__}'.")
+```
+
+::::
+
 Note now, how the _data_ variable has type `list`. So to view the data as we see them in the original online file, we can now use a `for` loop to print out each element of the `list` (each element being a row of the original online file):
+
+:::: {.panel-tabset}
+
+#### Question
 
 ```python
 print(f"There are {??} rows of data.")
 print("\n".join(??[0:2])) # New syntax alert! notice we can *join* list elements
 ```
 
-That's a little hard to read, though something has clearly changed. Let's try printing the last row:
+#### Answer
 
-```python
-print(??)
+```{python}
+#| echo: true
+print(f"There are {len(rows)} rows of data.")
+print("\n".join(rows[0:2])) # New syntax alert! notice we can *join* list elements
 ```
 
-The last row should be `Bangor,18808,53.228,-4.128`.
+::::
 
-**Congratulations!** You've now read a text file sitting on a server in, I think, Canada and Python _didn't care_. 
+That's a little hard to read, though something has clearly changed. Let's try printing the last row:
 
-##. Text into Data
+```{python}
+#| echo: true
+print(rows[-1])
+```
+
+**Congratulations!** You've now read a text file sitting on a server in, I think, Canada and Python _didn't care_. You've also converted a plain-text file to a row-formatted list.
+
+## Text into Data
 
 We now need to work on turning the response into useful data. We got partway there by splitting on line-breaks (`splitlines()`), but now we need to get columns for each line. You'll notice that we are dealing with a _CSV_ (Comma-Separated Value) file and that the format _looks_ quite simple... So, in theory, to turn this into data we 'just' need to _split_ each row into separate fields using the commas.
 
 There's a handy function associated with strings called `split`:
 
-```python
+```{python}
+#| echo: true
 print('abcdefgh'.split('d'))
 ```
 
 You can also investigate further how the split function works using:
 
-```python
+```{python}
+#| echo: true
 help('abcdefgh'.split)
 ```
 
 So this seems like a good solution to turn our text into *data*:
 
-```python
+```{python}
+#| echo: true
 test = rows[-1].split(',')
 print(test)
 print(f"The population of {test[0]} is {int(test[1]):,}")
@@ -545,11 +804,12 @@ print(f"The population of {test[0]} is {int(test[1]):,}")
 
 I'd say that we're now getting quite close to something that looks like 'real data': I know how to convert a raw response from a web server into a string, to split that string into rows, and can even access individual elements from a row! 
 
-##. The Advantages of a Package
+## The Advantages of a Package
 
 ::: {.callout-caution}
 
-    **&#9888; Stop!**: There are two problems to the `data.splitlines()` and `row.split(',')` approach! One of them is visible (though not obvious) in the Sheffield example above, the other is not.
+**Stop!**: There are two problems to the `data.splitlines()` and `row.split(',')` approach! One of them is visible (though not obvious) in the examples above, the other is not.
+
 :::
 
 1. Remember that `10` and `'10'` are _not_ the same thing. To comma-format the population of Sheffield you'll see that I had to do `int(...)` in order to turn `'685368'` into a number. So our approach so far doesn't know anything about the _type_ of data we're working with.
@@ -560,7 +820,8 @@ This is where using code that someone _else_ who is much more interested (and kn
 
 **Note:** For now just focus on problem \#2.
 
-```python
+```{python}
+#| echo: true
 from urllib.request import urlopen
 import csv
 
@@ -587,23 +848,24 @@ If it worked, then you should have this output:
 ```
 To you that might look a lot _worse_ that the data that you originally had, but to a computer that list-of-lists is something it can work with; check it out:
 
-```python
-for u in urlData[1:]:                             # For each row in the first 15 items in list
+```{python}
+for u in urlData[1:6]: # For each row in the first 5 items in list
     print(f"The city of '{u[0]}' has a population of {int(u[1]):,}") # Print out the name and pop
 ```
 
-::: {.callout-warning}
+::: {.callout-note}
 
-    **&#9888; Important**: Why did I use `urlData[1:]` instead of `urlData`?
-:::
+Why did I use `urlData[1:]` instead of `urlData`?
 
 If you print `urlData[0]` you'll see that this is the 'header' row that tells us what each column contains! So if we try to convert the column name to an integer (`int(u[1])`) we will get an error!
 
 The advantage of using the `csv` library over plain old `string.split` is that the csv library knows how to deal with fields that contain commas (_e.g._ `"Cardfiff, Caerdydd"` or `"An Amazing 4 Bedroom Home, Central London, Sleeps 12"`) and so is much more flexible and consistent that our naive `split` approach. The vast majority of _common_ tasks (reading certain types of files, getting remote files, etc.) have libraries that do exactly what you want without you needing to write much code yourself to take advantage of it. You should always have a look around online to see if a library exists before thinking that you need to write everything/anything from scratch. The tricky part is knowing what words to use for your search and how to read the answers that you find...
 
+:::
+
 Let's try this with a 'bigger' data set... In an ideal world, the 'power' of code is that once we've solved the problem *once*, we've solved it more generally as well. So let's try with the 'scaled-up' data set and see waht happens!
 
-```python
+```{python}
 from urllib.request import urlopen
 import csv
 
@@ -620,22 +882,23 @@ for row in csvfile:
 
 print(f"urlData has {len(urlData)} rows and {len(urlData[0])} columns.")
 
-for u in urlData[63:]:                             # For each row in the list
+for u in urlData[70:]:  # For each row in the list
     print(f"The city of '{u[0]}' has a population of {u[1]}") # Print out the name and pop
 ```
 
-::: {.callout-warning}
+::: {.callout-warning collapse="true"}
 
-    **&#9888; Important**: What mistake have I made here?
-:::
+#### What mistake have I made here?
 
 I have assumed that, just because the files have similar names, they must also have similar layouts!
 
-```python
-print(f"The URL's data labels are: {', '.join(??[0])}")
+```{python}
+print(f"The URL's data labels are: {', '.join(urlData[0])}")
 ```
 
-##. Insight!
+:::
+
+## Insight!
 
 So, although the code was basically the same for both of these files (good), we would need to change quite a bit in order to print out the _same_ information from different versions of the _same data_. So our code is rather **brittle**.
 
@@ -668,7 +931,7 @@ Some issues to consider:
 
 Let's apply this approach to the parsing of our data...
 
-##. Understanding What's an 'Appropriate' Data Structure
+## Understanding What's an 'Appropriate' Data Structure
 
 If you stop to think about it, then our list-of-lists approach to the data isn't very easy to navigate. Notice that if the position or name of a column changes then we need to change our program _every_ time we re-run it! It's not very easy to read *either* since we don't really know what `u[5]` is supposed to be. That way lies all kinds of potential errors!
 
@@ -693,23 +956,8 @@ Well, here are the first four rows of data from a list-of-lists for city sizes:
 
 Now, here's how it would look as a dictionary of lists organised by _column_, and _not_ by row:
 
-```python
-myData = {
-    'id'         : [1, 2, 3],
-    'Name'       : ['London', 'Manchester', 'West Midlands'],
-    'Rank'       : [1, 2, 3],
-    'Longitude'  : [-18162.92767, -251761.802, -210635.2396],
-    'Latitude'   : [6711153.709, 7073067.458, 6878950.083],
-    'Population' : [9787426, 2553379, 2440986],
-}
-
-```
-
-What does this do better? Well, for starters, we know that everything in the 'Name' column will be a string, and that everything in the 'Longitude' column is a float, while the 'Population' column contains integers. So that's made life easier already. But let's test this out and see how it works.
-
-Let's apply what we've just learned above. This next section is the _really_ crucial bit. This is going to take time to make sense, but if it does then 🤯!
-
-```python
+```{python}
+#| echo: true
 myData = {
     'id'         : [0, 1, 2, 3, 4, 5],
     'Name'       : ['London', 'Manchester', 'Birmingham','Edinburgh','Inverness','Lerwick'],
@@ -723,35 +971,94 @@ print(myData['Name'])
 print(myData['Population'])
 ```
 
+What does this do better? Well, for starters, we know that everything in the 'Name' column will be a string, and that everything in the 'Longitude' column is a float, while the 'Population' column contains integers. So that's made life easier already, but the real benefit is coming up...
+
 ### Behold the Power of the DoL
 
 Now let's look at what you can do with this... but first we need to import one _more_ package that you're going to see a _lot_ over the rest of term: `numpy` (Numerical Python), which is used _so_ much that most people simply refer to it as `np`. This is a _huge_ package in terms of features, but right now we're interested only in the basic arithmatic functions: `mean`, `max`, and `min`.
 
+::: {.callout-tip collapse="true"}
+
+#### We'll step through most of these in detail below.
+
+:::
+
+Find the latitude of Manchester:
+
+```{python}
+#| echo: true
+city = "Manchester"
+lat = myData['Latitude'][ myData['Name'].index(city) ]
+print(f"{city}'s latitude is {lat}")
+```
+
+Print the location of Lerwick:
+
+:::: {.panel-tabset}
+
+#### Question
+
 ```python
-import numpy as np
-
-# Find the latitude of Manchester.
-lat = myData[??][ myData['Name'].index(??) ]
-print(f"Manchester's latitude is {lat}") # Notice how 'f-strings' work!
-
-# Find the easternmost city
-city = myData['Name'][ myData[??].index( np.max(myData[??]) ) ]
-print(f"The easternmost city is: {city}")
-
-# Print the location of Lerwick
 city = "Lerwick"
 print(f"The town of {city} can be found at " + 
       f"{abs(myData['Longitude'][myData['Name'].index(city)])}ºW, {myData['Latitude'][myData['Name'].index(city)]}ºN")
+```
 
-# Find the mean population of the cities
-# using a handy package called numpy
+#### Answer
+
+```{python}
+city = "Lerwick"
+print(f"The town of {city} can be found at " + 
+      f"{abs(myData['Longitude'][myData['Name'].index(city)])}ºW, {myData['Latitude'][myData['Name'].index(city)]}ºN")
+```
+
+::::
+
+Find the easternmost city:
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+import numpy as np
+city = myData['Name'][ myData[??].index( np.max(myData[??]) ) ]
+print(f"The easternmost city is: {city}")
+```
+
+#### Answer
+
+```{python}
+import numpy as np
+city = myData['Name'][ myData['Longitude'].index( np.max(myData['Longitude']) ) ]
+print(f"The easternmost city is: {city}")
+```
+
+::::
+
+Find the mean population of the cities using a handy package called numpy:
+
+::: {.panel-tabset}
+
+#### Question
+
+```python 
 mean = np.??(myData['Population'])
 print(f"The mean population is: {mean}")
 ```
 
+#### Answer
+
+```{python}
+mean = np.mean(myData['Population'])
+print(f"The mean population is: {mean}")
+```
+
+::::
+
 ::: {.callout-warning}
 
-    **&#9888; Stop!**: Look closely at what is going on. There's a _lot_ of content to process in the code above, so do _not_ rush blindly on if this is confusing. Try pulling it apart into pieces and then reassemble it. Start with the bits that you understand and then *add* complexity.
+**Stop!** Look closely at what is going on. There's a _lot_ of content to process in the code above, so do _not_ rush blindly on if this is confusing. Try pulling it apart into pieces and then reassemble it. Start with the bits that you understand and then *add* complexity.
 
 :::
 
@@ -760,14 +1067,15 @@ We'll go through each one in turn, but they nearly all work in the same way and 
 ### The Population of Manchester
 
 The code can look pretty daunting, so let's break it down into two parts. What would you get if you ran just this code?
+
 ```python
 myData['Population'][1]
 ```
+
 Remember that this is a dictionary-of-lists (DoL). So, Python first looks for a key named `Population` in the myData dictionary. It finds out that the value associated with this key is a _list_ (`[9787426, 2553379, 2440986]`). In this example, it just pulls out the first value (index 1), which is `2553379`. Does **that part** make sense?
 
----
-
 Now, to the second part:
+
 ```python
 myData['Name'].index('Manchester')
 ```
@@ -779,21 +1087,28 @@ Does that make sense? If it does then you should be having a kind of an &#129327
 ### The Easternmost City
 
 Where this approach really comes into its own is on problems that involve maths. To figure out the easternmost city in this list we need to find the _maximum_ Longitude and then use _that_ value to look up the city name. So let's do the same process of pulling this apart into two steps. Let start with the easier bit:
+
 ```python
 myData['Name'][0]
 ```
+
 That would give us the name of a city, but we don't just want the first city in the list, we want the one with the maximum longitude. To achieve _that_ we need to somehow replace the `0` with the _**index of the maximum longitude**_. Let's break this down further: 
+
 1. We first need to _find_ the maximum longitude.
 2. We then need to _find_ the **index** of that maximum longitude.
 
 So Step 1 would be:
+
 ```python
 max_lon = max(myData['Longitude'])
 ```
+
 Because the `max(...)` helps us to find the maximum longitude in the Longitude list. Now that we have that we can proceed to Step 2:
+
 ```
 myData['Longitude'].index(max_lon)
 ```
+
 So now we ask Python to find the position of `max_lon` in the list. But rather than doing this in two steps we can combine into one if we write it down to make it easier to read:
 
 ```python
@@ -801,10 +1116,12 @@ myData['Longitude'].index(
     max(myData['Longitude'])
 )
 ```
+
 There's the same `.index` which tells us that Python is going to look for something in the list associated with the `Longitude` key. All we've done is change what's _inside_ that index function to `max(myData['Longitude'])`. This is telling Python to find the _maximum_ value in the `myData['Longitude']` list. So to explain this in three steps, what we're doing is:
-* Finding the maximum value in the Longitude column (we know there must be one, but we don't know what it is!),
-* Finding the index (position) of that maximum value in the Longitude column (now that we know what the value is!),
-* Using that index to read a value out of the Name column.
+
+- Finding the maximum value in the Longitude column (we know there must be one, but we don't know what it is!),
+- Finding the index (position) of that maximum value in the Longitude column (now that we know what the value is!),
+- Using that index to read a value out of the Name column.
 
 I _am_ a geek, but that's pretty cool, right? In one line of code we managed to quickly find out where the data we needed was even though it involved three discrete steps. Think about how much work you'd have to do if you were still thinking in _rows_, not _columns_!
 
@@ -813,44 +1130,52 @@ I _am_ a geek, but that's pretty cool, right? In one line of code we managed to 
 Lerwick is a small town in [the Shetlands](https://www.shetland.org/), way up to the North of mainland U.K. and somewhere I've wanted to go ever since I got back from [Orkney](https://www.orkney.com/)--but then I spent my honeymoon in the far North of [Iceland](https://www.westfjords.is/), so perhaps I just don't like being around lots of people... 🙃
 
 Anyway, this one _might_ be a tiny bit easier conceptually than the other problems, except that I've deliberately used a slightly different way of showing the output that might be confusing:
+
+Print the location of Lerwick:
+
 ```python
-# Print the location of Lerwick
 city = "Lerwick"
 print(f"The town of {city} can be found at " + 
       f"{abs(myData['Longitude'][myData['Name'].index(city)])}ºW, {myData['Latitude'][myData['Name'].index(city)]}ºN")
-
 ```
+
 The first thing to do is to pull apart the `print` statement: you can see that this is actually just two 'f-strings' joined by a `+`--having that at the end of the line tells Python that it should carry on to the next line. That's a handy way to make your code a little easier to read. If you're creating a list and it's getting a little long, then you can also continue a line using a `,` as well!
 
-1. The first f-string
+#### 1. The first f-string
+   
 The first string will help you to make sense of the second: f-strings allow you to 'interpolate' a variable into a string directly rather than having to have lots of `str(x) + " some text " + str(y)`. You can write `f"{x} some text {y}"` and Python will automatically convert the variables `x` and `y` to strings and replace `{x}` with the _value of `x`_ and `{y}` with the _value of `y`_. 
 
 So here `f"The town of {city} can be found at "` becomes `f"The town of Lerwick can be found at "` because `{city}` is replaced by the value of the variable `city`. This makes for code that is easier for humans to read and so I'd consider that a good thing.
 
-2. The second f-string
+#### 2. The second f-string
 This one is hard because there's just a _lot_ of code there. But, again, if we start with what we recognise that it gets just a little bit more manageable... Also, it stands to reason that the only difference between the two outputs is that one asks for the 'Longitude' and the other for the 'Latitude'. So if you can make sense of one you have _automatically_ made sense of the other and don't need to work it all out.
 
 Let's start with a part that you might recognise:
+
 ```python
 myData['Name'].index(city)
 ```
+
 You've _got_ this. This is just asking Python to work out the index of Lerwick (because `city = 'Lerwick'`). So it's a number. 5 in this case. And we can then think, 'OK so what does this return:
+
 ```python 
 myData['Longitude'][5]
 ```
+
 And the answer is `-1.145`. That's the Longitude of Lerwick! There's just _one_ last thing: notice that we're talking about degrees West here. So the answer isn't a negative (because negative West degrees would be _East_!), it's the _absolute_ value. And that is the final piece of the puzzle: `abs(...)` gives us the absolute value of a number!
 
-```python
-?abs
+```{python}
+help(abs)
 ```
 
 ### The Average City Size
 
 Here we're going to 'cheat' a little bit: rather than writing our own function, we're going to import a package and use someone _else's_ function. The `numpy` package contains a _lot_ of useful functions that we can call on (if you don't believe me, add "`dir(np)`" on a new line after the `import` statement), and one of them calculates the average of a list or array of data.
-```python
-import numpy as np
-mean = np.mean(myData['Population'])
+
+```{python}
+print(f"The mean population is {np.mean(myData['Population'])}")
 ```
+
 This is where our new approach really comes into its own: because all of the population data is in one place (a.k.a. a _series_ or column), we can just throw the whole list into the `np.mean` function rather than having to use all of those convoluted loops and counters. Simples, right? 
 
 No, not _simple_ at all, but we've come up with a way to _make_ it simple.
@@ -868,6 +1193,7 @@ So the _really_ clever bit in all of this isn't switching from a list-of-lists t
 :::
 
 Why not have a stab at writing the code to print out the _4th most populous_ city? This can _still_ be done on one line, though you might want to start by breaking the problem down:
+
 1. How do I find the _4th_ largest value in a list?
 2. How do I find the _index_ of the 4th largest value in a list?
 3. How do I use that to look up the name associated with that index?
@@ -876,9 +1202,13 @@ You've already done \#2 and \#3 above so you've _solved_ that problem. If you ca
 
 ::: {.callout-tip}
 
-    you don't want to use `&lt;list&gt;.sort()` because that will sort your data *in place* and break the link between the indexes across the 'columns'; you want to research the function `sorted(&lt;list&gt;)` where `&lt;list&gt;` is the variable that holds your data and `sorted(...)` just returns whatever you pass it in a sorted order *without* changing the original list. You'll see why this matters if you get the answer... otherwise, wait a few days for the answers to post.
+You don't want to use `<list>.sort()` because that will sort your data *in place* and break the link between the indexes across the 'columns'; you want to research the function `sorted(<list>)` where `<list>` is the variable that holds your data and `sorted(...)` just returns whatever you pass it in a sorted order *without* changing the original list. You'll see why this matters if you get the answer... otherwise, wait a few days for the answers to post.
 
 :::
+
+:::: {.panel-tabset}
+
+#### Question
 
 ```python
 # Print out the name of the 4th most populous city-region
@@ -887,6 +1217,20 @@ city = ??
 print("The fourth most populous city is: " + str(city))
 ```
 
+#### Answer
+
+```{python}
+#| echo: true
+# Print out the name of the 4th most populous city-region
+city = myData['Name'][
+    myData['Population'].index(sorted(myData['Population'], reverse=True)[3])
+]
+
+print("The fourth most populous city is: " + str(city))
+```
+
+::::
+
 The answer is Edinburgh.
 
 ## Bringing it all together...
@@ -894,4 +1238,3 @@ The answer is Edinburgh.
 Conceptually, this is one of the hardest practicals in the entire term because it joins up so many of the seemingly simple ideas that you covered in Code Camp into a very complex 'stew' -- all our basic ingredients (lists, dictionaries, etc.) have simmered for a bit, been stirred up together, and become something entirely new and more complex.
 
 So if this practical doesn't make sense to you on the _first_ runthrough, I'd suggest going back through the second half of the practical _again_ in a couple of days' time -- that will give your brain a little time to wrap itself around the basics before you throw the hard stuff at it again. _Don't_ panic if it doesn't all make sense on the _second_ runthrough either -- this is like a language, you need to practice! With luck, the second time you went through this code a little bit _more_ made sense. If you need to do it a third time you'll find that even _more_ makes sense... and so on. 
-
