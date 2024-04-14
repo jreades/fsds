@@ -112,19 +112,15 @@ Depending on which syntax you prefer, you can use these interchangeably. The onl
 
 You will need to do several things here to read the remote, compressed CSV file specified by `url` into a data frame called `df`. Setting `low_memory=False` ensures that pandas will try to load the entire data set _before_ guessing the data format! Obviously, with very large files this is probably a bad idea and it's possible to force a particular column type while readng in the data as well. For larger data sets there are platforms like [Dask](https://dask.org/) (see, eg, [this](https://towardsdatascience.com/why-and-how-to-use-dask-with-big-data-746e34dac7c3)), and beyond that are [other options](https://towardsdatascience.com/scaling-pandas-comparing-dask-ray-modin-vaex-and-rapids-c74c85a4e59c).
 
-```{python}
-
-```
-
 :::: {.panel-tabset}
 
 #### Question
 
 ```python
 # Set download URL
+ymd  = '{{< var data.ymd >}}'
 host = 'https://orca.casa.ucl.ac.uk'
-path = '~jreades/data/{{< var data.fn >}}'
-url  = f'{host}/{path}'
+url  = f'{host}/~jreades/data/{ymd}-listings.csv.gz'
 
 # your code here
 df = pd.read_csv(??, compression='gzip', low_memory=False)
@@ -133,17 +129,18 @@ print(f"Data frame is {df.shape[0]:,} x {df.shape[1]}")
 
 #### Answer
 
+This is a bit of a fuller answer than the question, but hopefully you'll see why we take this approach as a 'better' one that the skeleton set out in the Question. Note that you can also find reviews and calendar at the same location as the listings file (i.e. `{{< var data.ymd >}}-calendar.csv.gz`)
+
 ```{python}
 # Notice that we import a specific error here
 # but other types of errors (e.g. NameError)
 # are always available because they're so basic.
 from urllib.error import URLError
 
-# Set download URL -- you can also find reviews and calendar
-# at the same location (i.e. {{< meta data.year >}}-{{< var data.month >}}-{{< var data.day >}}-calendar.csv.gz)
+# Set download URL
+ymd  = '2023-09-06'
 host = 'https://orca.casa.ucl.ac.uk'
-path = '~jreades/data/{{< var data.fn >}}'
-url  = f'{host}/{path}'
+url  = f'{host}/~jreades/data/{ymd}-listings.csv.gz'
 
 if not os.path.exists('tmp.csv.gz'):
     try:
@@ -679,9 +676,9 @@ print(f"Have reduced data frame to: {df.shape[0]:,} rows and {df.shape[1]:,} col
 
 # Using Indexes
 
-To recap, when we use the `[[...]]` syntax we're taking a short-cut through the data by column (keeping all rows). The *full* syntax is `df[<row_selection>,<col_selection>]`. When we *don't* specify both does then it defaults to `df[<col_selection>]`. 
+To recap, when we use the `[[...]]` syntax we're taking a short-cut through the data by column (keeping all rows). The *full* syntax is `df[<row_selection>,<col_selection>]`. Only when we *don't* specify both does it then default to `df[<col_selection>]`. 
 
-To make the most of pandas you will need to get to grips with the logic than underpins this syntax. This is embedded in the idea of there being row and column indexes. These are *like* the columns A..ZZ and the rows 1..n in Excel. As you'll have seen in [the video](), these aren't considered *data*, they are ways to *access the data*. Unlike Excel, while every data frame must *have* an index, in pandas you can 'promote' or 'demote' any column to be used *as* an index. 
+To make the most of pandas you will need to get to grips with the logic than underpins this syntax. This is embedded in the idea of there being row and column indexes. These are *like* the columns `A`..`ZZ` and the rows 1..n in Excel. As you'll have seen in [the video](), these aren't considered *data*, they are ways to *access the data*. Unlike Excel, while every data frame must *have* an index, in pandas you can 'promote' or 'demote' any column to be used *as* an index. 
 
 The default row index is just the row number — this will be created for you if you don't specify something else when you create the data frame. The default column index is created from a file's column names (works for many types of data) but you can change these at any time.
 
