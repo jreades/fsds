@@ -19,23 +19,37 @@ The later parts are largely complete and ready to run; however, that *doesn't* m
 
 ::: {.callout-note}
 
-    **&#128279; Connections**: working with text is unquestionably _hard_. In fact, _conceptually_ this is probaly the most challenging practical of the term! But data scientists are _always_ dealing with text because so much of the data that we collect (even more so thanks to the web) is not only text-based (URLs are text!) but, increasingly, unstructured (social media posts, tags, etc.). So while getting to grips with text is a challenge, it also uniquely positions you with respect to the skills and knowledge that other graduates are offering to employers.
+#### &#128279; Connections
+
+Working with text is unquestionably _hard_. In fact, _conceptually_ this is probaly the most challenging practical of the term! But data scientists are _always_ dealing with text because so much of the data that we collect (even more so thanks to the web) is not only text-based (URLs are text!) but, increasingly, unstructured (social media posts, tags, etc.). So while getting to grips with text is a challenge, it also uniquely positions you with respect to the skills and knowledge that other graduates are offering to employers.
 :::
 
 # Preamble
 
 This practical has been written using `nltk`, but would be _relatively_ easy to rework using `spacy`. Most programmers tend to use one *or* the other, and the switch wouldn't be hard other than having to first load the requisite language models:
-```python
+
+```{python}
 import spacy
-nlp = spacy.load("en_core_web_sm") # `...web_md` and `...web_lg` are also options
+
+# `...web_md` and `...web_lg` are also options
+corp = "en_core_web_sm"
+
+try: 
+    nlp = spacy.load(corp)
+except OSError:
+    spacy.cli.download(corp)
+    nlp = spacy.load(corp)
 ```
+
 You can [read about the models](https://spacy.io/models/en), and note that they are also [available in other languages](https://spacy.io/usage/models) besides English.
 
 # Setup
 
 ::: {.callout-tip collapse="true"}
 
-**Difficulty Level**: easy, but only because this has been worked out for you. Starting from sctach in NLP is _hard_ so people try to avoid it as much as possible.
+#### Difficulty Level: Low
+
+But this is only because this has been worked out for you. Starting from sctach in NLP is _hard_ so people try to avoid it as much as possible.
 
 :::
 
@@ -43,12 +57,13 @@ You can [read about the models](https://spacy.io/models/en), and note that they 
 
 ::: {.callout-note}
 
-    Notice that the number of modules and functions that we import is steadily increasing week-on-week, and that for text processing we tend to draw on quite a wide range of utilies! That said, the three most commonly used are: `sklearn`, `nltk`, and `spacy`.
+Notice that the number of modules and functions that we import is steadily increasing week-on-week, and that for text processing we tend to draw on quite a wide range of utilies! That said, the three most commonly used are: `sklearn`, `nltk`, and `spacy`.
+
 :::
 
 Standard libraries we've seen before.
 
-```python
+```{python}
 import os
 import numpy as np
 import pandas as pd
@@ -60,22 +75,29 @@ import matplotlib.pyplot as plt
 
 Vectorisers we will use from the 'big beast' of Python machine learning: Sci-Kit Learn.
 
-```python
-from sklearn.preprocessing import OneHotEncoder # We don't use this but I point out where you *could*
+```{python}
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
+
+# We don't use this but I point out where you *could*
+from sklearn.preprocessing import OneHotEncoder 
 ```
 
 NLP-specific libraries that we will use for tokenisation, lemmatisation, and frequency analysis.
 
-```python
+```{python}
 import nltk
 import spacy
 from nltk.corpus import wordnet as wn
 from nltk.stem.wordnet import WordNetLemmatizer
 
-from nltk.corpus import stopwords
+try:
+    from nltk.corpus import stopwords
+except:
+    nltk.download('stopwords')
+    from nltk.corpus import stopwords
+stopword_list = set(stopwords.words('english'))
 
 from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.tokenize.toktok import ToktokTokenizer
@@ -91,26 +113,16 @@ tokenizer = ToktokTokenizer()
 
 Remaining libraries that we'll use for processing and display text data. Most of this relates to dealing with the various ways that text data cleaning is *hard* because of the myriad formats it comes in.
 
-```python
+```{python}
 import string
 import unicodedata
 from bs4 import BeautifulSoup
 from wordcloud import WordCloud, STOPWORDS
 ```
 
-## Configure
-
-There isn't a lot to configure for this week, but you *will* want to examine the results from the first pass through the data in order to update the list of **stopwords**:
-
-```python
-#nltk.download('wordnet') # <-- These are done in a supporting tool, but in your own
-#nltk.download('averaged_perceptron_tagger') # application you'd need to import them
-stopword_list = set(stopwords.words('english'))
-```
-
 This next is just a small utility function that allows us to output Markdown (like this cell) instead of plain text:
 
-```python
+```{python}
 from IPython.display import display_markdown
 
 def as_markdown(head='', body='Some body text'):
@@ -126,12 +138,15 @@ as_markdown('Result!', "Here's my output...")
 
 ::: {.callout-note}
 
-    **&#128279; Connections**: Because I generally want each practical to stand on its own (unless I'm trying to make a _point_), I've not moved this to a separate Python file (e.g. `utils.py`, but in line with what we covered back in the lectures on [Functions and Packages](https://jreades.github.io/fsds/sessions/week3.html#lectures), this sort of thing is a good candidate for being split out to a separate file to simplify re-use.
+#### &#128279; Connections
+
+Because I generally want each practical to stand on its own (unless I'm trying to make a _point_), I've not moved this to a separate Python file (e.g. `utils.py`, but in line with what we covered back in the lectures on [Functions and Packages](https://jreades.github.io/fsds/sessions/week3.html#lectures), this sort of thing is a good candidate for being split out to a separate file to simplify re-use.
+
 :::
 
 Remember this function from last week? We use it to save downloading files that we already have stored locally. But notice I've made some small changes... what do these do to help the user?
 
-```python
+```{python}
 import os
 from requests import get
 from urllib.parse import urlparse
@@ -163,8 +178,10 @@ def cache_data(src:str, dest:str) -> str:
     dfn = os.path.join(dest,fn) # Destination filename
     
     # Check if dest+filename does *not* exist -- 
-    # that would mean we have to download it!
-    if not os.path.isfile(dfn):
+    # that would mean we have to download it! We
+    # also check for *very* small files that are 
+    # likely to represent an incomplete download.
+    if not os.path.isfile(dfn) or os.stat(dfn).st_size < 250:
         
         print(f"{dfn} not found, downloading!")
 
@@ -204,30 +221,30 @@ def cache_data(src:str, dest:str) -> str:
 
 ::: {.callout-tip}
 
-    for very large _non_-geographic data sets, remember that you can `use_cols` (or `columns` for feathers) to specify a subset of columns to load.
+For very large _non_-geographic data sets, remember that you can `use_cols` (or `columns` depending on the file type) to specify a subset of columns to load.
+
 :::
 
 Load the main data set:
 
-```python
+```{python}
 # Set download URL
+ymd  = '2023-09-06'
 host = 'https://orca.casa.ucl.ac.uk'
-path = '~jreades/data/'
-fn   = '2023-09-06-listings.geoparquet'
-url  = f'{host}/{path}/{fn}'
+url  = f'{host}/~jreades/data/{ymd}-listings.geoparquet'
 
 gdf = gpd.read_parquet( cache_data(url, os.path.join('data','geo')), 
                       columns=['geometry', 'listing_url', 'name', 
                                'description', 'amenities', 'price'])
-```
 
-```python
+gdf = gdf.to_crs('epsg:27700')
+
 print(f"gdf has {gdf.shape[0]:,} rows and CRS is {gdf.crs.name}.")
 ```
 
 Load supporting Geopackages:
 
-```python
+```{python}
 ddir  = os.path.join('data','geo') # destination directory
 spath = 'https://github.com/jreades/fsds/blob/master/data/src/' # source path
 
@@ -242,39 +259,58 @@ print('Done.')
 
 ::: {.callout-note}
 
-    **&#128279; Connections**: if you plan to work with data post-graduation then you will _need_ to become comfortable with Regular Expressions (aka. regexes). These are the focus of the [Patterns in Text](https://jreades.github.io/fsds/sessions/week7.html#lectures) lecture but they barely even scratch the surface of what regexes can do. They are _hard_, but they are powerful. 
+#### &#128279; Connections
+
+If you plan to work with data post-graduation then you will _need_ to become comfortable with Regular Expressions (aka. regexes). These are the focus of the [Patterns in Text](https://jreades.github.io/fsds/sessions/week7.html#lectures) lecture but they barely even scratch the surface of what regexes can do. They are _hard_, but they are powerful. 
+
 :::
 
 ::: {.callout-tip}
 
-    In a full text-mining application I would spend a lot more time on this stage: sampling, looking at descriptions in full, performing my analysis (the rest of the steps) and then coming back with a deeper understanding of the data to make further changes to the analysis.
+In a full text-mining application I would spend a lot more time on this stage: sampling, looking at descriptions in full, performing my analysis (the rest of the steps) and then coming back with a deeper understanding of the data to make further changes to the analysis.
+
 :::
 
 It's helpful to have a sense of what data look like before trying to do something with them, but by default pandas truncates quite a lot of output to keep it from overwhelming the display. For text processing, however, you should probably change the amount of preview text provided by pandas using the available options. *Note*: there are lots of other options that you can tweak in pandas.
 
-```python
+```{python}
 print(f"Default maximum column width: {pd.options.display.max_colwidth}") # What's this currently set to?
 pd.options.display.max_colwidth=250   # None = no maximum column width (you probably don't want to leave it at this)
-print(f"Now maximum column width set to: {???}")
+print(f"Now maximum column width set to: {pd.options.display.max_colwidth}")
 ```
 
 ## Investigate the Description Field
 
 ::: {.callout-warning collapse="true"}
 
-**Difficulty Level**: Medium, because of the questions.
+#### Difficulty level: Moderate, because of the questions.
 
 :::
 
 To explore the description field properly you'll need to filter out any NA/NaN descriptions before sampling the result. *Hint*: you'll need to think about negation (`~`) of a method output that tells you if a field *is NA*.
 
+:::: {.panel-tabset}
+
+#### Question
+
 ```python
 gdf[???].sample(5, random_state=42)[['description']]
 ```
 
+#### Answer
+
+```{python}
+gdf[~gdf.description.isna()].sample(5, random_state=42)[['description']]
+```
+
+::::
+
 ::: {.callout-caution}
 
-    **&#9888; Stop**: what do you notice about the above? Are they simple text? are there patterns of problems? Are there characters that represent things other than words and simple punctuation?
+#### Stop
+
+What do you notice about the above? Are they simple text? Are there patterns of problems? Are there characters that represent things other than words and simple punctuation?
+
 :::
 
 ### Questions
@@ -286,19 +322,19 @@ gdf[???].sample(5, random_state=42)[['description']]
 
 ::: {.callout-warning collapse="true"}
 
-**Difficulty Level**: Medium, because of the questions.
+#### Difficulty level: Moderate, because of the questions.
 
 :::
 
 This field presents a subtle issue that might not be obvious here:
 
-```python
+```{python}
 gdf.amenities.sample(5, random_state=42)
 ```
 
 But look what happens now, can you see the issue a little more easily?
 
-```python
+```{python}
 gdf.amenities.iloc[0]
 ```
 
@@ -309,23 +345,42 @@ gdf.amenities.iloc[0]
 
 ## Remove NaN Values
 
-::: {.callout-warning}
+::: {.callout-note}
 
-    **&#9888; Note**: I would be wary of doing the below in a 'proper' application without doing some careful research first, but to make our lives easier, we're going to drop rows where one of these values is NaN _now_ so it will simplify the steps below. In reality, I would spend quite a bit more time investigating which values are NaN and why before simply dropping them.
+I would be wary of doing the below in a 'proper' application without doing some careful research first, but to make our lives easier, we're going to drop rows where one of these values is NaN _now_ so it will simplify the steps below. In reality, I would spend quite a bit more time investigating which values are NaN and why before simply dropping them.
+
 :::
 
 Anyway, drop all rows where *either* the description or amenities (or both) are NA:
+
+:::: {.panel-tabset}
+
+#### Question
 
 ```python
 gdf = gdf.dropna(???)
 print(f"Now gdf has {gdf.shape[0]:,} rows.")
 ```
 
+#### Answer
+
+```{python}
+gdf = gdf.dropna(subset=['description','amenities'])
+print(f"Now gdf has {gdf.shape[0]:,} rows.")
+```
+
+::::
+
+You should get that there are `{python} f"{gdf.shape[0]:,}"` rows.
+
 # Using Regular Expressions
 
 ::: {.callout-note}
 
-    **&#128279; Connections**: We're building on the work done in [Practical 6](Practical-05-Spatial_Data.ipynb), but making use now of the lecture on [Patterns in Text](https://jreades.github.io/fsds/sessions/week6.html#lectures)) to quickly sort through the listings.
+#### &#128279; Connections
+
+We're building on the work done in [Practical 6](Practical-05-Spatial_Data.ipynb), but making use now of the lecture on [Patterns in Text](https://jreades.github.io/fsds/sessions/week6.html#lectures)) to quickly sort through the listings.
+
 :::
 
 There is a _lot_ that can be done with Regular Expressions to identify relevant records in textual data and we're going to use this as a starting point for the rest of the analysis. I would normally consider the regexes here a 'first pass' at the data, but would look very carefully at the output of the TF/IDF vectorizer, Count vectorizer, and LDA to see if I could improve my regexes for further cycles of analysis... the main gain there is that regexes are _much_ faster than using the full NLP (Natural Language Processing) pipeline on the _full_ data set each time. As an alternative, you could develop the pipeline using a random subsample of the data and then process the remaining records sequentially -- in this context there is no justification for doing that, but with a larger corpus it might make sense.
@@ -334,7 +389,7 @@ There is a _lot_ that can be done with Regular Expressions to identify relevant 
 
 ::: {.callout-caution collapse="true"}
 
-**Difficulty Level**: Hard, because of the regular expression and questions.
+#### Difficulty level: Hard, because of the regular expression and questions.
 
 :::
 
@@ -351,19 +406,49 @@ You should start with variations on 'luxury' (i.e. luxurious, luxuriate, ...) an
 
 In fact, in my real-world applications you might even need more than one group/non-capturing group in a *nested* structure.
 
+:::: {.panel-tabset}
+
+#### Question
+
 ```python
 gdf[
     gdf.description.str.contains(r'???', regex=True, flags=re.IGNORECASE) # <-- The regex
 ].sample(5, random_state=42)[['description']]
 ```
 
+#### Answer
+
+```{python}
+gdf[
+    gdf.description.str.contains(r'(?:luxur(?:y|ious|iat)|prestigious|stunning)', regex=True, flags=re.IGNORECASE)
+].sample(5, random_state=42)[['description']]
+```
+
+::::
+
 ### Apply it to Select Data
+
 Assign it to a new data frame called `lux`:
+
+:::: {.panel-tabset}
+
+#### Question
 
 ```python
 lux = gdf[gdf.description.str.contains(r'???', regex=True, flags=re.IGNORECASE)].copy()
 print(f"Found {lux.shape[0]:,} records for 'luxury' flats")
 ```
+
+#### Answer
+
+```{python}
+lux = gdf[gdf.description.str.contains(r'(?:luxur(?:y|ious|iat)|prestigious|stunning)', regex=True, flags=re.IGNORECASE)].copy()
+print(f"Found {lux.shape[0]:,} records for 'luxury' flats")
+```
+
+::::
+
+You should get `{python} f"{lux.shape[0]:,}"` rows.
 
 ### Plot the Data
 
@@ -376,6 +461,7 @@ help(plt.subplot2grid)
 Notice that there are two ways to create the plot specified above. I chose route 1, but in some ways route 2 (where you specify a `gridspec` object and *then* add the axes might be a bit simpler to work out if you're starting from scratch.
 
 The critical thing here is to understand how we'er initialising a plot that has **4 rows** and **1 column** even though it is only showing **2 plots**. What we're going to do is set the *first* plot to span **3 rows** so that it takes up 75% of the plot area (3/4), while the *second* plot only takes up 25% (1/4). They will appear one above the other, so there's only 1 column. Here's how to read the key parts of `subplot2grid`:
+
 - `nrows` -- how many rows *of plots* in the figure.
 - `ncols` -- how many columns *of plots* in the figure.
 - `row` -- what row of the figure does *this* plot start on (0-indexed like a list in Python).
@@ -385,9 +471,13 @@ The critical thing here is to understand how we'er initialising a plot that has 
 
 Every time you call `subplot2grid` you are initialising a new axis-object into which you can then draw with your geopackage or pandas plotting methods.
 
+:::: {.panel-tabset}
+
+#### Question
+
 ```python
 
-f,ax = plt.subplots(1,1,figsize=(12,8))
+f,ax = plt.subplots(1,1,figsize=(9,6))
 ax.remove()
 
 # The first plot 
@@ -407,6 +497,37 @@ plt.tight_layout() # <-- Try creating the plot *without* this to see what it cha
 plt.show()
 ```
 
+#### Answer
+
+```{python}
+f,ax = plt.subplots(1,1,figsize=(7,6))
+ax.remove()
+
+# The first plot
+ax1 = plt.subplot2grid((4, 1), (0, 0), rowspan=3)
+boros.plot(edgecolor='red', facecolor='none', linewidth=1, alpha=0.75, ax=ax1)
+lux.plot(markersize=2, column='price', cmap='viridis', alpha=0.2, scheme='Fisher_Jenks_Sampled', ax=ax1)
+
+ax1.set_xlim([500000, 565000])
+ax1.set_ylim([165000, 195000]);
+
+# The second plot
+ax2 = plt.subplot2grid((4, 1), (3, 0), rowspan=1)
+lux.price.plot.hist(bins=250, ax=ax2)
+
+plt.suptitle("Listings Advertising Luxury") # <-- How does this differ from title? Change it and see!
+plt.tight_layout() # <-- Try creating the plot *without* this to see what it changes
+```
+
+::::
+
+Your result should look similar to:
+
+```{python}
+#| echo: false
+f
+```
+
 ### Questions
 
 - What does `suptitle` do and how is it different from `title`? Could you use this as part of your plot-making process?
@@ -416,7 +537,7 @@ plt.show()
 
 ::: {.callout-tip collapse="true"}
 
-**Difficulty Level**: Easy, because you've worked out the hard bits already.
+#### Difficulty level: Easy, because you've worked out the hard bits already.
 
 :::
 
@@ -428,24 +549,54 @@ What words can you think of that might help you to spot affordable and budget ac
 
 1. I'd try adding word boundary markers to the regex (`\b`) where appropriate...
 
+:::: {.panel-tabset}
+
+#### Question
+
 ```python
 gdf[
     gdf.description.str.contains(???, regex=True, flags=re.IGNORECASE)
 ].sample(5, random_state=42)[['description']]
 ```
 
+#### Answer
+
+```{python}
+gdf[
+    gdf.description.str.contains(r'\b(?:affordable|budget|cheap|cosy)\b', 
+    regex=True, flags=re.IGNORECASE)
+].sample(5, random_state=42)[['description']]
+```
+
+::::
+
 ### Apply it to Select Data
+
+:::: {.panel-tabset}
+
+#### Question
 
 ```python
 aff = gdf[gdf.description.str.contains(???, regex=True, flags=re.IGNORECASE)].copy()
 print(f"There are {aff.shape[0]:,} rows flagged as 'affordable'.")
 ```
 
+#### Answer
+
+```{python}
+aff = gdf[gdf.description.str.contains(r'\b(?:affordable|budget|cheap|cosy)\b', 
+          regex=True, flags=re.IGNORECASE)].copy()
+print(f"There are {aff.shape[0]:,} rows flagged as 'affordable'.")
+```
+
+::::
+
+You should get `{python} f"{aff.shape[0]:,}" ` rows.
+
 ### Plot the Data
 
-```python
-
-f,ax = plt.subplots(1,1,figsize=(12,8))
+```{python}
+f,ax = plt.subplots(1,1,figsize=(8,6))
 ax.remove()
 
 # The first plot
@@ -462,8 +613,7 @@ aff.price.plot.hist(bins=100, ax=ax2)
 
 plt.suptitle("Listings Advertising Affordability")
 plt.tight_layout()
-plt.savefig("Affordable_Listings.png", dpi=150)
-plt.show()
+#plt.savefig("Affordable_Listings.png", dpi=150)
 ```
 
 ### Questions
@@ -481,7 +631,7 @@ plt.show()
 
 ::: {.callout-warning collapse="true"}
 
-**Difficulty Level**: Medium, because you're still learning about regexes.
+#### Difficulty level: Medium, because you're still learning about regexes.
 
 :::
 
@@ -493,13 +643,32 @@ Now see if you can work out a regular expression to find accommodation that emph
 
 ### Create the regular Expression
 
+:::: {.panel-tabset}
+
+#### Question
+
 ```python
 gdf[
     gdf.description.str.contains(???, regex=???, flags=???)
 ].sample(5, random_state=42)[['description']]
 ```
 
+#### Answer
+
+```{python}
+gdf[
+    gdf.description.str.contains(r'(?:Thames|river|water|canals?)(?:-|\s+)(?: view|\s?front)\b', 
+    regex=True, flags=re.IGNORECASE)
+].sample(5, random_state=42)[['description']]
+```
+
+::::
+
 ### Apply it to the Select Data
+
+:::: {.panel-tabset}
+
+#### Question
 
 ```python
 bluesp = gdf[
@@ -509,11 +678,25 @@ bluesp = gdf[
 print(f"Found {bluesp.shape[0]:,} rows.")
 ```
 
+#### Answer
+
+```{python}
+bluesp = gdf[
+    (gdf.description.str.contains(r'(?:Thames|river|water|canals?)(?:-|\s+)(?:view|front)\b', regex=True, flags=re.IGNORECASE)) |
+    (gdf.description.str.contains(r'(?:walk|close|near) to (?:Thames|river|water|canal)', regex=True, flags=re.IGNORECASE))
+].copy()
+print(f"Found {bluesp.shape[0]:,} rows.")
+```
+
+::::
+
+You should get `{python} f"{bluesp.shape[0]:,}" ` rows.
+
 ### Plot the Data
 
-```python
+```{python}
 
-f,ax = plt.subplots(1,1,figsize=(12,8))
+f,ax = plt.subplots(1,1,figsize=(8,6))
 ax.remove()
 
 # The first plot
@@ -546,7 +729,7 @@ Now we're going to step through the _parts_ of the process that we apply to clea
 
 ::: {.callout-tip collapse="true"}
 
-**Difficulty Level**: Easy.
+#### Difficulty Level: Low.
 
 :::
 
