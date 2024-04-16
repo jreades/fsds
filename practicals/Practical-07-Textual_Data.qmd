@@ -279,7 +279,7 @@ pd.options.display.max_colwidth=250   # None = no maximum column width (you prob
 print(f"Now maximum column width set to: {pd.options.display.max_colwidth}")
 ```
 
-## Investigate the Description Field
+## The Description Field
 
 ::: {.callout-warning collapse="true"}
 
@@ -318,7 +318,7 @@ What do you notice about the above? Are they simple text? Are there patterns of 
 - What patterns can you see that might need 'dealing with' for text-mining to work?
 - What non-text characters can you see? (Things *other* than A-Z, a-z, and simple punctuation!)
 
-## Amenities Field
+## The Amenities Field
 
 ::: {.callout-warning collapse="true"}
 
@@ -385,7 +385,7 @@ We're building on the work done in [Practical 6](Practical-05-Spatial_Data.ipynb
 
 There is a _lot_ that can be done with Regular Expressions to identify relevant records in textual data and we're going to use this as a starting point for the rest of the analysis. I would normally consider the regexes here a 'first pass' at the data, but would look very carefully at the output of the TF/IDF vectorizer, Count vectorizer, and LDA to see if I could improve my regexes for further cycles of analysis... the main gain there is that regexes are _much_ faster than using the full NLP (Natural Language Processing) pipeline on the _full_ data set each time. As an alternative, you could develop the pipeline using a random subsample of the data and then process the remaining records sequentially -- in this context there is no justification for doing that, but with a larger corpus it might make sense.
 
-## Luxury Accommodation
+## Luxury Listings
 
 ::: {.callout-caution collapse="true"}
 
@@ -533,7 +533,7 @@ f
 - What does `suptitle` do and how is it different from `title`? Could you use this as part of your plot-making process?
 - What does `tight_layout` do?
 
-## Budget Accommodation
+## Budget Listings
 
 ::: {.callout-tip collapse="true"}
 
@@ -735,7 +735,7 @@ Now we're going to step through the _parts_ of the process that we apply to clea
 
 There is plenty of good economic geography research being done using web pages. Try using Google Scholar to look for work using the British Library's copy of the *Internet Archive*.
 
-```python
+```{python}
 from urllib.request import urlopen, Request
 
 # We need this so that the Bartlett web site 'knows'
@@ -747,27 +747,55 @@ hdrs = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 }
 url = 'https://www.ucl.ac.uk/bartlett/casa/about-0'
+```
 
+:::: {.panel-tabset}
+
+#### Question 
+
+```python
 # Notice that here we have to assemble a request and
 # then 'open' it so that the request is properly issued
 # to the web server. Normally, we'd just use `urlopen`, 
 # but that doesn't give you the ability to set the headers.
 request  = Request(url, None, hdrs) #The assembled request
 response = urlopen(request)
-html     = response.???.decode('utf-8') # The data u need
+html     = response.???.decode('utf-8') # The data you need
 
 print(html[:1000])
 ```
+
+#### Answer
+
+```{python}
+# Notice that here we have to assemble a request and
+# then 'open' it so that the request is properly issued
+# to the web server. Normally, we'd just use `urlopen`, 
+# but that doesn't give you the ability to set the headers.
+request  = Request(url, None, hdrs) #The assembled request
+response = urlopen(request)
+html     = response.read().decode('utf-8') # The data you need
+
+print(html[:1000])
+```
+
+::::
 
 ## Removing HTML
 
 ::: {.callout-warning collapse="true"}
 
-**Difficulty Level**: Medium, because what we're doing will seem really strange and uses some previously unseen libraries that you'll have to google.
+#### Difficulty level: Moderate
+
+Because what we're doing will seem really strange and uses some previously unseen libraries that you'll have to google.
 
 :::
 
 *Hint*: you need to need to **get the text** out of the each returned `<p>` and `<div>` element! I'd suggest also commenting this up since there is a *lot* going on on some of these lines of code!
+
+:::: {.panel-tabset}
+
+#### Question
 
 ```python
 cleaned = []
@@ -784,24 +812,58 @@ for c in body.findChildren(recursive=False):
 cleaned
 ```
 
+#### Answer
+
+```{python}
+cleaned = []
+
+soup = BeautifulSoup(html)
+body = soup.find('body')
+
+for c in body.findChildren(recursive=False):
+    if c.name in ['div','p'] and c.get_text().strip() != '':
+        # \xa0 is a non-breaking space in Unicode (&nbsp; in HTML)
+        txt = [re.sub(r'(?:\u202f|\xa0|\u200b)',' ',x.strip()) for x in c.get_text(separator=" ").split('\n') if x.strip() != '']
+        cleaned += txt
+
+cleaned
+```
+
+::::
+
 ## Lower Case
 
 ::: {.callout-tip collapse="true"}
 
-**Difficulty Level**: Easy.
+#### Difficulty Level: Low.
 
 :::
+
+:::: {.panel-tabset}
+
+#### Question
 
 ```python
 lower = [c.???() for ??? in cleaned]
 lower
 ```
 
+#### Answer
+
+```{python}
+lower = [s.lower() for s in cleaned]
+lower
+```
+
+::::
+
 ## Stripping 'Punctuation'
 
 ::: {.callout-caution collapse="true"}
 
-**Difficulty Level**: Hard, because you need to understand: 1) why we're _compiling_ the regular expression and how to use character classes; and 2) how the NLTK tokenizer differs in approach to the regex.
+#### Difficulty level: Hard
+
+This is because you need to understand: 1) why we're _compiling_ the regular expression and how to use character classes; and 2) how the NLTK tokenizer differs in approach to the regex.
 
 :::
 
@@ -814,28 +876,45 @@ We want to clear out punctuation using a regex that takes advantage of the `[...
 1. You will want to match more than one piece of punctuation at a time, so I'd suggest add a `+` to your pattern.
 2. You will need to look into *metacharacters* for creating a kind of 'any of the characters *in this class*' bag of possible matches.
 
+:::: {.panel-tabset}
+
+#### Question
+
 ```python
 pattern = re.compile(r'[???]+')
 print(pattern)
 ```
 
+#### Answer
+
+```{python}
+pattern = re.compile(r'[,\.!\-><=\(\)\[\]\/&\'\"’;\+\–\—]+')
+print(pattern)
+```
+
+::::
+
 ### Tokenizer
 
 The other way to do this, which is probably *easier* but produces more complex output, is to draw on the tokenizers [already provided by NLTK](https://www.nltk.org/api/nltk.tokenize.html). For our purposes `word_tokenize` is probably fine, but depending on your needs there are other options and you can also write your own.
 
-```python
+```{python}
+nltk.download('punkt')
+nltk.download('wordnet')
 from nltk.tokenize import word_tokenize
 print(word_tokenize)
 ```
 
 ### Compare
 
-```python
+Look at how these outputs differ in subtle ways:
+
+```{python}
 subbed = []
 tokens = []
 for l in lower:
-    subbed.append(re.sub(???, ' ', l))
-    tokens.append(???(l))
+    subbed.append(re.sub(pattern, ' ', l))
+    tokens.append(word_tokenize(l))
 
 for s in subbed:
     as_markdown("Substituted", s)
@@ -848,14 +927,20 @@ for t in tokens:
 
 ::: {.callout-warning collapse="true"}
 
-    **Difficulty Level**: Medium, because you need to remember how list comprehensions work to use the `stopword_list`.
+#### Difficulty Level: Moderate 
+
+You need to remember how list comprehensions work to use the `stopword_list`.
 
 :::
 
-```python
+```{python}
 stopword_list = set(stopwords.words('english'))
 print(stopword_list)
 ```
+
+:::: {.panel-tabset}
+
+#### Question
 
 ```python
 stopped = []
@@ -866,21 +951,34 @@ for s in stopped:
     as_markdown("Line", s)
 ```
 
+#### Answer
+
+```{python}
+stopped = []
+for p in tokens[2:4]: # <-- why do I just take these items from the list?
+    stopped.append([x for x in p if x not in stopword_list and len(x) > 1])
+
+for s in stopped:
+    as_markdown("Line", s)
+```
+
+::::
+
 ## Lemmatisation vs Stemming
 
 ::: {.callout-tip collapse="true"}
 
-**Difficulty Level**: Easy.
+#### Difficulty level: Low.
 
 :::
 
-```python
+```{python}
 from nltk.stem.porter import PorterStemmer
 from nltk.stem.snowball import SnowballStemmer
 from nltk.stem.wordnet import WordNetLemmatizer 
 ```
 
-```python
+```{python}
 lemmatizer = WordNetLemmatizer()
 print(lemmatizer.lemmatize('monkeys'))
 print(lemmatizer.lemmatize('cities'))
@@ -888,7 +986,7 @@ print(lemmatizer.lemmatize('complexity'))
 print(lemmatizer.lemmatize('Reades'))
 ```
 
-```python
+```{python}
 stemmer = PorterStemmer()
 print(stemmer.stem('monkeys'))
 print(stemmer.stem('cities'))
@@ -896,7 +994,7 @@ print(stemmer.stem('complexity'))
 print(stemmer.stem('Reades'))
 ```
 
-```python
+```{python}
 stemmer = SnowballStemmer(language='english')
 print(stemmer.stem('monkeys'))
 print(stemmer.stem('cities'))
@@ -904,7 +1002,7 @@ print(stemmer.stem('complexity'))
 print(stemmer.stem('Reades'))
 ```
 
-```python
+```{python}
 lemmatizer = WordNetLemmatizer()
 lemmas  = []
 stemmed = []
@@ -925,7 +1023,7 @@ for s in stemmed:
     as_markdown('Stemmed',s)
 ```
 
-```python
+```{python}
 # What are we doing here?
 for ix, p in enumerate(stopped):
     stopped_set = set(stopped[ix])
@@ -941,13 +1039,13 @@ The above approach is fairly hard going since you need to loop through every lis
 
 ::: {.callout-tip collapse="true"}
 
-**Difficulty Level**: Easy.
+#### Difficulty level: Low.
 
 :::
 
 This custom module is not perfect, but it gets the job done... mostly and has some additional features that you could play around with for a final project (e.g. `detect_entities` and `detect_acronyms`).
 
-```python
+```{python}
 import urllib.request
 host  = 'https://orca.casa.ucl.ac.uk'
 turl  = f'{host}/~jreades/__textual__.py'
@@ -963,31 +1061,33 @@ if not os.path.exists(tpath):
 
 ::: {.callout-tip collapse="true"}
 
-**Difficulty Level**: Easy, since you didn't have to write the module! But the questions could be hard...
+#### Difficulty Level: Low. 
+
+But only because you didn't have to write the module! However, the questions could be hard...
 
 :::
 
 Now let's import it.
 
-```python
+```{ipython}
 # This allows us to edit and reload the library
 %load_ext autoreload
 %autoreload 2
 ```
 
-```python
+```{python}
 from textual import *
 ```
 
-```python
+```{python}
 as_markdown('Input', cleaned)
 ```
 
-```python
-as_markdown('Normalised', [normalise_document(x, remove_digits=True) for x in ???])
+```{python}
+as_markdown('Normalised', [normalise_document(x, remove_digits=True) for x in cleaned])
 ```
 
-```python
+```{python}
 help(normalise_document)
 ```
 
@@ -1001,7 +1101,10 @@ Let's assume that you want to analyse web page content...
 
 ::: {.callout-caution}
 
-    **&#9888; Stop!** Beyond this point, we are moving into Natural Language Processing. If you are already struggling with regular expressions, I would recommend _stopping here_. You can come back to revisit the NLP components and creation of word clouds later.
+#### Stop!
+
+Beyond this point, we are moving into Natural Language Processing. If you are already struggling with regular expressions, I would recommend _stopping here_. You can come back to revisit the NLP components and creation of word clouds later.
+
 :::
 
 # Revenons à Nos Moutons
@@ -1012,7 +1115,7 @@ Now that you've seen how the steps are applied to a 'random' HTML document, let'
 
 ::: {.callout-tip collapse="true"}
 
-**Difficulty Level**: Easy, but you'll need to be patient!
+#### Difficulty level: Low, but you'll need to be patient!
 
 :::
 
@@ -1020,8 +1123,13 @@ Notice the use of `%%time` here -- this will tell you how long each block of cod
 
 ::: {.callout-tip}
 
-    Notice how we can change the default parameters for `normalise_document` even when using `apply`, but that the syntax is different. So whereas we'd use `normalise_document(doc, remove_digits=True)` if calling the function directly, here it's `.apply(normalise_document, remove_digits=True)`!
+Notice how we can change the default parameters for `normalise_document` even when using `apply`, but that the syntax is different. So whereas we'd use `normalise_document(doc, remove_digits=True)` if calling the function directly, here it's `.apply(normalise_document, remove_digits=True)`!
+
 :::
+
+:::: {.panel-tabset}
+
+#### Question
 
 ```python
 %%time 
@@ -1041,11 +1149,33 @@ aff['description_norm'] = aff.???.apply(???, remove_digits=True)
 bluesp['description_norm'] = bluesp.???.apply(???, remove_digits=True)
 ```
 
+#### Answer
+
+```{python}
+%%time
+# I get about 1 minute on a M2 Mac
+lux['description_norm'] = lux.description.apply(normalise_document, remove_digits=True)
+```
+
+```{python}
+%%time
+# I get about 1 minute on a M2 Mac
+aff['description_norm'] = aff.description.apply(normalise_document, remove_digits=True)
+```
+
+```{python}
+%%time
+# I get about 1 seconds on a M2 Mac
+bluesp['description_norm'] = bluesp.description.apply(normalise_document, remove_digits=True)
+```
+
+::::
+
 ## Select and Tokenise
 
 ::: {.callout-tip collapse="true"}
 
-**Difficulty Level**: Easy, except the double list-comprehension.
+#### Difficulty level: Lowy, except for the double list-comprehension.
 
 :::
 
@@ -1085,7 +1215,7 @@ print(f"Words 0: {words[0]}")
 
 ::: {.callout-warning collapse="true"}
 
-**Difficulty Level**: Moderate.
+#### Difficulty level: Moderate.
 
 :::
 
@@ -1127,7 +1257,7 @@ for dfs in fcounts.???():
 
 ::: {.callout-tip collapse="true"}
 
-**Difficulty Level**: Easy, but the output needs some thought!
+#### Difficulty level: Low, but the output needs some thought!
 
 :::
 
@@ -1227,7 +1357,7 @@ We're going to pick this up again in Task 7.
 
 ::: {.callout-warning collapse="true"}
 
-**Difficulty Level**: Moderate, if you want to understand how `max_df` and `min_df` work!
+#### Difficulty level: Moderate, if you want to understand how `max_df` and `min_df` work!
 
 :::
 
@@ -1266,7 +1396,7 @@ tfidf.head()
 
 ::: {.callout-tip collapse="true"}
 
-**Difficulty Level**: Easy!
+#### Difficulty level: Easy!
 
 :::
 
@@ -1289,7 +1419,7 @@ plt.axis("off");
 
 ::: {.callout-tip collapse="true"}
 
-**Difficulty Level**: Easy, but you'll need to be patient!
+#### Difficulty level: Low, but you'll need to be patient!
 
 :::
 
