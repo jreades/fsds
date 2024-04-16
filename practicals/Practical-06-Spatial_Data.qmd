@@ -8,8 +8,14 @@ jupyter: python3
 | :------- | :------------------ | :----------- | :--------------- | --: |
 | 50% | &#9619;&#9619;&#9619;&#9619;&#9619;&#9619;&#9619;&#9619; | &#9619;&#9619;&#9619;&#9617;&#9617;&#9617; | &#9617;&#9617;&#9617;&#9617;&#9617;&#9617; | 6/10
 
-Last week we did some initial processing on the Inside Airbnb listings data, focussing on its *numeric* properties. This week we are going to focus on the *spatial* properties of the data set.
+<style type="text/css">
+.longform {
+    max-height: 300px;
+    overflow-y: scroll;
+}
+</style>
 
+Last week we did some initial processing on the Inside Airbnb listings data, focussing on its *numeric* properties. This week we are going to focus on the *spatial* properties of the data set.
 
 ::: {.callout-tip}
 
@@ -26,6 +32,19 @@ import pandas as pd
 import geopandas as gpd
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
+
+import matplotlib
+import matplotlib.font_manager
+# For debugging purposes (fonts can be hard)
+print(matplotlib.get_cachedir())
+
+# We change fonts the hard way in this notebook...
+# but you can also do this to change the default 
+# font everywhere in one go:
+# matplotlib.rcParams['font.family'] = "Liberation Sans Narrow"
+fontname = "Liberation Sans Narrow"
+
+matplotlib.font_manager.FontManager().findfont(fontname, fontext='ttf', rebuild_if_missing=True)
 ```
 
 # Reading Geo-Data
@@ -44,7 +63,9 @@ We're going to do something _similar_ to the `get_url` function in `dtools` in o
 
 You'll need to add the documentation yourself and I've left a few `??` to challenge you.
 
-## Caching Data Files
+## Caching Remote Data
+
+We don't want to continually download data over the Internet: 1) because it's not nice to whoever is hosting the data; and 2) because it requires you be online in order to run your code. So if we can 'cache' the data locally so that it's only downloaded once this makes life much, much easier.
 
 I've used the Numpy-style comments here, but the Google-style also look good in this context and all styles of answer are acceptable so long as they *work*. See overview of commenting styles [on DataCamp](https://www.datacamp.com/community/tutorials/docstrings-python).
 
@@ -56,7 +77,7 @@ Use this as an opportunity to improve your ability to read code and to learn thr
 
 ::: {.callout-warning collapse="true"}
 
-#### Difficulty: Moderate
+#### Difficulty level: Moderate
 
 :::
 
@@ -164,13 +185,15 @@ help(cache_data) # <- This should show the docstring you've written
 
 ::::
 
-## Read Remote Geo-Data
+## Downloading the Data
 
 ::: {.callout-tip collapse="true"}
 
-#### Difficult level: Low, if your function works!
+#### Difficulty level: Low, if your function works!
 
 :::
+
+### Geopackages
 
 Use the function above to download and cache the GeoPackage files found [on GitHub](https://github.com/jreades/fsds/tree/master/data/src) for Boroughs, Water, and Greenspace, then pass the output of these to GeoPandas. If you have been having trouble downloading files from GitHub, then use the understanding of the function developed above to download the file manually and place it where this function expects to find it!
 
@@ -204,11 +227,258 @@ print('Done.')
 
 ::::
 
-## Check the Projection
+### Parquet
+
+Let's re-use our `cache_data` function to download and save the full Inside Airbnb data set. Again, if you have trouble with downloading via code, use your understanding of the function to work out where to save your own copy of this file so that the function works as expected.
 
 ::: {.callout-tip collapse="true"}
 
-#### Difficulty level**: Low
+#### Difficulty level: Low
+
+:::
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+# Set download URL
+ymd  = '2023-09-06'
+host = 'https://orca.casa.ucl.ac.uk'
+url  = f'{host}/~jreades/data/{ymd}-listings.parquet'
+
+# your code here
+df = pd.read_parquet( ??(??, os.path.join('data','raw')) )
+print(f"Data frame is {df.shape[0]:,} x {df.shape[1]}")
+```
+
+#### Answer
+
+```{python}
+# Set download URL
+ymd  = '2023-09-06'
+host = 'https://orca.casa.ucl.ac.uk'
+url  = f'{host}/~jreades/data/{ymd}-listings.parquet'
+
+# your code here
+df = pd.read_parquet( cache_data(url, os.path.join('data','raw')) )
+print(f"Data frame is {df.shape[0]:,} x {df.shape[1]}")
+```
+
+::::
+
+You should see that the file was 'not found' so 'downloading' happened and then the size of the data frame was printed out.
+
+# 'Writing' Geo-Data
+
+Of course, you will also often encounter geo-data that is not yet 'geographically enabled'; the two most frequent contexts for this are:
+
+1. The data represents points and is provided with latitude and longitude (or similar) as separate columns in a non-geographic data set.
+2. The data represents polygons but is provided _separately_ from the polygons themselves and so cannot be shown on a map without being 'joined' to the geography first.
+
+We'll tackle each of these eventually, but for now we're going to focus on the first option.
+
+## Creatting a GeoDataFrame
+
+::: {.callout-tip collapse="true"}
+
+#### Difficulty Level: Low
+
+:::
+
+Right, we're finally there! We need to convert our coordinates into some kind of geo-data. GeoPandas offers two ways to do this: the original way using `zip` and a new utility method called `points_from_xy`. Here's the old way:
+
+```python
+from shapely.geometry import Point
+gdf = gpd.GeoDataFrame(df, 
+                geometry=[Point(x,y) for x, y in zip(df.Longitude,df.Latitude)])
+```
+
+Note, however, that this did not automatically set a projection, unlike the new approach with the 'helper function':
+
+```{python}
+gdf = gpd.GeoDataFrame(df,
+      geometry=gpd.points_from_xy(df.longitude, df.latitude, crs='epsg:4326'))
+```
+
+```{python}
+#| echo: true
+print(type(gdf))
+print(type(gdf.geometry))
+```
+
+## Saving Geo-Data Locally
+
+### Think Storage Formats
+
+We want to save the InsideAirbnb GeoDataFrame to the 'geo' directory, but first let's see [what file formats are supported](https://geopandas.org/en/stable/docs/user_guide/io.html).
+
+| Format    | Advantages      | Disadvantages   |
+| :-------- | :-------------- | :-------------- |
+| Shapefile | Wide support    | Easy to break via loss of individual file element and not very efficient format |
+| GeoJSON   | Human-readable  | Highly inefficient storage format | 
+| GeoPackage | Lightweight spatial database with benefits of indexing | Lightweight spatial database with limits on data types supported | 
+| Parquet   | Highly compressed columnar database | Limited GIS support (except QGIS) |
+
+**GeoPackages** are really well-supported by QGIS: you can even embed multiple layers with different style information so that your final analysis is easy to distribute; however, they also carry quite a bit of overhead that makes them inefficient for distributing smaller data sets, while *also* not supporting the full spectrum of Pythonic data structures such as categorical data or lists.
+
+**GeoParquet** is an extension of the Parquet format. For working with large data sets this has revolutionised my workflow: getting excited about a columnar database might seem a bit... nerdy... but it's been transformative for many data scientists. First, because the data set is columnar you only read in the data that you need, so reading Parquet file is blindingly fast. Second, you can stream data from a Parquet file over the Internet, so that means you even gain these advantages reading remote files. Third, you have full support for Python data types, including (up to a point) objects. And, fourth, you can treat multiple Parquet files with the same layout as a single data set or mutiple Parquet files with different layouts as tables in a single database!
+
+
+### Specifying a Driver
+
+Since there are _many_ formats in which to save geo-data, rather than have multiple `to_format_x` methods, GeoPandas has _one_ for local files (`to_file`). If you are reading/writing a filename than ends in a valid extension (e.g. `.shp`, `.gpkg`, or `.geojson`) then GeoPandas will 'do the right thing'. Where you *may* run into trouble is if you are reading/writing a **URL** (e.g. [https://github.com/jreades/fsds/blob/master/data/src/Boroughs.gpkg?raw=true](https://github.com/jreades/fsds/blob/master/data/src/Boroughs.gpkg?raw=true)). With a URL ending in `?raw=true` there's no extension that GeoPandas can see so you *will* need to specify a driver. If in doubt, specify the driver.
+
+::: {.callout-note}
+
+#### Clarification
+
+In this practical we are reading geodata from GitHub and I'm saying that we need to specify the driver. So why didn't we need to do with the `cache_data` function earlier as well? Well, this was a side-benefit of using the standard URL library: it *automatically* stripped off the query string (`?raw=true`) when I asked it for the file name, so we saved the file locally as a GeoPackage with `.gpkg` extension, which means that GeoPandas could read it without any problems.
+
+:::
+
+So the following two bits of code are equivalent:
+
+```python
+# This *may* not always do what we want, but should be fine for local files
+boros.to_file('test.gpkg') 
+```
+
+```python
+# This is safer if working across computers/the Internet
+boros.to_file('test.gpkg', driver='GPKG')
+```
+
+```{python}
+#| echo: false
+fn = f"{ymd}-listings.gpkg"
+```
+
+So, starting with `fn=`{python} f"'{fn}'"``...
+
+Notice the difference:
+
+::: {.longform}
+
+```{python}
+print(f"Using '{fn}' as basis for saving data...")
+try:
+   gdf.to_file(os.path.join('data','geo',fn), driver='GPKG')
+except TypeError as e:
+    print("Caught type error...")
+    print(e)
+```
+
+:::
+
+If you try to save as a GeoPackage file then the code above typically throws a `TypeError` because of the presence of Categorical data.
+
+But the below, in which we specify as a 'geoparquet' because of the coordinate data, does not:
+
+```{python}
+fn = fn.replace('.gpkg','.geoparquet')
+gdf.to_parquet(os.path.join('data','geo',fn))
+```
+
+## Spatial Indexing
+
+It's also worth comparing the output of a point with the output of a polygon or multi-polygon because you may well come across data in formats (e.g. WKT) resembling both of these in real data sets and they *can* be read as well. Notice too that we can use `loc` and `iloc` accessor methods to pull individual points and polygons out of a GeoDataFrame!
+
+```{python}
+print(gdf.geometry.iloc[1]) # Print out the object's contents
+gdf.geometry.iloc[1] # The object knows how to print itself as a point
+```
+
+```{python}
+print(str(boros.geometry.iloc[1])[:399] + "...") # Object to string then print out first 399 characters
+boros.geometry.iloc[1] # So this is a multi-polygon boundary
+```
+
+So each element of this Series has text indicating the type of shape the geometry applies to (e.g. _POLYGON_) followed by a bunch of numbers. These numbers are truncated here just to make things a little more legible.
+
+# Checking the Data
+
+### Checking Numeric Data
+
+Before we mindlessly convert the parquet data to mappable geo-data it might make sense to sanity-check it. GeoPandas has a `total_bounds` method that gives us the bounding box for a GeoSeries, but how would we do that in Pandas?
+
+::: {.callout-tip}
+
+Think about what the 'total bounds' (or 'envelope') of a point data set is. You have already seen the pandas functions you'll need to _find_ these...
+
+:::
+
+::: {.callout-warning collapse="true"}
+
+#### Difficulty level: Moderate
+
+:::
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+print(f"The bottom-left corner is {??}, {??}")
+print(f"The top-right corner is {??}, {??}")
+```
+
+Your answer should produce the following:
+
+```{python}
+#| echo: false
+
+lonmin = f"{df.longitude.min():0.1f}"
+latmin = f"{df.latitude.min():0.1f}"
+lonmax = f"{df.longitude.max():0.1f}"
+latmax = f"{df.latitude.max():0.1f}"
+```
+
+The bottom-left corner is `{python} f"{lonmin}"`, `{python} latmin`
+
+The top-right corner is `{python} lonmax`, `{python} latmax`
+
+#### Answer
+
+```{python}
+print(f"The bottom-left corner is {df.longitude.min():0.1f}, {df.latitude.min():0.1f}")
+print(f"The top-right corner is {df.longitude.max():0.1f}, {df.latitude.max():0.1f}")
+```
+
+::::
+
+### Checking via a Plot
+
+::: {.callout-tip collapse="true"}
+
+#### Difficulty level: Low
+
+:::
+
+We'll see how you control figure-making more effectively later, but for now let's just see what they look like using GeoPanda's plotting functionality. If you don't see what you expected then the problem could be quite basic/fundamental.
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+for ??:
+    ??.plot()
+```
+#### Answer
+
+```{python}
+for g in [boros,water,green]:
+    g.plot()
+```
+
+::::
+
+### Checking the Projection
+
+::: {.callout-tip collapse="true"}
+
+#### Difficulty level: Low
 
 :::
 
@@ -234,36 +504,48 @@ for g in [boros,water,green]:
 
 You should see that all three are in the [EPSG:27700 CRS](https://epsg.io/27700) which is a common one for analysis using GB data.
 
-## Check the Data
+### Reprojecting the Data
 
 ::: {.callout-tip collapse="true"}
 
-#### Difficulty level: Low
+#### Difficulty Level: Low
 
 :::
 
-We'll see how you control figure-making more effectively later, but for now let's just see what they look like using plot:
+Let's start by taking our InsideAirbnb data in its original projection...
+
+```{python}
+print(gdf.geometry.crs)
+print(gdf.total_bounds)
+```
+
+... and reprojecting this into the OSGB1936/BNG CRS:
 
 :::: {.panel-tabset}
 
 #### Question
 
 ```python
-for ??:
-    ??.plot()
+gdf = gdf.??(??) # There is no 'in_place=True' option here.
+print(gdf.geometry.crs)
+print(gdf.total_bounds)
 ```
+
 #### Answer
 
 ```{python}
-for g in [boros,water,green]:
-    g.plot()
+gdf = gdf.to_crs('epsg:27700') # There is no 'in_place=True' option here.
+print(gdf.geometry.crs)
+print(gdf.total_bounds)
 ```
 
 ::::
 
-# An Introduction to Mapping
+Notice the change in total bounds from lat/long to Northing/Easting.
 
-These files all contain polygons, and the adjustments for points are different, but it's worth seeing how you can tweak these before we start combining them. Behind the scenes, GeoPandas is using `matplotlib` to render the map, so let's play with the colours to get the _start_ of something map-like. 
+# Simple Mapping
+
+The files we've just downloaded all contain polygons, and the adjustments for points are different, but it's worth seeing how you can tweak these before we start combining them. Behind the scenes, GeoPandas is using `matplotlib` to render the map, so let's play with the colours to get the _start_ of something map-like. 
 
 You will want to look both at [how to make maps in GeoPandas](https://geopandas.org/mapping.html) and  at the different ways to [specify colours in Matplotlib](https://matplotlib.org/3.1.1/tutorials/colors/colors.html#specifying-colors). For the greenspace map you are looking for information about tuples... which can have three or four elements.
 
@@ -312,6 +594,13 @@ boros.plot(edgecolor='red', facecolor='white', linewidth=1.5, figsize=(8,6))
 
 ::::
 
+Your plot should look similar to this:
+
+```{python}
+#| echo: false
+boros.plot(edgecolor='red', facecolor='white', linewidth=1.5, figsize=(8,6))
+```
+
 ### Water
 
 The process is the same as above, but I'd like you to work out how to specify:
@@ -332,6 +621,13 @@ water.plot(edgecolor="none", facecolor='xkcd:lightblue', figsize=(8,6))
 ```
 
 ::::
+
+Your plot should look similar to this:
+
+```{python}
+#| echo: false
+water.plot(edgecolor="none", facecolor='xkcd:lightblue', figsize=(8,6))
+```
 
 ### Greenspace
 
@@ -354,6 +650,13 @@ green.plot(edgecolor='none', facecolor=(0.7, 0.7, 0.14, 0.25), figsize=(8,6))
 ```
 
 ::::
+
+Your plot should look similar to this:
+
+```{python}
+#| echo: false
+green.plot(edgecolor='none', facecolor=(0.7, 0.7, 0.14, 0.25), figsize=(8,6))
+```
 
 ## Combining Layers
 
@@ -383,7 +686,7 @@ This is a first pass at a map, over the next few weeks we'll see how to add thin
 
 ::: {.callout-caution collapse="true"}
 
-#### Difficulty: Hard
+#### Difficulty level: Hard
 
 :::
 
@@ -395,7 +698,7 @@ This is a first pass at a map, over the next few weeks we'll see how to add thin
 # Creates a new figure with specified number of
 # subplots (we'll see more of this later) and 
 # and the specified size (in inches by default).
-fig, ax = plt.subplots(1,1, figsize=(12,9))
+fig, ax = plt.subplots(1,1, figsize=(9,6))
 
 # Plot all three GeoPackages to the same axes
 water.plot(??, ax=ax)
@@ -416,7 +719,7 @@ plt.savefig(os.path.join('img','My_First_Map.png'), dpi=150)
 # Creates a new figure with specified number of
 # subplots (we'll see more of this later) and
 # and the specified size (in inches by default).
-fig, ax = plt.subplots(1,1, figsize=(12,9))
+f,ax = plt.subplots(1,1, figsize=(9,6))
 
 # Plot all three GeoPackages to the same axes
 water.plot(edgecolor="none", facecolor='xkcd:lightblue', ax=ax)
@@ -429,116 +732,434 @@ ax.set_ylim(155000,202000)
 
 # Save the image (dpi is 'dots per inch')
 os.makedirs('img', exist_ok=True)
-plt.savefig(os.path.join('img','My_First_Map.png'), dpi=150)
+
+# This is how you'd save an image output
+#plt.savefig(os.path.join('img','My_First_Map.png'), dpi=150)
 ```
 
 ::::
 
 You may wish for a different look, but here's one version of the output:
 
-![](https://github.com/jreades/i2p/raw/master/practicals/img/Map-First_Pass.png)
+```{python}
+#| echo: false
+f
+```
 
-# 'Creating' Geo-Data
-
-Of course, you will also often encounter geo-data that is not yet 'geographically enabled'; the two most frequent contexts for this are:
-
-1. The data represents points and is provided with latitude and longitude (or similar) as separate columns in a non-geographic data set.
-2. The data represents polygons but is provided _separately_ from the polygons themselves and so cannot be shown on a map without being 'joined' to the geography first.
-
-We'll tackle each of these eventually, but for now we're going to focus on the first option.
-
-## Parquet Pandas
-
-Let's re-use our `cache_data` function to download and save the full Inside Airbnb data set. Again, if you have trouble with downloading via code, use your understanding of the function to work out where to save your own copy of this file so that the function works as expected.
+## Choropleth Plots
 
 ::: {.callout-tip collapse="true"}
 
-#### Difficulty: Low
+#### Difficulty Level: Low
 
 :::
+
+Now that we've converted the InsideAirbnb data to a GeoDataFrame, we can plot it, reproject it, etc.
+
+See if you can work out how to plot the points coloured by their price using the appropriate BNG projection.
 
 :::: {.panel-tabset}
 
 #### Question
 
 ```python
-# Set download URL
-ymd  = '2023-09-06'
-host = 'https://orca.casa.ucl.ac.uk'
-url  = f'{host}/~jreades/data/{ymd}-listings.parquet'
-
-# your code here
-df = pd.read_parquet( ??(??, os.path.join('data','raw')) )
-print(f"Data frame is {df.shape[0]:,} x {df.shape[1]}")
+gdf.to_crs(??).plot(column=??, cmap=??, alpha=0.25, markersize=1, figsize=(12,8));
 ```
 
 #### Answer
 
 ```{python}
-# Set download URL
-ymd  = '2023-09-06'
-host = 'https://orca.casa.ucl.ac.uk'
-url  = f'{host}/~jreades/data/{ymd}-listings.parquet'
-
-# your code here
-df = pd.read_parquet( cache_data(url, os.path.join('data','raw')) )
-print(f"Data frame is {df.shape[0]:,} x {df.shape[1]}")
+gdf.to_crs('epsg:27700').plot(column='price', cmap='viridis', alpha=0.25, markersize=1, figsize=(12,8));
 ```
 
 ::::
 
-You should see that the file was 'not found' so 'downloading' happened and then the size of the data frame was printed out.
-
-## Checking Lat/Long
-
-Before we mindlessly convert the data it might make sense to sanity-check the data. In GeoPandas we have a `total_bounds` method that gives us the bounding box for a GeoSeries, but how would we do that in Pandas?
-
-::: {.callout-tip}
-
-Think about what the 'total bounds' (or 'envelope') of a point data set is. You have already seen the pandas functions you'll need to _find_ these...
-
-:::
-
-::: {.callout-warning collapse="true"}
-
-#### Difficulty level: Moderate
-
-:::
-
-:::: {.panel-tabset}
-
-#### Question
-
-```python
-print(f"The bottom-left corner is {??}, {??}")
-print(f"The top-right corner is {??}, {??}")
-```
-
-Your answer should produce the following:
+Using the Viridis colourmap I get the following:
 
 ```{python}
 #| echo: false
-
-lonmin = f"{df.longitude.min():0.1f}"
-latmin = f"{df.latitude.min():0.1f}"
-lonmax = f"{df.longitude.max():0.1f}"
-latmax = f"{df.latitude.max():0.1f}"
+gdf.to_crs('epsg:27700').plot(column='price', cmap='viridis', alpha=0.25, markersize=1, figsize=(8,5));
 ```
 
-The bottom-left corner is `{python} f"{lonmin}"`, `{python} latmin`
+### Work out the Data Range
 
-The top-right corner is `{python} lonmax`, `{python} latmax`
+::: {.callout-tip collapse="true"}
+
+#### Difficulty level: Low
+
+:::
+
+As we saw above with the point-plot, in its original form the pricing data will not reveal much of interest because of the range of the data. However, as you will have seen in QM already (and as we explore in greater detail in Weeks 7/8), using *transformations* we can manipulate the data to increase its tractability for analysis.
+
+Let's start by getting a feel for the full data set in terms of the range of prices that it contains:
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+print(f"The range of price is ${??:,.2f} to ${??:,.2f}")
+print(f"The mean and median of the price are ${??:,.2f} and ${??:,.2f}")
+```
 
 #### Answer
 
 ```{python}
-print(f"The bottom-left corner is {df.longitude.min():0.1f}, {df.latitude.min():0.1f}")
-print(f"The top-right corner is {df.longitude.max():0.1f}, {df.latitude.max():0.1f}")
+print(f"The range of price is ${gdf.price.min():,.2f} to ${gdf.price.max():,.2f}")
+print(f"The mean and median of the price are ${gdf.price.mean():,.2f} and ${gdf.price.median():,.2f}")
 ```
 
 ::::
 
-## Embedding Web Maps
+Notice the neat little comma-separated thousands in there? That's fairly easy to do in English, but to use a thousands separator common to another language you would need to do something [a little more tricky](https://stackoverflow.com/questions/13082620/how-can-i-print-a-float-with-thousands-separators). 
+
+### Inheritance!
+
+We already know that GeoPandas _inherits_ functionality from Pandas, but let's formalise this... 
+
+First, let's check what class of object `gdf` is using the [`isinstance`](https://www.w3schools.com/python/ref_func_isinstance.asp) function:
+
+```{python}
+# Is gdf a GeoDataFrame object?
+if isinstance(gdf, gpd.GeoDataFrame): 
+    print("\tI'm a geopandas data frame!")
+
+# Is gdf *also* a DataFrame object?
+if isinstance(gdf, pd.DataFrame): 
+    print("\tI'm a pandas data frame!")
+```
+
+### Benefiting from Inheritance
+
+*That* result means that we can also investigate the data using, for instance, a pandas histogram:
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+# Oooooh, let's use a *pandas* method here
+gdf.price.plot.??(bins=??, figsize=(10,3)); 
+```
+
+#### Answer
+
+```{python}
+# Oooooh, let's use a *pandas* method here
+gdf.price.plot.hist(bins=200, figsize=(10,3)); 
+```
+
+::::
+
+Notice how we've used our GeoDataFrame *as if* it's a plain old DataFrame here? That's the miracle of Object-Oriented Design: we can do *anything* we would with a regular Pandas `df` as we do with a GeoPandas `gdf` because GeoPandas *inherits* all the methods of its parent super-class.
+
+We can see that there's very little data above (at a guess) about $2,000, but at this scale it's hard to tell. We've already seen that you can use axes limits to adjust the display of a map, but the same technique applies to plain old plots because they're fundamentally the *same thing*.
+
+Try adjusting the axis so that the x-range is 0..2500:
+
+```python
+ax = gdf.price.plot.??(bins=??, figsize=(10,3));
+ax.??
+```
+
+You can do the same thing with a boxplot:
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+ax = gdf.price.plot.??(vert=False, figsize=(10,3))
+ax.??
+```
+#### Answer
+
+```{python}
+ax = gdf.price.plot.box(vert=False, figsize=(10,3))
+ax.set_xlim(0,2500)
+```
+
+::::
+
+[More complex](https://stackoverflow.com/a/54023612/4041902) formatting is also possible if you really know your pandas and your matplotlib:
+
+```{python}
+gdf.price.plot(kind='box', vert=False, 
+             color=dict(boxes='r', whiskers='r', medians='r', caps='r'),
+             boxprops=dict(linestyle='-', linewidth=1.5),
+             flierprops=dict(linestyle='-', linewidth=1.5),
+             medianprops=dict(linestyle='-', linewidth=1.5),
+             whiskerprops=dict(linestyle='-', linewidth=1.5),
+             capprops=dict(linestyle='-', linewidth=1.5),
+             showfliers=False, grid=False, rot=0);
+```
+
+## Truncate and Transform
+
+::: {.callout-caution collapse="true"}
+
+#### Difficulty level: Hard
+
+:::
+
+### Working it Out
+
+Anyway, drawing on everything we've seen over the past couple of weeks (and in *this* practical) I'd like you to:
+
+1. Try to take the natural-log of the price (*hint*: use `numpy`) and assign to a new Series called `lnprice`.
+2. Work out what the error means.
+3. Work out how to fix the error and *then* repeate step 1.
+4. Work out how many rows were affected.
+5. Report on the new min/max values.
+6. Work out if other outliers need to be removed (use code from above).
+7. Remove outliers and then continue with your work...
+
+```python
+# Use this as a 'scratch space' to work out what's needed below...
+```
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+print(f"gdf has {gdf.shape[0]:,.0f} rows.")
+
+# ---------- Do the processing -------------
+# You may need more than one of these 'drops'
+# to get the data the way you want...
+gdf.drop(gdf[??].index, axis=0, inplace=True)
+gdf['lnprice'] = np.log(gdf.price)
+
+# ---------- Check effects -----------
+print(f"gdf now has {gdf.shape[0]:,.0f} rows.")
+print(f"The range of price is {gdf.price.min():,.2f} to {gdf.price.max():,.2f}")
+print(f"The range of ln(price) is {gdf.lnprice.min():,.4f} to {gdf.lnprice.max():,.4f}")
+
+gdf.price.plot(kind='box', vert=False, 
+             color=dict(boxes='r', whiskers='r', medians='r', caps='r'),
+             boxprops=dict(linestyle='-', linewidth=1.5),
+             flierprops=dict(linestyle='-', linewidth=1.5),
+             medianprops=dict(linestyle='-', linewidth=1.5),
+             whiskerprops=dict(linestyle='-', linewidth=1.5),
+             capprops=dict(linestyle='-', linewidth=1.5),
+             showfliers=False, grid=False, rot=0);
+plt.title("Price (Outliers not shown)")
+plt.show()
+
+gdf.lnprice.plot(kind='box', vert=False, 
+             color=dict(boxes='r', whiskers='r', medians='r', caps='r'),
+             boxprops=dict(linestyle='-', linewidth=1.5),
+             flierprops=dict(linestyle='-', linewidth=1.5),
+             medianprops=dict(linestyle='-', linewidth=1.5),
+             whiskerprops=dict(linestyle='-', linewidth=1.5),
+             capprops=dict(linestyle='-', linewidth=1.5),
+             showfliers=False, grid=False, rot=0);
+plt.title("Ln(Price) (Outliers not shown)")
+plt.show()
+```
+
+#### Answer
+
+```{python}
+print(f"gdf has {gdf.shape[0]:,.0f} rows.")
+
+# Notice that we use multiple drop statements --
+# in my opinion this isn't ideal nor is the logic
+# data-driven (beyond the fact that zeroes are a 
+# major issue when working with logs).
+gdf.drop(gdf[gdf.price==0].index, axis=0, inplace=True)
+gdf.drop(gdf[gdf.price < 5].index, axis=0, inplace=True)
+gdf.drop(gdf[gdf.price > 1000].index, axis=0, inplace=True)
+
+# Notice use of a numpy function since this is what
+# underpins many elements of pandas
+gdf['lnprice'] = np.log(gdf.price)
+
+print(f"gdf now has {gdf.shape[0]:,.0f} rows.")
+print(f"The range of price is {gdf.price.min():,.2f} to {gdf.price.max():,.2f}")
+print(f"The range of ln(price) is {gdf.lnprice.min():,.4f} to {gdf.lnprice.max():,.4f}")
+
+# And plot
+gdf.price.plot(kind='box', vert=False,
+             color=dict(boxes='r', whiskers='r', medians='r', caps='r'),
+             boxprops=dict(linestyle='-', linewidth=1.5),
+             flierprops=dict(linestyle='-', linewidth=1.5),
+             medianprops=dict(linestyle='-', linewidth=1.5),
+             whiskerprops=dict(linestyle='-', linewidth=1.5),
+             capprops=dict(linestyle='-', linewidth=1.5),
+             showfliers=False, grid=False, rot=0);
+plt.title("Price (Outliers not shown)")
+plt.show()
+gdf.lnprice.plot(kind='box', vert=False,
+             color=dict(boxes='r', whiskers='r', medians='r', caps='r'),
+             boxprops=dict(linestyle='-', linewidth=1.5),
+             flierprops=dict(linestyle='-', linewidth=1.5),
+             medianprops=dict(linestyle='-', linewidth=1.5),
+             whiskerprops=dict(linestyle='-', linewidth=1.5),
+             capprops=dict(linestyle='-', linewidth=1.5),
+             showfliers=False, grid=False, rot=0);
+plt.title("Ln(Price) (Outliers not shown)")
+plt.show()
+```
+
+::::
+
+## Plot Options
+
+Now plot the ln(price) as a chloropleth using:
+
+1. A figure size of 9 x 6
+2. A marker size of 0.25
+3. The Viridis colourmap
+4. A legend
+5. A legend label of 'Natural Log of Price per Night ($)'
+
+I'd suggest [referring to the documentation](https://geopandas.org/mapping.html).
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+ax = gdf.plot(figsize=??, marker='*', markersize=0.25, 
+         column=??, cmap=??, 
+         legend=??, legend_kwds=??);
+ax.set_title("Plot of Natural Log of Nightly Price for Airbnb Listings (Outliers Removed)");
+```
+
+#### Answer
+
+```{python}
+ax = gdf.plot(figsize=(9,6), marker='*', markersize=0.25,
+         column='lnprice', cmap='viridis',
+         legend=True, legend_kwds={'label':'Natural Log of Price per Night ($)'});
+ax.set_title("Plot of Natural Log of Nightly Price for Airbnb Listings (Outliers Removed)");
+f = ax.get_figure()
+```
+
+::::
+
+You should get something like:
+
+```{python}
+#| echo: false
+f
+```
+
+## Zooming In/Out
+
+::: {.callout-tip collapse="true"}
+
+#### Difficulty Level: Low
+
+:::
+
+That's a little hard to see, let's try zooming in on Central London! Very roughly, let's call that an Easting range of 525,000 to 535,000 and a Northing range of 178,000 to 185,000.
+
+::: {.callout-tip}
+
+#### Plotting
+
+We show one way to do this below (`f,ax = plt.subplots(...)`) because it gives you greater control, but `gdf.plot()` *can* return an axis object (`ax = gdf.plot(...)`) that gives you the same kind of access... but with a bit more 'faff'.
+
+:::
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+# Note this new f,ax syntax and that we then
+# pass ax=ax to gdf.plot -- this has to do with
+# where and how things are plotted.
+f,ax = plt.subplots(1,1,figsize=(9,6))
+gdf.plot(ax=ax, marker='*', markersize=0.25, 
+         column='lnprice', cmap='viridis', 
+         legend=True, legend_kwds={'label':'Natural Log of Price per Night ($)'});
+ax.set_title("Ln(Price/Night) for Airbnb Listings (Central London Detail)")
+ax.??
+ax.??
+f
+```
+
+#### Answer
+
+```{python}
+# Note this new f,ax syntax and that we then
+# pass ax=ax to gdf.plot -- this has to do with
+# where and how things are plotted.
+f,ax = plt.subplots(1,1,figsize=(9,6))
+gdf.plot(ax=ax, marker='*', markersize=0.25,
+         column='lnprice', cmap='viridis',
+         legend=True, legend_kwds={'label':'Natural Log of Price per Night ($)'});
+ax.set_title("Ln(Price/Night) for Airbnb Listings (Central London Detail)")
+ax.set_xlim([525000,535000])
+ax.set_ylim([178000,185000])
+f
+```
+
+::::
+
+Your result should look something like this:
+
+```{python}
+#| echo: false
+f
+```
+
+That's a little better, but ideally we'd do more thinking about outliers... 
+
+## Changing the Classification Scheme
+
+::: {.callout-warning collapse="true"}
+
+#### Difficulty Level: Moderate (mainly computation time)
+
+:::
+
+Let's give this one last try using the quantiles classification scheme for Central London!
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+f,ax = plt.subplots(1,1,figsize=(9,7))
+ax = gdf.plot(marker='*', markersize=0.25, 
+         column='lnprice', cmap='viridis', ??, k=5, 
+         legend=True, ax=ax); 
+         # Note that the legend *label* had to go -- 
+         # there are other ways to add it.
+
+ax.set_xlim([525000,535000])
+ax.set_ylim([178000,185000])
+```
+
+#### Answer
+
+```{python}
+f,ax = plt.subplots(1,1,figsize=(9,7))
+gdf.plot(marker='*', markersize=0.25,
+         column='lnprice', cmap='viridis', scheme='quantiles', k=5,
+         legend=True, ax=ax); 
+         # Note that the legend *label* had to go -- 
+         # there are other ways to add it
+
+ax.set_xlim([525000,535000])
+ax.set_ylim([178000,185000])
+```
+
+::::
+
+Your answer should look like:
+
+```{python}
+#| echo: false
+f
+```
+
+# Simple Web Maps
 
 ::: {.callout-caution collapse="true"}
 
@@ -658,395 +1279,25 @@ m.add_layer(rectangle)
 m
 ```
 
-## Lat/Long to GeoSeries
+# Bringing it All Together
 
-::: {.callout-tip collapse="true"}
+::: {.callout-caution collapse="true"}
 
-#### Difficulty Level: Low
-
-:::
-
-Right, we're finally there! We need to convert our coordinates into some kind of geo-data. GeoPandas offers two ways to do this: the original way using `zip` and a new utility method called `points_from_xy`. Here's the old way:
-
-```python
-from shapely.geometry import Point
-gdf = gpd.GeoDataFrame(df, 
-                geometry=[Point(x,y) for x, y in zip(df.Longitude,df.Latitude)])
-```
-
-Note, however, that this did not automatically set a projection, unlike the new approach with the 'helper function':
-
-```{python}
-gdf = gpd.GeoDataFrame(df,
-      geometry=gpd.points_from_xy(df.longitude, df.latitude, crs='epsg:4326'))
-```
-
-```{python}
-#| echo: true
-print(type(gdf))
-print(type(gdf.geometry))
-```
-
-## Plotting
-
-::: {.callout-tip collapse="true"}
-
-#### Difficulty Level: Low
+#### Difficulty Level: &#129327;
 
 :::
 
-Now that we've converted the InsideAirbnb data to a GeoDataFrame, we can plot it, reproject it, etc.
-
-See if you can work out how to plot the points coloured by their price using the appropriate BNG projection.
+To give a bit of a show of how we can put it all together try to get this working
 
 :::: {.panel-tabset}
 
 #### Question
 
 ```python
-gdf.to_crs(??).plot(column=??, cmap=??, alpha=0.25, markersize=1, figsize=(12,8));
-```
-
-#### Answer
-
-```{python}
-gdf.to_crs('epsg:27700').plot(column='price', cmap='viridis', alpha=0.25, markersize=1, figsize=(12,8));
-```
-
-::::
-
-Using the Viridis colourmap I get the following:
-
-```{python}
-#| echo: false
-gdf.to_crs('epsg:27700').plot(column='price', cmap='viridis', alpha=0.25, markersize=1, figsize=(8,5));
-```
-
-## Saving Geo-Data Locally
-
-::: {.callout-tip collapse="true"}
-
-#### Difficulty Level: Low
-
-:::
-
-Since there are _many_ formats in which to save geo-data, rather than have multiple `to_format_x` methods, GeoPandas has _one_ for local files (`to_file`). If you are reading/writing a filename than ends in a valid extension (e.g. `.shp`, `.gpkg`, or `.geojson`) then GeoPandas will 'do the right thing'. Where you *may* run into trouble is if you are reading/writing a **URL** (e.g. [https://github.com/jreades/fsds/blob/master/data/src/Boroughs.gpkg?raw=true](https://github.com/jreades/fsds/blob/master/data/src/Boroughs.gpkg?raw=true)). With this URL ending in `?raw=true` there's no extension that GeoPandas can read so you *will* need to specify a driver. If in doubt, specify the driver as below:
-
-::: {.callout-note}
-
-#### Clarification
-
-In this example we are reading from GitHub and I'm saying that we need to specify the driver. So why didn't we need to do with the `cache_data` function earlier as well? Well, this was a side-benefit of using the standard URL library: it *automatically* stripped off the query string (`?raw=true`) when I asked it for the file name, so we saved the file locally as a GeoPackage with `.gpkg` extension, which means that GeoPandas could read it without any problems.
-
-:::
-
-So the following two bits of code are equivalent:
-
-```python
-boros.to_file('test.gpkg') # This *may* not always do what we want, but should be fine for local files
-```
-
-```python
-boros.to_file('test.gpkg', driver='GPKG') # This is safer if working across computers/the Internet
-```
-
-Now save the InsideAirbnb GeoDataFrame to the 'geo' directory, but first let's see [what file formats are supported](https://geopandas.org/en/stable/docs/user_guide/io.html).
-
-So we have two options:
-
-- File formats with wider compatibility (the ones supported by Fiona) may not be fully-compatible with the Pandas/GeoPandas data formats. For example, **Categorical Data** is not supported by any standard format except parquet, and Shapefiles don't reliably support column labels (`df.columns`) longer than 10 characters!
-- File formats with Python compatibility and performance benefits are much less likely to be compatible with a GIS. So for these we have to write them `to_feather` and `read_feather`, and `to_parquet` and `read_parquet`.
-
-Notice the difference:
-
-```python
-print(f"Using '{fn}' as basis for saving data...")
-gdf.to_file(os.path.join('data','geo',fn.replace('.parquet','.gpkg')), driver='GPKG')
-```
-
-If you try to save as a GeoPackage file then the code above typically throws a `TypeError` because of the presence of Categorical data.
-
-But the below, in which we specify as a 'geoparquet' because of the coordinate data, does not:
-
-```python
-print(f"Using '{fn}' as basis for saving data...")
-gdf.to_parquet(os.path.join('data','geo',fn.replace('.parquet','.geoparquet')))
-```
-
-## Compare
-
-It's also worth comparing the output of a point with the output of a polygon or multi-polygon because you may well come across data in formats (e.g. WKT) resembling both of these in real data sets and they *can* be read as well. Notice too that we can use `loc` and `iloc` accessor methods to pull individual points and polygons out of a GeoDataFrame!
-
-```python
-print(gdf.geometry.iloc[1]) # Print out the object's contents
-gdf.geometry.iloc[1] # The object knows how to print itself as a point
-```
-
-```python
-print(str(boros.geometry.iloc[1])[:399] + "...") # Object to string then print out first 399 characters
-boros.geometry.iloc[1] # So this is a multi-polygon boundary
-```
-
-So each element of this Series has text indicating the type of shape the geometry applies to (e.g. _POLYGON_) followed by a bunch of numbers. These numbers are truncated here just to make things a little more legible.
-
-# Dealing with (Geo)Data
-
-Let's dig a little deeper into GeoPandas' features.
-
-## Reprojection
-
-::: {.callout-tip collapse="true"}
-
-**Difficulty Level**: Low
-
-:::
-
-Let's start by taking our InsideAirbnb data in its original projection...
-
-```python
-print(gdf.geometry.crs)
-print(gdf.total_bounds)
-```
-
-... and reprojecting this into the OSGB1936/BNG CRS:
-
-```python
-gdf = gdf.??(??) # There is no 'in_place=True' option here.
-print(gdf.geometry.crs)
-print(gdf.total_bounds)
-```
-
-Notice the change in total bounds from lat/long to Northing/Easting.
-
-## More on Mapping
-
-::: {.callout-tip collapse="true"}
-
-**Difficulty Level**: Low
-
-:::
-
-As we saw above with the point-plot, in its original form the pricing data will not reveal much of interest because of the range of the data. However, as you will have seen in QM already (and as we explore in greater detail in Weeks 7/8), using *transformations* we can manipulate the data to increase its tractability for analysis.
-
-### Work out the Data Range
-
-Let's start by getting a feel for the full data set in terms of the range of prices that it contains:
-
-```python
-print(f"The range of price is ${??:,.2f} to ${??:,.2f}")
-print(f"The mean and median of the price are ${??:,.2f} and ${??:,.2f}")
-```
-
-Notice the neat little comma-separated thousands in there? That's fairly easy to do in English, but to use a thousands separator common to another language you would need to do something [a little more tricky](https://stackoverflow.com/questions/13082620/how-can-i-print-a-float-with-thousands-separators). 
-
-###: Inheritance!
-
-We already know that GeoPandas _inherits_ functionality from Pandas, but let's formalise this... 
-
-First, let's check what class of object `gdf` is using the [`isinstance`](https://www.w3schools.com/python/ref_func_isinstance.asp) function:
-
-```python
-if isinstance(gdf, gpd.GeoDataFrame): # Is gdf a GeoDataFrame object?
-    print("\tI'm a geopandas data frame!")
-
-if isinstance(gdf, pd.DataFrame): # Is gdf *also* a DataFrame object?
-    print("\tI'm a pandas data frame!")
-```
-
-### Benefiting from Inheritance
-
-*That* result means that we can also investigate the data using, for instance, a pandas histogram:
-
-```python
-gdf.price.plot.??(bins=??, figsize=(13,3)); # Oooooh, let's use a *pandas* method here
-```
-
-Notice how we've used our GeoDataFrame *as if* it's a plain old DataFrame here? That's the miracle of Object-Oriented Design: we can do *anything* we would with a regular Pandas `df` as we do with a GeoPandas `gdf` because GeoPandas *inherits* all the methods of its parent super-class.
-
-We can see that there's very little data above (at a guess) about $2,000, but at this scale it's hard to tell. We've already seen that you can use axes limits to adjust the display of a map, but the same technique applies to plain old plots because they're fundamentally the *same thing*.
-
-Try adjusting the axis so that the x-range is 0..2500:
-
-```python
-ax = gdf.price.plot.??(bins=??, figsize=(13,3)); # Oooooh, let's use a *pandas* method here
-ax.??
-```
-
-You can do the same thing with a boxplot:
-
-```python
-ax = gdf.price.plot.??(vert=False, figsize=(13,3))
-ax.??
-```
-
-[More complex](https://stackoverflow.com/a/54023612/4041902) formatting is also possible if you really know your pandas and your matplotlib:
-
-```python
-gdf.price.plot(kind='box', vert=False, 
-             color=dict(boxes='r', whiskers='r', medians='r', caps='r'),
-             boxprops=dict(linestyle='-', linewidth=1.5),
-             flierprops=dict(linestyle='-', linewidth=1.5),
-             medianprops=dict(linestyle='-', linewidth=1.5),
-             whiskerprops=dict(linestyle='-', linewidth=1.5),
-             capprops=dict(linestyle='-', linewidth=1.5),
-             showfliers=False, grid=False, rot=0);
-```
-
-## Truncating and Transforming
-
-::: {.callout-caution collapse="true"}
-
-**Difficulty Level**: Hard
-
-:::
-
-### Working it Out
-
-Anyway, drawing on everything we've seen over the past couple of weeks (and in *this* practical) I'd like you to:
-
-1. Try to take the natural-log of the price (*hint*: use `numpy`) and assign to a new Series called `lnprice`.
-2. Work out what the error means.
-3. Work out how to fix the error and *then* repeate step 1.
-4. Work out how many rows were affected.
-5. Report on the new min/max values.
-6. Work out if other outliers need to be removed (use code from above).
-7. Remove outliers and then continue with your work...
-
-```python
-# Use this as a 'scratch space' to work out what's needed below...
-```
-
-```python
-print(f"gdf has {gdf.shape[0]:,.0f} rows.")
-
-# ---------- Do the processing -------------
-# You may need more than one of these 'drops'
-# to get the data the way you want...
-gdf.drop(gdf[??].index, axis=0, inplace=True)
-gdf['lnprice'] = np.log(gdf.price)
-
-# ---------- Check effects -----------
-print(f"gdf now has {gdf.shape[0]:,.0f} rows.")
-print(f"The range of price is {gdf.price.min():,.2f} to {gdf.price.max():,.2f}")
-print(f"The range of ln(price) is {gdf.lnprice.min():,.4f} to {gdf.lnprice.max():,.4f}")
-
-gdf.price.plot(kind='box', vert=False, 
-             color=dict(boxes='r', whiskers='r', medians='r', caps='r'),
-             boxprops=dict(linestyle='-', linewidth=1.5),
-             flierprops=dict(linestyle='-', linewidth=1.5),
-             medianprops=dict(linestyle='-', linewidth=1.5),
-             whiskerprops=dict(linestyle='-', linewidth=1.5),
-             capprops=dict(linestyle='-', linewidth=1.5),
-             showfliers=False, grid=False, rot=0);
-plt.title("Price (Outliers not shown)")
-plt.show()
-
-gdf.lnprice.plot(kind='box', vert=False, 
-             color=dict(boxes='r', whiskers='r', medians='r', caps='r'),
-             boxprops=dict(linestyle='-', linewidth=1.5),
-             flierprops=dict(linestyle='-', linewidth=1.5),
-             medianprops=dict(linestyle='-', linewidth=1.5),
-             whiskerprops=dict(linestyle='-', linewidth=1.5),
-             capprops=dict(linestyle='-', linewidth=1.5),
-             showfliers=False, grid=False, rot=0);
-plt.title("Ln(Price) (Outliers not shown)")
-plt.show()
-```
-
-### Plotting
-
-Now plot the ln(price) as a chloropleth using:
-1. A figure size of 12 x 8
-2. A marker size of 0.25
-3. The Viridis colourmap
-4. A legend
-5. A legend label of 'Natural Log of Price per Night ($)'
-
-I'd suggest [referring to the documentation](https://geopandas.org/mapping.html).
-
-```python
-ax = gdf.plot(figsize=??, marker='*', markersize=0.25, 
-         column=??, cmap=??, 
-         legend=??, legend_kwds=??);
-ax.set_title("Plot of Natural Log of Nightly Price for Airbnb Listings (Outliers Removed)");
-```
-
-Your map should look something like this:
-    
-![Plot of Natural Log of Nightly Price for Airbnb Listings (Outliers Removed)](https://github.com/jreades/fsds/raw/master/practicals/img/Airbnb-lnprice.png)
-
-## Zooming In/Out
-
-::: {.callout-tip collapse="true"}
-
-**Difficulty Level**: Low
-
-:::
-
-That's a little hard to see, let's try zooming in on Central London! Very roughly, let's call that an Easting range of 525,000 to 535,000 and a Northing range of 178,000 to 185,000.
-
-::: {.callout-tip}
-You will need to remember that `GeoDataFrame.plot()` returns an axis object.
-
-:::
-
-```python
-ax = gdf.plot(figsize=(12,8), marker='*', markersize=0.25, 
-         column='lnprice', cmap='viridis', 
-         legend=True, legend_kwds={'label':'Natural Log of Price per Night ($)'});
-ax.set_title("Ln(Price/Night) for Airbnb Listings (Central London Detail)")
-ax.??
-ax.??;
-```
-
-You result should look something like this:
-
-![Ln(Price/Night) for Airbnb Listings (Central London Detail)](https://github.com/jreades/fsds/raw/master/practicals/img/Airbnb-lnprice-zoom.png)
-
-That's a little better, but ideally we'd do more thinking about outliers... 
-
-## Changing the Classification Scheme
-
-::: {.callout-warning collapse="true"}
-
-**Difficulty Level**: Moderate (mainly computation time)
-
-:::
-
-Let's give this one last try using a different classification scheme... such as Fisher-Jenks... for Central London!
-
-```python
-ax = gdf.plot(figsize=(12,8), marker='*', markersize=0.25, 
-         column='lnprice', cmap='viridis', ??, k=5, 
-         legend=True); # Note that the legend *label* had to go -- there are other ways to add it
-
-ax.set_xlim([525000,535000])
-ax.set_ylim([178000,185000])
-```
-
-In which case we can...
-
-## Bringing it All Together
-
-::: {.callout-caution collapse="true"}
-
-**Difficulty Level**: &#129327;
-
-:::
-
-And just to give a bit of a show of how we can put it all together:
-
-```python
 import pysal as p
 import mapclassify as mc
 import palettable.matplotlib as palmpl
 from legendgram import legendgram
-
-# We change fonts the hard way here...
-# but you can also do this to change
-# the font everywhere in one go:
-# matplotlib.rcParams['font.family'] = "Liberation Sans Narrow"
-fontname = "Liberation Sans Narrow"
 
 # We create a temporary data frame here because we want
 # the 'bins' to be created using only the data on the 
@@ -1067,7 +1318,7 @@ q = mc.??(tgdf.price.values, ??)
 tgdf['bins'] = q.??
 
 # Set up the figure with its 'basemap'
-f,ax = plt.subplots(figsize=(15,9))
+f,ax = plt.subplots(figsize=(10,6))
 green.plot(edgecolor=(0.7, 0.7, 0.14, 0.25), facecolor=(0.7, 0.7, 0.14, 0.25), zorder=1, ax=ax)
 water.plot(edgecolor="none", facecolor='xkcd:lightblue', zorder=2, ax=ax)
 boros.plot(edgecolor=(0.8, 0, 0, 0.5), facecolor='none', linewidth=2.5, zorder=3, ax=ax)
@@ -1140,9 +1391,119 @@ for tk in ax2.get_xticklabels():
 #plt.savefig('Airbnb-price-all.png', dpi=150)
 ```
 
+#### Answer
+
+```{python}
+import pysal as p
+import mapclassify as mc
+import palettable.matplotlib as palmpl
+from legendgram import legendgram
+
+# We create a temporary data frame here because we want
+# the 'bins' to be created using only the data on the
+# map. Otherwise, we'd have a distribution on the map
+# that differed from the one in the legendgram and the
+# one used to calculate the breaks in the first place!
+tgdf = gdf[(gdf.geometry.x > 525000) & (gdf.geometry.x < 540000) & (gdf.geometry.y > 176000) & (gdf.geometry.y < 186000)].copy()
+
+# Here we use Mapclassify to calculate quantiles
+# (k=5) using the original price. You could use
+# any Mapclassify scheme at this point, though
+# note that for Fisher Jenks you might want to use
+# the 'Sampled' version to speed things up a bit.
+q = mc.Quantiles(tgdf.price.values, k=5)
+
+# We then write these binned values *back* on to the data
+# frame so that we can use them with the GDF plot function.
+tgdf['bins'] = q.yb
+
+# Set up the figure with its 'basemap'
+f,ax = plt.subplots(figsize=(10,6))
+green.plot(edgecolor=(0.7, 0.7, 0.14, 0.25), facecolor=(0.7, 0.7, 0.14, 0.25), zorder=1, ax=ax)
+water.plot(edgecolor="none", facecolor='xkcd:lightblue', zorder=2, ax=ax)
+boros.plot(edgecolor=(0.8, 0, 0, 0.5), facecolor='none', linewidth=2.5, zorder=3, ax=ax)
+
+# Restrict the x and y axis to the data
+# Notice it's hard-coded here *and* above
+# this could be done *better* using a
+# custom bounding box so that we could
+# update both the tgdf and the display
+# area at the same time.
+ax.set_xlim([525000,540000])
+ax.set_ylim([176000,186000])
+
+ax.axis('off') # Don't plot the axes
+
+# Plot the bins using a categorical legend instead
+# of the price using a continuous legend.
+tgdf.plot(column='bins', categorical=True,
+         cmap='viridis', legend=True, marker='.', markersize=1.5, zorder=4, ax=ax)
+
+# Set the title using a specified font, weight, and size
+ax.set_title('London Airbnb Listings Price Per Night',
+             fontdict={'fontsize':'20', 'fontweight':'3', 'family':fontname})  #provide a title
+
+# This is where geopandas gets in the way -- the
+# categorical legend doesn't work for us so we need
+# to actually create the legend 'by hand' using this
+# code... which first has to *find* the layer containing
+# the data! Each layer is a 'patch collection', so we
+# loop through the collections looking for the one whose
+# z-order is 4 (which we set above to the data layer).
+#
+# I relied on this: https://stackoverflow.com/a/71419387/4041902
+# to work out how to do this!
+
+for c in ax.collections:
+    # Find the layer with the data
+    if c.get_zorder()==4:
+        # *Now* we can create a legend... but we need to
+        # first retrieve the colours from the layer. These
+        # are returned as 'handles' and then we need to
+        # associate these with the labels taken from the
+        # Mapclassify object... Once we set that up, along
+        # with fonts and such, we can add it as an 'artist'
+        # to the figure.
+        handles, _ = c.legend_elements(prop="colors")
+        legend1 = ax.legend(handles, q.get_legend_classes(fmt='{:.2f}'),
+                            loc="upper right", title="Price per Night",
+                            prop={'size':'10', 'weight':'1', 'family':fontname})
+        ax.add_artist(legend1)
+
+# And don't forget to add a source!
+a = ax.text(tgdf.geometry.x.max(), tgdf.geometry.y.min(), 'Source: InsideAirbnb (2022)',
+             horizontalalignment='right', verticalalignment='bottom',
+             fontsize=14, fontweight=4, color='#333333', family=fontname)
+
+# And this is a nice feature: show the distribution!
+ax2 = legendgram(f, ax,
+           tgdf.price, q.bins, bins=round(gdf.price.max()/25),
+           pal=palmpl.Viridis_5,
+           legend_size=(0.3, 0.1),
+           loc='lower left',
+           clip=(0,1000),
+           frameon=True
+    )
+# But we have to fix the font manually here
+# for the legendgram too
+for tk in ax2.get_xticklabels():
+    tk.set_fontname(fontname)
+
+#plt.savefig('Airbnb-price-all.png', dpi=150)
+f
+```
+
+::::
+
 You should have something like this:
-    
-![London Airbnb Listings Price Per Night (Quantiles)](https://github.com/jreades/fsds/raw/master/practicals/img/Airbnb-price-all-together.png)
+
+```{python}
+#| echo: false
+#f = plt.gcf()
+f
+```
+
+London Airbnb Listings Price Per Night (Quantiles)
 
 I'll be honest, I do find ggplot easier for making good-quality; this _is_ more customisable overall, but it's also much more 'magical' in the sense of 'search for `matplotlib` examples that do what you want then copy+paste them and tweak' being the main way that most people get things working how they want.
 
