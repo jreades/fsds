@@ -1439,7 +1439,7 @@ else:
 
 ```{python}
 f,ax = plt.subplots(1,1,figsize=(8, 8))
-plt.gcf().set_dpi(300)
+plt.gcf().set_dpi(150)
 Cloud = WordCloud(
     background_color="white", 
     max_words=75,
@@ -1464,7 +1464,7 @@ tfidf.sum().sort_values(ascending=False)
 
 ```{python}
 f,ax = plt.subplots(1,1,figsize=(8, 8))
-plt.gcf().set_dpi(300)
+plt.gcf().set_dpi(150)
 Cloud = WordCloud(
     background_color="white", 
     max_words=100,
@@ -1484,18 +1484,21 @@ ax.axis("off");
 
 ::: {.callout-tip}
 
-    I would give this a _low_ priority. It's a commonly-used method, but on small data sets it really isn't much use and I've found its answers to be... unclear... even on large data sets.
+I would give this a _low_ priority. It's a commonly-used method, but on small data sets it really isn't much use and I've found its answers to be... unclear... even on large data sets.
+
 :::
 
 Adapted from [this post](https://stackabuse.com/python-for-nlp-topic-modeling/) on doing LDA using sklearn. Most other examples use the `gensim` library.
 
-```python
-vectorizer = CountVectorizer(ngram_range=(1,2)) # Notice change to ngram range (try 1,1 and 1,2 for other options)
+```{python}
+# Notice change to ngram range 
+# (try 1,1 and 1,2 for other options)
+vectorizer = CountVectorizer(ngram_range=(1,2))
 ```
 
 ## Calculate Topics
 
-```python
+```{python}
 vectorizer.fit(corpus) 
 tcorpus = vectorizer.transform(corpus) # tcorpus for transformed corpus
 
@@ -1503,7 +1506,7 @@ LDA = LatentDirichletAllocation(n_components=3, random_state=42) # Might want to
 LDA.fit(tcorpus)
 ```
 
-```python
+```{python}
 first_topic = LDA.components_[0]
 top_words = first_topic.argsort()[-25:]
 
@@ -1511,60 +1514,65 @@ for i in top_words:
     print(vectorizer.get_feature_names_out()[i])
 ```
 
-```python
+```{python}
 for i,topic in enumerate(LDA.components_):
     as_markdown(f'Top 10 words for topic #{i}', ', '.join([vectorizer.get_feature_names_out()[i] for i in topic.argsort()[-25:]]))
 ```
 
 ## Maximum Likelihood Topic
 
-```python
+```{python}
 topic_values = LDA.transform(tcorpus)
 topic_values.shape
 ```
 
-```python
+```{python}
 pd.options.display.max_colwidth=20
 srcdf['Topic'] = topic_values.argmax(axis=1)
 srcdf.head()
 ```
 
-```python
+```{python}
 pd.options.display.max_colwidth=75
 srcdf[srcdf.Topic==1].description_norm.head(10)
 ```
 
-```python
+```{python}
 vectorizer = CountVectorizer(ngram_range=(1,1), stop_words='english', analyzer='word', max_df=0.7, min_df=0.05)
 topic_corpus = vectorizer.fit_transform(srcdf[srcdf.Topic==1].description.values) # tcorpus for transformed corpus
 ```
 
-```python
+```{python}
 topicdf = pd.DataFrame(data=topic_corpus.toarray(),
                         columns=vectorizer.get_feature_names_out())
 ```
 
-```python
-plt.figure(figsize=(12, 12))
-Cloud = WordCloud(background_color="white", max_words=75).generate_from_frequencies(topicdf.sum())
-plt.imshow(Cloud) 
-plt.axis("off");
+```{python}
+f,ax = plt.subplots(1,1,figsize=(8,8))
+plt.gcf().set_dpi(150)
+Cloud = WordCloud(
+            background_color="white", 
+            max_words=75).generate_from_frequencies(topicdf.sum())
+ax.imshow(Cloud) 
+ax.axis("off");
+# plt.savefig('Wordcloud 3.png')
 ```
 
 # Word2Vec
 
-::: {.callout-caution}
+::: {.callout-tip}
 
-    **&#129327; Tip**: This algorithm works almost like magic. You should play with the configuration parameters and see how it changes your results.
+This algorithm works almost like magic. You should play with the configuration parameters and see how it changes your results.
+
 :::
 
 ## Configure
 
-```python
+```{python}
 from gensim.models.word2vec import Word2Vec
 ```
 
-```python
+```{python}
 dims = 100
 print(f"You've chosen {dims} dimensions.")
 
@@ -1578,7 +1586,7 @@ print(f"With a minimum frequency of {min_v_freq} and {srcdf.shape[0]:,} document
 
 ## Train
 
-```python
+```{python}
 %%time 
 
 corpus      = srcdf.description_norm.fillna(' ').values
@@ -1587,14 +1595,14 @@ corpus_sent = [d.replace('.',' ').split(' ') for d in corpus] # <-- deals better
 model       = Word2Vec(sentences=corpus_sent, vector_size=dims, window=window, epochs=200, 
                  min_count=min_v_count, seed=42, workers=1)
 
-model.save(f"word2vec-d{dims}-w{window}.model") # <-- You can then Word2Vec.load(...) which is useful with large corpora
+#model.save(f"word2vec-d{dims}-w{window}.model") # <-- You can then Word2Vec.load(...) which is useful with large corpora
 ```
 
 ## Explore Similarities
 
 This next bit of code only runs if you have calculated the frequencies above in the [Frequencies and Ngrams](#frequencies-and-ngrams) section.
 
-```python
+```{python}
 pd.set_option('display.max_colwidth',150)
 
 df = fcounts[1] # <-- copy out only the unigrams as we haven't trained anything else
@@ -1654,7 +1662,7 @@ We're going to make *use* of this further next week...
 
 ::: {.callout-caution}
 
-    **&#9888; Warning**: This code can take *some time* (**&gt; 5 minutes on a M2 Mac**) to run, so **don't run this** until you've understood what we did before!
+This code can take *some time* (**&gt; 5 minutes on a M2 Mac**) to run, so **don't run this** until you've understood what we did before!
 
 :::
 
@@ -1673,11 +1681,11 @@ gdf.to_parquet(os.path.join('data','geo',f'{fn.replace(".","-with-nlp.")}'))
 
 ::: {.callout-tip}
 
-    saving an intermediate file at this point is useful because you've done quite a bit of _expensive_ computation. You _could_ restart-and-run-all and then go out for the day, but probably easier to just save this output and then, if you need to restart your analysis at some point in the future, just remember to deserialise amenities back into a list format.
+Saving an intermediate file at this point is useful because you've done quite a bit of _expensive_ computation. You _could_ restart-and-run-all and then go out for the day, but probably easier to just save this output and then, if you need to restart your analysis at some point in the future, just remember to deserialise amenities back into a list format.
+
 :::
 
 ## Applications
-
 
 The above is _still_ only the results for the 'luxury' apartments _alone_. At this point, you would probably want to think about how your results might change if you changed any of the following:
 
@@ -1698,4 +1706,3 @@ And some more useful links:
 - [Pandas String Contains Method](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.str.contains.html)
 - [Using Regular Expressions with Pandas](https://kanoki.org/2019/11/12/how-to-use-regex-in-pandas/)
 - [Summarising Chapters from Frankenstein using TF/IDF](https://towardsdatascience.com/using-tf-idf-to-form-descriptive-chapter-summaries-via-keyword-extraction-4e6fd857d190)
-
