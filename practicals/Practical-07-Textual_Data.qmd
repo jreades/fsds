@@ -1067,13 +1067,14 @@ But only because you didn't have to write the module! However, the questions cou
 
 :::
 
-Now let's import it.
+In a Jupyter notebook, this code allows us to edit and reload the library dynamically:
 
-```{ipython}
-# This allows us to edit and reload the library
+```python
 %load_ext autoreload
 %autoreload 2
 ```
+
+Now let's import it.
 
 ```{python}
 from textual import *
@@ -1175,7 +1176,7 @@ bluesp['description_norm'] = bluesp.description.apply(normalise_document, remove
 
 ::: {.callout-tip collapse="true"}
 
-#### Difficulty level: Lowy, except for the double list-comprehension.
+#### Difficulty level: Low, except for the double list-comprehension.
 
 :::
 
@@ -1183,11 +1184,19 @@ bluesp['description_norm'] = bluesp.description.apply(normalise_document, remove
 
 See useful tutorial [here](https://towardsdatascience.com/tf-idf-explained-and-python-sklearn-implementation-b020c5e83275). Although we shouldn't have any empty descriptions, by the time we've finished normalising the textual data we may have _created_ some empty values and we need to ensure that we don't accidentally pass a NaN to the vectorisers and frequency distribution functions.
 
-```python
-srcdf = bluesp # <-- you only need to change the value here to try the different selections
+```{python}
+srcdf = bluesp 
 ```
 
-```python
+::: {.callout-tip}
+
+#### Coding Tip
+
+Notice how you only need to change the value of the variable here to try any of the different selections we did above? This is a simple kind of parameterisation somewhere between a function and hard-coding everything.
+
+:::
+
+```{python}
 corpus = srcdf.description_norm.fillna(' ').values
 print(corpus[0:3])
 ```
@@ -1196,7 +1205,7 @@ print(corpus[0:3])
 
 There are different forms of tokenisation and different algorithms will expect differing inputs. Here are two:
 
-```python
+```{python}
 sentences = [nltk.sent_tokenize(text) for text in corpus]
 words     = [[nltk.tokenize.word_tokenize(sentence) 
                   for sentence in nltk.sent_tokenize(text)] 
@@ -1205,7 +1214,7 @@ words     = [[nltk.tokenize.word_tokenize(sentence)
 
 Notice how this has turned every sentence into an array and each document into an array of arrays:
 
-```python
+```{python}
 print(f"Sentences 0: {sentences[0]}")
 print()
 print(f"Words 0: {words[0]}")
@@ -1225,7 +1234,7 @@ One new thing you'll see here is the `ngram`: ngrams are 'simply' pairs, or trip
 
 Build counts for ngram range 1..3:
 
-```python
+```{python}
 fcounts = dict()
 
 # Here we replace all full-stops... can you think why we might do this?
@@ -1242,9 +1251,9 @@ for size in 1, 2, 3:
 
 And output the most common ones for each ngram range:
 
-```python
-for dfs in fcounts.???():
-    print(dfs.sort_values(by=dfs.columns.values[0], ascending=???).head(10))
+```{python}
+for dfs in fcounts.values():
+    print(dfs.sort_values(by=dfs.columns.values[0], ascending=False).head(10))
     print()
 ```
 
@@ -1265,7 +1274,7 @@ This is a big foray into sklearn (sci-kit learn) which is the main machine learn
 
 ### Fit the Vectoriser
 
-```python
+```{python}
 cvectorizer = CountVectorizer(ngram_range=(1,3))
 cvectorizer.fit(corpus)
 ```
@@ -1274,7 +1283,7 @@ cvectorizer.fit(corpus)
 
 Find the number associated with a word in the vocabulary and how many times it occurs in the original corpus:
 
-```python
+```{python}
 term = 'stratford'
 pd.options.display.max_colwidth=750
 # Find the vocabulary mapping for the term
@@ -1290,8 +1299,8 @@ for x in srcdf[srcdf.description_norm.str.contains(term)].description_norm:
 
 You can only *tranform* the entire corpus *after* the vectoriser has been fitted. There is an option to `fit_transform` in one go, but I wanted to demonstrate a few things here and some vectorisers are don't support the one-shot fit-and-transform approach. **Note the type of the transformed corpus**:
 
-```python
-cvtcorpus = cvectorizer.transform(???)
+```{python}
+cvtcorpus = cvectorizer.transform(corpus)
 cvtcorpus # cvtcorpus for count-vectorised transformed corpus
 ```
 
@@ -1299,7 +1308,7 @@ cvtcorpus # cvtcorpus for count-vectorised transformed corpus
 
 Here is the **first** document from the corpus:
 
-```python
+```{python}
 doc_df = pd.DataFrame(cvtcorpus[0].T.todense(), 
                       index=cvectorizer.get_feature_names_out(), columns=["Counts"]
                      ).sort_values('Counts', ascending=False)
@@ -1308,7 +1317,7 @@ doc_df.head(10)
 
 ### Transformed Corpus
 
-```python
+```{python}
 cvdf = pd.DataFrame(data=cvtcorpus.toarray(),
                         columns=cvectorizer.get_feature_names_out())
 print(f"Raw count vectorised data frame has {cvdf.shape[0]:,} rows and {cvdf.shape[1]:,} columns.")
@@ -1321,7 +1330,7 @@ These are likely to be artefacts of text-cleaning or human input error. As well,
 
 Let's start by getting the *column* sums:
 
-```python
+```{python}
 sums = cvdf.sum(axis=0)
 print(f"There are {len(sums):,} terms in the data set.")
 sums.head()
@@ -1329,19 +1338,31 @@ sums.head()
 
 Remove columns (i.e. terms) appearing in less than 1% of documents. You can do this by thinking about what the shape of the data frame means (rows and/or columns) and how you'd get 1% of that!
 
+:::: {.panel-tabset}
+
+#### Question
+
 ```python
 filter_terms = sums >= cvdf.shape[0] * ???
 ```
 
+#### Answer
+
+```{python}
+filter_terms = sums >= cvdf.shape[0] * 0.01
+```
+
+::::
+
 Now see how we can use this to strip out the columns corresponding to low-frequency terms:
 
-```python
+```{python}
 fcvdf = cvdf.drop(columns=cvdf.columns[~filter_terms].values)
 print(f"Filtered count vectorised data frame has {fcvdf.shape[0]:,} rows and {fcvdf.shape[1]:,} columns.")
 fcvdf.iloc[0:5,0:10]
 ```
 
-```python
+```{python}
 fcvdf.sum(axis=0)
 ```
 
@@ -1357,13 +1378,15 @@ We're going to pick this up again in Task 7.
 
 ::: {.callout-warning collapse="true"}
 
-#### Difficulty level: Moderate, if you want to understand how `max_df` and `min_df` work!
+#### Difficulty level: Moderate
+
+But only if you want to understand how `max_df` and `min_df` work!
 
 :::
 
 ### Fit and Transform
 
-```python
+```{python}
 tfvectorizer = TfidfVectorizer(use_idf=True, ngram_range=(1,3), 
                                max_df=0.75, min_df=0.01) # <-- these matter!
 tftcorpus    = tfvectorizer.fit_transform(corpus) # TF-transformed corpus
@@ -1371,14 +1394,14 @@ tftcorpus    = tfvectorizer.fit_transform(corpus) # TF-transformed corpus
 
 ### Single Document
 
-```python
+```{python}
 doc_df = pd.DataFrame(tftcorpus[0].T.todense(), index=tfvectorizer.get_feature_names_out(), columns=["Weights"])
 doc_df.sort_values('Weights', ascending=False).head(10)
 ```
 
 ### Transformed Corpus
 
-```python
+```{python}
 tfidf = pd.DataFrame(data=tftcorpus.toarray(),
                         columns=tfvectorizer.get_feature_names_out())
 print(f"TF/IDF data frame has {tfidf.shape[0]:,} rows and {tfidf.shape[1]:,} columns.")
@@ -1400,19 +1423,31 @@ tfidf.head()
 
 :::
 
-```python
+```{python}
 fcvdf.sum().sort_values(ascending=False)
 ```
 
-```python
-plt.figure(figsize=(12, 12))
+```{python}
+ff = 'Roboto-Light.ttf'
+dp = '/home/jovyan/.local/share/fonts/'
+tp = os.path.join(os.path.expanduser('~'),'Library','Fonts')
+if os.path.exists(tp):
+    fp = os.path.join(tp,ff)
+else:
+    fp = os.path.join(dp,ff)
+```
+
+```{python}
+f,ax = plt.subplots(1,1,figsize=(8, 8))
+plt.gcf().set_dpi(300)
 Cloud = WordCloud(
     background_color="white", 
     max_words=75,
-    font_path='/home/jovyan/.local/share/fonts/Roboto-Light.ttf'
+    font_path=fp
 ).generate_from_frequencies(fcvdf.sum())
-plt.imshow(Cloud) 
-plt.axis("off");
+ax.imshow(Cloud) 
+ax.axis("off");
+#plt.savefig("Wordcloud 1.png")
 ```
 
 ## For TF/IDF Weighting
@@ -1423,19 +1458,21 @@ plt.axis("off");
 
 :::
 
-```python
+```{python}
 tfidf.sum().sort_values(ascending=False)
 ```
 
-```python
-plt.figure(figsize=(12, 12))
+```{python}
+f,ax = plt.subplots(1,1,figsize=(8, 8))
+plt.gcf().set_dpi(300)
 Cloud = WordCloud(
     background_color="white", 
     max_words=100,
-    font_path='/home/jovyan/.local/share/fonts/JetBrainsMono-VariableFont_wght.ttf'
+    font_path=fp
 ).generate_from_frequencies(tfidf.sum())
-plt.imshow(Cloud) 
-plt.axis("off");
+ax.imshow(Cloud) 
+ax.axis("off");
+#plt.savefig("Wordcloud 2.png")
 ```
 
 ### Questions
