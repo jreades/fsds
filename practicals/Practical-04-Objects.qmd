@@ -27,7 +27,12 @@ This is a very long practical and it's _not_ expected that you will get through 
 
 #### Group Sign-Up
 
-You should now make it a priority [Sign Up](https://forms.office.com/e/2ij0sWHnpR)!
+```{python}
+#| echo: false
+#| output: asis
+
+print("You should now make it a priority [Sign Up]({{< var module.signup >}})!")
+```
 
 :::
 
@@ -57,7 +62,6 @@ This task briefly recaps the final part of [Practical 2](https://jreades.github.
 Here are four rows of 'data' for city sizes organised by _row_ as a list-of-lists. Try printing out *just* the cities contained in the data:
 
 ```{python}
-#| echo: true
 myData = [
     ['id', 'Name', 'Rank', 'Longitude', 'Latitude', 'Population'], 
     ['1', 'Greater London', '1', '-18162.92767', '6711153.709', '9787426'], 
@@ -68,7 +72,7 @@ myData = [
 
 ### Print a List of Cities
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question 
 
@@ -87,7 +91,6 @@ print("The cities in the data set are: " + ", ".join(cities))
 Print out a list of every city in the data set:
 
 ```{python}
-#| echo: true
 cities = []
 
 col    = myData[0].index('Name')
@@ -103,9 +106,9 @@ print("The cities in the data set are: " + ", ".join(cities))
 
 Now write code to find out if `Edinburgh` is included in the list of data:
 
-:::: {.panel-tabset}
+:::: {.qna}
 
-### Question 
+#### Question 
 
 ```python
 col   = myData[0].index('Name')
@@ -120,10 +123,9 @@ if found == ??:
     print("Didn't find Edinburgh in the data set.")
 ```
 
-### Answer
+#### Answer
 
 ```{python}
-#| echo: true
 col   = myData[0].index('Name')
 found = False
 for i in range(1, len(myData)):
@@ -142,14 +144,13 @@ if found == False:
 
 ::: {.callout-tip collapse="true"}
 
-**Difficulty level**: Low (this time around).
+#### **Difficulty level**: Low (this time around).
 
 :::
 
 Compare that code to how it works for a dictionary-of-lists organised by _column_. Now try printing out the cities in the data:
 
 ```{python}
-#| echo: true
 myData = {
     'id'         : [0, 1, 2, 3, 4, 5],
     'Name'       : ['Greater London', 'Greater Manchester', 'Birmingham','Edinburgh','Inverness','Lerwick'],
@@ -164,7 +165,7 @@ myData = {
 
 Print out a list of every city in the data set:
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -175,7 +176,6 @@ print(", ".join(??))
 #### Answer
 
 ```{python}
-#| echo: true
 print(", ".join(myData['Name']))
 ```
 
@@ -235,7 +235,7 @@ It's the same thing, just different notation.
 
 Let's start by calculating the sample mean and standard deviation (use Google: `Python numpy mean...`):
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -250,7 +250,6 @@ print(f"City distribution has a mean {mean:,.0f} and standard deviation of {std:
 #### Answer
 
 ```{python}
-#| echo: true
 import numpy as np
 # Use numpy functions to calculate mean and standard deviation
 mean = np.mean(myData['Population'])
@@ -277,14 +276,13 @@ In Python you will see code like this a lot: `[x for x in list]`. This syntax is
 Here's a quick example just to show you what's going on:
 
 ```{python}
-#| echo: true
 demo = range(0,10) # <- a *range* of numbers between 0 and 9 (stop at 10)
 print([x**2 for x in demo]) # square every element of demo
 ```
 
 Now let's apply this to our problem. We calculated the the mean and standard deviation above, so now we want to apply the z-score formula to every element of the Population list... 
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -296,7 +294,6 @@ print([f"{x:.3f}" for x in rs])
 #### Answer
 
 ```{python}
-#| echo: true
 rs = [(x - mean)/std for x in myData['Population']] # rs == result set
 print([f"{x:.3f}" for x in rs])
 ```
@@ -314,7 +311,6 @@ print([f"{x:.3f}" for x in rs])
 And now let's add it to the data set:
 
 ```{python}
-#| echo: true
 myData['Std. Population'] = rs
 print(myData['Std. Population'])
 ```
@@ -322,7 +318,6 @@ print(myData['Std. Population'])
 And just to show how everything is in a single data structure:
 
 ```{python}
-#| echo: true
 for c in myData['Name']:
     idx = myData['Name'].index(c)
     print(f"{c} has a population of {myData['Population'][idx]:,} and standardised score of {myData['Std. Population'][idx]:.3f}")
@@ -353,7 +348,25 @@ Let's focus on the first part *first* because that's the precondition for everyt
 
 First, let's be sensibly lazy--we've already written code to read a file from the Internet and turn it into a list of lists. So I've copy+pasted that into the code block below since we're going to start from this point; however, just to help you check your own understanding, I've removed a few bits and replaced them with `??`. Sorry, it's good practice. 😈
 
-:::: {.panel-tabset}
+```{python}
+#| echo: false
+
+from urllib.request import URLError
+from urllib.request import urlopen
+
+try:
+    url = 'https://raw.githubusercontent.com/jreades/fsds/master/data/src/Wikipedia-Cities-simple.csv'
+    response = urlopen(url)
+    raw  = response.read()
+    data = raw.decode('utf-8')
+    urlData = [ x.split(',') for x in data.splitlines() ]
+except URLError as e:
+    with open('../data/src/Wikipedia-Cities-simple.csv', 'r') as f:
+        data = f.read()
+    urlData = [ x.split(',') for x in data.splitlines() ]
+```
+
+:::: {.qna}
 
 #### Question
 
@@ -375,12 +388,20 @@ print("urlData has " + str(len(urlData)) + " rows and " + str(len(urlData[0])) +
 print(urlData[-1]) # Check it worked!
 ```
 
-You should get `urlData has 11 rows and 4 columns.` and a row that looks like this: `['Bangor', '18808', '53.228', '-4.128']`.
+You should get: 
+
+```{python}
+#| echo: false
+#| output: asis
+
+print(f"<code>urlData has {len(urlData)} rows and {len(urlData[0])} columns.</code>")
+print("<br />")
+print(f"<code>{ urlData[-1] }</code>")
+```
 
 #### Answer
 
-```{python}
-#| echo: true
+```python
 from urllib.request import urlopen
 import csv
 
@@ -418,7 +439,6 @@ You will find that the `os` module helps here because of the `path` function. An
 I would start by setting my inputs:
 
 ```{python}
-#| echo: true
 import os
 url = "https://raw.githubusercontent.com/jreades/fsds/master/data/src/Wikipedia-Cities-simple.csv"
 out = os.path.join('data','Wikipedia-Cities.csv') # Print `out` if you aren't sure what this has done!
@@ -434,7 +454,7 @@ out = os.path.join('data','Wikipedia-Cities.csv') # Print `out` if you aren't su
 
 Then I would sketch out how my function will work using comments. And the simplest thing to start with is checking whether the file has already been downloaded:
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -543,7 +563,7 @@ It really would be a good idea to put in the effort to make sense of how this fu
 
 Now we turn to the next task: parsing the file if it's a CSV. This implies that it *might* not be so that's something we should also consider!
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -567,26 +587,9 @@ read_csv(src)
 #read_csv('Practical-04-Objects-Answers.ipynb') # Or this code!
 ```
 
-You should get:
-
-```
-[['City', 'Population', 'Latitude', 'Longitude'],
- ['Perth', '45770', '56.39583', '-3.43333'],
- ['Armagh', '14777', '54.3499', '-6.6546'],
- ['Dundee', '147268', '56.462', '-2.9707'],
- ['Colchester', '194706', '51.88861', '0.90361'],
- ['Salisbury', '40302', '51.07', '-1.79'],
- ['Portsmouth', '205056', '50.80583', '-1.08722'],
- ['Wakefield', '325837', '53.683', '-1.499'],
- ['Bradford', '522452', '53.792', '-1.754'],
- ['Lancaster', '138375', '54.047', '-2.801'],
- ['Bangor', '18808', '53.228', '-4.128']]
-```
-
 #### Answer
 
 ```{python}
-#| echo: true
 import csv
 
 def read_csv(src):
@@ -608,6 +611,16 @@ read_csv(src)
 
 ::::
 
+You should get:
+
+```{python}
+#| echo: false
+#| output: asis
+print("<code>")
+print(read_csv(src))
+print("</code>")
+```
+
 ## Convert the CSV into a DoL
 
 ::: {.callout-warning collapse="true"}
@@ -618,7 +631,7 @@ read_csv(src)
 
 Now we can focus on converting the CSV data to a dictionary-of-lists! We're going to start with the *same* function name but expand what the function *does*. This kind of *iteration* is common in software development.
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -653,25 +666,9 @@ def read_csv(src):
 read_csv(src)
 ```
 
-You should get something that starts:
-```
-{'City': ['Perth',
-  'Armagh',
-  'Dundee',
-  'Colchester',
-  'Salisbury',
-  'Portsmouth',
-  'Wakefield',
-  'Bradford',
-  'Lancaster',
-  'Bangor'],
- 'Population': ['45770',
-```
-
 #### Answer
 
 ```{python}
-#| echo: true
 import csv
 
 def read_csv(src):
@@ -706,6 +703,14 @@ read_csv(src)
 
 ::::
 
+You should get something that starts:
+
+```{python}
+#| echo: false
+
+print(str(read_csv(src))[:75] + "...")
+```
+
 ## Adding Docstring
 
 ::: {.callout-tip collapse="true"}
@@ -726,8 +731,8 @@ def read_csv(src:str) -> dict:
     Converts a CSV file to a dictionary-of-lists (dol),
     using the first row to create column names.
     
-    :param src: a local CSV file
-    :returns: a dictionary-of-lists
+    param src: a local CSV file
+    returns: a dictionary-of-lists
     """
     csvdata = {} # An empty dictionary-of-lists
     
@@ -758,12 +763,10 @@ ds = read_csv(src)
 ```
 
 ```{python}
-#| echo: true
 help(read_csv)
 ```
 
 ```{python}
-#| echo: true
 print("Columns are: " + ", ".join(ds.keys()))
 print(f"First two cities are: {ds['City'][:2]}")
 print(f"First two populations are: {ds['Population'][:2]}")
@@ -792,7 +795,7 @@ If you look closely at the above, you'll see that *everything* is a string, incl
 
 :::
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -816,7 +819,6 @@ for col in zip(cols, dtype):
 #### Answer
 
 ```{python}
-#| echo: true
 cols  = ['City', 'Population', 'Latitude', 'Longitude'] # <- Column name
 dtype = [str, int, float, float]                        # <- Column data type
 
@@ -844,7 +846,6 @@ for col in zip(cols, dtype):
 :::
 
 ```{python}
-#| echo: true
 # Convert the raw data to data of the appropriate
 # type: 'column data' (cdata) -> 'column type' (ctype)
 def to_type(cdata, ctype):
@@ -875,13 +876,12 @@ def to_type(cdata, ctype):
 For example: 
 
 ```{python}
-#| echo: true
 to_type(['31.4','14','2412312.23'],int)
 ```
 
-Now apply this! We'll copy the data to new data structure only so that we know we're not overwriting `ds` until we're sure that the code works.
+Now this isn't the *best* function because we might expect it to return integers for all number-like things regardless of whether they are floats or integers or strings, but at least we've not thrown an *exception* when this happens, we've only converted the fields that clearly apply! We'll copy the data to new data structure only so that we know we're not overwriting `ds` until we're sure that the code works.
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -913,7 +913,6 @@ for col in zip(cols, dtype):
 Compare the output here to the output from these two cells *carefully* (what has changed?):
 
 ```{python}
-#| echo: true
 print("DS columns are: " + ", ".join(ds.keys()))
 print(f"First two cities are: {ds['City'][:2]}")
 print(f"First two populations are: {ds['Population'][:2]}")
@@ -921,7 +920,6 @@ print(f"First two latitudes are: {ds['Latitude'][:2]}")
 ```
 
 ```{python}
-#| echo: true
 print("DS2 columns are: " + ", ".join(ds2.keys()))
 print(f"First two cities are: {ds2['City'][:2]}")
 print(f"First two populations are: {ds2['Population'][:2]}")
@@ -938,7 +936,7 @@ print(f"First two latitudes are: {ds2['Latitude'][:2]}")
 
 Now that we've got our data structure all set up correctly (appropriate names, data types, etc.) let's see if it works by testing out some of our previous operations:
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -953,11 +951,14 @@ print(f"Southernmost city is {ds2['City'][np.where(ds2['Latitude']==np.??(ds2['?
 
 You should get the following:
 
-```
-Average population is 165,335.10
-Westernmost city is Armagh
-Northernmost city is Dundee
-Southernmost city is Portsmouth
+```{python}
+#| echo: false
+import numpy as np # We'll need this to apply functions to lists easily
+
+print(f"Average population is {np.mean(ds2['Population']):,.2f}")
+print(f"Westernmost city is {ds2['City'][np.where(ds2['Longitude']==np.min(ds2['Longitude']))[0][0]]}")
+print(f"Northernmost city is {ds2['City'][np.where(ds2['Latitude']==np.max(ds2['Latitude']))[0][0]]}")
+print(f"Southernmost city is {ds2['City'][np.where(ds2['Latitude']==np.min(ds2['Latitude']))[0][0]]}")
 ```
 
 #### Answer
@@ -1004,12 +1005,9 @@ print(f"Westernmost city is {ds2['City'][min_idx]}")
 
 :::
 
-At this point it's worth asking: was all this *worth* it? Let's see! 
-
-The best way to test is to use a *different* data set and see if we've solved the 'hard-coding' problem.
+At this point it's worth asking: was all this *worth* it? Well let's see! The best way to test this is to use a *different* data set and see if we've solved the 'hard-coding' problem.
 
 ```{python}
-#| echo: true
 url = "https://raw.githubusercontent.com/jreades/fsds/master/data/src/Wikipedia-Cities.csv"
 out = os.path.join('data','Wikipedia-Cities-full.csv')
 
@@ -1026,13 +1024,11 @@ for col in zip(cols, dtype):
 ```
 
 ```{python}
-#| echo: true
 print(f"Average population is {np.mean(typed_dol['Population']):,.2f}")
 print(f"Westernmost city is {typed_dol['City'][np.where(typed_dol['Longitude']==np.min(typed_dol['Longitude']))[0][0]]}")
 print(f"Northernmost city is {typed_dol['City'][np.where(typed_dol['Latitude']==np.max(typed_dol['Latitude']))[0][0]]}")
 print(f"Southernmost city is {typed_dol['City'][np.where(typed_dol['Latitude']==np.min(typed_dol['Latitude']))[0][0]]}")
 ```
-
 
 So we used all the same code as for the subset of the data but changed *nothing*. And this is even though the column order changed (print out the first row of each file if you don't believe me) *and* the number of columns changed *and* our city column now contains commas! So what this has given us is a much more flexible way not only to *access* the data, but also to *work* with it!
 
@@ -1120,7 +1116,9 @@ So we have streaminlined the code still further and implemented a fairly generic
 
 ::: {.callout-note}
 
-**&#128279; Connections**: This is building on both [Functions](https://jreades.github.io/code-camp/lessons/Functions.html) and [Packages](https://jreades.github.io/code-camp/lessons/Packages.html) sessions from Code Camp as well as the [Functions](https://jreades.github.io/fsds/sessions/week3.html#lectures) and [Packages](https://jreades.github.io/fsds/sessions/week3.html#lectures) lectures. 
+#### &#128279; Connections
+
+This is building on both [Functions](https://jreades.github.io/code-camp/lessons/Functions.html) and [Packages](https://jreades.github.io/code-camp/lessons/Packages.html) sessions from Code Camp as well as the [Functions](https://jreades.github.io/fsds/sessions/week3.html#lectures) and [Packages](https://jreades.github.io/fsds/sessions/week3.html#lectures) lectures. 
 
 :::
 
@@ -1157,6 +1155,7 @@ You can create an empty file with that name in `dtools` using a command line fun
 
 Either way, the next step is then to copy all of the functions you've just created into the `__init__.py` file.
 
+::: {.callout-note collapse="true"}
 
 #### Aside: nbconvert 
 
@@ -1169,6 +1168,8 @@ Sometimes, notebooks become so complex or take such a long time to run that they
 ```
 
 This is just so that you know the option exists.
+
+:::
 
 ## Extract Code to Init
 
@@ -1208,26 +1209,46 @@ The next two lines of code allow you to repeatedly edit an imported package with
 
 And now we should be able to import the package and start using the functions that we defined...
 
-```python
+```{python}
 import dtools
 help(dtools.read_csv)
 ```
 
 ### Use Read_CSV
 
+:::: {.qna}
+
+#### Question
+
 ```python
 url = 'https://github.com/jreades/fsds/raw/master/data/2019-sample-crime.csv'
 out = os.path.join('data','crime-sample.csv')
 
 ds = ??.read_csv(??.get_url(url, out))
-```
 
-```python
 print(f"ds has {len(ds.keys())} columns, these are: " + ", ".join(ds.keys()))
 print(f"There are {len(ds['ID'])} rows of data")
 ```
 
+#### Answer
+
+```{python}
+url = 'https://github.com/jreades/fsds/raw/master/data/2019-sample-crime.csv'
+out = os.path.join('data','crime-sample.csv')
+
+ds = dtools.read_csv(dtools.get_url(url, out))
+
+print(f"ds has {len(ds.keys())} columns, these are: " + ", ".join(ds.keys()))
+print(f"There are {len(ds['ID'])} rows of data")
+```
+
+::::
+
 ### Use To_Type
+
+:::: {.qna}
+
+#### Question
 
 ```python
 cols  = ['Latitude', 'Longitude'] 
@@ -1240,7 +1261,26 @@ for col in zip(cols, dtype): # <- This only copies these two columns to typed_d
     typed_ds[ colname ] = dtools.to_type(ds[colname], coltype)
 ```
 
+#### Answer
+
+```{python}
+cols  = ['Latitude', 'Longitude']
+dtype = [float, float]
+
+typed_ds = {}
+for col in zip(cols, dtype):
+    colname = col[0]
+    coltype = col[1]
+    typed_ds[ colname ] = dtools.to_type(ds[colname], coltype)
+```
+
+::::
+
 ### Use Find_Val
+
+:::: {.qna}
+
+#### Question
 
 ```python
 idx = find_val(typed_ds['Latitude'], 'min')
@@ -1249,11 +1289,23 @@ print(ds['Case Number'][idx])
 print(ds['Description'][idx])
 ```
 
-# Brain Teaser
+#### Answer
+
+```{python}
+idx = find_val(typed_ds['Latitude'], 'min')
+print(ds['Case Number'][idx])
+print(ds['Description'][idx])
+```
+
+::::
+
+# Classes and Inheritance
 
 ::: {.callout-note}
 
-**&#128279; Connections**: This will draw on what you've learned in the lectures about <a href="">Methods</a>, <a href="">Classes</a>, and <a href="">Design</a>. You will also find the Code Camp [Classes](https://jreades.github.io/code-camp/lessons/Classes.html) session useful.
+#### &#128279; Connections
+
+This will draw on what you've learned in the lectures about <a href="">Methods</a>, <a href="">Classes</a>, and <a href="">Design</a>. You will also find the Code Camp [Classes](https://jreades.github.io/code-camp/lessons/Classes.html) session useful.
 
 :::
 
@@ -1287,7 +1339,6 @@ This class appears to do very little, but there are two things to notice:
 2. It provides methods (which only raise exceptions) that will allow one shape to be used in the place of any other shape that inherits from `shape`.
 
 ```{python}
-#| echo: true
 from math import pi
 
 # Base class shape
