@@ -25,6 +25,9 @@ function Div(div)
       RawBlock = function(r)
         return
       end,
+      BlockQuote = function(bl)
+        return
+      end,
       Table = function(tbl)
         resource_attr = pandoc.Attr('', {'cell-output','cell-output-display'}, {})
         d = pandoc.Div(pandoc.Div(tbl), resource_attr)

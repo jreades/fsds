@@ -1,0 +1,2027 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.43">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Foundations of Spatial Data Science – Practical 10: Visualisation</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="..//img/favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<meta property="og:title" content="Foundations of Spatial Data Science - Practical 10: Visualisation">
+<meta property="og:description" content="Linking &amp; Visualising Data">
+<meta property="og:image" content="img/CASA_Logo_no_text.png">
+<meta property="og:site_name" content="Foundations">
+<meta property="og:locale" content="en_GB">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-md " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../img/CASA_Logo_no_text.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Foundations of Spatial Data Science</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Welcome</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../setup/index.html"> 
+<span class="menu-text">Setup</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-week-by-week" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Week-by-Week</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-week-by-week">    
+        <li>
+    <a class="dropdown-item" href="../sessions/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Part 1: Foundations</li>
+        <li>
+    <a class="dropdown-item" href="../sessions/week1.html">
+ <span class="dropdown-text">1. Setting Up</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week2.html">
+ <span class="dropdown-text">2. Foundations (Pt.1)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week3.html">
+ <span class="dropdown-text">3. Foundations (Pt.2)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week4.html">
+ <span class="dropdown-text">4. Objects</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Part 2: Data</li>
+        <li>
+    <a class="dropdown-item" href="../sessions/week5.html">
+ <span class="dropdown-text">5. Numeric Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/reading_week.html">
+ <span class="dropdown-text">Reading Week</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week6.html">
+ <span class="dropdown-text">6. Spatial Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week7.html">
+ <span class="dropdown-text">7. Textual Data</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Part 3: Analysis</li>
+        <li>
+    <a class="dropdown-item" href="../sessions/week8.html">
+ <span class="dropdown-text">8. Selecting Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week9.html">
+ <span class="dropdown-text">9. Presenting Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week10.html">
+ <span class="dropdown-text">10. Wrap Up + Lookahead</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Part 4: Bonus</li>
+        <li>
+    <a class="dropdown-item" href="../sessions/week11.html">
+ <span class="dropdown-text">11. Dimensions in Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week12.html">
+ <span class="dropdown-text">12. Grouping Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../references.html">
+ <span class="dropdown-text">Bibliography</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-assessments" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Assessments</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-assessments">    
+        <li>
+    <a class="dropdown-item" href="../assessments/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Elements</li>
+        <li>
+    <a class="dropdown-item" href="../assessments/exam.html">
+ <span class="dropdown-text">Timed Open Book Exam</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../assessments/group.html">
+ <span class="dropdown-text">Group Work</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../assessments/peer.html">
+ <span class="dropdown-text">Group Self-Evaluation</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../help.html"> 
+<span class="menu-text">Getting Help</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">This Week</h2>
+   
+  <ul class="collapse">
+  <li><a href="#preamble" id="toc-preamble" class="nav-link active" data-scroll-target="#preamble"><span class="header-section-number">1</span> Preamble</a></li>
+  <li><a href="#spatial-joins-recap" id="toc-spatial-joins-recap" class="nav-link" data-scroll-target="#spatial-joins-recap"><span class="header-section-number">2</span> Spatial Joins (Recap)</a>
+  <ul class="collapse">
+  <li><a href="#load-geodata" id="toc-load-geodata" class="nav-link" data-scroll-target="#load-geodata"><span class="header-section-number">2.1</span> Load Geodata</a></li>
+  <li><a href="#select-london-msoas" id="toc-select-london-msoas" class="nav-link" data-scroll-target="#select-london-msoas"><span class="header-section-number">2.2</span> Select London MSOAs</a></li>
+  <li><a href="#append-names" id="toc-append-names" class="nav-link" data-scroll-target="#append-names"><span class="header-section-number">2.3</span> Append Names</a></li>
+  <li><a href="#load-insideairbnb-data" id="toc-load-insideairbnb-data" class="nav-link" data-scroll-target="#load-insideairbnb-data"><span class="header-section-number">2.4</span> Load InsideAirbnb Data</a></li>
+  <li><a href="#create-la-data" id="toc-create-la-data" class="nav-link" data-scroll-target="#create-la-data"><span class="header-section-number">2.5</span> Create LA Data</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/jreades/fsds/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Practical 10: Visualisation</h1>
+<p class="subtitle lead">Linking &amp; Visualising Data</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<table class="caption-top table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 32%">
+<col style="width: 20%">
+<col style="width: 27%">
+<col style="width: 5%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Complete</th>
+<th style="text-align: left;">Part 1: Foundations</th>
+<th style="text-align: left;">Part 2: Data</th>
+<th style="text-align: left;">Part 3: Analysis</th>
+<th style="text-align: right;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">90%</td>
+<td style="text-align: left;">▓▓▓▓▓▓▓▓</td>
+<td style="text-align: left;">▓▓▓▓▓▓</td>
+<td style="text-align: left;">▓▓▓▓▓░</td>
+<td style="text-align: right;">10/10</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This practical focusses on two key bits of <em>implementation</em>: visualisation and data linkage! You will have seen quite a bit of each of these across the preceding three to four weeks, but they were picked up in an <em>ad-hoc</em> way, here we try to systematise things a bit.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+🔗 Connections
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Here we’re trying to tidy up the loose ends. You’ve already worked with basic data visualisations in Seaborn and Matplotlib (including (geo)panda’s <code>plot</code> function), but we want you to have a better sense of how that <em>works</em> as part of a coherent – if altogether rather complex and overwhelming – approach to managing a data visualisation. You’ve also already seen examples of joins and spatial joins before but, again, we just want to review them more formally now.</p>
+</div>
+</div>
+<section id="preamble" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Preamble</h1>
+<div id="1fe28ea0" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.cm <span class="im">as</span> cm</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="eb13eaa0" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> requests <span class="im">import</span> get</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> urllib.parse <span class="im">import</span> urlparse</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> cache_data(src:<span class="bu">str</span>, dest:<span class="bu">str</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Downloads and caches a remote file locally.</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">    The function sits between the 'read' step of a pandas or geopandas</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">    data frame and downloading the file from a remote location. The idea</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">    is that it will save it locally so that you don't need to remember to</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">    do so yourself. Subsequent re-reads of the file will return instantly</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">    rather than downloading the entire file for a second or n-th itme.</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">    ----------</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">    src : str</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">        The remote *source* for the file, any valid URL should work.</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co">    dest : str</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co">        The *destination* location to save the downloaded file.</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co">        </span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co">    -------</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co">    str</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co">        A string representing the local location of the file.</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> urlparse(src) <span class="co"># We assume that this is some kind of valid URL </span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    fn  <span class="op">=</span> os.path.split(url.path)[<span class="op">-</span><span class="dv">1</span>] <span class="co"># Extract the filename</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    dfn <span class="op">=</span> os.path.join(dest,fn) <span class="co">#&nbsp;Destination filename</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Check if dest+filename does *not* exist -- </span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    <span class="co"># that would mean we have to download it!</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> os.path.isfile(dfn) <span class="kw">or</span> os.path.getsize(dfn) <span class="op">&lt;</span> <span class="dv">1</span>:</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>dfn<span class="sc">}</span><span class="ss"> not found, downloading!"</span>)</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Convert the path back into a list (without)</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>        <span class="co"># the filename -- we need to check that directories</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>        <span class="co"># exist first.</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>        path <span class="op">=</span> os.path.split(dest)</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Create any missing directories in dest(ination) path</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>        <span class="co"># -- os.path.join is the reverse of split (as you saw above)</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>        <span class="co"># but it doesn't work with lists... so I had to google how</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>        <span class="co"># to use the 'splat' operator! os.makedirs creates missing</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>        <span class="co"># directories in a path automatically.</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">len</span>(path) <span class="op">&gt;=</span> <span class="dv">1</span> <span class="kw">and</span> path[<span class="dv">0</span>] <span class="op">!=</span> <span class="st">''</span>:</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>            os.makedirs(os.path.join(<span class="op">*</span>path), exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Download and write the file</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> <span class="bu">open</span>(dfn, <span class="st">"wb"</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>            response <span class="op">=</span> get(src)</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>            <span class="bu">file</span>.write(response.content)</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">'Done downloading...'</span>)</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Found </span><span class="sc">{</span>dfn<span class="sc">}</span><span class="ss"> locally!"</span>)</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> dfn</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="spatial-joins-recap" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Spatial Joins (Recap)</h1>
+<section id="load-geodata" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="load-geodata"><span class="header-section-number">2.1</span> Load Geodata</h2>
+<p>A lot of useful geo-data can be accessed from the <a href="https://geoportal.statistics.gov.uk/">GeoPortal</a>. And see also <a href="https://jreades.github.io/fsds/lectures/9.2-Linking_Spatial_Data.html#/think-it-through">my discussion</a> on <a href="https://geoportal.statistics.gov.uk/datasets/postcode-to-output-area-to-lower-layer-super-output-area-to-middle-layer-super-output-area-to-local-authority-district-november-2018-lookup-in-the-uk-2/about">lookup tables</a>.</p>
+<div id="25b7a011" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>spath <span class="op">=</span> <span class="st">'https://github.com/jreades/fsds/blob/master/data/src/'</span> <span class="co"># source path</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>ddir  <span class="op">=</span> os.path.join(<span class="st">'data'</span>,<span class="st">'geo'</span>) <span class="co"># destination directory</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>water <span class="op">=</span> gpd.read_file( cache_data(spath<span class="op">+</span><span class="st">'Water.gpkg?raw=true'</span>, ddir) )</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>boros <span class="op">=</span> gpd.read_file( cache_data(spath<span class="op">+</span><span class="st">'Boroughs.gpkg?raw=true'</span>, ddir) )</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>green <span class="op">=</span> gpd.read_file( cache_data(spath<span class="op">+</span><span class="st">'Greenspace.gpkg?raw=true'</span>, ddir) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Found data/geo/Water.gpkg locally!
+Found data/geo/Boroughs.gpkg locally!
+Found data/geo/Greenspace.gpkg locally!</code></pre>
+</div>
+</div>
+<div id="0c450fd3" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>msoas <span class="op">=</span> gpd.read_file( cache_data(spath<span class="op">+</span><span class="st">'Middle_Layer_Super_Output_Areas__December_2011__EW_BGC_V2-shp.zip?raw=true'</span>, ddir) )</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>msoas.plot()<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Found data/geo/Middle_Layer_Super_Output_Areas__December_2011__EW_BGC_V2-shp.zip locally!</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Practical-08-Selecting_Data_files/figure-html/cell-5-output-2.png" width="404" height="411" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="f6ae2b1a" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>msoas.sample(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">OBJECTID</th>
+<th data-quarto-table-cell-role="th">MSOA11CD</th>
+<th data-quarto-table-cell-role="th">MSOA11NM</th>
+<th data-quarto-table-cell-role="th">MSOA11NMW</th>
+<th data-quarto-table-cell-role="th">BNG_E</th>
+<th data-quarto-table-cell-role="th">BNG_N</th>
+<th data-quarto-table-cell-role="th">LONG</th>
+<th data-quarto-table-cell-role="th">LAT</th>
+<th data-quarto-table-cell-role="th">Shape__Are</th>
+<th data-quarto-table-cell-role="th">Shape__Len</th>
+<th data-quarto-table-cell-role="th">geometry</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6592</td>
+<td>6593</td>
+<td>E02006734</td>
+<td>Worcester 001</td>
+<td>Worcester 001</td>
+<td>384974</td>
+<td>257845</td>
+<td>-2.22135</td>
+<td>52.21862</td>
+<td>4.544143e+06</td>
+<td>11177.509085</td>
+<td>POLYGON ((385548.000 258720.406, 385839.819 25...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">4821</td>
+<td>4822</td>
+<td>E02004930</td>
+<td>St Albans 007</td>
+<td>St Albans 007</td>
+<td>517022</td>
+<td>210632</td>
+<td>-0.30498</td>
+<td>51.78213</td>
+<td>1.443424e+07</td>
+<td>19701.770584</td>
+<td>POLYGON ((518548.281 212950.402, 518553.781 21...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6481</td>
+<td>6482</td>
+<td>E02006623</td>
+<td>Worthing 003</td>
+<td>Worthing 003</td>
+<td>511678</td>
+<td>104975</td>
+<td>-0.41547</td>
+<td>50.83353</td>
+<td>1.435652e+06</td>
+<td>8182.321431</td>
+<td>POLYGON ((512686.730 105645.721, 512562.698 10...</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="select-london-msoas" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="select-london-msoas"><span class="header-section-number">2.2</span> Select London MSOAs</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+🔗 Connections
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>One thing to remember here is that computers are <em>exact</em>. So if you say that the selection should only be of MSOAs <em>within</em> London then you actually need to think about whether a shared border qualifies as ‘within’. Watch <a href="https://jreades.github.io/fsds/sessions/week10.html#lectures">the lectures</a> again if you’re unsure, but that’s why here we take this slightly clunk approach of buffering the London boundary <em>before</em> doing the selection.</p>
+</div>
+</div>
+<section id="union" class="level3">
+<h3 class="anchored" data-anchor-id="union">Union</h3>
+<p>As we don’t have a boundary file for London, we can <em>generate</em> use using the <code>unary_union</code> operator (as we do here) or using the <a href="https://geopandas.org/en/stable/docs/user_guide/aggregation_with_dissolve.html">dissolve()</a> approach. Consider the pros and cons of each approach in terms of performance, output format, and leigibility.</p>
+<p>So here’s approach 1, which is a function call (on which we call <code>plot</code>):</p>
+<div id="fe7ba226" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>boros.dissolve().plot()<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Practical-08-Selecting_Data_files/figure-html/cell-7-output-1.png" width="558" height="411" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>And here’s approach 2, which is an <em>attribute</em> and returns a polygon (so no reason to call <code>plot</code>, but it’s come back without the rest of the data frame!):</p>
+<div id="c179d7e8" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>boros.unary_union</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div>
+<figure class="figure">
+<p><img src="Practical-08-Selecting_Data_files/figure-html/cell-8-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+🔗 Connections
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Notice how we’re also demonstrating some additional ways of plotting ‘on the fly’ (without generating a data frame) as well as reminding you how to zoom in/out.</p>
+</div>
+</div>
+<div id="28e027e5" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>ldn <span class="op">=</span> gpd.GeoDataFrame(gpd.GeoSeries(data<span class="op">=</span>boros.unary_union)).rename(columns<span class="op">=</span>{<span class="dv">0</span>:<span class="st">'geometry'</span>}).set_geometry(<span class="st">"geometry"</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>ldn <span class="op">=</span> ldn.set_crs(epsg<span class="op">=</span><span class="dv">27700</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>ax  <span class="op">=</span> ldn.plot(facecolor<span class="op">=</span>(<span class="fl">.5</span>, <span class="fl">.5</span>, <span class="fl">.9</span>, <span class="fl">.5</span>))<span class="op">;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>msoas.plot(ax<span class="op">=</span>ax, facecolor<span class="op">=</span><span class="st">'none'</span>, edgecolor<span class="op">=</span>(<span class="fl">.6</span>, <span class="fl">.6</span>, <span class="fl">.6</span>, <span class="fl">.6</span>))</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>ax.set_xlim(<span class="dv">500000</span>, <span class="dv">515000</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>ax.set_ylim(<span class="dv">180000</span>, <span class="dv">195000</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Practical-08-Selecting_Data_files/figure-html/cell-9-output-1.png" width="450" height="411" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="buffer" class="level3">
+<h3 class="anchored" data-anchor-id="buffer">Buffer</h3>
+<p>In order to ensure that we get all MSOAs <em>within</em> London we will buffer the boundary by 250m. If <em>cover</em> were easier to use then that option might be preferable.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset qna-question">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Question</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Answer</a></li></ul>
+<div class="tab-content qna-question">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="sourceCode" id="cb11"><pre class="sourceCode python code cell code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>ldn[<span class="st">'buffered'</span>] <span class="op">=</span> ldn.geometry.???(???)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>ldn <span class="op">=</span> ldn.set_geometry(<span class="st">'buffered'</span>).set_crs(epsg<span class="op">=</span><span class="dv">27700</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>ax  <span class="op">=</span> ldn.plot(facecolor<span class="op">=</span>(<span class="fl">.5</span>, <span class="fl">.5</span>, <span class="fl">.9</span>, <span class="fl">.5</span>))</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>msoas.plot(ax<span class="op">=</span>ax, facecolor<span class="op">=</span><span class="st">'none'</span>, edgecolor<span class="op">=</span>(<span class="fl">.6</span>, <span class="fl">.6</span>, <span class="fl">.6</span>, <span class="fl">.6</span>))</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>ax.set_xlim(<span class="dv">500000</span>, <span class="dv">515000</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>ax.set_ylim(<span class="dv">180000</span>, <span class="dv">195000</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code cell code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>ldn[<span class="st">'buffered'</span>] <span class="op">=</span> ldn.geometry.<span class="bu">buffer</span>(<span class="dv">250</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>ldn <span class="op">=</span> ldn.set_geometry(<span class="st">'buffered'</span>).set_crs(epsg<span class="op">=</span><span class="dv">27700</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>ax  <span class="op">=</span> ldn.plot(facecolor<span class="op">=</span>(<span class="fl">.5</span>, <span class="fl">.5</span>, <span class="fl">.9</span>, <span class="fl">.5</span>))</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>msoas.plot(ax<span class="op">=</span>ax, facecolor<span class="op">=</span><span class="st">'none'</span>, edgecolor<span class="op">=</span>(<span class="fl">.6</span>, <span class="fl">.6</span>, <span class="fl">.6</span>, <span class="fl">.6</span>))</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>ax.set_xlim(<span class="dv">500000</span>, <span class="dv">515000</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>ax.set_ylim(<span class="dv">180000</span>, <span class="dv">195000</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="Practical-08-Selecting_Data_files/figure-html/cell-10-output-1.png" width="450" height="411"></p>
+</div>
+</div>
+</div>
+</section>
+<section id="spatial-join" class="level3">
+<h3 class="anchored" data-anchor-id="spatial-join">Spatial Join</h3>
+<p>Here’s our first spatial join. By default it will be an <em>inner</em> join because we want to drop everything that doesn’t line up between the two data sets (i.e.&nbsp;don’t keep the thousands of <em>other</em> MSOAs).</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset qna-question">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Question</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Answer</a></li></ul>
+<div class="tab-content qna-question">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="sourceCode" id="cb13"><pre class="sourceCode python code cell code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>ldn_msoas <span class="op">=</span> gpd.sjoin(msoas, ldn, predicate<span class="op">=</span><span class="st">'???'</span>, how<span class="op">=</span><span class="st">'inner'</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>ldn_msoas.head(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code cell code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>ldn_msoas <span class="op">=</span> gpd.sjoin(msoas, ldn, predicate<span class="op">=</span><span class="st">'within'</span>, how<span class="op">=</span><span class="st">'inner'</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>ldn_msoas.head(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">OBJECTID</th>
+<th data-quarto-table-cell-role="th">MSOA11CD</th>
+<th data-quarto-table-cell-role="th">MSOA11NM</th>
+<th data-quarto-table-cell-role="th">MSOA11NMW</th>
+<th data-quarto-table-cell-role="th">BNG_E</th>
+<th data-quarto-table-cell-role="th">BNG_N</th>
+<th data-quarto-table-cell-role="th">LONG</th>
+<th data-quarto-table-cell-role="th">LAT</th>
+<th data-quarto-table-cell-role="th">Shape__Are</th>
+<th data-quarto-table-cell-role="th">Shape__Len</th>
+<th data-quarto-table-cell-role="th">geometry_left</th>
+<th data-quarto-table-cell-role="th">index_right</th>
+<th data-quarto-table-cell-role="th">geometry_right</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1</td>
+<td>E02000001</td>
+<td>City of London 001</td>
+<td>City of London 001</td>
+<td>532384</td>
+<td>181355</td>
+<td>-0.093490</td>
+<td>51.51561</td>
+<td>2.906361e+06</td>
+<td>8936.818478</td>
+<td>POLYGON ((532135.138 182198.131, 532158.250 18...</td>
+<td>0</td>
+<td>POLYGON ((528150.200 159979.200, 528100.900 16...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2</td>
+<td>E02000002</td>
+<td>Barking and Dagenham 001</td>
+<td>Barking and Dagenham 001</td>
+<td>548267</td>
+<td>189685</td>
+<td>0.138756</td>
+<td>51.58652</td>
+<td>2.166163e+06</td>
+<td>8150.405928</td>
+<td>POLYGON ((548881.563 190845.265, 548881.125 19...</td>
+<td>0</td>
+<td>POLYGON ((528150.200 159979.200, 528100.900 16...</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="plot" class="level3">
+<h3 class="anchored" data-anchor-id="plot">Plot</h3>
+<div id="d3d0b3bf" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>ldn_msoas.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Practical-08-Selecting_Data_files/figure-html/cell-12-output-1.png" width="579" height="425" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset qna-question">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Question</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Answer</a></li></ul>
+<div class="tab-content qna-question">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<p>Hmmmm, not quite what you were expecting? See if you can figure out from the list of columns and the documentation for <code>set_geometry</code> what is going wrong?</p>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code cell code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> ldn_msoas.set_geometry(<span class="st">'geometry_left'</span>).plot(linewidth<span class="op">=</span><span class="dv">2</span>, facecolor<span class="op">=</span><span class="st">'none'</span>, edgecolor<span class="op">=</span>(<span class="fl">.6</span>, <span class="fl">.6</span>, <span class="fl">.6</span>, <span class="fl">.6</span>))</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>ax.set_xlim(<span class="dv">500000</span>, <span class="dv">515000</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>ax.set_ylim(<span class="dv">180000</span>, <span class="dv">195000</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="Practical-08-Selecting_Data_files/figure-html/cell-13-output-1.png" width="450" height="411"></p>
+</div>
+</div>
+</div>
+<div id="6e8a9487" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>ldn_msoas <span class="op">=</span> ldn_msoas.rename(columns<span class="op">=</span>{<span class="st">'geometry_left'</span>:<span class="st">'geometry'</span>}).set_geometry(<span class="st">'geometry'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="bf717f36" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>ldn_msoas.drop(columns<span class="op">=</span><span class="st">'geometry_right'</span>, inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We no longer really need to keep the full MSOA data set hanging about.</p>
+<div id="bdb80141" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">del</span>(msoas)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">NameError</span>:</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"msoas already deleted."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section class="level3 qna-question">
+<h3 class="qna-question anchored" data-anchor-id="">Question</h3>
+<div class="qna-question">
+<ul>
+<li>Can you explain <em>why</em> the outputs of the <code>dissolve</code> and <code>unary_union</code> <em>look</em> differnet? And use that as the basis for explaining why they <em>are</em> different?</li>
+</ul>
+<ul>
+<li>How do you know that the units for the buffering operation are metres? 250 could be <em>anything</em> right?</li>
+</ul>
+<ul>
+<li>Why do we need to buffer the London geometry <em>before</em> performing the <em>within</em> spatial join?</li>
+</ul>
+<section id="answer-3" class="level4">
+<h4 class="anchored" data-anchor-id="answer-3">Answer</h4>
+<ul>
+<li>Can you explain <em>why</em> the outputs of the <code>dissolve</code> and <code>unary_union</code> <em>look</em> differnet? And use that as the basis for explaining why they <em>are</em> different?</li>
+</ul>
+<p>Dissolve is a method call that returns a new GeoDataFrame, while unary_union is a spatial operation that returns a primitive geometry. So we could capture the output of dissolve and just r ename the columns, but from unary_union we need to write the primitive <em>into</em> a new GeoDataFrame as a geometry column.</p>
+<ul>
+<li>How do you know that the units for the buffering operation are metres? 250 could be <em>anything</em> right?</li>
+</ul>
+<p>It depends on the CRS! EPSG:27700 uses metres so the buffer operation is in metres.</p>
+<ul>
+<li>Why do we need to buffer the London geometry <em>before</em> performing the <em>within</em> spatial join?</li>
+</ul>
+<p>Because there may be small precision issues such that the MSOA borders cross the ‘border’ of the Thames and therefore no longer fall entirely within the London geometry. Try it yourself by changing the buffer amount!</p>
+</section>
+</div>
+</section>
+</section>
+<section id="append-names" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="append-names"><span class="header-section-number">2.3</span> Append Names</h2>
+<p>We don’t actually make use of these in this session, but <em>both</em> operations could be relevant to your final reports:</p>
+<ol type="1">
+<li>The Borough &gt; Subregion mapping could help you to group your data into larger sets so that your resulst become more reobust. it also connects us to long-run patterns of socio-economic development in London.</li>
+<li>The MSOA Names data set gives you something that you could use to label one or more ‘neighbourhoods’ on a map with names that are <em>relevant</em>. So rather than talking about “As you can see, Sutton 003, is…”, you can write “The Wrythe neighbourhood [or area] of Sutton is significantly different from the surrounding areas…”</li>
+</ol>
+<p>They also usefully test your understanding of regular expressions and a few other aspects covered in previous weeks.</p>
+<section id="replace" class="level3">
+<h3 class="anchored" data-anchor-id="replace">Replace</h3>
+<p>You’ve done this before: notice that the MSOA Name <em>contains</em> the Borough name <strong>with a space and some digits at the end</strong>. Use a regex (in <code>str.replace()</code>) to extract the LA name from the MSOA name. See if you do this <em>without</em> having to find your previous answer!</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset qna-question">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">Question</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">Answer</a></li></ul>
+<div class="tab-content qna-question">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
+<div class="sourceCode" id="cb20"><pre class="sourceCode python code cell code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>ldn_msoas[<span class="st">'Borough'</span>] <span class="op">=</span> ldn_msoas.MSOA11NM.<span class="bu">str</span>.replace(<span class="vs">r'???'</span>,<span class="st">''</span>,regex<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Just check results look plausible; you should have:</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># - 33 boroughs</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># - A df shape of 983 x 13</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ldn_msoas.Borough.unique())</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"There are </span><span class="sc">{</span><span class="bu">len</span>(ldn_msoas.Borough.unique())<span class="sc">}</span><span class="ss"> boroughs."</span>)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Overall shape of data frame is </span><span class="sc">{</span><span class="st">' x '</span><span class="sc">.</span>join([<span class="bu">str</span>(x) <span class="cf">for</span> x <span class="kw">in</span> ldn_msoas.shape])<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code cell code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>ldn_msoas[<span class="st">'Borough'</span>] <span class="op">=</span> ldn_msoas.MSOA11NM.<span class="bu">str</span>.replace(<span class="vs">r' \d+$'</span>,<span class="st">''</span>,regex<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Just check results look plausible; you should have:</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># - 33 boroughs</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co"># - A df shape of 983 x 13</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ldn_msoas.Borough.unique())</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"There are </span><span class="sc">{</span><span class="bu">len</span>(ldn_msoas.Borough.unique())<span class="sc">}</span><span class="ss"> boroughs."</span>)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Overall shape of data frame is </span><span class="sc">{</span><span class="st">' x '</span><span class="sc">.</span>join([<span class="bu">str</span>(x) <span class="cf">for</span> x <span class="kw">in</span> ldn_msoas.shape])<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre class="code cell"><code>['City of London' 'Barking and Dagenham' 'Barnet' 'Bexley' 'Brent'
+ 'Bromley' 'Camden' 'Croydon' 'Ealing' 'Enfield' 'Greenwich' 'Hackney'
+ 'Hammersmith and Fulham' 'Haringey' 'Harrow' 'Havering' 'Hillingdon'
+ 'Hounslow' 'Islington' 'Kensington and Chelsea' 'Kingston upon Thames'
+ 'Lambeth' 'Lewisham' 'Merton' 'Newham' 'Redbridge' 'Richmond upon Thames'
+ 'Southwark' 'Sutton' 'Tower Hamlets' 'Waltham Forest' 'Wandsworth'
+ 'Westminster']
+There are 33 boroughs.
+Overall shape of data frame is 983 x 13</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="merge" class="level3">
+<h3 class="anchored" data-anchor-id="merge">Merge</h3>
+<p>The House of Commons Library provides a <a href="https://houseofcommonslibrary.github.io/msoanames/">MSOA Names</a> data set that contains locally-relevant names applied to MSOAs. These seek to connect the Census geography (OA &gt; LSOA &gt; MSOA &gt; LA) to a loosely-defined ‘neighbourhood’.</p>
+<div id="86e0c0b4" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>msoa_nms <span class="op">=</span> pd.read_csv( cache_data(<span class="st">'https://houseofcommonslibrary.github.io/msoanames/MSOA-Names-1.20.csv'</span>, ddir) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Found data/geo/MSOA-Names-1.20.csv locally!</code></pre>
+</div>
+</div>
+<div id="2312d820" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(msoa_nms.columns.values)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>msoa_nms.sample(<span class="dv">3</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>['msoa11cd' 'msoa11nm' 'msoa11nmw' 'msoa11hclnm' 'msoa11hclnmw' 'Laname']</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">msoa11cd</th>
+<th data-quarto-table-cell-role="th">msoa11nm</th>
+<th data-quarto-table-cell-role="th">msoa11nmw</th>
+<th data-quarto-table-cell-role="th">msoa11hclnm</th>
+<th data-quarto-table-cell-role="th">msoa11hclnmw</th>
+<th data-quarto-table-cell-role="th">Laname</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4512</td>
+<td>E02004616</td>
+<td>Cotswold 002</td>
+<td>Cotswold 002</td>
+<td>Moreton &amp; Stow-on-the-Wold</td>
+<td>NaN</td>
+<td>Cotswold</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">4660</td>
+<td>E02004768</td>
+<td>Havant 007</td>
+<td>Havant 007</td>
+<td>Waterlooville East</td>
+<td>NaN</td>
+<td>Havant</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1038</td>
+<td>E02001074</td>
+<td>Manchester 030</td>
+<td>Manchester 030</td>
+<td>Fallowfield West &amp; Whalley Range South</td>
+<td>NaN</td>
+<td>Manchester</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Now that you’ve loaded the <code>msoa_nms</code> data you need to merge it with our <code>ldn_msoas</code>. You will need to deal with the fact that the left and right fields have different names and may also want to think about the <code>how</code> of the merge. In <em>this</em> case, the result of the merge <em>should</em> be a GeoDataFrame, but <strong>this is not always guaranteed</strong> so you may want to double-check or run multiple tests before assuming that you’ll get back a geographically aware object.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset qna-question">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">Question</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">Answer</a></li></ul>
+<div class="tab-content qna-question">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
+<div class="sourceCode" id="cb27"><pre class="sourceCode python code cell code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>msoas <span class="op">=</span> pd.merge(ldn_msoas, msoa_nms, left_on<span class="op">=</span><span class="st">'??'</span>, right_on<span class="op">=</span><span class="st">'??'</span>, how<span class="op">=</span><span class="st">'??'</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"MSOAs shape is </span><span class="sc">{</span><span class="st">' x '</span><span class="sc">.</span>join([<span class="bu">str</span>(x) <span class="cf">for</span> x <span class="kw">in</span> msoas.shape])<span class="sc">}</span><span class="ss">."</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Resulting class is a </span><span class="sc">{</span><span class="bu">type</span>(msoas)<span class="sc">.</span><span class="va">__name__</span><span class="sc">}</span><span class="ss">."</span>) <span class="co"># You should check this -- result isn't always be a GeoDataFrame</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>msoas.sample(<span class="dv">3</span>, random_state<span class="op">=</span><span class="dv">42</span>)[[<span class="st">'OBJECTID'</span>,<span class="st">'MSOA11CD'</span>,<span class="st">'MSOA11NM'</span>,<span class="st">'msoa11hclnm'</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code cell code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>msoas <span class="op">=</span> pd.merge(ldn_msoas, msoa_nms, left_on<span class="op">=</span><span class="st">'MSOA11CD'</span>, right_on<span class="op">=</span><span class="st">'msoa11cd'</span>, how<span class="op">=</span><span class="st">'inner'</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"MSOAs shape is </span><span class="sc">{</span><span class="st">' x '</span><span class="sc">.</span>join([<span class="bu">str</span>(x) <span class="cf">for</span> x <span class="kw">in</span> msoas.shape])<span class="sc">}</span><span class="ss">."</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Resulting class is a </span><span class="sc">{</span><span class="bu">type</span>(msoas)<span class="sc">.</span><span class="va">__name__</span><span class="sc">}</span><span class="ss">."</span>) <span class="co"># You should check this -- result isn't always be a GeoDataFrame</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>msoas.sample(<span class="dv">3</span>, random_state<span class="op">=</span><span class="dv">42</span>)[[<span class="st">'OBJECTID'</span>,<span class="st">'MSOA11CD'</span>,<span class="st">'MSOA11NM'</span>,<span class="st">'msoa11hclnm'</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre class="code cell"><code>MSOAs shape is 983 x 19.
+Resulting class is a GeoDataFrame.</code></pre>
+<div class="cell-output cell-output-display">
+<div>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">OBJECTID</th>
+<th data-quarto-table-cell-role="th">MSOA11CD</th>
+<th data-quarto-table-cell-role="th">MSOA11NM</th>
+<th data-quarto-table-cell-role="th">msoa11hclnm</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">810</td>
+<td>811</td>
+<td>E02000841</td>
+<td>Sutton 002</td>
+<td>St Helier South</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">801</td>
+<td>802</td>
+<td>E02000832</td>
+<td>Southwark 026</td>
+<td>Nunhead North</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">813</td>
+<td>814</td>
+<td>E02000844</td>
+<td>Sutton 005</td>
+<td>The Wrythe</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+
+</div>
+</div>
+</div>
+</div>
+<p>Your result should be:</p>
+<div id="e99c14c6" class="cell" data-execution_count="20">
+<div class="cell-output cell-output-display" data-execution_count="20">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">OBJECTID</th>
+<th data-quarto-table-cell-role="th">MSOA11CD</th>
+<th data-quarto-table-cell-role="th">MSOA11NM</th>
+<th data-quarto-table-cell-role="th">msoa11hclnm</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">810</td>
+<td>811</td>
+<td>E02000841</td>
+<td>Sutton 002</td>
+<td>St Helier South</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">801</td>
+<td>802</td>
+<td>E02000832</td>
+<td>Southwark 026</td>
+<td>Nunhead North</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">813</td>
+<td>814</td>
+<td>E02000844</td>
+<td>Sutton 005</td>
+<td>The Wrythe</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="map" class="level3">
+<h3 class="anchored" data-anchor-id="map">Map</h3>
+<p>Set up a <code>mapping</code> dict here so that you can apply it as part of the <code>groupby</code> operation below (you should have 33 keys when done):</p>
+<div id="1a740192" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>mapping <span class="op">=</span> {}</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> b <span class="kw">in</span> [<span class="st">'Enfield'</span>,<span class="st">'Waltham Forest'</span>,<span class="st">'Redbridge'</span>,<span class="st">'Barking and Dagenham'</span>,<span class="st">'Havering'</span>,<span class="st">'Greenwich'</span>,<span class="st">'Bexley'</span>]:</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    mapping[b]<span class="op">=</span><span class="st">'Outer East and North East'</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> b <span class="kw">in</span> [<span class="st">'Haringey'</span>,<span class="st">'Islington'</span>,<span class="st">'Hackney'</span>,<span class="st">'Tower Hamlets'</span>,<span class="st">'Newham'</span>,<span class="st">'Lambeth'</span>,<span class="st">'Southwark'</span>,<span class="st">'Lewisham'</span>]:</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    mapping[b]<span class="op">=</span><span class="st">'Inner East'</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> b <span class="kw">in</span> [<span class="st">'Bromley'</span>,<span class="st">'Croydon'</span>,<span class="st">'Sutton'</span>,<span class="st">'Merton'</span>,<span class="st">'Kingston upon Thames'</span>]:</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    mapping[b]<span class="op">=</span><span class="st">'Outer South'</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> b <span class="kw">in</span> [<span class="st">'Wandsworth'</span>,<span class="st">'Kensington and Chelsea'</span>,<span class="st">'Hammersmith and Fulham'</span>,<span class="st">'Westminster'</span>,<span class="st">'Camden'</span>]:</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>    mapping[b]<span class="op">=</span><span class="st">'Inner West'</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> b <span class="kw">in</span> [<span class="st">'Richmond upon Thames'</span>,<span class="st">'Hounslow'</span>,<span class="st">'Ealing'</span>,<span class="st">'Hillingdon'</span>,<span class="st">'Brent'</span>,<span class="st">'Harrow'</span>,<span class="st">'Barnet'</span>,<span class="st">'City of London'</span>]:</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>    mapping[b]<span class="op">=</span><span class="st">'Outer West and North West'</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(mapping.keys()))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>33</code></pre>
+</div>
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset qna-question">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true">Question</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false">Answer</a></li></ul>
+<div class="tab-content qna-question">
+<div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
+<div class="sourceCode" id="cb32"><pre class="sourceCode python code cell code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>msoas[<span class="st">'Subregion'</span>] <span class="op">=</span> msoas.Borough.<span class="bu">map</span>(???)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code cell code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>msoas[<span class="st">'Subregion'</span>] <span class="op">=</span> msoas.Borough.<span class="bu">map</span>(mapping)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="tidy-up" class="level3">
+<h3 class="anchored" data-anchor-id="tidy-up">Tidy Up</h3>
+<div id="65b18196" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>msoas.columns.to_list()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<pre><code>['OBJECTID',
+ 'MSOA11CD',
+ 'MSOA11NM',
+ 'MSOA11NMW',
+ 'BNG_E',
+ 'BNG_N',
+ 'LONG',
+ 'LAT',
+ 'Shape__Are',
+ 'Shape__Len',
+ 'geometry',
+ 'index_right',
+ 'Borough',
+ 'msoa11cd',
+ 'msoa11nm',
+ 'msoa11nmw',
+ 'msoa11hclnm',
+ 'msoa11hclnmw',
+ 'Laname',
+ 'Subregion']</code></pre>
+</div>
+</div>
+<div id="1e5a0696" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>to_drop <span class="op">=</span> [<span class="st">'MSOA11CD'</span>,<span class="st">'MSOA11NM'</span>,<span class="st">'MSOA11NMW'</span>,<span class="st">'LONG'</span>,<span class="st">'LAT'</span>,<span class="st">'Shape__Are'</span>,<span class="st">'Shape__Len'</span>,<span class="st">'index_right'</span>,</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>           <span class="st">'Laname'</span>,<span class="st">'msoa11hclnmw'</span>,<span class="st">'msoa11nmw'</span>]</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>msoas.drop(columns<span class="op">=</span>to_drop, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(msoas.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(983, 9)</code></pre>
+</div>
+</div>
+</section>
+<section id="and-save" class="level3">
+<h3 class="anchored" data-anchor-id="and-save">And Save</h3>
+<div id="80370578" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>msoas.to_parquet(os.path.join(<span class="st">'data'</span>,<span class="st">'geo'</span>,<span class="st">'London_MSOA_Names.geoparquet'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="load-insideairbnb-data" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="load-insideairbnb-data"><span class="header-section-number">2.4</span> Load InsideAirbnb Data</h2>
+<div id="ec207465" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>host <span class="op">=</span> <span class="st">'http://orca.casa.ucl.ac.uk'</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> <span class="st">'~jreades/data'</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>ymd  <span class="op">=</span> <span class="st">'2023-09-06'</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>listings <span class="op">=</span> gpd.read_parquet( cache_data(<span class="ss">f'</span><span class="sc">{</span>host<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>path<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>ymd<span class="sc">}</span><span class="ss">-listings.geoparquet'</span>, ddir) )</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>listings <span class="op">=</span> listings.to_crs(epsg<span class="op">=</span><span class="dv">27700</span>)</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Data frame is </span><span class="sc">{</span>listings<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> x </span><span class="sc">{</span>listings<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Found data/geo/2023-09-06-listings.geoparquet locally!
+Data frame is 85,134 x 31</code></pre>
+</div>
+</div>
+<div id="03efb128" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>listings <span class="op">=</span> listings.to_crs(<span class="st">'epsg:27700'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="spatial-join-1" class="level3">
+<h3 class="anchored" data-anchor-id="spatial-join-1">Spatial Join</h3>
+<p>Associate LA (Local Authority) names to the listings using a spatial join, but <strong>notice</strong> the <code>how</code> here:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset qna-question">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true">Question</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false">Answer</a></li></ul>
+<div class="tab-content qna-question">
+<div id="tabset-7-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-7-1-tab">
+<div class="sourceCode" id="cb42"><pre class="sourceCode python code cell code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>gdf_la <span class="op">=</span> gpd.sjoin(listings, ???, predicate<span class="op">=</span><span class="st">'???'</span>, how<span class="op">=</span><span class="st">'left'</span>)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gdf_la.columns.to_list())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="tabset-7-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-2-tab">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code cell code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>gdf_la <span class="op">=</span> gpd.sjoin(listings, boros, predicate<span class="op">=</span><span class="st">'within'</span>, how<span class="op">=</span><span class="st">'left'</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gdf_la.columns.to_list())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre class="code cell"><code>['listing_url', 'last_scraped', 'name', 'description', 'host_id', 'host_name', 'host_since', 'host_location', 'host_is_superhost', 'host_listings_count', 'host_total_listings_count', 'host_verifications', 'latitude', 'longitude', 'property_type', 'room_type', 'accommodates', 'bathrooms_text', 'bedrooms', 'beds', 'amenities', 'price', 'minimum_nights', 'maximum_nights', 'availability_365', 'number_of_reviews', 'first_review', 'last_review', 'review_scores_rating', 'reviews_per_month', 'geometry', 'index_right', 'NAME', 'GSS_CODE', 'HECTARES', 'NONLD_AREA', 'ONS_INNER']</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="tidy-up-1" class="level3">
+<h3 class="anchored" data-anchor-id="tidy-up-1">Tidy Up</h3>
+<div id="552f02f7" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>gdf_la.drop(columns<span class="op">=</span>[<span class="st">'index_right'</span>,<span class="st">'HECTARES'</span>,<span class="st">'NONLD_AREA'</span>,<span class="st">'ONS_INNER'</span>], inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You’ll need to look closely to check that the <code>value_counts</code> output squares with your expectations. If you don’t get <code>33</code> then there’s an issue:</p>
+<div id="d69bd1d8" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">len</span>(gdf_la.NAME.unique()) <span class="op">==</span> <span class="dv">33</span>:</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"All good..."</span>)</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Need to run the next section of code..."</span>)</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Now there are... </span><span class="sc">{</span><span class="bu">len</span>(gdf_la.NAME.unique())<span class="sc">}</span><span class="ss"> boroughs?"</span>)</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>    gdf_la.NAME.value_counts(dropna<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>All good...</code></pre>
+</div>
+</div>
+</section>
+<section id="find-problematic-listings" class="level3">
+<h3 class="anchored" data-anchor-id="find-problematic-listings">Find Problematic Listings</h3>
+<p>If you were told that you need to run the next sectin of code then see if you can work out what happened…</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(gdf_la[gdf_la.NAME.isna()].sample(<span class="dv">2</span>)[[<span class="st">'name'</span>, <span class="st">'NAME'</span>]])</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>    ax <span class="op">=</span> gdf_la[gdf_la.NAME.isna()].plot(figsize<span class="op">=</span>(<span class="dv">9</span>,<span class="dv">6</span>), markersize<span class="op">=</span><span class="dv">5</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>    boros.plot(ax<span class="op">=</span>ax, edgecolor<span class="op">=</span><span class="st">'r'</span>, facecolor<span class="op">=</span><span class="st">'None'</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)<span class="op">;</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">ValueError</span> <span class="im">as</span> e:</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>   <span class="cf">pass</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In short: in some cases there may be records that fall outside of London because of Airbnb’s shuffling approach:</p>
+<div id="7af8e8d6" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>gdf_la.drop(index<span class="op">=</span>gdf_la[gdf_la.NAME.isna()].index, axis<span class="op">=</span><span class="dv">1</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Data frame is </span><span class="sc">{</span>gdf_la<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> x </span><span class="sc">{</span>gdf_la<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data frame is 85,134 x 33</code></pre>
+</div>
+</div>
+<p>You should now have <code>{python} f"{gdf_la.shape[0]:,}"</code> records.</p>
+</section>
+<section id="check" class="level3">
+<h3 class="anchored" data-anchor-id="check">Check</h3>
+<div id="1e60392c" class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> gdf_la.plot(column<span class="op">=</span><span class="st">'NAME'</span>, markersize<span class="op">=</span><span class="fl">0.5</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, figsize<span class="op">=</span>(<span class="dv">9</span>,<span class="dv">7</span>))</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>boros.plot(ax<span class="op">=</span>ax, edgecolor<span class="op">=</span><span class="st">'r'</span>, facecolor<span class="op">=</span><span class="st">'None'</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Practical-08-Selecting_Data_files/figure-html/cell-33-output-1.png" width="749" height="559" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="save" class="level3">
+<h3 class="anchored" data-anchor-id="save">Save</h3>
+<div id="f04bcf8d" class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>gdf_la.to_parquet(os.path.join(<span class="st">'data'</span>,<span class="st">'geo'</span>,<span class="st">'Listings_with_LA.geoparquet'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset qna-question">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-8-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-1" role="tab" aria-controls="tabset-8-1" aria-selected="true">Question</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-2" role="tab" aria-controls="tabset-8-2" aria-selected="false">Answer</a></li></ul>
+<div class="tab-content qna-question">
+<div id="tabset-8-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-8-1-tab">
+<ul>
+<li>Do you understand the difference between <code>how='inner'</code> and <code>how='left'</code>?</li>
+</ul>
+</div>
+<div id="tabset-8-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-8-2-tab">
+<ul>
+<li>Do you understand the difference between <code>how='inner'</code> and <code>how='left'</code>?</li>
+</ul>
+<p>Left joins preserve <em>all</em> records on the left table <em>regardless</em> of whether they match something in the right table. In this case, because it’s a <em>spatial</em> join we keep the listings <em>regardless</em> of whether they fall within the London boroughs. Inner joins preserve <em>only</em> the records that match between left and right, so in this case if you did a spatial inner join you’d only get the records that fall within a London borough. Right joins do about what you’d expect (not very helpful in this example). Outer joins preserve everything in both tables which, in a spatial context, would probably be a little hard to interpret.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="create-la-data" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="create-la-data"><span class="header-section-number">2.5</span> Create LA Data</h2>
+<section id="select-la" class="level3">
+<h3 class="anchored" data-anchor-id="select-la">Select LA</h3>
+<p>Select a LA that is relevant to <em>you</em> to explore further…</p>
+<div id="5ada9eca" class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>LA <span class="op">=</span> <span class="st">'Waltham Forest'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="spatial-join-2" class="level3">
+<h3 class="anchored" data-anchor-id="spatial-join-2">Spatial Join</h3>
+<p>The first thing we want to do is join MSOA identifiers to each listing. In both cases we want to constrain the data to only be for ‘our’ LA of interest:</p>
+<div id="40d082e6" class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>msoadf  <span class="op">=</span> gpd.sjoin(</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>            gdf_la[gdf_la.NAME<span class="op">==</span>LA].reset_index(), </span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>            msoas[msoas.Borough<span class="op">==</span>LA], predicate<span class="op">=</span><span class="st">'within'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="aggregate" class="level3">
+<h3 class="anchored" data-anchor-id="aggregate">Aggregate</h3>
+<p>Now aggregate the data by MSOA, deriving median price and a count of the listings:</p>
+<div id="f3b30251" class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>msoagrdf <span class="op">=</span> msoadf.groupby(<span class="st">'msoa11nm'</span>).agg({<span class="st">'price'</span>:[<span class="st">'median'</span>,<span class="st">'count'</span>]}).reset_index()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="1f38dc84" class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>msoagrdf.sample(<span class="dv">3</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="37">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">msoa11nm</th>
+<th colspan="2" data-quarto-table-cell-role="th" data-halign="left">price</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">median</th>
+<th data-quarto-table-cell-role="th">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">9</td>
+<td>Waltham Forest 010</td>
+<td>60.0</td>
+<td>35</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">25</td>
+<td>Waltham Forest 026</td>
+<td>69.5</td>
+<td>86</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>Waltham Forest 009</td>
+<td>64.0</td>
+<td>47</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>You should get something like the below (if you’re using Waltham Forest):</p>
+<div id="573846d7" class="cell" data-execution_count="38">
+<div class="cell-output cell-output-display" data-execution_count="38">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">msoa11nm</th>
+<th colspan="2" data-quarto-table-cell-role="th" data-halign="left">price</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">median</th>
+<th data-quarto-table-cell-role="th">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">9</td>
+<td>Waltham Forest 010</td>
+<td>60.0</td>
+<td>35</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">25</td>
+<td>Waltham Forest 026</td>
+<td>69.5</td>
+<td>86</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>Waltham Forest 009</td>
+<td>64.0</td>
+<td>47</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="resolve-columns" class="level3">
+<h3 class="anchored" data-anchor-id="resolve-columns">Resolve Columns</h3>
+<p>Which level value is easier to use? 0? or 1?</p>
+<div id="a69227d6" class="cell" data-execution_count="39">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>msoagrdf.columns <span class="op">=</span> msoagrdf.columns.get_level_values(<span class="dv">1</span>)</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>msoagrdf.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="39">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">median</th>
+<th data-quarto-table-cell-role="th">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Waltham Forest 001</td>
+<td>97.0</td>
+<td>17</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Waltham Forest 002</td>
+<td>58.0</td>
+<td>14</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Waltham Forest 003</td>
+<td>89.0</td>
+<td>7</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Waltham Forest 004</td>
+<td>43.5</td>
+<td>8</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Waltham Forest 005</td>
+<td>50.0</td>
+<td>12</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Fix the missing column name:</p>
+<div id="64104f68" class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>msoagrdf.rename(columns<span class="op">=</span>{<span class="st">''</span>:<span class="st">'msoa11nm'</span>, <span class="st">'count'</span>:<span class="st">'listings'</span>}, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>msoagrdf.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="40">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">msoa11nm</th>
+<th data-quarto-table-cell-role="th">median</th>
+<th data-quarto-table-cell-role="th">listings</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Waltham Forest 001</td>
+<td>97.0</td>
+<td>17</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Waltham Forest 002</td>
+<td>58.0</td>
+<td>14</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Waltham Forest 003</td>
+<td>89.0</td>
+<td>7</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Waltham Forest 004</td>
+<td>43.5</td>
+<td>8</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Waltham Forest 005</td>
+<td>50.0</td>
+<td>12</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="join-again" class="level3">
+<h3 class="anchored" data-anchor-id="join-again">Join (Again)</h3>
+<p>Here we see the <strong>difference between merge and join</strong>. You’ll notice that <code>join</code> operates by taking one data frame as the implicit ‘<em>left</em>’ table (the one which <em>calls</em> join) while the one that is passed to the join function is, implicitly, the ‘<em>right</em>’ table. Join operates only using indexes, so you’ll need to insert the code to specify the same index on both data frames, but this can be done <strong>on-the-fly</strong> as part of the joining operation:</p>
+<div id="44e8169d" class="cell" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>msoa_gdf <span class="op">=</span> msoagrdf.set_index(<span class="st">'msoa11nm'</span>).join(</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>                msoas[msoas.Borough<span class="op">==</span>LA].set_index(<span class="st">'msoa11nm'</span>), </span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>                rsuffix<span class="op">=</span><span class="st">'_r'</span>)</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>msoa_gdf.head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="41">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">median</th>
+<th data-quarto-table-cell-role="th">listings</th>
+<th data-quarto-table-cell-role="th">OBJECTID</th>
+<th data-quarto-table-cell-role="th">BNG_E</th>
+<th data-quarto-table-cell-role="th">BNG_N</th>
+<th data-quarto-table-cell-role="th">geometry</th>
+<th data-quarto-table-cell-role="th">Borough</th>
+<th data-quarto-table-cell-role="th">msoa11cd</th>
+<th data-quarto-table-cell-role="th">msoa11hclnm</th>
+<th data-quarto-table-cell-role="th">Subregion</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">msoa11nm</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Waltham Forest 001</td>
+<td>97.0</td>
+<td>17</td>
+<td>863</td>
+<td>537936</td>
+<td>194880</td>
+<td>POLYGON ((537919.442 195742.428, 538051.250 19...</td>
+<td>Waltham Forest</td>
+<td>E02000895</td>
+<td>Chingford Green West</td>
+<td>Outer East and North East</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Waltham Forest 002</td>
+<td>58.0</td>
+<td>14</td>
+<td>864</td>
+<td>539350</td>
+<td>194516</td>
+<td>POLYGON ((539172.688 195540.000, 539696.813 19...</td>
+<td>Waltham Forest</td>
+<td>E02000896</td>
+<td>Chingford Green East</td>
+<td>Outer East and North East</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Waltham Forest 003</td>
+<td>89.0</td>
+<td>7</td>
+<td>865</td>
+<td>539355</td>
+<td>193522</td>
+<td>POLYGON ((538862.624 194017.438, 539001.125 19...</td>
+<td>Waltham Forest</td>
+<td>E02000897</td>
+<td>Friday Hill</td>
+<td>Outer East and North East</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="resolve-geodata" class="level3">
+<h3 class="anchored" data-anchor-id="resolve-geodata">Resolve Geodata</h3>
+<p>You need to add a command in order to help python recognise that this should be a GeoDataFrame:</p>
+<div id="cef2ad1b" class="cell" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>msoa_gdf <span class="op">=</span> msoa_gdf.set_geometry(<span class="st">'geometry'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>msoa_gdf.plot(column<span class="op">=</span><span class="st">'median'</span>, legend<span class="op">=</span><span class="va">True</span>, figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">8</span>))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You should get something like:</p>
+<div id="ec665d31" class="cell" data-execution_count="43">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Practical-08-Selecting_Data_files/figure-html/cell-44-output-1.png" width="500" height="633" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="save-1" class="level3">
+<h3 class="anchored" data-anchor-id="save-1">Save</h3>
+<p>Just so that we can pick up here without having to re-run all the preceding cells.</p>
+<div id="046f7eed" class="cell" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>msoa_gdf.to_parquet(os.path.join(<span class="st">'data'</span>,<span class="st">'geo'</span>,<span class="ss">f'</span><span class="sc">{</span>LA<span class="sc">}</span><span class="ss">-MSOA_data.geoparquet'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section class="level3 qna-question">
+<h3 class="qna-question anchored" data-anchor-id="">Question</h3>
+<div class="qna-question">
+<ul>
+<li>Do you understand the differences between <code>pd.merge</code> and <code>df.join</code>? and <code>gpd.sjoin</code>?</li>
+</ul>
+<ul>
+<li>Do you understand why it may be necessary to <code>set_geometry</code> in some cases?</li>
+</ul>
+<section id="answer-9" class="level4">
+<h4 class="anchored" data-anchor-id="answer-9">Answer</h4>
+<ul>
+<li>Do you understand the differences between <code>pd.merge</code> and <code>df.join</code>? and <code>gpd.sjoin</code>?</li>
+</ul>
+<p>Obviously one of these three is spatial in nature, but beyond that there is a <em>lot</em> of overlap and great deal depends on the logic or the linkage. <code>join</code> is relatively limited in functionality but is fairly clear about the relationships: if the indexes don’t match it doesn’t produce anything. <code>merge</code> is actually (functionally, at least) more similar to <code>sjoin</code> than <code>sjoin</code> is to <code>join</code> – this is slightly confusing but can probably be traced back to Pandas’ origins in panel data research whereas Geopandas’ is more technically correct in its terminology because of the influence of GIS.</p>
+<ul>
+<li>Do you understand why it may be necessary to <code>set_geometry</code> in some cases?</li>
+</ul>
+<p>Joins are DataFrame functionality and so are unaware of GeoDataFrames (so the return type devolves to a DataFrame), whereas merges seem to preserve the child class type and mean that a GeoDataFrame is returned even thought this is <em>also</em> a Pandas utility function.</p>
+</section>
+</div>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 2022, Jon Reades</p>
+</div>   
+    <div class="nav-footer-center">
+<p><img src="../img/favicon-16x16.png" class="height:10px img-fluid"> Foundations of Spatial Data Science</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jreades/fsds/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jreades/fsds">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/jreades">
+      <i class="bi bi-twitter" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

@@ -62,7 +62,7 @@ We're building on the work done in [Practical 5](Practical-05-Numeric_Data.ipynb
 
 I find GeoPackages and GeoParquet to be by far the easiest way to distribute geo-data now: they are a single file (in a database-like format that supports multiple types of data), include the projection information by default, and in some cases QGIS can even embed information about rendering style! 
 
-We're going to do something _similar_ to the `get_url` function in `dtools` in order to download the file to our hard drive and save it there. The improvement is that we'll check to see if the file already exists and, if it does, return that so that you can don't have to keep downloading it week after week. 
+We're going to do something _similar_ to the `get_url` in order to download the file to our hard drive and save it there. The improvement is that we'll check to see if the file already exists and, if it does, return that so that you can don't have to keep downloading it week after week. 
 
 You'll need to add the documentation yourself and I've left a few `??` to challenge you.
 
@@ -84,7 +84,7 @@ Use this as an opportunity to improve your ability to read code and to learn thr
 
 :::
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -104,7 +104,7 @@ def cache_data(src:str, dest:str) -> str:
     fn  = os.path.split(url.path)[??] # Extract the filename
     dfn = os.path.join(dest,fn) # Destination filename
     
-    if not os.path.isfile(dfn):
+    if not os.path.isfile(dfn) or os.path.getsize(dfn) < 250:
         
         print(f"{dfn} not found, downloading!")
 
@@ -163,7 +163,7 @@ def cache_data(src:str, dest:str) -> str:
     fn  = os.path.split(url.path)[-1] # Extract the filename
     dfn = os.path.join(dest,fn) # Destination filename
 
-    if not os.path.isfile(dfn):
+    if not os.path.isfile(dfn) or os.path.getsize(dfn) < 250:
 
         print(f"{dfn} not found, downloading!")
 
@@ -200,7 +200,7 @@ help(cache_data) # <- This should show the docstring you've written
 
 Use the function above to download and cache the GeoPackage files found [on GitHub](https://github.com/jreades/fsds/tree/master/data/src) for Boroughs, Water, and Greenspace, then pass the output of these to GeoPandas. If you have been having trouble downloading files from GitHub, then use the understanding of the function developed above to download the file manually and place it where this function expects to find it!
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -240,7 +240,7 @@ Let's re-use our `cache_data` function to download and save the full Inside Airb
 
 :::
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -281,7 +281,7 @@ Of course, you will also often encounter geo-data that is not yet 'geographicall
 
 We'll tackle each of these eventually, but for now we're going to focus on the first option.
 
-## Creatting a GeoDataFrame
+## Creating a GeoDataFrame
 
 ::: {.callout-tip collapse="true"}
 
@@ -354,10 +354,14 @@ boros.to_file('test.gpkg', driver='GPKG')
 
 ```{python}
 #| echo: false
-fn = f"{ymd}-listings.gpkg"
+#| output: asis
+print(f"So, starting with <code>fn = '{ymd}-listings.gpkg'</code>")
 ```
 
-So, starting with `fn=`{python} f"'{fn}'"``...
+```{python}
+#| echo: false
+fn = f"{ymd}-listings.gpkg"
+```
 
 Notice the difference:
 
@@ -381,6 +385,7 @@ But the below, in which we specify as a 'geoparquet' because of the coordinate d
 ```{python}
 fn = fn.replace('.gpkg','.geoparquet')
 gdf.to_parquet(os.path.join('data','geo',fn))
+print("Saved.")
 ```
 
 ## Spatial Indexing
@@ -393,8 +398,10 @@ gdf.geometry.iloc[1] # The object knows how to print itself as a point
 ```
 
 ```{python}
-print(str(boros.geometry.iloc[1])[:399] + "...") # Object to string then print out first 399 characters
-boros.geometry.iloc[1] # So this is a multi-polygon boundary
+# Object to string then print out first 399 characters
+print(str(boros.geometry.iloc[1])[:399] + "...") 
+# So this is a multi-polygon boundary
+boros.geometry.iloc[1] 
 ```
 
 So each element of this Series has text indicating the type of shape the geometry applies to (e.g. _POLYGON_) followed by a bunch of numbers. These numbers are truncated here just to make things a little more legible.
@@ -417,7 +424,7 @@ Think about what the 'total bounds' (or 'envelope') of a point data set is. You 
 
 :::
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -460,7 +467,7 @@ print(f"The top-right corner is {df.longitude.max():0.1f}, {df.latitude.max():0.
 
 We'll see how you control figure-making more effectively later, but for now let's just see what they look like using GeoPanda's plotting functionality. If you don't see what you expected then the problem could be quite basic/fundamental.
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -469,6 +476,8 @@ for ??:
     ??.plot()
 ```
 #### Answer
+
+Note that here the data has *already* been reprojected so we're looking as `EPSG:27700` and not `EPSG:4326`.
 
 ```{python}
 for g in [boros,water,green]:
@@ -487,7 +496,7 @@ for g in [boros,water,green]:
 
 Check the projection of each GeoDataFrame using a for loop and the `crs` attribute.
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -522,9 +531,9 @@ print(gdf.geometry.crs)
 print(gdf.total_bounds)
 ```
 
-... and reprojecting this into the OSGB1936/BNG CRS:
+... and reprojecting this into the `OSGB1936/BNG` CRS:
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -581,7 +590,7 @@ By way of a hint, matplotlib uses `edgecolor` and `facecolor` for controlling 'p
 
 Just to drive home how different this is from R, you can find the answer to question 1 [on the page for bar plots](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.bar.html).
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -610,7 +619,7 @@ The process is the same as above, but I'd like you to work out how to specify:
 1. _No_ color for an edge, and 
 2. An XKCD color for the face.
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -638,7 +647,7 @@ The process is _also_ the same as above, but I'd like you to work out how to spe
 1. No edge color.
 2. A partially transparent green specified as a 'tuple' (4 numbers in parentheses in the range 0.0-1.0).
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -683,6 +692,7 @@ You can set these limits before or after you start adding layers to the 'map', b
 4. Save it somewhere local so that you could, say, load it into a Markdown file!
 
 ::: {.callout-tip}
+
 This is a first pass at a map, over the next few weeks we'll see how to add things like axis labels and titles to make it more 'map-like'. We don't have quite the built-in functionality of `ggplot` alas, but Python is advancing very quickly in this area. There is even [an implementation of ggplot in Python](https://github.com/yhat/ggpy), but it's functionality is more limited. In fact, there's [more than one](https://github.com/has2k1/plotnine)...
 
 :::
@@ -693,7 +703,7 @@ This is a first pass at a map, over the next few weeks we'll see how to add thin
 
 :::
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -761,18 +771,18 @@ Now that we've converted the InsideAirbnb data to a GeoDataFrame, we can plot it
 
 See if you can work out how to plot the points coloured by their price using the appropriate BNG projection.
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
 ```python
-gdf.to_crs(??).plot(column=??, cmap=??, alpha=0.25, markersize=1, figsize=(12,8));
+gdf.to_crs(??).plot(column=??, cmap=??, alpha=0.25, markersize=1, figsize=(10,7));
 ```
 
 #### Answer
 
 ```{python}
-gdf.to_crs('epsg:27700').plot(column='price', cmap='viridis', alpha=0.25, markersize=1, figsize=(12,8));
+gdf.to_crs('epsg:27700').plot(column='price', cmap='viridis', alpha=0.25, markersize=1, figsize=(10,7));
 ```
 
 ::::
@@ -796,7 +806,7 @@ As we saw above with the point-plot, in its original form the pricing data will 
 
 Let's start by getting a feel for the full data set in terms of the range of prices that it contains:
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -836,7 +846,7 @@ if isinstance(gdf, pd.DataFrame):
 
 *That* result means that we can also investigate the data using, for instance, a pandas histogram:
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -847,9 +857,16 @@ gdf.price.plot.??(bins=??, figsize=(10,3));
 
 #### Answer
 
+{{< fa triangle-exclamation >}} Notice the difference between these two outputs, make sure that you understand why these differ so enormously:
+
 ```{python}
 # Oooooh, let's use a *pandas* method here
-gdf.price.plot.hist(bins=200, figsize=(10,3)); 
+gdf.price.plot.hist(bins=200, xlim=(0,1000), figsize=(9,3)); 
+```
+
+```{python}
+# Oooooh, let's use a *pandas* method here
+gdf[gdf.price < 1000].price.plot.hist(bins=200, figsize=(9,3)); 
 ```
 
 ::::
@@ -861,13 +878,13 @@ We can see that there's very little data above (at a guess) about $2,000, but at
 Try adjusting the axis so that the x-range is 0..2500:
 
 ```python
-ax = gdf.price.plot.??(bins=??, figsize=(10,3));
+ax = gdf.price.plot.??(bins=??, figsize=(9,3));
 ax.??
 ```
 
 You can do the same thing with a boxplot:
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -921,7 +938,7 @@ Anyway, drawing on everything we've seen over the past couple of weeks (and in *
 # Use this as a 'scratch space' to work out what's needed below...
 ```
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -1020,7 +1037,7 @@ Now plot the ln(price) as a chloropleth using:
 
 I'd suggest [referring to the documentation](https://geopandas.org/mapping.html).
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -1047,6 +1064,7 @@ You should get something like:
 
 ```{python}
 #| echo: false
+#| fig-cap: 'Natural Log of Price per Night ($) with Outliers REmoved'
 f
 ```
 
@@ -1068,7 +1086,7 @@ We show one way to do this below (`f,ax = plt.subplots(...)`) because it gives y
 
 :::
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -1108,6 +1126,7 @@ Your result should look something like this:
 
 ```{python}
 #| echo: false
+#| fig-cap: "Natural Log of Price per Night ($)"
 f
 ```
 
@@ -1123,7 +1142,7 @@ That's a little better, but ideally we'd do more thinking about outliers...
 
 Let's give this one last try using the quantiles classification scheme for Central London!
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -1159,6 +1178,7 @@ Your answer should look like:
 
 ```{python}
 #| echo: false
+#| fig-cap: "Natural Log of Price per Night ($) in Central London"
 f
 ```
 
@@ -1184,7 +1204,7 @@ You can't use `round` here because it it could round up or down depending on wha
 
 :::
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -1215,7 +1235,7 @@ You should end up with something like:
 -0.11000, 51.49000
 -0.10999999999999999 51.49
 ```
-You'll see *why* this happens in the answer notebook.
+You'll see *why* this happens in the answer.
 
 #### Answer
 
@@ -1292,7 +1312,7 @@ m
 
 To give a bit of a show of how we can put it all together try to get this working
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -1502,11 +1522,13 @@ You should have something like this:
 
 ```{python}
 #| echo: false
+#| label: fig-price-quantiles
+#| fig-cap: "London Airbnb Listings Price Per Night (Quantiles)"
 #f = plt.gcf()
 f
 ```
 
-London Airbnb Listings Price Per Night (Quantiles)
+
 
 I'll be honest, I do find ggplot easier for making good-quality; this _is_ more customisable overall, but it's also much more 'magical' in the sense of 'search for `matplotlib` examples that do what you want then copy+paste them and tweak' being the main way that most people get things working how they want.
 
@@ -1519,12 +1541,12 @@ You can find a lot of *possible* solutions in [this Stackoverflow thread](https:
 
 ### Getting More Help/Applications
 
-A great resource for more help and more examples is Dani Arribas-Bel's _Geographic Data Science_ module: he has put all of his [module practicals online](http://darribas.org/gds17/) (as we have too), and you might find that something that he does makes more sense to you than what we've done... check it out!
+A great resource for more help and more examples is Dani Arribas-Bel's _Geographic Data Science_ module: he has put all of his [module practicals online](https://github.com/darribas/gds_course) (as we have too), and you might find that something that he does makes more sense to you than what we've done... check it out!
 
 ## Credits!
 
 #### Contributors:
-The following individuals have contributed to these teaching materials: Jon Reades (jonathan.reades@kcl.ac.uk), James Millington (james.millington@kcl.ac.uk)
+The following individuals have contributed to these teaching materials: Jon Reades (j.reades@ucl.ac.uk), James Millington (james.millington@kcl.ac.uk)
 
 #### License
 These teaching materials are licensed under a mix of [The MIT License](https://opensource.org/licenses/mit-license.php) and the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 license](https://creativecommons.org/licenses/by-nc-sa/4.0/).
@@ -1533,5 +1555,4 @@ These teaching materials are licensed under a mix of [The MIT License](https://o
 Supported by the [Royal Geographical Society](https://www.rgs.org/HomePage.htm) (with the Institute of British Geographers) with a Ray Y Gildea Jr Award.
 
 #### Potential Dependencies:
-This notebook may depend on the following libraries: pandas, matplotlib, seaborn
-
+This notebook may depend on the following libraries: geopandas, pandas, matplotlib, seaborn

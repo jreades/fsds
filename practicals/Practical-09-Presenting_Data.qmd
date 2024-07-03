@@ -13,18 +13,23 @@ filters:
 
 ::: {.callout-warning}
 
-    **&#9888; Important**: This practical focusses on two key bits of _implementation_: visualisation and data linkage! You will have seen quite a bit of each of these across the preceding three to four weeks, but they were picked up in an _ad-hoc_ way, here we try to systematise things a bit.
+#### Important
+
+This practical focusses on the final topic we want to cover in *Foundations*: visualisation! You will have seen quite a bit of this across the preceding three to four weeks, but it was done in an _ad-hoc_ way, here we try to systematise things a bit.
 
 :::
 
 ::: {.callout-note}
 
-    **&#128279; Connections**: Here we're trying to tidy up the loose ends. You've already worked with basic data visualisations in Seaborn and Matplotlib (including (geo)panda's `plot` function), but we want you to have a better sense of how that _works_ as part of a coherent -- if altogether rather complex and overwhelming -- approach to managing a data visualisation. You've also already seen examples of joins and spatial joins before but, again, we just want to review them more formally now.
+#### &#128279; Connections
+
+Here we're trying to tidy up the loose ends. You've already worked with basic data visualisations in Seaborn and Matplotlib (including (geo)panda's `plot` function), but we want you to have a better sense of how that _works_ as part of a coherent -- if altogether rather complex and overwhelming -- approach to managing a data visualisation.
+
 :::
 
 # Preamble
 
-```python
+```{python}
 import os
 import numpy as np
 import pandas as pd
@@ -35,7 +40,7 @@ import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 ```
 
-```python
+```{python}
 import os
 from requests import get
 from urllib.parse import urlparse
@@ -98,423 +103,14 @@ def cache_data(src:str, dest:str) -> str:
     return dfn
 ```
 
-# Spatial Joins (Recap)
-
-## Load Geodata
-
-A lot of useful geo-data can be accessed from the [GeoPortal](https://geoportal.statistics.gov.uk/). And see also [my discussion](https://jreades.github.io/fsds/lectures/9.2-Linking_Spatial_Data.html#/think-it-through) on [lookup tables](https://geoportal.statistics.gov.uk/datasets/postcode-to-output-area-to-lower-layer-super-output-area-to-middle-layer-super-output-area-to-local-authority-district-november-2018-lookup-in-the-uk-2/about).
-
-```python
-spath = 'https://github.com/jreades/fsds/blob/master/data/src/' # source path
-ddir  = os.path.join('data','geo') # destination directory
-water = gpd.read_file( cache_data(spath+'Water.gpkg?raw=true', ddir) )
-boros = gpd.read_file( cache_data(spath+'Boroughs.gpkg?raw=true', ddir) )
-green = gpd.read_file( cache_data(spath+'Greenspace.gpkg?raw=true', ddir) )
-```
-
-```python
-msoas = gpd.read_file( cache_data(spath+'Middle_Layer_Super_Output_Areas__December_2011__EW_BGC_V2-shp.zip?raw=true', ddir) )
-msoas.plot();
-```
-
-```python
-msoas.sample(3)
-```
-
-## Select London MSOAs
-
-::: {.callout-note}
-
-    **&#128279; Connections**: One thing to remember here is that computers are _exact_. So if you say that the selection should only be of MSOAs _within_ London then you actually need to think about whether a shared border qualifies as 'within'. Watch [the lectures](https://jreades.github.io/fsds/sessions/week10.html#lectures) again if you're unsure, but that's why here we take this slightly clunk approach of buffering the London boundary _before_ doing the selection.
-:::
-
-###. Union
-
-As we don't have a boundary file for London, we can *generate* use using the `unary_union` operator (as we do here) or using the [dissolve()](https://geopandas.org/en/stable/docs/user_guide/aggregation_with_dissolve.html) approach. Consider the pros and cons of each approach in terms of performance, output format, and leigibility. 
-
-So here's approach 1, which is a function call (on which we call `plot`):
-
-```python
-boros.dissolve().plot();
-```
-
-And here's approach 2, which is an *attribute* and returns a polygon (so no reason to call `plot`, but it's come back without the rest of the data frame!):
-
-```python
-boros.unary_union
-```
-
-::: {.callout-note}
-
-    **&#128279; Connections**: Notice how we're also demonstrating some additional ways of plotting 'on the fly' (without generating a data frame) as well as reminding you how to zoom in/out.
-:::
-
-```python
-ldn = gpd.GeoDataFrame(gpd.GeoSeries(data=boros.unary_union)).rename(columns={0:'geometry'}).set_geometry("geometry")
-ldn = ldn.set_crs(epsg=27700)
-ax  = ldn.plot(facecolor=(.5, .5, .9, .5));
-msoas.plot(ax=ax, facecolor='none', edgecolor=(.6, .6, .6, .6))
-ax.set_xlim(500000, 515000)
-ax.set_ylim(180000, 195000);
-```
-
-###. Buffer
-
-In order to ensure that we get all MSOAs _within_ London we will buffer the boundary by 250m. If _cover_ were easier to use then that option might be preferable.
-
-```python
-ldn['buffered'] = ldn.geometry.???(???)
-ldn = ldn.set_geometry('buffered').set_crs(epsg=27700)
-ax  = ldn.plot(facecolor=(.5, .5, .9, .5))
-msoas.plot(ax=ax, facecolor='none', edgecolor=(.6, .6, .6, .6))
-ax.set_xlim(500000, 515000)
-ax.set_ylim(180000, 195000);
-```
-
-###. Spatial Join
-
-Here's our first spatial join. By default it will be an _inner_ join because we want to drop everything that doesn't line up between the two data sets (i.e. don't keep the thousands of *other* MSOAs).
-
-```python
-ldn_msoas = gpd.sjoin(msoas, ldn, predicate='???', how='inner')
-ldn_msoas.head(2)
-```
-
-###. Plot
-
-```python
-ldn_msoas.plot()
-```
-
-Hmmmm, not quite what you were expecting? See if you can figure out from the list of columns and the documentation for `set_geometry` what is going wrong?
-
-```python
-ax = ldn_msoas.set_geometry('geometry_left').plot(linewidth=2, facecolor='none', edgecolor=(.6, .6, .6, .6))
-ax.set_xlim(500000, 515000)
-ax.set_ylim(180000, 195000);
-```
-
-```python
-ldn_msoas = ldn_msoas.rename(columns={'geometry_left':'geometry'}).set_geometry('geometry')
-```
-
-```python
-ldn_msoas.drop(columns='geometry_right', inplace=True)
-```
-
-We no longer really need to keep the full MSOA data set hanging about.
-
-```python
-try:
-    del(msoas)
-except NameError:
-    print("msoas already deleted.")
-```
-
-###. Questions
-
-- Can you explain *why* the outputs of the `dissolve` and `unary_union` *look* differnet? And use that as the basis for explaining why they *are* different?
-
-> 
-
-- How do you know that the units for the buffering operation are metres? 250 could be *anything* right?
-
-> 
-
-- Why do we need to buffer the London geometry *before* performing the *within* spatial join?
-
-> 
-
-## Append Names
-
-We don't actually make use of these in this session, but *both* operations could be relevant to your final reports:
-
-1. The Borough > Subregion mapping could help you to group your data into larger sets so that your resulst become more reobust. it also connects us to long-run patterns of socio-economic development in London.
-2. The MSOA Names data set gives you something that you could use to label one or more 'neighbourhoods' on a map with names that are *relevant*. So rather than talking about "As you can see, Sutton 003, is...", you can write "The Wrythe neighbourhood [or area] of Sutton is significantly different from the surrounding areas..."
-
-They also usefully test your understanding of regular expressions and a few other aspects covered in previous weeks.
-
-###. Replace
-
-You've done this before: notice that the MSOA Name _contains_ the Borough name **with a space and some digits at the end**. Use a regex (in `str.replace()`) to extract the LA name from the MSOA name. See if you do this *without* having to find your previous answer!
-
-```python
-ldn_msoas['Borough'] = ldn_msoas.MSOA11NM.str.replace(r'???','',regex=True)
-
-# Just check results look plausible; you should have:
-# - 33 boroughs
-# - A df shape of 983 x 13
-print(ldn_msoas.Borough.unique())
-print(f"There are {len(ldn_msoas.Borough.unique())} boroughs.")
-print(f"Overall shape of data frame is {' x '.join([str(x) for x in ldn_msoas.shape])}")
-```
-
-###. Merge
-
-The House of Commons Library provides a [MSOA Names](https://houseofcommonslibrary.github.io/msoanames/) data set that contains locally-relevant names applied to MSOAs. These seek to connect the Census geography (OA > LSOA > MSOA > LA) to a loosely-defined 'neighbourhood'.
-
-```python
-msoa_nms = pd.read_csv( cache_data('https://houseofcommonslibrary.github.io/msoanames/MSOA-Names-1.20.csv', ddir) )
-```
-
-```python
-print(msoa_nms.columns.values)
-msoa_nms.sample(3, random_state=42)
-```
-
-Now that you've loaded the `msoa_nms` data you need to merge it with our `ldn_msoas`. You will need to deal with the fact that the left and right fields have different names and may also want to think about the `how` of the merge. In *this* case, the result of the merge *should* be a GeoDataFrame, but **this is not always guaranteed** so you may want to double-check or run multiple tests before assuming that you'll get back a geographically aware object.
-
-```python
-msoas = pd.merge(ldn_msoas, msoa_nms, left_on='MSOA11CD', right_on='msoa11cd', how='inner')
-print(f"MSOAs shape is {' x '.join([str(x) for x in msoas.shape])}.")
-print(f"Resulting class is a {type(msoas).__name__}.") # You should check this -- result isn't always be a GeoDataFrame
-msoas.sample(3, random_state=42)[['OBJECTID','MSOA11CD','MSOA11NM','msoa11hclnm']]
-```
-
-Your result should be:
-
-|    | OBJECTID | MSOA11CD | MSOA11NM | msoa11hclnm |
-| -: | -------: | -------: | :------- | :---------- |
-| **810** | 811 | E02000841 | Sutton 002 | St Helier South |
-| **801** | 802 | E02000832 | Southwark 026 | Nunhead North |
-| **813** | 814 | E02000844 | Sutton 005 | The Wrythe |
-
-###. Map
-
-Set up a `mapping` dict here so that you can apply it as part of the `groupby` operation below (you should have 33 keys when done):
-
-```python
-mapping = {}
-for b in ['Enfield','Waltham Forest','Redbridge','Barking and Dagenham','Havering','Greenwich','Bexley']:
-    mapping[b]='Outer East and North East'
-for b in ['Haringey','Islington','Hackney','Tower Hamlets','Newham','Lambeth','Southwark','Lewisham']:
-    mapping[b]='Inner East'
-for b in ['Bromley','Croydon','Sutton','Merton','Kingston upon Thames']:
-    mapping[b]='Outer South'
-for b in ['Wandsworth','Kensington and Chelsea','Hammersmith and Fulham','Westminster','Camden']:
-    mapping[b]='Inner West'
-for b in ['Richmond upon Thames','Hounslow','Ealing','Hillingdon','Brent','Harrow','Barnet','City of London']:
-    mapping[b]='Outer West and North West'
-print(len(mapping.keys()))
-```
-
-```python
-msoas['Subregion'] = msoas.Borough.map(???)
-```
-
-###. Tidy Up
-
-```python
-msoas.columns.to_list()
-```
-
-```python
-to_drop = ['MSOA11CD','MSOA11NM','MSOA11NMW','LONG','LAT','Shape__Are','Shape__Len','index_right',
-           'Laname','msoa11hclnmw','msoa11nmw']
-msoas.drop(columns=to_drop, inplace=True)
-print(msoas.shape)
-```
-
-###. And Save
-
-```python
-msoas.to_parquet(os.path.join('data','geo','London_MSOA_Names.geoparquet'))
-```
-
-## Load InsideAirbnb Data
-
-```python
-host = 'http://orca.casa.ucl.ac.uk'
-path = '~jreades/data'
-listings = gpd.read_parquet( cache_data(f'{host}/{path}/2023-09-06-listings.geoparquet', ddir) )
-listings = listings.to_crs(epsg=27700)
-print(f"Data frame is {listings.shape[0]:,} x {listings.shape[1]}")
-```
-
-```python
-listings = listings.to_crs('epsg:27700')
-```
-
-###. Spatial Join
-
-Associate LA (Local Authority) names to the listings using a spatial join, but **notice** the `how` here:
-
-```python
-gdf_la = gpd.sjoin(listings, ???, predicate='???', how='left')
-```
-
-```python
-print(gdf_la.columns.to_list())
-```
-
-###. Tidy Up
-
-```python
-gdf_la.drop(columns=['index_right','HECTARES','NONLD_AREA','ONS_INNER'], inplace=True)
-```
-
-You'll need to look closely to see what's wrong in the `value_counts` output, but here's a clue:
-
-```python
-print(f"Now there are... {len(gdf_la.NAME.unique())} boroughs?")
-```
-
-```python
-gdf_la.NAME.value_counts(dropna=False)
-```
-
-```python
-gdf_la.columns
-```
-
-```python
-gdf_la[gdf_la.NAME.isna()].sample(2)[['name', 'NAME']]
-```
-
-###. Find Problematic Listings
-
-Let's map them and see if you can work out what happened...
-
-```python
-ax = gdf_la[gdf_la.NAME.isna()].plot(figsize=(10,7), markersize=5, alpha=0.5)
-boros.plot(ax=ax, edgecolor='r', facecolor='None', alpha=0.5);
-```
-
-<img src="https://github.com/jreades/fsds/blob/master/practicals/img/Unmatched_Listings.png?raw=true" alt="Unmatched Listings" style="width:50%" />
-
-###. Drop Problematic Results
-
-```python
-gdf_la.drop(index=gdf_la[gdf_la.NAME.isna()].index, axis=1, inplace=True)
-print(f"Data frame is {gdf_la.shape[0]:,} x {gdf_la.shape[1]}")
-```
-
-You should now have 67,993 records.
-
-###. Check
-
-```python
-ax = gdf_la.plot(column='NAME', markersize=0.5, alpha=0.5, figsize=(10,8))
-boros.plot(ax=ax, edgecolor='r', facecolor='None', alpha=0.5);
-```
-
-###. Save
-
-```python
-gdf_la.to_parquet(os.path.join('data','geo','Listings_with_LA.geoparquet'))
-```
-
-###. Questions
-
-- Do you understand the difference between `how='inner'` and `how='left'`? 
-
-> 
-
-## Create LA Data
-
-###. Select LA
-
-Select a LA that is relevant to _you_ to explore further...
-
-```python
-LA = 'Waltham Forest'
-```
-
-###. Spatial Join
-
-The first thing we want to do is join MSOA identifiers to each listing. In both cases we want to constrain the data to only be for 'our' LA of interest: 
-
-```python
-msoadf  = gpd.sjoin(
-            gdf_la[gdf_la.NAME==LA].reset_index(), 
-            msoas[msoas.Borough==LA], predicate='within')
-```
-
-###. Aggregate
-
-Now aggregate the data by MSOA, deriving median price and a count of the listings:
-
-```python
-msoagrdf = msoadf.groupby('msoa11nm').agg({'price':['median','count']}).reset_index()
-```
-
-```python
-msoagrdf.sample(3, random_state=42)
-```
-
-You should get something like the below (if you're using Waltham Forest):
-
-|   | msoa11nm |  | price |
-| -: | ------: | ----: | ----: |
-|   | **median** | **count** |
-| 9 | Waltham Forest 010 | 55.0 | 25 |
-| 25 | Waltham Forest 026 | 75.0 | 72 |
-| 8 | Waltham Forest 009 | 51.5 | 26 |
-
-###. Resolve Columns
-
-Which level value is easier to use? 0? or 1?
-
-```python
-msoagrdf.columns = msoagrdf.columns.get_level_values(1)
-msoagrdf.head()
-```
-
-Fix the missing column name:
-
-```python
-msoagrdf.rename(columns={'':'msoa11nm', 'count':'listings'}, inplace=True)
-msoagrdf.head()
-```
-
-###. Join (Again)
-
-Here we see the **difference between merge and join**. You'll notice that `join` operates by taking one data frame as the implicit '*left*' table (the one which *calls* join) while the one that is passed to the join function is, implicitly, the '*right*' table. Join operates only using indexes, so you'll need to insert the code to specify the same index on both data frames, but this can be done **on-the-fly** as part of the joining operation:
-
-```python
-msoa_gdf = msoagrdf.set_index('msoa11nm').join(
-                msoas[msoas.Borough==LA].set_index('msoa11nm'), 
-                rsuffix='_r')
-msoa_gdf.head(3)
-```
-
-###. Resolve Geodata
-
-You need to add a command in order to help python recognise that this should be a GeoDataFrame:
-
-```python
-msoa_gdf = msoa_gdf.set_geometry('geometry')
-```
-
-```python
-msoa_gdf.plot(column='median', legend=True, figsize=(8,8));
-```
-
-###. Save
-
-Just so that we can pick up here without having to re-run all the preceding cells.
-
-```python
-msoa_gdf.to_parquet(os.path.join('data','geo',f'{LA}-MSOA_data.geoparquet'))
-```
-
-###. Questions
-
-- Do you understand the differences between `pd.merge` and `df.join`? and `gpd.sjoin`?
-
-> 
-
-- Do you understand why it may be necessary to `set_geometry` in some cases?
-
-> 
-
 # Using Maplotlib
 
 ## Anatomy of a Figure
 
 ::: {.callout-tip}
 
-    You might want to bookmark the 'Anatomy of a Figure' image so that you can easily find and refer to it in the future. This structure is why `matplotlib` is so much nastier than `ggplot`, but it does also give you greater _control_ over the output if you really dig into the guts of things.
+You might want to bookmark the 'Anatomy of a Figure' image so that you can easily find and refer to it in the future. This structure is why `matplotlib` is so much nastier than `ggplot`, but it does also give you greater _control_ over the output if you really dig into the guts of things.
+
 :::
 
 *One* of the reasons that Matplotlib is so much more complex than `ggplot` is that it can actually *do* a plot more than ggplot, including image manipulation, axis translation, and even 3D. You can get a sense of this by looking at [the tutorials](https://matplotlib.org/stable/tutorials/index.html) since the [Users guide](https://matplotlib.org/stable/users/index.html) can be a bit overwhelming.
@@ -527,7 +123,7 @@ Nevertheless, the [core components of all matplotlib figures](https://matplotlib
 
 I find matplotlib's use of fonts to be _profoundly_ weird. If you use `conda` and install directly on to the computer then you _might_ have access to all of your computer's fonts (though there are different *types* of fonts as well, not all of which will show up), but for most users it will be those that were installed into Docker. 
 
-###. Using Fontconfig
+### Using Fontconfig
 
 `fontconfig` is the base Linux utility for managing fonts. We can list font using `fc-list` and then a set of 'switches' determining the kind of information we want back. Since fontconfig doesn't exist on OSX or Windows, you'll need to do some more investigating and poking around to get these details on a `conda` install (I'll show an option further down)...
 
@@ -564,7 +160,7 @@ Here are the monospace fonts installed:
 ! fc-list :spacing=mono : family | sort | uniq
 ```
 
-###. Using Python+Terminal
+### Using Python+Terminal
 
 Another way to get at this information is to try asking matplotlib what fonts it *already* knows about in its cache:
 
@@ -588,7 +184,7 @@ fonts = ! fc-list : family style | grep "Ubuntu"
 print(sorted(fonts))
 ```
 
-###. Fontdicts
+### Fontdicts
 
 Now that we know what's available, the next step is to set up some useful defaults that we can re-use across multiple plots to ensure consistency of output. The format for specifying fonts on a per-figure basis is a dictionary, so where you see `fontdict` in the `matplotlib` [documentation](https://matplotlib.org/stable/gallery/text_labels_and_annotations/text_fontdict.html) the following should work:
 
@@ -631,7 +227,7 @@ listing_gdf = msoa_gdf[['msoa11cd','listings','geometry']].rename(columns={'list
 import matplotlib.pyplot as plt
 ```
 
-###. The Defaults
+### The Defaults
 
 Here is a demonstration of some of the ways you can adjust features in a Python matplotlib plot. I'm not suggesting either of these is a _good_ output, but that's not the point! The idea is to see the various ways you can tweak a plot... And notice that we've not yet changed any fonts. And it shows.
 
@@ -954,6 +550,8 @@ push_notebook(handle=handle)
 
 ::: {.callout-note}
 
-    **&#128279; Connections**: And that's it. That's all she wrote! You've now covered in 10 weeks what many people might take 10 _months_ to cover. So do not feel like either: 1) you know it all; or 2) you know nothing. You have learned a _lot_, but it's probably just enough to see how much you _don't_ know. That's the start of wisdom. Good luck, young Python-master!
-:::
+#### &#128279; Connections
 
+And that's it. That's all she wrote! You've now covered in 10 weeks what many people might take 10 _months_ to cover. So do not feel like either: 1) you know it all; or 2) you know nothing. You have learned a _lot_, but it's probably just enough to see how much you _don't_ know. That's the start of wisdom. Good luck, young Python-master!
+
+:::

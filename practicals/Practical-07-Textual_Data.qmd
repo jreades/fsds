@@ -292,7 +292,7 @@ print(f"Now maximum column width set to: {pd.options.display.max_colwidth}")
 
 To explore the description field properly you'll need to filter out any NA/NaN descriptions before sampling the result. *Hint*: you'll need to think about negation (`~`) of a method output that tells you if a field *is NA*.
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -356,7 +356,7 @@ I would be wary of doing the below in a 'proper' application without doing some 
 
 Anyway, drop all rows where *either* the description or amenities (or both) are NA:
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -409,14 +409,14 @@ You should start with variations on 'luxury' (i.e. luxurious, luxuriate, ...) an
 
 In fact, in my real-world applications you might even need more than one group/non-capturing group in a *nested* structure.
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
 ```python
 gdf[
     gdf.description.str.contains(r'???', regex=True, flags=re.IGNORECASE) # <-- The regex
-].sample(5, random_state=42)[['description']]
+].sample(3, random_state=42)[['description']]
 ```
 
 #### Answer
@@ -424,7 +424,7 @@ gdf[
 ```{python}
 gdf[
     gdf.description.str.contains(r'(?:luxur(?:y|ious|iat)|prestigious|stunning)', regex=True, flags=re.IGNORECASE)
-].sample(5, random_state=42)[['description']]
+].sample(3, random_state=42)[['description']]
 ```
 
 ::::
@@ -433,7 +433,7 @@ gdf[
 
 Assign it to a new data frame called `lux`:
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -474,7 +474,7 @@ The critical thing here is to understand how we'er initialising a plot that has 
 
 Every time you call `subplot2grid` you are initialising a new axis-object into which you can then draw with your geopackage or pandas plotting methods.
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -528,13 +528,23 @@ Your result should look similar to:
 
 ```{python}
 #| echo: false
+#| fig-cap: "'Luxury' listings in London"
 f
 ```
 
-### Questions
+::: {.qna}
+
+#### Question
 
 - What does `suptitle` do and how is it different from `title`? Could you use this as part of your plot-making process?
 - What does `tight_layout` do?
+
+#### Answer
+
+- `title` applies to a single subplot, whereas `suptitle` applies to the entire figure.
+- `tight_layout` basically tries to adjust the margins around each figure so as to minimise the amount of whitespace.
+
+:::
 
 ## Budget Listings
 
@@ -552,7 +562,7 @@ What words can you think of that might help you to spot affordable and budget ac
 
 1. I'd try adding word boundary markers to the regex (`\b`) where appropriate...
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -575,7 +585,7 @@ gdf[
 
 ### Apply it to Select Data
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -646,7 +656,7 @@ Now see if you can work out a regular expression to find accommodation that emph
 
 ### Create the regular Expression
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -669,7 +679,7 @@ gdf[
 
 ### Apply it to the Select Data
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -724,65 +734,9 @@ plt.show()
 
 - How else might you select listings with a view of the Thames or other bluespaces?
 
-# Illustrative Text Cleaning
+# Text Cleaning
 
-Now we're going to step through the _parts_ of the process that we apply to clean and transform text. We'll do this individually before using a function to apply them _all at once_.
-
-## Downloading a Web Page
-
-::: {.callout-tip collapse="true"}
-
-#### Difficulty Level: Low.
-
-:::
-
-There is plenty of good economic geography research being done using web pages. Try using Google Scholar to look for work using the British Library's copy of the *Internet Archive*.
-
-```{python}
-from urllib.request import urlopen, Request
-
-# We need this so that the Bartlett web site 'knows'
-# what kind of browser it is deasling with. Otherwise
-# you get a Permission Error (403 Forbidden) because
-# the site doesn't know what to do.
-hdrs = {
-    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-}
-url = 'https://www.ucl.ac.uk/bartlett/casa/about-0'
-```
-
-:::: {.panel-tabset}
-
-#### Question 
-
-```python
-# Notice that here we have to assemble a request and
-# then 'open' it so that the request is properly issued
-# to the web server. Normally, we'd just use `urlopen`, 
-# but that doesn't give you the ability to set the headers.
-request  = Request(url, None, hdrs) #The assembled request
-response = urlopen(request)
-html     = response.???.decode('utf-8') # The data you need
-
-print(html[:1000])
-```
-
-#### Answer
-
-```{python}
-# Notice that here we have to assemble a request and
-# then 'open' it so that the request is properly issued
-# to the web server. Normally, we'd just use `urlopen`, 
-# but that doesn't give you the ability to set the headers.
-request  = Request(url, None, hdrs) #The assembled request
-response = urlopen(request)
-html     = response.read().decode('utf-8') # The data you need
-
-print(html[:1000])
-```
-
-::::
+Now we're going to step through the _parts_ of the process in which we apply to clean and transform text. We'll do this individually before using a function to apply them _all at once_.
 
 ## Removing HTML
 
@@ -796,13 +750,41 @@ Because what we're doing will seem really strange and uses some previously unsee
 
 *Hint*: you need to need to **get the text** out of the each returned `<p>` and `<div>` element! I'd suggest also commenting this up since there is a *lot* going on on some of these lines of code!
 
-:::: {.panel-tabset}
+We're going to take a single record to process:
+
+```{python}
+#| echo: false
+sample_row = bluesp.sample(1, random_state=42).description.to_list()[0]
+```
+
+```python
+sample_row = bluesp.sample(1, random_state=42).description.to_list()[0]
+```
+
+Our sample data looks like this:
+
+```{python}
+#| echo: false
+#| output: asis
+print(f"> {sample_row}")
+```
+
+Note, however, that it includes some formatting (bold, line breaks, etc.) that isn't strictly relevant and might actually give us issues downstream because it's 'markup' and not content:
+
+```{python}
+#| echo: false
+tmp = [e + "<br />" for e in sample_row.split("<br />")]
+print("\n".join(tmp))
+```
+
+:::: {.qna}
 
 #### Question
 
 ```python
 cleaned = []
 
+html = sample_row
 soup = BeautifulSoup(html)
 body = soup.find('body')
 
@@ -812,7 +794,8 @@ for c in body.findChildren(recursive=False):
         txt = [re.sub(r'(?:\u202f|\xa0|\u200b)',' ',x.strip()) for x in c.get_text(separator=" ").split('\n') if x.strip() != '']
         cleaned += txt
 
-cleaned
+# Notice how this has changed from above
+print(cleaned)
 ```
 
 #### Answer
@@ -820,6 +803,7 @@ cleaned
 ```{python}
 cleaned = []
 
+html = sample_row
 soup = BeautifulSoup(html)
 body = soup.find('body')
 
@@ -829,7 +813,7 @@ for c in body.findChildren(recursive=False):
         txt = [re.sub(r'(?:\u202f|\xa0|\u200b)',' ',x.strip()) for x in c.get_text(separator=" ").split('\n') if x.strip() != '']
         cleaned += txt
 
-cleaned
+print(cleaned)
 ```
 
 ::::
@@ -842,7 +826,7 @@ cleaned
 
 :::
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -879,7 +863,7 @@ We want to clear out punctuation using a regex that takes advantage of the `[...
 1. You will want to match more than one piece of punctuation at a time, so I'd suggest add a `+` to your pattern.
 2. You will need to look into *metacharacters* for creating a kind of 'any of the characters *in this class*' bag of possible matches.
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -941,13 +925,13 @@ stopword_list = set(stopwords.words('english'))
 print(stopword_list)
 ```
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
 ```python
 stopped = []
-for p in tokens[2:4]: # <-- why do I just take these items from the list?
+for p in tokens: # <-- why do I just take these items from the list?
     stopped.append([x for x in p if x not in ??? and len(x) > 1])
 
 for s in stopped:
@@ -958,7 +942,7 @@ for s in stopped:
 
 ```{python}
 stopped = []
-for p in tokens[2:4]: # <-- why do I just take these items from the list?
+for p in tokens: # <-- why do I just take these items from the list?
     stopped.append([x for x in p if x not in stopword_list and len(x) > 1])
 
 for s in stopped:
@@ -1026,15 +1010,18 @@ for s in stemmed:
     as_markdown('Stemmed',s)
 ```
 
+#### Compare and Contrast
+
+What are we doing here?
+
 ```{python}
-# What are we doing here?
 for ix, p in enumerate(stopped):
     stopped_set = set(stopped[ix])
     lemma_set   = set(lemmas[ix])
     print(sorted(stopped_set.symmetric_difference(lemma_set)))
 ```
 
-# Applying Normalisation
+# Pandas.Apply
 
 The above approach is fairly hard going since you need to loop through every list element applying these changes one at a time. Instead, we could convert the column to a corpus (or use pandas `apply`) together with a function imported from a library to do the work.
 
@@ -1111,9 +1098,9 @@ Beyond this point, we are moving into Natural Language Processing. If you are al
 
 :::
 
-# Revenons à Nos Moutons
+# Data Normalisation
 
-Now that you've seen how the steps are applied to a 'random' HTML document, let's get back to the problem at hand (revenons à nos moutons == let's get back to our sheep).
+Now that you've seen how the steps are applied to a 'random' document, let's get back to the problem at hand or, as the French would put it, revenons à nos moutons (let's get back to our sheep).
 
 ## Process the Selected Listings
 
@@ -1131,7 +1118,7 @@ Notice how we can change the default parameters for `normalise_document` even wh
 
 :::
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -1155,17 +1142,7 @@ bluesp['description_norm'] = bluesp.???.apply(???, remove_digits=True)
 
 #### Answer
 
-```{python}
-%%time
-# I get about 1 minute on a M2 Mac
-lux['description_norm'] = lux.description.apply(normalise_document, remove_digits=True)
-```
-
-```{python}
-%%time
-# I get about 1 minute on a M2 Mac
-aff['description_norm'] = aff.description.apply(normalise_document, remove_digits=True)
-```
+We're only going to show one of these since that speeds up the rendering, for the luxury and affordable samples you are looking at upwards of 1 minute calculation time.
 
 ```{python}
 %%time
@@ -1188,6 +1165,9 @@ bluesp['description_norm'] = bluesp.description.apply(normalise_document, remove
 See useful tutorial [here](https://towardsdatascience.com/tf-idf-explained-and-python-sklearn-implementation-b020c5e83275). Although we shouldn't have any empty descriptions, by the time we've finished normalising the textual data we may have _created_ some empty values and we need to ensure that we don't accidentally pass a NaN to the vectorisers and frequency distribution functions.
 
 ```{python}
+# The data set to which we want to apply
+# the data normalisation code... feel free
+# to change (though so will your results)
 srcdf = bluesp 
 ```
 
@@ -1339,9 +1319,9 @@ print(f"There are {len(sums):,} terms in the data set.")
 sums.head()
 ```
 
-Remove columns (i.e. terms) appearing in less than 1% of documents. You can do this by thinking about what the shape of the data frame means (rows and/or columns) and how you'd get 1% of that!
+Remove columns (i.e. terms) appearing in **less than 1% of documents**. You can do this by thinking about what the shape of the data frame means (rows and/or columns) and how you'd get 1% of that!
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -1368,8 +1348,6 @@ fcvdf.iloc[0:5,0:10]
 ```{python}
 fcvdf.sum(axis=0)
 ```
-
-We're going to pick this up again in Task 7.
 
 ### Questions
 
@@ -1441,7 +1419,7 @@ else:
 ```
 
 ```{python}
-f,ax = plt.subplots(1,1,figsize=(8, 8))
+f,ax = plt.subplots(1,1,figsize=(7, 7))
 plt.gcf().set_dpi(150)
 Cloud = WordCloud(
     background_color="white", 
@@ -1466,7 +1444,7 @@ tfidf.sum().sort_values(ascending=False)
 ```
 
 ```{python}
-f,ax = plt.subplots(1,1,figsize=(8, 8))
+f,ax = plt.subplots(1,1,figsize=(7, 7))
 plt.gcf().set_dpi(150)
 Cloud = WordCloud(
     background_color="white", 
@@ -1482,224 +1460,6 @@ ax.axis("off");
 
 - What does the `sum` represent for the count vectoriser?
 - What does the `sum` represent for the TF/IDF vectoriser?
-
-# Latent Dirchlet Allocation
-
-::: {.callout-tip}
-
-I would give this a _low_ priority. It's a commonly-used method, but on small data sets it really isn't much use and I've found its answers to be... unclear... even on large data sets.
-
-:::
-
-Adapted from [this post](https://stackabuse.com/python-for-nlp-topic-modeling/) on doing LDA using sklearn. Most other examples use the `gensim` library.
-
-```{python}
-# Notice change to ngram range 
-# (try 1,1 and 1,2 for other options)
-vectorizer = CountVectorizer(ngram_range=(1,2))
-```
-
-## Calculate Topics
-
-```{python}
-vectorizer.fit(corpus) 
-tcorpus = vectorizer.transform(corpus) # tcorpus for transformed corpus
-
-LDA = LatentDirichletAllocation(n_components=3, random_state=42) # Might want to experiment with n_components too
-LDA.fit(tcorpus)
-```
-
-```{python}
-first_topic = LDA.components_[0]
-top_words = first_topic.argsort()[-25:]
-
-for i in top_words:
-    print(vectorizer.get_feature_names_out()[i])
-```
-
-```{python}
-for i,topic in enumerate(LDA.components_):
-    as_markdown(f'Top 10 words for topic #{i}', ', '.join([vectorizer.get_feature_names_out()[i] for i in topic.argsort()[-25:]]))
-```
-
-## Maximum Likelihood Topic
-
-```{python}
-topic_values = LDA.transform(tcorpus)
-topic_values.shape
-```
-
-```{python}
-pd.options.display.max_colwidth=20
-srcdf['Topic'] = topic_values.argmax(axis=1)
-srcdf.head()
-```
-
-```{python}
-pd.options.display.max_colwidth=75
-srcdf[srcdf.Topic==1].description_norm.head(10)
-```
-
-```{python}
-vectorizer = CountVectorizer(ngram_range=(1,1), stop_words='english', analyzer='word', max_df=0.7, min_df=0.05)
-topic_corpus = vectorizer.fit_transform(srcdf[srcdf.Topic==1].description.values) # tcorpus for transformed corpus
-```
-
-```{python}
-topicdf = pd.DataFrame(data=topic_corpus.toarray(),
-                        columns=vectorizer.get_feature_names_out())
-```
-
-```{python}
-f,ax = plt.subplots(1,1,figsize=(8,8))
-plt.gcf().set_dpi(150)
-Cloud = WordCloud(
-            background_color="white", 
-            max_words=75).generate_from_frequencies(topicdf.sum())
-ax.imshow(Cloud) 
-ax.axis("off");
-# plt.savefig('Wordcloud 3.png')
-```
-
-# Word2Vec
-
-::: {.callout-tip}
-
-This algorithm works almost like magic. You should play with the configuration parameters and see how it changes your results.
-
-:::
-
-## Configure
-
-```{python}
-from gensim.models.word2vec import Word2Vec
-```
-
-```{python}
-dims = 100
-print(f"You've chosen {dims} dimensions.")
-
-window = 3
-print(f"You've chosen a window of size {window}.")
-
-min_v_freq  = 0.005 # Don't keep words appearing less than 0.5% frequency
-min_v_count = math.ceil(min_v_freq * srcdf.shape[0])
-print(f"With a minimum frequency of {min_v_freq} and {srcdf.shape[0]:,} documents, minimum vocab frequency is {min_v_count:,}.")
-```
-
-## Train
-
-```{python}
-%%time 
-
-corpus      = srcdf.description_norm.fillna(' ').values
-#corpus_sent = [nltk.sent_tokenize(text) for text in corpus] # <-- with more formal writing this would work well
-corpus_sent = [d.replace('.',' ').split(' ') for d in corpus] # <-- deals better with many short sentences though context may end up... weird
-model       = Word2Vec(sentences=corpus_sent, vector_size=dims, window=window, epochs=200, 
-                 min_count=min_v_count, seed=42, workers=1)
-
-#model.save(f"word2vec-d{dims}-w{window}.model") # <-- You can then Word2Vec.load(...) which is useful with large corpora
-```
-
-## Explore Similarities
-
-This next bit of code only runs if you have calculated the frequencies above in the [Frequencies and Ngrams](#frequencies-and-ngrams) section.
-
-```{python}
-pd.set_option('display.max_colwidth',150)
-
-df = fcounts[1] # <-- copy out only the unigrams as we haven't trained anything else
-
-n     = 14 # number of words
-topn  = 7  # number of most similar words
-
-selected_words = df[df['Ngram Size 1'] > 5].reset_index().level_0.sample(n, random_state=42).tolist()
-
-words = []
-v1    = []
-v2    = []
-v3    = []
-sims  = []
-
-for w in selected_words:
-    try: 
-        vector = model.wv[w]  # get numpy vector of a word
-        #print(f"Word vector for '{w}' starts: {vector[:5]}...")
-    
-        sim = model.wv.most_similar(w, topn=topn)
-        #print(f"Similar words to '{w}' include: {sim}.")
-    
-        words.append(w)
-        v1.append(vector[0])
-        v2.append(vector[1])
-        v3.append(vector[2])
-        sims.append(", ".join([x[0] for x in sim]))
-    except KeyError:
-        print(f"Didn't find {w} in model. Can happen with low-frequency terms.")
-    
-vecs = pd.DataFrame({
-    'Term':words,
-    'V1':v1, 
-    'V2':v2, 
-    'V3':v3,
-    f'Top {topn} Similar':sims
-})
-
-vecs
-```
-
-```python
-#print(model.wv.index_to_key) # <-- the full vocabulary that has been trained
-```
-
-## Apply
-
-We're going to make *use* of this further next week...
-
-### Questions
-
-- What happens when *dims* is very small (e.g. 25) or very large (e.g. 300)?
-- What happens when *window* is very small (e.g. 2) or very large (e.g. 8)?
-
-#0. Processing the Full File
-
-::: {.callout-caution}
-
-This code can take *some time* (**&gt; 5 minutes on a M2 Mac**) to run, so **don't run this** until you've understood what we did before!
-
-:::
-
-You will get a warning about `"." looks like a filename, not markup` — this looks a little scary, but is basically suggesting that we have a description that consists only of a '.' or that looks like some kind of URL (which the parser thinks means you're trying to pass it something to download). 
-
-```python
-%%time 
-# This can take up to 8 minutes on a M2 Mac
-gdf['description_norm'] = ''
-gdf['description_norm'] = gdf.description.apply(normalise_document, remove_digits=True, special_char_removal=True)
-```
-
-```python
-gdf.to_parquet(os.path.join('data','geo',f'{fn.replace(".","-with-nlp.")}'))
-```
-
-::: {.callout-tip}
-
-Saving an intermediate file at this point is useful because you've done quite a bit of _expensive_ computation. You _could_ restart-and-run-all and then go out for the day, but probably easier to just save this output and then, if you need to restart your analysis at some point in the future, just remember to deserialise amenities back into a list format.
-
-:::
-
-## Applications
-
-The above is _still_ only the results for the 'luxury' apartments _alone_. At this point, you would probably want to think about how your results might change if you changed any of the following:
-
-1. Using one of the other data sets that we created, or even the entire data set!
-2. Applying the CountVectorizer or TfidfVectorizer _before_ selecting out any of our 'sub' data sets.
-3. Using the visualisation of information from \#2 to improve our regex selection process.
-4. Reducing, increasing, or constraining (i.e. `ngrams=(2,2)`) the size of the ngrams while bearing in mind the impact on processing time and interpretability.
-5. Filtering by type of listing or host instead of keywords found in the description (for instance, what if you applied TF/IDF to the entire data set and then selected out 'Whole Properties' before splitting into those advertised by hosts with only one listing vs. those with multiple listings?).
-6. Linking this back to the geography.
-
-Over the next few weeks we'll also consider alternative means of visualising the data!
 
 ## Resources
 
