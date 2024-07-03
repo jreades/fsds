@@ -18,9 +18,9 @@ filters:
 }
 </style>
 
-This session is a kind of tour-de-`pandas`, which is Python's equivalent of the `tidyverse` meets `data.tables`, meaning that pandas is fundamental to Python's data science ecosystem and is probably one of the most-widely used libraries in the language: I get more than 285,000 questions tagged as pandas questions on StackOverflow. 
+This session is a tour-de-`pandas`; since this is Python's equivalent of the `tidyverse` meets `data.tables` it is fundamental to the data science ecosystem and is probably one of the most-widely used libraries in the language as a whole. I get [more than 285,000 questions](https://stackoverflow.com/questions/tagged/pandas) tagged with pandas on StackOverflow. 
 
-This week we are also going to start looking at the **[InsideAirbnb](http://insideairbnb.com/)** data which forms the core of the work that we do over the remaining 5 weeks of the term. The focus of *this* notebook is simple numeric data: no mapping or text data... yet... and direct manipulation of data types, derivation of summary statistics, and simple plotting.
+This week we are also going to start looking at the **[InsideAirbnb](http://insideairbnb.com/)** data which forms the core of the work that we do over the rest of the term. The focus of *this* notebook is simple numeric data: no mapping or text data... yet... and direct manipulation of data types, derivation of summary statistics, and simple plotting.
 
 We hope that you will be able to draw on the past few practical sessions to develop a more intuitive understanding of how to interact with pandas since it supports both a 'dictionary-of-lists' style of interaction *and* a methods-based style of interaction with the 'Data Frame'.
 
@@ -77,7 +77,7 @@ You can always check what version you have installed like this:
 print(pd.__version__)
 ```
 
-::: {.callout-note}
+::: {.callout-tip}
 
 The `<package_name>.__version__` approach isn't guaranteed to work with _every_ package, but it will work with most of them. Remember that variables and methods starting and ending with '`__`' are **private** and any interaction with them should be approached very, very carefully.
 
@@ -110,7 +110,10 @@ And pandas gives us two ways to access that data:
 1. Using a method syntax: `myDataFrame.column_name_1`
 2. Using a dictionary syntax: `myDataFrame['column_name_1']`
 
-Depending on which syntax you prefer, you can use these interchangeably. The only times you *have* to choose one over the other are: a) assignment (e.g. `myDataFrame['column_name_1'] = ...`); b) columns with spaces in their names (e.g. `myDataFrame['Column Name 1')`).
+Depending on which syntax you prefer, you can use these interchangeably. The only times you *have* to choose one over the other are: 
+
+- Assignment (e.g. `myDataFrame['column_name_1'] = ...`); 
+- Columns with spaces in their names (e.g. `myDataFrame['Column Name 1')`).
 
 ## Reading Remote Data
 
@@ -122,7 +125,7 @@ Depending on which syntax you prefer, you can use these interchangeably. The onl
 
 You will need to do several things here to read the remote, compressed CSV file specified by `url` into a data frame called `df`. Setting `low_memory=False` ensures that pandas will try to load the entire data set _before_ guessing the data format! Obviously, with very large files this is probably a bad idea and it's possible to force a particular column type while readng in the data as well. For larger data sets there are platforms like [Dask](https://dask.org/) (see, eg, [this](https://towardsdatascience.com/why-and-how-to-use-dask-with-big-data-746e34dac7c3)), and beyond that are [other options](https://towardsdatascience.com/scaling-pandas-comparing-dask-ray-modin-vaex-and-rapids-c74c85a4e59c).
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -153,6 +156,7 @@ host = 'https://orca.casa.ucl.ac.uk'
 url  = f'{host}/~jreades/data/{ymd}-listings.csv.gz'
 
 if not os.path.exists('tmp.csv.gz'):
+    print("Didn't find tmp.csv.gz locally")
     try:
         df = pd.read_csv(url, compression='gzip', low_memory=False)
         df.to_csv('tmp.csv.gz', compression='gzip', index=False)
@@ -160,6 +164,7 @@ if not os.path.exists('tmp.csv.gz'):
         print(f"Unable to access: {url}")
         print(e)
 else:
+    print("Found tmp.csv.gz locally")
     df = pd.read_csv('tmp.csv.gz', compression='gzip', low_memory=False)
 
 try:
@@ -174,10 +179,6 @@ You should get a data frame containing `{python} f"{df.shape[1]:,}"` columns and
 
 ## Inspecting the Data Frame
 
-```{python}
-mem_usage = df.memory_usage(index=True, deep=True)
-```
-
 ::: {.callout-tip collapse="true"}
 
 #### Difficulty: Low.
@@ -190,7 +191,7 @@ Let's get a general sense of the data by printing out information _about_ the da
 - `df.info(verbose=None, buf=None, max_cols=None, memory_usage=None, show_counts=None)` -- summarises all columns, but without distribution information
 - `df.memory_usage(index=True, deep=True)` -- memory usage details about each column (can be quite slow as it's doing a *lot* of digging)
 
-::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -200,15 +201,20 @@ What is another term for the 0.5 percentile?
 
 The median!
 
-:::
+::::
 
 ### Describing
+
+```{python}
+#| echo: false
+mem_usage = df.memory_usage(index=True, deep=True)
+```
 
 Describing a data frame provides general information about *numeric* columns, such as the median, IQR, or number of discrete values. 
 
 So to show the 5th and 95th percentiles you need to pass an argument to `describe` to override the default report from pandas:
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -245,6 +251,7 @@ If you really need to get into the 'weeds' and profile your data frame because y
 ```python
 df.memory_usage(index=True, deep=True)
 ```
+
 ::: {.longform}
 
 ```{python}
@@ -286,9 +293,10 @@ print(f"Writing to: {fn}")
 if not os.path.exists(path):      # And what does *this* do?
     print(f"Creating {path} under {os.getcwd()}")
     os.makedirs(path)
-    
-df.to_csv(os.path.join(path,fn), index=False)
-print("Done.")
+
+if not os.path.exists(os.path.join(path,fn)):  
+    df.to_csv(os.path.join(path,fn), index=False)
+    print("Done.")
 ```
 
 # Managing Your Data
@@ -333,7 +341,7 @@ In this case you might try to work out how to make it easy to update the code to
 
 Using parameters makes it easier to write robust code that doesn't have unwanted side-effects. Here's a common one: you write code to download and process a file named `20221111-data.csv.gz`. After doing all the steps in Tasks 2 and 3 below you save it to `clean-data.csv.gz`. 
 
-::: {.panel-tabset}
+::: {.qna}
 
 #### Question
 
@@ -359,7 +367,7 @@ To achieve this you could set pandas to:
 
 Let's tackle the *rows* problem first:
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -395,8 +403,6 @@ print(f"Data frame is {df.shape[0]:,} x {df.shape[1]}")
 
 So notice how this code deliberately works the same for either testing _or_ operational execution -- we just flip between the option by changing the `testing` variable from `True` to `False`! 
 
-
-
 To make this more robust and useful we could use this `testing` variable *throughout* our code if we wanted to change other behaviours based on development/deployment context. The state of the switch could then be set globally using an external configuration file (usually just called a 'conf file'). The easiest way to do this is to have a `conf.py` which contains your global parameters and then every script or notebook file reads in the configuration and sets these variables.
 
 Something like:
@@ -429,7 +435,7 @@ print(f"Cols contains {len(cols)} columns.")
 
 So let's extend our previous answer
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -508,17 +514,18 @@ df.sample(3)
 
 See if you can work out from the documentation (Google search time!) how to get the same 'random' sample every time you re-run this code block:
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
 ```python
-df.sample(3, ??)[['latitude','longitude','license','review_scores_rating','price']]
+df.sample(3, ??)
 ```
+
 #### Answer
 
 ```{python}
-df.sample(3, random_state=42)[['latitude','longitude','license','review_scores_rating','price']]
+df.sample(3, random_state=42)
 ```
 
 ::::
@@ -529,7 +536,7 @@ If you look very closely, you'll see that pandas isn't showing you the _full_ ra
 
 I'd like you to sample 3 random rows, selecting the 'latitude', 'longitude', 'license', 'property_type', 'room_type' and 'price' columns only.
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -538,6 +545,8 @@ df.sample(??)[??]
 ```
 
 #### Answer
+
+Notice that we can make things a little easier to read using the whitespace:
 
 ```{python}
 df.sample(3)[
@@ -764,7 +773,7 @@ from ydata_profiling import ProfileReport
 
 Looking back over earlier code see if you can work out how to profile `latitude`, `longitude`,and `review_scores_rating` together.
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -985,7 +994,7 @@ For now don't worry about what `regex=False` means. It will all make sense when 
 
 :::
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -1086,7 +1095,7 @@ So far we've been taking primarily a row and column view of the data, now we wan
 
 If we wanted to filter in/out certain columns pandas can do that! Let's try for floats and ints (*hint*: these are 64-bit data types).
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -1120,7 +1129,7 @@ df.groupby('room_type')['property_type'].value_counts()
 
 Now try to select only the `Entire home/apt` room type:
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -1152,7 +1161,7 @@ df[df.room_type=='Entire home/apt']['property_type'].value_counts().head(10)
 
 OK, now let's look for the Entire home/apt listings that are more expected than average... to do *that* let's get a sense of where the mean and median value fall:
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -1178,9 +1187,11 @@ You might want to have a [look at the documentation](http://pandas.pydata.org/pa
 
 So we want to take `Entire home/apt` and filter the data set _together with_ the price per night from the `price` column.  For that, let's use the mean price/night of $`{python} f"{df.price.mean():0.2f}"` (_note_: this is totally arbitrary)?
 
-:::: {.panel-tabset}
+:::: {.qna}
 
-#### Question
+#### Question
+
+So here we want to filter on two values in the data set using `&`:
 
 ```python
 pricey = df[(??) & (df.price>df.price.??)]
@@ -1188,6 +1199,8 @@ print(f"Selected {pricey.shape[0]:,} rows")
 ```
 
 #### Answer
+
+So here we want to filter on two values in the data set using `&`:
 
 ```{python}
 pricey = df[(df.room_type=='Entire home/apt') & (df.price>df.price.mean())]
@@ -1212,27 +1225,31 @@ In the code above we see two things:
 
 Let's find the cheapest and most expensive listings using `min` and `max` methods:
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
+
+Least expensive: 
 
 ```python
 df[df.price==df.price.??()][['price','id','listing_url','room_type','description']]
 ```
 
-You should get one or more units priced at very low levels... or even (seemingly) for free!
+Most expensive: 
 
 ```python
-df[df.price==df.price.max()][['price','id','listing_url','room_type','description']]
+df[df.price==df.price.??()][['price','id','listing_url','room_type','description']]
 ```
 
 #### Answer
+
+Least expensive: 
 
 ```{python}
 df[df.price==df.price.min()][['price','listing_url','room_type','description']]
 ```
 
-You should get one or more units priced at very low levels... or even (seemingly) for free!
+Most expensive: 
 
 ```{python}
 df[df.price==df.price.max()][['price','listing_url','room_type','description']]
@@ -1254,9 +1271,17 @@ df.sort_values(by='price', ascending=False).head(3)[
 
 :::
 
-**Quick question**: what do you make of this result?
+:::: {.qna}
 
-**Answer**: Try following some of the `listing_url`s.
+#### Question
+
+What do you make of this result?
+
+#### Answer
+
+Try following some of the `listing_url`s. My best *guess* is that some people are having trouble *un*-listing their properties or are somehow trying to pause bookings by pricing their property at an unrealistical level.
+
+::::
 
 ## Selection with a Range
 
@@ -1268,7 +1293,7 @@ df.sort_values(by='price', ascending=False).head(3)[
 
 Perhaps we aren't just looking for extremes... how about all of the properties falling within the middle of the distribution? We can ask for any abitrary quantile we like, so let's go with the 25th and 75th percentile to get the middle 50% of the data. Google how to get percentiles from pandas.
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
@@ -1319,32 +1344,73 @@ That example contains a few things to which you need to pay attention:
 
 Let's try calculating several derived measures of distribution for the price... these deliberately demonstrate different ways of handling this process (and notice also the little call to `apply` that can perform additional tasks).
 
-### The *Z*-Score
+### The *z*-Score
 
 The z-score is given by $z = (x - \bar{x})/\sigma$.
+
+:::: {.qna}
+
+#### Question
 
 ```python
 df['z'] = (df.?? - df.??.??()) / df.??.??()
 df.z.describe().apply(lambda x: f"{x:5.5f}")
 ```
 
+#### Answer
+
+```{python}
+df['z'] = (df.price - df.price.mean()) / df.price.std()
+df.z.describe().apply(lambda x: f"{x:5.5f}")
+```
+
+::::
+
 ### Inter-Quartile Standardisation
 
 The IQR-standardised score is given by $i = (x - Q_{1})/(Q_{3} - Q_{1})$
+
+:::: {.qna}
+
+#### Question
 
 ```python
 df['iqs'] = (df.price - ??)/(??-??)
 df.iqs.describe().apply(lambda x: f"{x:5.5f}")
 ```
 
+#### Answer
+
+```{python}
+df['iqs'] = (df.price - df.price.quantile(0.25))/(df.price.quantile(0.75)-df.price.quantile(0.25))
+df.iqs.describe().apply(lambda x: f"{x:5.5f}")
+```
+
+::::
+
 ### Log-Normalisation
 
 The natural log of the price is gven by $ln(x)$
+
+:::: {.qna}
+
+#### Question
 
 ```python
 df['lnprice'] = np.log(??)
 df.lnprice.describe().apply(lambda x: f"{x:5.5f}")
 ```
+
+#### Answer
+
+*Note* the issue with `divide by zero` here: you would need to resolve this by either dropping properties priced at `0`, *or* adding `1` to the price (i.e. `np.log(df.price+1)`). There are arguments for and against both approaches.
+
+```{python}
+df['lnprice'] = np.log(df.price)
+df.lnprice.describe().apply(lambda x: f"{x:5.5f}")
+```
+
+::::
 
 ## Quick (and Dirty) Plotting
 
@@ -1354,9 +1420,9 @@ For now, let's look at the basic plotting functionality pandas provides - in con
 
 ::: {.callout-warning collapse="true"}
 
-MacOS users who are *not* using Docker will need to do certain things in a specific order at the start of any notebook in order to show maps or graphs. Please make a copy of the following code for any notebook that you create and make it the *first* code that you run in the notebook...
+#### MacOS plotting *without* Docker
 
-:::
+MacOS users who are *not* using Docker will need to do certain things in a specific order at the start of any notebook in order to show maps or graphs. Please make a copy of the following code for any notebook that you create and make it the *first* code that you run in the notebook...
 
 ```python
 # Needed on a Mac
@@ -1365,6 +1431,8 @@ mpl.use('TkAgg')
 %matplotlib inline
 import matplotlib.pyplot as plt
 ```
+
+:::
 
 ### Histograms
 
@@ -1376,16 +1444,20 @@ import matplotlib.pyplot as plt
 
 First, let's see some of the ways we could visualise the distribution of the `Series` in the dataset:
 
-```python
+```{python}
 df.price.plot.hist() # histogram
 ```
 
-If the code worked properly you should have just created a standard [histogram](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.plot.hist.html) plot (if you can't see one, ask for help). 
+If the code worked properly you should have just created a standard [histogram](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.plot.hist.html) plot (if you can't see one, ask for help). However, a basic problem here may be the range of the data: if your maximum price is much more than £5,000 then you'll find the majority of your data plotted in one bar, which isn't very helpful.
 
-You can also pass in simple options to improve the plotting:
+You can filter the data *and* pass in some simple options to improve the plotting:
 
-```python
-df.price.plot.hist(bins=??); # Notice the ';' here to suppress `<AxesSubplot...>`
+```{python}
+# Notice the ';' here to suppress `<AxesSubplot...>`
+# That information doesn't *always* appear, but whenever
+# you have unwanted textual output above your plot just
+# add a ';' on the end of the line of code!
+df[df.price < 1000].price.plot.hist(bins=50); 
 ```
 
 ### KDE Plots
@@ -1396,11 +1468,25 @@ df.price.plot.hist(bins=??); # Notice the ';' here to suppress `<AxesSubplot...>
 
 :::
 
-Similarly, we can produce a [Kernel Density Estimate plot](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.plot.kde.html) (modifying the limits of the x-axis using `xlim`):
+Similarly, we can produce a [Kernel Density Estimate plot](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.plot.kde.html). This time, instead of dropping data just before calling `plot` we're going to modify the *limits* of the x-axis using `xlim`:
+
+:::: {.qna}
+
+#### Question
+
+Look for information about using `xlim`:
 
 ```python
-df.price.plot.kde(xlim=(0,??)); #kernel density estimate plot
+df.price.plot.kde(xlim=(??)); #kernel density estimate plot
 ```
+
+#### Answer
+
+```{python}
+df.price.plot.kde(xlim=(0,1000)); #kernel density estimate plot
+```
+
+::::
 
 Kind of handy, no? These aren't the _best_ looking plots, but they are all being generated on-the-fly for you by pandas with no more than a cheery `DataFrame.Series.plot.<plot type>`! Since those plots are all just method calls, many of them take optional parameters to change the colour, the notation (scientific or not), and other options. For example, many of the documentation pages linked to above are rather brief, but include a link to [the general options that can be applied to all `Series.plot`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.plot.html) calls.
 
@@ -1408,9 +1494,13 @@ This is why we like pandas: it allows us to be _constructively lazy_. We don't n
 
 ### A Slight Case of Over-Plotting
 
-Generally, Jupyter is clever enough to overlay plots one on top of the other if you call them all in the same cell. We'll see ways to gain more control later, but this is still a good start!
+Generally, Jupyter is clever enough to overlay plots one on top of the other if you call them all in the same cell. We'll see ways to gain more control later, but this is still a good start! Note that here we also need to get rid of the `-inf` values from rows that had a price of £0.
 
-```python
+```{python}
+# Calling copy() ensures the index is updated
+# and note that all subsequent plots will have
+# these £0 rows removed!
+df = df[df.price > 0].copy() 
 df.z.plot.kde(xlim=[-2, 10])
 df.iqs.plot.kde(xlim=[-2, 10])
 df.lnprice.plot.kde();
@@ -1426,8 +1516,8 @@ df.lnprice.plot.kde();
 
 A standard [boxplot](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.plot.box.html):
 
-```python
-df.price.plot.box(figsize=(4, 8)); # boxplot
+```{python}
+df.lnprice.plot.box(figsize=(4, 8));
 ```
 
 ### Scatterplots
@@ -1440,7 +1530,7 @@ df.price.plot.box(figsize=(4, 8)); # boxplot
 
 We can also plot two variables in a [scatter plot](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.plot.scatter.html#pandas.DataFrame.plot.scatter) by applying a plot method to the `DataFrame` (not an individual `Series`):
 
-```python
+```{python}
 df.plot.scatter(x='longitude', y='latitude', c='price', s=2, cmap='viridis', figsize=(15,10))
 ```
 
@@ -1448,14 +1538,13 @@ Note how the code above has the form `DataFrame.plot.<plot type>`, not `DataFram
 
 Looking at the plot produced, it's hard to see where the high values are, so we might want to think about ways that we could make it easier to spot the big numbers... We could, for instance, also vary the size of the point in a plot by some variable, but why does the following not really work?
 
-```python
-tmp = df[df.price>0]
-tmp.plot.scatter(x='longitude', y='latitude', c='price', s=(tmp.price/tmp.price.min()), cmap='viridis', figsize=(15,10))
+```{python}
+df.plot.scatter(x='longitude', y='latitude', c='price', s=(df.price/df.price.min()), cmap='viridis', figsize=(15,10))
 ```
 
 And we can plot subsets of our data without creating a new object. See if you can work out what the following code is doing that is different from the last plot:
 
-```python
+```{python}
 df[df.price > df.price.quantile(0.90)].plot.scatter(x='longitude', y='latitude', c='price', cmap='viridis', s=8)
 ```
 
@@ -1469,8 +1558,8 @@ df[df.price > df.price.quantile(0.90)].plot.scatter(x='longitude', y='latitude',
 
 And pandas allows us to create 'less standard' plots, like a [hex bin plot](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.plot.hexbin.html#pandas.DataFrame.plot.hexbin):
 
-```python
-df.plot.hexbin(x='longitude', y='latitude', gridsize=50, figsize=(10,7))  #hex bin plot
+```{python}
+df.plot.hexbin(x='longitude', y='latitude', gridsize=50, figsize=(10,7))
 ```
 
 That's just a taste of what the basic plotting functionality of pandas can do. Feel free to explore more yourself and we'll also see [the seaborn package](http://seaborn.pydata.org/index.html) later.
