@@ -11,15 +11,11 @@ filters:
 | :------- | :------------------ | :----------- | :--------------- | --: |
 | 30% | &#9619;&#9619;&#9619;&#9619;&#9619;&#9619;&#9619;&#9617; | &#9617;&#9617;&#9617;&#9617;&#9617;&#9617; | &#9617;&#9617;&#9617;&#9617;&#9617;&#9617; | 4/10
 
-In this notebook the priorities here should be **Tasks 1–4** because they take you through the process of building a function incrementally by gradually adding complexity and sophistication rather than doing everything in one go. You will get an extra chance to revisit the differences between LoLs and DoLs because you will undoubtedly encounter and make use of these data structures even *after* you become a skillfull Python programmer.
-
-**Task 5** is something you will probably want to revist when you get stuck into the group work because packages of functions are useful when multiple people are working on the same code. So if someone edits 'their' package it doesn't trigger conflicts with anyone else's code: you can work a *bit* in isolation without creating conflicts in Git that needs to be continually resolved. 
-
-**Task 6** will help you to understand *how* to build your own classes in greater detail, but it is enough to understand that classes exist in hierarchies (as this was also covered in the live session).
+This is a very challenging notebook because it takes you *both* through the process of building a function incrementally *and* through a 'simple' example of how Python classes actually work. You will need to understand these two very different elements in order to make the most of the remaining 6 weeks of term, because we both improve our code incrementally *and* make use of objects and their inheritances extensively. You also get an extra chance to revisit the differences between LoLs and DoLs because you will undoubtedly encounter and make use of these data structures even *after* you become a skillfull Python programmer.
 
 ::: {.callout-warning}
 
-This is a very long practical and it's _not_ expected that you will get through it in the alloted time.
+This is a very challenging practical and you should do your best to ensure that you actually understand what you have done and why.
 
 ::: 
 
@@ -36,9 +32,11 @@ print("You should now make it a priority [Sign Up]({{< var module.signup >}})!")
 
 :::
 
-Practical 3 is hard, so I want to provide _another_ chance for the concepts to bed in before we use them in an *object-oriented way through Pandas*. Yes, Week 5 will show how we combine concepts covered over the preceding two weeks in *practice* to do data science. 
+# Why 'Obvious' is Not Always 'Right' (Revisited)
 
-So remember the finding from last week: if we don't really care about column order, then a dictionary of lists would be a nice way to handle data. And why should we care about column order? With our CSV file we saw what a pain it was to fix things when even a tiny thing like the layout of the columns changed. But if, instead, we could just reference the 'Description' column in the data set then it doesn't matter where that column actually is *and* we would know that all the descriptions would be *text*, while all the populations or prices would be *numbers*. Why is that? 
+Practical 3 is hard, so I want to provide _another_ chance for the concepts to bed in before we use them in an *object-oriented way through Pandas*. Yes, Week 5 will show how we combine concepts covered over the preceding two weeks in *practice* to 'do data science'.
+
+First, remember the finding from last week: if we don't really care about column order, then a dictionary of lists is a nice way to handle data. And why should we care about column order? With our CSV file we saw what a pain it was to fix things when even a tiny thing like the layout of the columns changed. But if, instead, we could just reference the 'Description' column in the data set then it doesn't matter where that column actually is *and* we would know that all the descriptions would be *text*, while all the populations or prices would be *numbers*. Why is that? 
 
 ::: {.callout-note}
 
@@ -48,18 +46,9 @@ This task briefly recaps the final part of [Practical 2](https://jreades.github.
 
 :::
 
-
-# Why 'Obvious' is Not Always 'Right' (Revisited)
-
 ## The Way That Doesn't Work
 
-::: {.callout-tip collapse="true"}
-
-#### Difficulty level: Low (this time around).
-
-:::
-
-Here are four rows of 'data' for city sizes organised by _row_ as a list-of-lists. Try printing out *just* the cities contained in the data:
+Recall that this is how four rows of 'data' for city sizes organised by _row_ as a list-of-lists look:
 
 ```{python}
 myData = [
@@ -70,25 +59,7 @@ myData = [
 ]
 ```
 
-### Print a List of Cities
-
-:::: {.qna}
-
-#### Question 
-
-Print out a list of every city in the data set:
-
-```python
-cities = []
-
-???
-
-print("The cities in the data set are: " + ", ".join(cities))
-```
-
-#### Answer
-
-Print out a list of every city in the data set:
+To print out a list of every city in the data set *when* we don't know where the `Name` column is in the file we have to jump through some hoops:
 
 ```{python}
 cities = []
@@ -100,30 +71,7 @@ for i in range(1, len(myData)):
 print("The cities in the data set are: " + ", ".join(cities))
 ```
 
-::::
-
-### Is Edinburgh in the List?
-
-Now write code to find out if `Edinburgh` is included in the list of data:
-
-:::: {.qna}
-
-#### Question 
-
-```python
-col   = myData[0].index('Name')
-found = False
-for i in range(1, len(??)):
-    if myData[i][col] == ??:
-        print("Found Edinburgh in the data set!")
-        found = True
-        break
-
-if found == ??:
-    print("Didn't find Edinburgh in the data set.")
-```
-
-#### Answer
+And it's the same kind of faff if we want to find out if `Edinburgh` is included in the data set:
 
 ```{python}
 col   = myData[0].index('Name')
@@ -138,15 +86,7 @@ if found == False:
     print("Didn't find Edinburgh in the data set.")
 ```
 
-::::
-
 ## The Way That Does Work
-
-::: {.callout-tip collapse="true"}
-
-#### **Difficulty level**: Low (this time around).
-
-:::
 
 Compare that code to how it works for a dictionary-of-lists organised by _column_. Now try printing out the cities in the data:
 
@@ -161,42 +101,13 @@ myData = {
 }
 ```
 
-### Print a List of Cities
-
-Print out a list of every city in the data set:
-
-:::: {.qna}
-
-#### Question
-
-```python
-print(", ".join(??))
-```
-
-#### Answer
+To print out a list of every city in the data set:
 
 ```{python}
 print(", ".join(myData['Name']))
 ```
 
-::::
-
-### Is Edinburgh in the List?
-
-Now write code to find out if `Edinburgh` is included in the list of data:
-
-:::: {.panel-tabset}
-
-#### Question
-
-```python
-if 'Edinburgh' in ??:
-    print("Found Edinburgh in the data set!")
-else:
-    print("Didn't find Edinburgh in the data set.")
-```
-
-#### Answer
+To find out if `Edinburgh` is included in the list of data:
 
 ```{python}
 if 'Edinburgh' in myData['Name']:
@@ -205,27 +116,22 @@ else:
     print("Didn't find Edinburgh in the data set.")
 ```
 
-::::
-
 See how even basic questions like "Is Edinburgh in our list of data?" are suddenly easy to answer? We no longer need to loop over the entire data set in order to find one data point. In addition, we know that everything in the 'Name' column will be a string, and that everything in the 'Longitude' column is a float, while the 'Population' column contains integers. So that's made life easier already. But let's test this out and see how it works.
 
 # Appending a Column
 
-To give you a sense of how scaleable this approach to data is let's add a new column where the city population is standardised to a z-score. Remember that the format for the z-score (when dealing with a sample) is: 
+## Calculate Mean
 
-$$
-z = \frac{x - \bar{x}}{s}
-$$
+Let's start by calculating the sample mean (use Google: `Python numpy mean...`):
 
-The population standard deviation (by which I mean, if you are dealing with *all* the data, and not a subsample as we are here) is:
+```{python}
+import numpy as np
+# Use numpy functions to calculate mean and standard deviation
+mean = np.mean(myData['Population'])
+print(f"City distribution has a mean of {mean:,.0f}.")
+```
 
-$$
-z = \frac{x - \mu}{\sigma}
-$$
-
-It's the same thing, just different notation.
-
-## Calculate Mean & Std Dev
+## Calculate Standard Deviation
 
 ::: {.callout-tip collapse="true"}
 
@@ -233,7 +139,7 @@ It's the same thing, just different notation.
 
 :::
 
-Let's start by calculating the sample mean and standard deviation (use Google: `Python numpy mean...`):
+Now let's do the standard deviation:
 
 :::: {.qna}
 
@@ -242,9 +148,8 @@ Let's start by calculating the sample mean and standard deviation (use Google: `
 ```python
 import numpy as np
 # Use numpy functions to calculate mean and standard deviation
-mean = np.??(myData['Population'])
 std  = np.??(??)
-print(f"City distribution has a mean {mean:,.0f} and standard deviation of {std:,.2f}.")
+print(f"City distribution has a standard deviation of {std:,.2f}.")
 ```
 
 #### Answer
@@ -252,14 +157,13 @@ print(f"City distribution has a mean {mean:,.0f} and standard deviation of {std:
 ```{python}
 import numpy as np
 # Use numpy functions to calculate mean and standard deviation
-mean = np.mean(myData['Population'])
 std  = np.std(myData['Population'])
-print(f"City distribution has a mean {mean:,.0f} and standard deviation of {std:,.2f}.")
+print(f"City distribution has a standard deviation of {std:,.2f}.")
 ```
 
 ::::
 
-`numpy` gives us a way to calculate the mean and standard deviation _quickly_ and without having to reinvent the wheel. The other potentially new thing here is `{std:,.2f}`. This is about [string formatting](https://www.w3schools.com/python/ref_string_format.asp) and the main thing to recognise is that this means 'format this float with commas separating the thousands/millions and 2 digits to the right'. The link I've provided uses the slightly older approach of `<str>.format()` but the formatting approach is the same.
+So the `numpy` package gives us a way to calculate the mean and standard deviation _quickly_ and without having to reinvent the wheel. The other potentially new thing here is `{std:,.2f}`. This is about [string formatting](https://www.w3schools.com/python/ref_string_format.asp) and the main thing to recognise is that this means 'format this float with commas separating the thousands/millions and 2 digits to the right'. The link I've provided uses the slightly older approach of `<str>.format()` but the formatting approach is the same.
 
 ## For Loops Without For Loops
 
@@ -280,7 +184,17 @@ demo = range(0,10) # <- a *range* of numbers between 0 and 9 (stop at 10)
 print([x**2 for x in demo]) # square every element of demo
 ```
 
-Now let's apply this to our problem. We calculated the the mean and standard deviation above, so now we want to apply the z-score formula to every element of the Population list... 
+Now let's apply this to our problem. We calculated the the mean and standard deviation above, so now we want to apply the z-score formula to every element of the Population list...  Remember that the format for the z-score (when dealing with a sample) is: 
+
+$$
+z = \frac{x - \bar{x}}{s}
+$$
+
+And the population standard deviation (by which I mean, if you are dealing with *all* the data, and not a subsample as we are here) is:
+
+$$
+z = \frac{x - \mu}{\sigma}
+$$
 
 :::: {.qna}
 
@@ -773,533 +687,23 @@ print(f"First two populations are: {ds['Population'][:2]}")
 print(f"First two latitudes are: {ds['Latitude'][:2]}")
 ```
 
-# 'Functionalising' (Part 2)
+## Creating a Package
 
-Now that we've got a function that *basically* works, we're going to spend a little time thinking ahead about the kinds errors that we might expect our function to encounter 'in the wild' and how we can make its output more immediately useful for an analyst.
+We're not going to tackle this now, but it's important that you understand how what we've done connects to what we're *about* to do, and the concept of a package is the bridge. We've already covered this in the pre-recorded lectures, but if you want to actually *try* to create your own package, the simplest way to do this is to:
 
-## Fixing Data Types
+1. Copy the `read_csv` into a new file called, for instance, `utils.py`.
+2. Make sure you delete this function from the current 'namespace' (`del(read_csv)`) by which I mean that the `read_csv` function no longer exists (running `help(read_csv)` should give you an error!).
+3. Try importing the function from the file: `from utils import read_csv` and run the `help(read_csv)` code again.
 
-::: {.callout-warning collapse="true"}
+Assuming that you've done everything correctly, we've now brought in code from another file without having to write it into our main Python script file. In Python, many of the most complex libraries are spread across the equivalent of *many* `utils.py` files, but on top of *that* when we import and run them they are also creating objects from classes defined in those files. 
 
-#### Difficulty: Medium.
-
-:::
-
-If you look closely at the above, you'll see that *everything* is a string, including the latitudes, longitudes, and populations, which are clearly numeric data types. Here's a 'simple' way to specify a `dtype` list to hold the _data type_ for each column. I'm also going to introduce you the `zip` function here as it has many uses with geographic data (especially converting lat/long to points).
-
-### Demonstrating Zip
-
-::: {.callout-tip collapse="true"}
-
-#### Difficulty: Low
-
-:::
-
-:::: {.qna}
-
-#### Question
-
-```python
-cols  = ['City', 'Population', 'Latitude', 'Longitude'] # <- Column name
-dtype = [??, ??, ??, float]                        # <- Column data type
-
-# 'Zips up' these two lists into an iterator! So this will 
-# take element 0 from *each* list and pass them to `col` as
-# a list-like 'tuple' (meaning there is a col[0] and a col[1]).
-for col in zip(cols, dtype):
-    colname = col[0]
-    coltype = col[1]
-    
-    # Notice the more advanced formatting here:
-    # - `>12` means right-align with up to 12 characters of whitespace; notice the last line!
-    # - `coltype.__name__` gives us the name of the data type, rather than a '<class...>' output.
-    print(f"Column {colname:>12} should be type: {coltype.__name__}")
-```
-
-#### Answer
-
-```{python}
-cols  = ['City', 'Population', 'Latitude', 'Longitude'] # <- Column name
-dtype = [str, int, float, float]                        # <- Column data type
-
-# 'Zips up' these two lists into an iterator! So this will
-# take element 0 from *each* list and pass them to `col` as
-# a list-like 'tuple' (meaning there is a col[0] and a col[1]).
-for col in zip(cols, dtype):
-    colname = col[0]
-    coltype = col[1]
-
-    # Notice the more advanced formatting here:
-    # - `>12` means right-align with up to 12 characters of whitespace; notice the last line!
-    # - `coltype.__name__` gives us the name of the data type, rather than a '<class...>' output.
-    print(f"Column {colname:>12} should be type: {coltype.__name__}")
-```
-
-::::
-
-### A Function to Convert Data Types
-
-::: {.callout-tip collapse="true"}
-
-#### Difficulty: Low, as I've provided a function.
-
-:::
-
-```{python}
-# Convert the raw data to data of the appropriate
-# type: 'column data' (cdata) -> 'column type' (ctype)
-def to_type(cdata, ctype):
-    # If a string
-    if isinstance(cdata, str):
-        try:
-            if ctype==bool:
-                return cdata==True
-            else:
-                return ctype(cdata)
-        except TypeError:
-            return cdata
-    
-    # Not a string (assume list)
-    else: 
-        fdata = []
-        for c in cdata:
-            try:
-                if ctype==bool:
-                    fdata.append( c=='True' )
-                else:
-                    fdata.append( ctype(c) )
-            except:
-                fdata.append( c )
-        return fdata
-```
-
-For example: 
-
-```{python}
-to_type(['31.4','14','2412312.23'],int)
-```
-
-Now this isn't the *best* function because we might expect it to return integers for all number-like things regardless of whether they are floats or integers or strings, but at least we've not thrown an *exception* when this happens, we've only converted the fields that clearly apply! We'll copy the data to new data structure only so that we know we're not overwriting `ds` until we're sure that the code works.
-
-:::: {.qna}
-
-#### Question
-
-```python 
-ds2 = {}
-for col in zip(cols, dtype):
-    colname = col[0]
-    coltype = col[1]
-    ds2[ ?? ] = to_type( ds[??], coltype )
-```
-
-#### Answer
-
-```{python}
-# Now apply this! We'll copy the data to
-# new data structure only so that we know
-# we're not overwriting `ds` until we're sure
-# that the code works.
-ds2 = {}
-for col in zip(cols, dtype):
-    colname = col[0]
-    coltype = col[1]
-    print(f"ds2[ {colname} ] = to_type( ds[{colname}], {coltype})")
-    ds2[ colname ] = to_type( ds[colname], coltype )
-```
-
-::::
-
-Compare the output here to the output from these two cells *carefully* (what has changed?):
-
-```{python}
-print("DS columns are: " + ", ".join(ds.keys()))
-print(f"First two cities are: {ds['City'][:2]}")
-print(f"First two populations are: {ds['Population'][:2]}")
-print(f"First two latitudes are: {ds['Latitude'][:2]}")
-```
-
-```{python}
-print("DS2 columns are: " + ", ".join(ds2.keys()))
-print(f"First two cities are: {ds2['City'][:2]}")
-print(f"First two populations are: {ds2['Population'][:2]}")
-print(f"First two latitudes are: {ds2['Latitude'][:2]}")
-```
-
-## Checking Basic Functionality
-
-::: {.callout-warning collapse="true"}
-
-#### Difficulty: Medium
-
-:::
-
-Now that we've got our data structure all set up correctly (appropriate names, data types, etc.) let's see if it works by testing out some of our previous operations:
-
-:::: {.qna}
-
-#### Question
-
-```python
-import numpy as np # We'll need this to apply functions to lists easily
-
-print(f"Average population is {np.mean(ds2['Population']):,.2f}")
-print(f"Westernmost city is {ds2['City'][np.where(ds2['Longitude']==np.??(ds2['??']))[0][0]]}")
-print(f"Northernmost city is {ds2['City'][np.where(ds2['Latitude']==np.??(ds2['??']))[0][0]]}")
-print(f"Southernmost city is {ds2['City'][np.where(ds2['Latitude']==np.??(ds2['??']))[0][0]]}")
-```
-
-You should get the following:
-
-```{python}
-#| echo: false
-import numpy as np # We'll need this to apply functions to lists easily
-
-print(f"Average population is {np.mean(ds2['Population']):,.2f}")
-print(f"Westernmost city is {ds2['City'][np.where(ds2['Longitude']==np.min(ds2['Longitude']))[0][0]]}")
-print(f"Northernmost city is {ds2['City'][np.where(ds2['Latitude']==np.max(ds2['Latitude']))[0][0]]}")
-print(f"Southernmost city is {ds2['City'][np.where(ds2['Latitude']==np.min(ds2['Latitude']))[0][0]]}")
-```
-
-#### Answer
-
-```{python}
-import numpy as np # We'll need this to apply functions to lists easily
-
-print(f"Average population is {np.mean(ds2['Population']):,.2f}")
-print(f"Westernmost city is {ds2['City'][np.where(ds2['Longitude']==np.min(ds2['Longitude']))[0][0]]}")
-print(f"Northernmost city is {ds2['City'][np.where(ds2['Latitude']==np.max(ds2['Latitude']))[0][0]]}")
-print(f"Southernmost city is {ds2['City'][np.where(ds2['Latitude']==np.min(ds2['Latitude']))[0][0]]}")
-```
-
-::::
-
-There are a few things to understand here:
-
-1. Where we want to find something else in the data *based on that value* then things get a little more complex: we use `np.min` to find the smallest value in the data, but we don't know *where* in the list that value actually *was* so we use `np.where` to find out which indexes match the minimum value. In this data set it's easy because there's one, and only one value that matches. But you'd need to do some clever thinking about how to handle ties.
-2. `np.where` returns a complex data structure (list-of-lists, essentially) so we need to pull the value we need out of that data in order to actually find the list index we need and look up the `City` name associated with, for example, the minium value in the data. That bit (`[0][0]`) is a bit clunky, but right now we're not too worried about it.
-
-**Notice** that we do *all* of this without using a `for` loop or variables to keep track of what we've found... You *could* also use a `for` loop to answer each of these questions (see the example below), but hopefully you see how the above solution is more *elegant* (it's also faster):
-
-```python
-min_long = 180
-min_idx  = -1
-
-for l in ds2['Longitude']:
-    if l < min_long: min_long = l
-print(f"Minimum longitude is {min_long}")
-
-for idx, l2 in enumerate(ds2['Longitude']):
-    if l2==min_long:
-        min_idx = idx
-        break
-
-print(f"Westernmost city is {ds2['City'][min_idx]}")
-```
-
-## Was it Worth It?
-
-::: {.callout-tip collapse="true"}
-
-#### Difficulty: Low, it should just _work_.
-
-:::
-
-At this point it's worth asking: was all this *worth* it? Well let's see! The best way to test this is to use a *different* data set and see if we've solved the 'hard-coding' problem.
-
-```{python}
-url = "https://raw.githubusercontent.com/jreades/fsds/master/data/src/Wikipedia-Cities.csv"
-out = os.path.join('data','Wikipedia-Cities-full.csv')
-
-cols  = ['City', 'Population', 'Latitude', 'Longitude']
-dtype = [str, int, float, float]
-
-untyped_dol = read_csv(get_url(url, out))
-
-typed_dol = {}
-for col in zip(cols, dtype):
-    colname = col[0]
-    coltype = col[1]
-    typed_dol[ colname ] = to_type(untyped_dol[colname], coltype)
-```
-
-```{python}
-print(f"Average population is {np.mean(typed_dol['Population']):,.2f}")
-print(f"Westernmost city is {typed_dol['City'][np.where(typed_dol['Longitude']==np.min(typed_dol['Longitude']))[0][0]]}")
-print(f"Northernmost city is {typed_dol['City'][np.where(typed_dol['Latitude']==np.max(typed_dol['Latitude']))[0][0]]}")
-print(f"Southernmost city is {typed_dol['City'][np.where(typed_dol['Latitude']==np.min(typed_dol['Latitude']))[0][0]]}")
-```
-
-So we used all the same code as for the subset of the data but changed *nothing*. And this is even though the column order changed (print out the first row of each file if you don't believe me) *and* the number of columns changed *and* our city column now contains commas! So what this has given us is a much more flexible way not only to *access* the data, but also to *work* with it!
-
-## More Functions!
-
-::: {.callout-warning collapse="true"}
-
-#### Difficulty: Medium
-
-:::
-
-Here is the skeleton of a function to replace the `np.where(column==np.[min|max|...](column))[0][0]` code. There are a few ways to do this: 
-
-1. You could use if/else/elif and do different things based on testing against the specified string
-2. You could try to find a function in `numpy` that matches the specified string
-3. You could try to `eval` the code, but I really wouldn't recommend this for security reasons
-
-I have gone with a combination of 1 and 2, but you will need to really read the code to understand how it works. I've left the docstring for you to complete. This isn't the best function since it makes some assumptions about the types of data that it might be passed to the function: this is where *Object-Oriented Programming* could come to the rescue! If we had different column *types* (e.g. String, Float, Int) then we could have different *versions* of `find_val` that performed the same *function* (find a value) but did this completely differently depending on the data. This is what *methods* do!
-
-:::: {.panel-tabset}
-
-#### Question
-
-```python
-import numpy as np
-
-def find_val(col:list, val:str):
-    """
-    ??
-    """
-    if val in dir(np) and callable(getattr(np, val)):
-        func = getattr(np, val) # <--- What does this do???
-        if val in ['min','max']:
-            return np.??(col==func(col))[0][0]
-        else:
-            return func(col)
-    else:
-        return np.nan
-    
-print(find_val(typed_dol['Latitude'], 'min'))
-print(find_val(typed_dol['Latitude'], 'median'))
-```
-
-#### Answer
-
-```{python}
-import numpy as np
-
-def find_val(col:list, val:str):
-    """
-    Finds a value in a (numeric) list using a numpy function. The search
-    function must exist in numpy (e.g. np.min, np.max, np.median) since
-    that is the package that we search.
-
-    :param col: a list of numeric values
-    :param val: what kind of value to search for (in the sense of min, max, median, etc.)
-    :returns: the result of the search (e.g. the minimum value in the list as located by the numpy function)
-    """
-    if val in dir(np) and callable(getattr(np, val)):
-        func = getattr(np, val)
-        if val in ['min','max']:
-            return np.where(col==func(col))[0][0]
-        else:
-            return func(col)
-    else:
-        return np.nan
-
-print(find_val(typed_dol['Latitude'], 'min'))
-print(find_val(typed_dol['Latitude'], 'median'))
-```
-
-::::
-
-```{python}
-#| echo: true
-print(f"Average population is {find_val(typed_dol['Population'],'mean'):,.2f}")
-print(f"Westernmost city is {typed_dol['City'][find_val(typed_dol['Longitude'],'min')]}")
-print(f"Northernmost city is {typed_dol['City'][find_val(typed_dol['Latitude'],'max')]}")
-print(f"Southernmost city is {typed_dol['City'][find_val(typed_dol['Latitude'],'min')]}")
-```
-
-So we have streaminlined the code still further and implemented a fairly generic 'helper' function that uses `numpy` to perform calculations on a column of data (assuming it's numeric). We could, of course, extend this further, to handle strings and other data types, but we're going to see a *better* way to do all of this *next* week.
-
-# Creating a Package from Functions
-
-::: {.callout-note}
-
-#### &#128279; Connections
-
-This is building on both [Functions](https://jreades.github.io/code-camp/lessons/Functions.html) and [Packages](https://jreades.github.io/code-camp/lessons/Packages.html) sessions from Code Camp as well as the [Functions](https://jreades.github.io/fsds/sessions/week3.html#lectures) and [Packages](https://jreades.github.io/fsds/sessions/week3.html#lectures) lectures. 
-
-:::
-
-Below is code to create a package called `dtools` (i.e. data tools) by converting the notebook into a Python script file called `__init__.py` that sits in the `dtools` directory. This is the first step to creating a package from code that is *already* working in a Notebook.
-
-## Create a Directory
-
-::: {.callout-tip collapse="true"}
-
-#### Difficulty: Low. 
-
-:::
-
-When creating your own package, everything goes into a directory whose name is the name of the package. In other words, if you wanted to create a package called `my_stuff` then you'd need to *first* create a directory called `my_staff` in the *current working directory* (i.e. wherever you are keeping your Notbooks).
-
-We can create the directory using `mkdir` (the `!` means 'run this [Linux] command'):
-
-```{python}
-#| echo: true
-!mkdir -p 'dtools'
-```
-
-## Create the init File
-
-::: {.callout-warning collapse="true"}
-
-#### Difficulty: Medium
-
-:::
-
-More complex packages will have lots of stuff going on inside their 'root' directory, but we're keeping it simple and only need to create and fill in *one* file inside the `dtools` directory: `__init__.py`. This is a convention.
-
-You can create an empty file with that name in `dtools` using a command line function like `!touch dtools/__init__.py` or if you prefer then there's `File` > `New` > `Python File` but you'll need to **make sure it has created the file in the right place** (that's *within* the `dtools` directory).
-
-Either way, the next step is then to copy all of the functions you've just created into the `__init__.py` file.
-
-::: {.callout-note collapse="true"}
-
-#### Aside: nbconvert 
-
-Sometimes, notebooks become so complex or take such a long time to run that they're *better* expressed as Python scripts (`.py` files). We don't *have* to step through the notebook copying and pasting the bits we need since, using `nbconvert` you can convert an entire notebook in one go like this:
-
-```bash
-!jupyter nbconvert --ClearOutputPreprocessor.enabled=True \
-    --to python --output=dtools/notebook.py \
-    Practical-04-Objects-Answers.ipynb
-```
-
-This is just so that you know the option exists.
-
-:::
-
-## Extract Code to Init
-
-::: {.callout-warning collapse="true"}
-
-#### Difficulty: Medium
-
-:::
-
-You now need to find and copy+paste the following functions into `__init__.py`:
-
-1. `get_url`
-2. `read_csv` 
-3. `to_type` 
-4. `find_val`
-
-And don't forget to find all the `import` statements (including `from x import y`) at the start of this notebook and copy those as well!
-
-You should then be able to run the code below and can always compare it to my version [on GitHub](https://github.com/jreades/fsds/blob/master/practicals/dtools/__init__.py).
-
-## Test It
-
-::: {.callout-caution collapse="true"}
-
-#### Difficulty: Hard.
-
-:::
-
-The next two lines of code allow you to repeatedly edit an imported package without having to restart the entire Python notebook. So whenever Jupyter sees a change to `dtools/__init__.py` it will reload the package and update the code without you having to do anything.
-
-```python
-%load_ext autoreload
-%autoreload 2
-```
-
-### Import
-
-And now we should be able to import the package and start using the functions that we defined...
-
-```{python}
-import dtools
-help(dtools.read_csv)
-```
-
-### Use Read_CSV
-
-:::: {.qna}
-
-#### Question
-
-```python
-url = 'https://github.com/jreades/fsds/raw/master/data/2019-sample-crime.csv'
-out = os.path.join('data','crime-sample.csv')
-
-ds = ??.read_csv(??.get_url(url, out))
-
-print(f"ds has {len(ds.keys())} columns, these are: " + ", ".join(ds.keys()))
-print(f"There are {len(ds['ID'])} rows of data")
-```
-
-#### Answer
-
-```{python}
-url = 'https://github.com/jreades/fsds/raw/master/data/2019-sample-crime.csv'
-out = os.path.join('data','crime-sample.csv')
-
-ds = dtools.read_csv(dtools.get_url(url, out))
-
-print(f"ds has {len(ds.keys())} columns, these are: " + ", ".join(ds.keys()))
-print(f"There are {len(ds['ID'])} rows of data")
-```
-
-::::
-
-### Use To_Type
-
-:::: {.qna}
-
-#### Question
-
-```python
-cols  = ['Latitude', 'Longitude'] 
-dtype = [float, float]
-
-typed_ds = {}
-for col in zip(cols, dtype): # <- This only copies these two columns to typed_ds
-    colname = col[0]
-    coltype = col[1]
-    typed_ds[ colname ] = dtools.to_type(ds[colname], coltype)
-```
-
-#### Answer
-
-```{python}
-cols  = ['Latitude', 'Longitude']
-dtype = [float, float]
-
-typed_ds = {}
-for col in zip(cols, dtype):
-    colname = col[0]
-    coltype = col[1]
-    typed_ds[ colname ] = dtools.to_type(ds[colname], coltype)
-```
-
-::::
-
-### Use Find_Val
-
-:::: {.qna}
-
-#### Question
-
-```python
-idx = find_val(typed_ds['Latitude'], 'min')
-
-print(ds['Case Number'][idx])
-print(ds['Description'][idx])
-```
-
-#### Answer
-
-```{python}
-idx = find_val(typed_ds['Latitude'], 'min')
-print(ds['Case Number'][idx])
-print(ds['Description'][idx])
-```
-
-::::
+What we now want to do is use a fairly simple example using different 'shapes' (pyramids, cubes, etc.) that allow us to explore how classes work through inheritance from parents and can extend of overwrite the functionality provided by the parent class. We'll need this understanding in order to grasp how Pandas and GeoPandas work specifically, but also how Python works more generally.
 
 # Classes and Inheritance
+
+So, in the immortal words of Monty Python... 
+
+![And now for something completely different](./img/completely_different.png)
 
 ::: {.callout-note}
 
@@ -1309,15 +713,19 @@ This will draw on what you've learned in the lectures about <a href="">Methods</
 
 :::
 
+To repeat myself:
+
+> In Python, many of the most complex libraries are spread across the equivalent of *many* `utils.py` files, but on top of *that* when we import and run them they are also creating objects from classes defined in those files. 
+>
+> What we now want to do is use a fairly simple example using different 'shapes' (pyramids, cubes, etc.) that allow us to explore how classes work through inheritance from parents and can extend of overwrite the functionality provided by the parent class. We'll need this understanding in order to grasp how Pandas and GeoPandas work specifically, but also how Python works more generally.
+
 ::: {.callout-caution collapse="true"}
 
 #### Difficulty: &#129327;.
 
 :::
 
-And now for something completely different!
-
-We want to create a set of 'ideal shapes' with methods allowing us to derive various properties of that shape:
+We want to create a set of 'shapes' that allow us to calculate various properties of that shape:
 
 - Diameter: which we'll define as the longest line that can be drawn across the inside of the shape.
 - Volume: the total volume of the shape.
@@ -1327,9 +735,9 @@ We will create all of these shape classes in the notebook so that we know they w
 
 We're also going to make use of a few features of Python:
 
-- You can access the class name of an instance using: `self.__class__.__name__`. And here's one key point: `self` refers to the instance, not to the class... we'll see why this matters.
-- You can raise your own exceptions easily if you don't want to implement a particular method yet.
-- You can have an 'abstract' base class that does nothing except provide a template for the 'real' classes so that they can be used interchangeably.
+- You can access the class name of an instance using: `self.__class__.__name__`. And here's one key point: `self` refers to the specific instance (to *this* particular shape that I've created), not to the class in general (to *all* shapes of the same, er, shape)... we'll see why this matters.
+- You can raise your own exceptions easily if you don't want to implement a particular method yet. This is giving you control over how your code behaves when something goes 'wrong' -- as we've covered elsewhere sometimes an error is 'expected' and we want to handle the *exception*, other times it is 'unexpected' and we're going to let Python fail so that the user knows something is seriously wrong.
+- You can have an 'abstract' base class that does nothing except provide a template for the 'real' classes so that different types of shapes can be used interchangeably. This is quite an advanced feature, but it gives our script a lot more flexibility: we don't need to worry about whether we're working with a sphere, cube, or pyramid (or a spatial or non-spatial data set) because they are defined in a way that allows this flexibility.
 
 ## Abstract Base Class
 
@@ -1339,8 +747,6 @@ This class appears to do very little, but there are two things to notice:
 2. It provides methods (which only raise exceptions) that will allow one shape to be used in the place of any other shape that inherits from `shape`.
 
 ```{python}
-from math import pi
-
 # Base class shape
 class shape(object): # Inherit from base class 
     def __init__(self, dimension:float=None):
@@ -1361,6 +767,18 @@ class shape(object): # Inherit from base class
         return(self.shape_type)
 ```
 
+We can now create a new shape object (an *instance* of the shape class) but we can't do much that is useful with it:
+
+```{python}
+s = shape(15)
+
+try: 
+    print(f"I am a {s.type()}")
+    print(f"My volume is {s.volume()}")
+except Exception as e:
+    print(f"Error: {e}")
+```
+
 ## Cube
 
 Implements a cube:
@@ -1368,6 +786,12 @@ Implements a cube:
 1. The diameter of the cube is given by the Pythagorean formula for the length of the hypotenuse in 3D between opposing corners: $\sqrt{d^{2} + d^{2} + d^{2}}$ which we can reduce to $\sqrt{3 d^{2}}$.
 2. A cube's volume is given by $d^{3}$.
 3. A cube's surface area will be the sum of its six faces: $6d^{2}$.
+
+:::: {.qna}
+
+#### Question
+
+Can you work out the missing elements that will allow you to create a cube class?
 
 ```python
 # Cube class
@@ -1384,7 +808,48 @@ class cube(shape): # Inherit from shape
     
     def surface(self):
         return ??*(self.dim**2)
+
+# If you've done everything correctly then
+# you will no longer get an error here...
+s = cube(15)
+
+try: 
+    print(f"I am a {s.type()}")
+    print(f"My volume is {s.volume()}")
+except Exception as e:
+    print(f"Error: {e}")
 ```
+
+#### Answer
+
+```{python}
+# Cube class
+class cube(shape): # Inherit from shape
+    def __init__(self, dim:float):
+        super().__init__(dim)
+        return
+
+    def diameter(self):
+        return (3 * self.dim**2)**(1/2)
+
+    def volume(self):
+        return self.dim**3
+
+    def surface(self):
+        return 6*(self.dim**2)
+
+# If you've done everything correctly then
+# you will no longer get an error here...
+s = cube(15)
+
+try: 
+    print(f"I am a {s.type()}")
+    print(f"My volume is {s.volume()}")
+except Exception as e:
+    print(f"Error: {e}")
+```
+
+::::
 
 ## Sphere
 
@@ -1396,9 +861,70 @@ Implements a sphere:
 
 If we were writing something more general, we'd probably have spheres as a special case of an ellipsoid!
 
+:::: {.qna}
+
+#### Question
+
+Can you work out the missing elements that will allow you to create a cube class?
+
 ```python
-# Sphere code here!
+# Sphere class
+from math import pi
+class sphere(shape): # Inherit from shape
+    def __init__(self, dim:float):
+        # Something...
+
+    def diameter(self):
+        # Something...
+
+    def volume(self):
+        # Something
+
+    def surface(self):
+        # Something
+
+# If you've done everything correctly then
+# you will no longer get an error here...
+s = sphere(15)
+
+try: 
+    print(f"I am a {s.type()}")
+    print(f"My volume is {s.volume()}")
+except Exception as e:
+    print(f"Error: {e}")
 ```
+
+#### Answer
+
+```{python}
+from math import pi
+# Sphere class
+class sphere(shape): # Inherit from shape
+    def __init__(self, dim:float):
+        super().__init__(dim)
+        return
+
+    def diameter(self):
+        return self.dim*2
+
+    def volume(self):
+        return (4/3) * pi * self.dim**3
+
+    def surface(self):
+        return 4 * pi * (self.dim**2)
+
+# If you've done everything correctly then
+# you will no longer get an error here...
+s = sphere(15)
+
+try: 
+    print(f"I am a {s.type()}")
+    print(f"My volume is {s.volume()}")
+except Exception as e:
+    print(f"Error: {e}")
+```
+
+::::
 
 ## Regular Pyramid
 
@@ -1412,37 +938,43 @@ But this requires a _height_ method that is specific to pyramids:
 
 4. The height is taken from the centre of the pyramid (which will be half the length of the hypotenuse for two edges): $l = \sqrt{d{^2} + d^{2}}$ and the long side ($d$ again) which gives us $\sqrt{l/2 + d^{2}}$.
 
-Note that this has a class variable called `has_mummies` since Egyptian regular pyramids are plagued by them! 
+::: {.callout-note}
 
-```python
+#### Class Variables
+
+Note that this has a **class variable** called `has_mummies` since Egyptian regular pyramids are plagued by them! This class variable is set automatically for *all* instances of the `pyramid` class. Changing this variable can have weird effects so they're not *often* changed.
+
+:::
+
+```{python}
 # Pyramid class
 class pyramid(shape): # Inherit from shape
-    
+
     has_mummies = True # This is for *all* regular pyramids
-    
+
     def __init__(self, dim:float):
         super().__init__(dim)
         self.shape_type = 'Regular Pyramid'
         return
-    
+
     def diameter(self):
-        return (self.dim**?? + self.??**2)**(1/2)
-    
+        return (self.dim**2 + self.dim**2)**(1/2)
+
     def height(self):
-        return (self.diameter()/?? + self.dim**2)**(1/2)
-    
+        return (self.diameter()/2 + self.dim**2)**(1/2)
+
     def volume(self):
-        return self.dim**2 * self.??() / 3
-    
+        return self.dim**2 * self.height() / 3
+
     def surface(self):
         return self.dim**2 + self.dim**2 * 3**(1/2)
 ```
 
 ## Triangular Pyramid
 
-We want triangular pyramid to inherit from regular pyramid, and all sides are equal so it's an _equilateral_ triangular pyramid. However, this is kind of a judgement call since there's very little shared between the two types of pyramid and it's arguable whether this one is actually simpler and should therefore be the parent class...
+We have chosen for triangular pyramid to *inherit* from regular pyramid. However, this is kind of a judgement call since there's very little shared between the two types of pyramid and it's arguable whether this one is actually simpler and should therefore be the parent class... 
 
-Anyway, the calculations are:
+Just to note, as well, that since all sides are equal this is an _equilateral_ triangular pyramid.  Anyway, the calculations are:
 
 1. The diameter (longest line through the shape) will just be the edge: $d$.
 2. The volume $V = b * h / 3$ where $b$ is the area of an equilateral triangle.
@@ -1455,8 +987,34 @@ So we now need two new formulas:
 
 Triangular pyramids do *not* have a problem with mummies.
 
-```python
-# Triangular pyramid code here (extends regular pyramid)!
+Why don't you add some documentation to this class and the regular pyramid class so that we know how to use them correctly?
+
+```{python}
+# Triangular Pyramid class
+class t_pyramid(pyramid): # Inherit from regular pyramid
+
+    has_mummies = False # This is for all triangular pyramids
+
+    def __init__(self, dim:float):
+        super().__init__(dim)
+        self.shape_type = 'Triangular Pyramid'
+        return
+
+    def diameter(self):
+        return self.dim
+
+    def height(self):
+        # h = sqrt(6)/3 * d
+        return 6**(1/2)/3 * self.dim
+
+    def base(self):
+        return 3**(1/2)/4 * self.dim**2
+
+    def volume(self):
+        return (1/3) * self.base() * self.height()
+
+    def surface(self):
+        return 4 * self.base()
 ```
 
 ## Testing Your Classes
@@ -1486,7 +1044,7 @@ print(f"\tDiameter is: {p.diameter():5.2f}")
 print(f"\tSurface Area is: {p.surface():5.2f}")
 print(f"\tHeight is: {p.height():5.2f}")
 if p.has_mummies is True:
-    print("\tMummies? Aaaaaaaaagh!")
+    print("\tMummies? Aaaaaaaaargh!")
 else:
     print("\tPhew, no mummies!")
 print("")
@@ -1498,7 +1056,7 @@ print(f"\tDiameter is: {p2.diameter():5.2f}")
 print(f"\tSurface Area is: {p2.surface():5.2f}")
 print(f"\tHeight is: {p2.height():5.2f}")
 if p2.has_mummies is True:
-    print("\tMummies? Aaaaaaaaagh!")
+    print("\tMummies? Aaaaaaaaargh!")
 else:
     print("\tPhew, no mummies!")
 print("")
@@ -1514,37 +1072,59 @@ print("")
 
 I get the following output:
 
-```
-Sphere
-	Volume is: 4188.79
-	Diameter is: 20.00
-	Surface Area is: 1256.64
+```{python}
+#| echo: false
+# How would you test these changes?
+s = sphere(10)
+print(s.type())
+print(f"\tVolume is: {s.volume():5.2f}")
+print(f"\tDiameter is: {s.diameter():5.2f}")
+print(f"\tSurface Area is: {s.surface():5.2f}")
+print("")
 
-Cube
-	Volume is: 1000.00
-	Diameter is: 17.32
-	Surface Area is: 600.00
+c = cube(10)
+print(c.type())
+print(f"\tVolume is: {c.volume():5.2f}")
+print(f"\tDiameter is: {c.diameter():5.2f}")
+print(f"\tSurface Area is: {c.surface():5.2f}")
+print("")
 
-Regular Pyramid
-	Volume is: 344.92
-	Diameter is: 14.14
-	Surface Area is: 273.21
-	Height is: 10.35
-	Mummies? Aaaaaaaaagh!
+p = pyramid(10)
+print(p.type())
+print(f"\tVolume is: {p.volume():5.2f}")
+print(f"\tDiameter is: {p.diameter():5.2f}")
+print(f"\tSurface Area is: {p.surface():5.2f}")
+print(f"\tHeight is: {p.height():5.2f}")
+if p.has_mummies is True:
+    print("\tMummies? Aaaaaaaaargh!")
+else:
+    print("\tPhew, no mummies!")
+print("")
 
-Triangular Pyramid
-	Volume is: 117.85
-	Diameter is: 10.00
-	Surface Area is: 173.21
-	Height is:  8.16
-	Phew, no mummies!
+p2 = t_pyramid(10)
+print(p2.type())
+print(f"\tVolume is: {p2.volume():5.2f}")
+print(f"\tDiameter is: {p2.diameter():5.2f}")
+print(f"\tSurface Area is: {p2.surface():5.2f}")
+print(f"\tHeight is: {p2.height():5.2f}")
+if p2.has_mummies is True:
+    print("\tMummies? Aaaaaaaaargh!")
+else:
+    print("\tPhew, no mummies!")
+print("")
 
-Shape of type 'Triangular Pyramid' does *not* have attribute or method 'base_area'
+# Useful demonstration of how to find out if a method or attribute is
+# associated with a particular object
+if hasattr(p2,'base_area'):
+    print(f"Shape of type '{p2.type()}' has attribute or method 'base_area'")
+else:
+    print(f"Shape of type '{p2.type()}' does *not* have attribute or method 'base_area'")
+print("")
 ```
 
 ## Packaging It Up
 
-Wait, you're *still* working on this practical and haven't thrown up your hands in disgust yet? OK, in that case you can have *one* more thing to do: turn the whole shapes class hierarchy into a package that can be loaded via an `import` statement. 
+Wait, you're *still* working on this practical and haven't thrown up your hands in disgust yet? OK, in that case you can have *one* more thing to do: turn all the shapes into a package that can be loaded via an `import` statement. 
 
 ### Cell Magic
 
@@ -1557,15 +1137,24 @@ This code allows Jupyter to reload external libraries if they are edited after y
 
 ### Import Shapes
 
-You can call your package whatever you like, but then it *has* to match what you `import` below. So remember that with `dtools` we had `dtools/__init__.py`? You'll need to do the same here so that you can import the package.
+My suggestion is that you create a directory called `shapes` and copy all of the shape code (that's the code for `shape`, `cube`, `sphere`, `pyramid`, `tpyramid`) into a file called `__init__.py` inside the `shapes` directory. You should then able to run the following:
 
+```python
+for s in ['shape','sphere','cube','pyramid','t_pyramid']:
+    if s in locals():
+        del(s)
+from shapes import *
+```
+
+We need those first three lines of code to delete the existing classes from Python's 'memory' so that we can be sure we're importing the versions we saved to `shapes/__init__.py`.
 
 ### Adding Documentation
 
 In an ideal world, this would also be the time to properly document your classes and methods. Here as some examples that you could add to the `__init__.py` package file.
 
 Underneath the line `class shape(object):`, add:
-```
+
+```python
     """Abstract base class for all ideal shape classes.
 
     Keyword arguments:
@@ -1574,7 +1163,8 @@ Underneath the line `class shape(object):`, add:
 ```
 
 Underneath the line `def type(self):`, add:
-```
+
+```python
         """
         Returns the formatted name of the shape type. 
         
@@ -1585,8 +1175,10 @@ Underneath the line `def type(self):`, add:
         """
 ```
 
+This would then allow you to run:
+
 ```python
-import shapes # <-- Change this if you didn't call your package `shapes`!
-help(shapes.shape)
-help(shapes.shape.type)
+from shapes import * # <-- Change this if you didn't call your package `shapes`!
+help(shape)
+help(shape.type)
 ```
