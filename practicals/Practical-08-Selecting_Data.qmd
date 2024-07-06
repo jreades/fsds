@@ -1,6 +1,6 @@
 ---
-title: "Practical 10: Visualisation"
-subtitle: "Linking & Visualising Data"
+title: "Practical 8: Selecting Data"
+subtitle: "Selecting & Joining Data"
 jupyter: python3
 filters:
   - qna
@@ -9,7 +9,7 @@ filters:
 
 | Complete | Part 1: Foundations | Part 2: Data | Part 3: Analysis |     |
 | :------- | :------------------ | :----------- | :--------------- | --: |
-| 90% | &#9619;&#9619;&#9619;&#9619;&#9619;&#9619;&#9619;&#9619; | &#9619;&#9619;&#9619;&#9619;&#9619;&#9619; | &#9619;&#9619;&#9619;&#9619;&#9619;&#9617; | 10/10
+| 90% | &#9619;&#9619;&#9619;&#9619;&#9619;&#9619;&#9619;&#9619; | &#9619;&#9619;&#9619;&#9619;&#9619;&#9619; | &#9619;&#9619;&#9619;&#9617;&#9617;&#9617; | 8/10
 
 ::: {.callout-warning}
 
@@ -28,6 +28,12 @@ Here we're trying to tidy up the loose ends. You've already worked with basic da
 :::
 
 # Preamble
+
+```{python}
+host = 'http://orca.casa.ucl.ac.uk'
+path = '~jreades/data'
+ymd  = '2023-09-06'
+```
 
 ```{python}
 import os
@@ -103,7 +109,230 @@ def cache_data(src:str, dest:str) -> str:
     return dfn
 ```
 
-# Spatial Joins (Recap)
+```{python}
+ddir = os.path.join('data','geo') # destination directory
+pqt  = cache_data(f'{host}/{path}/{ymd}-listings.geoparquet', ddir)
+```
+
+# Selecting Data
+
+## In Pandas
+
+### Recap: A First Query
+
+```{python}
+pd.read_parquet(f'{pqt}').head(3) 
+```
+
+This should (I hope) be trivial to read now: we are loading a parquet file using pandas and taking advantage of Python's 'chaining' functionality (`<object>.<method>().<method>()...`) to return the first three rows using `head`. It is worth noticing that we're not even bothering to save the result of this command to a data frame (thus the lack of a `df =` in the code) and We're doing this here solely so that you can compare pandas and SQL/DuckDB syntax across each of the following steps.
+
+### Recap: Selecting some columns
+
+To load a columnar subset of the data we have two options:
+
+1. Load all the data and *then* subset (which always happens with CSV files but is optional with other formats)
+2. Load only the columns we care about (which is possible with parquet files)
+
+And in code these are:
+
+#### Load *then* filter
+
+```{python}
+%%time
+pd.read_parquet(f'{pqt}')[['listing_url', 'price', 'number_of_reviews', 'last_review', 'host_name']].head(5)
+```
+
+#### Filter *then* load
+
+```{python}
+%%time
+pd.read_parquet(f'{pqt}', columns=['listing_url', 'price', 'number_of_reviews', 'last_review', 'host_name']).head(5)
+```
+
+Notice the difference in time!!!
+
+### Recap: Adding a constraint
+
+### Aggregating the return
+
+## In SQL
+
+### Parquet and DuckDB
+
+One of the recent technical *revolutions* that has fundamentally reshaped my workflow is the combination of parquet files and in-memory databases. Parquet and Apache Arrow are [closely related](https://stackoverflow.com/a/56481636) but, in short, when you want to save large data sets in an easy-to-access format then Parquet should be your default choice. DuckDB gives you a way to treat Parquet files *as* a database **table** and run queries against it using standard SQL. You can [install DuckDB](https://duckdb.org/#quickinstall) on the command-line, but you can also query it from within Python using the appropriate module.
+
+::: {.callout-tip}
+
+#### Spatial DuckDB
+
+DuckDB also supports spatial queries via the [`SPATIAL` extension](https://duckdb.org/docs/extensions/spatial.html). Performance is *not* that of a tuned Postgres+PostGIS database, but the overhead of *creating* such a tuned database often exceeds the benefit for ad-hoc querying. Basically, Postgres+PostGIS is great if you're a company such as Booking.com, Airbnb, or OpenStreetMap, but it's most likely overkill for offline read-oriented applications.
+
+:::
+
+### A First Query
+
+Let's see a quick demonstration:
+
+```{python}
+import duckdb as db
+
+query = f'''
+SELECT *
+FROM read_parquet('{pqt}') 
+LIMIT 3;
+'''
+
+db.sql(query).to_df()
+```
+
+And now let's unpack this:
+
+1. We import the `duckdb` library as `db`.
+2. We set up a SQL `query` using a multi-line f-string
+3. We use DuckDb to execute the query and return a pandas dataframe (`df`)
+
+What's particularly elegant here (and quite different from trying to talk to a Postres or MySQL database) is that there's no connect-execute-collect pattern; we just build the query and execute it!
+
+### Deciphering SQL
+
+::: {.callout-note}
+
+#### I *do* declare...
+
+Now let's take a look at the SQL query... SQL is what's called a [declarative language](https://en.wikipedia.org/wiki/Declarative_programming), meaning that it is about the logic we want the program to follow rather than the 'flow' of execution. Python supports *some* declarative elements but is more commonly seen as an imperative language supporting procedural or functional approaches. This is a long way of saying: SQL won't look like Python even though we're executing SQL from *within* Python.
+
+:::
+
+So our query (with added line numbers for clarity) looked liked this:
+
+```{.sql code-line-numbers="true"}
+SELECT *
+FROM read_parquet('{pqt}') 
+LIMIT 3
+```
+
+Line-by-line this means:
+
+1. Select all columns (`SELECT <* == everything>`)
+2. From the parquet file (`FROM <table location>`)
+3. Limit the return to 3 rows (`LIMIT <row count>`)
+
+Let's look at some variations...
+
+### Choosing some columns
+
+```{python}
+query = f'''
+SELECT listing_url, price, number_of_reviews, last_review, host_name 
+FROM read_parquet('{pqt}') 
+LIMIT 5;
+'''
+
+db.sql(query).to_df()
+```
+
+```{.sql code-line-numbers="true"}
+SELECT listing_url, price, number_of_reviews, last_review, host_name 
+FROM read_parquet('{pqt}') 
+LIMIT 5;
+```
+
+It should be fairly easy to see how the query has changed from last time, but line-by-line this means:
+
+1. Select a set of columns from the table in the order specified (`SELECT <column 1>, <column 30>, <column 5>...`)
+2. From the parquet file (`FROM <table location>`)
+3. Limit the return to 5 rows (`LIMIT <row count>`)
+
+### Adding a constraint
+
+```{python}
+query = f'''
+SELECT listing_url, price, number_of_reviews, last_review, host_name 
+FROM read_parquet('{pqt}') 
+WHERE price < 250 
+AND number_of_reviews > 0
+AND property_type='Entire home/apt'
+LIMIT 5;
+'''
+
+db.sql(query).to_df()
+```
+
+In this query we've added *three* constraints using a `WHERE`, which is asking DuckDB to find all of the rows *where* the following things are true:
+
+4. The `price` must be less than ($)250/night
+5. The `number_of_reviews` must be more than 0
+6. The `property_type` must be `Entire home/apt`
+
+### Aggregating the return
+
+So far, we've seen a few ways (and hopefully enough to get you started) to *select* data, but databases also 'excel' at aggregating data in various ways. We aren't going to get into things like windowing functions or stored procedures here, but even simple aggregates done in DuckDB can vastly improve on the performance of pandas.
+
+::: {.callout-tip}
+
+WHen you aggregate data you need to retrieve *every* column in the `SELECT` portion that you `GROUP BY` in the `WHERE` portion of the query. This will make sense when you see the examples below... 
+
+:::
+
+```{python}
+query = f'''
+SELECT property_type, room_type, COUNT(*) AS frequency, MEDIAN(price) 
+FROM read_parquet('{pqt}') 
+WHERE price < 1000 
+AND number_of_reviews > 0
+GROUP BY room_type, property_type
+ORDER BY frequency DESC, room_type, property_type
+LIMIT 10;
+'''
+
+db.sql(query).to_df()
+```
+
+There are quite a few changes to the query here so it's worth reviewing them in more detail:
+
+```{.sql code-line-numbers="true"}
+SELECT property_type, room_type, COUNT(*) AS frequency, MEDIAN(price) 
+FROM read_parquet('{pqt}') 
+WHERE price < 1000 
+AND number_of_reviews > 0
+GROUP BY room_type, property_type
+ORDER BY frequency DESC, room_type, property_type
+LIMIT 10;
+```
+
+Key things to note:
+
+1. We have two new aggregate *functions*:
+   - `COUNT(*)` returns a count of the number of rows in each group specified in the `GROUP BY` clause.
+   - `MEDIAN(price)` returns, unsurprisingly, the median value of the `price` column for each group specified in the `GROUP BY` clause.
+   - *Note* also the `AS frequency` which 'renames' the column returned by the query; it's the same concept as the `import x as y` in Python.
+5. `GROUP BY` is where the aggregation happens, and here we're asking DuckDB to take all of the rows selected (`WHERE price < 1000 AND number_of_rviews > 0`) and group them using the `room_type` and `property_type` fields.
+6. `ORDER BY` orders the returned records by the columns we specify, and they can be either `ASC`ending (the default) or `DSC`ending (descending).
+
+What you should also be noting here is that:
+
+- This query returns *very* quickly compared to the pandas equivalent.
+- We have been able to express our selection, grouping, and organising criteria very succinctly.
+
+Together, these features mean that there can be quite substantial advantages to moving *some* of your workflow into a database or a database-like format such as Parquet.
+
+# Non-Spatial Joins
+
+## In Pandas
+
+```{python}
+msoa_nms = pd.read_csv( cache_data('https://houseofcommonslibrary.github.io/msoanames/MSOA-Names-1.20.csv', ddir) )
+```
+
+## In SQL
+
+# Spatial Joins
+
+## In Geopandas
+
+## In SQL
+
+# Worked Example
 
 ## Load Geodata
 
@@ -111,7 +340,6 @@ A lot of useful geo-data can be accessed from the [GeoPortal](https://geoportal.
 
 ```{python}
 spath = 'https://github.com/jreades/fsds/blob/master/data/src/' # source path
-ddir  = os.path.join('data','geo') # destination directory
 water = gpd.read_file( cache_data(spath+'Water.gpkg?raw=true', ddir) )
 boros = gpd.read_file( cache_data(spath+'Boroughs.gpkg?raw=true', ddir) )
 green = gpd.read_file( cache_data(spath+'Greenspace.gpkg?raw=true', ddir) )
@@ -438,9 +666,6 @@ msoas.to_parquet(os.path.join('data','geo','London_MSOA_Names.geoparquet'))
 ## Load InsideAirbnb Data
 
 ```{python}
-host = 'http://orca.casa.ucl.ac.uk'
-path = '~jreades/data'
-ymd  = '2023-09-06'
 listings = gpd.read_parquet( cache_data(f'{host}/{path}/{ymd}-listings.geoparquet', ddir) )
 listings = listings.to_crs(epsg=27700)
 print(f"Data frame is {listings.shape[0]:,} x {listings.shape[1]}")
@@ -569,14 +794,14 @@ msoagrdf = msoadf.groupby('msoa11nm').agg({'price':['median','count']}).reset_in
 ```
 
 ```{python}
-msoagrdf.sample(3, random_state=42)
+#msoagrdf.sample(3, random_state=42, replace=True)
 ```
 
 You should get something like the below (if you're using Waltham Forest):
 
 ```{python}
 #| echo: false
-msoagrdf.sample(3, random_state=42)
+#msoagrdf.sample(3, random_state=42, replace=True)
 ```
 
 ### Resolve Columns
