@@ -139,35 +139,114 @@ And in code these are:
 
 ```{python}
 %%time
-pd.read_parquet(f'{pqt}')[['listing_url', 'price', 'number_of_reviews', 'last_review', 'host_name']].head(5)
+pd.read_parquet(f'{pqt}')[['listing_url', 'price', 'number_of_reviews', 'property_type', 'host_name']].head(5)
 ```
 
 #### Filter *then* load
 
 ```{python}
 %%time
-pd.read_parquet(f'{pqt}', columns=['listing_url', 'price', 'number_of_reviews', 'last_review', 'host_name']).head(5)
+pd.read_parquet(f'{pqt}', columns=['listing_url', 'price', 'number_of_reviews', 'property_type', 'host_name']).head(5)
 ```
 
 Notice the difference in time!!!
 
 ### Recap: Adding a constraint
 
+```{python}
+df = pd.read_parquet(f'{pqt}', columns=['listing_url', 'price', 'number_of_reviews', 'property_type', 'host_name'])
+df[(df.price < 250) & (df.number_of_reviews > 0) & (df.property_type=='Entire home/apt')].head(5)
+```
+
+For improved legibility you can also write this as:
+
+```python
+df = pd.read_parquet(f'{pqt}', columns=['listing_url', 'price', 'number_of_reviews', 'last_review', 'host_name'])
+df[
+    (df.price < 250) & 
+    (df.number_of_reviews > 0) & 
+    (df.property_type=='Entire home/apt')
+].head(5)
+```
+
+Notice here that we are using three conditions to filter the data *as well as* a column filter on loading to minimise the amount of data loaded into memory. Applying the filters simultaneously will also make it easy to see what you've done (you aren't applying each one separately) and to adjust the overall cleaning process. 
+
+This filter is fairly straightforward, but things get more complicated when you want to aggregate the return...
+
 ### Aggregating the return
 
+There is a *lot* to unpack here, and notice that it takes three steps to achieve our goal of selecting, grouping, aggregating, sorting, and printing out the ten most frequent combinations of room and property type.
+
+```{python}
+df = pd.read_parquet(f'{pqt}', columns=['property_type','room_type','number_of_reviews','price'])
+df = df[
+    (df.price < 1050) & 
+    (df.number_of_reviews > 0)
+]
+df.groupby(
+        by=['room_type','property_type'],
+        observed=True
+    ).agg(
+        freq = ("property_type", "count"),
+        median_price = ("price", "median"),
+).reset_index().sort_values(
+        by=['freq','room_type','property_type'], ascending=[False,True,True]
+    ).head(10)
+```
+
+Hopefully the first two steps are fairly clear, so let's focus on the final one:
+
+#### Group By
+
+This is a *reasonably* intelligible step in which we group the data loaded by room and property:
+
+```python
+dfg = df.groupby(
+        by=['room_type','property_type'],
+        observed=True
+    )
+dfg
+```
+
+The *order* here matters: `groupby(by=[<A>,<B>])` does not return the same result as `groupby(by=[<B>,<A>])`. Try it:
+
+```python
+df.groupby(
+        by=['property_type','room_type'],
+        observed=True
+    )
+```
+
+The other thing to note here is the `observed=True`. This is a nice bit of additional functionality that, if you set it to `False` will return a number for all possible combinations, inserting a zero if that combintaion is *not* observed in the data.
+
+#### Agg
+
+The `agg` step aggregates the data specified in the functions:
+
+```python
+dfg.agg(
+        freq = ("property_type", "count"),
+        median_price = ("price", "median"),
+)
+```
+
+Pandas offers a *lot* of different ways to do this, but the above approach is perhaps the most flexible since we are telling Pandas to apply the `count` function to the `property_type` field and assign it to a column called `freq`, and to apply the `median` function to the `price` field and assign that to a column called `median_price`.
+
+#### 'Degroup'
+
+In order to work with the aggregated data you will *almost* always want to convert your `GroupedDataFrame` back to a regular `DataFrame` and that means resetting the index `reset_index()` -- this is just one of those things to learn about grouped data in Pandas.
+
+#### Sort
+
+Finally, to sort the *data* (which is usually what you want) you need to `sort_values`, where `by` specifies the fields you want to sort on and `ascending` is a matching (optional) list that specifies the sort order for each sort column. If you just want to sort everything in ascending order then you don't need to specify the `ascending` values, and if you wanted to sort *everything* in descending order then it's just `ascending=False`.
+
 ## In SQL
+
+That last example may have left you despairing of every being able to select/filter/aggregate/derive your data, but there *is* another way that is often far simpler *if* you are: a) willing to learn a different language, and b) willing to work with data in different formats. And that's all thanks to Parquet and DuckDB.
 
 ### Parquet and DuckDB
 
 One of the recent technical *revolutions* that has fundamentally reshaped my workflow is the combination of parquet files and in-memory databases. Parquet and Apache Arrow are [closely related](https://stackoverflow.com/a/56481636) but, in short, when you want to save large data sets in an easy-to-access format then Parquet should be your default choice. DuckDB gives you a way to treat Parquet files *as* a database **table** and run queries against it using standard SQL. You can [install DuckDB](https://duckdb.org/#quickinstall) on the command-line, but you can also query it from within Python using the appropriate module.
-
-::: {.callout-tip}
-
-#### Spatial DuckDB
-
-DuckDB also supports spatial queries via the [`SPATIAL` extension](https://duckdb.org/docs/extensions/spatial.html). Performance is *not* that of a tuned Postgres+PostGIS database, but the overhead of *creating* such a tuned database often exceeds the benefit for ad-hoc querying. Basically, Postgres+PostGIS is great if you're a company such as Booking.com, Airbnb, or OpenStreetMap, but it's most likely overkill for offline read-oriented applications.
-
-:::
 
 ### A First Query
 
@@ -270,7 +349,7 @@ So far, we've seen a few ways (and hopefully enough to get you started) to *sele
 
 ::: {.callout-tip}
 
-WHen you aggregate data you need to retrieve *every* column in the `SELECT` portion that you `GROUP BY` in the `WHERE` portion of the query. This will make sense when you see the examples below... 
+When you aggregate data you need to retrieve *every* column in the `SELECT` portion that you `GROUP BY` in the `WHERE` portion of the query. This will make sense when you see the examples below... (and should also make sense based on the Pandas equivalent above)
 
 :::
 
@@ -306,17 +385,27 @@ Key things to note:
    - `COUNT(*)` returns a count of the number of rows in each group specified in the `GROUP BY` clause.
    - `MEDIAN(price)` returns, unsurprisingly, the median value of the `price` column for each group specified in the `GROUP BY` clause.
    - *Note* also the `AS frequency` which 'renames' the column returned by the query; it's the same concept as the `import x as y` in Python.
-5. `GROUP BY` is where the aggregation happens, and here we're asking DuckDB to take all of the rows selected (`WHERE price < 1000 AND number_of_rviews > 0`) and group them using the `room_type` and `property_type` fields.
-6. `ORDER BY` orders the returned records by the columns we specify, and they can be either `ASC`ending (the default) or `DSC`ending (descending).
+5. `GROUP BY` is where the aggregation happens, and here we're asking DuckDB to take all of the rows selected (`WHERE price < 1000 AND number_of_reviews > 0`) and group them using the `room_type` and `property_type` fields.
+6. `ORDER BY` orders the returned records by the columns we specify, and they can be either `ASC`ending (the default) or `DESC`ending (descending).
 
 What you should also be noting here is that:
 
 - This query returns *very* quickly compared to the pandas equivalent.
 - We have been able to express our selection, grouping, and organising criteria very succinctly.
 
-Together, these features mean that there can be quite substantial advantages to moving *some* of your workflow into a database or a database-like format such as Parquet.
+In terms of both speed and intelligibility, there can be quite substantial advantages to moving *some* of your workflow into a database or a database-like format such as Parquet and then querying that from Python. Databases are *designed* for the kind of application that Pandas struggles with, and if you get to windowing functions and stored procedures you'll see how there are situations where something is far easier to express in Python/Pandas than in SQL. 
 
-# Non-Spatial Joins
+So the trick here is to recognise when you are facing a problem that: a) will benefit from being expressed/tackled in a different language; and b) won't create undue overhead on your technology 'stack'. In working with environmental and built environment data I was able to cut the processing time by 80% when I moved the bulk of the data linkage work from Pandas into Parquet+DuckDB. *But*, by the same token, what's the point of using Postgres and managing a spatial database to perform a single step in a much longer workflow *unless* the performance considerations are so massive they outweigh any other issue. 
+
+# Non-Spatial Joins {#nonspatial}
+
+::: {.callout-tip}
+
+#### The preferred solution
+
+To keep it simple: you should assume that non-spatial joins are *always* going to be faster than spatial ones, even in a performant spatial database. Asking if one number is less than another, or if a piece of text is found in another piece of text, is *much* simpler than asking if one object falls within the boundaries of another. Spatial databases are fast and very cool, but if you can express your problem non-spatially it will be faster to solve it that way too. 
+
+:::
 
 ## In Pandas
 
@@ -326,7 +415,75 @@ msoa_nms = pd.read_csv( cache_data('https://houseofcommonslibrary.github.io/msoa
 
 ## In SQL
 
-# Spatial Joins
+# Spatial Joins {#spatial}
+
+::: {.callout-tip}
+
+#### Spatial DuckDB
+
+DuckDB also now supports spatial queries via the [`SPATIAL` extension](https://duckdb.org/docs/extensions/spatial.html). Performance is *not* that of a tuned Postgres+PostGIS database, but the overhead of *creating* such a tuned database often exceeds the benefit for ad-hoc querying. Basically, Postgres+PostGIS is great if you're a company such as Booking.com, Airbnb, or OpenStreetMap, but it's most likely overkill for offline read-oriented applications.
+
+:::
+
+Building on what I said above in @nonspatial, even where you *do* have a spatial challenge, it can be worth it to convert it to a non-spatial solution to improve the overall performance of your code. For instance, say you have data from LSOAs and want to be able to aggregate it up to MSOAs and Boroughs to perform various analyses. 
+
+:::: {.columns}
+
+::: {.column width="30%"}
+#### LSOA Table
+
+| LSOA Code | Polygon     |
+|----------:|------------:|
+| LSOA1     | WKT(...)    |
+| LSOA2     | WKT(...)    |
+| LSOA3     | WKT(...)    |
+:::
+
+::: {.column width="5%"}
+
+:::
+
+::: {.column width="30%"}
+#### MSOA Table
+
+| MSOA Code | Polygon     |
+|----------:|------------:|
+| MSOA1     | WKT(...)    |
+| MSOA2     | WKT(...)    |
+| MSOA3     | WKT(...)    |
+:::
+
+::: {.column width="5%"}
+
+:::
+
+::: {.column width="30%"}
+#### Borough Table
+
+| Borough Code | Polygon     |
+|----------:|------------:|
+| BORO1     | WKT(...)    |
+| BORO2     | WKT(...)    |
+| BORO3     | WKT(...)    |
+:::
+
+::::
+
+The *obvious* way to do this is as a spatial join: `select all LSOAs within an MSOA and aggregate them`. And you would then run this same query for every dimension you want to aggregate. **This is *not* the right way to tackle this problem** even though you can write the query to give you the correct answer.
+
+The *right* way when you are going to repeatedly run an expensive spatial query is to work out if you can 'cache' the result to save time in the future. In this case the answer is to create a 'lookup table' which uses the LSOA and MSOA and Borough codes to tell you if a LSOA falls inside a borough or MSOA. You perform the hard spatial query *just once* to create the lookup table, and thereafter you are using a fast non-spatial query.
+
+In this case your lookup table will be this:
+
+#### Lookup Table
+
+| LSOA Code | MSOA Code | Borough Code |
+|----------:|----------:|-------------:|
+| LSOA1     | MSOA1     | BORO1        |
+| LSOA2     | MSOA1     | BORO1        |
+| LSOA3     | MSOA2     | BORO1        |
+
+Now you can do any kind of *spatial aggregation* you want without having to incur the costs of running a *spatial query*.
 
 ## In Geopandas
 
