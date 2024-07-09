@@ -397,7 +397,27 @@ In terms of both speed and intelligibility, there can be quite substantial advan
 
 So the trick here is to recognise when you are facing a problem that: a) will benefit from being expressed/tackled in a different language; and b) won't create undue overhead on your technology 'stack'. In working with environmental and built environment data I was able to cut the processing time by 80% when I moved the bulk of the data linkage work from Pandas into Parquet+DuckDB. *But*, by the same token, what's the point of using Postgres and managing a spatial database to perform a single step in a much longer workflow *unless* the performance considerations are so massive they outweigh any other issue. 
 
-# Non-Spatial Joins {#nonspatial}
+# Non-Spatial Joins {#sec-nonspatial}
+
+We're going to look at joining data by attributes *first* and then look at spatial joins so that you get a sense of how they behave and differ.
+
+For non-spatial joins we only need two data sets relating to MSOAs:
+
+```{python}
+
+msoa_names_url = 'https://houseofcommonslibrary.github.io/msoanames/MSOA-Names-1.20.csv'
+msoa_popst_url = 'https://orca.casa.ucl.ac.uk/~jreades/data/sapemsoaquinaryagetablefinal.xlsx'
+
+msoa_df = pd.read_excel(msoa_popst_url, sheet_name="Mid-2022 MSOA 2021", header=3)
+msoa_nms = pd.read_csv( cache_data(msoa_names_url, 'data') )
+
+# For DuckDB
+if not os.path.exists('data/MSOA_population_estimates.parquet'):
+    msoa_df.to_parquet('data/MSOA_population_estimates.parquet')
+
+print(f"msoa_df  has {msoa_df.shape[0]:,} rows and {msoa_df.shape[1]:,} columns.")
+print(f"msoa_nms has {msoa_nms.shape[0]:,} rows and {msoa_nms.shape[1]:,} columns.")
+```
 
 ::: {.callout-tip}
 
@@ -409,13 +429,149 @@ To keep it simple: you should assume that non-spatial joins are *always* going t
 
 ## In Pandas
 
+Pandas distinguishes between several types of what SQL would call a 'join': the process of linking two data sets. Depending on what you want to do, this will fall into one of the [merge, join, concatenate, or compare](https://pandas.pydata.org/docs/user_guide/merging.html) functions:
+
+- `concat` simply appends one data frame to another and won't be discussed further, but keep in mind that you can concatenate horizontally and vertically (across and down), and that having named indexes can cause consternation. You would find it most useful for appending columns to a data set (appending rows should be approached differently) or extending a data set for year $n$ with data from year $n+1$...
+- `merge` is what we normally want when we want to do something similar to a SQL join. You should refer back to the lecture for the differences between 'one-to-one', 'one-to-many', and 'many-to-many'. Note too that merging is a function of the pandas library and *not* a method of a data frame.
+
+### Joining by attribute
+
+So in our case, to join the two MSOA data sets we're going to need to match the MSOA codes which have (slightly) different names in the two datasets:
+
 ```{python}
-msoa_nms = pd.read_csv( cache_data('https://houseofcommonslibrary.github.io/msoanames/MSOA-Names-1.20.csv', ddir) )
+%%time
+
+rs = pd.merge(msoa_df, msoa_nms[['msoa11cd','msoa11hclnm','Laname']], left_on='MSOA 2021 Code', right_on='msoa11cd', how='left')
+print(f"Result set has {rs.shape[0]:,} rows and {rs.shape[1]:,} columns.")
+rs.head(3)
 ```
+
+**But wait!** There's an issue lurking in the data!
+
+```{python}
+print(f"There are {rs.msoa11hclnm.isna().sum()} missing MSOA Names!")
+```
+
+Can you work out why this has happened? There is a clue in the column names!
+
+There's no way to solve this problem except by changing the code to use [this URL instead](https://houseofcommonslibrary.github.io/msoanames/MSOA-Names-Latest2.csv) for the MSOA Names.
+
+We can also try to constrain the result set to one LA thanks to data in the MSOA Names database:
+
+```{python}
+%%time 
+
+la_nm = 'Waltham Forest'
+sdf   = msoa_nms[msoa_nms.Laname==la_nm][['msoa11cd','msoa11hclnm','Laname']].copy()
+
+rs = pd.merge(msoa_df, sdf, left_on='MSOA 2021 Code', right_on='msoa11cd', how='inner')
+print(f"Result set has {rs.shape[0]:,} rows and {rs.shape[1]:,} columns.")
+rs.head(3)
+```
+
+Without the `how=inner`, the result set would still have all of the rows but some of the columns would be nearly completely empty. 
 
 ## In SQL
 
-# Spatial Joins {#spatial}
+SQL-based joins use very similar keywords (since Pandas is copying SQL), but how we put together the query is quite different.
+
+### Joining by attribute
+
+```{python}
+%%time
+
+query = f'''
+SELECT * 
+FROM 
+    read_parquet('data/MSOA_population_estimates.parquet') as n 
+LEFT JOIN 
+    read_csv('{cache_data(msoa_names_url, 'data')}', header=true) as m
+ON 
+    n."MSOA 2021 Code"=m.msoa11cd;
+'''
+
+db.sql(query).to_df().head(3)
+```
+
+::: {.callout-note}
+#### Slower???
+
+*Without* the data caching function, the query above may *appear* slower than the Pandas one but if you look at the timing information you'll see that the actual time spent processing the data was less. How can that be? Notice that above we're reading the CSV file from the House of Commons library as *part* of the join, so most of that delay is spent waiting for the CSV file to download!
+
+That's why I prefer to download a file *once* and save it locally rather than downloading the same file again and again. Plus it's friendlier (and cheaper!) to the person or organisation providing the data to you.
+
+:::
+
+Let's take a look at the SQL:
+
+```{.sql code-line-numbers="true"}
+SELECT * 
+FROM 
+    read_parquet('data/MSOA_population_estimates.parquet') as n 
+LEFT JOIN 
+    read_csv(msoa_names_url, header=true) as m
+ON 
+    n."MSOA 2021 Code"=m.msoa11cd;
+```
+
+Line-by-line:
+
+1. `SELECT` every column (this is the `*`, change this if you want to only pull a subset of columns)
+2. `FROM` the following tables (it doesn't really matter if the tables are on this line or the next for legibility)
+3. `<table 1 from parquet> as n` (we now refer to the data from this table using the prefix `n.`; e.g. `n.Total`)
+4. `LEFT JOIN` is the SQL way of saying to keep all of the rows in the first table (`n`, which is the first, and therefore 'left' table)
+5. `<table 2 from csv> as m` (we now refer to the data from this table using the prefix `m.`; e.g. `m.geometry`)
+6. `ON <left table matching column> = <right table matching column>` (here, the unusual thin is the double-quotes around the column name required to deal with the fact that the label contains spaces).
+
+*Notice* how there are parallels between even quite different languages here: if you have spaces or special characters or whatever in your column name then you're going to need to handle that a little differently, and if you have two tables to join you have a left (aka first) one and a right (aka second) one and the order matters.
+
+Now, running the same query to get the Waltham Forest data can be done two ways:
+
+```{python}
+%%time
+
+boro = 'Waltham Forest'
+query = f'''
+SELECT * 
+FROM 
+    read_parquet('data/MSOA_population_estimates.parquet') as n 
+INNER JOIN 
+    read_csv('{cache_data(msoa_names_url, 'data')}', header=true) as m
+ON 
+    n."MSOA 2021 Code"=m.msoa11cd
+WHERE 
+    m.Laname='{boro}';
+'''
+
+db.sql(query).to_df().head(3)
+```
+
+Everything here is *basically* the same except for:
+
+1. We changed the `LEFT JOIN` to an `INNER JOIN` -- this should make sense to you if you've watched the lectures.
+2. We added a `WHERE m.Laname=<borough name>` which restricts the match to only those rows where the Local Authority name is Waltham Forest.
+
+*However*, note that this query can *also* be written this way: 
+
+```{python}
+%%time
+
+boro = 'Waltham Forest'
+query = f'''
+SELECT * 
+FROM 
+    read_parquet('data/MSOA_population_estimates.parquet') as n, 
+    read_csv('{cache_data(msoa_names_url, 'data')}', header=true) as m
+WHERE m.Laname='{boro}'
+AND n."MSOA 2021 Code"=m.msoa11cd;
+'''
+
+db.sql(query).to_df().head(3)
+```
+
+The second way is a little easier to read, but it *only* allows you to do **inner joins** where attributes need to match in both tables for a row to be kept. This situation is such a common 'use case' that it makes sense to have this simpler syntax, but the previous code will work for inner, left, right, and outer joins.
+
+# Spatial Joins {#sec-spatial}
 
 ::: {.callout-tip}
 
@@ -425,11 +581,14 @@ DuckDB also now supports spatial queries via the [`SPATIAL` extension](https://d
 
 :::
 
-Building on what I said above in @nonspatial, even where you *do* have a spatial challenge, it can be worth it to convert it to a non-spatial solution to improve the overall performance of your code. For instance, say you have data from LSOAs and want to be able to aggregate it up to MSOAs and Boroughs to perform various analyses. 
+## Why obvious is not always right (Part 432)
+
+Building on what I said above in @sec-nonspatial, even where you *do* have a spatial challenge, it can be worth it to convert it to a non-spatial solution to improve the overall performance of your code. For instance, say you have data from LSOAs and want to be able to aggregate it up to MSOAs and Boroughs to perform various analyses. 
 
 :::: {.columns}
 
 ::: {.column width="30%"}
+
 #### LSOA Table
 
 | LSOA Code | Polygon     |
@@ -444,6 +603,7 @@ Building on what I said above in @nonspatial, even where you *do* have a spatial
 :::
 
 ::: {.column width="30%"}
+
 #### MSOA Table
 
 | MSOA Code | Polygon     |
@@ -458,6 +618,7 @@ Building on what I said above in @nonspatial, even where you *do* have a spatial
 :::
 
 ::: {.column width="30%"}
+
 #### Borough Table
 
 | Borough Code | Polygon     |
@@ -473,7 +634,7 @@ The *obvious* way to do this is as a spatial join: `select all LSOAs within an M
 
 The *right* way when you are going to repeatedly run an expensive spatial query is to work out if you can 'cache' the result to save time in the future. In this case the answer is to create a 'lookup table' which uses the LSOA and MSOA and Borough codes to tell you if a LSOA falls inside a borough or MSOA. You perform the hard spatial query *just once* to create the lookup table, and thereafter you are using a fast non-spatial query.
 
-In this case your lookup table will be this:
+In this case your lookup table will be this...
 
 #### Lookup Table
 
@@ -483,32 +644,95 @@ In this case your lookup table will be this:
 | LSOA2     | MSOA1     | BORO1        |
 | LSOA3     | MSOA2     | BORO1        |
 
-Now you can do any kind of *spatial aggregation* you want without having to incur the costs of running a *spatial query*.
+Now you can do any kind of *spatial aggregation* you want without having to incur the costs of running a *spatial query* using something like:
+
+```{.sql code-line-numbers="true"}
+SELECT m."MSOA Code", SUM(<attribute>) as feature_sum, COUNT(<attribute 2>) as feature_count  
+FROM <lsoa data table> as l, <lookup table> as lkp  
+WHERE l."LSOA Code" = lkp."LSOA Code" 
+GROUP BY lkp."MSOA Code";
+```
+
+See, no need for a spatial query and you can run the same query easily for many features. You can also use this as a foundation for creating a `VIEW` or a `MATERIALIZED VIEW`, but that's an advanced topic for managing your data more efficiently in an operational environment rather than a research-oriented one.
+
+But first, we need some actual geodata to work with:
+
+```{python}
+msoa_gpkg = gpd.read_file( cache_data(f'{host}/{path}/MSOA-2011.gpkg', ddir) ).to_crs('epsg:27700')
+listings  = gpd.read_parquet( cache_data(f'{host}/{path}/{ymd}-listings.geoparquet', ddir) ).to_crs('epsg:27700')
+```
 
 ## In Geopandas
 
+Let's try to find all of the listings that fall within the borough of Waltham Forest, so that implies two steps:
+
+1. Subset the MSOA geo-data so that it only includes the Waltham Forest MSOAs.
+2. Run a spatial query to find the listings that are within those MSOAs (we could, optionally, `union` the MSOAs to get the outline of the borough)
+
+```{python}
+boro = 'Waltham Forest'
+boro_gdf = msoa_gpkg[msoa_gpkg.LAD11NM==boro].copy()
+
+# Do the spatial join
+boro_listings = gpd.sjoin(listings, boro_gdf, predicate='within', rsuffix='_r')
+
+# Layer the plots
+f, ax = plt.subplots(1,1,figsize=(8,5))
+boro_gdf.plot(color="white", edgecolor="black", linewidth=0.5, ax=ax)
+boro_listings.plot(column='price', cmap='viridis', legend=True, s=1.5, aspect=1, ax=ax)
+```
+
+::: {.callout-warning}
+
+If you get `ValueError: aspect must be finite and positive` when you try to make a plot (this seems fairly common with GeoPackages (`.gpkg` files) then you will need to specify `aspect=1` in the `plot(...)` command.
+
+:::
+
 ## In SQL
+
+After quite a bit of faff my conclusion is that, while you *can* do spatial queries in DuckDB it is a lot of work and *probably* not worth the effort *at this time*. The 'issue' is that spatial support (as well as Excel supprt) is provided via the `GDAL` framework and this takes quite a different approach. After working it out, spatial queries do work *fairly* well if you do them *entirely* within DuckDB (reading, merging, and writing the data) and then load the results in a separate step using GeoPandas; however, you *cannot* get a GeoDataFrame back via `db.query(<query>).to_df()` since that only returns a Pandas data frame and the geometry column is unreadable. In addition, geoparquet support seems limited while GeoPackage performance is *poor*, so you're basically losing all the advantages of a parquet-based workflow.
+
+So the examples below are provided for reference only and, on the whole, right now I'd recommend using GeoPandas and geoparquet files directly.
+
+
+```{python}
+%%time
+
+boro = 'Waltham Forest'
+
+query = f'''
+LOAD SPATIAL;
+COPY(
+  SELECT m.MSOA11CD, n.msoa11nm, n.Laname, m.geom 
+  FROM 
+      (SELECT MSOA11CD, geom FROM ST_Read("{cache_data(f'{host}/{path}/MSOA-2011.gpkg', ddir)}")) AS m,
+      read_csv("{cache_data(msoa_names_url, 'data')}") AS n
+  WHERE m.MSOA11CD=n.msoa11cd
+  AND n.Laname='{boro}'
+) TO 'data/geo/merged.gpkg' WITH (FORMAT GDAL, DRIVER 'GPKG', LAYER_CREATION_OPTIONS 'WRITE_BBOX=YES');
+'''
+
+db.sql(query)
+rs = gpd.read_file('data/geo/merged.gpkg')
+print(f"Result set has {rs.shape[0]:,} rows and {rs.shape[1]:,} columns.")
+rs.head(5)
+rs.plot(aspect=1)
+```
 
 # Worked Example
 
+With that background material, let's now work through a practical example.
+
 ## Load Geodata
 
-A lot of useful geo-data can be accessed from the [GeoPortal](https://geoportal.statistics.gov.uk/). And see also [my discussion](https://jreades.github.io/fsds/lectures/9.2-Linking_Spatial_Data.html#/think-it-through) on [lookup tables](https://geoportal.statistics.gov.uk/datasets/postcode-to-output-area-to-lower-layer-super-output-area-to-middle-layer-super-output-area-to-local-authority-district-november-2018-lookup-in-the-uk-2/about).
+A lot of useful geo-data can be accessed from the [GeoPortal](https://geoportal.statistics.gov.uk/). And see also [my discussion](https://jreades.github.io/fsds/sessions/week8.html) on [lookup tables](https://geoportal.statistics.gov.uk/datasets/postcode-to-output-area-to-lower-layer-super-output-area-to-middle-layer-super-output-area-to-local-authority-district-november-2018-lookup-in-the-uk-2/about).
 
 ```{python}
 spath = 'https://github.com/jreades/fsds/blob/master/data/src/' # source path
 water = gpd.read_file( cache_data(spath+'Water.gpkg?raw=true', ddir) )
 boros = gpd.read_file( cache_data(spath+'Boroughs.gpkg?raw=true', ddir) )
 green = gpd.read_file( cache_data(spath+'Greenspace.gpkg?raw=true', ddir) )
-```
-
-```{python}
-msoas = gpd.read_file( cache_data(spath+'Middle_Layer_Super_Output_Areas__December_2011__EW_BGC_V2-shp.zip?raw=true', ddir) )
-msoas.plot();
-```
-
-```{python}
-msoas.sample(3)
+msoas = gpd.read_file( cache_data(f'{host}/{path}/MSOA-2011.gpkg', ddir) ).to_crs('epsg:27700')
 ```
 
 ## Select London MSOAs
@@ -525,13 +749,13 @@ One thing to remember here is that computers are _exact_. So if you say that the
 
 As we don't have a boundary file for London, we can *generate* use using the `unary_union` operator (as we do here) or using the [dissolve()](https://geopandas.org/en/stable/docs/user_guide/aggregation_with_dissolve.html) approach. Consider the pros and cons of each approach in terms of performance, output format, and leigibility. 
 
-So here's approach 1, which is a function call (on which we call `plot`):
+So here's approach 1, which is a method call returning a GeoDataFrame (which is why we can call `plot`):
 
 ```{python}
 boros.dissolve().plot();
 ```
 
-And here's approach 2, which is an *attribute* and returns a polygon (so no reason to call `plot`, but it's come back without the rest of the data frame!):
+And here's approach 2, which is an *attribute* and returns a raw polygon (so no reason to call `plot`, but it's come back without the rest of the data frame!):
 
 ```{python}
 boros.unary_union
@@ -541,22 +765,40 @@ boros.unary_union
 
 #### &#128279; Connections
 
-Notice how we're also demonstrating some additional ways of plotting 'on the fly' (without generating a data frame) as well as reminding you how to zoom in/out.
+Notice how we're also demonstrating some additional ways of plotting 'on the fly' (without generating a data frame) as well as (below) showing you how to zoom in/out.
 
 :::
 
 ```{python}
 ldn = gpd.GeoDataFrame(gpd.GeoSeries(data=boros.unary_union)).rename(columns={0:'geometry'}).set_geometry("geometry")
 ldn = ldn.set_crs(epsg=27700)
-ax  = ldn.plot(facecolor=(.5, .5, .9, .5));
+ax  = ldn.plot(facecolor=(.5, .5, .9, .5))
 msoas.plot(ax=ax, facecolor='none', edgecolor=(.6, .6, .6, .6))
 ax.set_xlim(500000, 515000)
 ax.set_ylim(180000, 195000);
 ```
 
-### Buffer
+### A (Bad) First Join
 
-In order to ensure that we get all MSOAs _within_ London we will buffer the boundary by 250m. If _cover_ were easier to use then that option might be preferable.
+```{python}
+ldn_msoas = gpd.sjoin(msoas, ldn, predicate='within', how='inner')
+ax = ldn.plot(facecolor=(.5, .5, .9, .5))
+ldn_msoas.plot(ax=ax, facecolor='none', edgecolor=(.8, .4, .4), linewidth=0.75)
+ax.set_xlim(500000, 515000)
+ax.set_ylim(180000, 195000);
+```
+
+::: {.callout-caution}
+
+#### What has gone wrong???
+
+Before you move on to the solution, stop and actually *think* about what this hasn't done what you would have expected? THis is another reason that you need to pay attention to the differences between spatial and non-spatial joins.
+
+:::
+
+### Buffer and Join
+
+In order to ensure that we get all the MSOAs _within_ London we need to buffer the boundary by some amount to ensure that `within` returns what we want. If _cover_ were easier to use then that option might be preferable.
 
 :::: {.qna}
 
@@ -584,9 +826,7 @@ ax.set_ylim(180000, 195000);
 
 ::::
 
-### Spatial Join
-
-Here's our first spatial join. By default it will be an _inner_ join because we want to drop everything that doesn't line up between the two data sets (i.e. don't keep the thousands of *other* MSOAs).
+By default we want do an _inner_ join because we want to drop everything that doesn't line up between the two data sets (i.e. don't keep the thousands of *other* non-London MSOAs).
 
 :::: {.qna}
 
@@ -594,49 +834,48 @@ Here's our first spatial join. By default it will be an _inner_ join because we 
 
 ```python
 ldn_msoas = gpd.sjoin(msoas, ldn, predicate='???', how='inner')
-ldn_msoas.head(2)
+ldn_msoas.plot()
 ```
 
 #### Answer
 
 ```{python}
 ldn_msoas = gpd.sjoin(msoas, ldn, predicate='within', how='inner')
-ldn_msoas.head(2)
+ldn_msoas.plot()
 ```
 
 ::::
-
-### Plot
-
-```{python}
-ldn_msoas.plot()
-```
 
 :::: {.qna}
 
 #### Question
 
-Hmmmm, not quite what you were expecting? See if you can figure out from the list of columns and the documentation for `set_geometry` what is going wrong?
+Hmmmm, not quite what you were expecting? See if you can figure out from the list of columns and the documentation for `set_geometry` what is going wrong? This might also help:
+
+```{python}
+print(", ".join(ldn_msoas.columns.to_list()))
+```
 
 #### Answer
 
 ```{python}
 ax = ldn_msoas.set_geometry('geometry_left').plot(linewidth=2, facecolor='none', edgecolor=(.6, .6, .6, .6))
 ax.set_xlim(500000, 515000)
-ax.set_ylim(180000, 195000);
+ax.set_ylim(180000, 195000)
 ```
 
 ::::
 
-```{python}
-ldn_msoas = ldn_msoas.rename(columns={'geometry_left':'geometry'}).set_geometry('geometry')
-```
+The issue arises because we've joined two geo-data frames but the join function comes from pandas, which doesn't know anything about spatial data and we have therefore 'lost track' of the column in which the geometry is stored. *Worse*, there are actually two geometry columns now, so we need to tell Geopandas which one to use!
+
+The easiest way to do this is to simply rename the geometry we *want* and then set is as the active geometry:
 
 ```{python}
+ldn_msoas = ldn_msoas.rename(columns={'geometry_left':'geometry'}).set_geometry('geometry')
 ldn_msoas.drop(columns='geometry_right', inplace=True)
 ```
 
-We no longer really need to keep the full MSOA data set hanging about.
+We also no longer really need to keep the full MSOA data set hanging about.
 
 ```{python}
 try:
@@ -647,19 +886,19 @@ except NameError:
 
 :::: {.qna}
 
-### Question
+#### Question
 
 - Can you explain *why* the outputs of the `dissolve` and `unary_union` *look* differnet? And use that as the basis for explaining why they *are* different?
 
-> 
+> Answer 1
 
 - How do you know that the units for the buffering operation are metres? 250 could be *anything* right?
 
-> 
+> Answer 2
 
 - Why do we need to buffer the London geometry *before* performing the *within* spatial join?
 
-> 
+> Answer 3
 
 #### Answer
 
@@ -674,17 +913,16 @@ ename the columns, but from unary_union we need to write the primitive *into* a 
 
 - Why do we need to buffer the London geometry *before* performing the *within* spatial join?
 
-> Because there may be small precision issues such that the MSOA borders cross the 'border' of the Thames and therefore no longer fall entirely within the London geometry. Try it yourself by
- changing the buffer amount!
+> Because there may be small precision issues such that the MSOA borders cross the 'border' of the Thames and therefore no longer fall entirely within the London geometry. Try it yourself by changing the buffer amount!
 
 ::::
 
-## Append Names
+## Append or Derive Names
 
 We don't actually make use of these in this session, but *both* operations could be relevant to your final reports:
 
-1. The Borough > Subregion mapping could help you to group your data into larger sets so that your resulst become more reobust. it also connects us to long-run patterns of socio-economic development in London.
-2. The MSOA Names data set gives you something that you could use to label one or more 'neighbourhoods' on a map with names that are *relevant*. So rather than talking about "As you can see, Sutton 003, is...", you can write "The Wrythe neighbourhood [or area] of Sutton is significantly different from the surrounding areas..."
+1. The Borough-to-Subregion mapping could help you to group your data into larger sets so that your resulst become more reobust. it also connects us to long-run patterns of socio-economic development in London.
+2. The MSOA Names data set (which you used above) gives you something that you could use to label one or more 'neighbourhoods' on a map with names that are *relevant*. So rather than talking about "As you can see, Sutton 003, is...", you can write "The Wrythe neighbourhood [or area] of Sutton is significantly different from the surrounding areas..."
 
 They also usefully test your understanding of regular expressions and a few other aspects covered in previous weeks.
 
@@ -722,53 +960,9 @@ print(f"Overall shape of data frame is {' x '.join([str(x) for x in ldn_msoas.sh
 
 ::::
 
-### Merge
-
-The House of Commons Library provides a [MSOA Names](https://houseofcommonslibrary.github.io/msoanames/) data set that contains locally-relevant names applied to MSOAs. These seek to connect the Census geography (OA > LSOA > MSOA > LA) to a loosely-defined 'neighbourhood'.
-
-```{python}
-msoa_nms = pd.read_csv( cache_data('https://houseofcommonslibrary.github.io/msoanames/MSOA-Names-1.20.csv', ddir) )
-```
-
-```{python}
-print(msoa_nms.columns.values)
-msoa_nms.sample(3, random_state=42)
-```
-
-Now that you've loaded the `msoa_nms` data you need to merge it with our `ldn_msoas`. You will need to deal with the fact that the left and right fields have different names and may also want to think about the `how` of the merge. In *this* case, the result of the merge *should* be a GeoDataFrame, but **this is not always guaranteed** so you may want to double-check or run multiple tests before assuming that you'll get back a geographically aware object.
-
-:::: {.qna}
-
-#### Question
-
-```python
-msoas = pd.merge(ldn_msoas, msoa_nms, left_on='??', right_on='??', how='??')
-print(f"MSOAs shape is {' x '.join([str(x) for x in msoas.shape])}.")
-print(f"Resulting class is a {type(msoas).__name__}.") # You should check this -- result isn't always be a GeoDataFrame
-msoas.sample(3, random_state=42)[['OBJECTID','MSOA11CD','MSOA11NM','msoa11hclnm']]
-```
-
-#### Answer
-
-```{python}
-msoas = pd.merge(ldn_msoas, msoa_nms, left_on='MSOA11CD', right_on='msoa11cd', how='inner')
-print(f"MSOAs shape is {' x '.join([str(x) for x in msoas.shape])}.")
-print(f"Resulting class is a {type(msoas).__name__}.") # You should check this -- result isn't always be a GeoDataFrame
-msoas.sample(3, random_state=42)[['OBJECTID','MSOA11CD','MSOA11NM','msoa11hclnm']]
-```
-
-::::
-
-Your result should be:
-
-```{python}
-#| echo: false
-msoas.sample(3, random_state=42)[['OBJECTID','MSOA11CD','MSOA11NM','msoa11hclnm']]
-```
-
 ### Map
 
-Set up a `mapping` dict here so that you can apply it as part of the `groupby` operation below (you should have 33 keys when done):
+Now that we've got the borough names we can set up a `mapping` dict here so that we can apply it as part of the `groupby` operation below (you should have 33 keys when done):
 
 ```{python}
 mapping = {}
@@ -790,46 +984,28 @@ print(len(mapping.keys()))
 #### Question
 
 ```python
-msoas['Subregion'] = msoas.Borough.map(???)
+ldn_msoas['Subregion'] = ldn_msoas.Borough.map(???)
 ```
 
 #### Answer
 
 ```{python}
-msoas['Subregion'] = msoas.Borough.map(mapping)
+ldn_msoas['Subregion'] = ldn_msoas.Borough.map(mapping)
 ```
 
 ::::
 
-### Tidy Up
-
-```{python}
-msoas.columns.to_list()
-```
-
-```{python}
-to_drop = ['MSOA11CD','MSOA11NM','MSOA11NMW','LONG','LAT','Shape__Are','Shape__Len','index_right',
-           'Laname','msoa11hclnmw','msoa11nmw']
-msoas.drop(columns=to_drop, inplace=True)
-print(msoas.shape)
-```
-
 ### And Save
 
 ```{python}
-msoas.to_parquet(os.path.join('data','geo','London_MSOA_Names.geoparquet'))
+ldn_msoas.to_parquet(os.path.join('data','geo','London_MSOA_Names.geoparquet'))
 ```
 
 ## Load InsideAirbnb Data
 
 ```{python}
-listings = gpd.read_parquet( cache_data(f'{host}/{path}/{ymd}-listings.geoparquet', ddir) )
-listings = listings.to_crs(epsg=27700)
+listings = gpd.read_parquet( cache_data(f'{host}/{path}/{ymd}-listings.geoparquet', ddir) ).to_crs(epsg=27700)
 print(f"Data frame is {listings.shape[0]:,} x {listings.shape[1]}")
-```
-
-```{python}
-listings = listings.to_crs('epsg:27700')
 ```
 
 ### Spatial Join
@@ -849,6 +1025,7 @@ print(gdf_la.columns.to_list())
 
 ```{python}
 gdf_la = gpd.sjoin(listings, boros, predicate='within', how='left')
+print(f"Have {gdf_la.shape[0]:,} rows in gdf_la")
 print(gdf_la.columns.to_list())
 ```
 
@@ -860,7 +1037,7 @@ print(gdf_la.columns.to_list())
 gdf_la.drop(columns=['index_right','HECTARES','NONLD_AREA','ONS_INNER'], inplace=True)
 ```
 
-You'll need to look closely to check that the `value_counts` output squares with your expectations. If you don't get `33` then there's an issue:
+You'll need to look closely to check that the `value_counts` output squares with your expectations. If you don't get `33` then there's an issue and you'll need to run the code in @sec-problems:
 
 ```{python}
 if len(gdf_la.NAME.unique()) == 33:
@@ -871,7 +1048,7 @@ else:
     gdf_la.NAME.value_counts(dropna=False)
 ```
 
-### Find Problematic Listings
+### Find Problematic Listings {#sec-problems}
 
 If you were told that you need to run the next sectin of code then see if you can work out what happened...
 
@@ -886,23 +1063,27 @@ except ValueError as e:
 
 In short: in some cases there may be records that fall outside of London because of Airbnb's shuffling approach:
 
-```{python}
+```python
 gdf_la.drop(index=gdf_la[gdf_la.NAME.isna()].index, axis=1, inplace=True)
 print(f"Data frame is {gdf_la.shape[0]:,} x {gdf_la.shape[1]}")
 ```
 
-You should now have `{python} f"{gdf_la.shape[0]:,}" ` records.
+### Check and Save
 
-### Check
-
-```{python}
+```python
 ax = gdf_la.plot(column='NAME', markersize=0.5, alpha=0.5, figsize=(9,7))
 boros.plot(ax=ax, edgecolor='r', facecolor='None', alpha=0.5);
 ```
 
-### Save
+You should get the following:
 
 ```{python}
+#| echo: false
+ax = gdf_la.plot(column='NAME', markersize=0.5, alpha=0.5, figsize=(9,7))
+boros.plot(ax=ax, edgecolor='r', facecolor='None', alpha=0.5);
+```
+
+```python
 gdf_la.to_parquet(os.path.join('data','geo','Listings_with_LA.geoparquet'))
 ```
 
@@ -924,6 +1105,8 @@ gdf_la.to_parquet(os.path.join('data','geo','Listings_with_LA.geoparquet'))
 
 ## Create LA Data
 
+Now that we've assigned every listing to a borough, we can derive aggregate values for different groups of zones.
+
 ### Select LA
 
 Select a LA that is relevant to _you_ to explore further...
@@ -934,12 +1117,13 @@ LA = 'Waltham Forest'
 
 ### Spatial Join
 
-The first thing we want to do is join MSOA identifiers to each listing. In both cases we want to constrain the data to only be for 'our' LA of interest: 
+The first thing we want to do is join MSOA identifiers to each listing. In both cases we want to constrain the data to only be for 'our' LA of interest since that will speed up the process substantially: 
 
 ```{python}
-msoadf  = gpd.sjoin(
+gdf_msoa = gpd.sjoin(
             gdf_la[gdf_la.NAME==LA].reset_index(), 
-            msoas[msoas.Borough==LA], predicate='within')
+            ldn_msoas[ldn_msoas.Borough==LA][['MSOA11CD','MSOA11NM','USUALRES','HHOLDS','Subregion','geometry']], predicate='within')
+gdf_msoa.head(2)
 ```
 
 ### Aggregate
@@ -947,34 +1131,12 @@ msoadf  = gpd.sjoin(
 Now aggregate the data by MSOA, deriving median price and a count of the listings:
 
 ```{python}
-msoagrdf = msoadf.groupby('msoa11nm').agg({'price':['median','count']}).reset_index()
-```
-
-```{python}
-#msoagrdf.sample(3, random_state=42, replace=True)
-```
-
-You should get something like the below (if you're using Waltham Forest):
-
-```{python}
-#| echo: false
-#msoagrdf.sample(3, random_state=42, replace=True)
-```
-
-### Resolve Columns
-
-Which level value is easier to use? 0? or 1?
-
-```{python}
-msoagrdf.columns = msoagrdf.columns.get_level_values(1)
-msoagrdf.head()
-```
-
-Fix the missing column name:
-
-```{python}
-msoagrdf.rename(columns={'':'msoa11nm', 'count':'listings'}, inplace=True)
-msoagrdf.head()
+grdf_msoa = gdf_msoa.groupby('MSOA11NM').agg(
+    listing_count = ('price','count'),
+    median_price = ('price','median')
+).reset_index()
+print(f"Have {grdf_msoa.shape[0]:,} rows and {grdf_msoa.shape[1]:,} columns")
+grdf_msoa.head(2)
 ```
 
 ### Join (Again)
@@ -982,29 +1144,21 @@ msoagrdf.head()
 Here we see the **difference between merge and join**. You'll notice that `join` operates by taking one data frame as the implicit '*left*' table (the one which *calls* join) while the one that is passed to the join function is, implicitly, the '*right*' table. Join operates only using indexes, so you'll need to insert the code to specify the same index on both data frames, but this can be done **on-the-fly** as part of the joining operation:
 
 ```{python}
-msoa_gdf = msoagrdf.set_index('msoa11nm').join(
-                msoas[msoas.Borough==LA].set_index('msoa11nm'), 
-                rsuffix='_r')
+msoa_gdf = grdf_msoa.set_index('MSOA11NM').join(
+                ldn_msoas[ldn_msoas.Borough==LA].set_index('MSOA11NM'), 
+                rsuffix='_r').set_geometry('geometry')
 msoa_gdf.head(3)
 ```
 
-### Resolve Geodata
-
-You need to add a command in order to help python recognise that this should be a GeoDataFrame:
-
-```{python}
-msoa_gdf = msoa_gdf.set_geometry('geometry')
-```
-
 ```python
-msoa_gdf.plot(column='median', legend=True, figsize=(8,8));
+msoa_gdf.plot(column='median_price', legend=True, figsize=(8,8));
 ```
 
 You should get something like:
 
 ```{python}
 #| echo: false
-msoa_gdf.plot(column='median', legend=True, figsize=(8,8));
+msoa_gdf.plot(column='median_price', legend=True, figsize=(6,8));
 ```
 
 ### Save
@@ -1017,7 +1171,7 @@ msoa_gdf.to_parquet(os.path.join('data','geo',f'{LA}-MSOA_data.geoparquet'))
 
 :::: {.qna}
 
-### Question
+#### Question
 
 - Do you understand the differences between `pd.merge` and `df.join`? and `gpd.sjoin`?
 
