@@ -90,11 +90,13 @@ function Div(div)
   -- the second. We remove the question *or* answer
   -- for some output formats based on filter spec
   if quarto.doc.is_format("ipynb") then
-    print("Writing Notebook!!!")
     table.remove(raw,2)
   elseif quarto.doc.is_format("pdf") then
-    print("Writing PDF!!!")
     table.remove(raw,1)
+  elseif quarto.doc.is_format("html") then 
+    -- do nothing
+  else
+    print("No output format detected.")
   end
   
   if #raw == 1 then
