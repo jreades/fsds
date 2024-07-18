@@ -125,11 +125,15 @@ function Div(div)
 
     cb = pandoc.CodeBlock(raw[1].content[1].text, pandoc.Attr('', {'python','cell-code'}, {}))
     cd = pandoc.Div(cb, pandoc.Attr('', {'cell'}, {}))
-    if (raw[1].content[2] ~= nil and raw[1].content[2].t == 'CodeBlock') then
-      co = pandoc.Div(raw[1].content[2].text, pandoc.Attr('', {"cell-output", "cell-output-stdout"}, {}))
+    
+    if (raw[1].content[2] ~= nil and raw[1].content[2].t=='CodeBlock') then
+      print("Adding...")
+      co = pandoc.Div(pandoc.CodeBlock(raw[1].content[2].text), pandoc.Attr('', {"cell-output", "cell-output-stdout"}, {}))
       table.insert(cd.content,co)
     end
     hd = pandoc.Header(header_level, raw[1].title, pandoc.Attr('', {'qna-question'}, {}))
+
+    -- print(cd)
 
     resources[1] = hd
     resources[2] = cd
