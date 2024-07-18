@@ -1,3 +1,21 @@
+local function render_quarto_tab_orig(tbl, tabset)
+  local content = quarto.utils.as_blocks(tbl.content)
+  local title = quarto.utils.as_inlines(tbl.title)
+  local inner_content = pandoc.List()
+  inner_content:insert(pandoc.Header(tabset.level, title))
+  inner_content:extend(content)
+  return pandoc.Div(inner_content)
+end
+
+local function render_quarto_tab(tbl, hlevel)
+  local content = quarto.utils.as_blocks(tbl.content)
+  local title = quarto.utils.as_inlines(tbl.title)
+  local inner_content = pandoc.List()
+  inner_content:insert(pandoc.Header(hlevel, title))
+  inner_content:extend(content)
+  return pandoc.Div(inner_content)
+end
+
 function Div(div)
   if not div.classes:includes("qna") then 
     return
@@ -6,6 +24,12 @@ function Div(div)
   raw = {}
   local div_num = 0
   local header_level = 0
+
+  -- print("~~~~~ Q&A ~~~~~")
+  -- for key, value in pairs(div) do
+  --   print(key, value)
+  -- end
+  -- print("~~~~~~~~~~~~~~")
 
   div:walk({
       Block = function(block)
@@ -32,32 +56,21 @@ function Div(div)
         resource_attr = pandoc.Attr('', {'cell-output','cell-output-display'}, {})
         d = pandoc.Div(pandoc.Div(tbl), resource_attr)
         table.insert(raw[div_num].content, d)
-        return {}
+        return -- {}
       end,
       Div = function(div)
+        -- print("~~~~ Div ~~~~")
+        -- print(div.content)
         if next(div.classes) ~= nil and (div.classes:includes('cell') or div.classes:includes('cell-output')) then
-          return {}
+          return -- {}
         else
           table.insert(raw[div_num].content, div)
         end
       end,
       CodeBlock = function(code)
-        -- print(code.attr)
-        -- print(code.text)
-        local resource_attr = pandoc.Attr('', {'cell','code'}, {})
-        -- print(code.classes)
-        if not code.classes:includes('code') then 
-          code.classes:insert('code')
-          code.classes:insert('cell')
-        end
-        -- print(code.classes)
-        table.insert(raw[div_num].content, code) -- pandoc.Div(code, resource_attr))
+        table.insert(raw[div_num].content, code)
       end,
       Para = function(para)
-        -- print("-----")
-        -- print(raw)
-        -- print(para)
-        -- print("-----")
         table.insert(raw[div_num].content, para)
         -- table.insert(raw[#raw].content, para)
       end,
@@ -71,6 +84,7 @@ function Div(div)
         return pl -- table.insert(raw[div_num].content, pl)
       end,
       Header = function(header)
+        -- print("~~~~ Header ~~~~", header.content)
         if header_level == 0 then
           header_level = header.level
         end
@@ -101,9 +115,25 @@ function Div(div)
   
   if #raw == 1 then
     local resources = {}
-    local resource_attr = pandoc.Attr('', {'qna-question'}, {})
-    resources[1] = pandoc.Header(header_level, raw[1].title, resource_attr)
-    resources[2] = pandoc.Div(raw[1].content, resource_attr)
+    local content   = {}
+    
+    -- print("~~~~~")
+    -- for key, value in pairs(raw[1].content) do
+    --   print(key, value)
+    -- end
+    -- print("~~~~~")
+
+    cb = pandoc.CodeBlock(raw[1].content[1].text, pandoc.Attr('', {'python','cell-code'}, {}))
+    cd = pandoc.Div(cb, pandoc.Attr('', {'cell'}, {}))
+    if (raw[1].content[2] ~= nil and raw[1].content[2].t == 'CodeBlock') then
+      co = pandoc.Div(raw[1].content[2].text, pandoc.Attr('', {"cell-output", "cell-output-stdout"}, {}))
+      table.insert(cd.content,co)
+    end
+    hd = pandoc.Header(header_level, raw[1].title, pandoc.Attr('', {'qna-question'}, {}))
+
+    resources[1] = hd
+    resources[2] = cd
+
     return resources
   else
     tabs = {}
