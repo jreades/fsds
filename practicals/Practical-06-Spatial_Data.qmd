@@ -1,6 +1,8 @@
 ---
 title: "Practical 6: Spatial Data"
 subtitle: "Getting to grips with Geo-Data using Geopandas"
+execute:
+  keep-ipynb: true
 jupyter: python3
 filters:
   - qna
@@ -84,11 +86,12 @@ Use this as an opportunity to improve your ability to read code and to learn thr
 
 :::
 
-:::: {.qna}
+::: {.qna}
 
 #### Question
 
-```python
+```{python}
+#| eval: false
 import os
 from requests import get
 from urllib.parse import urlparse
@@ -186,7 +189,7 @@ def cache_data(src:str, dest:str) -> str:
 help(cache_data) # <- This should show the docstring you've written
 ```
 
-::::
+:::
 
 ## Downloading the Data
 
@@ -200,11 +203,12 @@ help(cache_data) # <- This should show the docstring you've written
 
 Use the function above to download and cache the GeoPackage files found [on GitHub](https://github.com/jreades/fsds/tree/master/data/src) for Boroughs, Water, and Greenspace, then pass the output of these to GeoPandas. If you have been having trouble downloading files from GitHub, then use the understanding of the function developed above to download the file manually and place it where this function expects to find it!
 
-:::: {.qna}
+::: {.qna}
 
 #### Question
 
-```python
+```{python}
+#| eval: false
 ddir  = os.path.join('data','geo') # destination directory
 spath = 'https://github.com/jreades/i2p/blob/master/data/src/' # source path
 
@@ -228,7 +232,7 @@ green = gpd.read_file( cache_data(spath+'Greenspace.gpkg?raw=true', ddir) )
 print('Done.')
 ```
 
-::::
+:::
 
 ### Parquet
 
@@ -240,7 +244,7 @@ Let's re-use our `cache_data` function to download and save the full Inside Airb
 
 :::
 
-:::: {.qna}
+::: {.qna}
 
 #### Question
 
@@ -268,7 +272,7 @@ df = pd.read_parquet( cache_data(url, os.path.join('data','raw')) )
 print(f"Data frame is {df.shape[0]:,} x {df.shape[1]}")
 ```
 
-::::
+:::
 
 You should see that the file was 'not found' so 'downloading' happened and then the size of the data frame was printed out.
 
@@ -342,12 +346,14 @@ In this practical we are reading geodata from GitHub and I'm saying that we need
 
 So the following two bits of code are equivalent:
 
-```python
+```{python}
+#| eval: false
 # This *may* not always do what we want, but should be fine for local files
 boros.to_file('test.gpkg') 
 ```
 
-```python
+```{python}
+#| eval: false
 # This is safer if working across computers/the Internet
 boros.to_file('test.gpkg', driver='GPKG')
 ```
@@ -365,18 +371,15 @@ fn = f"{ymd}-listings.gpkg"
 
 Notice the difference:
 
-::: {.longform}
-
 ```{python}
+#| code-overflow: scroll
 print(f"Using '{fn}' as basis for saving data...")
 try:
    gdf.to_file(os.path.join('data','geo',fn), driver='GPKG')
 except TypeError as e:
     print("Caught type error...")
-    print(e)
+    print(str(e)[:1000] + " ...")
 ```
-
-:::
 
 If you try to save as a GeoPackage file then the code above typically throws a `TypeError` because of the presence of Categorical data.
 
