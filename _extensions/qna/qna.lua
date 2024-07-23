@@ -14,6 +14,7 @@ function Div(div)
   -- print("~~~~~~~~~~~~~~~~~~~~~~~~~")
 
   div:walk({
+    traverse = topdown,
       Block = function(block)
         print('vvvv')
         print("Unknown block of type " .. block.t)
@@ -29,22 +30,36 @@ function Div(div)
         print('^^^^')
       end,
       RawBlock = function(r)
-        return
+        -- Do nothing
+      end,
+      Plain = function(pl)
+        print('Plain called')
+        print(pl.content)
+        print(pl.tag)
+        return pl -- table.insert(raw[div_num].content, pl)
       end,
       BlockQuote = function(bl)
-        return
+        -- This is kind of weird but basically div:walk
+        -- also walks into the paragraph block *inside*
+        -- the Blockquote, and Blockquote is only called
+        -- after the Para function is called. So we have
+        -- to go back and remove the excess output from
+        -- the stack before adding the Blockquote back in.
+        for i=1,#bl.content do
+          table.remove(raw[div_num].content,#raw[div_num].content)
+        end
+        table.insert(raw[div_num].content, pandoc.BlockQuote(bl.content))
       end,
       Table = function(tbl)
         resource_attr = pandoc.Attr('', {'cell-output','cell-output-display'}, {})
         d = pandoc.Div(pandoc.Div(tbl), resource_attr)
         table.insert(raw[div_num].content, d)
-        return -- {}
       end,
       Div = function(div)
         -- print("~~~~ Div ~~~~")
         -- print(div.content)
         if next(div.classes) ~= nil and (div.classes:includes('cell') or div.classes:includes('cell-output')) then
-          return -- {}
+          return
         else
           table.insert(raw[div_num].content, div)
         end
@@ -54,7 +69,6 @@ function Div(div)
       end,
       Para = function(para)
         table.insert(raw[div_num].content, para)
-        -- table.insert(raw[#raw].content, para)
       end,
       BulletList = function(bl)
         table.insert(raw[div_num].content, bl)
@@ -62,9 +76,11 @@ function Div(div)
       OrderedList = function(ol)
         table.insert(raw[div_num].content, ol)
       end,
-      Plain = function(pl)
-        return pl -- table.insert(raw[div_num].content, pl)
-      end,
+      -- Notice that the header forces a new div
+      -- container so this is where div_num is 
+      -- incremented. Everything after this, and
+      -- up to the next header, forms part of the 
+      -- same div.
       Header = function(header)
         -- print("~~~~ Header ~~~~", header.content)
         if header_level == 0 then
