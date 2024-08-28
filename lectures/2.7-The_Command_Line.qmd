@@ -167,7 +167,7 @@ Some characters are 'special' and need to be **escaped**. You'll encounter these
 | `\ `   | Allows spaces in file names | `less My\ File\ with\ Spaces.txt` |
 | `\t`   | Creates/matches a tab character | `\tThe start of a paragraph...` |
 | `\n`   | Creates/matches a newline character | `The end of a row/para...\n` |
-| `\r`   | Creates/matches a carriange return | `The end of a row/para...\r\n` |
+| `\r`   | Creates/matches a carriage return | `The end of a row/para...\r\n` |
 | `\$`   | Literal dollar sign (since `$` often marks a variable) | `It costs \$1,000,000` |
 | `\!`   | Literal exclamation mark (since `!` can mean a number of things) | `Don't forget me\!` |
 
@@ -221,17 +221,22 @@ gzip -cd very_lg_file.txt.gz |
 
 So the output from the previous commands goes into `matches.txt` as plain-text. The reverse `<` is only used in very special circumstances so you probably won't encounter it very often.
 
+## Practical Applications
+
+Most developers will use one or more of these on a daily basis:
+
+![](./img/log_parsing_cheat_sheet.png)
 
 ## A (Complex) Example {.smaller}
 
 I do _not_ expect you to understand this, but I do want you to understand why this is important:
+
 ```bash
 docker run -v conda:/home/jovyan/work --rm ${DOCKER_NM} start.sh \
    conda env export -n ${ENV_NM} | sed '1d;$d' | sed '$d' \
    | perl -p -e 's/^([^=]+=)([^=]+)=.+$/$1$2/m' \
    | grep -Ev '\- _|cpp|backports|\- lib|\- tk|\- xorg' > conda/environment_py.yml
 ```
-
 
 ::: {.notes}
 
@@ -276,4 +281,3 @@ Some specific commands:
 And lots more here on [using the file system and shell commands](https://www.linkedin.com/learning/learning-python-2/using-file-system-shell-methods)
 
 
-# Thank you!
