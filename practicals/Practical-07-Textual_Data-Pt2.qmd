@@ -1,0 +1,1712 @@
+---
+title: "Practical 7: Working with Text"
+subtitle: "The basics of Text Mining and NLP"
+jupyter: python3
+filters:
+  - qna
+  - quarto
+---
+
+| Complete | Part 1: Foundations | Part 2: Data | Part 3: Analysis |     |
+| :------- | :------------------ | :----------- | :--------------- | --: |
+| 60% | &#9619;&#9619;&#9619;&#9619;&#9619;&#9619;&#9619;&#9619; | &#9619;&#9619;&#9619;&#9619;&#9619;&#9617; | &#9617;&#9617;&#9617;&#9617;&#9617;&#9617; | 7/10
+
+A lot of the content here is provided to help you *understand* what text-cleaning does and how it generates tokens that can be processed by the various analytical approaches commonly-used in NLP. The best way to think about this is as a practical in three parts, not all of which you should expect to complete in this session:
+
+1. Tasks 1–3: these are largely focussed on the basics: exploring text and using regular expressions to find and select text.
+2. Tasks 4–5: this might seem like a *bit* of a detour, but it's intended to show you in a more tangible way how 'normalisation' works when we're working with text. **You should feel free to stop here and return to the rest later.**
+3. Tasks 6–7: are about finding important vocabulary (think 'keywords' and 'significant terms') in documents so that you can start to think about what is *distinctive* about documents and groups of documents. **This is quite useful and relatively easier to understand than what comes next!**
+4. Tasks 8–9: are about fully-fledged NLP using Latent Direclecht Allocation (topic modelling) and Word2Vec (words embeddings for use in clustering or similarity work).
+
+The later parts are largely complete and ready to run; however, that *doesn't* mean you should just skip over them and think you've grasped what's happening and it will be easy to apply in your own analyses. I would *not* pay as much attention to LDA topic mining since I don't think it's results are that good, but I've included it here as it's still commonly-used in the Digital Humanities and by Marketing folks. Word2Vec is much more powerful and forms the basis of the kinds of advances seen in ChatGPT and other LLMs.
+
+::: {.callout-note}
+
+#### &#128279; Connections
+
+Working with text is unquestionably _hard_. In fact, _conceptually_ this is probaly the most challenging practical of the term! But data scientists are _always_ dealing with text because so much of the data that we collect (even more so thanks to the web) is not only text-based (URLs are text!) but, increasingly, unstructured (social media posts, tags, etc.). So while getting to grips with text is a challenge, it also uniquely positions you with respect to the skills and knowledge that other graduates are offering to employers.
+:::
+
+# Preamble
+
+This practical has been written using `nltk`, but would be _relatively_ easy to rework using `spacy`. Most programmers tend to use one *or* the other, and the switch wouldn't be hard other than having to first load the requisite language models:
+
+```{python}
+import spacy
+
+# `...web_md` and `...web_lg` are also options
+corp = "en_core_web_sm"
+
+try: 
+    nlp = spacy.load(corp)
+except OSError:
+    spacy.cli.download(corp)
+    nlp = spacy.load(corp)
+```
+
+You can [read about the models](https://spacy.io/models/en), and note that they are also [available in other languages](https://spacy.io/usage/models) besides English.
+
+# Setup
+
+::: {.callout-tip collapse="true"}
+
+#### Difficulty Level: Low
+
+But this is only because this has been worked out for you. Starting from sctach in NLP is _hard_ so people try to avoid it as much as possible.
+
+:::
+
+## Required Modules
+
+::: {.callout-note}
+
+Notice that the number of modules and functions that we import is steadily increasing week-on-week, and that for text processing we tend to draw on quite a wide range of utilies! That said, the three most commonly used are: `sklearn`, `nltk`, and `spacy`.
+
+:::
+
+Standard libraries we've seen before.
+
+```{python}
+import os
+import numpy as np
+import pandas as pd
+import geopandas as gpd
+import re
+import math
+import matplotlib.pyplot as plt
+```
+
+Vectorisers we will use from the 'big beast' of Python machine learning: Sci-Kit Learn.
+
+```{python}
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.decomposition import LatentDirichletAllocation
+
+# We don't use this but I point out where you *could*
+from sklearn.preprocessing import OneHotEncoder 
+```
+
+NLP-specific libraries that we will use for tokenisation, lemmatisation, and frequency analysis.
+
+```{python}
+import nltk
+import spacy
+from nltk.corpus import wordnet as wn
+from nltk.stem.wordnet import WordNetLemmatizer
+
+try:
+    from nltk.corpus import stopwords
+except:
+    nltk.download('stopwords')
+    from nltk.corpus import stopwords
+stopword_list = set(stopwords.words('english'))
+
+from nltk.tokenize import word_tokenize, sent_tokenize
+from nltk.tokenize.toktok import ToktokTokenizer
+
+from nltk.stem.porter import PorterStemmer
+from nltk.stem.snowball import SnowballStemmer
+
+from nltk import ngrams, FreqDist
+
+lemmatizer = WordNetLemmatizer()
+tokenizer = ToktokTokenizer()
+```
+
+Remaining libraries that we'll use for processing and display text data. Most of this relates to dealing with the various ways that text data cleaning is *hard* because of the myriad formats it comes in.
+
+```{python}
+import string
+import unicodedata
+from bs4 import BeautifulSoup
+from wordcloud import WordCloud, STOPWORDS
+```
+
+This next is just a small utility function that allows us to output Markdown (like this cell) instead of plain text:
+
+```{python}
+from IPython.display import display_markdown
+
+def as_markdown(head='', body='Some body text'):
+    if head != '':
+        display_markdown(f"##### {head}\n\n>{body}\n", raw=True)
+    else:
+        display_markdown(f">{body}\n", raw=True)
+
+as_markdown('Result!', "Here's my output...")
+```
+
+## Loading Data
+
+::: {.callout-note}
+
+#### &#128279; Connections
+
+Because I generally want each practical to stand on its own (unless I'm trying to make a _point_), I've not moved this to a separate Python file (e.g. `utils.py`, but in line with what we covered back in the lectures on [Functions and Packages](https://jreades.github.io/fsds/sessions/week3.html#lectures), this sort of thing is a good candidate for being split out to a separate file to simplify re-use.
+
+:::
+
+Remember this function from last week? We use it to save downloading files that we already have stored locally. But notice I've made some small changes... what do these do to help the user?
+
+```{python}
+import os
+from requests import get
+from urllib.parse import urlparse
+
+def cache_data(src:str, dest:str) -> str:
+    """Downloads and caches a remote file locally.
+    
+    The function sits between the 'read' step of a pandas or geopandas
+    data frame and downloading the file from a remote location. The idea
+    is that it will save it locally so that you don't need to remember to
+    do so yourself. Subsequent re-reads of the file will return instantly
+    rather than downloading the entire file for a second or n-th itme.
+    
+    Parameters
+    ----------
+    src : str
+        The remote *source* for the file, any valid URL should work.
+    dest : str
+        The *destination* location to save the downloaded file.
+        
+    Returns
+    -------
+    str
+        A string representing the local location of the file.
+    """
+    
+    url = urlparse(src) # We assume that this is some kind of valid URL 
+    fn  = os.path.split(url.path)[-1] # Extract the filename
+    dfn = os.path.join(dest,fn) # Destination filename
+    
+    # Check if dest+filename does *not* exist -- 
+    # that would mean we have to download it! We
+    # also check for *very* small files that are 
+    # likely to represent an incomplete download.
+    if not os.path.isfile(dfn) or os.stat(dfn).st_size < 250:
+        
+        print(f"{dfn} not found, downloading!")
+
+        # Convert the path back into a list (without)
+        # the filename -- we need to check that directories
+        # exist first.
+        path = os.path.split(dest)
+        
+        # Create any missing directories in dest(ination) path
+        # -- os.path.join is the reverse of split (as you saw above)
+        # but it doesn't work with lists... so I had to google how
+        # to use the 'splat' operator! os.makedirs creates missing
+        # directories in a path automatically.
+        if len(path) >= 1 and path[0] != '':
+            os.makedirs(os.path.join(*path), exist_ok=True)
+            
+        # Download and write the file
+        with open(dfn, "wb") as file:
+            response = get(src)
+            file.write(response.content)
+            
+        print("\tDone downloading...")
+
+        # What's this doing???
+        f_size = os.stat(dfn).st_size
+        print(f"\tSize is {f_size/1024**2:,.0f} MB ({f_size:,} bytes)")
+
+    else:
+        print(f"Found {dfn} locally!")
+
+        # And why is it here as well???
+        f_size = os.stat(dfn).st_size
+        print(f"\tSize is {f_size/1024**2:,.0f} MB ({f_size:,} bytes)")
+        
+    return dfn
+```
+
+::: {.callout-tip}
+
+For very large _non_-geographic data sets, remember that you can `use_cols` (or `columns` depending on the file type) to specify a subset of columns to load.
+
+:::
+
+Load the main data set:
+
+```{python}
+# Set download URL
+ymd  = '2023-09-06'
+host = 'https://orca.casa.ucl.ac.uk'
+url  = f'{host}/~jreades/data/{ymd}-listings.geoparquet'
+
+gdf = gpd.read_parquet( cache_data(url, os.path.join('data','geo')), 
+                      columns=['geometry', 'listing_url', 'name', 
+                               'description', 'amenities', 'price'])
+
+gdf = gdf.to_crs('epsg:27700')
+
+print(f"gdf has {gdf.shape[0]:,} rows and CRS is {gdf.crs.name}.")
+```
+
+Load supporting Geopackages:
+
+```{python}
+ddir  = os.path.join('data','geo') # destination directory
+spath = 'https://github.com/jreades/fsds/blob/master/data/src/' # source path
+
+boros = gpd.read_file( cache_data(spath+'Boroughs.gpkg?raw=true', ddir) )
+water = gpd.read_file( cache_data(spath+'Water.gpkg?raw=true', ddir) )
+green = gpd.read_file( cache_data(spath+'Greenspace.gpkg?raw=true', ddir) )
+
+print('Done.')
+```
+
+# Exploratory Textual Analysis
+
+::: {.callout-note}
+
+#### &#128279; Connections
+
+If you plan to work with data post-graduation then you will _need_ to become comfortable with Regular Expressions (aka. regexes). These are the focus of the [Patterns in Text](https://jreades.github.io/fsds/sessions/week7.html#lectures) lecture but they barely even scratch the surface of what regexes can do. They are _hard_, but they are powerful. 
+
+:::
+
+::: {.callout-tip}
+
+In a full text-mining application I would spend a lot more time on this stage: sampling, looking at descriptions in full, performing my analysis (the rest of the steps) and then coming back with a deeper understanding of the data to make further changes to the analysis.
+
+:::
+
+It's helpful to have a sense of what data look like before trying to do something with them, but by default pandas truncates quite a lot of output to keep it from overwhelming the display. For text processing, however, you should probably change the amount of preview text provided by pandas using the available options. *Note*: there are lots of other options that you can tweak in pandas.
+
+```{python}
+print(f"Default maximum column width: {pd.options.display.max_colwidth}") # What's this currently set to?
+pd.options.display.max_colwidth=250   # None = no maximum column width (you probably don't want to leave it at this)
+print(f"Now maximum column width set to: {pd.options.display.max_colwidth}")
+```
+
+## The Description Field
+
+::: {.callout-warning collapse="true"}
+
+#### Difficulty level: Moderate, because of the questions.
+
+:::
+
+To explore the description field properly you'll need to filter out any NA/NaN descriptions before sampling the result. *Hint*: you'll need to think about negation (`~`) of a method output that tells you if a field *is NA*.
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+gdf[???].sample(5, random_state=42)[['description']]
+```
+
+#### Answer
+
+```{python}
+gdf[~gdf.description.isna()].sample(5, random_state=42)[['description']]
+```
+
+::::
+
+::: {.callout-caution}
+
+#### Stop
+
+What do you notice about the above? Are they simple text? Are there patterns of problems? Are there characters that represent things other than words and simple punctuation?
+
+:::
+
+### Questions
+
+- What patterns can you see that might need 'dealing with' for text-mining to work?
+- What non-text characters can you see? (Things *other* than A-Z, a-z, and simple punctuation!)
+
+## The Amenities Field
+
+::: {.callout-warning collapse="true"}
+
+#### Difficulty level: Moderate, because of the questions.
+
+:::
+
+This field presents a subtle issue that might not be obvious here:
+
+```{python}
+gdf.amenities.sample(5, random_state=42)
+```
+
+But look what happens now, can you see the issue a little more easily?
+
+```{python}
+gdf.amenities.iloc[0]
+```
+
+### Questions
+
+- What's the implicit format of the Amenities columns?
+- How could you represent the data contained in the column?
+
+## Remove NaN Values
+
+::: {.callout-note}
+
+I would be wary of doing the below in a 'proper' application without doing some careful research first, but to make our lives easier, we're going to drop rows where one of these values is NaN _now_ so it will simplify the steps below. In reality, I would spend quite a bit more time investigating which values are NaN and why before simply dropping them.
+
+:::
+
+Anyway, drop all rows where *either* the description or amenities (or both) are NA:
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+gdf = gdf.dropna(???)
+print(f"Now gdf has {gdf.shape[0]:,} rows.")
+```
+
+#### Answer
+
+```{python}
+gdf = gdf.dropna(subset=['description','amenities'])
+print(f"Now gdf has {gdf.shape[0]:,} rows.")
+```
+
+::::
+
+You should get that there are `{python} f"{gdf.shape[0]:,}"` rows.
+
+# Using Regular Expressions
+
+::: {.callout-note}
+
+#### &#128279; Connections
+
+We're building on the work done in [Practical 6](Practical-06-Spatial_Data.ipynb), but making use now of the lecture on [Patterns in Text](https://jreades.github.io/fsds/sessions/week6.html#lectures)) to quickly sort through the listings.
+
+:::
+
+There is a _lot_ that can be done with Regular Expressions to identify relevant records in textual data and we're going to use this as a starting point for the rest of the analysis. I would normally consider the regexes here a 'first pass' at the data, but would look very carefully at the output of the TF/IDF vectorizer, Count vectorizer, and LDA to see if I could improve my regexes for further cycles of analysis... the main gain there is that regexes are _much_ faster than using the full NLP (Natural Language Processing) pipeline on the _full_ data set each time. As an alternative, you could develop the pipeline using a random subsample of the data and then process the remaining records sequentially -- in this context there is no justification for doing that, but with a larger corpus it might make sense.
+
+## Luxury Listings
+
+::: {.callout-caution collapse="true"}
+
+#### Difficulty level: Hard, because of the regular expression and questions.
+
+:::
+
+I would like you to find listings that *might* (on the basis of word choice) indicate 'luxury' accommodation.
+
+### Create the Regular Expression
+
+You should start with variations on 'luxury' (i.e. luxurious, luxuriate, ...) and work out a **single regular expression** that works for variations on this *one* word. **Later**, I would encourage you to come back to this and consider what other words might help to signal 'luxury'... perhaps words like 'stunning' or 'prestigious'? Could you add those to the regex as well?
+
+*Hints*: this is a toughy, but...
+
+1. All regular expressions work best using the `r'...'` (which means raw string) syntax.
+2. You need to be able to *group* terms. Recall, however, that in Python a 'group' of the form `r'(some text)'` refers to matching (`some text` will be 'memoized'/remembered), whereas what you need here is a "non-capturing group" of the **positive lookahead** type. That's a Google clue right there, but you've also seen this in the lecture.
+
+In fact, in my real-world applications you might even need more than one group/non-capturing group in a *nested* structure.
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+gdf[
+    gdf.description.str.contains(r'???', regex=True, flags=re.IGNORECASE) # <-- The regex
+].sample(5, random_state=42)[['description']]
+```
+
+#### Answer
+
+```{python}
+gdf[
+    gdf.description.str.contains(r'(?:luxur(?:y|ious|iat)|prestigious|stunning)', regex=True, flags=re.IGNORECASE)
+].sample(5, random_state=42)[['description']]
+```
+
+::::
+
+### Apply it to Select Data
+
+Assign it to a new data frame called `lux`:
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+lux = gdf[gdf.description.str.contains(r'???', regex=True, flags=re.IGNORECASE)].copy()
+print(f"Found {lux.shape[0]:,} records for 'luxury' flats")
+```
+
+#### Answer
+
+```{python}
+lux = gdf[gdf.description.str.contains(r'(?:luxur(?:y|ious|iat)|prestigious|stunning)', regex=True, flags=re.IGNORECASE)].copy()
+print(f"Found {lux.shape[0]:,} records for 'luxury' flats")
+```
+
+::::
+
+You should get `{python} f"{lux.shape[0]:,}"` rows.
+
+### Plot the Data
+
+Now we are going to create a more complex plot that will give space to both the spatial and price distributions using `subplot2grid`.
+
+```python
+help(plt.subplot2grid)
+```
+
+Notice that there are two ways to create the plot specified above. I chose route 1, but in some ways route 2 (where you specify a `gridspec` object and *then* add the axes might be a bit simpler to work out if you're starting from scratch.
+
+The critical thing here is to understand how we'er initialising a plot that has **4 rows** and **1 column** even though it is only showing **2 plots**. What we're going to do is set the *first* plot to span **3 rows** so that it takes up 75% of the plot area (3/4), while the *second* plot only takes up 25% (1/4). They will appear one above the other, so there's only 1 column. Here's how to read the key parts of `subplot2grid`:
+
+- `nrows` -- how many rows *of plots* in the figure.
+- `ncols` -- how many columns *of plots* in the figure.
+- `row` -- what row of the figure does *this* plot start on (0-indexed like a list in Python).
+- `col` -- what column of the figure does *this* plot start on (0-indexed like a list in Python).
+- `rowspan` -- how many rows of the figure does *this* plot span (*not* 0-indexed because it's not list-like).
+- `colspan` -- how many columns of the figure does *this* plot span (*not* 0-indexed because it's not list-like).
+
+Every time you call `subplot2grid` you are initialising a new axis-object into which you can then draw with your geopackage or pandas plotting methods.
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+
+f,ax = plt.subplots(1,1,figsize=(9,6))
+ax.remove()
+
+# The first plot 
+ax1 = plt.subplot2grid((4, 1), (???), rowspan=???)
+boros.plot(edgecolor='red', facecolor='none', linewidth=1, alpha=0.75, ax=ax1)
+lux.plot(markersize=2, column='price', cmap='viridis', alpha=0.2, scheme='Fisher_Jenks_Sampled', ax=ax1)
+
+ax1.set_xlim([500000, 565000])
+ax1.set_ylim([165000, 195000]);
+
+# The second plot
+ax2 = plt.subplot2grid((???), (???), rowspan=1)
+lux.price.plot.hist(bins=250, ax=ax2)
+
+plt.suptitle("Listings Advertising Luxury") # <-- How does this differ from title? Change it and see!
+plt.tight_layout() # <-- Try creating the plot *without* this to see what it changes
+plt.show()
+```
+
+#### Answer
+
+```{python}
+f,ax = plt.subplots(1,1,figsize=(7,6))
+ax.remove()
+
+# The first plot
+ax1 = plt.subplot2grid((4, 1), (0, 0), rowspan=3)
+boros.plot(edgecolor='red', facecolor='none', linewidth=1, alpha=0.75, ax=ax1)
+lux.plot(markersize=2, column='price', cmap='viridis', alpha=0.2, scheme='Fisher_Jenks_Sampled', ax=ax1)
+
+ax1.set_xlim([500000, 565000])
+ax1.set_ylim([165000, 195000]);
+
+# The second plot
+ax2 = plt.subplot2grid((4, 1), (3, 0), rowspan=1)
+lux.price.plot.hist(bins=250, ax=ax2)
+
+plt.suptitle("Listings Advertising Luxury") # <-- How does this differ from title? Change it and see!
+plt.tight_layout() # <-- Try creating the plot *without* this to see what it changes
+```
+
+::::
+
+Your result should look similar to:
+
+```{python}
+#| echo: false
+f
+```
+
+### Questions
+
+- What does `suptitle` do and how is it different from `title`? Could you use this as part of your plot-making process?
+- What does `tight_layout` do?
+
+## Budget Listings
+
+::: {.callout-tip collapse="true"}
+
+#### Difficulty level: Easy, because you've worked out the hard bits already.
+
+:::
+
+### Create the Regular Expression
+
+What words can you think of that might help you to spot affordable and budget accommodation? Start with just a couple of words and then I would encourage you to consider what _other_ words might help to signal 'affordability'... perhaps words like 'cosy' or 'charming' and then think about how you could you add those to the regex?
+
+*Hints*: this just builds on what you did above with one exception:
+
+1. I'd try adding word boundary markers to the regex (`\b`) where appropriate...
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+gdf[
+    gdf.description.str.contains(???, regex=True, flags=re.IGNORECASE)
+].sample(5, random_state=42)[['description']]
+```
+
+#### Answer
+
+```{python}
+gdf[
+    gdf.description.str.contains(r'\b(?:affordable|budget|cheap|cosy)\b', 
+    regex=True, flags=re.IGNORECASE)
+].sample(5, random_state=42)[['description']]
+```
+
+::::
+
+### Apply it to Select Data
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+aff = gdf[gdf.description.str.contains(???, regex=True, flags=re.IGNORECASE)].copy()
+print(f"There are {aff.shape[0]:,} rows flagged as 'affordable'.")
+```
+
+#### Answer
+
+```{python}
+aff = gdf[gdf.description.str.contains(r'\b(?:affordable|budget|cheap|cosy)\b', 
+          regex=True, flags=re.IGNORECASE)].copy()
+print(f"There are {aff.shape[0]:,} rows flagged as 'affordable'.")
+```
+
+::::
+
+You should get `{python} f"{aff.shape[0]:,}" ` rows.
+
+### Plot the Data
+
+```{python}
+f,ax = plt.subplots(1,1,figsize=(8,6))
+ax.remove()
+
+# The first plot
+ax1 = plt.subplot2grid((4, 1), (0, 0), rowspan=3)
+boros.plot(edgecolor='red', facecolor='none', linewidth=1, alpha=0.75, ax=ax1)
+aff.plot(markersize=2, column='price', cmap='viridis', alpha=0.2, scheme='Fisher_Jenks_Sampled', ax=ax1)
+
+ax1.set_xlim([500000, 565000])
+ax1.set_ylim([165000, 195000]);
+
+# The second plot
+ax2 = plt.subplot2grid((4, 1), (3, 0), rowspan=1)
+aff.price.plot.hist(bins=100, ax=ax2)
+
+plt.suptitle("Listings Advertising Affordability")
+plt.tight_layout()
+#plt.savefig("Affordable_Listings.png", dpi=150)
+```
+
+### Questions
+
+- Do you think that this is a *good* way to select affordable options?
+- Do you understand what `dpi` means and how `savefig` works?
+- Copy the code from above but modify it to constrain the histogram on a more limited distribution by *filtering* out the outliers *before* drawing the plot. I would copy the cell above to one just below here so that you keep a working copy available and can undo any changes that break things.
+
+```python
+
+
+```
+
+## Near Bluespace
+
+::: {.callout-warning collapse="true"}
+
+#### Difficulty level: Medium, because you're still learning about regexes.
+
+:::
+
+Now see if you can work out a regular expression to find accommodation that emphasises accessibility to the Thames and other 'blue spaces' as part of the description? One thing you'll need to tackle is that some listings seem to say something about Thameslink and you wouldn't want those be returned as part of a regex looking for _rivers_. So by way of a hint:
+
+- You probably need to think about the Thames, rivers, and water.
+- These will probably be *followed* by a qualifier like a 'view' (e.g. Thames-view) or a front (e.g. water-front).
+- But you need to rule out things like "close the Thameslink station..."
+
+### Create the regular Expression
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+gdf[
+    gdf.description.str.contains(???, regex=???, flags=???)
+].sample(5, random_state=42)[['description']]
+```
+
+#### Answer
+
+```{python}
+gdf[
+    gdf.description.str.contains(r'(?:Thames|river|water|canals?)(?:-|\s+)(?: view|\s?front)\b', 
+    regex=True, flags=re.IGNORECASE)
+].sample(5, random_state=42)[['description']]
+```
+
+::::
+
+### Apply it to the Select Data
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+bluesp = gdf[
+    (gdf.description.str.contains(???, regex=True, flags=re.IGNORECASE)) |
+    (gdf.description.str.contains(???, regex=True, flags=re.IGNORECASE))
+].copy()
+print(f"Found {bluesp.shape[0]:,} rows.")
+```
+
+#### Answer
+
+```{python}
+bluesp = gdf[
+    (gdf.description.str.contains(r'(?:Thames|river|water|canals?)(?:-|\s+)(?:view|front)\b', regex=True, flags=re.IGNORECASE)) |
+    (gdf.description.str.contains(r'(?:walk|close|near) to (?:Thames|river|water|canal)', regex=True, flags=re.IGNORECASE))
+].copy()
+print(f"Found {bluesp.shape[0]:,} rows.")
+```
+
+::::
+
+You should get `{python} f"{bluesp.shape[0]:,}" ` rows.
+
+### Plot the Data
+
+```{python}
+
+f,ax = plt.subplots(1,1,figsize=(8,6))
+ax.remove()
+
+# The first plot
+ax1 = plt.subplot2grid((4, 1), (0, 0), rowspan=3)
+water.plot(edgecolor='none', facecolor=(.25, .25, .7, .25), ax=ax1)
+boros.plot(edgecolor='red', facecolor='none', linewidth=1, alpha=0.75, ax=ax1)
+bluesp.plot(markersize=2, column='price', cmap='viridis', alpha=0.5, scheme='Fisher_Jenks_Sampled', ax=ax1)
+
+ax1.set_xlim([500000, 565000])
+ax1.set_ylim([165000, 195000]);
+
+# The second plot
+ax2 = plt.subplot2grid((4, 1), (3, 0), rowspan=1)
+bluesp.price.plot.hist(bins=100, ax=ax2)
+
+plt.suptitle("Bluespace Listings")
+plt.tight_layout()
+plt.show()
+```
+
+### Questions
+
+- How else might you select listings with a view of the Thames or other bluespaces?
+
+# Illustrative Text Cleaning
+
+Now we're going to step through the _parts_ of the process that we apply to clean and transform text. We'll do this individually before using a function to apply them _all at once_.
+
+## Downloading a Web Page
+
+::: {.callout-tip collapse="true"}
+
+#### Difficulty Level: Low.
+
+:::
+
+There is plenty of good economic geography research being done using web pages. Try using Google Scholar to look for work using the British Library's copy of the *Internet Archive*.
+
+```{python}
+from urllib.request import urlopen, Request
+
+# We need this so that the Bartlett web site 'knows'
+# what kind of browser it is deasling with. Otherwise
+# you get a Permission Error (403 Forbidden) because
+# the site doesn't know what to do.
+hdrs = {
+    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+}
+url = 'https://www.ucl.ac.uk/bartlett/casa/about-0'
+```
+
+:::: {.panel-tabset}
+
+#### Question 
+
+```python
+# Notice that here we have to assemble a request and
+# then 'open' it so that the request is properly issued
+# to the web server. Normally, we'd just use `urlopen`, 
+# but that doesn't give you the ability to set the headers.
+request  = Request(url, None, hdrs) #The assembled request
+response = urlopen(request)
+html     = response.???.decode('utf-8') # The data you need
+
+print(html[:1000])
+```
+
+#### Answer
+
+```{python}
+# Notice that here we have to assemble a request and
+# then 'open' it so that the request is properly issued
+# to the web server. Normally, we'd just use `urlopen`, 
+# but that doesn't give you the ability to set the headers.
+request  = Request(url, None, hdrs) #The assembled request
+response = urlopen(request)
+html     = response.read().decode('utf-8') # The data you need
+
+print(html[:1000])
+```
+
+::::
+
+## Removing HTML
+
+::: {.callout-warning collapse="true"}
+
+#### Difficulty level: Moderate
+
+Because what we're doing will seem really strange and uses some previously unseen libraries that you'll have to google.
+
+:::
+
+*Hint*: you need to need to **get the text** out of the each returned `<p>` and `<div>` element! I'd suggest also commenting this up since there is a *lot* going on on some of these lines of code!
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+cleaned = []
+
+soup = BeautifulSoup(html)
+body = soup.find('body')
+
+for c in body.findChildren(recursive=False):
+    if c.name in ['div','p'] and c.???.strip() != '': 
+        # \xa0 is a non-breaking space in Unicode (&nbsp; in HTML)
+        txt = [re.sub(r'(?:\u202f|\xa0|\u200b)',' ',x.strip()) for x in c.get_text(separator=" ").split('\n') if x.strip() != '']
+        cleaned += txt
+
+cleaned
+```
+
+#### Answer
+
+```{python}
+cleaned = []
+
+soup = BeautifulSoup(html)
+body = soup.find('body')
+
+for c in body.findChildren(recursive=False):
+    if c.name in ['div','p'] and c.get_text().strip() != '':
+        # \xa0 is a non-breaking space in Unicode (&nbsp; in HTML)
+        txt = [re.sub(r'(?:\u202f|\xa0|\u200b)',' ',x.strip()) for x in c.get_text(separator=" ").split('\n') if x.strip() != '']
+        cleaned += txt
+
+cleaned
+```
+
+::::
+
+## Lower Case
+
+::: {.callout-tip collapse="true"}
+
+#### Difficulty Level: Low.
+
+:::
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+lower = [c.???() for ??? in cleaned]
+lower
+```
+
+#### Answer
+
+```{python}
+lower = [s.lower() for s in cleaned]
+lower
+```
+
+::::
+
+## Stripping 'Punctuation'
+
+::: {.callout-caution collapse="true"}
+
+#### Difficulty level: Hard
+
+This is because you need to understand: 1) why we're _compiling_ the regular expression and how to use character classes; and 2) how the NLTK tokenizer differs in approach to the regex.
+
+:::
+
+### Regular Expression Approach
+
+We want to clear out punctuation using a regex that takes advantage of the `[...]` (character class) syntax. The really tricky part is remembering how to specify the 'punctuation' when some of that punctuation has 'special' meanings in a regular expression context. For instance, `.` means 'any character', while `[` and `]` mean 'character class'. So this is another *escaping* problem and it works the *same* way it did when we were dealing with the Terminal... 
+
+*Hints*: some other factors... 
+
+1. You will want to match more than one piece of punctuation at a time, so I'd suggest add a `+` to your pattern.
+2. You will need to look into *metacharacters* for creating a kind of 'any of the characters *in this class*' bag of possible matches.
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+pattern = re.compile(r'[???]+')
+print(pattern)
+```
+
+#### Answer
+
+```{python}
+pattern = re.compile(r'[,\.!\-><=\(\)\[\]\/&\'\"’;\+\–\—]+')
+print(pattern)
+```
+
+::::
+
+### Tokenizer
+
+The other way to do this, which is probably *easier* but produces more complex output, is to draw on the tokenizers [already provided by NLTK](https://www.nltk.org/api/nltk.tokenize.html). For our purposes `word_tokenize` is probably fine, but depending on your needs there are other options and you can also write your own.
+
+```{python}
+nltk.download('punkt')
+nltk.download('wordnet')
+from nltk.tokenize import word_tokenize
+print(word_tokenize)
+```
+
+### Compare
+
+Look at how these outputs differ in subtle ways:
+
+```{python}
+subbed = []
+tokens = []
+for l in lower:
+    subbed.append(re.sub(pattern, ' ', l))
+    tokens.append(word_tokenize(l))
+
+for s in subbed:
+    as_markdown("Substituted", s)
+
+for t in tokens:
+    as_markdown("Tokenised", t)
+```
+
+## Stopword Removal
+
+::: {.callout-warning collapse="true"}
+
+#### Difficulty Level: Moderate 
+
+You need to remember how list comprehensions work to use the `stopword_list`.
+
+:::
+
+```{python}
+stopword_list = set(stopwords.words('english'))
+print(stopword_list)
+```
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+stopped = []
+for p in tokens[2:4]: # <-- why do I just take these items from the list?
+    stopped.append([x for x in p if x not in ??? and len(x) > 1])
+
+for s in stopped:
+    as_markdown("Line", s)
+```
+
+#### Answer
+
+```{python}
+stopped = []
+for p in tokens[2:4]: # <-- why do I just take these items from the list?
+    stopped.append([x for x in p if x not in stopword_list and len(x) > 1])
+
+for s in stopped:
+    as_markdown("Line", s)
+```
+
+::::
+
+## Lemmatisation vs Stemming
+
+::: {.callout-tip collapse="true"}
+
+#### Difficulty level: Low.
+
+:::
+
+```{python}
+from nltk.stem.porter import PorterStemmer
+from nltk.stem.snowball import SnowballStemmer
+from nltk.stem.wordnet import WordNetLemmatizer 
+```
+
+```{python}
+lemmatizer = WordNetLemmatizer()
+print(lemmatizer.lemmatize('monkeys'))
+print(lemmatizer.lemmatize('cities'))
+print(lemmatizer.lemmatize('complexity'))
+print(lemmatizer.lemmatize('Reades'))
+```
+
+```{python}
+stemmer = PorterStemmer()
+print(stemmer.stem('monkeys'))
+print(stemmer.stem('cities'))
+print(stemmer.stem('complexity'))
+print(stemmer.stem('Reades'))
+```
+
+```{python}
+stemmer = SnowballStemmer(language='english')
+print(stemmer.stem('monkeys'))
+print(stemmer.stem('cities'))
+print(stemmer.stem('complexity'))
+print(stemmer.stem('Reades'))
+```
+
+```{python}
+lemmatizer = WordNetLemmatizer()
+lemmas  = []
+stemmed = []
+
+# This would be better if we passed in a PoS (Part of Speech) tag as well,
+# but processing text for parts of speech is *expensive* and for the purposes
+# of this tutorial, not necessary.
+for s in stopped:
+    lemmas.append([lemmatizer.lemmatize(x) for x in s])
+
+for s in stopped:
+    stemmed.append([stemmer.stem(x) for x in s])
+
+for l in lemmas:
+    as_markdown('Lemmatised',l)
+
+for s in stemmed:
+    as_markdown('Stemmed',s)
+```
+
+```{python}
+# What are we doing here?
+for ix, p in enumerate(stopped):
+    stopped_set = set(stopped[ix])
+    lemma_set   = set(lemmas[ix])
+    print(sorted(stopped_set.symmetric_difference(lemma_set)))
+```
+
+# Applying Normalisation
+
+The above approach is fairly hard going since you need to loop through every list element applying these changes one at a time. Instead, we could convert the column to a corpus (or use pandas `apply`) together with a function imported from a library to do the work.
+
+## Downloading the Custom Module
+
+::: {.callout-tip collapse="true"}
+
+#### Difficulty level: Low.
+
+:::
+
+This custom module is not perfect, but it gets the job done... mostly and has some additional features that you could play around with for a final project (e.g. `detect_entities` and `detect_acronyms`).
+
+```{python}
+import urllib.request
+host  = 'https://orca.casa.ucl.ac.uk'
+turl  = f'{host}/~jreades/__textual__.py'
+tdirs = os.path.join('textual')
+tpath = os.path.join(tdirs,'__init__.py')
+
+if not os.path.exists(tpath):
+    os.makedirs(tdirs, exist_ok=True)
+    urllib.request.urlretrieve(turl, tpath)
+```
+
+## Importing the Custom Module
+
+::: {.callout-tip collapse="true"}
+
+#### Difficulty Level: Low. 
+
+But only because you didn't have to write the module! However, the questions could be hard...
+
+:::
+
+In a Jupyter notebook, this code allows us to edit and reload the library dynamically:
+
+```python
+%load_ext autoreload
+%autoreload 2
+```
+
+Now let's import it.
+
+```{python}
+from textual import *
+```
+
+```{python}
+as_markdown('Input', cleaned)
+```
+
+```{python}
+as_markdown('Normalised', [normalise_document(x, remove_digits=True) for x in cleaned])
+```
+
+```{python}
+help(normalise_document)
+```
+
+### Questions
+
+Let's assume that you want to analyse web page content... 
+
+- Based on the above output, what stopwords do you think are missing?
+- Based on the above output, what should be removed but isn't?
+- Based on the above output, how do you think a computer can work with this text?
+
+::: {.callout-caution}
+
+#### Stop!
+
+Beyond this point, we are moving into Natural Language Processing. If you are already struggling with regular expressions, I would recommend _stopping here_. You can come back to revisit the NLP components and creation of word clouds later.
+
+:::
+
+# Revenons à Nos Moutons
+
+Now that you've seen how the steps are applied to a 'random' HTML document, let's get back to the problem at hand (revenons à nos moutons == let's get back to our sheep).
+
+## Process the Selected Listings
+
+::: {.callout-tip collapse="true"}
+
+#### Difficulty level: Low, but you'll need to be patient!
+
+:::
+
+Notice the use of `%%time` here -- this will tell you how long each block of code takes to complete. It's a really useful technique for reminding *yourself* and others of how long something might take to run. I find that with NLP this is particularly important since you have to do a *lot* of processing on each document in order to normalise it.
+
+::: {.callout-tip}
+
+Notice how we can change the default parameters for `normalise_document` even when using `apply`, but that the syntax is different. So whereas we'd use `normalise_document(doc, remove_digits=True)` if calling the function directly, here it's `.apply(normalise_document, remove_digits=True)`!
+
+:::
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+%%time 
+# I get about 1 minute on a M2 Mac
+lux['description_norm'] = lux.???.apply(???, remove_digits=True)
+```
+
+```python
+%%time 
+# I get about 1 minute on a M2 Mac
+aff['description_norm'] = aff.???.apply(???, remove_digits=True)
+```
+
+```python
+%%time  
+# I get about 2 seconds on a M2 Mac
+bluesp['description_norm'] = bluesp.???.apply(???, remove_digits=True)
+```
+
+#### Answer
+
+```{python}
+%%time
+# I get about 1 minute on a M2 Mac
+lux['description_norm'] = lux.description.apply(normalise_document, remove_digits=True)
+```
+
+```{python}
+%%time
+# I get about 1 minute on a M2 Mac
+aff['description_norm'] = aff.description.apply(normalise_document, remove_digits=True)
+```
+
+```{python}
+%%time
+# I get about 1 seconds on a M2 Mac
+bluesp['description_norm'] = bluesp.description.apply(normalise_document, remove_digits=True)
+```
+
+::::
+
+## Select and Tokenise
+
+::: {.callout-tip collapse="true"}
+
+#### Difficulty level: Low, except for the double list-comprehension.
+
+:::
+
+### Select and Extract Corpus
+
+See useful tutorial [here](https://towardsdatascience.com/tf-idf-explained-and-python-sklearn-implementation-b020c5e83275). Although we shouldn't have any empty descriptions, by the time we've finished normalising the textual data we may have _created_ some empty values and we need to ensure that we don't accidentally pass a NaN to the vectorisers and frequency distribution functions.
+
+```{python}
+srcdf = bluesp 
+```
+
+::: {.callout-tip}
+
+#### Coding Tip
+
+Notice how you only need to change the value of the variable here to try any of the different selections we did above? This is a simple kind of parameterisation somewhere between a function and hard-coding everything.
+
+:::
+
+```{python}
+corpus = srcdf.description_norm.fillna(' ').values
+print(corpus[0:3])
+```
+
+### Tokenise
+
+There are different forms of tokenisation and different algorithms will expect differing inputs. Here are two:
+
+```{python}
+sentences = [nltk.sent_tokenize(text) for text in corpus]
+words     = [[nltk.tokenize.word_tokenize(sentence) 
+                  for sentence in nltk.sent_tokenize(text)] 
+                  for text in corpus]
+```
+
+Notice how this has turned every sentence into an array and each document into an array of arrays:
+
+```{python}
+print(f"Sentences 0: {sentences[0]}")
+print()
+print(f"Words 0: {words[0]}")
+```
+
+## Frequencies and Ngrams
+
+::: {.callout-warning collapse="true"}
+
+#### Difficulty level: Moderate.
+
+:::
+
+One new thing you'll see here is the `ngram`: ngrams are 'simply' pairs, or triplets, or quadruplets of words. You may come across the terms unigram (`ngram(1,1)`), bigram (`ngram(2,2)`), trigram (`ngram(3,3)`)... typically, you will rarely find anything beyond trigrams, and these present real issues for text2vec algorithms because the embedding for `geographical`, `information`, and `systems` is _not_ the same as for `geographical information systetms`.
+
+### Build Frequency Distribution
+
+Build counts for ngram range 1..3:
+
+```{python}
+fcounts = dict()
+
+# Here we replace all full-stops... can you think why we might do this?
+data = nltk.tokenize.word_tokenize(' '.join([text.replace('.','') for text in corpus]))
+
+for size in 1, 2, 3:
+    fdist = FreqDist(ngrams(data, size))
+    print(fdist)
+    # If you only need one note this: https://stackoverflow.com/a/52193485/4041902
+    fcounts[size] = pd.DataFrame.from_dict({f'Ngram Size {size}': fdist})
+```
+
+### Output Top-n Ngrams
+
+And output the most common ones for each ngram range:
+
+```{python}
+for dfs in fcounts.values():
+    print(dfs.sort_values(by=dfs.columns.values[0], ascending=False).head(10))
+    print()
+```
+
+### Questions
+
+- Can you think why we don't care about punctuation for frequency distributions and n-grams?
+- Do you understand what n-grams *are*?
+
+## Count Vectoriser
+
+::: {.callout-tip collapse="true"}
+
+#### Difficulty level: Low, but the output needs some thought!
+
+:::
+
+This is a big foray into sklearn (sci-kit learn) which is the main machine learning and clustering module for Python. For processing text we use *vectorisers* to convert terms to a vector representation. We're doing this on the smallest of the derived data sets because these processes can take a while to run and generate *huge* matrices (remember: one row and one column for each term!).
+
+### Fit the Vectoriser
+
+```{python}
+cvectorizer = CountVectorizer(ngram_range=(1,3))
+cvectorizer.fit(corpus)
+```
+
+### Brief Demonstration
+
+Find the number associated with a word in the vocabulary and how many times it occurs in the original corpus:
+
+```{python}
+term = 'stratford'
+pd.options.display.max_colwidth=750
+# Find the vocabulary mapping for the term
+print(f"Vocabulary mapping for {term} is {cvectorizer.vocabulary_[term]}")
+# How many times is it in the data
+print(f"Found {srcdf.description_norm.str.contains(term).sum():,} rows containing {term}")
+# Print the descriptions containing the term
+for x in srcdf[srcdf.description_norm.str.contains(term)].description_norm:
+    as_markdown('Stratford',x)
+```
+
+### Transform the Corpus 
+
+You can only *tranform* the entire corpus *after* the vectoriser has been fitted. There is an option to `fit_transform` in one go, but I wanted to demonstrate a few things here and some vectorisers are don't support the one-shot fit-and-transform approach. **Note the type of the transformed corpus**:
+
+```{python}
+cvtcorpus = cvectorizer.transform(corpus)
+cvtcorpus # cvtcorpus for count-vectorised transformed corpus
+```
+
+### Single Document
+
+Here is the **first** document from the corpus:
+
+```{python}
+doc_df = pd.DataFrame(cvtcorpus[0].T.todense(), 
+                      index=cvectorizer.get_feature_names_out(), columns=["Counts"]
+                     ).sort_values('Counts', ascending=False)
+doc_df.head(10)
+```
+
+### Transformed Corpus
+
+```{python}
+cvdf = pd.DataFrame(data=cvtcorpus.toarray(),
+                        columns=cvectorizer.get_feature_names_out())
+print(f"Raw count vectorised data frame has {cvdf.shape[0]:,} rows and {cvdf.shape[1]:,} columns.")
+cvdf.iloc[0:5,0:10]
+```
+
+### Filter Low-Frequency Words
+
+These are likely to be artefacts of text-cleaning or human input error. As well, if we're trying to look across an entire corpus then we might not want to retain words that only appear in a couple of documents.
+
+Let's start by getting the *column* sums:
+
+```{python}
+sums = cvdf.sum(axis=0)
+print(f"There are {len(sums):,} terms in the data set.")
+sums.head()
+```
+
+Remove columns (i.e. terms) appearing in less than 1% of documents. You can do this by thinking about what the shape of the data frame means (rows and/or columns) and how you'd get 1% of that!
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+filter_terms = sums >= cvdf.shape[0] * ???
+```
+
+#### Answer
+
+```{python}
+filter_terms = sums >= cvdf.shape[0] * 0.01
+```
+
+::::
+
+Now see how we can use this to strip out the columns corresponding to low-frequency terms:
+
+```{python}
+fcvdf = cvdf.drop(columns=cvdf.columns[~filter_terms].values)
+print(f"Filtered count vectorised data frame has {fcvdf.shape[0]:,} rows and {fcvdf.shape[1]:,} columns.")
+fcvdf.iloc[0:5,0:10]
+```
+
+```{python}
+fcvdf.sum(axis=0)
+```
+
+We're going to pick this up again in Task 7.
+
+### Questions
+
+- Can you explain what `doc_df` contains?
+- What does `cvdf` contain? Explain the rows and columns.
+- What is the function of `filter_terms`?
+
+## TF/IDF Vectoriser
+
+::: {.callout-warning collapse="true"}
+
+#### Difficulty level: Moderate
+
+But only if you want to understand how `max_df` and `min_df` work!
+
+:::
+
+### Fit and Transform
+
+```{python}
+tfvectorizer = TfidfVectorizer(use_idf=True, ngram_range=(1,3), 
+                               max_df=0.75, min_df=0.01) # <-- these matter!
+tftcorpus    = tfvectorizer.fit_transform(corpus) # TF-transformed corpus
+```
+
+### Single Document
+
+```{python}
+doc_df = pd.DataFrame(tftcorpus[0].T.todense(), index=tfvectorizer.get_feature_names_out(), columns=["Weights"])
+doc_df.sort_values('Weights', ascending=False).head(10)
+```
+
+### Transformed Corpus
+
+```{python}
+tfidf = pd.DataFrame(data=tftcorpus.toarray(),
+                        columns=tfvectorizer.get_feature_names_out())
+print(f"TF/IDF data frame has {tfidf.shape[0]:,} rows and {tfidf.shape[1]:,} columns.")
+tfidf.head()
+```
+
+### Questions
+
+- What does the TF/IDF score *represent*?
+- What is the role of `max_df` and `min_df`?
+
+# Word Clouds
+
+## For Counts
+
+::: {.callout-tip collapse="true"}
+
+#### Difficulty level: Easy!
+
+:::
+
+```{python}
+fcvdf.sum().sort_values(ascending=False)
+```
+
+```{python}
+ff = 'RobotoMono-VariableFont_wght.ttf'
+dp = '/home/jovyan/.local/share/fonts/'
+tp = os.path.join(os.path.expanduser('~'),'Library','Fonts')
+if os.path.exists(tp):
+    fp = os.path.join(tp,ff)
+else:
+    fp = os.path.join(dp,ff)
+```
+
+```{python}
+f,ax = plt.subplots(1,1,figsize=(8, 8))
+plt.gcf().set_dpi(150)
+Cloud = WordCloud(
+    background_color="white", 
+    max_words=75,
+    font_path=fp
+).generate_from_frequencies(fcvdf.sum())
+ax.imshow(Cloud) 
+ax.axis("off");
+#plt.savefig("Wordcloud 1.png")
+```
+
+## For TF/IDF Weighting
+
+::: {.callout-tip collapse="true"}
+
+#### Difficulty level: Low, but you'll need to be patient!
+
+:::
+
+```{python}
+tfidf.sum().sort_values(ascending=False)
+```
+
+```{python}
+f,ax = plt.subplots(1,1,figsize=(8, 8))
+plt.gcf().set_dpi(150)
+Cloud = WordCloud(
+    background_color="white", 
+    max_words=100,
+    font_path=fp
+).generate_from_frequencies(tfidf.sum())
+ax.imshow(Cloud) 
+ax.axis("off");
+#plt.savefig("Wordcloud 2.png")
+```
+
+### Questions
+
+- What does the `sum` represent for the count vectoriser?
+- What does the `sum` represent for the TF/IDF vectoriser?
+
+# Latent Dirchlet Allocation
+
+::: {.callout-tip}
+
+I would give this a _low_ priority. It's a commonly-used method, but on small data sets it really isn't much use and I've found its answers to be... unclear... even on large data sets.
+
+:::
+
+Adapted from [this post](https://stackabuse.com/python-for-nlp-topic-modeling/) on doing LDA using sklearn. Most other examples use the `gensim` library.
+
+```{python}
+# Notice change to ngram range 
+# (try 1,1 and 1,2 for other options)
+vectorizer = CountVectorizer(ngram_range=(1,2))
+```
+
+## Calculate Topics
+
+```{python}
+vectorizer.fit(corpus) 
+tcorpus = vectorizer.transform(corpus) # tcorpus for transformed corpus
+
+LDA = LatentDirichletAllocation(n_components=3, random_state=42) # Might want to experiment with n_components too
+LDA.fit(tcorpus)
+```
+
+```{python}
+first_topic = LDA.components_[0]
+top_words = first_topic.argsort()[-25:]
+
+for i in top_words:
+    print(vectorizer.get_feature_names_out()[i])
+```
+
+```{python}
+for i,topic in enumerate(LDA.components_):
+    as_markdown(f'Top 10 words for topic #{i}', ', '.join([vectorizer.get_feature_names_out()[i] for i in topic.argsort()[-25:]]))
+```
+
+## Maximum Likelihood Topic
+
+```{python}
+topic_values = LDA.transform(tcorpus)
+topic_values.shape
+```
+
+```{python}
+pd.options.display.max_colwidth=20
+srcdf['Topic'] = topic_values.argmax(axis=1)
+srcdf.head()
+```
+
+```{python}
+pd.options.display.max_colwidth=75
+srcdf[srcdf.Topic==1].description_norm.head(10)
+```
+
+```{python}
+vectorizer = CountVectorizer(ngram_range=(1,1), stop_words='english', analyzer='word', max_df=0.7, min_df=0.05)
+topic_corpus = vectorizer.fit_transform(srcdf[srcdf.Topic==1].description.values) # tcorpus for transformed corpus
+```
+
+```{python}
+topicdf = pd.DataFrame(data=topic_corpus.toarray(),
+                        columns=vectorizer.get_feature_names_out())
+```
+
+```{python}
+f,ax = plt.subplots(1,1,figsize=(8,8))
+plt.gcf().set_dpi(150)
+Cloud = WordCloud(
+            background_color="white", 
+            max_words=75).generate_from_frequencies(topicdf.sum())
+ax.imshow(Cloud) 
+ax.axis("off");
+# plt.savefig('Wordcloud 3.png')
+```
+
+# Word2Vec
+
+::: {.callout-tip}
+
+This algorithm works almost like magic. You should play with the configuration parameters and see how it changes your results.
+
+:::
+
+## Configure
+
+```{python}
+from gensim.models.word2vec import Word2Vec
+```
+
+```{python}
+dims = 100
+print(f"You've chosen {dims} dimensions.")
+
+window = 3
+print(f"You've chosen a window of size {window}.")
+
+min_v_freq  = 0.005 # Don't keep words appearing less than 0.5% frequency
+min_v_count = math.ceil(min_v_freq * srcdf.shape[0])
+print(f"With a minimum frequency of {min_v_freq} and {srcdf.shape[0]:,} documents, minimum vocab frequency is {min_v_count:,}.")
+```
+
+## Train
+
+```{python}
+%%time 
+
+corpus      = srcdf.description_norm.fillna(' ').values
+#corpus_sent = [nltk.sent_tokenize(text) for text in corpus] # <-- with more formal writing this would work well
+corpus_sent = [d.replace('.',' ').split(' ') for d in corpus] # <-- deals better with many short sentences though context may end up... weird
+model       = Word2Vec(sentences=corpus_sent, vector_size=dims, window=window, epochs=200, 
+                 min_count=min_v_count, seed=42, workers=1)
+
+#model.save(f"word2vec-d{dims}-w{window}.model") # <-- You can then Word2Vec.load(...) which is useful with large corpora
+```
+
+## Explore Similarities
+
+This next bit of code only runs if you have calculated the frequencies above in the [Frequencies and Ngrams](#frequencies-and-ngrams) section.
+
+```{python}
+pd.set_option('display.max_colwidth',150)
+
+df = fcounts[1] # <-- copy out only the unigrams as we haven't trained anything else
+
+n     = 14 # number of words
+topn  = 7  # number of most similar words
+
+selected_words = df[df['Ngram Size 1'] > 5].reset_index().level_0.sample(n, random_state=42).tolist()
+
+words = []
+v1    = []
+v2    = []
+v3    = []
+sims  = []
+
+for w in selected_words:
+    try: 
+        vector = model.wv[w]  # get numpy vector of a word
+        #print(f"Word vector for '{w}' starts: {vector[:5]}...")
+    
+        sim = model.wv.most_similar(w, topn=topn)
+        #print(f"Similar words to '{w}' include: {sim}.")
+    
+        words.append(w)
+        v1.append(vector[0])
+        v2.append(vector[1])
+        v3.append(vector[2])
+        sims.append(", ".join([x[0] for x in sim]))
+    except KeyError:
+        print(f"Didn't find {w} in model. Can happen with low-frequency terms.")
+    
+vecs = pd.DataFrame({
+    'Term':words,
+    'V1':v1, 
+    'V2':v2, 
+    'V3':v3,
+    f'Top {topn} Similar':sims
+})
+
+vecs
+```
+
+```python
+#print(model.wv.index_to_key) # <-- the full vocabulary that has been trained
+```
+
+## Apply
+
+We're going to make *use* of this further next week...
+
+### Questions
+
+- What happens when *dims* is very small (e.g. 25) or very large (e.g. 300)?
+- What happens when *window* is very small (e.g. 2) or very large (e.g. 8)?
+
+#0. Processing the Full File
+
+::: {.callout-caution}
+
+This code can take *some time* (**&gt; 5 minutes on a M2 Mac**) to run, so **don't run this** until you've understood what we did before!
+
+:::
+
+You will get a warning about `"." looks like a filename, not markup` — this looks a little scary, but is basically suggesting that we have a description that consists only of a '.' or that looks like some kind of URL (which the parser thinks means you're trying to pass it something to download). 
+
+```python
+%%time 
+# This can take up to 8 minutes on a M2 Mac
+gdf['description_norm'] = ''
+gdf['description_norm'] = gdf.description.apply(normalise_document, remove_digits=True, special_char_removal=True)
+```
+
+```python
+gdf.to_parquet(os.path.join('data','geo',f'{fn.replace(".","-with-nlp.")}'))
+```
+
+::: {.callout-tip}
+
+Saving an intermediate file at this point is useful because you've done quite a bit of _expensive_ computation. You _could_ restart-and-run-all and then go out for the day, but probably easier to just save this output and then, if you need to restart your analysis at some point in the future, just remember to deserialise amenities back into a list format.
+
+:::
+
+## Applications
+
+The above is _still_ only the results for the 'luxury' apartments _alone_. At this point, you would probably want to think about how your results might change if you changed any of the following:
+
+1. Using one of the other data sets that we created, or even the entire data set!
+2. Applying the CountVectorizer or TfidfVectorizer _before_ selecting out any of our 'sub' data sets.
+3. Using the visualisation of information from \#2 to improve our regex selection process.
+4. Reducing, increasing, or constraining (i.e. `ngrams=(2,2)`) the size of the ngrams while bearing in mind the impact on processing time and interpretability.
+5. Filtering by type of listing or host instead of keywords found in the description (for instance, what if you applied TF/IDF to the entire data set and then selected out 'Whole Properties' before splitting into those advertised by hosts with only one listing vs. those with multiple listings?).
+6. Linking this back to the geography.
+
+Over the next few weeks we'll also consider alternative means of visualising the data!
+
+## Resources
+
+There is a lot more information out there, including a [whole book](https://www.nltk.org/book/) and your standard [O'Reilly text](http://www.datascienceassn.org/sites/default/files/Natural%20Language%20Processing%20with%20Python.pdf).
+
+And some more useful links:
+
+- [Pandas String Contains Method](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.str.contains.html)
+- [Using Regular Expressions with Pandas](https://kanoki.org/2019/11/12/how-to-use-regex-in-pandas/)
+- [Summarising Chapters from Frankenstein using TF/IDF](https://towardsdatascience.com/using-tf-idf-to-form-descriptive-chapter-summaries-via-keyword-extraction-4e6fd857d190)

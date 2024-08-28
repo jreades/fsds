@@ -1,0 +1,907 @@
+---
+title: 'Practical 2: Foundations (Part 1)'
+subtitle: "Getting to grips with the 'Basics'"
+filters:
+  - qna
+  - quarto
+---
+
+| Complete | Part 1: Foundations | Part 2: Data | Part 3: Analysis |     |
+| :------- | :------------------ | :----------- | :--------------- | --: |
+| 10% | &#9619;&#9619;&#9619;&#9617;&#9617;&#9617;&#9617;&#9617; | &#9617;&#9617;&#9617;&#9617;&#9617;&#9617; | &#9617;&#9617;&#9617;&#9617;&#9617;&#9617; | 2/10
+
+This notebook is focussed on ensuring that you're able to run Jupyter notebooks locally (i.e. on youu own computer) in Docker and are comfortable with the basics of Python: if you've already done Code Camp then this will be a refresher and you'll have plenty of time to get to grips with Git and GitHub, which often presents significant practical challenges. You *should* find this notebook quite straightforward, but take any challenges as a sign that you need to keep practicing since subsequent weeks will build on these foundational concepts.
+
+::: {.callout-warning}
+
+### Remember
+
+Please save your work regularly, or prepare to be disappointed. This will be my only reminder about this!
+
+:::
+
+# Setting Up
+
+I'm going to assume that you've got Docker installed and have managed to 'pull' the `{{< var docker.all >}}` or `{{< var docker.mac >}}` image at this point. If not, this is your **most urgent** priority. Please make one of us aware of your situation and we'll do our best to get you going.
+
+## Is the Container Running?
+
+Docker will happily keep a container running in the background even if you close every open window. So how do you know if the `sds2023` container is already running? There are two ways:
+
+1. Open the Docker Dashboard/Desktop from the menu and make sure that you select the `Containers` tab on the left (it may be hidden by a message from Docker about upcoming conferences). You _should_ see something like this if the container is _running_ and _available_:
+
+![sds2023 container running](./img/Running_Container.png)
+
+2. From the Terminal/Power Shell you should be able to run: `docker ps`. This will give you output something like this:
+
+![sds2023 container running from Terminal](./img/Running_Container_2.png)
+
+If the `sds2023` *container* is not running then you'll need to run the startup command (`docker run...`) covered in the [last practical session](Practical-01-Getting_Started.qmd)
+
+## Connect to Jupyter Lab
+
+Once you know the container is running you can connected to Jupyter Lab on [localhost:8888](http://localhost:8888/lab/tree/work/) and should see something like this:
+
+![Screenshot of Jupyter Lab](https://github.com/jreades/fsds/raw/master/practicals/img/1.8-Jupyter_Lab.png){height=300}
+
+You're connected and can go to @sec-notebook. 
+
+
+## Getting the Notebook {#sec-notebook}
+
+### Downloading from GitHub
+
+On the [Week 2 of FSDS page](https://jreades.github.io/fsds/sessions/week2.html#practical) you'll see that there is a 'preview' link and a a 'download' link in the [Practical section](https://jreades.github.io/fsds/sessions/week2.html#practical). If you click the preview link you will be taken to the GitHub page for the notebook where it has been 'rendered' as a web page by GitHub. But to make the notebook useable on *your* computer, you need to download the RAW notebook content.
+
+So now:
+
+1. Click on the `Download the Notebook` link.
+2. When you see a page of raw code, select `File` then `Save Page As...`.
+3. Save the file somewhere easy to find (e.g. Downloads or Desktop). 
+4. Notice that *most* browsers will save the file as `Practical-02-Foundations_1.ipynb.txt`; they have *added* `.txt` to the file name without asking. You will need to correct this by *either*: 1) changing the name in the command line using `mv <name_of_practical>.ipynb.txt <name_of_practical>.ipynb` (you can even do this in Jupyter Lab *after* completing @sec-available); or 2) renaming the file using the Finder (Mac) or Windows Explorer.
+
+### Making the Notebook Available to Jupyter Lab {#sec-available}
+
+You now need to place the notebook where Jupyter Lab can access it. There is only _one_ place that you can do this, and that is where you ran the `docker run ...` command which **mounted** the current working directory to the `work` directory. Remember that the startup command is something like:
+
+```shell
+docker run ... -v "$(pwd):/home/jovyan/work" ...
+```
+
+The `-v` (short for *volume*) tells Docker what part of _your_ computer (`$(pwd)`) to connect to container (`/home/jovyan/work`). `pwd` is short-hand for 'working directory' and is the location where you ran the Docker startup command! So we're talking about the location on _your_ computer when you access the `work` folder from within Docker/Jupyter Lab:
+
+- On a Mac it will most likely be your `$HOME` directory (e.g. `/Users/your_username/`).
+- On a Windows machine it _may_ be your `$HOME` directory but we can't promise. See the steps above for trying to ensure this is where you end up.
+
+Perhaps a video will help clarify?
+
+{{< video https://www.youtube.com/embed/5IkwUrYTY78 >}}
+
+### Staring the Notebook
+
+From _within Jupyter Lab_ you should now be able to start the notebook:
+
+1. Make sure Jupyter Lab is showing (&#128193;`/work/`) in the left-hand menu.
+2. Navigate to the location that you saved `Practical-02-Foundations_1.ipynb`.
+3. Double-click the file and you should see the notebook appear on the right-hand side.
+
+Now you can run code directly in your browser, so let's try it!
+
+# Hello World!
+
+Nearly every introduction to programming course starts with the famous 'Hello World!', so why do anything different? Try typing the below into the empty 'cell' that has appeared and then clicking on the right-triangle (&#9654;) in the area above between the clipboard &#128203; for copying and the &#9632; for stopping running code:
+
+```python
+print('Hello World!')
+```
+
+Hopefully, the following has appeared directly below the code:
+
+```{python}
+#| echo: false
+print('Hello World!')
+```
+
+::: {.callout-tip}
+
+ You can always click the &#9654; icon above, but it will be much _faster_ to get into the habit of type `Ctrl`+`Enter` instead when you have placed your cursor in a code cell. This is also how to turn a Markdown cell back into display text.
+
+:::
+
+# Python Variables
+
+::: {.callout-note}
+### Connections
+
+ This is a short recap of materials covered in this week's video on [Python: the Basics](https://jreades.github.io/fsds/sessions/week2.html#lectures) as well as Code Camp's [The Basics](https://jreades.github.io/code-camp/lessons/The_Basics.html)
+
+:::
+
+## Variables Names
+
+::: {.callout-note}
+### Look closer!
+
+ Pay attention to the *colour* of the code, while it might be subtle (a single character in a different colour), it is giving you clues as to where problems might be found because it means the Python 'interpreter' is reading what you wrote differently from how you *probably* meant it...
+
+:::
+    
+_Some_ of the lines of code below are valid Python, but others _may_ have a problem that will cause Python to generate an error. Each error can be fixed by changing _one_ character. See if you can work out which ones you need to fix **before running the code**:
+
+::: {.qna}
+
+#### Question
+
+```python
+Pi = 3.14159      # Valid Python
+pi = 3.14159      # ??
+3pi = 3.14159*3   # ??
+pi_2 = 3.14159**2 # ??
+pi^2 = 3.14159**2 # ??
+my radius = 5     # ??
+My_Radius = 5     # ??
+class = 5         # ??
+```
+
+#### Answer
+
+```{python}
+Pi = 3.14159      # Valid Python
+pi = 3.14159      # Valid Python
+pi3 = 3.14159*3   # Invalid, variable starts with a number
+pi_2 = 3.14159**2 # Valid Python
+pi2 = 3.14159**2  # Invalid, 'hat' character in variable name
+my_radius = 5     # Invalid, space in variable name
+My_Radius = 5     # Valid Python
+mclass = 5        # Invalid, reserved word
+```
+
+:::
+
+## Variable Types
+
+**Before running the code** below, work out what the output will be for _each_ of the `print` commands below when the code is executed. Write them as comments on the same line as the code (after the `#`, see example).
+
+::: {.qna}
+
+#### Question
+
+```python
+x = '2'
+y = z = 2
+
+print(y * z)    # 4
+print(x * y)    # ??
+print(x + x)    # ??
+print((y+z)**z) # ??
+print(y/(y+z))  # ??
+
+print( type(x * y) )    # ??
+print( type(y * z) )    # ??
+print( type((y+z)**z) ) # ??
+print( type(y/(y+z)) )  # ??
+```
+
+#### Answer
+
+```{python}
+x = '2'
+y = z = 2
+
+print(y * z)    # 4
+print(x * y)    # ??
+print(x + x)    # ??
+print((y+z)**z) # ??
+print(y/(y+z))  # ??
+
+print( type(x * y) )    # ??
+print( type(y * z) )    # ??
+print( type((y+z)**z) ) # ??
+print( type(y/(y+z)) )  # ??
+```
+
+:::
+
+## Assignment
+
+**Before running the code**, work out what the values of `x`, `y` and `z` will be after every line of code in the block has been executed.
+
+::: {.qna}
+
+#### Question
+
+```python
+x = 12
+y = 10
+
+z = x + y # ??
+x = x + y # ??
+y = z + y # ??
+
+# print(x)
+# ??
+# ??
+```
+
+#### Answer
+
+```{python}
+x = 12
+y = 10
+
+z = x + y
+x = x + y
+y = z + y
+
+print(x)
+print(y)
+print(z)
+```
+
+:::
+
+Once you have worked out what you think `x`, `y` and `z` are, add `print(...)` statements to the code above to check your answers!
+
+Make sure you understand the results you find. **Ask someone if you need help to understand.**
+
+## Operators & Precedence
+
+**Before running the code**, work out what the values of `x`, `y` and `z` will be after every line of code in the block has been executed. Feel free to use a calculator.
+
+::: {.callout-tip}
+
+ This question is about what operations (i.e. multiplication, division, powers, etc.) are done *first* based on the type of operation and the presence of parentheses... it's the same as it would be for a maths problem!
+ 
+:::
+
+::: {.qna}
+
+#### Question
+
+```python
+x = 1 + (2 * 3) / 4
+y = (1 + 2) * (3 / 4)
+z = 1 + 2 * (3 / 4)
+
+print(x) # x is 
+print(y) # y is 
+print(z) # z is 
+```
+
+#### Answer
+
+```{python}
+x = 1 + (2 * 3) / 4
+y = (1 + 2) * (3 / 4)
+z = 1 + 2 * (3 / 4)
+
+print(x) # x is 
+print(y) # y is 
+print(z) # z is 
+```
+
+:::
+
+Once you have calculated what you think `x`, `y` and `z` are, run the code to check.
+
+## Test Your Operator Knowledge
+
+Now let's look at some of the stranger operators. Many of these can be very useful in more complex code but can seem a little pointless now.
+
+**Work out what operator should replace the `??`** in each of the lines of code below to produce the output I've shown in the comments. I've mixed in ones you have seen above with ones that we've not seen before.
+
+::: {.qna}
+
+#### Question
+
+```python
+x = 10
+y = 3
+
+print( x ?? y ) # 1
+print( x ?? y ) # 13
+print( x ?? y ) # False
+print( x ?? y ) # 1000
+print( x ?? y ) # 7
+print( x ?? y ) # 3
+```
+
+#### Answer
+
+```{python}
+x = 10
+y = 3
+
+print( x % y ) # 1
+print( x + y ) # 13
+print( x == y ) # False
+print( x ** y ) # 1000
+print( x - y ) # 7
+print( x // y ) # 3
+```
+
+:::
+
+## Applying What We've Learned
+
+Now we are going to take what we've learned and apply it in a more 'abstract' way: how do we translate some well-known mathematical formulae _into code_? In particular, I'm interested in the formula for the volume of a sphere (and this gives me a chance to show that Notebooks can show formulae as well!):
+
+$$
+V = \frac{4}{3}\pi r^{3}
+$$
+
+### Calculate the Volume of a Sphere
+
+So, given a sphere with a **diameter** of 12cm, calculate its volume:
+
+::: {.callout-tip}
+
+I would strongly advise you to Google: `python constant pi` and look for code that will save you having to write down the value of $\pi$.
+
+:::
+
+::: {.qna}
+
+#### Question
+
+```python
+from math import ??
+v = ??
+print(f"{v:0.3f} cm3")
+```
+
+#### Answer
+
+```{python}
+from math import pi
+v = (4/3) * pi * (12/2)**3
+print(f"{v:0.3f}")
+```
+
+:::
+
+I get an answer of `{python} f"{v:0.3f}"`cm$^3$.
+
+### Calculate the Radius of a Sphere
+
+Now, given a sphere of volume 14,137cm$^3$ calculate its radius as a **whole number**. The formula for this can be worked out as:
+
+\begin{align*}
+\frac{3}{4}V &= \pi r^{3} \\
+\frac{3}{4}\frac{V}{\pi} &= r^{3} \\
+(\frac{3}{4}\frac{V}{\pi})^{1/3} &= r
+\end{align*}
+
+If you can't remember how to rearrange formulae this would be a good skill to refresh! 
+
+::: {.callout-tip}
+
+There are three ways to get a "whole number" from a float:
+
+1. When you're starting out, the easiest is to change the variable's `type`
+2. The next step up is to make use of Google to find out if there are ways of *rounding* to the nearest integer
+3. The third step is to change what's visible to the user without altering the actual number
+
+:::
+
+I get an answer of either 14 or 15... can you work out why?
+
+::: {.qna}
+
+#### Question
+
+```python
+from math import pi
+v = 14137
+r = ??
+print(??)
+```
+
+#### Answer
+
+```{python}
+from math import pi
+v = 14137
+r = ((3 * v) / (4 * pi))**(1/3)
+print("1. " + str(int(r)) + " cm")
+print("2. " + str(round(r)) + " cm")
+print("3. " + f"{r:0.0f} cm")
+```
+
+:::
+
+# Python Conditions
+
+::: {.callout-note}
+### Connections
+
+This is a short recap of material covered in Code Camp's [Truth & Conditions](https://jreades.github.io/code-camp/lessons/Boolean_Logic.html) and, to some extent, the [Iteration](https://jreades.github.io/fsds/sessions/week2.html#lectures) lecture.
+
+:::
+
+## Working with Conditions
+
+Use **if, elif, and else** so that you get the following output:
+
+1. When `hours` is 10 or more, then the code prints `At least 10 hours worked!`
+2. When `hours` is exactly 2, then the code prints `Exactly 2 hours worked.`  
+3. When `hours` is 9 or less *but not 2*, then the code prints `Less than 10 hours worked!`
+
+::: {.callout-tip}
+
+### Hint
+
+ You will *also* need to think about the order in which these conditions are tested.
+ 
+:::
+
+::: {.qna}
+
+#### Question
+
+```python
+hours = 2
+
+if hours ??:
+    print(" ")
+elif hours ??:
+    print(" ")
+else:
+    print(" ")
+```
+
+#### Answer
+
+```{python}
+hours=2
+
+if hours == 2:
+    print("Exactly 2 hours worked")
+elif hours < 10:
+    print("Less than 10 hours worked!")
+else:
+    print("At least 10 hours worked!")
+```
+
+:::
+
+## Flow Control
+
+Using the flow chart shown in the image below as a model, write the code to make this condition work. You will need to complete the code such that it produces the following:
+1. When `a = 2` and `b = 2` four lines of output will be written
+2. When `a = 1` and `b = 2` one line of output will be written
+
+![](https://kingsgeocomputation.files.wordpress.com/2016/09/geocompweek2_task3_3.jpg){width=600}
+
+::: {.qna}
+
+#### Question
+
+```python
+a = 1
+b = 1
+
+# <your code here>
+??
+```
+
+#### Answer
+
+```{python}
+a = 1
+b = 1
+
+x = a
+
+if x == b:
+    print("inside 1")
+    print("inside 2")
+    print("inside")
+
+print("after condition")
+```
+
+:::
+
+# Python Logic
+
+::: {.callout-note}
+
+### Connections
+
+ This is a short recap of Code Camp's [Boolean Logic](https://jreades.github.io/code-camp/lessons/Boolean_Logic.html) session and the [Pthon: the Basics](https://jreades.github.io/fsds/sessions/week2.html#lectures) lecture.
+ 
+:::
+
+## It's All Quite Logical...
+
+Before adding a value for `x` and running the code below, try to answer the following questions:
+
+::: {.qna}
+
+#### Question
+
+1. What names are name(s) are printed when `x = 5`? 
+2. What value(s) can `x` be when the names `Joe` and `Aled` are printed? 
+3. What name(s) are printed when `x = -1`?  
+4. Is there any value for which all three names will be printed? 
+
+```python
+x = ??
+
+if x > 0 and x < 5:
+    print("Joe")
+
+if x > 0 or x < 5:
+    print("Aled")
+
+if not(x > 0):
+    print("Sarah")
+```
+
+#### Answer
+
+1. What names are name(s) are printed when `x = 5`? **Answer**: `Aled`
+2. What value(s) can `x` be when the names `Joe` and `Aled` are printed? **Answer**: $x \in [1,4]$
+3. What name(s) are printed when `x = -1`?  **Answer**: `Aled` and `Sarah`
+4. Is there any value for which all three names will be printed? `No`
+
+```{python}
+x = 0
+
+if x > 0 and x < 5:
+    print("Joe")
+
+if x > 0 or x < 5:
+    print("Aled")
+
+if not(x > 0):
+    print("Sarah")
+```
+
+:::
+
+## Logic (Cont'd)
+
+Study the flow chart below.
+
+![](https://kingsgeocomputation.files.wordpress.com/2016/09/geocompweek2_task3_5.jpg){width=600}
+
+::: {.callout-tip}
+
+This will require you to combine logic with one of the operators that we saw earlier. Also note the *new* iterator that we've got here: `range(<start>, <stop>)` to create a `range` of numbers between two other numbers.
+ 
+:::
+
+In the cell below, use the for loop _already set up_ to as a starting point for implementing the flow chart shown above for values of `x` between 0 and 9.
+
+::: {.qna}
+
+#### Question
+
+```python
+for x in range(0,9):
+    #... do something...
+    ??
+```
+
+#### Answer
+
+```{python}
+for x in range(0,9):
+    #... do something...
+    if x%2==0:
+        print("x is even.")
+    else:
+        print("x is odd")
+    print(x)
+```
+
+:::
+
+## 'Nested' Conditionals
+
+Conditional statements can be nested within one another. That is, Python evaluates the first, or 'outer', condition and can then evaluate secondary, or 'inner', conditions. The code below shows an example of this. 
+
+::: {.qna}
+
+#### Question
+
+```python
+x = 5
+y = 4
+
+if x != y:                                 #line 1
+    print("x is not equal to y")
+    
+    if(x > y):                             #line 4
+        print("x is greater than y")
+    
+    else:                                  #line 7
+        print("x is less than y")
+
+else:
+    print("<insert conclusion here>")
+```
+
+#### Answer
+
+```{python}
+x = 2
+y = 3
+
+if x != y:                                 #line 1
+    print("x is not equal to y")
+
+    if(x > y):                             #line 4
+        print("x is greater than y")
+
+    else:                                  #line 7
+        print("x is less than y")
+
+else:
+    print("x is equal to y")
+```
+
+:::
+
+Note how the indentation makes it easier to work out which ‘level’ (outer or inner condition) the code is operating on. In the code above, lines 4 and 7 are at the same indentation meaning that _both will be skipped_ if the initial condition (on line 1) is `False`. 
+
+To check you understand how the code above works:
+
+1. Change `<insert conclusion here>` to a string that explains the condition of `x` and `y`
+2. For `x = 2` and `y = 3`, type what line(s) will be output here: ...
+
+Great! You should now have a pretty good understanding of how conditional and logical operators work. This understanding will be handy in future as we work through other computational concepts.
+
+# Python Lists
+
+::: {.callout-note}
+
+### Connections
+
+ This is a short recap of material covered in the [Lists](https://jreades.github.io/fsds/sessions/week2.html#lectures) lecture and Code Camp's [Lists](https://jreades.github.io/code-camp/lessons/Lists.html) session.
+ 
+:::
+
+## Who's in the List?
+
+Here we are looking to interact with lists in a straightforward way that will help you to understand accessing them using indexes and slices, and searching.
+
+::: {.qna}
+
+#### Question
+
+```python
+cities = ['New York', 'London', 'Beijing', 'Tokyo', 'Delhi']
+
+# Print out London from cities:
+print( ?? )
+
+# Print out Tokyo using *negative* indexing:
+print( ?? )
+
+# Print out Beijing *and* Tokyo using a list slice
+print( ?? )
+
+# Print out London to Delhi using a slice
+print( ?? ) # You could also do cities[1:5] but this way is neater
+
+# Combine positive and negative indexing to print out London, Beijing and Tokyo using a list slice
+print( ?? )
+
+# Print out the position of New York in the list by searching for it (i.e. you can't just type 0)
+print( ?? )
+```
+
+#### Answer
+
+```{python}
+cities = ['New York', 'London', 'Beijing', 'Tokyo', 'Delhi']
+
+# Print out London from cities:
+print( cities[1] )
+
+# Print out Tokyo using *negative* indexing:
+print( cities[-2] )
+
+# Print out Beijing and Tokyo using a list slice
+print( cities[2:4] )
+
+# Print out London to Delhi using a slice
+print( cities[1:] ) # You could also do cities[1:5] but this way is neater
+
+# Combine positive and negative indexing to print out London, Beijing and Tokyo using a list slice
+print( cities[1:-1] )
+
+# Print out the position of New York in the list by searching for it (i.e. you can't just type 0)
+print( cities.index('New York') )
+```
+
+:::
+
+## Manipulating Lists
+
+Let's break a few things...
+
+### Create an IndexError
+
+::: {.qna}
+
+#### Question
+
+```python
+# Cause an 'IndexError: list index out of range' errr
+??
+```
+
+#### Answer
+
+```{{python}}
+cities[7]
+```
+
+:::
+
+### Create a ValueError
+
+::: {.qna}
+
+#### Question
+
+```python
+# Cause a ValueError using the city of Toronto
+??
+```
+
+#### Answer
+
+```{{python}}
+cities.index('Toronto')
+```
+
+:::
+
+### Sort the List
+
+Sort the list *in place* in reverse alphabetical order (i.e. z...a) and then print the sorted list
+
+::: {.qna}
+
+#### Question
+
+```python
+??
+print(cities)
+```
+
+The output from this should be: <code>`{python} sorted(cities, reverse=True)`</code>
+
+#### Answer
+
+```{python}
+# The approach does _not_ sort the original list,
+# it returns a copy of the list that is sorted:
+print(sorted(cities, reverse=True)) # <- what is printed is sorted
+print(cities)                       # <- but the list is not
+
+# This is the 'in place' option
+cities.sort(reverse=True)           # <- list is now sorted
+print(cities)
+```
+
+:::
+
+## Adding/Removing Values
+
+### Inserting into a List
+
+Add the city of Toronto to the list _after_ New York in the *sorted* list.
+
+::: {.qna}
+
+#### Question
+
+```python
+# Just in case you make a mistake...
+cities = ['Tokyo', 'New York', 'London', 'Delhi', 'Beijing']
+
+??
+print(cities)
+```
+
+#### Answer
+
+```{python}
+# Just in case you make a mistake...
+cities = ['Tokyo', 'New York', 'London', 'Delhi', 'Beijing']
+
+cities.insert(2,'Toronto')
+print(cities)
+```
+
+:::
+
+The output should be: <code>`{python} cities`</code>
+
+### Removing from a List
+
+Now *pop* New York from the list *without* specifying its index (i.e. the number `1` should *not* appear in your code). Print out the value that you popped and the print out the cities list to check you've done the right thing...
+
+::: {.qna}
+
+#### Question
+
+```python
+??
+print(p)
+print(cities)
+```
+
+#### Answer
+
+```{python}
+p = cities.pop( cities.index('New York') )
+print(p)
+print(cities)
+```
+
+:::
+
+The output should be: 
+
+- <code>`{python} p`</code>
+- <code>`{python} cities`</code>
+
+### Checking Lists
+
+Finally, how can you check if the city of Moscow is in the list and let the user know if it is or is not?
+
+::: {.qna}
+
+#### Question
+
+```python
+if ??
+    ??
+else:
+    ??
+```
+
+#### Answer
+
+```{python}
+if 'Moscow' in cities:
+    print("Moscow is in the cities list.")
+else:
+    print("Moscow is not in the cities list.")
+```
+
+:::
+
+## You're Done!
+
+This is quite a lot to get through. If you've managed it in under 2 hours then *congratulations*! Either you must have paid a lot of attention when doing Code Camp, or you might want to check in with us as to whether you should really be doing this module...
+
+### No Wait, One More Thing...
+
+You might want to refer to both [The Command Line](https://jreades.github.io/fsds/sessions/week2.html#lectures) and [Getting Stuck into Git](https://jreades.github.io/fsds/sessions/week2.html#lectures) lectures as well as to [The Terminal](https://jreades.github.io/code-camp/lessons/The_Terminal.html) Code Camp session.
+
+You now want to push your completed notebook to your GitHub reposistory. Using the Terminal or Git Bash you need to:
+
+1. Navigate (if you've not got a shell already open there) to `$HOME/Documents/CASA/modules/<your repository>`.
+2. Check the status of your notebooks using `git status` (you should see that `Practical-02-Foundations_1.ipynb has been modified`).
+3. Add this changed notebook to git using `git add  Practical-02-Foundations_1.ipynb`
+4. Commit this changed notebook with a message using `git commit -m "<your message here... but don't use a !>"`
+5. Push this change to GitHub using: `git push`
+
+You should now be able to visit your repository on [GitHub](https://github.com/) and see that your changes are now stored there as well!
+
+::: {.callout-note}
+ 
+ If you are using Docker then you can also save your work as a PDF using: `File` > `Export Notebook As...` (this does not work for notebooks with lots of complex formatting).
+ 
+:::
+
+#### License
+These teaching materials are licensed under a mix of the MIT and CC-BY licenses...

@@ -1,0 +1,445 @@
+---
+format:
+  revealjs:
+    theme: [serif, slides.scss]
+  html:
+    embed-resources: true
+author: "Jon Reades"
+title: "Lists"
+footer: "Lists • Jon Reades"
+highlight-style: github
+code-copy: true
+code-line-numbers: true
+slide-level: 2
+title-slide-attributes:
+  data-background-image: ../img/CASA_Logo_no_text.png
+  data-background-size: cover
+  data-background-position: center
+  data-background-opacity: '0.17'
+logo: ../img/CASA_logo.png
+history: false
+css: slides.css
+---
+
+## What's in a List?
+
+In the same way that a paper shopping list holds many 'types' of shopping in one place, a Python list holds many 'types' of data in one place.
+
+```python
+myList = [1, 3, 5, 7]     # homogenous list
+myList = [1, "dog", 7.01] # heterogenous list 
+myList = []               # empty list
+```
+
+Python lists are *always* recognisable by their "square brackets": `[...]`
+
+## What's in a List? (Part 2)
+
+In fact, when I say lists can hold **many** types of data, I should have said that they can hold **any** type of data:
+
+```python
+x = 3
+y = "Foo"
+z = ["A", "list", 42]
+
+a = [x, y, z] # Holds x, y, *and* list z
+```
+The output of `print(a)` is:
+```python
+[3, 'Foo', ['A', 'list', 42]]
+```
+
+::: {.notes}
+
+We're going to come back to this a _lot_ later, but for now notice that a list can hold lists!
+
+:::
+
+# Accessing Lists
+
+::: {.notes}
+
+Why is a Python list like a lift in Europe, and *not* like an elevator in America?
+
+:::
+
+## Using List Indexes
+
+```python
+geographers = ["Massey", "Harvey", "Rose"]
+```
+
+Lists are 'indexed' _numerically_ from the **zero**-th element:
+
+| geographers [ | 0      | 1      | 2      | ]  |
+| :-----------: | :----: | :----: | :----: | :- | 
+| | Massey ^[https://en.wikipedia.org/wiki/Doreen_Massey_(geographer)] | Harvey ^[https://en.wikipedia.org/wiki/David_Harvey] | Rose ^[https://en.wikipedia.org/wiki/Gillian_Rose_(geographer)] | |
+
+```python
+print(geographers[1]) # Harvey
+print(geographers[2]) # Rose
+print(geographers[3]) # Error: List index out of range
+```
+
+
+::: {.notes}
+
+And notice this error: Python _tells_ you waht the problem is. The issue is understanding what the message _means_ if you don't know the vocabulary.
+
+:::
+
+## Interpolation 
+
+We can also use **variables** as list indexes:
+
+```python
+geographers = ["Massey", "Harvey", "Rose"]
+i = 0
+print(geographers[i]) # Massey
+```
+
+**Anything** that evaluates (i.e. resolves) to a number can be used as an index:
+
+```python
+i = 1
+print(geographers[i+1]) # Rose
+print(geographers[ (i-2+1)*2 ]) # Massey
+```
+
+
+## Countdown!
+
+We can 'count' backwards from the *end* of the list using *negative* numbers:
+
+```python
+geographers = ["Massey", "Harvey", "Rose"]
+print( geographers[-1] ) # Rose
+print( geographers[-2] ) # Harvey
+```
+
+## Does Not Compute!
+
+Errors can be scary... but informative!
+
+```python
+geographers = ["Massey", "Harvey", "Rose"]
+print( geographers[4] )
+```
+
+> IndexError: **list index out of range**
+
+And then try:
+
+```python
+print( geographers[1.25] )
+```
+> TypeError: **list indices must be integers or slices, not float**
+
+Notice that Python gives us important hints about the source of the problem!
+
+
+## Slicing & Dicing Lists
+
+You can access more than one element at a time using a *slice*:
+
+```python
+geographers = ["Massey", "Harvey", "Rose"]
+print( geographers[0:2] ) # ['Massey','Harvey']
+print( geographers[1:] )  # ['Harvey', 'Rose']
+print( geographers[-2:] ) # ['Harvey', 'Rose']
+```
+
+The syntax for a slice is: `list[ <start_idx>, <end_idx> ]`, but `end_idx` is *not* included in the slice. And notice:
+
+```python
+print( geographers[1:2] ) # ['Harvey']
+print( geographers[1] )   #   Harvey
+```
+
+::: {.notes}
+
+It's really subtle, but notice that a slice *always* returns a list, even if it's just a list containing one thing. So `geographers[1]=='Harvey'` but `geographers[1:2]==['Harvey']`. **Not** the same thing!
+
+:::
+
+## Test Yourself
+
+
+What do you think this will produce?
+
+```python
+geographers = ["Massey", "Harvey", "Rose"]
+i = 2
+print( geographers[ (i-3)**2-4:-1 ] )
+```
+
+See if you can work out in your head before typing it!
+
+
+# Finding Things in Lists
+
+## Where's Wally?
+
+`list.index(...)` tells you **where** something can be found in a list:
+
+```python
+geographers = ["Massey", "Harvey", "Rose"]
+geographers.index("Harvey") # 1
+geographers.index("Massey") # 0
+```
+
+Combining ideas that will become very useful later:
+
+```python
+print(geographers[ geographers.index("Massey") ])
+```
+
+What do you think this prints? Why does it work at *all*?
+
+
+::: {.notes}
+
+This last example looks a little strange, but what if I had a separate list with *first* names, or Wikipedia links, or other information about these geographers? Because `list.index(x)` returns an integer we can use it *as* an index for accessing *another* list.
+
+:::
+
+## Where's Wally (Part 2)
+
+`list.index(...)` has one flaw:
+```python
+geographers = ["Massey", "Harvey", "Rose"]
+geographers.index('Batty')
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ValueError: 'Batty' is not in list
+```
+If 'throwing an error' is overkill, then here's another way:
+```python
+if 'Batty' in geographers:
+    print("Found Mike!")
+else:
+    print("Not a geographer!")
+```
+
+
+## Sorting
+
+
+We can sort lists in alpha-numerical order:
+
+```python 
+geographers = ["Massey", "Harvey", "Rose"]
+geographers.sort()
+print(geographers) # ['Harvey', 'Massey', 'Rose']
+```
+
+And we can reverse-sort too:
+
+```python
+geographers.sort(reverse=True)
+print(geographers) # ['Rose', 'Massey', 'Harvey']
+```
+
+
+# Changing Lists
+
+## Lists are Mutable
+
+Mutable == "liable or subject to change or alteration"
+
+Let's replace Rose with Jefferson^[[the-women-cartographers-who-mapped-art-and-science-in-the-20th-century](https://www.bloomberg.com/news/articles/2016-03-25/the-women-cartographers-who-mapped-art-and-science-in-the-20th-century)] in the list.
+
+```python
+geographers = ["Massey", "Harvey", "Rose"]
+geographers[2] = "Jefferson"
+print(geographers) # ['Massey','Harvey','Jefferson']
+```
+
+
+
+
+## Adding/Removing Items
+
+When we `insert()` items into, or `pop()` items out of, a list we normally need to specify the index. 
+
+```python
+geographers = ["Massey", "Harvey", "Jefferson"]
+geographers.insert(0,"von Humboldt")
+print(geographers) 
+# ['von Humboldt', 'Massey', 'Harvey', 'Jefferson']
+geographers.insert(3,"von Humboldt")
+print(geographers) 
+# ['von Humboldt', 'Massey', 'Harvey', 'von Humboldt', 'Jefferson']
+```
+
+And in 'reverse':
+
+```python
+geographers.pop(3) # 'von Humboldt'
+print(geographers) 
+# ['von Humboldt', 'Massey', 'Harvey', 'Jefferson']
+```
+
+::: {.notes}
+
+Notice also that `insert` modifies the list and returns *nothing*, while `pop` modifies the list and returns the value that you 'popped'.
+
+:::
+
+## Test Yourself
+
+
+There are *two* ways to remove David Harvey from the list of geographers _without_ writing this:
+
+```python
+geographers = ['von Humboldt', 'Massey', 'Harvey', 'Jefferson']
+geographers.pop(2) # Do not use this answer!
+```
+
+1. You can *adapt* an [example we saw earlier](#finding-things-in-lists) in 'Finding Things'.
+2. You can [use Google](https://letmegooglethat.com/?q=how+to+remove+an+item+from+a+list+in+python) to see if there are list operations we've not covered. 
+
+
+::: {.notes}
+
+_Hints:_ `remove` and `del` are both options for 2.
+
+:::
+
+# Combining Lists
+
+## Concatenating
+
+We combine lists using addition:
+
+```python
+female_geographers = ['Rose','Valentine','Massey','Jefferson']
+male_geographers = ['Von Humboldt','Harvey','Hägerstrand']
+all_geographers = female_geographers + male_geographers
+print(all_geographers)    # ['Rose', ..., 'Hägerstrand']
+print(all_geographers[0]) # Rose
+```
+
+## Appending
+
+
+Note that this is *not* the same!
+
+```python 
+female_geographers = ['Rose','Valentine','Massey','Jefferson']
+male_geographers   = ['Von Humboldt','Harvey','Hägerstrand']
+all_geographers = []
+all_geographers.append(female_geographers)
+ all_geographers.append(male_geographers)
+print(all_geographers) # [['Rose',...], [..., 'Hägerstrand']]
+print(all_geographers[0]) # ['Rose', ..., 'Jefferson']
+```
+
+What do you think has happened here?
+
+
+## Test Yourself
+
+
+```python
+male_geographers = ['Von Humboldt','Harvey','Hägerstrand']
+male_geographers.append('Batty')
+print(male_geographers)
+```
+
+What do you think this will produce? And why do you think that `append` *appears* to do something different in these two examples?
+
+
+# Finally...
+
+## How many geographers do I know?
+
+
+`len(...)` gives you the **len**gth of 'countable' things:
+
+```python
+geographers = ["Massey","Harvey","Rose"]
+len(geographers) # 3
+```
+
+But...
+
+```python
+female_geographers = ['Rose','Valentine','Massey','Jefferson']
+male_geographers = ['Von Humboldt','Harvey','Hägerstrand']
+all_geographers = []
+all_geographers.append(female_geographers)
+all_geographers.append(male_geographers)
+print( len(all_geographers) ) # 2
+```
+
+## Who's on the List?
+
+
+```python
+geographers = ["Massey","Harvey","Rose"]
+print("Massey" in geographers) # True
+print("Batty" in geographers)  # False
+```
+
+But... 
+
+```python
+geographers.index('Batty')
+```
+
+is a `ValueError` that causes your Python code to fail.
+
+> Why might you choose one of these over the other? 
+
+
+## Test Yourself
+
+How would you change this code:
+```python
+geographers = ["Massey","Harvey","Rose"]
+print("Massey" in geographers)
+print("Batty" in geographers)
+```
+
+So that it prints:
+```python
+False
+True
+```
+
+You will have seen the answer to this in Code Camp, but you can also [Google it](https://letmegooglethat.com/?q=find+out+if+an+item+is+not+in+a+list+python)<sup>&dagger;</sup>! 
+
+::: {.aside}
+&dagger; I'd suggest looking *first* at Stack Overflow answers in most cases.
+:::
+
+## Tuples: Not Actually a List
+
+Because they come up a *lot* in geo-data, it's worth knowing about **tuples**, which are basically *immutable* lists:
+
+```python
+t = (52.124021, -0.0012012)
+print(type(t)) # <class 'tuple'>
+print(t)       # (52.124021, -0.0012012)
+print(t[0])    # 52.124021
+```
+
+But this... 
+```python
+t[0] = 25.1203210
+```
+will throw an error:
+
+> *TypeError*: 'tuple' object does not support item assignment
+
+
+## Resources {.smaller}
+
+
+- [Lists in Python](https://www.linkedin.com/learning/python-quick-start/lists-in-python)
+- [Tuples in Python](https://www.linkedin.com/learning/python-quick-start/tuples-in-python)
+- [Range and lists](https://www.linkedin.com/learning/learning-the-python-3-standard-library/range-and-list)
+- [Sequence types](https://www.linkedin.com/learning/python-essential-training-2/sequence-types)
+- [The Complete Guide to Lists](https://towardsdatascience.com/a-complete-guide-to-lists-in-python-d049cf3760d4) (by a CASA alum!)
+

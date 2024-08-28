@@ -1,72 +1,76 @@
 ---
-title: "Grouping Data"
+title: "Presenting Data"
 ---
 
 ## Overview
 
-This week we will be looking at various ways of grouping data, whether it is by variable or by algorithm. So we begin by covering how data can be aggregated in Python using Pandas before turning to the practical challenges of classification (labeled data) and clustering (unlabeled data). 
-
-We hare now 'completing' the pipeline begun in Week 5 using the concepts introduced in Weeks 1–4, but if you remember your '[epicycles of analysis](../lectures/6.3-EDA.qmd#epicyclic-feedback)' then you'll realise that this is, at best, a first pass through the data science process and there are *multiple* places where insights derived from the practicals (on outliers/problematic records, on data quality issues, on data selection, etc.) could be fed *back* through the pipeline to adjust and improve the analytical outputs.
-
-We will also be shifting our focus in the live session to the final parts of the [group submission](../assessments/group.qmd), but you should *also* be looking at how this module connects and integrates ideas covered in CASA0001 (UST), CASA0005 (GIS), and CASA0007 (QM). So there will be only a minimal live-coding session in order to leave as much time as possible for the groups to meet and start working on their final projects.
+This week is focussed on formalising our understanding of two things that we've already touched on at multiple points throughout the term: 1) how to link data sets; 2) how to tune `matplotlib` plots to 'publication quality' by tweaking fine-grained elements. So this week begins by looking at how to join data together in both spatial and non-spatial contexts, before facing off with the monster that most Python visualisation libraries ultimately depend on: `matplotlib`. As a tool it is both incredibly powerful and intensely *counter*-intuitive if you are used to R's `ggplot`. We will also be looking more widely to the future of quantitative methods, the potential of a *geographic* data science, and the ways in which we can move between spatial and non-spatial paradigms of analysis within the same piece of work.
 
 ::: {.callout-important}
-## Learning Objectives
+## Learning Outcomes
 
-1. An understanding of the differences between aggregation, classification, and clustering.
-2. An appreciation of the utility of deriving grouped variables and proxies from raw data.
-3. An appreciation of how clustering as *part of an analytical pipeline* differs from the material covered in CASA0007 and so enhances our understanding of 'paradigms' in CASA0001.
-4. A general appreciation of how different clustering algorithms work and how this differs from classifcation.
-:::
+2. You have broadened your thinking about the purpose of data visualisation.
+3. You are working intensively on the [group project](../assessments/group.qmd).
+
+::: 
 
 ## Lectures
 
-You should, by now, be familiar with the concept of how to cluster data from the QM module (CASA0007), so this week is actually focussed on how to move beyond *k*-means. The point is to contextualise these approaches as part of a data science 'pipeline' and to contrast to them with the more theoretical aspects covered elsewhere. We are less interested in the *mathematical* and *technical* aspects, and more interested in how one might go about selecting the *appropriate* algorithm for a particular problem.
+You are *strongly* advised to watch these videos on linking data and spatial data, as well how to group data within pandas; *however*, you will not be asked to present any of these because our attention is now on the final assessments. As well, you should by now be familiar with the concept of how to join data from the GIS module ([CASA0005](https://andrewmaclachlan.github.io/CASA0005repo/)), so this focusses on two things: 1) how to *do* this in Python; and 2) how to approach this process with large or mismatched data sets.
 
 | Session | Video | Presentation | 
 | :------ | :---- | :----------- | 
-| Grouping Data | [Video]({{< var vids.grouping >}}) | [Slides](../lectures/9.1-Grouping_Data.qmd) | 
-| Classification | [Video]({{< var vids.classification >}}) | [Slides](../lectures/9.2-Classification.qmd) | 
-| Clustering | [Video]({{< var vids.clustering >}}) | [Slides](../lectures/9.3-Clustering.qmd) | 
-| Clustering and Geography | [Video]({{< var vids.clustering_geo >}}) | [Slides](../lectures/9.4-Clustering_and_Geography.qmd) | 
+| Data Visualisation | [Video]({{< var vids.visualising >}}) | [Slides](../lectures/10.3-Visualising_Data.qmd) | 
 
 ## Other Prep
+
+- Come to class prepared to briefly present/discuss:
+  - @wolf:2021 <[URL](https://journals.sagepub.com/doi/10.1177/0309132520924722)>
+  - @shapiro:2017 <[URL](https://medium.com/topos-ai/rethinking-distance-in-new-york-city-d17212d24919)>
+  - @singleton2019 <[DOI](https://doi.org/10.1111/gean.12194)>
+- Complete the [short Moodle quiz]({{< var quiz.week9 >}}) associated with this week's activities.
+
+You may also want to look at the following reports / profiles with a view to thinking about employability and how the skills acquired in this module can be applied beyond the end of your MSc:
+
+- Geospatial Skills Report <[URL](https://www.gov.uk/government/publications/demand-for-geospatial-skills-report-for-the-geospatial-commission)>
+- AAG Profile of Nicolas Saravia <[URL](https://www.aag.org/profile/nicolas-saravia/)>
+- @wolf:2021 <[URL](https://doi.org/10.1177%2F0309132520924722)>
 
 ::: {.callout-tip}
 
 ## Connections
 
-We're trying to move between technical and critical representations of data and methods -- showing (again) how all data analysis represents a series of *choices* about what *matters*. Ultimately, it's up to us whether we make these consciously or unconsciously: being a 'critical' (spatial) data scientist positions us to question the data constructively to ensure that it is 'fit for purpose' -- that it is appropriate and adequate to the the processes or behaviours that we wish to study -- be it for profit, policy, and public engagement. 
+While I expect most of you will be focussed on assessments, you should *seriously* consider returning to these readings over the term break as they will help you to *reflect* on what you've learned this term -- in this module and across the programme as a whole -- in terms of the direction of the field, the opportunities in industry, and the kinds of work that people with (sptial) data science skills can do.
 
 :::
 
-- You should come to class prepared to present/discuss:
-  - @dignazio:2020, chap. 3, *On Rational, Scientific, Objective Viewpoints from Mythical, Imaginary, Impossible Standpoints* <[URL](https://ucl.primo.exlibrisgroup.com/discovery/fulldisplay?docid=alma9931206723604761&context=L&vid=44UCL_INST:UCL_VU2&lang=en&search_scope=UCLLibraryCatalogue&adaptor=Local%20Search%20Engine&isFrbr=true&tab=UCLLibraryCatalogue&query=any,contains,D%5C%27Ignazio%20Data%20Feminism&sortby=date_d&facet=frbrgroupid,include,9041340239229546206&offset=0)>
-  - @badger:2019 <[URL](https://www.nytimes.com/interactive/2019/04/27/upshot/diversity-housing-maps-raleigh-gentrification.html)>
-  - @Massey:1996 <[URL](https://www.tandfonline.com/doi/abs/10.1080/14702549608554458)>
-
-
 ## Practical
 
-The previous week has set up nicely for approaching aggregation, classification, and clustering as functions of the (transformed and reduced) data space. With this, you have essentially covered a full data science analytical pipeline from start (setting up) to finish (cluster/classification analysis) and can hopefully see how these pieces fit together to support one another, and how there is no such thing as a 'right' way to approach an analysis... but that there *are* better and worse ways. 
-
-Note that, while you should be trying to advance your understanding of clustering and classification in Python, these final practicals are *also* a very good time to be working on your [group project](../assessments/group.qmd). So look at whether the techniques covered this week can help (or distract) you on this work and adjust the time given accordingly.
+The practical will lead you through the application of grouping and aggregation functions in pandas, and the fine-tuning of data visualisations in Matplotlib/Seaborn. In many ways, this should be seen (bar the aggregation) as largely a recap of material encountered in previous sessions. However, you should see this as an important step in the production of outputs and analyses needed for the final project. That said, you would be better off spending time on the *substance* of the report first and only turning to the fine-tuning of the visualisations if time permits.
 
 ::: {.callout-tip}
 ## Connections
 
 The practical focusses on:
 
-- How to group and aggregate data.
-- The connections between classification and clustering.
-- The use of classification as a predictive process with labeled data.
-- The choice of *k* in *k*-means and extraction of representative centroids.
-- The use of alternative clustering algorithms (DBSCAN, OPTICS, Self-Organising Maps, and ADBSCAN).
+- Linking data as part of a visualisation process.
+- Automating the production of map outputs in Python to create an 'atlas'.
+- Thinking about proxies; e.g. why would you find ppsqm more/less useful than price? what are you *really* measuring? 
+
 :::
 
 To access the practical:
 
-1. [Preview on GitHub]({{< var module.prac > >}}practicals/Practical-09-Grouping_Data.ipynb)
-2. [Download the Notebook]({{< var module.raw >}}practicals/Practical-09-Grouping_Data.ipynb)
+```{python}
+#| output: asis
+#| echo: false
+#| code-fold: false
 
-## References
+prac = "Practical-09-Presenting_Data"
+
+print("1. [Preview]({{< var repo.prac >}}/practicals/" + prac + ".{{< var repo.ext >}})")
+print("2. [Download]({{< var repo.raw >}}/practicals/" + prac + ".ipynb)")
+
+```
+
+## References 
