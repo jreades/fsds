@@ -7,14 +7,27 @@ print(f"Tidying up {render_dir}")
 for root, dirs, files in os.walk(render_dir):
     for filename in files:
         print(f"File: {filename}", end=" ")
-        if not (filename.startswith("Practical-") and filename.startswith(".pdf")): 
-            print("x removed")
-            os.remove(os.path.join(root, filename))
+        if not (filename.startswith("Practical-") and filename.endswith(".pdf")): 
+            try:
+                os.remove(os.path.join(root, filename))
+                print("x removed")
+            except FileNotFoundError:
+                print(f"! unable to remove {dirname}")
         else:
+            os.rename(os.path.join(root, filename), os.path.join(render_dir, filename))
             print("- retained")
     for dirname in dirs:
         print(f"Dir: {dirname}", end=" ")
         if not (dirname == 'practicals'):
-            os.remove(os.path.join(root, filename))
+            try:
+                os.rmdir(os.path.join(root, dirname))
+                print("x removed")
+            except FileNotFoundError:
+                print(f"! unable to remove {dirname}")
+            except PermissionError:
+                print(f"! permission error on {dirname}")
+            except OSError:
+                print(f"! os error on {dirname}")
+
         else:
             print("- retained")
