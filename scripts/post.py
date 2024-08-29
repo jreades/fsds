@@ -1,10 +1,7 @@
 print("~" * 50)
-msg = """
-Don't forget to render the practicals!
-> quarto render practicals --to ipynb
-> quarto render ipynb practicals --to pdf
-> git add practicals && git commit -m "Updated practicals" && git push
-Otherwise these won't be updated.
-"""
+msg = """Don't forget to render the site properly:
+> quarto render --profile web
+> quarto render --profile pracs
+Otherwise these won't be updated. Note that practials are sent to `_pracs` while web content is sent to `_site`."""
 print(msg)
 print("~" * 50)

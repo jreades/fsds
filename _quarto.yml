@@ -5,13 +5,12 @@ project:
   post-render:
     - scripts/post.py
   type: website
-  output-dir: docs
+  output-dir: _site
   preview:
     port: 4200
   render:
     - "*.qmd"
     - "!bib/"
-    - "!slideas/"
     - "!data/"
     - "!practicals/"
   resources:
@@ -21,117 +20,10 @@ project:
 execute:
   freeze: auto
 
-website:
-  title: "Foundations of Spatial Data Science"
-  image: "img/CASA_Logo_no_text.png"
-  repo-url: https://github.com/jreades/fsds/
-  repo-actions: [issue]
-  favicon: "/img/favicon.ico"
-  open-graph: 
-    locale: en_GB
-    site-name: Foundations
-  page-navigation: true
-  reader-mode: true
-  page-footer: 
-    left: "[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 2022, Jon Reades"
-    center: "![](/img/favicon-16x16.png){.height:10px} Foundations of Spatial Data Science"
-    right: 
-      - icon: github
-        href: https://github.com/jreades/fsds
-      - icon: twitter 
-        href: https://twitter.com/jreades
-  navbar:
-    background: primary
-    search: true
-    logo: "/img/CASA_Logo_no_text.png"
-    collapse: true
-    collapse-below: md
-    left:
-      - text: "Welcome"
-        href: index.qmd
-      - text: "Setup"
-        href: setup/index.qmd
-      - sidebar:schedule
-      - sidebar:assessments
-      - text: "Getting Help"
-        href: help.qmd
-
-  sidebar:
-    - id: assessments
-      title: "Assessments"
-      contents:
-        - text: "Overview"
-          href: assessments/index.qmd
-        - section: "Elements"
-          contents:
-          - assessments/exam.qmd
-          - section: "Group Work"
-            contents:
-              - assessments/group.qmd
-              - assessments/code.qmd
-              - assessments/conflicts.qmd
-              - assessments/briefing.qmd
-              - assessments/models.qmd
-              - assessments/restrictions.qmd
-          - assessments/peer.qmd
-      
-    - id: schedule
-      title: "Week-by-Week"
-      contents:
-        - text: "Overview"
-          href: sessions/index.qmd
-        - section: "Part 1: Foundations"
-          contents:
-            - text: "1. Setting Up"
-              href: sessions/week1.qmd
-            - text: "2. Foundations (Pt.1)"
-              href: sessions/week2.qmd
-            - text: "3. Foundations (Pt.2)"
-              href: sessions/week3.qmd
-            - text: "4. Objects"
-              href: sessions/week4.qmd
-        - section: "Part 2: Data"
-          contents:
-          - text: "5. Numeric Data"
-            href: sessions/week5.qmd
-          - text: "Reading Week"
-            href: sessions/reading_week.qmd
-          - text: "6. Spatial Data"
-            href: sessions/week6.qmd
-          - text: "7. Textual Data"
-            href: sessions/week7.qmd
-        - section: "Part 3: Analysis"
-          contents:
-          - text: "8. Selecting Data" # Parquet + SQL + Linking data
-            href: sessions/week8.qmd
-          - text: "9. Presenting Data"
-            href: sessions/week9.qmd # Tables in Quarto + Matplotlib
-          - text: "10. Wrap Up + Lookahead"
-            href: sessions/week10.qmd
-        - section: "Part 4: Bonus"
-          contents:
-          - text: "11. Dimensions in Data"
-            href: sessions/week11.qmd
-          - text: "12. Grouping Data"
-            href: sessions/week12.qmd
-        - text: "Bibliography"
-          href: references.qmd
+metadata-files:
+  - _website.yml
 
 bibliography: ref/Readings.bib
 csl: ref/chicago-author-date.csl
 
 highlight-style: pygments
-format:
-  html:
-    theme: 
-      - minty
-      - css/web.scss
-    code-copy: true
-    code-link: true
-    #cover-image: cover.png
-    toc: true
-    toc-title: "On this page"
-    toc-depth: 2
-    toc_float: 
-      collapsed: false
-      smooth_scroll: true
