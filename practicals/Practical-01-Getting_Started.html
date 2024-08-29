@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Practical 1: Getting Started – Foundations of Spatial Data Science</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="..//img/favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<meta property="og:title" content="Practical 1: Getting Started – Foundations of Spatial Data Science">
+<meta property="og:description" content="Getting to grips with Jupyter, Git and Markdown">
+<meta property="og:image" content="https://jreades.github.io/fsds/practicals/img/CASA_Logo_no_text.png">
+<meta property="og:site_name" content="Foundations">
+<meta property="og:locale" content="en_GB">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-md " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../img/CASA_Logo_no_text.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Foundations of Spatial Data Science</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Welcome</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../setup/index.html"> 
+<span class="menu-text">Setup</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-week-by-week" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Week-by-Week</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-week-by-week">    
+        <li>
+    <a class="dropdown-item" href="../sessions/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Part 1: Foundations</li>
+        <li>
+    <a class="dropdown-item" href="../sessions/week1.html">
+ <span class="dropdown-text">1. Setting Up</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week2.html">
+ <span class="dropdown-text">2. Foundations (Pt.1)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week3.html">
+ <span class="dropdown-text">3. Foundations (Pt.2)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week4.html">
+ <span class="dropdown-text">4. Objects</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Part 2: Data</li>
+        <li>
+    <a class="dropdown-item" href="../sessions/week5.html">
+ <span class="dropdown-text">5. Numeric Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/reading_week.html">
+ <span class="dropdown-text">Reading Week</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week6.html">
+ <span class="dropdown-text">6. Spatial Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week7.html">
+ <span class="dropdown-text">7. Textual Data</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Part 3: Analysis</li>
+        <li>
+    <a class="dropdown-item" href="../sessions/week8.html">
+ <span class="dropdown-text">8. Selecting Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week9.html">
+ <span class="dropdown-text">9. Presenting Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week10.html">
+ <span class="dropdown-text">10. Wrap Up + Lookahead</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Part 4: Bonus</li>
+        <li>
+    <a class="dropdown-item" href="../sessions/week11.html">
+ <span class="dropdown-text">11. Dimensions in Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week12.html">
+ <span class="dropdown-text">12. Grouping Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../references.html">
+ <span class="dropdown-text">Bibliography</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-assessments" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Assessments</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-assessments">    
+        <li>
+    <a class="dropdown-item" href="../assessments/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Elements</li>
+        <li>
+    <a class="dropdown-item" href="../assessments/exam.html">
+ <span class="dropdown-text">Timed Open Book Exam</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../assessments/group.html">
+ <span class="dropdown-text">Group Work</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../assessments/peer.html">
+ <span class="dropdown-text">Group Self-Evaluation</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../help.html"> 
+<span class="menu-text">Getting Help</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#running-docker" id="toc-running-docker" class="nav-link active" data-scroll-target="#running-docker">Running Docker</a></li>
+  <li><a href="#organising-your-workspace" id="toc-organising-your-workspace" class="nav-link" data-scroll-target="#organising-your-workspace">Organising Your Workspace</a></li>
+  <li><a href="#setting-up-github" id="toc-setting-up-github" class="nav-link" data-scroll-target="#setting-up-github">Setting Up GitHub</a></li>
+  <li><a href="#updating-the-.gitignore-file" id="toc-updating-the-.gitignore-file" class="nav-link" data-scroll-target="#updating-the-.gitignore-file">Updating the .gitignore File</a></li>
+  <li><a href="#creating-your-first-remote-file" id="toc-creating-your-first-remote-file" class="nav-link" data-scroll-target="#creating-your-first-remote-file">Creating Your First Remote File</a></li>
+  <li><a href="#setting-up-git-locally" id="toc-setting-up-git-locally" class="nav-link" data-scroll-target="#setting-up-git-locally">Setting Up Git Locally</a></li>
+  <li><a href="#setting-up-a-github-web-site" id="toc-setting-up-a-github-web-site" class="nav-link" data-scroll-target="#setting-up-a-github-web-site">Setting up a GitHub Web Site</a></li>
+  <li><a href="#other-ways-of-using-docker" id="toc-other-ways-of-using-docker" class="nav-link" data-scroll-target="#other-ways-of-using-docker">Other Ways of Using Docker</a></li>
+  <li><a href="#answers" id="toc-answers" class="nav-link" data-scroll-target="#answers">Answers</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jreades/fsds/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Practical-01-Getting_Started.ipynb" download="Practical-01-Getting_Started.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li><li><a href="Practical-01-Getting_Started.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Practical 1: Getting Started</h1>
+<p class="subtitle lead">Getting to grips with Jupyter, Git and Markdown</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><img src="../img/casa_logo.jpg" class="img-fluid" width="100"></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 32%">
+<col style="width: 20%">
+<col style="width: 27%">
+<col style="width: 5%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Complete</th>
+<th style="text-align: left;">Part 1: Foundations</th>
+<th style="text-align: left;">Part 2: Data</th>
+<th style="text-align: left;">Part 3: Analysis</th>
+<th style="text-align: right;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">0%</td>
+<td style="text-align: left;">▓░░░░░░░</td>
+<td style="text-align: left;">░░░░░░</td>
+<td style="text-align: left;">░░░░░░</td>
+<td style="text-align: right;">1/10</td>
+</tr>
+</tbody>
+</table>
+<p>This week’s practical is focussed on getting you set up with the tools and accounts that you’ll need to across many of the CASA modules in Terms 1 and 2, and familiarising you with ‘how people do data science’. Outside of academia, it’s rare to find a data scientist who works entirely on their own: most code is collaborative, as is most analysis! But collaborating effectively requires tools that: get out of the way of doing ‘stuff’; support teams in negotating conflicts in code; make it easy to share results; and make it easy to ensure that everyone is ‘on the same page’.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Windows Users
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Please use <strong>Power Shell</strong> instead of the <strong>Command Prompt</strong> (<code>cmd</code>). Power Shell behaves much more like the Terminal in macOS and Linux, so the results are more consistent and easier to ‘debug’.</p>
+</div>
+</div>
+<p>If you haven’t done this already, you need to follow the instructions for installing all of the tools listed on on the <a href="https://jreades.github.io/sds_env/setup/install_fest.html">CASA Computing Environment</a> web page. This process will take time, so please keep reading or work on other things to do while you wait!</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tips on Using the Command Line
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>If you need help understanding how to use the Command Line or want to be able to do <em>much more</em> there are a wide range of tutorials available.</p>
+<p>Here are some starting points for learning more:</p>
+<ul>
+<li><strong>I need help understanding</strong>: <a href="https://software-carpentry.org/lessons/index.html">Software Carpentries</a> is your friend! They have an entire tutorial titled <a href="https://swcarpentry.github.io/shell-novice/">The Unix Shell</a>.</li>
+<li><strong>I <em>still</em> need help understanding</strong>: the <a href="https://programminghistorian.org/">Programming Historian</a> is another good place to look! And they <em>also</em> have an entire tutorial titled <a href="https://programminghistorian.org/en/lessons/intro-to-bash">An Introduction to Bash</a>.</li>
+<li><strong>I want to do <em>more</em> on the Command Line</strong>: O’Reilly has produced an online book called <a href="https://datascienceatthecommandline.com/2e/chapter-2-getting-started.html">Data Science at the Command Line</a> that will take you much, much further.</li>
+</ul>
+</div>
+</div>
+</div>
+<section id="running-docker" class="level1">
+<h1>Running Docker</h1>
+<section id="starting-up-right" class="level2">
+<h2 class="anchored" data-anchor-id="starting-up-right">Starting Up ‘Right’</h2>
+<p>One of the most confusing things about starting a Docker container with a “local volume mount” (i.e.&nbsp;a location on your computer that Docker <em>connects</em> to the container’s file system) is that it seems like magic and it’s often hard to understand why you’re seeing what you are under the <code>work</code> directory.</p>
+<p>So <em>before you do anything else</em> please spend a minute in the Terminal (macOS) or Power Shell (Windows) learning how to get to your home directory and, below that, to a CASA directory where you can store your work and keep Docker from accessing data that it shouldn’t.</p>
+<p>On both a Mac and a PC you should be able to run the following:</p>
+<ol type="1">
+<li><code>echo $(pwd)</code> – this should print out the location where the Terminal/Power Shell ‘started’.</li>
+<li><code>cd $HOME</code> – this should take you to your user’s <em>home</em> directory (on a Mac it will be <code>/Users/&lt;your username&gt;</code>, on a PC it will be something like <code>C:\Users\&lt;your username&gt;</code>). <em>Hint: <code>cd</code> means ‘change directory’!</em></li>
+<li><code>cd Documents</code> – this will move you into your ‘Documents’ folder. <em>Note: on Windows this <strong>might</strong> be called <code>My\ Documents</code> and note the “" in the name! If you have set up your computer in another language this might be called something else, but Power Shell still ‘knows’ which folder should contain your documents.</em></li>
+<li><code>mkdir casa</code> – this will create a <code>casa</code> folder in your home directory.</li>
+<li><code>cd casa</code> – you are now changing into the <code>casa</code> directory.</li>
+<li><code>echo $pwd</code> – this should show you the ‘full path’ to your new <code>casa</code> directory (e.g.&nbsp;<code>/Users/&lt;your username&gt;/Documents/casa</code> or something like that).</li>
+</ol>
+<p>Perhaps a video will help clarify?</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/5IkwUrYTY78" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+</section>
+<section id="configuring-the-image" class="level2">
+<h2 class="anchored" data-anchor-id="configuring-the-image">Configuring the sds2024 Image</h2>
+<p>During the ‘<a href="https://jreades.github.io/sds_env/setup/install_fest.html">install festival</a>’ you should have installed Docker and, time permitting, ‘pulled’ the image appropriate to your system. If you haven’t, then you should do so as a priority <em>now</em> using either:</p>
+<p>On Windows or Intel Macs:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> pull jreades/sds:2024-intel</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>or M1, M2 or M3 Macs:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> pull jreades/sds:2024-silicon</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This command is run either in the macOS <strong><code>Terminal</code></strong> application (in the Utilties directory of your Applications folder) or using the Windows <strong><code>Power Shell</code></strong> (<em>not</em> the Command Prompt).</p>
+<p>We’d <em>strongly</em> encourage you to ensure that you’re able to run Docker and use one of the above images as soon as possible so that we have as long as possible to help you over any hurdles before we get to week 3 where it will be essential that you are running the environment successfully. In our experience, the students who put off trying to get the environment running end up falling quickly behind as they are unable to complete basic tasks successfully.</p>
+</section>
+<section id="running-docker-1" class="level2">
+<h2 class="anchored" data-anchor-id="running-docker-1">Running Docker</h2>
+<p>By default, the best way to start Docker is from the Terminal or Power Shell.</p>
+<section id="on-windows" class="level3">
+<h3 class="anchored" data-anchor-id="on-windows">On Windows</h3>
+<p>Using the Power Shell copy and paste the following <em>all on one line</em>:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--rm</span> <span class="at">-d</span> <span class="at">--name</span> sds2024 <span class="at">-p</span> 8888:8888 </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-v</span> <span class="st">"</span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st">:/home/jovyan/work"</span> jreades/sds:2024-intel start.sh jupyter lab </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="ex">--LabApp.password=</span><span class="st">''</span> <span class="at">--ServerApp.password</span><span class="op">=</span><span class="st">''</span> <span class="at">--NotebookApp.token</span><span class="op">=</span><span class="st">''</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Windows Commands and Docker
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>$(pwd)</code> is actually a <em>command</em>, you are asking the Power Shell to use the current working directory* (<code>pwd</code> == <code>print working directory</code>) as the ‘mount point’ for the <code>work</code> directory. The Command Prompt doesn’t support <code>pwd</code>, but the Power Shell <em>should</em>. You can check this by simply typing <code>pwd</code> and hitting enter (⏎) to see if you get an error.</p>
+</div>
+</div>
+</section>
+<section id="on-macos" class="level3">
+<h3 class="anchored" data-anchor-id="on-macos">On macOS</h3>
+<p>Using the Terminal or iTerm2 copy and past the following (change the docker image to <code>jreades/sds:2024-intel</code> if using an older Intel Mac):</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--rm</span> <span class="at">-d</span> <span class="at">--name</span> sds2024 <span class="at">-p</span> 8888:8888 <span class="dt">\</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>   <span class="at">-v</span> <span class="st">"</span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st">:/home/jovyan/work"</span> <span class="dt">\</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  jreades/sds:2024-silicon start.sh jupyter lab <span class="dt">\</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--LabApp.password</span><span class="op">=</span><span class="st">''</span> <span class="at">--ServerApp.password</span><span class="op">=</span><span class="st">''</span> <span class="at">--NotebookApp.token</span><span class="op">=</span><span class="st">''</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="how-do-i-know-it-worked" class="level2">
+<h2 class="anchored" data-anchor-id="how-do-i-know-it-worked">How do I Know it Worked?</h2>
+<p>With Docker running, you will <em>mainly</em> interact with Python through a web page (unless you choose the VSCode IDE). To check if it’s running, we just have to visit the web page and see what happens.</p>
+<p>It is likely that the page you want is: <a href="http://localhost:8888/lab/tree/work/">http://localhost:8888/lab/tree/work/</a>. We’ll talk more about exactly what is going on next week as well, but this should show you a page that looks something like this (probably with fewer files listed on the left-hand side):</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://github.com/jreades/fsds/raw/master/practicals/img/1.8-Jupyter_Lab.png" class="img-fluid figure-img"></p>
+<figcaption>Screenshot of Jupyter Lab</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+See Docker Run (and Run)…
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Once you have started a Docker container using any of the above, the machine <strong>will continue running</strong> until you either restart the computer or tell Docker to stop the container. This <em>can</em> consume memory and battery power indefinitely.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="organising-your-workspace" class="level1">
+<h1>Organising Your Workspace</h1>
+<p>Before we start trying to code, I’d suggest organising a ‘workspace’ on your computer so that it’s easy to find/load data and ‘Jupyter notebooks’ (the tool we’ll be using to write and rung code). The easiest way to do this is to start from your <code>Documents</code> folder and set directories there to hold your code and data. Why? Because leaving everything in the Downloads folder or in random locations all over you computer is likely to be a disaster, especially when you’re under time pressure.</p>
+<p>Here’s <em>one</em> way of organising things, and I’m also taking the opportunity to show you how to do this using the Command Line:</p>
+<ul>
+<li>Using the Jupyter Lab web interface from Docker that we created earlier…</li>
+<li>Click on the <code>Terminal</code> tile (in the <code>Other</code> section) or select <code>File</code> &gt; <code>New</code> &gt; <code>Terminal</code> to open a new shell.</li>
+<li>This should open a new, empty window with a flashing cursor next to something <em>like</em> <code>(base) jovyan@5a4d5a7f2f50:~$</code>.</li>
+</ul>
+<p>This short video will show you how to create a directory called <code>CASA</code> in your Documents folder (or <code>My\ Documents</code> on some Windows machines):</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/Fnna4YMdLw4" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<p>The commands we used were:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 70%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Command</th>
+<th style="text-align: left;">Means</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>cd</code></td>
+<td style="text-align: left;">Change directory</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>cd $HOME</code></td>
+<td style="text-align: left;">Change to the home directory (wherever shown by <code>echo $HOME</code>)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>cd Documents</code></td>
+<td style="text-align: left;">Change directory to Documents from the current location</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>ls</code></td>
+<td style="text-align: left;">List the files in the current directory</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>mkdir CASA</code></td>
+<td style="text-align: left;">Make a directory called <code>CASA</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>touch test.txt</code></td>
+<td style="text-align: left;">Create an empty file by ‘touching’ it</td>
+</tr>
+</tbody>
+</table>
+<p>Note: <code>$HOME</code> may not be available on Windows machines; however, the Terminal provided in the sds2024 container <em>does</em> allow this because it is a full Linux system running on your computer.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Where are My (Windows) Documents?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>On some Windows machines you might not have a <code>Documents</code> folder and will need to decide whether to create one or use the Windows-equivalent (probably <code>My\ Documents</code> – notice the “<code>\</code>” instead of a “<code>/</code>”).</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Organising Your Work
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There are any number of ways to organise your CASA work, what’s important is that you are <em>logical</em> about things like names and hierarchy. This will make it much easier to access files and notebooks using Docker, Quarto, <em>and</em> Python.</p>
+</div>
+</div>
+</section>
+<section id="setting-up-github" class="level1">
+<h1>Setting Up GitHub</h1>
+<p>Understanding how to use Git and GitHub effectively is a core element of learning to code. So one of the <em>first</em> things that we are going to do is set you up with an account and a new project.</p>
+<p>So in order to complete this task you need to:</p>
+<ol type="1">
+<li>Create a login with <a href="https://github.com">GitHub</a>.</li>
+<li>Create a new <strong>private</strong> project on GitHub.</li>
+<li>Edit the <code>README.md</code> and <code>.gitignore</code> files for your new project.</li>
+<li>Save the changes (this is called a ‘commit’) and say in a general way what edits you did.</li>
+<li>Work out how to compare the original and edited versions of any file in your browser.</li>
+</ol>
+<section id="your-new-github-account" class="level2">
+<h2 class="anchored" data-anchor-id="your-new-github-account">Your New GitHub Account</h2>
+<p>You may wish to set up your new GitHub account with your UCL email. GitHub ‘knows’ about educational users and will give you access to more features for free if you use a <code>.ac.uk</code> email address. Once you’ve done this, you can then link a personal email address as well.</p>
+<p>From a security standpoint you should <em>also</em> enable 2-factor authentication so that you receive a text message when you log in on a new machine and are asked to confirm a code.</p>
+</section>
+<section id="creating-a-private-repository" class="level2">
+<h2 class="anchored" data-anchor-id="creating-a-private-repository">Creating a Private Repository</h2>
+<p>To create a repository, click on the <code>+</code> at the upper-right corner of the GitHub web page and select <code>New Repository</code>. You might as well call your ‘repo’ <code>fsds</code> or <code>foundations</code> since that’s a lot shorter than <code>foundations_of_spatial_data_science</code>.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Your Repo Name
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For the purposes of this tutorial (and all subsequent tutorials) I will assume that your repository is called <code>fsds</code>. You can call it whatever you like, in which case you will <em>always</em> need to substitute the name that <em>you</em> chose wherever you see me write <code>fsds</code>.</p>
+</div>
+</div>
+<p>It’s always helpful to provide some basic information about what’s in the project (<em>e.g.</em> your notes and practicals for the <em>Foundations</em> module). And finally, make sure you:</p>
+<ol type="1">
+<li>Change the visibility from <code>Public</code> to <code>Private</code>,</li>
+<li>Tick <code>Add a README file</code>,</li>
+<li>Change <code>Add .gitignore</code> from <code>None</code> to <code>template: Python</code>.</li>
+</ol>
+<p>Click <code>Create Repository</code> and you should end up on a page that looks like this:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://github.com/jreades/fsds/raw/master/practicals/img/1.1-Repo_Created.png" class="img-fluid figure-img"></p>
+<figcaption>Repository created</figcaption>
+</figure>
+</div>
+<p>Your new repository has been created (on GitHub)!</p>
+</section>
+</section>
+<section id="updating-the-.gitignore-file" class="level1">
+<h1>Updating the .gitignore File</h1>
+<p>The <code>.gitignore</code> file tells Git what files to ignore by default. Unless you <em>force</em> Git to add an ignored file it will happily live in your <em>local</em> repository alongside files that are version-controlled and ‘shared’ with GitHub.</p>
+<p>The Python template for <code>.gitignore</code> includes a lot of useful files and folders that we wouldn’t want Git to track for us. But it <em>doesn’t</em> include data. In your web browser, click on the <code>.gitignore</code> file and then the ‘pencil’ icon on the right to edit it on GitHub. You should see something like this:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://github.com/jreades/fsds/raw/master/practicals/img/1.4-Editing_Gitignore.png" class="img-fluid figure-img"></p>
+<figcaption>Editing the .gitignore file</figcaption>
+</figure>
+</div>
+<section id="exclude-data-files" class="level2">
+<h2 class="anchored" data-anchor-id="exclude-data-files">Exclude Data Files</h2>
+<p>We want to make it hard to accidentally add a large data file to our repository. Git/GitHub isn’t designed for large, binary files (you can’t ‘read’ a Parquet file) and we assume that data is backed up or available elsewhere, but our <em>code</em> is not! So as a first step we want to exclude files that are likely to just be ‘data’:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">File Type</th>
+<th style="text-align: right;">Extension</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">CSV</td>
+<td style="text-align: right;"><code>.csv</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Excel</td>
+<td style="text-align: right;"><code>.xls</code>, <code>.xlsx</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Zip</td>
+<td style="text-align: right;"><code>.zip</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GZip</td>
+<td style="text-align: right;"><code>.gzip</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Feather</td>
+<td style="text-align: right;"><code>.feather</code>, <code>.geofeather</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Parquet</td>
+<td style="text-align: right;"><code>.parquet</code>, <code>.geoparquet</code></td>
+</tr>
+</tbody>
+</table>
+<p>Here’s another hint: <code>C extensions</code> are <em>already</em> excluded by the <code>.gitignore</code> file, so maybe look to see how that’s done to help you figure out how to exlcude <code>.zip</code>, <code>.gz</code>, and <code>.csv</code> files…</p>
+</section>
+<section id="exclude-a-data-directory" class="level2">
+<h2 class="anchored" data-anchor-id="exclude-a-data-directory">Exclude a Data Directory</h2>
+<p>To make it even <em>less</em> like that we accidentally include data, let’s also exclude a <code>data</code> directory from our repository. As a clue, nearly everything in the <code>Distribution / packaging</code> section of the <code>.gitignore</code> file is a directory to be excluded from Git.</p>
+<p>So how would you indicate that <code>data</code> is a directory? Once you’re sure, add the <code>data</code> directory!</p>
+<p>When you are done, don’t forget to add a ‘commit message’ (e.g.&nbsp;‘Added data files to .gitignore’) at the bottom and then click <code>Commit changes</code>.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Quick Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>I don’t want you to get hung up on this <em>one</em> thing in Practical 1, so if you just can’t make sense of what you’re being asked to do here, have a look at the <a href="#Answers">Answers</a> at the bottom of this page.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="check-your-changes" class="level2">
+<h2 class="anchored" data-anchor-id="check-your-changes">Check Your Changes</h2>
+<p>Once you have committed your changes, you should be back to the default view of the <code>.gitignore</code> file but there should be a message to the effect of <code>Latest commit &lt;some hexadecimal number&gt; 10 seconds ago</code> and, next to that, a <code>History</code> button.</p>
+<p>Click on ‘History’ and let’s go back in time!</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://github.com/jreades/fsds/raw/master/practicals/img/1.5-Gitignore_History.png" class="img-fluid figure-img"></p>
+<figcaption>The Gitignore history</figcaption>
+</figure>
+</div>
+<p>On the history page you can browse every edit to your file. Whenever you <code>commit</code> a file, this like taking a snapshot at a point in time. Using the ‘History’ you can compare two different snapshots in order to see what has changed. This would help you to work out how you broke something, check that requested changes have been made, or see how an error might have been introduced.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Viewing Your Commit History
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You can mouseover the buttons to see what they do. Why don’t you try to find <code>See commmit details</code> and check what edits you made to the <code>.gitignore</code> file? You should see at least <em>three</em> plusses in the history view representing three new lines in the <code>.gitignore</code> file.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="creating-your-first-remote-file" class="level1">
+<h1>Creating Your First Remote File</h1>
+<p>To get some practice with Markdown let’s write up some notes direclty into our GitHub repository (aka ‘repo’). You’ll notice that we’ve not yet hit the <em>BIG GREEN BUTTON</em> marked <code>Add a README</code>… Let’s do that now!</p>
+<p>This will take you to an editing page for the new <code>README.md</code> file. You can type directly into this web page and it will update the repository, but <em>only</em> once you <code>commit</code> your edits.</p>
+<section id="working-on-your-markdown" class="level2">
+<h2 class="anchored" data-anchor-id="working-on-your-markdown">Working on Your Markdown</h2>
+<p>Write your <code>README</code> file using <em>at least</em> the following Markdown features:</p>
+<ul>
+<li>A level-1 header (<code>#</code>)</li>
+<li>A level-3 header (<code>###</code>)</li>
+<li>Italic text (<code>_this is italicised_</code>)</li>
+<li>Bold text (<code>**this is bold**</code>)</li>
+<li>A link (<code>[link text](url)</code>)</li>
+<li>An image (<code>![Alt text](image_location)</code>)</li>
+</ul>
+<p>If you’re unsure how these work, just double-click on <em>this text</em> and you’ll see Markdown in a Jupyter notebook. Here’s some sample text to get you started:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">### Foundations of Spatial Data Science</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>This repository contains practicals and notes from the _Foundations_ module. </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>You can find the original <span class="co">[</span><span class="ot">here</span><span class="co">](https://jreades.github.io/fsds/)</span>.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Don’t forget to check out the “Preview” tab!</strong></p>
+</section>
+<section id="commiting-a-change" class="level2">
+<h2 class="anchored" data-anchor-id="commiting-a-change">Commiting a Change</h2>
+<p>Once you’re happy with how your text looks and works, it’s time to commit! Scroll down to where you see something like this (you will see your <em>own</em> GitHub username, not mine):</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://github.com/jreades/fsds/raw/master/practicals/img/1.2-Commit.png" class="img-fluid figure-img"></p>
+<figcaption>GitHub Commit</figcaption>
+</figure>
+</div>
+<p>You can just accept the description (<em>e.g.</em> <code>Create README.md</code>) or you can write your own. You can also provide an extended description if you choose. Then click <code>Commit new file</code> and you will see your new README appear.</p>
+</section>
+</section>
+<section id="setting-up-git-locally" class="level1">
+<h1>Setting Up Git Locally</h1>
+<p>I have <a href="https://web.microsoftstream.com/video/29a31977-ff9e-4b53-92d3-ee3bb2a769f6">created a video</a> on Microsoft Streams that runs you through Tasks 6.1 and 6.2 (below). You can refer to it if you find the written instructions hard to follow for any reason or would like a visual check that you’re doing the right thing!</p>
+<section id="configuring-defaults" class="level2">
+<h2 class="anchored" data-anchor-id="configuring-defaults">Configuring Defaults</h2>
+<p>The first thing to do is set up the default username and email for GitHub. These can be changed on a project-by-project basis, but to begin with it’s best to set up the <em>global defaults</em>. Using either the Terminal or Bash enter the following (replacing <code>&lt;...&gt;</code> with <em>your</em> details):</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--global</span> user.email <span class="st">'&lt;your GitHub email address&gt;'</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--global</span> user.name <span class="st">'&lt;your GibHub username&gt;'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="creating-a-personal-access-token" class="level2">
+<h2 class="anchored" data-anchor-id="creating-a-personal-access-token">Creating a Personal Access Token</h2>
+<p>You do not want to have to enter your GitHub password every time you copy changes up to/down from GitHub, and you <em>don’t</em> want to paste your password in plain text into your code! The Personal Access Token is a way to manage this by issuing special passwords that allow only limited access to your account.</p>
+<p>To create a Personal Access Token:</p>
+<ul>
+<li>Visit your GitHub User Page (<a href="https://github.com/jreades">e.g.&nbsp;github.com/jreades</a>)</li>
+<li>Click on your user icon (at the top-right corner of the page) and pick <code>Settings</code></li>
+<li>Scroll down the <a href="https://github.com/settings/profile">settings page</a> until you get to <code>Developer settings</code></li>
+<li>Click the <code>Developer settings</code> link to reach <a href="https://github.com/settings/apps">the ‘apps’ page</a> and then click on the <code>Personal access tokens</code> link.</li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Types of Personal Tokens
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You now need to choose the type of token to generate. I <em>personally</em> find the old type of tokens easier to work with because the ‘new’ fine-grained tokens are intended to support complex workflows when all we’re trying to do is allow one computer to push/pull from Git.</p>
+</div>
+</div>
+<ul>
+<li>Click the <code>Generate new token</code> button and set up the token so that it has <strong>read/write <code>repo</code> privileges (full control of private repositories)</strong>. You can change other settings (read/write packages, gists, and notifications) but this is not necessary.</li>
+<li>Save the resulting token somewhere safe as you will need it again!</li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Keep your Personal Token Safe
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You will need it at least twice in this tutorial and may want to use it again on other computers. You can always create a new one, but then you’ll need to update every computer where you access your GitHub repositories.</p>
+</div>
+</div>
+</section>
+<section id="cloning-your-repository" class="level2">
+<h2 class="anchored" data-anchor-id="cloning-your-repository">Cloning Your Repository</h2>
+<p>Now we are going to <code>clone</code> (i.e.&nbsp;copy) the repository that you just created on to your own computer. This is surprisingly straightforward provided that you have installed the command line tools.</p>
+<p>On your private repository page, click on the green button labeled <code>Code</code> visible in the screenshot below:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://github.com/jreades/i2p/raw/master/lectures/img/Cloning.png" class="img-fluid figure-img"></p>
+<figcaption>Screenshot of cloning interface</figcaption>
+</figure>
+</div>
+<p>You should then copy the URL (visible in my screenshot as <code>https://github.com/jreades/i2p.git</code>). Switching to the command line, <em>c</em>hange <em>d</em>irectory (<code>cd</code>) to the location where you want your repository to be stored on <em>your</em> machine. For instance, if I wanted to keep all of my <em>Foundations</em> code in the CASA directory then I would do this:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$HOME</span>/work/Documents/CASA/</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone <span class="op">&lt;</span>the_url_that_you_copied_from_the_browser<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The first time that you do this, you will likely need to provide login information. Use your GitHub username and the Personal Access Token that you just created.</p>
+</section>
+<section id="storing-credentials-pulling" class="level2">
+<h2 class="anchored" data-anchor-id="storing-credentials-pulling">Storing Credentials &amp; ‘Pulling’</h2>
+<p>You can now activate the credtial helper that will store your Personal Access Token:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> fsds</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config credential.helper store</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>When you type <code>git pull</code> you <em>should</em> be asked <em>again</em> for your username and password. You should (again) use the Personal Access Token as your password. You should not be asked again for pushing or pulling data into this GitHub repository. If you are <em>not</em> asked for your Personal Access Token then this likely means that your token is already saved and ready to use on all future ‘actions’.</p>
+</section>
+<section id="adding-a-local-file-to-your-repository" class="level2">
+<h2 class="anchored" data-anchor-id="adding-a-local-file-to-your-repository">Adding a Local File to Your Repository</h2>
+<p>In order to tie together the different concepts covered above, we are now going add Practical 1 (<em>this</em> practical) to <em>your</em> GitHub repo. The easiest way to do this is to open the practicals as <code>Raw text</code> in your browser: so navigate to the <a href="https://github.com/jreades/fsds/blob/master/practicals/Practical-01-Getting_Started.ipynb">Practical 1</a> page on GitHub and then click <code>Raw</code> to see something like this:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://github.com/jreades/fsds/raw/master/practicals/img/1.6-Raw_Ipynb.png" class="img-fluid figure-img"></p>
+<figcaption>Raw view of a Jupyter Notebook</figcaption>
+</figure>
+</div>
+<p>So, starting with the ‘raw’ notebook:</p>
+<ol type="1">
+<li>Save this file to your computer as a notebook with the extension <code>.ipynb</code>.</li>
+<li>Move the file to your repostiory folder (<em>e.g.</em> <code>$HOME/work/Documents/CASA/fsds/</code>).</li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+File Extensions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>It is <em>highly</em> likely that your browser automatically added a <code>.txt</code> extension when you saved the Notebook file to your computer. You need to remove that ending to your file name or Jupyter won’t be able to run it. You can rename a file by <em>moving</em> (bash: <code>mv</code>) from one name to another: <code>mv &lt;notebook_name&gt;.ipynb.txt &lt;notebook_name.ipynb</code></p>
+</div>
+</div>
+<p>In the Terminal/Bash we now need <code>add</code> this file to Git so that it knows to keep track of it. Unlike Dropbox or OneDrive, just putting a file in a repo directory does <em>not</em> mean that Git will pay attention to it:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming that you are 'in' the 'fsds' directory...</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add Practical-01-Getting_Started.ipynb</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Adding notebook 1 to repo."</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Add, Commit, Push, Repeat
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Unless you have <em>added</em> and <em>committed</em> a file to Git then it is <em>not</em> version controlled.</p>
+<p>Unless you have <em>pushed</em> your committed files to GitHub they are only backed up locally.</p>
+</div>
+</div>
+</section>
+<section id="status-check" class="level2">
+<h2 class="anchored" data-anchor-id="status-check">Status Check</h2>
+<p>We now want to check that the file has been successfully added to Git. We do this with a <code>status</code> check in the repository directory (<em>i.e.</em> <code>cd $HOME/work/Documents/CASA/fsds/</code>):</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> status</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You should see something like:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">On</span> branch master</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Your</span> branch is ahead of <span class="st">'origin/master'</span> by 1 commit.</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">(</span><span class="ex">use</span> <span class="st">"git push"</span> to publish your local commits<span class="kw">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This is telling you that your local computer is 1 commit (the one that you <em>just</em> completed) ahead of the ‘origin’, which is on GitHub. GitHub doesn’t <em>have</em> to be the origin (nor does the repository have to be one that we created in order to be an origin) but <em>conceptually</em> and <em>practically</em> it’s easier to create new repositories on GitHub and clone them to our computer.</p>
+</section>
+<section id="keep-pushing" class="level2">
+<h2 class="anchored" data-anchor-id="keep-pushing">Keep Pushing</h2>
+<p>To synchronise the changes we just made, let’s follow Git’s advice:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You should see <em>something</em> like (the numbers and details will <em>all</em> differ, but the messages will be the same):</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Enumerating</span> objects: 5, done.</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Counting</span> objects: 100% <span class="er">(</span><span class="ex">5/5</span><span class="kw">)</span><span class="ex">,</span> done.</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Delta</span> compression using up to 8 threads</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="ex">Compressing</span> objects: 100% <span class="er">(</span><span class="ex">3/3</span><span class="kw">)</span><span class="ex">,</span> done.</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Writing</span> objects: 100% <span class="er">(</span><span class="ex">3/3</span><span class="kw">)</span><span class="ex">,</span> 306 bytes <span class="kw">|</span> <span class="ex">306.00</span> KiB/s, done.</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="ex">Total</span> 3 <span class="er">(</span><span class="ex">delta</span> 2<span class="kw">)</span><span class="ex">,</span> reused 0 <span class="er">(</span><span class="ex">delta</span> 0<span class="kw">)</span><span class="ex">,</span> pack-reused 0</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="ex">remote:</span> Resolving deltas: 100% <span class="er">(</span><span class="ex">2/2</span><span class="kw">)</span><span class="ex">,</span> completed with 2 local objects.</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="ex">remote:</span> This repository moved. Please use the new location:</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="ex">remote:</span>   https://github.com/jreades/fsds.git</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="ex">To</span> https://github.com/jreades/i2p.git</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>   <span class="ex">7410d0e..45aa80a</span>  master <span class="at">-</span><span class="op">&gt;</span> master</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>If you now go over to your browser and visit your GitHub repo page (<em>e.g.</em> <code>https://github.com/jreades/fsds</code>) — pressing the <code>Reload</code> button if you had the page open already — then you should see that the file you added <em>on your computer</em> is also showing up on the GitHub site as well! This means it’s now fully version-controlled and backed-up.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Keep Pushing
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Unless have <em>pushed</em> your commits to GitHub they are <em>only</em> stored on <em>your</em> computer. So your files can be properly version-controlled, but without a <em>push</em> if you lose your computer you <em>still</em> lose everything!</p>
+</div>
+</div>
+</section>
+<section id="more-about-git" class="level2">
+<h2 class="anchored" data-anchor-id="more-about-git">More About Git</h2>
+<p>From here on out you can keep changes made either directly on GitHub or locally on your computer (or any <em>other</em> computer to which you <code>clone</code> your repository) in synch by using <code>git push</code> (to <em>push</em> changes from a local computer <em>up</em> to the origin on GitHub) and <code>git pull</code> (to <em>pull</em> changes available on the origin <em>down</em> to the local computer).</p>
+<p>That said, you can do a <em>lot</em> more than just push/pull to your own repository and <a href="https://twitter.com/ChrisStaud/status/1574277175527735296">this Twitter thread</a> leads to a lot of useful additional resources to do with Git:</p>
+<ul>
+<li><a href="https://programminghistorian.org/en/lessons/retired/getting-started-with-github-desktop">Introduction to Version Control with Git</a> on the Programming Historian web site is written for digital humanities researchers so it’s intended to be accessible.</li>
+<li><a href="https://ohmygit.org/">Oh My Git</a> is an ‘open source game’ to help you learn Git.</li>
+<li><a href="https://profy.dev/project/github-minesweeper">Git Meets Minesweeper?</a> is apparently a ‘thing’.</li>
+<li><a href="http://marklodato.github.io/visual-git-guide/index-en.html">Visual Git Reference</a> if you think visually or just want to check your understanding.</li>
+<li><a href="https://swcarpentry.github.io/git-novice/">Version Control with Git</a> is a Software Carpentries lesson that takes you quickly through the important elements of getting set up and started. It would be a good refresher.</li>
+<li><a href="https://www.atlassian.com/git/tutorials">Altassian’s Documentation</a> provides more detailed explanations of the commands and options.</li>
+<li><a href="https://learngitbranching.js.org">Learn Git Branching</a> focusses on a key concept for software <em>collaboration</em>.</li>
+<li><a href="https://gitimmersion.com">Git Immersion</a> provides a ‘guided tour’ of the fundamentals.</li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For the <a href="https://jreades.github.io/fsds/assessments/group.html">Group Work</a> every member of your group will need to make contributions to a GitHub repository. This will require learning how to invite others to be contributors, how to merge changes, and how to deal with conflicts of the coding kind.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="setting-up-a-github-web-site" class="level1">
+<h1>Setting up a GitHub Web Site</h1>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Bonus Content
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>It is not core to this module, but if you’d like to really make the most of Git, why not create a GitHub.io web site? Using Markdown (for the most bare bones effect) and code (via Quarto), you can render and push a web site to <code>&lt;your username&gt;.github.io/</code>. You might find this useful for creating a simple portfolio, blog, or other collection of ‘outputs’ that you can use to demonstrate to employers that you know your way around.</p>
+</div>
+</div>
+<p>Rather than create a GitHub.io site using your <em>Foundations</em> repository, we’d recommend building one in the separate ‘main’ repository so that, for example, <a href="https://jreades.github.io">jreades.github.io</a>, returns a web page.</p>
+<p>To do this, the steps are <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site#creating-a-repository-for-your-site">detailed here</a>, but read on to get an overview:</p>
+<ol type="1">
+<li>On the GitHub web site, create a new repository called <code>&lt;your username&gt;.github.io</code> (where <code>&lt;your username&gt;</code> is whatever your github username is). So for us, it would mean creating a <em>new</em> repository called <code>jreades.github.io</code>.</li>
+<li>For your first web site, try setting up GitHub pages <strong>without</strong> specifying a branch: this way, <em>anything</em> that you put into your GitHub repository will show up on the public web site. Later, when you are more comfortable with GitHub, you may wish to switch to using a branch so that you can do work without <em>always</em> and <em>immediately</em> updating the web site.</li>
+<li>One you’ve followed the <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site#creating-a-repository-for-your-site">GitHub instructions</a> for publishing a web site, you should <code>clone</code> the site to your computer.</li>
+<li>After cloning the site to your computer, try making a change to the <code>README.md</code> file and <code>push</code>ing the change back to GitHub. After a minute or two (possibly up to 10 minutes) you should see your web page update!</li>
+</ol>
+<p>Congratulations, you can now publish a web site using nothing more than Markdown.</p>
+<p>As you develop your Markdown, coding, and Quarto skills, you might also want to look into <a href="https://quarto.org/docs/publishing/github-pages.html">publishing to GitHub pages from Quarto</a>. That’s how we build the entire <em>Foundations</em> web site, so there’s a <em>lot</em> further that you can go with this…</p>
+</section>
+<section id="other-ways-of-using-docker" class="level1">
+<h1>Other Ways of Using Docker</h1>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Advanced Content
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The two techniques below are: 1) advanced; and 2) not essential to using Docker for this module. We will offer limited support for this if we can, but you will be a lower priority for support since these are <em>entirely</em> at your discretion.</p>
+</div>
+</div>
+<p>There are two <em>other</em> ways of running Docker:</p>
+<ol type="1">
+<li>If you have a Mac or have installed a full Linux system for WSL2 (e.g.&nbsp;Ubuntu) on your Windows machine, then there is a ‘bash script’ and configuration file as <a href="https://jreades.github.io/sds_env/docker/#running-everything-script">detailed here</a> that we created for you. This is the <em>easiest</em> way to start/stop Docker.</li>
+<li>Using VSCode as <a href="https://jreades.github.io/sds_env/docker/#vscode-integration">detailed here</a> to create a new VSCode project that is ‘bound’ to the Docker image. This will give you a very different experience of using Docker and Jupyter, but is appropriate for <em>those who want to use an IDE to write code</em>.</li>
+</ol>
+<section id="other-useful-resources" class="level2">
+<h2 class="anchored" data-anchor-id="other-useful-resources">Other Useful Resources</h2>
+<ul>
+<li><a href="https://guides.github.com/features/mastering-markdown/">GitHub Markdown Guide</a></li>
+<li><a href="https://commonmark.org/help/">Common Mark</a></li>
+<li><a href="https://www.markdownguide.org/basic-syntax/">Markdown Guide</a>, which helpfully includes do’s and don’ts.</li>
+</ul>
+<p>Finally, these are a bit overkill but the bits about setting up and installing <code>git</code>, <code>bash</code>/<code>zsh</code>, and so on may come in handy later:</p>
+<ul>
+<li><a href="https://www.taniarascia.com/setting-up-a-brand-new-mac-for-development/">Setting Up a New Mac</a></li>
+<li><a href="https://medium.com/@mfosullivan/a-beginners-guide-to-setting-up-a-modern-web-development-environment-on-windows-10-4d75cd94cde8">Beginner’s Guide to Setting Up Windows 10</a></li>
+<li><a href="https://dev.to/jozsefsallai/how-i-ve-set-up-my-windows-machine-as-a-development-environment-without-wsl-2kcl">Setting up Windows without Linux</a></li>
+<li><a href="https://docs.microsoft.com/en-us/windows/python/beginners">Microsoft Python Setup Guide</a></li>
+</ul>
+</section>
+</section>
+<section id="answers" class="level1">
+<h1>Answers</h1>
+<p>Normally, we will provide ‘answers’ later in the week, but for <em>this</em> week it makes sense to provide them right away if you need them…</p>
+<section id="gitignore" class="level2">
+<h2 class="anchored" data-anchor-id="gitignore">.Gitignore</h2>
+<p>The main thing you should notice is the pattern: <code>*</code> means ‘anything’, while <code>/</code> at the end of a line implies a directory. So the following four lines should be added to your <code>.gitignore</code> file:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ot">*.zip</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ot">*.gz</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="ot">*.csv</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="ot">*.gzip</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="ot">*.feather</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="ot">*.geofeather</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="ot">*.parquet</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="ot">*.geoparquet</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="at">data/</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>That’s it.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/jreades\.github\.io\/fsds\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 2022, Jon Reades</p>
+</div>   
+    <div class="nav-footer-center">
+<p><img src="../img/favicon-16x16.png" class="height:10px img-fluid"> Foundations of Spatial Data Science</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jreades/fsds/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jreades/fsds">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/jreades">
+      <i class="bi bi-twitter" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
