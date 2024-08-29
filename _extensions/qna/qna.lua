@@ -1,3 +1,42 @@
+-- Supports:
+-- qna:
+--   pdf: answer
+--   html: both
+--   ipynb: question
+-- pandoc.utils.stringify might be useful
+
+local pdf_target   = nil
+local ipynb_target = nil
+local html_target  = nil
+
+Meta = function(meta) 
+  local qnaMeta = meta.qna
+  if qnaMeta ~= nil and type(qnaMeta) == 'table' then
+    if qnaMeta.pdf ~= nil then
+      -- print(qnaMeta.pdf)
+      pdf_target = pandoc.utils.stringify(qnaMeta.pdf)
+    else
+      pdf_target = "answer"
+    end
+    if qnaMeta.html ~= nil then
+      -- print(qnaMeta.html)
+      html_target = pandoc.utils.stringify(qnaMeta.html)
+    else
+      html_target = "both"
+    end
+    if qnaMeta.ipynb ~= nil then
+      -- print(qnaMeta.ipynb)
+      ipynb_target = pandoc.utils.stringify(qnaMeta.ipynb)
+    else
+      ipynb_target = "question"
+    end
+  end
+  -- print('PDF Target: ', pdf_target)
+  -- print('HTML Target: ', html_target)
+  -- print('IPYNB Target: ', ipynb_target)
+  -- print("End")
+end
+
 function Div(div)
   if not div.classes:includes("qna") then 
     return
@@ -11,6 +50,9 @@ function Div(div)
   -- for key, value in pairs(div) do
   --   print(key, value)
   -- end
+  -- print('PDF Target: ', pdf_target)
+  -- print('IPYNB Taget: ', ipynb_target)
+  -- print('HTML Target: ', html_target)
   -- print("~~~~~~~~~~~~~~~~~~~~~~~~~")
 
   div:walk({
@@ -33,9 +75,9 @@ function Div(div)
         -- Do nothing
       end,
       Plain = function(pl)
-        print('Plain called')
-        print(pl.content)
-        print(pl.tag)
+        -- print('Plain called')
+        -- print(pl.content)
+        -- print(pl.tag)
         return pl -- table.insert(raw[div_num].content, pl)
       end,
       BlockQuote = function(bl)
@@ -103,13 +145,37 @@ function Div(div)
   -- for some output formats based on filter spec
   if quarto.doc.is_format("ipynb") then
     -- print("ipynb")
-    table.remove(raw,2)
+    -- print("  Target: ", ipynb_target)
+    -- print("  Question: ", ipynb_target == "question")
+    if ipynb_target == "question" then
+      table.remove(raw,2)
+    elseif ipynb_target == "answer" then 
+      table.remove(raw,1)
+    else
+      -- do nothing
+    end
   elseif quarto.doc.is_format("pdf") then
     -- print("pdf")
-    table.remove(raw,1)
+    -- print("  Target: ", pdf_target)
+    -- print("  Question: ", pdf_target == "question")
+    if pdf_target == "question" then
+      table.remove(raw,2)
+    elseif pdf_target == "answer" then 
+      table.remove(raw,1)
+    else
+      -- do nothing
+    end
   elseif quarto.doc.is_format("html") then 
     -- print("html")
-    -- do nothing
+    -- print("  Target: ", html_target)
+    -- print("  Question: ", html_target == "question")
+    if html_target == "question" then
+      table.remove(raw,2)
+    elseif html_target == "answer" then 
+      table.remove(raw,1)
+    else
+      -- do nothing
+    end
   else
     print("No output format detected.")
   end
@@ -188,3 +254,11 @@ function Div(div)
     })
   end
 end
+
+-- Notice that we need to enforce processing of Meta
+-- before the Div filter can work, otherwise the meta
+-- values haven't been set before the filtering happens.
+return {
+  { Meta = Meta },
+  { Div = Div},
+}
