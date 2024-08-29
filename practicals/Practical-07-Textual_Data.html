@@ -275,7 +275,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#data-normalisation" id="toc-data-normalisation" class="nav-link" data-scroll-target="#data-normalisation">Data Normalisation</a></li>
   <li><a href="#word-clouds" id="toc-word-clouds" class="nav-link" data-scroll-target="#word-clouds">Word Clouds</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/jreades/fsds/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Practical-07-Textual_Data.ipynb" download="Practical-07-Textual_Data.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/jreades/fsds/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Practical-07-Textual_Data.ipynb" download="Practical-07-Textual_Data.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li><li><a href="Practical-07-Textual_Data.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -351,7 +351,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="preamble" class="level1">
 <h1>Preamble</h1>
 <p>This practical has been written using <code>nltk</code>, but would be <em>relatively</em> easy to rework using <code>spacy</code>. Most programmers tend to use one <em>or</em> the other, and the switch wouldn’t be hard other than having to first load the requisite language models:</p>
-<div id="96ec7549" class="cell" data-execution_count="1">
+<div id="a79d513d" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> spacy</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># `...web_md` and `...web_lg` are also options</span></span>
@@ -399,7 +399,7 @@ Note
 </div>
 </div>
 <p>Standard libraries we’ve seen before.</p>
-<div id="0f431ea2" class="cell" data-execution_count="2">
+<div id="00c3c063" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -409,7 +409,7 @@ Note
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Vectorisers we will use from the ‘big beast’ of Python machine learning: Sci-Kit Learn.</p>
-<div id="8dedca19" class="cell" data-execution_count="3">
+<div id="7587b540" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> TfidfVectorizer</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> CountVectorizer</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> LatentDirichletAllocation</span>
@@ -418,7 +418,7 @@ Note
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>NLP-specific libraries that we will use for tokenisation, lemmatisation, and frequency analysis.</p>
-<div id="d99ed3df" class="cell" data-execution_count="4">
+<div id="69d29183" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> spacy</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> wordnet <span class="im">as</span> wn</span>
@@ -443,14 +443,14 @@ Note
 <span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>tokenizer <span class="op">=</span> ToktokTokenizer()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Remaining libraries that we’ll use for processing and display text data. Most of this relates to dealing with the various ways that text data cleaning is <em>hard</em> because of the myriad formats it comes in.</p>
-<div id="88317142" class="cell" data-execution_count="5">
+<div id="45c4ca54" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> string</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> unicodedata</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> bs4 <span class="im">import</span> BeautifulSoup</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> wordcloud <span class="im">import</span> WordCloud, STOPWORDS</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This next is just a small utility function that allows us to output Markdown (like this cell) instead of plain text:</p>
-<div id="441ad1b9" class="cell" data-execution_count="6">
+<div id="1375af08" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> display_markdown</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> as_markdown(head<span class="op">=</span><span class="st">''</span>, body<span class="op">=</span><span class="st">'Some body text'</span>):</span>
@@ -484,7 +484,7 @@ Note
 </div>
 </div>
 <p>Remember this function from last week? We use it to save downloading files that we already have stored locally. But notice I’ve made some small changes… what do these do to help the user?</p>
-<div id="df76607d" class="cell" data-execution_count="7">
+<div id="ab9c51d8" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> requests <span class="im">import</span> get</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> urllib.parse <span class="im">import</span> urlparse</span>
@@ -570,7 +570,7 @@ Tip
 </div>
 </div>
 <p>Load the main data set:</p>
-<div id="2ee00d7e" class="cell" data-execution_count="8">
+<div id="e78b807a" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set download URL</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>ymd  <span class="op">=</span> <span class="st">'2023-09-06'</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>host <span class="op">=</span> <span class="st">'https://orca.casa.ucl.ac.uk'</span></span>
@@ -585,12 +585,12 @@ Tip
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"gdf has </span><span class="sc">{</span>gdf<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> rows and CRS is </span><span class="sc">{</span>gdf<span class="sc">.</span>crs<span class="sc">.</span>name<span class="sc">}</span><span class="ss">."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Found data/geo/2023-09-06-listings.geoparquet locally!
-    Size is 42 MB (44,152,609 bytes)
+    Size is 42 MB (43,985,171 bytes)
 gdf has 85,134 rows and CRS is OSGB36 / British National Grid.</code></pre>
 </div>
 </div>
 <p>Load supporting Geopackages:</p>
-<div id="cb65fedd" class="cell" data-execution_count="9">
+<div id="d14c6857" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>ddir  <span class="op">=</span> os.path.join(<span class="st">'data'</span>,<span class="st">'geo'</span>) <span class="co"># destination directory</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>spath <span class="op">=</span> <span class="st">'https://github.com/jreades/fsds/blob/master/data/src/'</span> <span class="co"># source path</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -640,7 +640,7 @@ Tip
 </div>
 </div>
 <p>It’s helpful to have a sense of what data look like before trying to do something with them, but by default pandas truncates quite a lot of output to keep it from overwhelming the display. For text processing, however, you should probably change the amount of preview text provided by pandas using the available options. <em>Note</em>: there are lots of other options that you can tweak in pandas.</p>
-<div id="b200712b" class="cell" data-execution_count="10">
+<div id="943ef4ed" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Default maximum column width: </span><span class="sc">{</span>pd<span class="sc">.</span>options<span class="sc">.</span>display<span class="sc">.</span>max_colwidth<span class="sc">}</span><span class="ss">"</span>) <span class="co"># What's this currently set to?</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>pd.options.display.max_colwidth<span class="op">=</span><span class="dv">250</span>   <span class="co"># None = no maximum column width (you probably don't want to leave it at this)</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Now maximum column width set to: </span><span class="sc">{</span>pd<span class="sc">.</span>options<span class="sc">.</span>display<span class="sc">.</span>max_colwidth<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -714,7 +714,7 @@ Difficulty level: Moderate, because of the questions.
 </div>
 </div>
 <p>This field presents a subtle issue that might not be obvious here:</p>
-<div id="c62fb7ac" class="cell" data-execution_count="12">
+<div id="b73ca0d0" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>gdf.amenities.sample(<span class="dv">5</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="12">
 <pre><code>id
@@ -727,7 +727,7 @@ Name: amenities, dtype: object</code></pre>
 </div>
 </div>
 <p>But look what happens now, can you see the issue a little more easily?</p>
-<div id="b4325fe6" class="cell" data-execution_count="13">
+<div id="8b85cee9" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>gdf.amenities.iloc[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="13">
 <pre><code>'["Heating", "TV with standard cable", "Wifi", "Smoke alarm", "Dryer", "Kitchen", "Washer", "Essentials"]'</code></pre>
@@ -871,7 +871,7 @@ Difficulty level: Hard, because of the regular expression and questions.
 <span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Your result should look similar to:</p>
-<div id="aaa6d04b" class="cell" data-execution_count="18">
+<div id="f24cd2e1" class="cell" data-execution_count="18">
 <div class="cell-output cell-output-display" data-execution_count="18">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -938,7 +938,7 @@ Difficulty level: Easy, because you’ve worked out the hard bits already.
 </section>
 <section id="plot-the-data-1" class="level3">
 <h3 class="anchored" data-anchor-id="plot-the-data-1">Plot the Data</h3>
-<div id="cfbe822e" class="cell" data-execution_count="21">
+<div id="eb098c95" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>f,ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">1</span>,figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">6</span>))</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>ax.remove()</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1027,7 +1027,7 @@ Difficulty level: Medium, because you’re still learning about regexes.
 </section>
 <section id="plot-the-data-2" class="level3">
 <h3 class="anchored" data-anchor-id="plot-the-data-2">Plot the Data</h3>
-<div id="204356c4" class="cell" data-execution_count="24">
+<div id="a607bb49" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>f,ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">1</span>,figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">6</span>))</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>ax.remove()</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1093,7 +1093,7 @@ Difficulty level: Moderate
 <p>An amazing room with equipment you need to make the most of your trip to London. <br><br>The room has a double size bed, double wardrobe, chest of drawers.<br><br>We include bedsheets, towels, hand soap, toilet.<br><br>The house has a bathroom and kitchen that you will share with other roommates.<br><br>We are 5 min. walk from Canada Water station on zone 2. Central london is 15-20 in tube. You can walk to Tower Bridge, close to river.<br><br><b>The space</b><br>A house near the tube station, a 24 hr supermarket, in a quiet area of London, but very close to the center too.<br><br><b>Guest access</b><br>Guests can use their room and bathroom. Bathroom and kitchen are shared with roommates.<br><br><b>During your stay</b><br>I’m available for questions or tips around the area, through Airbnb messages. Always happy to help!<br><br><b>Other things to note</b><br>Please do not use shoes inside the house<br><br>We kindly ask to keep noise low from 2</p>
 </blockquote>
 <p>Note, however, that it includes some formatting (bold, line breaks, etc.) that isn’t strictly relevant and might actually give us issues downstream because it’s ‘markup’ and not content:</p>
-<div id="fc735fe2" class="cell" data-execution_count="27">
+<div id="559ed570" class="cell" data-execution_count="27">
 <div class="cell-output cell-output-stdout">
 <pre><code>An amazing room with equipment you need to make the most of your trip to London. &lt;br /&gt;
 &lt;br /&gt;
@@ -1203,13 +1203,13 @@ Difficulty level: Hard
 <section id="tokenizer" class="level3">
 <h3 class="anchored" data-anchor-id="tokenizer">Tokenizer</h3>
 <p>The other way to do this, which is probably <em>easier</em> but produces more complex output, is to draw on the tokenizers <a href="https://www.nltk.org/api/nltk.tokenize.html">already provided by NLTK</a>. For our purposes <code>word_tokenize</code> is probably fine, but depending on your needs there are other options and you can also write your own.</p>
-<div id="875e3e4b" class="cell" data-execution_count="31">
+<div id="810a101c" class="cell" data-execution_count="31">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'punkt'</span>)</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'wordnet'</span>)</span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.tokenize <span class="im">import</span> word_tokenize</span>
 <span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(word_tokenize)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;function word_tokenize at 0x17e3ee160&gt;</code></pre>
+<pre><code>&lt;function word_tokenize at 0x178ab6160&gt;</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>[nltk_data] Downloading package punkt to /Users/jreades/nltk_data...
@@ -1222,7 +1222,7 @@ Difficulty level: Hard
 <section id="compare" class="level3">
 <h3 class="anchored" data-anchor-id="compare">Compare</h3>
 <p>Look at how these outputs differ in subtle ways:</p>
-<div id="695582dd" class="cell" data-execution_count="32">
+<div id="0054e53b" class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>subbed <span class="op">=</span> []</span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>tokens <span class="op">=</span> []</span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> l <span class="kw">in</span> lower:</span>
@@ -1267,11 +1267,11 @@ Difficulty Level: Moderate
 </div>
 </div>
 </div>
-<div id="220bd7a2" class="cell" data-execution_count="33">
+<div id="640f5eb5" class="cell" data-execution_count="33">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>stopword_list <span class="op">=</span> <span class="bu">set</span>(stopwords.words(<span class="st">'english'</span>))</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(stopword_list)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>{'ourselves', 'am', "don't", 'y', 'the', 'weren', 'after', 'down', 'did', 'through', 'your', 'her', 'does', 'are', 'what', 'over', 's', "mightn't", "shouldn't", 'with', 'he', 'were', 'out', 'needn', 'all', 'an', 'again', "shan't", 'off', 're', 'will', 'you', 'now', 'where', 'don', 'that', 'ours', "mustn't", 'than', "you're", 'only', 'who', "should've", 'those', 'each', 'o', 've', 'shouldn', "doesn't", 'from', 'any', 'too', 'yourselves', 'himself', 'to', 'won', 'my', 'myself', 'or', 'its', 'as', 'a', 'own', 'theirs', 'shan', 'herself', 'about', 'at', 'their', 'into', 'can', "isn't", 'having', 'ma', "wouldn't", 'most', 'more', 'has', 'on', "didn't", 'hadn', 'same', 'ain', 'itself', 'should', 'while', 'such', 'do', 'not', "haven't", 'when', "wasn't", 'yours', 't', 'his', 'i', 'before', 'hers', "you'll", "you'd", 'been', 'until', "couldn't", "hasn't", 'further', 'during', 'whom', 'we', 'd', 'mightn', 'against', 'above', 'both', 'they', 'have', 'being', 'because', 'between', 'so', 'wasn', "you've", "aren't", 'under', 'for', 'other', 'll', "won't", 'how', 'if', 'had', 'is', 'below', 'of', 'didn', 'no', 'why', "she's", "that'll", 'hasn', 'up', 'and', 'aren', 'she', 'isn', 'me', 'few', 'which', 'just', 'was', 'but', 'once', 'there', 'themselves', 'very', 'this', 'him', 'be', 'these', 'doesn', 'then', 'our', 'here', 'wouldn', "it's", 'some', "hadn't", "needn't", 'mustn', "weren't", 'it', 'by', 'in', 'doing', 'couldn', 'yourself', 'them', 'm', 'haven', 'nor'}</code></pre>
+<pre><code>{'wouldn', 'the', 'once', 'and', 'no', "you're", 'which', "that'll", 'from', 'in', 'most', 'before', 'yourselves', "couldn't", "mustn't", 'is', 'into', 'yours', 'that', 'doesn', 'out', 'so', 'him', 'down', 'them', 'but', 'your', 'above', 'such', 'a', 'am', 'again', 'with', 'as', 'been', 'where', 'very', 'have', 't', 'does', "doesn't", 've', "hasn't", 'hasn', 'his', 'below', 'didn', "mightn't", 's', 'own', 'not', 'while', 'itself', 'this', 'theirs', 'how', 'both', 'what', 'up', "isn't", "needn't", 'isn', 'myself', 'has', 'y', 'just', 'was', 'because', 'her', 'at', "hadn't", 'why', 'i', 'an', "wasn't", 'hers', 'we', 'be', "don't", 'couldn', 'who', 'over', 'when', 'weren', 'off', 'then', 'should', 'being', 'll', 'other', 'some', 'can', "didn't", 'mustn', 'whom', 'are', 'same', 'don', 'further', 'after', 'having', 'only', "she's", "wouldn't", 'ours', 'nor', 'will', 'himself', 'ourselves', "won't", 'did', 'doing', 'their', 'to', 'more', 'during', 'hadn', "you'd", 'she', 'do', 'd', 'there', 'here', 'my', 'm', 're', 'about', 'than', 'were', 'now', 'those', 'o', "weren't", 'shouldn', "you've", 'of', 'ma', 'shan', 'its', 'against', 'between', 'any', 'they', "should've", 'haven', 'he', "shouldn't", 'under', "shan't", 'for', 'all', "you'll", 'these', 'needn', 'few', 'on', 'won', 'you', 'too', 'through', 'our', 'by', 'ain', "haven't", 'themselves', 'had', 'if', 'me', 'yourself', "aren't", 'herself', 'or', 'it', 'mightn', "it's", 'each', 'wasn', 'until', 'aren'}</code></pre>
 </div>
 </div>
 <section class="level4 qna-question">
@@ -1304,12 +1304,12 @@ Difficulty level: Low.
 </div>
 </div>
 </div>
-<div id="524cd9e8" class="cell" data-execution_count="35">
+<div id="2688d7cb" class="cell" data-execution_count="35">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.stem.porter <span class="im">import</span> PorterStemmer</span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.stem.snowball <span class="im">import</span> SnowballStemmer</span>
 <span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.stem.wordnet <span class="im">import</span> WordNetLemmatizer </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="7b6499f5" class="cell" data-execution_count="36">
+<div id="6f98d325" class="cell" data-execution_count="36">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>lemmatizer <span class="op">=</span> WordNetLemmatizer()</span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(lemmatizer.lemmatize(<span class="st">'monkeys'</span>))</span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(lemmatizer.lemmatize(<span class="st">'cities'</span>))</span>
@@ -1322,7 +1322,7 @@ complexity
 Reades</code></pre>
 </div>
 </div>
-<div id="d7ab2550" class="cell" data-execution_count="37">
+<div id="98ffe74e" class="cell" data-execution_count="37">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>stemmer <span class="op">=</span> PorterStemmer()</span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(stemmer.stem(<span class="st">'monkeys'</span>))</span>
 <span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(stemmer.stem(<span class="st">'cities'</span>))</span>
@@ -1335,7 +1335,7 @@ complex
 read</code></pre>
 </div>
 </div>
-<div id="3d6eff30" class="cell" data-execution_count="38">
+<div id="a76e1777" class="cell" data-execution_count="38">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>stemmer <span class="op">=</span> SnowballStemmer(language<span class="op">=</span><span class="st">'english'</span>)</span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(stemmer.stem(<span class="st">'monkeys'</span>))</span>
 <span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(stemmer.stem(<span class="st">'cities'</span>))</span>
@@ -1348,7 +1348,7 @@ complex
 read</code></pre>
 </div>
 </div>
-<div id="61a944bb" class="cell" data-execution_count="39">
+<div id="27f015cb" class="cell" data-execution_count="39">
 <div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>lemmatizer <span class="op">=</span> WordNetLemmatizer()</span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>lemmas  <span class="op">=</span> []</span>
 <span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>stemmed <span class="op">=</span> []</span>
@@ -1383,7 +1383,7 @@ read</code></pre>
 <section id="compare-and-contrast" class="level4">
 <h4 class="anchored" data-anchor-id="compare-and-contrast">Compare and Contrast</h4>
 <p>What are we doing here?</p>
-<div id="d312c101" class="cell" data-execution_count="40">
+<div id="d0978107" class="cell" data-execution_count="40">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ix, p <span class="kw">in</span> <span class="bu">enumerate</span>(stopped):</span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>    stopped_set <span class="op">=</span> <span class="bu">set</span>(stopped[ix])</span>
 <span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>    lemma_set   <span class="op">=</span> <span class="bu">set</span>(lemmas[ix])</span>
@@ -1417,7 +1417,7 @@ Difficulty level: Low.
 </div>
 </div>
 <p>This custom module is not perfect, but it gets the job done… mostly and has some additional features that you could play around with for a final project (e.g.&nbsp;<code>detect_entities</code> and <code>detect_acronyms</code>).</p>
-<div id="cdd53a59" class="cell" data-execution_count="41">
+<div id="616fbb63" class="cell" data-execution_count="41">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> urllib.request</span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>host  <span class="op">=</span> <span class="st">'https://orca.casa.ucl.ac.uk'</span></span>
 <span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>turl  <span class="op">=</span> <span class="ss">f'</span><span class="sc">{</span>host<span class="sc">}</span><span class="ss">/~jreades/__textual__.py'</span></span>
@@ -1451,13 +1451,13 @@ Difficulty Level: Low.
 <div class="sourceCode" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext autoreload</span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>autoreload <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Now let’s import it.</p>
-<div id="8422636d" class="cell" data-execution_count="42">
+<div id="f7123fa7" class="cell" data-execution_count="42">
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textual <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>All NLTK libraries installed...</code></pre>
 </div>
 </div>
-<div id="02c1e3cb" class="cell" data-execution_count="43">
+<div id="dc09bfc3" class="cell" data-execution_count="43">
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>as_markdown(<span class="st">'Input'</span>, cleaned)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="input" class="level5 cell-output cell-output-display cell-output-markdown">
 <h5 class="anchored" data-anchor-id="input">Input</h5>
@@ -1466,7 +1466,7 @@ Difficulty Level: Low.
 </blockquote>
 </section>
 </div>
-<div id="da289223" class="cell" data-execution_count="44">
+<div id="4aba17c9" class="cell" data-execution_count="44">
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>as_markdown(<span class="st">'Normalised'</span>, [normalise_document(x, remove_digits<span class="op">=</span><span class="va">True</span>) <span class="cf">for</span> x <span class="kw">in</span> cleaned])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="normalised" class="level5 cell-output cell-output-display cell-output-markdown">
 <h5 class="anchored" data-anchor-id="normalised">Normalised</h5>
@@ -1475,7 +1475,7 @@ Difficulty Level: Low.
 </blockquote>
 </section>
 </div>
-<div id="32db7bd0" class="cell" data-execution_count="45">
+<div id="f1da23ef" class="cell" data-execution_count="45">
 <div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="bu">help</span>(normalise_document)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Help on function normalise_document in module textual:
@@ -1587,7 +1587,7 @@ Difficulty level: Low, except for the double list-comprehension.
 <section id="select-and-extract-corpus" class="level3">
 <h3 class="anchored" data-anchor-id="select-and-extract-corpus">Select and Extract Corpus</h3>
 <p>See useful tutorial <a href="https://towardsdatascience.com/tf-idf-explained-and-python-sklearn-implementation-b020c5e83275">here</a>. Although we shouldn’t have any empty descriptions, by the time we’ve finished normalising the textual data we may have <em>created</em> some empty values and we need to ensure that we don’t accidentally pass a NaN to the vectorisers and frequency distribution functions.</p>
-<div id="261da6aa" class="cell" data-execution_count="47">
+<div id="9a0f9fe2" class="cell" data-execution_count="47">
 <div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The data set to which we want to apply</span></span>
 <span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the data normalisation code... feel free</span></span>
 <span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a><span class="co"># to change (though so will your results)</span></span>
@@ -1606,7 +1606,7 @@ Coding Tip
 <p>Notice how you only need to change the value of the variable here to try any of the different selections we did above? This is a simple kind of parameterisation somewhere between a function and hard-coding everything.</p>
 </div>
 </div>
-<div id="c8fdf808" class="cell" data-execution_count="48">
+<div id="b0656399" class="cell" data-execution_count="48">
 <div class="sourceCode cell-code" id="cb65"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>corpus <span class="op">=</span> srcdf.description_norm.fillna(<span class="st">' '</span>).values</span>
 <span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(corpus[<span class="dv">0</span>:<span class="dv">3</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1619,14 +1619,14 @@ Coding Tip
 <section id="tokenise" class="level3">
 <h3 class="anchored" data-anchor-id="tokenise">Tokenise</h3>
 <p>There are different forms of tokenisation and different algorithms will expect differing inputs. Here are two:</p>
-<div id="62e761e8" class="cell" data-execution_count="49">
+<div id="3f553e76" class="cell" data-execution_count="49">
 <div class="sourceCode cell-code" id="cb67"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>sentences <span class="op">=</span> [nltk.sent_tokenize(text) <span class="cf">for</span> text <span class="kw">in</span> corpus]</span>
 <span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>words     <span class="op">=</span> [[nltk.tokenize.word_tokenize(sentence) </span>
 <span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>                  <span class="cf">for</span> sentence <span class="kw">in</span> nltk.sent_tokenize(text)] </span>
 <span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>                  <span class="cf">for</span> text <span class="kw">in</span> corpus]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Notice how this has turned every sentence into an array and each document into an array of arrays:</p>
-<div id="899b9ee0" class="cell" data-execution_count="50">
+<div id="a32d9b11" class="cell" data-execution_count="50">
 <div class="sourceCode cell-code" id="cb68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Sentences 0: </span><span class="sc">{</span>sentences[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
 <span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Words 0: </span><span class="sc">{</span>words[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1660,7 +1660,7 @@ Difficulty level: Moderate.
 <section id="build-frequency-distribution" class="level3">
 <h3 class="anchored" data-anchor-id="build-frequency-distribution">Build Frequency Distribution</h3>
 <p>Build counts for ngram range 1..3:</p>
-<div id="aeaed5bc" class="cell" data-execution_count="51">
+<div id="7dc9f413" class="cell" data-execution_count="51">
 <div class="sourceCode cell-code" id="cb70"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>fcounts <span class="op">=</span> <span class="bu">dict</span>()</span>
 <span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Here we replace all full-stops... can you think why we might do this?</span></span>
@@ -1681,7 +1681,7 @@ Difficulty level: Moderate.
 <section id="output-top-n-ngrams" class="level3">
 <h3 class="anchored" data-anchor-id="output-top-n-ngrams">Output Top-n Ngrams</h3>
 <p>And output the most common ones for each ngram range:</p>
-<div id="40cfa335" class="cell" data-execution_count="52">
+<div id="c8bcae0b" class="cell" data-execution_count="52">
 <div class="sourceCode cell-code" id="cb72"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> dfs <span class="kw">in</span> fcounts.values():</span>
 <span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(dfs.sort_values(by<span class="op">=</span>dfs.columns.values[<span class="dv">0</span>], ascending<span class="op">=</span><span class="va">False</span>).head(<span class="dv">10</span>))</span>
 <span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1754,7 +1754,7 @@ Difficulty level: Low, but the output needs some thought!
 <p>This is a big foray into sklearn (sci-kit learn) which is the main machine learning and clustering module for Python. For processing text we use <em>vectorisers</em> to convert terms to a vector representation. We’re doing this on the smallest of the derived data sets because these processes can take a while to run and generate <em>huge</em> matrices (remember: one row and one column for each term!).</p>
 <section id="fit-the-vectoriser" class="level3">
 <h3 class="anchored" data-anchor-id="fit-the-vectoriser">Fit the Vectoriser</h3>
-<div id="78d3ca1a" class="cell" data-execution_count="53">
+<div id="2b791d50" class="cell" data-execution_count="53">
 <div class="sourceCode cell-code" id="cb74"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>cvectorizer <span class="op">=</span> CountVectorizer(ngram_range<span class="op">=</span>(<span class="dv">1</span>,<span class="dv">3</span>))</span>
 <span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>cvectorizer.fit(corpus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="53">
@@ -2169,7 +2169,7 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 <section id="brief-demonstration" class="level3">
 <h3 class="anchored" data-anchor-id="brief-demonstration">Brief Demonstration</h3>
 <p>Find the number associated with a word in the vocabulary and how many times it occurs in the original corpus:</p>
-<div id="97112eff" class="cell" data-execution_count="54">
+<div id="4979e78b" class="cell" data-execution_count="54">
 <div class="sourceCode cell-code" id="cb75"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>term <span class="op">=</span> <span class="st">'stratford'</span></span>
 <span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>pd.options.display.max_colwidth<span class="op">=</span><span class="dv">750</span></span>
 <span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the vocabulary mapping for the term</span></span>
@@ -2248,7 +2248,7 @@ Found 10 rows containing stratford</code></pre>
 <section id="transform-the-corpus" class="level3">
 <h3 class="anchored" data-anchor-id="transform-the-corpus">Transform the Corpus</h3>
 <p>You can only <em>tranform</em> the entire corpus <em>after</em> the vectoriser has been fitted. There is an option to <code>fit_transform</code> in one go, but I wanted to demonstrate a few things here and some vectorisers are don’t support the one-shot fit-and-transform approach. <strong>Note the type of the transformed corpus</strong>:</p>
-<div id="d3b8e7ac" class="cell" data-execution_count="55">
+<div id="4152b076" class="cell" data-execution_count="55">
 <div class="sourceCode cell-code" id="cb77"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>cvtcorpus <span class="op">=</span> cvectorizer.transform(corpus)</span>
 <span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>cvtcorpus <span class="co"># cvtcorpus for count-vectorised transformed corpus</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="55">
@@ -2260,7 +2260,7 @@ Found 10 rows containing stratford</code></pre>
 <section id="single-document" class="level3">
 <h3 class="anchored" data-anchor-id="single-document">Single Document</h3>
 <p>Here is the <strong>first</strong> document from the corpus:</p>
-<div id="2c63d0fa" class="cell" data-execution_count="56">
+<div id="356814f7" class="cell" data-execution_count="56">
 <div class="sourceCode cell-code" id="cb79"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>doc_df <span class="op">=</span> pd.DataFrame(cvtcorpus[<span class="dv">0</span>].T.todense(), </span>
 <span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>                      index<span class="op">=</span>cvectorizer.get_feature_names_out(), columns<span class="op">=</span>[<span class="st">"Counts"</span>]</span>
 <span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>                     ).sort_values(<span class="st">'Counts'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
@@ -2326,7 +2326,7 @@ Found 10 rows containing stratford</code></pre>
 </section>
 <section id="transformed-corpus" class="level3">
 <h3 class="anchored" data-anchor-id="transformed-corpus">Transformed Corpus</h3>
-<div id="b6038194" class="cell" data-execution_count="57">
+<div id="1ab87d2e" class="cell" data-execution_count="57">
 <div class="sourceCode cell-code" id="cb80"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>cvdf <span class="op">=</span> pd.DataFrame(data<span class="op">=</span>cvtcorpus.toarray(),</span>
 <span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>                        columns<span class="op">=</span>cvectorizer.get_feature_names_out())</span>
 <span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Raw count vectorised data frame has </span><span class="sc">{</span>cvdf<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> rows and </span><span class="sc">{</span>cvdf<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">:,}</span><span class="ss"> columns."</span>)</span>
@@ -2431,7 +2431,7 @@ Found 10 rows containing stratford</code></pre>
 <h3 class="anchored" data-anchor-id="filter-low-frequency-words">Filter Low-Frequency Words</h3>
 <p>These are likely to be artefacts of text-cleaning or human input error. As well, if we’re trying to look across an entire corpus then we might not want to retain words that only appear in a couple of documents.</p>
 <p>Let’s start by getting the <em>column</em> sums:</p>
-<div id="f30a7e90" class="cell" data-execution_count="58">
+<div id="0373d01b" class="cell" data-execution_count="58">
 <div class="sourceCode cell-code" id="cb82"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>sums <span class="op">=</span> cvdf.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"There are </span><span class="sc">{</span><span class="bu">len</span>(sums)<span class="sc">:,}</span><span class="ss"> terms in the data set."</span>)</span>
 <span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>sums.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -2454,7 +2454,7 @@ dtype: int64</code></pre>
 <div class="sourceCode" id="cb85"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>filter_terms <span class="op">=</span> sums <span class="op">&gt;=</span> cvdf.shape[<span class="dv">0</span>] <span class="op">*</span> ???</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now see how we can use this to strip out the columns corresponding to low-frequency terms:</p>
-<div id="5ffce06e" class="cell" data-execution_count="60">
+<div id="d7696d27" class="cell" data-execution_count="60">
 <div class="sourceCode cell-code" id="cb86"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>fcvdf <span class="op">=</span> cvdf.drop(columns<span class="op">=</span>cvdf.columns[<span class="op">~</span>filter_terms].values)</span>
 <span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Filtered count vectorised data frame has </span><span class="sc">{</span>fcvdf<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> rows and </span><span class="sc">{</span>fcvdf<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">:,}</span><span class="ss"> columns."</span>)</span>
 <span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>fcvdf.iloc[<span class="dv">0</span>:<span class="dv">5</span>,<span class="dv">0</span>:<span class="dv">10</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -2553,7 +2553,7 @@ dtype: int64</code></pre>
 </div>
 </div>
 </div>
-<div id="acba0c49" class="cell" data-execution_count="61">
+<div id="f1d4d18a" class="cell" data-execution_count="61">
 <div class="sourceCode cell-code" id="cb88"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>fcvdf.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="61">
 <pre><code>able                         8
@@ -2601,7 +2601,7 @@ Difficulty level: Moderate
 </div>
 <section id="fit-and-transform" class="level3">
 <h3 class="anchored" data-anchor-id="fit-and-transform">Fit and Transform</h3>
-<div id="de278119" class="cell" data-execution_count="62">
+<div id="e3f2b565" class="cell" data-execution_count="62">
 <div class="sourceCode cell-code" id="cb90"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>tfvectorizer <span class="op">=</span> TfidfVectorizer(use_idf<span class="op">=</span><span class="va">True</span>, ngram_range<span class="op">=</span>(<span class="dv">1</span>,<span class="dv">3</span>), </span>
 <span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a>                               max_df<span class="op">=</span><span class="fl">0.75</span>, min_df<span class="op">=</span><span class="fl">0.01</span>) <span class="co"># &lt;-- these matter!</span></span>
 <span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>tftcorpus    <span class="op">=</span> tfvectorizer.fit_transform(corpus) <span class="co"># TF-transformed corpus</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -2609,7 +2609,7 @@ Difficulty level: Moderate
 </section>
 <section id="single-document-1" class="level3">
 <h3 class="anchored" data-anchor-id="single-document-1">Single Document</h3>
-<div id="bd68d73b" class="cell" data-execution_count="63">
+<div id="20ea72c3" class="cell" data-execution_count="63">
 <div class="sourceCode cell-code" id="cb91"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>doc_df <span class="op">=</span> pd.DataFrame(tftcorpus[<span class="dv">0</span>].T.todense(), index<span class="op">=</span>tfvectorizer.get_feature_names_out(), columns<span class="op">=</span>[<span class="st">"Weights"</span>])</span>
 <span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>doc_df.sort_values(<span class="st">'Weights'</span>, ascending<span class="op">=</span><span class="va">False</span>).head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="63">
@@ -2673,7 +2673,7 @@ Difficulty level: Moderate
 </section>
 <section id="transformed-corpus-1" class="level3">
 <h3 class="anchored" data-anchor-id="transformed-corpus-1">Transformed Corpus</h3>
-<div id="d9d52b7d" class="cell" data-execution_count="64">
+<div id="9ad840e9" class="cell" data-execution_count="64">
 <div class="sourceCode cell-code" id="cb92"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>tfidf <span class="op">=</span> pd.DataFrame(data<span class="op">=</span>tftcorpus.toarray(),</span>
 <span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>                        columns<span class="op">=</span>tfvectorizer.get_feature_names_out())</span>
 <span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"TF/IDF data frame has </span><span class="sc">{</span>tfidf<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> rows and </span><span class="sc">{</span>tfidf<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">:,}</span><span class="ss"> columns."</span>)</span>
@@ -2870,7 +2870,7 @@ Difficulty level: Easy!
 </div>
 </div>
 </div>
-<div id="a949a0cb" class="cell" data-execution_count="65">
+<div id="fc3df238" class="cell" data-execution_count="65">
 <div class="sourceCode cell-code" id="cb94"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>fcvdf.<span class="bu">sum</span>().sort_values(ascending<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="65">
 <pre><code>walk                      595
@@ -2887,7 +2887,7 @@ london aquarium minute      5
 Length: 2043, dtype: int64</code></pre>
 </div>
 </div>
-<div id="c04fb665" class="cell" data-execution_count="66">
+<div id="f368f174" class="cell" data-execution_count="66">
 <div class="sourceCode cell-code" id="cb96"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>ff <span class="op">=</span> <span class="st">'RobotoMono-VariableFont_wght.ttf'</span></span>
 <span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>dp <span class="op">=</span> <span class="st">'/home/jovyan/.local/share/fonts/'</span></span>
 <span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>tp <span class="op">=</span> os.path.join(os.path.expanduser(<span class="st">'~'</span>),<span class="st">'Library'</span>,<span class="st">'Fonts'</span>)</span>
@@ -2896,7 +2896,7 @@ Length: 2043, dtype: int64</code></pre>
 <span id="cb96-6"><a href="#cb96-6" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
 <span id="cb96-7"><a href="#cb96-7" aria-hidden="true" tabindex="-1"></a>    fp <span class="op">=</span> os.path.join(dp,ff)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="992ff80c" class="cell" data-execution_count="67">
+<div id="b6fc2f91" class="cell" data-execution_count="67">
 <div class="sourceCode cell-code" id="cb97"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>f,ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">1</span>,figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">7</span>))</span>
 <span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a>plt.gcf().set_dpi(<span class="dv">150</span>)</span>
 <span id="cb97-3"><a href="#cb97-3" aria-hidden="true" tabindex="-1"></a>Cloud <span class="op">=</span> WordCloud(</span>
@@ -2934,7 +2934,7 @@ Difficulty level: Low, but you’ll need to be patient!
 </div>
 </div>
 </div>
-<div id="0393d998" class="cell" data-execution_count="68">
+<div id="980cd77d" class="cell" data-execution_count="68">
 <div class="sourceCode cell-code" id="cb98"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>tfidf.<span class="bu">sum</span>().sort_values(ascending<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="68">
 <pre><code>walk                     23.037285
@@ -2951,7 +2951,7 @@ also close station        0.401426
 Length: 1911, dtype: float64</code></pre>
 </div>
 </div>
-<div id="edb3bdb0" class="cell" data-execution_count="69">
+<div id="379eeba1" class="cell" data-execution_count="69">
 <div class="sourceCode cell-code" id="cb100"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>f,ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">1</span>,figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">7</span>))</span>
 <span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a>plt.gcf().set_dpi(<span class="dv">150</span>)</span>
 <span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>Cloud <span class="op">=</span> WordCloud(</span>
