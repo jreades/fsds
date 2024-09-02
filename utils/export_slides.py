@@ -24,9 +24,11 @@ import subprocess
 # talks will be in the same folder because that's
 # fairly logical in a teaching contenxt.
 print(f"Working in: {os.getcwd()}")
+if not os.path.exists(os.path.join('_export')):
+    os.makedirs(os.path.join('_export'))
 remote_path = 'lectures'
-reveal_path = os.path.join('docs',remote_path) 
-export_path = os.path.join('export')
+reveal_path = os.path.join('_site',remote_path) 
+export_path = os.path.join('_export')
 
 # Other configuration parameters
 quarto_url = 'http://localhost:4200'
@@ -89,8 +91,12 @@ for src in reveal_files:
 
             # Call Decktape -- slightly annoyingly this also 
             # creates a PDF file even if we ask it not to do so.
-            call = ['/usr/local/bin/decktape',
-                '--screenshots', '--screenshots-format', 'png', '--screenshot-size', "'1280x720'",
+            deckpath = '/usr/local/bin/decktape'
+            if os.path.exists('/opt/homebrew/bin/decktape'):
+                deckpath = '/opt/homebrew/bin/decktape'
+            
+            call = [deckpath,
+                '--screenshots', '--screenshots-format', 'png', '--screenshots-size', '1280x720',
                 '--screenshots-directory', f"./{sub_dir}", 'reveal',
                 reveal_url, src.replace('.html','.pdf')]
             #print("  ", " ".join(call))
