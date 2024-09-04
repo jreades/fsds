@@ -10,11 +10,6 @@ In order to make use of these materials you will need to download and install th
 
 ## To Dos
 
-- [ffmpeg stuff](./ffmpeg/README.md)
-- Move Debugging Manifesto in Lecture 2.5 and re-render video.
-- [Shift away from .values](https://stackoverflow.com/questions/17241004/how-do-i-convert-a-pandas-series-or-index-to-a-numpy-array/54324513#54324513)
 - Require more active use of GitHub/Git — a submission in which it’s easy to automate checks that they’ve created a repo and populated it with the completed notebooks?
-- Refresh Code Camp and make it more self-test oriented. Use the self-test to set expectations about level of effort/preparation required (and whether or not taking the module will be useful).
-- Standardise delivery of practical content by TAs: should have consistent approach across practicals.
-- Point to cross-module content/recaps.
+- Refresh Code Camp and make it more self-test oriented. 
 
