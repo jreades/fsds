@@ -82,12 +82,14 @@ Here’s code to read a (remote) CSV file:
 import pandas as pd      # import package
 # Bitly: https://raw.githubusercontent.com/jreades/fsds/master/data/2019-sample-crime.csv
 url='https://bit.ly/39SJpfp'
-df = pd.read_csv(url)     # load a (remote) CSV
-print(type(df))           # not simple data type
-print(df.columns.values)  # column names
+df = pd.read_csv(url)       # load a (remote) CSV
+print(type(df))             # not simple data type
+print(df.columns.to_list()) # column names
+print(df.columns.values)    # Also works but deprecated
 ```
 
 Output:
+
 ```python
 <class 'pandas.core.frame.DataFrame'>
 ['ID' 'Case Number' 'Date' 'Primary Type' 'Description'
@@ -287,7 +289,7 @@ This shows that `Date` is currently a string of dates+times.
 
 Pandas handles date and times using a `datetime` type that also works as an index (more on these later):
 ```python
-df['dt'] = pd.to_datetime(df.Date.values, 
+df['dt'] = pd.to_datetime(df.Date.array, 
               format="%m/%d/%Y %H:%M:%S %p")
 print(df.dt.dtype.name)
 # datetime64[ns]
