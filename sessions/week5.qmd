@@ -1,59 +1,66 @@
 ---
-title: "Numeric Data"
+title: "Objects"
+week: 5
 ---
 
 ## Overview
 
-This week we will be introducing the use of the pandas library for data analysis and management through a focus on numeric data and its distribution(s). This marks a major shift from working with concepts (lists, dictionaries, functions, etc.) largely in isolation to encountering all of them together 'in the wild' as part of a full data science workflow. So we are moving from the acquisition of concepts to their integration in the same way that we will — over the course of these three sessions — be coming from data acquisition to data integration.
+This week we will see how Python actually works by looking beyond simple functions and into methods, classes, and the outlines of Object Oriented Design and Programming (OOD/OOP). We'll also look at what to do when 'things go wrong', because they will, but sometimes we want that to blow up the application while other times we want Python to handle the 'exception' gracefully. Learning to read Exceptions is essential to *debugging* code: the one thing that almost never works when you get an exception is ignoring it.
 
 ::: {.callout-important}
-## Learning Objectives
+### Learning Objectives
 
-1. An appreciation of how and why this module *differs* from (QM) CASA0007.
-2. The beginnings of a more integrative understanding of foundational computer science concepts and the practice(s) of data science.
-3. A basic understanding of data acquisition and manipulation in Python.
+1. Develop *enough* of an understanding of classes and inheritance that you can make effective use of Python.
+2. Develop an understanding of how to read and write Exceptions so as to be able to create robust code.
+3. Under the process of moving code from in-line scripting, to functions, to packages of functions.
+4. Begin developing an appreciation of the *substantive* concerns of the module (data, ethics, bias, and the risks of 'experts' who 'know it all').
 ::: 
+
+This week deals with 'objects' and 'classes', which is fundamental to mastering the Python programming language: in Python, *everything* is an object, you just didn't need to know it until now. Understanding how classes and objects work is essential to using Python effectively, but it will also make you a better programmer in any language because it will help you to think about how data and code work _together_ to achieve your goals. 
 
 ## Lectures
 
-Come to class prepared to present/discuss:
+Come to class prepared to present:
 
 | Session | Video | Presentation | 
 | :------ | :---- | :----------- | 
-| Logic | [Video]({{< var vids.logic >}}) | [Slides](../lectures/5.1-Logic.qmd) | 
-| Randomness | [Video]({{< var vids.randomness >}}) | [Slides](../lectures/5.2-Randomness.qmd) | 
-| Data | [Video]({{< var vids.files >}}) | [Slides](../lectures/5.3-Files.qmd) | 
-| Pandas | [Video]({{< var vids.pandas >}}) | [Slides](../lectures/5.4-Pandas.qmd) | 
-| More on the Assessments | In class | [Slides](../lectures/5.5-Assessments.qmd) | 
+| Methods | [Video]({{< var vids.methods >}}) | [Slides](../lectures/{{< meta week >}}.1-Methods.qmd) | 
+| Classes | [Video]({{< var vids.classes >}}) | [Slides](../lectures/{{< meta week >}}.2-Classes.qmd) | 
+| Design | [Video]({{< var vids.design >}}) | [Slides](../lectures/{{< meta week >}}.3-Design.qmd) | 
+| Exceptions | [Video]({{< var vids.exceptions >}}) | [Slides](../lectures/{{< meta week >}}.4-Errors.qmd) | 
+| More on the Assessments | In class | [Slides](../lectures/{{< meta week >}}.5-Assessments.qmd) | 
 
 ## Other Prep
 
 - Come to class prepared to present/discuss:
-  - @dignazio:2020, chap. 4, *What Gets Counted Counts*  
-  <[URL](https://ucl.primo.exlibrisgroup.com/discovery/fulldisplay?docid=alma9931206723604761&context=L&vid=44UCL_INST:UCL_VU2&lang=en&search_scope=UCLLibraryCatalogue&adaptor=Local%20Search%20Engine&isFrbr=true&tab=UCLLibraryCatalogue&query=any,contains,D%5C%27Ignazio%20Data%20Feminism&sortby=date_d&facet=frbrgroupid,include,9041340239229546206&offset=0)>
-  - @Wachsmuth:2018] <[URL](https://doi.org/10.1177%2F0308518X18778038)>
-  - @Harris:2018 <[URL](https://www.theguardian.com/commentisfree/2018/feb/12/profiteers-killing-airbnb-erode-communities)>
+  - @Cox:2016 <[PDF](http://insideairbnb.com/reports/how-airbnbs-data-hid-the-facts-in-new-york-city.pdf)>
+  - @dignazio:2020, chap. 5, *Unicorns Janitors, Ninjas, Wizards, and Rock Stars* <[URL](https://ucl.primo.exlibrisgroup.com/discovery/fulldisplay?docid=alma9931206723604761&context=L&vid=44UCL_INST:UCL_VU2&lang=en&search_scope=UCLLibraryCatalogue&adaptor=Local%20Search%20Engine&isFrbr=true&tab=UCLLibraryCatalogue&query=any,contains,D%5C%27Ignazio%20Data%20Feminism&sortby=date_d&facet=frbrgroupid,include,9041340239229546206&offset=0)>
+- We'll aim to do the 'Student Dialogue' Mentimeter poll at the start of class.
 
 ::: {.callout-tip}
 ## Connections
 
-Two more readings about the impact of Airbnb on cities [@Wachsmuth:2018;@Harris:2018] that you're likely to find useful for developing your thinking for the [Group Work](../assessments/group.qmd) and one by @dignazio:2020 to highlight the importance of thinking about what a data set captures... and what it excludes. You should almost *never* be claiming that your (social) data represents the 'universe' of behaviours or is somehow 'complete'.
+We're now going to shift our focus slightly towards more critical takes on data and data science. These are *not* by people who can't 'do' data science, rather they point to ways in which neither the data, nor the people who process them, are neutral or objective in the way that we often like to think they are. @Cox:2016 is also a first introduction to the underlying data that we'll be working with over the rest of term. @dignazio:2020 should be getting you thinking about how 'cleaning' is not just about hygiene but has real implications for what you can and will find in your data: data is often a lot less 'tidy' than `tidyr` might lead you think!
 
 :::
 
 ## Practical
 
-In this practical we will begin working with the InsideAirbnb data, which you will have briefly examined in CASA0005. This week we focus on the first 'class' of data in the data set: simple numeric columns. We will see how to use Pandas for (simple) visualisation and (the beginnings of) analysis. It is hoped that you will see how Pandas combines and builds on techniques that we've already seen: while Pandas is incredibly sophisticated, the underlying *concepts* have been covered in the preceding three weeks! At this point we will also begin to make use of Pandas functionality to subset and explore the data.
+:::{.callout-warning}
+
+This practical will lead you through the process of converting inline scripts into functions and, ultimately, into a simple package. The last parts of the practical are *optional* -- creating classes in hierarchies is integral to how Python works, but many data scientists will rarely need to write their own classes... they just make use of classes written by others (which is why understanding what they *are* is important, but being able to write your own is a little less so).
+
+::: 
 
 ::: {.callout-tip}
 ## Connections
 
 The practical focusses on:
 
-- Seeing how Pandas is 'just' a sophisticated extension of what we've already done.
-- Familiarising yourself with Pandas functionality.
-- Performing basic data cleaning and exploration tasks (including visualisation).
-- Selecting and aggregating data in pandas.
+- Bedding in the 'data thinking' from last week's practical.
+- Creating functions to perform repetitive tasks.
+- Packaging these functions up and accessing via the appropriate namespace.
+- Implementing a few simple classes so that you understand the basics of how they work.
 :::
 
 To access the practical:
@@ -63,11 +70,11 @@ To access the practical:
 #| echo: false
 #| code-fold: false
 
-prac = "Practical-05-Numeric_Data"
+prac = "Practical-05-Objects"
 
 print("1. [Preview]({{< var module.web >}}practicals/" + prac + ".html)")
 print("2. [Download]({{< var module.web >}}practicals/" + prac + ".ipynb)")
 
 ```
 
-## References 
+## References

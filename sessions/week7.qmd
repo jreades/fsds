@@ -1,22 +1,22 @@
 ---
-title: "Textual Data"
+title: "Spatial Data"
+week: 7
 ---
 
 ## Overview
 
-Although the direct use of textual (both structured and unstructured) data is still relatively rare in spatial analyses, the growth of crowd-sourced and user-generated content points to the growing importance of this area. he tools and approaches in this area are also evolving quickly and changing rapidly, so this week is intended primarily to familiarise you with the basic landscape in preparation for you developing your skills further in your own time!
+This week we will be focussing on the use of the geopandas library for spatial data analysis and management through a focus on spatial data and its distribution(s). Geopandas will help to clarify how Object-Oriented design and inheritance processes work, while also allowing to interrogate and map the assigned data set(s). A critical concept that should be emerging here is that spatial and numerical data analyses are, fundamentally, just two different views of the same data. 
 
 ::: {.callout-important}
 ## Learning Outcomes
 
-1. An awareness of the benefits of separating content from presentation. 
-2. A basic understanding of pattern-matching in Python (you will have been exposed to this Week 2 of CASA0005)
-3. A basic understanding of how text can be 'cleaned' to make it more amenable for analysis
-4. An appreciation of parallelisation in the context of text processing.
-5. An appreciation of how text can be analysed.
-:::
+1. You develop better *judgement* about interpreting and representing data.
+2. You understand how GeoPandas *extends* Pandas with spatial functionality.
+3. You build on material covered in Week 1-3, and 5 of CASA0005 to extend your understanding of mapping and spatial data.
+4. You develop better *practices* for (spatial) data exploration.
+::: 
 
-The manipulation of text requires a high level of abstraction -- of thinking about words as data in ways that are deeply counter-intuitive -- but the ability to do forms a critical bridge between this block and the subsequent one, while also reinforcing the idea that numerical, spatial, and textual data analyses provide alternative (and often complementary) views into the data. 
+So we're going to be looking at both how to work geo-data in Python *and* how to explore a real-world data set using Exploratory Data Analysis (EDA) and Exploratory *Spatial* Data Analysis (ESDA) approaches to mapping distributions, testing for NaNs, and so on.
 
 ## Lectures
 
@@ -24,40 +24,39 @@ Come to class prepared to present/discuss:
 
 | Session | Video | Presentation | 
 | :------ | :---- | :----------- | 
-| Notebooks as Documents | [Video]({{< var vids.notebooks >}}) | [Slides](../lectures/7.1-Notebooks_as_Documents.qmd) | 
-| Patterns in Text | [Video]({{< var vids.patterns >}}) | [Slides](../lectures/7.2-Patterns_in_Text.qmd) | 
-| Cleaning Text | [Video]({{< var vids.cleaning >}}) | [Slides](../lectures/7.3-Cleaning_Text.qmd) | 
-| Analysing Text | [Video]({{< var vids.analysing >}}) | [Slides](../lectures/7.4-Analysing_Text.qmd) | 
+| Mapping | [Video]({{< var vids.mapping >}}) | [Slides](../lectures/{{< meta week >}}.1-Mapping.qmd) | 
+| GeoPandas | [Video]({{< var vids.geopandas >}}) | [Slides](../lectures/{{< meta week >}}.2-Geopandas.qmd) | 
+| EDA | [Video]({{< var vids.eda >}}) |[Slides](../lectures/{{< meta week >}}.3-EDA.qmd) | 
+| ESDA | [Video]({{< var vids.esda >}}) | [Slides](../lectures/{{< meta week >}}.4-ESDA.qmd) | 
 
 ## Other Prep
 
-- Come to class prepared to present/discuss:
-  - @Ladd:2020 <[URL](https://programminghistorian.org/en/lessons/common-similarity-measures)>
-  - @Lavin:2019 <[URL](https://programminghistorian.org/en/lessons/analyzing-documents-with-tfidf)>
-  - @Reades:2023 <[URL](https://doi.org/10.46430/phen0111)>
-- Complete the [short Moodle quiz]({{< var quiz.week7 >}}) associated with this week's activities.
+- Come to class prepared to present:
+  - @dignazio:2020, chap. 6, *The Numbers Don't Speak for Themselves* <[URL](https://ucl.primo.exlibrisgroup.com/discovery/fulldisplay?docid=alma9931206723604761&context=L&vid=44UCL_INST:UCL_VU2&lang=en&search_scope=UCLLibraryCatalogue&adaptor=Local%20Search%20Engine&isFrbr=true&tab=UCLLibraryCatalogue&query=any,contains,D%5C%27Ignazio%20Data%20Feminism&sortby=date_d&facet=frbrgroupid,include,9041340239229546206&offset=0)> 
+  - @Elwood:2017 <[URL](https://doi.org/10.1080/13658816.2017.1334892)>
+- Complete the [short Moodle quiz]({{< var quiz.week6 >}}) associated with this week's activities.
+- Student Dialogue: [Mentimeter poll](https://moodle.ucl.ac.uk/mod/url/view.php?id=4389751&forceview=1) to be completed by the start of class.
 
 ::: {.callout-tip}
 ## Connections
 
-Conceptually, this is by far the hardest week of the entire term: there is very little upon which to draw from other modules, and the processing of text with computers rarely makes it beyond simple regular expressions; however, the growth in data that is 'accidental, open, and everywhere' [@arribas2014accidental] means that a lot more of it is **unstructured** and contains free-text written by humans as well as numerical and coordinate data generated by sensors or transactions. Using tutorial from the [Programming Historian](https://programminghistorian.org), we're going to look at the foundations of text processing and how we can extract important terms from a document as well as, ultimately, the foundations upon which modern Large Language Models are built. 
+The really crucial insight here is to see how we are constantly looking back to *earlier* concepts, data structures, and tools to assemble our data and data visualisations in a *computational* manner: caching local data, defining the corners of a map, zooming in/out, creating coordinate pairs from a tuple, etc. The *hard* part is that Python's most-used way of presenting data visually (`matplotlib`) works utterly differently from `ggplot`: `matplotlib` is much more like a canvas on to which things are 'painted' by the computer and much less like a series of data transformations using a 'grammer of graphics'. On the whole, `ggplot` is easier to learn and, often, can yield better-looking plots, whereas `matplotlib` is a bit like dropping through the looking glass into a world where *everything* can be changed and tweaked endlessly but it's hard to get something that looks good without a *lot* more work.
 
 :::
 
 ## Practical
 
-In the practical we will continue to work with the InsideAirbnb data, here focussing on the third 'class' of data in the data set: text. We will see how working with text is more complex than working with numeric or spatial data and, consequently, why the computational costs rise accordingly. This practical should suggest some new lines of inquiry for [Group Project](../assessments/group.qmd).
+In the practical we will continue to work with the InsideAirbnb data, here focussing on the second 'class' of data in the data set: geography. We will see how to use GoePandas and PySAL for (geo)visualisation and analysis.
 
 ::: {.callout-tip}
 ## Connections
 
 The practical focusses on:
 
-- Applying simple regular expressions to find patterns in text.
-- How to clean text in preparation for further analysis.
-- Simple transformations that allow you to analyse text (e.g. TF/IDF)
-- Ways of exploring groups/similarity in textual data.
-
+- Creating/working with geo-data in Python.
+- Making maps with Python.
+- Exploring the data visually.
+- 
 :::
 
 To access the practical:
@@ -67,25 +66,11 @@ To access the practical:
 #| echo: false
 #| code-fold: false
 
-prac = "Practical-07-Textual_Data"
+prac = "Practical-07-Spatial_Data"
 
 print("1. [Preview]({{< var module.web >}}practicals/" + prac + ".html)")
 print("2. [Download]({{< var module.web >}}practicals/" + prac + ".ipynb)")
 
 ```
 
-Bonus material containing material related to Natural Language Processing (NLP): 
-
-```{python}
-#| output: asis
-#| echo: false
-#| code-fold: false
-
-prac = "Practical-07-Textual_Data-Pt2"
-
-print("3. [Preview]({{< var module.web >}}practicals/" + prac + ".html)")
-print("4. [Download]({{< var module.web >}}practicals/" + prac + ".ipynb)")
-
-```
-
-## References
+## References 

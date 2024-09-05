@@ -1,21 +1,19 @@
 ---
-title: "Spatial Data"
+title: "Numeric Data"
+week: 6
 ---
 
 ## Overview
 
-This week we will be focussing on the use of the geopandas library for spatial data analysis and management through a focus on spatial data and its distribution(s). Geopandas will help to clarify how Object-Oriented design and inheritance processes work, while also allowing to interrogate and map the assigned data set(s). A critical concept that should be emerging here is that spatial and numerical data analyses are, fundamentally, just two different views of the same data. 
+This week we will be introducing the use of the pandas library for data analysis and management through a focus on numeric data and its distribution(s). This marks a major shift from working with concepts (lists, dictionaries, functions, etc.) largely in isolation to encountering all of them together 'in the wild' as part of a full data science workflow. So we are moving from the acquisition of concepts to their integration in the same way that we will — over the course of these three sessions — be coming from data acquisition to data integration.
 
 ::: {.callout-important}
-## Learning Outcomes
+## Learning Objectives
 
-1. You develop better *judgement* about interpreting and representing data.
-2. You understand how GeoPandas *extends* Pandas with spatial functionality.
-3. You build on material covered in Week 1-3, and 5 of CASA0005 to extend your understanding of mapping and spatial data.
-4. You develop better *practices* for (spatial) data exploration.
+1. An appreciation of how and why this module *differs* from (QM) CASA0007.
+2. The beginnings of a more integrative understanding of foundational computer science concepts and the practice(s) of data science.
+3. A basic understanding of data acquisition and manipulation in Python.
 ::: 
-
-So we're going to be looking at both how to work geo-data in Python *and* how to explore a real-world data set using Exploratory Data Analysis (EDA) and Exploratory *Spatial* Data Analysis (ESDA) approaches to mapping distributions, testing for NaNs, and so on.
 
 ## Lectures
 
@@ -23,38 +21,39 @@ Come to class prepared to present/discuss:
 
 | Session | Video | Presentation | 
 | :------ | :---- | :----------- | 
-| Mapping | [Video]({{< var vids.mapping >}}) | [Slides](../lectures/6.1-Mapping.qmd) | 
-| GeoPandas | [Video]({{< var vids.geopandas >}}) | [Slides](../lectures/6.2-Geopandas.qmd) | 
-| EDA | [Video]({{< var vids.eda >}}) |[Slides](../lectures/6.3-EDA.qmd) | 
-| ESDA | [Video]({{< var vids.esda >}}) | [Slides](../lectures/6.4-ESDA.qmd) | 
+| Logic | [Video]({{< var vids.logic >}}) | [Slides](../lectures/{{< meta week >}}.1-Logic.qmd) | 
+| Randomness | [Video]({{< var vids.randomness >}}) | [Slides](../lectures/{{< meta week >}}.2-Randomness.qmd) | 
+| Data | [Video]({{< var vids.files >}}) | [Slides](../lectures/{{< meta week >}}.3-Files.qmd) | 
+| Pandas | [Video]({{< var vids.pandas >}}) | [Slides](../lectures/{{< meta week >}}.4-Pandas.qmd) | 
 
 ## Other Prep
 
-- Come to class prepared to present:
-  - @dignazio:2020, chap. 6, *The Numbers Don't Speak for Themselves* <[URL](https://ucl.primo.exlibrisgroup.com/discovery/fulldisplay?docid=alma9931206723604761&context=L&vid=44UCL_INST:UCL_VU2&lang=en&search_scope=UCLLibraryCatalogue&adaptor=Local%20Search%20Engine&isFrbr=true&tab=UCLLibraryCatalogue&query=any,contains,D%5C%27Ignazio%20Data%20Feminism&sortby=date_d&facet=frbrgroupid,include,9041340239229546206&offset=0)> 
-  - @Elwood:2017 <[URL](https://doi.org/10.1080/13658816.2017.1334892)>
-- Complete the [short Moodle quiz]({{< var quiz.week6 >}}) associated with this week's activities.
-- Student Dialogue: [Mentimeter poll](https://moodle.ucl.ac.uk/mod/url/view.php?id=4389751&forceview=1) to be completed by the start of class.
+- Come to class prepared to present/discuss:
+  - @dignazio:2020, chap. 4, *What Gets Counted Counts*  
+  <[URL](https://ucl.primo.exlibrisgroup.com/discovery/fulldisplay?docid=alma9931206723604761&context=L&vid=44UCL_INST:UCL_VU2&lang=en&search_scope=UCLLibraryCatalogue&adaptor=Local%20Search%20Engine&isFrbr=true&tab=UCLLibraryCatalogue&query=any,contains,D%5C%27Ignazio%20Data%20Feminism&sortby=date_d&facet=frbrgroupid,include,9041340239229546206&offset=0)>
+  - @Wachsmuth:2018] <[URL](https://doi.org/10.1177%2F0308518X18778038)>
+  - @Harris:2018 <[URL](https://www.theguardian.com/commentisfree/2018/feb/12/profiteers-killing-airbnb-erode-communities)>
 
 ::: {.callout-tip}
 ## Connections
 
-The really crucial insight here is to see how we are constantly looking back to *earlier* concepts, data structures, and tools to assemble our data and data visualisations in a *computational* manner: caching local data, defining the corners of a map, zooming in/out, creating coordinate pairs from a tuple, etc. The *hard* part is that Python's most-used way of presenting data visually (`matplotlib`) works utterly differently from `ggplot`: `matplotlib` is much more like a canvas on to which things are 'painted' by the computer and much less like a series of data transformations using a 'grammer of graphics'. On the whole, `ggplot` is easier to learn and, often, can yield better-looking plots, whereas `matplotlib` is a bit like dropping through the looking glass into a world where *everything* can be changed and tweaked endlessly but it's hard to get something that looks good without a *lot* more work.
+Two more readings about the impact of Airbnb on cities [@Wachsmuth:2018;@Harris:2018] that you're likely to find useful for developing your thinking for the [Group Work](../assessments/group.qmd) and one by @dignazio:2020 to highlight the importance of thinking about what a data set captures... and what it excludes. You should almost *never* be claiming that your (social) data represents the 'universe' of behaviours or is somehow 'complete'.
 
 :::
 
 ## Practical
 
-In the practical we will continue to work with the InsideAirbnb data, here focussing on the second 'class' of data in the data set: geography. We will see how to use GoePandas and PySAL for (geo)visualisation and analysis.
+In this practical we will begin working with the InsideAirbnb data, which you will have briefly examined in CASA0005. This week we focus on the first 'class' of data in the data set: simple numeric columns. We will see how to use Pandas for (simple) visualisation and (the beginnings of) analysis. It is hoped that you will see how Pandas combines and builds on techniques that we've already seen: while Pandas is incredibly sophisticated, the underlying *concepts* have been covered in the preceding three weeks! At this point we will also begin to make use of Pandas functionality to subset and explore the data.
 
 ::: {.callout-tip}
 ## Connections
 
 The practical focusses on:
 
-- Creating/working with geo-data in Python.
-- Making maps with Python.
-- Exploring the data visually.
+- Seeing how Pandas is 'just' a sophisticated extension of what we've already done.
+- Familiarising yourself with Pandas functionality.
+- Performing basic data cleaning and exploration tasks (including visualisation).
+- Selecting and aggregating data in pandas.
 :::
 
 To access the practical:
@@ -64,7 +63,7 @@ To access the practical:
 #| echo: false
 #| code-fold: false
 
-prac = "Practical-06-Spatial_Data"
+prac = "Practical-06-Numeric_Data"
 
 print("1. [Preview]({{< var module.web >}}practicals/" + prac + ".html)")
 print("2. [Download]({{< var module.web >}}practicals/" + prac + ".ipynb)")
