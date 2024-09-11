@@ -9,6 +9,8 @@ footer: "Decorators • Jon Reades"
 highlight-style: github
 code-copy: true
 code-line-numbers: true
+execute:
+  echo: true
 slide-level: 2
 title-slide-attributes:
   data-background-image: ../img/CASA_Logo_no_text.png
@@ -20,26 +22,291 @@ history: false
 css: slides.css
 ---
 
+## A Basic Function
 
-## Resources {.smaller}
+```{python}
+def hello():
+  return('hello world')
+
+print(hello())
+```
+
+## Modifying the Function
+
+Let's get meta:
+
+```{python}
+def better():
+  def hello():
+    print("  + Defining hello!")
+    return('hello world')
+  print("+ Calling hello...")
+  rv = hello().title() + "!"
+  print(f"+ hello returned {rv}")
+  return(rv)
+
+better()
+```
+
+## Decorating the Function
+
+```{python}
+def better(func):
+  def wrapper():
+    return func().title() + "!"
+  return wrapper
+
+@better
+def hello():
+  return('hello world')
+
+print(hello())
+```
+
+## WTF?
+
+How did that happen?
+
+```{python}
+#| eval: False
+#| code-line-numbers: "1,6"
+def better(func):
+  def wrapper():
+    return func().title() + "!"
+  return wrapper
+
+@better
+def hello():
+  return('hello world')
+
+print(hello())
+```
+
+## The Decorator Function
+
+Let's unpack the `wrapper`:
+
+```{python}
+#| eval: False
+#| code-line-numbers: "2-4"
+def better(func):
+  def wrapper():
+    return func().title() + "!"
+  return wrapper
+
+@better
+def hello():
+  return('hello world')
+
+print(hello())
+```
+
+## Reusing a Decorator
+
+Everything's 'better' now:
+
+```{python}
+@better
+def goodbye():
+  return('GooDBye world')
+
+print(goodbye())
+```
+
+## But...
+
+But this:
+
+```{python}
+#| eval: false
+@better
+def bad_func():
+  return(2)
+
+print(bad_func())
+```
+
+Will trigger this:
+
+```python
+      2 def wrapper():
+----> 3   return func().title() + "!"
+
+AttributeError: 'int' object has no attribute 'title'
+```
+
+## Chaining Decorators^[[Datacamp](https://www.datacamp.com/tutorial/decorators-python)]
+
+```{python}
+def splitter(func):
+  def wrapper():
+    return func().split()
+  return wrapper
+
+@splitter
+@better
+def hello():
+  return('hello world')
+
+print(hello())
+```
+
+## Using Func(tion)Tools
+
+And there are decorators for decorators...
+
+```{python}
+from functools import wraps
+def better(func):
+  @wraps(func)
+  def wrapper():
+    return func().title() + "!"
+  return wrapper
+
+@better
+def hello():
+  return('hello world')
+
+print(hello())
+```
+
+## Unpicking Functools
+
+```{python}
+#| eval: False
+#| code-line-numbers: "1,3"
+from functools import wraps
+def better(func):
+  @wraps(func)
+  def wrapper():
+    return func().title() + "!"
+  return wrapper
+...
+```
+
+## Making Use of Metadata {.smaller}
+
+Compare:
 
 :::: {.columns}
 ::: {.column width="50%"}
-- [What is a function?](https://www.linkedin.com/learning/python-quick-start/what-is-a-function)
-- [Python functions](https://www.linkedin.com/learning/learning-python-2/python-functions)
-- [Built-in functions](https://www.linkedin.com/learning/python-quick-start/built-in-functions-in-python)
-- [Define your own functions](https://www.linkedin.com/learning/python-quick-start/define-and-call-your-own-functions)
-- [Types of functions](https://www.linkedin.com/learning/python-quick-start/types-of-functions)
-- [Defining a function](https://www.linkedin.com/learning/python-essential-training-2/defining-a-function)
+```{python}
+def better(func):
+  '''Better formatting of a string'''
+  def wrapper():
+    '''Wraps a function to format it.'''
+    return func().title() + "!"
+  return wrapper
+
+@better
+def hello():
+  '''Prints hello world'''
+  return('hello world')
+
+print(hello.__name__)
+print(hello.__doc__)
+```
 :::
 ::: {.column width="50%"}
-- [Function arguments](https://www.linkedin.com/learning/python-essential-training-2/function-arguments)
-- [Argument lists](https://www.linkedin.com/learning/python-essential-training-2/argument-lists)
-- [Keyword arguments](https://www.linkedin.com/learning/python-essential-training-2/keyword-arguments)
-- [Return values](https://www.linkedin.com/learning/python-essential-training-2/return-values)
-- [Decorators](https://www.linkedin.com/learning/python-essential-training-2/decorators)
-- [Variable Scopes](https://realpython.com/python-namespaces-scope/)
-- [Robust Python with Type Hints](https://towardsdatascience.com/robust-python-with-type-hints-a86632ff56cc)
+```{python}
+from functools import wraps
+def better(func):
+  @wraps(func)
+  def wrapper():
+    return func().title() + "!"
+  return wrapper
+
+@better
+def hello():
+  '''Prints hello world'''
+  return('hello world')
+
+print(hello.__name__)
+print(hello.__doc__)
+```
+:::
+::::
+
+## Some Applications 1^[[KDNuggets: 8 Built-in Python Decorators](https://www.kdnuggets.com/8-built-in-python-decorators-to-write-elegant-code)] {.smaller}
+
+```{python}
+def simple_logger(func):
+  def wrapper(*args, **kwargs):
+    print(f"+ Executing '{func.__name__}' with args: {args}")
+    result = func(*args, **kwargs)
+    print(f"  + Result is: {result}")
+    return result
+  return wrapper
+
+@simple_logger
+def add(a,b):
+  return a+b
+
+add(2,5)
+```
+
+## Some Applications 2^[[KDNuggets: 8 Built-in Python Decorators](https://www.kdnuggets.com/8-built-in-python-decorators-to-write-elegant-code)] {.smaller}
+
+```{python}
+#| eval: False
+import atexit
+
+# Register the exit_handler function
+@atexit.register
+def exit_handler():
+    print("Exiting the program. Cleanup tasks can be performed here.")
+
+# Rest of the program
+def main():
+    print("Inside the main function.")
+    # Your program logic goes here.
+
+if __name__ == "__main__":
+    main()
+```
+
+This would output:
+
+```python
+Inside the main function.
+Exiting the program. Cleanup tasks can be performed here.
+```
+
+## Benefits of Decorators^[[5 Key Benefits of Using Python Decorators](https://www.linkedin.com/pulse/5-key-benefits-using-python-decorators-optimized/)] {.smaller}
+
+1. **Code readability**: each function is more narrowly focussed on the 'thing' it's supposed to do, without extraneous validation, logging, or authentication 'cruft'.
+2. **Code reuse**: keep your code 'DRY' (Don't Repeat Yourself) by applying the same code across multiple functions (e.g. log the arguments this function received)
+3. **Modification without alteration**: extending the behaviour of something else (e.g. you can't/don't want to modify someone else's code, but need some additional step to be performend)
+4. **Logging made simple**: add/remove debugging and logging functionality quickly, easily, and consistently.
+5. **Development**: Python web frameworks (Django, Flask) use decorators to handle requests.
+6. **Error handling**: manage error-handling 'centrally' by placing `try` and `except` around every function you want to manage.
+
+## There's More...
+
+We've barely scratched the surface, decorators can:
+
+- Take arguments (which might alter the behavour of the wrapped function).
+- Help to make classes and methods more useful (see the [Methods](./5.1-Methods.qmd) and [Classes](./5.2-Classes.qmd) lectures).
+- Manage common tasks like authorisation and permissions.
+  
+There's lots, lost more, but using decorators effectively will seriously impress anyone interviewing you for a job while *also* helping you to understand a lot more about good programming!
+
+## Resources
+
+:::: {.columns}
+::: {.column width="50%"}
+- Special /ht to [\@wraps Explained in 30 seconds](https://levelup.gitconnected.com/wraps-in-python-explained-in-30-seconds-b638fd2798e1)
+- [Python Decorators Explained](https://www.datacamp.com/tutorial/decorators-python)
+- [Python Tips: Decorators](https://book.pythontips.com/en/latest/decorators.html)
+- [Python Decorators: How to Use it and Why?](https://www.toppr.com/guides/python-guide/tutorials/python-advanced-topics/python-decorators-how-to-use-it-and-why/)
+- [5 Key Benefits of Using Python Decorators for Optimized COding Practices](https://www.linkedin.com/pulse/5-key-benefits-using-python-decorators-optimized/)
+:::
+::: {.column width="50%"}
+- [Python's Most Powerful Decorator](https://towardsdatascience.com/pythons-most-powerful-decorator-6bc39e6a8dd8)
+- [Chaining Decorators](https://python.pages.doc.ic.ac.uk/2021/lessons/decorator/02-decorator/05-chain.html)
+- [Decorators and Generators in Python](https://medium.com/@romulo.gatto/decorators-and-generators-in-python-b78c289ab111)
+- [Available Standard Decorators in Python](https://wiki.python.org/moin/Decorators)
+- [Awesome Python Decorators](https://github.com/lord63/awesome-python-decorator)
 :::
 ::::
 
