@@ -1,6 +1,6 @@
 ---
-title: "Practical 5: Pandas"
-subtitle: "Easing into EDA"
+title: "Practical 6: Numeric Data"
+subtitle: "Easing into EDA with Pandas"
 jupyter: python3
 filters:
   - qna
@@ -8,10 +8,6 @@ filters:
 html:
   - embed-resources: true
 ---
-
-| Complete | Part 1: Foundations | Part 2: Data | Part 3: Analysis |     |
-| :------- | :------------------ | :----------- | :--------------- | --: |
-| 40% | &#9619;&#9619;&#9619;&#9619;&#9619;&#9619;&#9619;&#9619; | &#9619;&#9617;&#9617;&#9617;&#9617;&#9617; | &#9617;&#9617;&#9617;&#9617;&#9617;&#9617; | 5/10
 
 <style type="text/css">
 .longform {
@@ -153,7 +149,7 @@ This is a bit of a fuller answer than the question, but hopefully you'll see why
 from urllib.error import URLError
 
 # Set download URL
-ymd  = '2023-09-06'
+ymd  = '2024-06-14'
 host = 'https://orca.casa.ucl.ac.uk'
 url  = f'{host}/~jreades/data/{ymd}-listings.csv.gz'
 
@@ -544,6 +540,15 @@ I'd like you to sample 3 random rows, selecting the 'latitude', 'longitude', 'li
 
 ```python
 df.sample(??)[??]
+```
+
+Your answer should look like this:
+
+```{python}
+#| echo: false
+df.sample(3)[
+    ['latitude', 'longitude', 'license', 'property_type', 'room_type', 'price']
+]
 ```
 
 #### Answer
@@ -1126,7 +1131,7 @@ What if we wanted to find whole homes listings for more than $100/night?
 To do this we use a combination of the selection approaches above in combination with conditionals, but first we need to see what sort of properties there are in the data set! `groupby` is a really useful function that we'll come back to later in the term, but for now notice that it helps us to group the analysis by `room_type` so that subsequently asking for the `property_type` value counts allows the same `property_type` to appear in more than once place if it's associated with more than one `room_type`.
 
 ```{python}
-df.groupby('room_type')['property_type'].value_counts()
+df.groupby('room_type', observed=True)['property_type'].value_counts()
 ```
 
 Now try to select only the `Entire home/apt` room type:

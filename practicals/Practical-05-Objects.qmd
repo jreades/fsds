@@ -1,15 +1,11 @@
 ---
-title: "Practical 4: Object-Oriented Programming"
-subtitle: "Getting to grips with Functions & Packages"
+title: "Practical 5: Objects"
+subtitle: "From Functions to Classes"
 jupyter: python3
 filters:
   - qna
   - quarto
 ---
-
-| Complete | Part 1: Foundations | Part 2: Data | Part 3: Analysis |     |
-| :------- | :------------------ | :----------- | :--------------- | --: |
-| 30% | &#9619;&#9619;&#9619;&#9619;&#9619;&#9619;&#9619;&#9617; | &#9617;&#9617;&#9617;&#9617;&#9617;&#9617; | &#9617;&#9617;&#9617;&#9617;&#9617;&#9617; | 4/10
 
 This is a very challenging notebook because it takes you *both* through the process of building a function incrementally *and* through a 'simple' example of how Python classes actually work. You will need to understand these two very different elements in order to make the most of the remaining 6 weeks of term, because we both improve our code incrementally *and* make use of objects and their inheritances extensively. You also get an extra chance to revisit the differences between LoLs and DoLs because you will undoubtedly encounter and make use of these data structures even *after* you become a skillfull Python programmer.
 
@@ -42,7 +38,7 @@ First, remember the finding from last week: if we don't really care about column
 
 #### &#128279; Connections
 
-This task briefly recaps the final part of [Practical 2](https://jreades.github.io/fsds/sessions/week3.html#practical) and builds on the [DOLs to Data](https://jreades.github.io/fsds/sessions/week3.html#lectures) and [Functions](https://jreades.github.io/fsds/sessions/week3.html#lectures) lectures.
+This task briefly recaps the final part of the previous practical and builds on the [DOLs to Data](https://jreades.github.io/fsds/sessions/week3.html#lectures) and [Functions](https://jreades.github.io/fsds/sessions/week4.html#lectures) lectures.
 
 :::
 
@@ -458,6 +454,60 @@ def get_url(src, dest):
 # see what our function is up to.
 src = get_url(url, out)
 ```
+
+## Decorating!
+
+Let's now look into simplifying this code using a dectorator! Our function has become a bit unwieldy and we want to look at how we can simplify that.
+
+The 'obvious' (i.e. not obvious) way to do this is to implement the check for a local copy as a decorator on the downloading function. So we have a function that downloads, and a decorator function that checks if the download should even be triggered.
+
+```{python}
+from functools import wraps
+def check_cache(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        src  = args[0]
+        dest = args[1]
+        if os.path.isfile(dest):
+            print(f"{dest} found locally!")
+            return(dest)
+        else:
+            print(f"{dest} not found, downloading!")
+            return(f(src, dest))
+    return wrapper
+
+@check_cache
+def get_url(src, dest):    
+    # Get the data using the urlopen function
+    response = urlopen(src) 
+    filedata = response.read().decode('utf-8')
+     
+    # Extract the part of the dest(ination) that is *not*
+    # the actual filename--have a look at how 
+    # os.path.split works using `help(os.path.split)`
+    path = list(os.path.split(dest)[:-1])
+     
+    # Create any missing directories in dest(ination) path
+    # -- os.path.join is the reverse of split (as you saw above)
+    # but it doesn't work with lists... so I had to google how 
+    # to use the 'splat' operator! os.makedirs creates missing 
+    # directories in a path automatically.
+    if len(path) >= 1 and path[0] != '':
+        os.makedirs(os.path.join(*path), exist_ok=True)
+     
+    with open(dest, 'w') as f:
+        f.write(filedata)
+         
+    print(f"Data written to {dest}!")
+    
+    return dest
+        
+# Using the `return contents` line we make it easy to 
+# see what our function is up to.
+src = get_url(url, out)
+```
+
+I'm not going to pretend that's the *best* use of a decorator, but it *does* neatly separate the downloading function from the caching function. In fact, there is already a [cache decorator](https://pvsravanth.medium.com/speeding-up-your-python-code-with-the-cache-decorator-from-functools-bce4731eed69) and some of these have unlimited capacity; however, they are intended to run in a 'live' context, so you'd still need to download the file again any time you start a new notebook or restart Docker. This caching function saves the actual data locally to `dest`.
 
 ::: {.callout-warning}
 

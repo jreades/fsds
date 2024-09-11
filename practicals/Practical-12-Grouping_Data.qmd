@@ -1,5 +1,5 @@
 ---
-title: "Practical 9: Grouping Data"
+title: "Practical 12: Grouping Data"
 subtitle: "Aggregation, Classification & Clustering"
 jupyter: python3
 filters:
@@ -7,15 +7,11 @@ filters:
   - quarto
 ---
 
-| Complete | Part 1: Foundations | Part 2: Data | Part 3: Analysis |     |
-| :------- | :------------------ | :----------- | :--------------- | --: |
-| 80% | &#9619;&#9619;&#9619;&#9619;&#9619;&#9619;&#9619;&#9619; | &#9619;&#9619;&#9619;&#9619;&#9619;&#9619; | &#9619;&#9619;&#9619;&#9617;&#9617;&#9617; | 9/10
-
 A common challenge in data analysis is how to group observations in a data set together in a way that allows for generalisation: _this_ group of observations are similar to one another, _that_ group is dissimilar to this group. Sometimes we have a *label* that we can use as part of the process (in which case we're doing **classification**), and somtimes we don't (in which case we're doing **clustering**). But what defines similarity and difference? There is no _one_ answer to that question and so there are many different ways to cluster or classify data, each of which has strengths and weaknesses that make them more, or less, appropriate in different contexts.
 
 ::: {.callout-note}
 
-    **&#128279; Connections**: This practical pulls together many topics covered in other modules, and many of the ideas covered elsewhere in _this_ module: clustering, reproducibility, dimensionality reduction... but, above all, this practical is about the importance of **judgement**. Do _not_ take what we've done here as the ONE RIGHT WAY: a number of these results are questionnable at best because we haven't developed or defined an underlying hypothesis informed by a critical appraisal of the data. You should be _much_ more selective in how you deploy the data and the algorithms, as last week's [session on dimensionality](https://jreades.github.io/fsds/sessions/week8.html) should have shown.
+**&#128279; Connections**: This practical pulls together many topics covered in other modules, and many of the ideas covered elsewhere in _this_ module: clustering, reproducibility, dimensionality reduction... but, above all, this practical is about the importance of **judgement**. Do _not_ take what we've done here as the ONE RIGHT WAY: a number of these results are questionnable at best because we haven't developed or defined an underlying hypothesis informed by a critical appraisal of the data. You should be _much_ more selective in how you deploy the data and the algorithms, as last week's [session on dimensionality](https://jreades.github.io/fsds/sessions/week8.html) should have shown.
     
 :::
 
@@ -74,7 +70,7 @@ pts  = PowerTransformer()
 
 ::: {.callout-note}
 
-    **&#128279; Connections**: Here's an example of how you can use a function to do something a little more complex than just locally save some data. This is still largely a kind of 'stub', but if you are going to be producing a lot of plots of London why not automate away some of the pain of producing a good-looking basemap _each_ time: use a function to apply the formatting and then just return `f` and `ax` as if you'd done this all yourself.
+**&#128279; Connections**: Here's an example of how you can use a function to do something a little more complex than just locally save some data. This is still largely a kind of 'stub', but if you are going to be producing a lot of plots of London why not automate away some of the pain of producing a good-looking basemap _each_ time: use a function to apply the formatting and then just return `f` and `ax` as if you'd done this all yourself.
 
 :::
 
@@ -261,8 +257,15 @@ I get the results below, but note that the **Dimension values** may be slightly 
 
 Let's also get the listings data from a few weeks back:
 
+```{python}
+# Set download URL
+ymd  = '2024-06-14'
+host = 'https://orca.casa.ucl.ac.uk'
+url  = f'{host}/~jreades/data/{ymd}-listings.geoparquet'
+```
+
 ```python
-listings = gpd.read_parquet( cache_data(f'{host}/{path}/2023-09-06-listings.geoparquet', ddir) )
+listings = gpd.read_parquet( cache_data(url, ddir) )
 listings = listings.to_crs(epsg=27700)
 print(f"Data frame is {listings.shape[0]:,} x {listings.shape[1]}")
 ```
