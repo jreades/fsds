@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Practical 8: Dimensions in Data – Foundations of Spatial Data Science</title>
+<title>Practical 11: Dimensions in Data – Foundations of Spatial Data Science</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -135,7 +135,7 @@ window.Quarto = {
 };
 </script>
 
-<meta property="og:title" content="Practical 8: Dimensions in Data – Foundations of Spatial Data Science">
+<meta property="og:title" content="Practical 11: Dimensions in Data – Foundations of Spatial Data Science">
 <meta property="og:description" content="Transformation &amp; Dimensionality Reduction">
 <meta property="og:image" content="img/CASA_Logo_no_text.png">
 <meta property="og:site_name" content="Foundations">
@@ -195,42 +195,40 @@ window.Quarto = {
   </li>  
         <li>
     <a class="dropdown-item" href="../sessions/week4.html">
- <span class="dropdown-text">4. Objects</span></a>
+ <span class="dropdown-text">4. Efficient Code</span></a>
   </li>  
-        <li><hr class="dropdown-divider"></li>
-        <li class="dropdown-header">Part 2: Data</li>
         <li>
     <a class="dropdown-item" href="../sessions/week5.html">
- <span class="dropdown-text">5. Numeric Data</span></a>
+ <span class="dropdown-text">5. Objects</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../sessions/reading_week.html">
  <span class="dropdown-text">Reading Week</span></a>
   </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Part 2: Process</li>
         <li>
     <a class="dropdown-item" href="../sessions/week6.html">
- <span class="dropdown-text">6. Spatial Data</span></a>
+ <span class="dropdown-text">6. Numeric Data</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../sessions/week7.html">
- <span class="dropdown-text">7. Textual Data</span></a>
+ <span class="dropdown-text">7. Spatial Data</span></a>
   </li>  
-        <li><hr class="dropdown-divider"></li>
-        <li class="dropdown-header">Part 3: Analysis</li>
         <li>
     <a class="dropdown-item" href="../sessions/week8.html">
- <span class="dropdown-text">8. Selecting Data</span></a>
+ <span class="dropdown-text">8. Textual Data</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../sessions/week9.html">
- <span class="dropdown-text">9. Presenting Data</span></a>
+ <span class="dropdown-text">9. Selecting Data</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../sessions/week10.html">
- <span class="dropdown-text">10. Wrap Up + Lookahead</span></a>
+ <span class="dropdown-text">10. Presenting Data</span></a>
   </li>  
         <li><hr class="dropdown-divider"></li>
-        <li class="dropdown-header">Part 4: Bonus</li>
+        <li class="dropdown-header">Part 3: Bonus</li>
         <li>
     <a class="dropdown-item" href="../sessions/week11.html">
  <span class="dropdown-text">11. Dimensions in Data</span></a>
@@ -311,7 +309,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Practical 8: Dimensions in Data</h1>
+<h1 class="title">Practical 11: Dimensions in Data</h1>
 <p class="subtitle lead">Transformation &amp; Dimensionality Reduction</p>
 </div>
 
@@ -329,33 +327,6 @@ window.Quarto = {
 </header>
 
 
-<table class="caption-top table">
-<colgroup>
-<col style="width: 13%">
-<col style="width: 32%">
-<col style="width: 20%">
-<col style="width: 27%">
-<col style="width: 5%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Complete</th>
-<th style="text-align: left;">Part 1: Foundations</th>
-<th style="text-align: left;">Part 2: Data</th>
-<th style="text-align: left;">Part 3: Analysis</th>
-<th style="text-align: right;"></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">70%</td>
-<td style="text-align: left;">▓▓▓▓▓▓▓▓</td>
-<td style="text-align: left;">▓▓▓▓▓▓</td>
-<td style="text-align: left;">▓░░░░░</td>
-<td style="text-align: right;">8/10</td>
-</tr>
-</tbody>
-</table>
 <style type="text/css">
 .longform {
     max-height: 300px;
@@ -384,7 +355,7 @@ window.Quarto = {
 <section id="preamble" class="level1">
 <h1>Preamble</h1>
 <p>Let’s start with the usual bits of code to ensure plotting works, to import packages and load the data into memory.</p>
-<div id="b6742d7b" class="cell" data-execution_count="1">
+<div id="d6aeeedb" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -403,7 +374,7 @@ window.Quarto = {
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> kneed <span class="im">import</span> knee_locator</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Notice here that we’ve moved the function from last week’s notebook to a separate file <code>cache.py</code> from which we import the <code>cache_data</code> function. This should give you some ideas about how to work from script -&gt; function -&gt; library effectively.</p>
-<div id="7be6141d" class="cell" data-execution_count="2">
+<div id="92b89d5d" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cache <span class="im">import</span> cache_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
@@ -460,7 +431,7 @@ Difficulty level: Low.
 </div>
 </div>
 <p>You might like to load the cached copy of the file into Excel so that you can see how the next bit works. You can find the rest of the MSOA Atlas <a href="https://data.london.gov.uk/dataset/msoa-atlas">here</a>.</p>
-<div id="3833045c" class="cell" data-execution_count="3">
+<div id="6ae8ba7e" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>src_url   <span class="op">=</span> <span class="st">'https://data.london.gov.uk/download/msoa-atlas/39fdd8eb-e977-4d32-85a4-f65b92f29dcb/msoa-data.xls'</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>dest_path <span class="op">=</span> os.path.join(<span class="st">'data'</span>,<span class="st">'msoa'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -474,7 +445,7 @@ Difficulty level: Low.
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    header<span class="op">=</span>[<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>])            <span class="co"># Where are the column names... there's three of them!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<div id="c07604f0" class="cell" data-execution_count="4">
+<div id="fc7c4b88" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>excel_atlas <span class="op">=</span> pd.read_excel(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    cache_data(src_url, dest_path),</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    sheet_name<span class="op">=</span><span class="st">'iadatasheet1'</span>, <span class="co"># Which sheet is the data in?</span></span>
@@ -488,7 +459,7 @@ Difficulty level: Low.
 </div>
 </div>
 <p>Notice the format of the output and notice that all of the empty cells in the Excel sheet have come through as <code>Unnamed: &lt;col_no&gt;_level_&lt;level_no&gt;</code>:</p>
-<div id="b29e7236" class="cell" data-execution_count="5">
+<div id="43f480f5" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>excel_atlas.head(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <div>
@@ -623,7 +594,7 @@ Difficulty: Moderate.
 <p>Of course, one way to get at the data is to use <code>.iloc[...]</code> since that refers to columns by <em>position</em> and ignores the complexity of the index. Try printing out the the first five rows of the first column using <code>iloc</code>:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>excel_atlas.iloc[???]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>You should get:</p>
-<div id="7429c891" class="cell" data-execution_count="6">
+<div id="f5dc381a" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display" data-execution_count="6">
 <pre><code>0    E02000001
 1    E02000002
@@ -637,7 +608,7 @@ Name: (Unnamed: 0_level_0, Unnamed: 0_level_1, MSOA Code), dtype: object</code><
 <section id="named-access" class="level3">
 <h3 class="anchored" data-anchor-id="named-access">Named Access</h3>
 <p>But to do it by name is a little trickier:</p>
-<div id="3640b5da" class="cell" data-execution_count="7">
+<div id="70e0cfa6" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>excel_atlas.columns.tolist()[:<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
 <pre><code>[('Unnamed: 0_level_0', 'Unnamed: 0_level_1', 'MSOA Code'),
@@ -656,7 +627,7 @@ Name: (Unnamed: 0_level_0, Unnamed: 0_level_1, MSOA Code), dtype: object</code><
 <div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>excel_atlas.loc[<span class="dv">0</span>:<span class="dv">5</span>, ???]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
-<div id="385d41c9" class="cell" data-execution_count="8">
+<div id="07a4c576" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>excel_atlas.loc[<span class="dv">0</span>:<span class="dv">5</span>, (<span class="st">'Unnamed: 0_level_0'</span>,<span class="st">'Unnamed: 0_level_1'</span>,<span class="st">'MSOA Code'</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
 <pre><code>0    E02000001
@@ -676,7 +647,7 @@ Name: (Unnamed: 0_level_0, Unnamed: 0_level_1, MSOA Code), dtype: object</code><
 <section id="grouped-access" class="level3">
 <h3 class="anchored" data-anchor-id="grouped-access">Grouped Access</h3>
 <p>Despite this, <em>one</em> way that MultiIndexes can be useful is for accessing column-slices from a ‘wide’ dataframe. We can, for instance, select all of the Age Structure columns in one go and it will be <em>simpler</em> than what we did above.</p>
-<div id="e2d9ecd1" class="cell" data-execution_count="9">
+<div id="6b8c8d6e" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>excel_atlas.loc[<span class="dv">0</span>:<span class="dv">5</span>, (<span class="st">'Age Structure (2011 Census)'</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="9">
 <div>
@@ -776,7 +747,7 @@ Name: (Unnamed: 0_level_0, Unnamed: 0_level_1, MSOA Code), dtype: object</code><
 <section id="understanding-levels" class="level3">
 <h3 class="anchored" data-anchor-id="understanding-levels">Understanding Levels</h3>
 <p>This works because the MultiIndex tracks the columns using <em>levels</em>, with level 0 at the ‘top’ and level 2 (in our case) at the bottom. These are the unique <em>values</em> for the top level (‘row 0’):</p>
-<div id="5d69986d" class="cell" data-execution_count="10">
+<div id="3d2eb3eb" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>excel_atlas.columns.levels[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
 <pre><code>Index(['Adults in Employment (2011 Census)', 'Age Structure (2011 Census)',
@@ -796,7 +767,7 @@ Name: (Unnamed: 0_level_0, Unnamed: 0_level_1, MSOA Code), dtype: object</code><
 </div>
 </div>
 <p>These are the <em>values</em> for those levels across the actual columns in the data frame, notice the repeated ‘Age Structure (2011 Census)’:</p>
-<div id="b30cb750" class="cell" data-execution_count="11">
+<div id="7cbd12ff" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>excel_atlas.columns.get_level_values(<span class="dv">0</span>)[:<span class="dv">10</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="11">
 <pre><code>Index(['Unnamed: 0_level_0', 'Unnamed: 1_level_0',
@@ -808,7 +779,7 @@ Name: (Unnamed: 0_level_0, Unnamed: 0_level_1, MSOA Code), dtype: object</code><
 </div>
 </div>
 <p>And here are the <em>values</em> for the second level of the index (‘row 1’ in the Excel file):</p>
-<div id="55646163" class="cell" data-execution_count="12">
+<div id="55c503de" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>excel_atlas.columns.get_level_values(<span class="dv">1</span>)[:<span class="dv">10</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="12">
 <pre><code>Index(['Unnamed: 0_level_1', 'Unnamed: 1_level_1', 'All Ages', '0-15', '16-29',
@@ -817,7 +788,7 @@ Name: (Unnamed: 0_level_0, Unnamed: 0_level_1, MSOA Code), dtype: object</code><
 </div>
 </div>
 <p>By extension, if we drop a level 0 index then <em>all</em> of the columns that it supports at levels 1 and 2 are <em>also</em> dropped: so when we drop <code>Mid-year Estimate totals</code> from level 0 then all 11 of the ‘Mid-year Estimate totals (2002…2012)’ columns are dropped in one go.</p>
-<div id="09a2a461" class="cell" data-execution_count="13">
+<div id="24f1c595" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>excel_atlas[[<span class="st">'Mid-year Estimate totals'</span>]].head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="13">
 <div>
@@ -897,7 +868,7 @@ Name: (Unnamed: 0_level_0, Unnamed: 0_level_1, MSOA Code), dtype: object</code><
 </div>
 </div>
 </div>
-<div id="397bc71e" class="cell" data-execution_count="14">
+<div id="38a8d4f3" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>test <span class="op">=</span> excel_atlas.drop(columns<span class="op">=</span>[<span class="st">'Mid-year Estimate totals'</span>], axis<span class="op">=</span><span class="dv">1</span>, level<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Excel source had </span><span class="sc">{</span>excel_atlas<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss"> columns."</span>)</span>
@@ -907,7 +878,7 @@ Name: (Unnamed: 0_level_0, Unnamed: 0_level_1, MSOA Code), dtype: object</code><
 Test now has 196 columns.</code></pre>
 </div>
 </div>
-<div id="d5aa5bc1" class="cell" data-execution_count="15">
+<div id="28022123" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tidy up if the variable exists</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">'test'</span> <span class="kw">in</span> <span class="bu">locals</span>():</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">del</span>(test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -943,7 +914,7 @@ Difficulty level: Low
 <section id="dropping-named-levels" class="level3">
 <h3 class="anchored" data-anchor-id="dropping-named-levels">Dropping Named Levels</h3>
 <p>There’s a <em>lot</em> of data in the data frame that we don’t need for our Airbnb work, so let’s go a bit further with the dropping of column-groups using the MultiIndex.</p>
-<div id="e16efda7" class="cell" data-execution_count="16">
+<div id="d00a8111" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>to_drop <span class="op">=</span> [<span class="st">'Mid-year Estimate totals'</span>,<span class="st">'Mid-year Estimates 2012, by age'</span>,<span class="st">'Religion (2011)'</span>,</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>           <span class="st">'Land Area'</span>,<span class="st">'Lone Parents (2011 Census)'</span>,<span class="st">'Central Heating (2011 Census)'</span>,<span class="st">'Health (2011 Census)'</span>,</span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>           <span class="st">'Low Birth Weight Births (2007-2011)'</span>,<span class="st">'Obesity'</span>,<span class="st">'Incidence of Cancer'</span>,<span class="st">'Life Expectancy'</span>,</span>
@@ -955,7 +926,7 @@ Difficulty level: Low
 </div>
 </div>
 <p>This should drop you down to 984 x 111. Notice below that the multi-level <em>index</em> has not changed but the multi-level <em>values</em> remaining have!</p>
-<div id="e57644cb" class="cell" data-execution_count="17">
+<div id="60fbaa99" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"There are </span><span class="sc">{</span><span class="bu">len</span>(tidy.columns.levels[<span class="dv">0</span>].unique())<span class="sc">}</span><span class="ss"> categories."</span>) <span class="co"># The categories</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"But only </span><span class="sc">{</span><span class="bu">len</span>(tidy.columns.get_level_values(<span class="dv">0</span>).unique())<span class="sc">}</span><span class="ss"> values."</span>) <span class="co">#&nbsp;The actual values</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -979,7 +950,7 @@ But only 18 values.</code></pre>
 <div class="sourceCode" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>([x <span class="cf">for</span> x <span class="kw">in</span> tidy.columns.get_level_values(<span class="dv">1</span>) <span class="cf">if</span> re.search(???, x)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
-<div id="6ed5f704" class="cell" data-execution_count="18">
+<div id="c826be83" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>to_drop <span class="op">=</span> [x <span class="cf">for</span> x <span class="kw">in</span> tidy.columns.get_level_values(<span class="dv">1</span>) <span class="cf">if</span> (</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>    x.endswith(<span class="st">"(%)"</span>) <span class="kw">or</span> x.startswith(<span class="st">"%"</span>) <span class="kw">or</span> x.endswith(<span class="st">"Percentages"</span>) <span class="kw">or</span> x.endswith(<span class="st">"%"</span>))]</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(to_drop)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -987,7 +958,7 @@ But only 18 values.</code></pre>
 <pre><code>['Percentages', 'Percentages', 'Percentages', 'Percentages', 'Percentages', 'White (%)', 'Mixed/multiple ethnic groups (%)', 'Asian/Asian British (%)', 'Black/African/Caribbean/Black British (%)', 'Other ethnic group (%)', 'BAME (%)', 'United Kingdom (%)', 'Not United Kingdom (%)', '% of people aged 16 and over in household have English as a main language', '% of households where no people in household have English as a main language', 'Owned: Owned outright (%)', 'Owned: Owned with a mortgage or loan (%)', 'Social rented (%)', 'Private rented (%)', 'Household spaces with at least one usual resident (%)', 'Household spaces with no usual residents (%)', 'Whole house or bungalow: Detached (%)', 'Whole house or bungalow: Semi-detached (%)', 'Whole house or bungalow: Terraced (including end-terrace) (%)', 'Flat, maisonette or apartment (%)', 'Economically active %', 'Economically inactive %', '% of households with no adults in employment: With dependent children', '% living in income deprived households reliant on means tested benefit', '% of people aged over 60 who live in pension credit households', 'No cars or vans in household (%)', '1 car or van in household (%)', '2 cars or vans in household (%)', '3 cars or vans in household (%)', '4 or more cars or vans in household (%)']</code></pre>
 </div>
 </div>
-<div id="a76ac4d5" class="cell" data-execution_count="19">
+<div id="4b41de95" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>([x <span class="cf">for</span> x <span class="kw">in</span> tidy.columns.get_level_values(<span class="dv">1</span>) <span class="cf">if</span> re.search(<span class="st">"(?:%|Percentages)"</span>, x)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['Percentages', 'Percentages', 'Percentages', 'Percentages', 'Percentages', 'White (%)', 'Mixed/multiple ethnic groups (%)', 'Asian/Asian British (%)', 'Black/African/Caribbean/Black British (%)', 'Other ethnic group (%)', 'BAME (%)', 'United Kingdom (%)', 'Not United Kingdom (%)', '% of people aged 16 and over in household have English as a main language', '% of households where no people in household have English as a main language', 'Owned: Owned outright (%)', 'Owned: Owned with a mortgage or loan (%)', 'Social rented (%)', 'Private rented (%)', 'Household spaces with at least one usual resident (%)', 'Household spaces with no usual residents (%)', 'Whole house or bungalow: Detached (%)', 'Whole house or bungalow: Semi-detached (%)', 'Whole house or bungalow: Terraced (including end-terrace) (%)', 'Flat, maisonette or apartment (%)', 'Economically active %', 'Economically inactive %', '% of households with no adults in employment: With dependent children', '% living in income deprived households reliant on means tested benefit', '% of people aged over 60 who live in pension credit households', 'No cars or vans in household (%)', '1 car or van in household (%)', '2 cars or vans in household (%)', '3 cars or vans in household (%)', '4 or more cars or vans in household (%)']</code></pre>
@@ -998,7 +969,7 @@ But only 18 values.</code></pre>
 </div>
 <p>With both you should get:</p>
 <div class="longform">
-<div id="15d52c0b" class="cell" data-execution_count="20">
+<div id="51f9658f" class="cell" data-execution_count="20">
 <div class="cell-output cell-output-display" data-execution_count="20">
 <pre><code>['Percentages',
  'Percentages',
@@ -1063,7 +1034,7 @@ But only 18 values.</code></pre>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Shape of the MSOA Atlas data frame is now: </span><span class="sc">{</span>tidy<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> x </span><span class="sc">{</span>tidy<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
-<div id="054942cf" class="cell" data-execution_count="21">
+<div id="060efd23" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>tidy.drop(to_drop, axis<span class="op">=</span><span class="dv">1</span>, level<span class="op">=</span><span class="dv">1</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Shape of the MSOA Atlas data frame is now: </span><span class="sc">{</span>tidy<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> x </span><span class="sc">{</span>tidy<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1078,7 +1049,7 @@ But only 18 values.</code></pre>
 <section id="flattening-the-index" class="level3">
 <h3 class="anchored" data-anchor-id="flattening-the-index">Flattening the Index</h3>
 <p>Although this ia big improvement, you’ll have trouble saving or linking this data to other inputs. The problem is that Level 2 of the multi-index is mainly composed of ‘Unnamed’ values and so we need to merge it with Level 1 to simplify our data frame, and then merge <em>that</em> with level 0…</p>
-<div id="40fc8f1f" class="cell" data-execution_count="22">
+<div id="e7f0f8eb" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>tidy.columns.values[:<span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="22">
 <pre><code>array([('Unnamed: 0_level_0', 'Unnamed: 0_level_1', 'MSOA Code'),
@@ -1088,7 +1059,7 @@ But only 18 values.</code></pre>
 </div>
 </div>
 <p>Let’s use code to sort this out!</p>
-<div id="6f594ce5" class="cell" data-execution_count="23">
+<div id="9e5b9d32" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>new_cols <span class="op">=</span> []</span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> tidy.columns.values:</span>
 <span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>    </span>
@@ -1122,7 +1093,7 @@ But only 18 values.</code></pre>
 <span id="cb43-31"><a href="#cb43-31" aria-hidden="true" tabindex="-1"></a>    new_cols.append(clabel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="longform">
-<div id="ed598a49" class="cell" data-execution_count="24">
+<div id="03479c38" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>new_cols</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="24">
 <pre><code>['MSOA Code',
@@ -1217,7 +1188,7 @@ Stop
 <p>Make sure you understand what is happening here before just moving on to the next thing. Try adding <code>print()</code> statements if it will help it to make sense. This sort of code comes up a <em>lot</em> in the real world.</p>
 </div>
 </div>
-<div id="19604583" class="cell" data-execution_count="25">
+<div id="b1111e18" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>tidy.columns <span class="op">=</span> new_cols  <span class="co"># &lt;- Blow away complex index, replace with simple</span></span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>tidy.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="25">
@@ -1380,14 +1351,14 @@ Stop
 </div>
 </div>
 <p>You might want to have a look at <em>what</em> the code below drops first before just running it… remember that you can pull apart any complex code into pieces:</p>
-<div id="cc9e8b86" class="cell" data-execution_count="26">
+<div id="8371cf9e" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>tidy[<span class="st">'MSOA Code'</span>].isna()</span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>tidy[tidy[<span class="st">'MSOA Code'</span>].isna()].index</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="26">
 <pre><code>Index([983], dtype='int64')</code></pre>
 </div>
 </div>
-<div id="4286dcb3" class="cell" data-execution_count="27">
+<div id="6d092d09" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>tidy.drop(index<span class="op">=</span>tidy[tidy[<span class="st">'MSOA Code'</span>].isna()].index, inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
@@ -1435,7 +1406,7 @@ Difficulty: Moderate, since I’m not giving you many clues.
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>tidy.Borough.unique()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
-<div id="4b89a699" class="cell" data-execution_count="28">
+<div id="63155054" class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>tidy[<span class="st">'Borough'</span>] <span class="op">=</span> tidy[<span class="st">'MSOA Name'</span>].<span class="bu">str</span>.replace(<span class="vs">r' \d+$'</span>,<span class="st">''</span>,regex<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>tidy.Borough.unique()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="28">
@@ -1453,7 +1424,7 @@ Difficulty: Moderate, since I’m not giving you many clues.
 </div>
 </div>
 <p>You should get:</p>
-<div id="7555ea1e" class="cell" data-execution_count="29">
+<div id="6e912bb2" class="cell" data-execution_count="29">
 <div class="cell-output cell-output-display" data-execution_count="29">
 <pre><code>array(['City of London', 'Barking and Dagenham', 'Barnet', 'Bexley',
        'Brent', 'Bromley', 'Camden', 'Croydon', 'Ealing', 'Enfield',
@@ -1469,7 +1440,7 @@ Difficulty: Moderate, since I’m not giving you many clues.
 <section id="map-boroughs-to-subregions" class="level3">
 <h3 class="anchored" data-anchor-id="map-boroughs-to-subregions">Map Boroughs to Subregions</h3>
 <p>And now you need to understand how to <em>apply</em> the mapping ot the Borough field using a <code>lambda</code> function. It’s fairly straightforward once you know the syntax: just a dictionary lookup. But as usual, you might want to first create a new cell and experiment with the output from the apply function before using it to write the <code>Subregion</code> field of the data frame…</p>
-<div id="c14edeae" class="cell" data-execution_count="30">
+<div id="011dd74b" class="cell" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>mapping <span class="op">=</span> {}</span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> b <span class="kw">in</span> [<span class="st">'Enfield'</span>,<span class="st">'Waltham Forest'</span>,<span class="st">'Redbridge'</span>,<span class="st">'Barking and Dagenham'</span>,<span class="st">'Havering'</span>,<span class="st">'Greenwich'</span>,<span class="st">'Bexley'</span>]:</span>
 <span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>    mapping[b]<span class="op">=</span><span class="st">'Outer East and North East'</span></span>
@@ -1489,7 +1460,7 @@ Difficulty: Moderate, since I’m not giving you many clues.
 <div class="sourceCode" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>tidy[<span class="st">'Subregion'</span>] <span class="op">=</span> tidy.Borough.<span class="bu">apply</span>(???)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
-<div id="008de079" class="cell" data-execution_count="31">
+<div id="0553aaf9" class="cell" data-execution_count="31">
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>tidy[<span class="st">'Subregion'</span>] <span class="op">=</span> tidy.Borough.<span class="bu">apply</span>(<span class="kw">lambda</span> x: mapping[x])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
@@ -1499,7 +1470,7 @@ Difficulty: Moderate, since I’m not giving you many clues.
 <section id="and-save" class="level3">
 <h3 class="anchored" data-anchor-id="and-save">And Save</h3>
 <p>There’s a little snipped of useful code to work out here: we need to check if the <code>clean</code> directory exists in the <code>data</code> directory; if we don’t then the <code>tidy.to_parquet()</code> call will fail.</p>
-<div id="4504a2c2" class="cell" data-execution_count="32">
+<div id="b7156d99" class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> os.path.exists(os.path.join(<span class="st">'data'</span>,<span class="st">'clean'</span>)):</span>
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>    os.makedirs(os.path.join(<span class="st">'data'</span>,<span class="st">'clean'</span>))</span>
 <span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>tidy.to_parquet(os.path.join(<span class="st">'data'</span>,<span class="st">'clean'</span>,<span class="st">'MSOA_Atlas.parquet'</span>))</span>
@@ -1549,7 +1520,7 @@ Difficulty: Low, except for plotting.
 </div>
 </div>
 <p>First, we need to download the MSOA source file, which is a zipped archive of a Shapefile:</p>
-<div id="15362d19" class="cell" data-execution_count="33">
+<div id="8f16c517" class="cell" data-execution_count="33">
 <div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Oh look, we can read a Shapefile without needing to unzip it!</span></span>
 <span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>msoas <span class="op">=</span> gpd.read_file(</span>
 <span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>    cache_data(<span class="st">'https://github.com/jreades/fsds/blob/master/data/src/Middle_Layer_Super_Output_Areas__December_2011__EW_BGC_V2-shp.zip?raw=true'</span>, </span>
@@ -1562,7 +1533,7 @@ Difficulty: Low, except for plotting.
 <section id="identifying-matching-columns" class="level3">
 <h3 class="anchored" data-anchor-id="identifying-matching-columns">Identifying Matching Columns</h3>
 <p>Looking at the first few columns of each data frame, which one might allow us to link the two files together? You’ve done this in GIS. <em>Remember</em>: the column <em>names</em> don’t need to match for us to use them in a join, it’s the <em>values</em> that matter.</p>
-<div id="10ec9370" class="cell" data-execution_count="34">
+<div id="eefff254" class="cell" data-execution_count="34">
 <div class="sourceCode cell-code" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Column names: </span><span class="sc">{</span><span class="st">', '</span><span class="sc">.</span>join(tidy.columns.tolist()[:<span class="dv">5</span>])<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>tidy.iloc[:<span class="dv">3</span>,:<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1628,7 +1599,7 @@ Difficulty: Low, except for plotting.
 <span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Final MSOA Atlas data frame has shape </span><span class="sc">{</span>gdf<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> x </span><span class="sc">{</span>gdf<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="tabset-7-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-2-tab">
-<div id="562d8f62" class="cell" data-execution_count="35">
+<div id="2a0de3fb" class="cell" data-execution_count="35">
 <div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>gdf <span class="op">=</span> pd.merge(msoas, tidy, left_on<span class="op">=</span><span class="st">'MSOA11CD'</span>, right_on<span class="op">=</span><span class="st">'MSOA Code'</span>, how<span class="op">=</span><span class="st">'inner'</span>)</span>
 <span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>gdf <span class="op">=</span> gdf.drop(columns<span class="op">=</span>[<span class="st">'MSOA11CD'</span>,<span class="st">'MSOA11NM'</span>,<span class="st">'OBJECTID'</span>])</span>
 <span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -3104,7 +3075,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 2022, Jon Reades</p>
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 2022–2024, Jon Reades</p>
 </div>   
     <div class="nav-footer-center">
 <p><img src="../img/favicon-16x16.png" class="height:10px img-fluid"> Foundations of Spatial Data Science</p>
