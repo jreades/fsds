@@ -7,11 +7,12 @@ filters:
   - quarto
 ---
 
+
 ::: {.callout-warning}
 
 #### Important
 
-This practical focusses on two key bits of _implementation_: visualisation and data linkage! You will have seen quite a bit of each of these across the preceding three to four weeks, but they were picked up in an _ad-hoc_ way, here we try to systematise things a bit.
+This practical focusses on data linkage! You will have seen quite a bit of this of these across the preceding three to four weeks, but they were picked up in an _ad-hoc_ way, here we try to systematise things a bit.
 
 :::
 
@@ -19,17 +20,13 @@ This practical focusses on two key bits of _implementation_: visualisation and d
 
 #### &#128279; Connections
 
-Here we're trying to tidy up the loose ends. You've already worked with basic data visualisations in Seaborn and Matplotlib (including (geo)panda's `plot` function), but we want you to have a better sense of how that _works_ as part of a coherent -- if altogether rather complex and overwhelming -- approach to managing a data visualisation. You've also already seen examples of joins and spatial joins before but, again, we just want to review them more formally now.
+We're going to look at how data can be joined (linked) to other data using a range of techniques: pure Python (spatial and non-spatial) and SQL (non-spatial only).
 
 :::
 
 # Preamble
 
-```{python}
-host = 'http://orca.casa.ucl.ac.uk'
-path = '~jreades/data'
-ymd  = '2024-06-14'
-```
+{{< include _data_definition_sp.qmd >}}
 
 ```{python}
 import os
@@ -42,72 +39,11 @@ import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 ```
 
-```{python}
-import os
-from requests import get
-from urllib.parse import urlparse
-
-def cache_data(src:str, dest:str) -> str:
-    """Downloads and caches a remote file locally.
-    
-    The function sits between the 'read' step of a pandas or geopandas
-    data frame and downloading the file from a remote location. The idea
-    is that it will save it locally so that you don't need to remember to
-    do so yourself. Subsequent re-reads of the file will return instantly
-    rather than downloading the entire file for a second or n-th itme.
-    
-    Parameters
-    ----------
-    src : str
-        The remote *source* for the file, any valid URL should work.
-    dest : str
-        The *destination* location to save the downloaded file.
-        
-    Returns
-    -------
-    str
-        A string representing the local location of the file.
-    """
-    
-    url = urlparse(src) # We assume that this is some kind of valid URL 
-    fn  = os.path.split(url.path)[-1] # Extract the filename
-    dfn = os.path.join(dest,fn) # Destination filename
-    
-    # Check if dest+filename does *not* exist -- 
-    # that would mean we have to download it!
-    if not os.path.isfile(dfn) or os.path.getsize(dfn) < 1:
-        
-        print(f"{dfn} not found, downloading!")
-
-        # Convert the path back into a list (without)
-        # the filename -- we need to check that directories
-        # exist first.
-        path = os.path.split(dest)
-        
-        # Create any missing directories in dest(ination) path
-        # -- os.path.join is the reverse of split (as you saw above)
-        # but it doesn't work with lists... so I had to google how
-        # to use the 'splat' operator! os.makedirs creates missing
-        # directories in a path automatically.
-        if len(path) >= 1 and path[0] != '':
-            os.makedirs(os.path.join(*path), exist_ok=True)
-            
-        # Download and write the file
-        with open(dfn, "wb") as file:
-            response = get(src)
-            file.write(response.content)
-            
-        print('Done downloading...')
-
-    else:
-        print(f"Found {dfn} locally!")
-
-    return dfn
-```
+{{< include _cache_function.qmd >}}
 
 ```{python}
 ddir = os.path.join('data','geo') # destination directory
-pqt  = cache_data(f'{host}/{path}/{ymd}-listings.geoparquet', ddir)
+pqt  = cache_data(url, ddir)
 ```
 
 # Selecting Data
@@ -654,8 +590,8 @@ See, no need for a spatial query and you can run the same query easily for many 
 But first, we need some actual geodata to work with:
 
 ```{python}
-msoa_gpkg = gpd.read_file( cache_data(f'{host}/{path}/MSOA-2011.gpkg', ddir) ).to_crs('epsg:27700')
-listings  = gpd.read_parquet( cache_data(f'{host}/{path}/{ymd}-listings.geoparquet', ddir) ).to_crs('epsg:27700')
+msoa_gpkg = gpd.read_file( cache_data(f'{host}/~jreades/data//MSOA-2011.gpkg', ddir) ).to_crs('epsg:27700')
+listings  = gpd.read_parquet( cache_data(f'{host}/~jreades/data/{ymd}-{city}-listings.geoparquet', ddir) ).to_crs('epsg:27700')
 ```
 
 ## In Geopandas
@@ -701,7 +637,7 @@ LOAD SPATIAL;
 COPY(
   SELECT m.MSOA11CD, n.msoa11nm, n.Laname, m.geom 
   FROM 
-      (SELECT MSOA11CD, geom FROM ST_Read("{cache_data(f'{host}/{path}/MSOA-2011.gpkg', ddir)}")) AS m,
+      (SELECT MSOA11CD, geom FROM ST_Read("{cache_data(f'{host}/~jreades/data/MSOA-2011.gpkg', ddir)}")) AS m,
       read_csv("{cache_data(msoa_names_url, 'data')}") AS n
   WHERE m.MSOA11CD=n.msoa11cd
   AND n.Laname='{boro}'
@@ -728,7 +664,7 @@ spath = 'https://github.com/jreades/fsds/blob/master/data/src/' # source path
 water = gpd.read_file( cache_data(spath+'Water.gpkg?raw=true', ddir) )
 boros = gpd.read_file( cache_data(spath+'Boroughs.gpkg?raw=true', ddir) )
 green = gpd.read_file( cache_data(spath+'Greenspace.gpkg?raw=true', ddir) )
-msoas = gpd.read_file( cache_data(f'{host}/{path}/MSOA-2011.gpkg', ddir) ).to_crs('epsg:27700')
+msoas = gpd.read_file( cache_data(f'{host}/~jreades/data/MSOA-2011.gpkg', ddir) ).to_crs('epsg:27700')
 ```
 
 ## Select London MSOAs
@@ -1000,7 +936,7 @@ ldn_msoas.to_parquet(os.path.join('data','geo','London_MSOA_Names.geoparquet'))
 ## Load InsideAirbnb Data
 
 ```{python}
-listings = gpd.read_parquet( cache_data(f'{host}/{path}/{ymd}-listings.geoparquet', ddir) ).to_crs(epsg=27700)
+listings = gpd.read_parquet( cache_data(f'{host}/~jreades/data/{ymd}-{city}-listings.geoparquet', ddir) ).to_crs(epsg=27700)
 print(f"Data frame is {listings.shape[0]:,} x {listings.shape[1]}")
 ```
 

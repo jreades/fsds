@@ -16,7 +16,7 @@ html:
 }
 </style>
 
-This session is a tour-de-`pandas`; since this is Python's equivalent of the `tidyverse` meets `data.tables` it is fundamental to the data science ecosystem and is probably one of the most-widely used libraries in the language as a whole. I get [more than 285,000 questions](https://stackoverflow.com/questions/tagged/pandas) tagged with pandas on StackOverflow. 
+This session is a tour-de-`pandas`; since this is Python's equivalent of the `tidyverse` meets `data.tables` it is fundamental to the data science ecosystem and is probably one of the most-widely used libraries in the language as a whole. I get [more than 286,000 questions](https://stackoverflow.com/questions/tagged/pandas) tagged with pandas on StackOverflow. 
 
 This week we are also going to start looking at the **[InsideAirbnb](http://insideairbnb.com/)** data which forms the core of the work that we do over the rest of the term. The focus of *this* notebook is simple numeric data: no mapping or text data... yet... and direct manipulation of data types, derivation of summary statistics, and simple plotting.
 
@@ -123,16 +123,13 @@ Depending on which syntax you prefer, you can use these interchangeably. The onl
 
 You will need to do several things here to read the remote, compressed CSV file specified by `url` into a data frame called `df`. Setting `low_memory=False` ensures that pandas will try to load the entire data set _before_ guessing the data format! Obviously, with very large files this is probably a bad idea and it's possible to force a particular column type while readng in the data as well. For larger data sets there are platforms like [Dask](https://dask.org/) (see, eg, [this](https://towardsdatascience.com/why-and-how-to-use-dask-with-big-data-746e34dac7c3)), and beyond that are [other options](https://towardsdatascience.com/scaling-pandas-comparing-dask-ray-modin-vaex-and-rapids-c74c85a4e59c).
 
+{{< include _data_definition_csv.qmd >}}
+
 :::: {.qna}
 
 #### Question
 
 ```python
-# Set download URL
-ymd  = '{{< var data.ymd >}}'
-host = 'https://orca.casa.ucl.ac.uk'
-url  = f'{host}/~jreades/data/{ymd}-listings.csv.gz'
-
 # your code here
 df = pd.read_csv(??, compression='gzip', low_memory=False)
 print(f"Data frame is {df.shape[0]:,} x {df.shape[1]}")
@@ -140,18 +137,13 @@ print(f"Data frame is {df.shape[0]:,} x {df.shape[1]}")
 
 #### Answer
 
-This is a bit of a fuller answer than the question, but hopefully you'll see why we take this approach as a 'better' one that the skeleton set out in the Question. Note that you can also find reviews and calendar at the same location as the listings file (i.e. `{{< var data.ymd >}}-calendar.csv.gz`)
+This is a bit of a fuller answer than the question, but hopefully you'll see why we take this approach as a 'better' one that the skeleton set out in the Question. Note that you can also find reviews and calendar at the same location as the listings file (i.e. `{{< var data.ymd >}}-{city}-calendar.csv.gz`)
 
 ```{python}
 # Notice that we import a specific error here
 # but other types of errors (e.g. NameError)
 # are always available because they're so basic.
 from urllib.error import URLError
-
-# Set download URL
-ymd  = '2024-06-14'
-host = 'https://orca.casa.ucl.ac.uk'
-url  = f'{host}/~jreades/data/{ymd}-listings.csv.gz'
 
 if not os.path.exists('tmp.csv.gz'):
     print("Didn't find tmp.csv.gz locally")

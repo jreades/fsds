@@ -36,68 +36,7 @@ import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 ```
 
-```{python}
-import os
-from requests import get
-from urllib.parse import urlparse
-
-def cache_data(src:str, dest:str) -> str:
-    """Downloads and caches a remote file locally.
-    
-    The function sits between the 'read' step of a pandas or geopandas
-    data frame and downloading the file from a remote location. The idea
-    is that it will save it locally so that you don't need to remember to
-    do so yourself. Subsequent re-reads of the file will return instantly
-    rather than downloading the entire file for a second or n-th itme.
-    
-    Parameters
-    ----------
-    src : str
-        The remote *source* for the file, any valid URL should work.
-    dest : str
-        The *destination* location to save the downloaded file.
-        
-    Returns
-    -------
-    str
-        A string representing the local location of the file.
-    """
-    
-    url = urlparse(src) # We assume that this is some kind of valid URL 
-    fn  = os.path.split(url.path)[-1] # Extract the filename
-    dfn = os.path.join(dest,fn) # Destination filename
-    
-    # Check if dest+filename does *not* exist -- 
-    # that would mean we have to download it!
-    if not os.path.isfile(dfn) or os.path.getsize(dfn) < 1:
-        
-        print(f"{dfn} not found, downloading!")
-
-        # Convert the path back into a list (without)
-        # the filename -- we need to check that directories
-        # exist first.
-        path = os.path.split(dest)
-        
-        # Create any missing directories in dest(ination) path
-        # -- os.path.join is the reverse of split (as you saw above)
-        # but it doesn't work with lists... so I had to google how
-        # to use the 'splat' operator! os.makedirs creates missing
-        # directories in a path automatically.
-        if len(path) >= 1 and path[0] != '':
-            os.makedirs(os.path.join(*path), exist_ok=True)
-            
-        # Download and write the file
-        with open(dfn, "wb") as file:
-            response = get(src)
-            file.write(response.content)
-            
-        print('Done downloading...')
-
-    else:
-        print(f"Found {dfn} locally!")
-
-    return dfn
-```
+{{< include _cache_function.qmd >}}
 
 # Using Maplotlib
 
@@ -209,7 +148,7 @@ I am setting the 'title font' (`tfont`) and 'body copy font' (`bfont`) and 'axis
 At this point we're going to work towards a kind of 'atlas' that would make it easy to compare some features for different London boroughs. I basically implemented a the basic `matplotlib` version of QGIS' Atlas functionality.
 
 ```{python}
-# This will be wahtever LA you processed last week
+# This will be whatever LA you processed last week
 LA = 'Waltham Forest'
 ```
 

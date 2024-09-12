@@ -54,7 +54,7 @@ matplotlib.font_manager.FontManager().findfont(fontname, fontext='ttf', rebuild_
 
 #### &#128279; Connections
 
-We're building on the work done in [Practical 5](Practical-05-Numeric_Data.ipynb) and [Practical 4](Practical-04-Objects.ipynb) (with a particular nod to the [lecture on Data](https://jreades.github.io/fsds/sessions/week5.html#lectures)) to create some useful functions that we can call on at-need to improve the ease of doing data analysis.
+We're building on the work done in [Practical 5](Practical-06-Numeric_Data.ipynb) and [Practical 4](Practical-05-Objects.ipynb) (with a particular nod to the [lecture on Data](https://jreades.github.io/fsds/sessions/week5.html#lectures)) to create some useful functions that we can call on at-need to improve the ease of doing data analysis.
 
 :::
 
@@ -128,60 +128,9 @@ help(cache_data) # <- This should show the docstring you've written
 
 #### Answer
 
+{{< include _cache_function.qmd >}}
+
 ```{python}
-import os
-from requests import get
-from urllib.parse import urlparse
-
-def cache_data(src:str, dest:str) -> str:
-    """Downloads and caches a remote file locally.
-
-    The function sits between the 'read' step of a pandas or geopandas
-    data frame and downloading the file from a remote location. The idea
-    is that it will save it locally so that you don't need to remember to
-    do so yourself. Subsequent re-reads of the file will return instantly
-    rather than downloading the entire file for a second or n-th itme.
-
-    We've built in some basic logic around looking at the extension of the
-    destination file and converting it accordingly *once* it is downloaded.
-
-    Parameters
-    ----------
-    src : str
-        The remote *source* for the file, any valid URL should work.
-    dest : str
-        The *destination* location to save the downloaded file.
-
-    Returns
-    -------
-    str
-        A string representing the local location of the file.
-    """
-
-    url = urlparse(src) # We assume that this is some kind of valid URL
-    fn  = os.path.split(url.path)[-1] # Extract the filename
-    dfn = os.path.join(dest,fn) # Destination filename
-
-    if not os.path.isfile(dfn) or os.path.getsize(dfn) < 250:
-
-        print(f"{dfn} not found, downloading!")
-
-        path = os.path.split(dest)
-
-        if len(path) >= 1 and path[0] != '':
-            os.makedirs(os.path.join(*path), exist_ok=True)
-
-        with open(dfn, "wb") as file:
-            response = get(src)
-            file.write(response.content)
-
-        print("\tDone downloading...")
-
-    else:
-        print(f"Found {dfn} locally!")
-
-    return dfn
-
 help(cache_data) # <- This should show the docstring you've written
 ```
 
@@ -240,16 +189,13 @@ Let's re-use our `cache_data` function to download and save the full Inside Airb
 
 :::
 
+{{< include _data_definition.qmd >}}
+
 ::: {.qna}
 
 #### Question
 
 ```python
-# Set download URL
-ymd  = '{{< var data.ymd >}}'
-host = 'https://orca.casa.ucl.ac.uk'
-url  = f'{host}/~jreades/data/{ymd}-listings.parquet'
-
 # your code here
 df = pd.read_parquet( ??(??, os.path.join('data','raw')) )
 print(f"Data frame is {df.shape[0]:,} x {df.shape[1]}")
@@ -257,12 +203,9 @@ print(f"Data frame is {df.shape[0]:,} x {df.shape[1]}")
 
 #### Answer
 
-```{python}
-# Set download URL
-ymd  = '2024-06-14'
-host = 'https://orca.casa.ucl.ac.uk'
-url  = f'{host}/~jreades/data/{ymd}-listings.parquet'
+{{< include _data_definition.qmd >}}
 
+```{python}
 # your code here
 df = pd.read_parquet( cache_data(url, os.path.join('data','raw')) )
 print(f"Data frame is {df.shape[0]:,} x {df.shape[1]}")
@@ -710,7 +653,7 @@ This is a first pass at a map, over the next few weeks we'll see how to add thin
 # Creates a new figure with specified number of
 # subplots (we'll see more of this later) and 
 # and the specified size (in inches by default).
-fig, ax = plt.subplots(1,1, figsize=(9,6))
+fig, ax = plt.subplots(1,1, figsize=(8,6))
 
 # Plot all three GeoPackages to the same axes
 water.plot(??, ax=ax)
@@ -731,7 +674,7 @@ plt.savefig(os.path.join('img','My_First_Map.png'), dpi=150)
 # Creates a new figure with specified number of
 # subplots (we'll see more of this later) and
 # and the specified size (in inches by default).
-f,ax = plt.subplots(1,1, figsize=(9,6))
+f,ax = plt.subplots(1,1, figsize=(8,6))
 
 # Plot all three GeoPackages to the same axes
 water.plot(edgecolor="none", facecolor='xkcd:lightblue', ax=ax)
@@ -775,13 +718,13 @@ See if you can work out how to plot the points coloured by their price using the
 #### Question
 
 ```python
-gdf.to_crs(??).plot(column=??, cmap=??, alpha=0.25, markersize=1, figsize=(10,7));
+gdf.to_crs(??).plot(column=??, cmap=??, alpha=0.25, markersize=1, figsize=(8,6));
 ```
 
 #### Answer
 
 ```{python}
-gdf.to_crs('epsg:27700').plot(column='price', cmap='viridis', alpha=0.25, markersize=1, figsize=(10,7));
+gdf.to_crs('epsg:27700').plot(column='price', cmap='viridis', alpha=0.25, markersize=1, figsize=(8,6));
 ```
 
 ::::
@@ -790,7 +733,7 @@ Using the Viridis colourmap I get the following:
 
 ```{python}
 #| echo: false
-gdf.to_crs('epsg:27700').plot(column='price', cmap='viridis', alpha=0.25, markersize=1, figsize=(8,5));
+gdf.to_crs('epsg:27700').plot(column='price', cmap='viridis', alpha=0.25, markersize=1, figsize=(8,6));
 ```
 
 ### Work out the Data Range
@@ -851,7 +794,7 @@ if isinstance(gdf, pd.DataFrame):
 
 ```python
 # Oooooh, let's use a *pandas* method here
-gdf.price.plot.??(bins=??, figsize=(10,3)); 
+gdf.price.plot.??(bins=??, figsize=(8,3)); 
 ```
 
 #### Answer
@@ -860,12 +803,12 @@ Notice the difference between these two outputs, make sure that you understand w
 
 ```{python}
 # Oooooh, let's use a *pandas* method here
-gdf.price.plot.hist(bins=200, xlim=(0,1000), figsize=(9,3)); 
+gdf.price.plot.hist(bins=200, xlim=(0,1000), figsize=(8,3)); 
 ```
 
 ```{python}
 # Oooooh, let's use a *pandas* method here
-gdf[gdf.price < 1000].price.plot.hist(bins=200, figsize=(9,3)); 
+gdf[gdf.price < 1000].price.plot.hist(bins=200, figsize=(8,3)); 
 ```
 
 ::::
@@ -877,7 +820,7 @@ We can see that there's very little data above (at a guess) about $2,000, but at
 Try adjusting the axis so that the x-range is 0..2500:
 
 ```python
-ax = gdf.price.plot.??(bins=??, figsize=(9,3));
+ax = gdf.price.plot.??(bins=??, figsize=(8,3));
 ax.??
 ```
 
@@ -888,13 +831,13 @@ You can do the same thing with a boxplot:
 #### Question
 
 ```python
-ax = gdf.price.plot.??(vert=False, figsize=(10,3))
+ax = gdf.price.plot.??(vert=False, figsize=(8,3))
 ax.??
 ```
 #### Answer
 
 ```{python}
-ax = gdf.price.plot.box(vert=False, figsize=(10,3))
+ax = gdf.price.plot.box(vert=False, figsize=(8,3))
 ax.set_xlim(0,2500)
 ```
 
@@ -1050,7 +993,7 @@ ax.set_title("Plot of Natural Log of Nightly Price for Airbnb Listings (Outliers
 #### Answer
 
 ```{python}
-ax = gdf.plot(figsize=(9,6), marker='*', markersize=0.25,
+ax = gdf.plot(figsize=(8,6), marker='*', markersize=0.25,
          column='lnprice', cmap='viridis',
          legend=True, legend_kwds={'label':'Natural Log of Price per Night ($)'});
 ax.set_title("Plot of Natural Log of Nightly Price for Airbnb Listings (Outliers Removed)");
@@ -1093,7 +1036,7 @@ We show one way to do this below (`f,ax = plt.subplots(...)`) because it gives y
 # Note this new f,ax syntax and that we then
 # pass ax=ax to gdf.plot -- this has to do with
 # where and how things are plotted.
-f,ax = plt.subplots(1,1,figsize=(9,6))
+f,ax = plt.subplots(1,1,figsize=(8,6))
 gdf.plot(ax=ax, marker='*', markersize=0.25, 
          column='lnprice', cmap='viridis', 
          legend=True, legend_kwds={'label':'Natural Log of Price per Night ($)'});
@@ -1109,7 +1052,7 @@ f
 # Note this new f,ax syntax and that we then
 # pass ax=ax to gdf.plot -- this has to do with
 # where and how things are plotted.
-f,ax = plt.subplots(1,1,figsize=(9,6))
+f,ax = plt.subplots(1,1,figsize=(8,6))
 gdf.plot(ax=ax, marker='*', markersize=0.25,
          column='lnprice', cmap='viridis',
          legend=True, legend_kwds={'label':'Natural Log of Price per Night ($)'});
@@ -1146,7 +1089,7 @@ Let's give this one last try using the quantiles classification scheme for Centr
 #### Question
 
 ```python
-f,ax = plt.subplots(1,1,figsize=(9,7))
+f,ax = plt.subplots(1,1,figsize=(8,6))
 ax = gdf.plot(marker='*', markersize=0.25, 
          column='lnprice', cmap='viridis', ??, k=5, 
          legend=True, ax=ax); 
@@ -1160,7 +1103,7 @@ ax.set_ylim([178000,185000])
 #### Answer
 
 ```{python}
-f,ax = plt.subplots(1,1,figsize=(9,7))
+f,ax = plt.subplots(1,1,figsize=(8,6))
 gdf.plot(marker='*', markersize=0.25,
          column='lnprice', cmap='viridis', scheme='quantiles', k=5,
          legend=True, ax=ax); 
@@ -1340,7 +1283,7 @@ q = mc.??(tgdf.price.values, ??)
 tgdf['bins'] = q.??
 
 # Set up the figure with its 'basemap'
-f,ax = plt.subplots(figsize=(10,6))
+f,ax = plt.subplots(figsize=(8,6))
 green.plot(edgecolor=(0.7, 0.7, 0.14, 0.25), facecolor=(0.7, 0.7, 0.14, 0.25), zorder=1, ax=ax)
 water.plot(edgecolor="none", facecolor='xkcd:lightblue', zorder=2, ax=ax)
 boros.plot(edgecolor=(0.8, 0, 0, 0.5), facecolor='none', linewidth=2.5, zorder=3, ax=ax)
@@ -1440,7 +1383,7 @@ q = mc.Quantiles(tgdf.price.values, k=5)
 tgdf['bins'] = q.yb
 
 # Set up the figure with its 'basemap'
-f,ax = plt.subplots(figsize=(10,6))
+f,ax = plt.subplots(figsize=(8,6))
 green.plot(edgecolor=(0.7, 0.7, 0.14, 0.25), facecolor=(0.7, 0.7, 0.14, 0.25), zorder=1, ax=ax)
 water.plot(edgecolor="none", facecolor='xkcd:lightblue', zorder=2, ax=ax)
 boros.plot(edgecolor=(0.8, 0, 0, 0.5), facecolor='none', linewidth=2.5, zorder=3, ax=ax)

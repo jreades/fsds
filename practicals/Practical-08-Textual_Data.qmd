@@ -7,14 +7,12 @@ filters:
   - quarto
 ---
 
-A lot of the content here is provided to help you *understand* what text-cleaning does and how it generates tokens that can be processed by the various analytical approaches commonly-used in NLP. The best way to think about this is as a practical in three parts, not all of which you should expect to complete in this session:
+A lot of the content here is provided to help you *understand* what text-cleaning does and how it generates tokens that can be processed by the various analytical approaches commonly-used in NLP. The best way to think about this is as a practical in two parts, with a bonus 'Part 2' that you should not expect to complete unless you probably shouldn't be taking CASA0013 in the first place:
 
 1. Tasks 1–3: these are largely focussed on the basics: exploring text and using regular expressions to find and select text.
-2. Tasks 4–5: this might seem like a *bit* of a detour, but it's intended to show you in a more tangible way how 'normalisation' works when we're working with text. **You should feel free to stop here and return to the rest later.**
-3. Tasks 6–7: are about finding important vocabulary (think 'keywords' and 'significant terms') in documents so that you can start to think about what is *distinctive* about documents and groups of documents. **This is quite useful and relatively easier to understand than what comes next!**
-4. Tasks 8–9: are about fully-fledged NLP using Latent Direclecht Allocation (topic modelling) and Word2Vec (words embeddings for use in clustering or similarity work).
+2. Tasks 4–5: this might seem like a *bit* of a detour, but it's intended to show you in a more tangible way how 'normalisation' works when we're working with text. 
 
-The later parts are largely complete and ready to run; however, that *doesn't* mean you should just skip over them and think you've grasped what's happening and it will be easy to apply in your own analyses. I would *not* pay as much attention to LDA topic mining since I don't think it's results are that good, but I've included it here as it's still commonly-used in the Digital Humanities and by Marketing folks. Word2Vec is much more powerful and forms the basis of the kinds of advances seen in ChatGPT and other LLMs.
+The later parts in [Part 2](./Practical-08-Textual_Data-Pt2.qmd) are largely complete and ready to run; however, that *doesn't* mean you should just skip over them and think you've grasped what's happening and it will be easy to apply in your own analyses. I would *not* pay as much attention to LDA topic mining since I don't think it's results are that good, but I've included it here as it's still commonly-used in the Digital Humanities and by Marketing folks. Word2Vec is much more powerful and forms the basis of the kinds of advances seen in ChatGPT and other LLMs.
 
 ::: {.callout-note}
 
@@ -22,25 +20,6 @@ The later parts are largely complete and ready to run; however, that *doesn't* m
 
 Working with text is unquestionably _hard_. In fact, _conceptually_ this is probaly the most challenging practical of the term! But data scientists are _always_ dealing with text because so much of the data that we collect (even more so thanks to the web) is not only text-based (URLs are text!) but, increasingly, unstructured (social media posts, tags, etc.). So while getting to grips with text is a challenge, it also uniquely positions you with respect to the skills and knowledge that other graduates are offering to employers.
 :::
-
-# Preamble
-
-This practical has been written using `nltk`, but would be _relatively_ easy to rework using `spacy`. Most programmers tend to use one *or* the other, and the switch wouldn't be hard other than having to first load the requisite language models:
-
-```{python}
-import spacy
-
-# `...web_md` and `...web_lg` are also options
-corp = "en_core_web_sm"
-
-try: 
-    nlp = spacy.load(corp)
-except OSError:
-    spacy.cli.download(corp)
-    nlp = spacy.load(corp)
-```
-
-You can [read about the models](https://spacy.io/models/en), and note that they are also [available in other languages](https://spacy.io/usage/models) besides English.
 
 # Setup
 
@@ -70,53 +49,6 @@ import geopandas as gpd
 import re
 import math
 import matplotlib.pyplot as plt
-```
-
-Vectorisers we will use from the 'big beast' of Python machine learning: Sci-Kit Learn.
-
-```{python}
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.decomposition import LatentDirichletAllocation
-
-# We don't use this but I point out where you *could*
-from sklearn.preprocessing import OneHotEncoder 
-```
-
-NLP-specific libraries that we will use for tokenisation, lemmatisation, and frequency analysis.
-
-```{python}
-import nltk
-import spacy
-from nltk.corpus import wordnet as wn
-from nltk.stem.wordnet import WordNetLemmatizer
-
-try:
-    from nltk.corpus import stopwords
-except:
-    nltk.download('stopwords')
-    from nltk.corpus import stopwords
-stopword_list = set(stopwords.words('english'))
-
-from nltk.tokenize import word_tokenize, sent_tokenize
-from nltk.tokenize.toktok import ToktokTokenizer
-
-from nltk.stem.porter import PorterStemmer
-from nltk.stem.snowball import SnowballStemmer
-
-from nltk import ngrams, FreqDist
-
-lemmatizer = WordNetLemmatizer()
-tokenizer = ToktokTokenizer()
-```
-
-Remaining libraries that we'll use for processing and display text data. Most of this relates to dealing with the various ways that text data cleaning is *hard* because of the myriad formats it comes in.
-
-```{python}
-import string
-import unicodedata
-from bs4 import BeautifulSoup
-from wordcloud import WordCloud, STOPWORDS
 ```
 
 This next is just a small utility function that allows us to output Markdown (like this cell) instead of plain text:
@@ -226,12 +158,9 @@ For very large _non_-geographic data sets, remember that you can `use_cols` (or 
 
 Load the main data set:
 
-```{python}
-# Set download URL
-ymd  = '2024-06-14'
-host = 'https://orca.casa.ucl.ac.uk'
-url  = f'{host}/~jreades/data/{ymd}-listings.geoparquet'
+{{< include _data_definition_sp.qmd >}}
 
+```{python}
 gdf = gpd.read_parquet( cache_data(url, os.path.join('data','geo')), 
                       columns=['geometry', 'listing_url', 'name', 
                                'description', 'amenities', 'price'])
@@ -370,7 +299,11 @@ print(f"Now gdf has {gdf.shape[0]:,} rows.")
 
 ::::
 
-You should get that there are `{python} f"{gdf.shape[0]:,}"` rows.
+```{python}
+#| echo: false
+#| output: asis
+print(f"You should get that there are `{gdf.shape[0]:,}` rows.")
+```
 
 # Using Regular Expressions
 
@@ -378,7 +311,7 @@ You should get that there are `{python} f"{gdf.shape[0]:,}"` rows.
 
 #### &#128279; Connections
 
-We're building on the work done in [Practical 6](Practical-05-Spatial_Data.ipynb), but making use now of the lecture on [Patterns in Text](https://jreades.github.io/fsds/sessions/week6.html#lectures)) to quickly sort through the listings.
+We're building on the work done in [Practical 7](Practical-07-Spatial_Data.qmd), but making use now of the lecture on [Patterns in Text](https://jreades.github.io/fsds/sessions/week6.html#lectures)) to quickly sort through the listings.
 
 :::
 
@@ -435,6 +368,7 @@ Assign it to a new data frame called `lux`:
 
 ```python
 lux = gdf[gdf.description.str.contains(r'???', regex=True, flags=re.IGNORECASE)].copy()
+lux.to_parquet(os.path.join('data','clean','luxury.geopackage'))
 print(f"Found {lux.shape[0]:,} records for 'luxury' flats")
 ```
 
@@ -442,12 +376,17 @@ print(f"Found {lux.shape[0]:,} records for 'luxury' flats")
 
 ```{python}
 lux = gdf[gdf.description.str.contains(r'(?:luxur(?:y|ious|iat)|prestigious|stunning)', regex=True, flags=re.IGNORECASE)].copy()
+lux.to_parquet(os.path.join('data','clean','luxury.geopackage'))
 print(f"Found {lux.shape[0]:,} records for 'luxury' flats")
 ```
 
 ::::
 
-You should get `{python} f"{lux.shape[0]:,}"` rows.
+```{python}
+#| echo: false
+#| output: asis
+print(f"You should get that there are `{lux.shape[0]:,}` rows.")
+```
 
 ### Plot the Data
 
@@ -587,6 +526,7 @@ gdf[
 
 ```python
 aff = gdf[gdf.description.str.contains(???, regex=True, flags=re.IGNORECASE)].copy()
+aff.to_parquet(os.path.join('data','clean','affordable.geopackage'))
 print(f"There are {aff.shape[0]:,} rows flagged as 'affordable'.")
 ```
 
@@ -595,12 +535,17 @@ print(f"There are {aff.shape[0]:,} rows flagged as 'affordable'.")
 ```{python}
 aff = gdf[gdf.description.str.contains(r'\b(?:affordable|budget|cheap|cosy)\b', 
           regex=True, flags=re.IGNORECASE)].copy()
+aff.to_parquet(os.path.join('data','clean','affordable.geopackage'))
 print(f"There are {aff.shape[0]:,} rows flagged as 'affordable'.")
 ```
 
 ::::
 
-You should get `{python} f"{aff.shape[0]:,}" ` rows.
+```{python}
+#| echo: false
+#| output: asis
+print(f"You should get that there are `{aff.shape[0]:,}` rows.")
+```
 
 ### Plot the Data
 
@@ -684,6 +629,7 @@ bluesp = gdf[
     (gdf.description.str.contains(???, regex=True, flags=re.IGNORECASE)) |
     (gdf.description.str.contains(???, regex=True, flags=re.IGNORECASE))
 ].copy()
+bluesp.to_parquet(os.path.join('data','clean','bluespace.geopackage'))
 print(f"Found {bluesp.shape[0]:,} rows.")
 ```
 
@@ -694,12 +640,17 @@ bluesp = gdf[
     (gdf.description.str.contains(r'(?:Thames|river|water|canals?)(?:-|\s+)(?:view|front)\b', regex=True, flags=re.IGNORECASE)) |
     (gdf.description.str.contains(r'(?:walk|close|near) to (?:Thames|river|water|canal)', regex=True, flags=re.IGNORECASE))
 ].copy()
+bluesp.to_parquet(os.path.join('data','clean','bluespace.geopackage'))
 print(f"Found {bluesp.shape[0]:,} rows.")
 ```
 
 ::::
 
-You should get `{python} f"{bluesp.shape[0]:,}" ` rows.
+```{python}
+#| echo: false
+#| output: asis
+print(f"You should get that there are `{bluesp.shape[0]:,}` rows.")
+```
 
 ### Plot the Data
 
@@ -729,733 +680,6 @@ plt.show()
 ### Questions
 
 - How else might you select listings with a view of the Thames or other bluespaces?
-
-# Text Cleaning
-
-Now we're going to step through the _parts_ of the process in which we apply to clean and transform text. We'll do this individually before using a function to apply them _all at once_.
-
-## Removing HTML
-
-::: {.callout-warning collapse="true"}
-
-#### Difficulty level: Moderate
-
-Because what we're doing will seem really strange and uses some previously unseen libraries that you'll have to google.
-
-:::
-
-*Hint*: you need to need to **get the text** out of the each returned `<p>` and `<div>` element! I'd suggest also commenting this up since there is a *lot* going on on some of these lines of code!
-
-We're going to take a single record to process:
-
-```{python}
-#| echo: false
-sample_row = bluesp.sample(1, random_state=42).description.to_list()[0]
-```
-
-```python
-sample_row = bluesp.sample(1, random_state=42).description.to_list()[0]
-```
-
-Our sample data looks like this:
-
-```{python}
-#| echo: false
-#| output: asis
-print(f"> {sample_row}")
-```
-
-Note, however, that it includes some formatting (bold, line breaks, etc.) that isn't strictly relevant and might actually give us issues downstream because it's 'markup' and not content:
-
-```{python}
-#| echo: false
-tmp = [e + "<br />" for e in sample_row.split("<br />")]
-print("\n".join(tmp))
-```
-
-:::: {.qna}
-
-#### Question
-
-```python
-cleaned = []
-
-html = sample_row
-soup = BeautifulSoup(html)
-body = soup.find('body')
-
-for c in body.findChildren(recursive=False):
-    if c.name in ['div','p'] and c.???.strip() != '': 
-        # \xa0 is a non-breaking space in Unicode (&nbsp; in HTML)
-        txt = [re.sub(r'(?:\u202f|\xa0|\u200b)',' ',x.strip()) for x in c.get_text(separator=" ").split('\n') if x.strip() != '']
-        cleaned += txt
-
-# Notice how this has changed from above
-print(cleaned)
-```
-
-#### Answer
-
-```{python}
-cleaned = []
-
-html = sample_row
-soup = BeautifulSoup(html)
-body = soup.find('body')
-
-for c in body.findChildren(recursive=False):
-    if c.name in ['div','p'] and c.get_text().strip() != '':
-        # \xa0 is a non-breaking space in Unicode (&nbsp; in HTML)
-        txt = [re.sub(r'(?:\u202f|\xa0|\u200b)',' ',x.strip()) for x in c.get_text(separator=" ").split('\n') if x.strip() != '']
-        cleaned += txt
-
-print(cleaned)
-```
-
-::::
-
-## Lower Case
-
-::: {.callout-tip collapse="true"}
-
-#### Difficulty Level: Low.
-
-:::
-
-:::: {.qna}
-
-#### Question
-
-```python
-lower = [c.???() for ??? in cleaned]
-lower
-```
-
-#### Answer
-
-```{python}
-lower = [s.lower() for s in cleaned]
-lower
-```
-
-::::
-
-## Stripping 'Punctuation'
-
-::: {.callout-caution collapse="true"}
-
-#### Difficulty level: Hard
-
-This is because you need to understand: 1) why we're _compiling_ the regular expression and how to use character classes; and 2) how the NLTK tokenizer differs in approach to the regex.
-
-:::
-
-### Regular Expression Approach
-
-We want to clear out punctuation using a regex that takes advantage of the `[...]` (character class) syntax. The really tricky part is remembering how to specify the 'punctuation' when some of that punctuation has 'special' meanings in a regular expression context. For instance, `.` means 'any character', while `[` and `]` mean 'character class'. So this is another *escaping* problem and it works the *same* way it did when we were dealing with the Terminal... 
-
-*Hints*: some other factors... 
-
-1. You will want to match more than one piece of punctuation at a time, so I'd suggest add a `+` to your pattern.
-2. You will need to look into *metacharacters* for creating a kind of 'any of the characters *in this class*' bag of possible matches.
-
-:::: {.qna}
-
-#### Question
-
-```python
-pattern = re.compile(r'[???]+')
-print(pattern)
-```
-
-#### Answer
-
-```{python}
-pattern = re.compile(r'[,\.!\-><=\(\)\[\]\/&\'\"’;\+\–\—]+')
-print(pattern)
-```
-
-::::
-
-### Tokenizer
-
-The other way to do this, which is probably *easier* but produces more complex output, is to draw on the tokenizers [already provided by NLTK](https://www.nltk.org/api/nltk.tokenize.html). For our purposes `word_tokenize` is probably fine, but depending on your needs there are other options and you can also write your own.
-
-```{python}
-nltk.download('punkt')
-nltk.download('wordnet')
-from nltk.tokenize import word_tokenize
-print(word_tokenize)
-```
-
-### Compare
-
-Look at how these outputs differ in subtle ways:
-
-```{python}
-subbed = []
-tokens = []
-for l in lower:
-    subbed.append(re.sub(pattern, ' ', l))
-    tokens.append(word_tokenize(l))
-
-for s in subbed:
-    as_markdown("Substituted", s)
-
-for t in tokens:
-    as_markdown("Tokenised", t)
-```
-
-## Stopword Removal
-
-::: {.callout-warning collapse="true"}
-
-#### Difficulty Level: Moderate 
-
-You need to remember how list comprehensions work to use the `stopword_list`.
-
-:::
-
-```{python}
-stopword_list = set(stopwords.words('english'))
-print(stopword_list)
-```
-
-:::: {.qna}
-
-#### Question
-
-```python
-stopped = []
-for p in tokens: # <-- why do I just take these items from the list?
-    stopped.append([x for x in p if x not in ??? and len(x) > 1])
-
-for s in stopped:
-    as_markdown("Line", s)
-```
-
-#### Answer
-
-```{python}
-stopped = []
-for p in tokens: # <-- why do I just take these items from the list?
-    stopped.append([x for x in p if x not in stopword_list and len(x) > 1])
-
-for s in stopped:
-    as_markdown("Line", s)
-```
-
-::::
-
-## Lemmatisation vs Stemming
-
-::: {.callout-tip collapse="true"}
-
-#### Difficulty level: Low.
-
-:::
-
-```{python}
-from nltk.stem.porter import PorterStemmer
-from nltk.stem.snowball import SnowballStemmer
-from nltk.stem.wordnet import WordNetLemmatizer 
-```
-
-```{python}
-lemmatizer = WordNetLemmatizer()
-print(lemmatizer.lemmatize('monkeys'))
-print(lemmatizer.lemmatize('cities'))
-print(lemmatizer.lemmatize('complexity'))
-print(lemmatizer.lemmatize('Reades'))
-```
-
-```{python}
-stemmer = PorterStemmer()
-print(stemmer.stem('monkeys'))
-print(stemmer.stem('cities'))
-print(stemmer.stem('complexity'))
-print(stemmer.stem('Reades'))
-```
-
-```{python}
-stemmer = SnowballStemmer(language='english')
-print(stemmer.stem('monkeys'))
-print(stemmer.stem('cities'))
-print(stemmer.stem('complexity'))
-print(stemmer.stem('Reades'))
-```
-
-```{python}
-lemmatizer = WordNetLemmatizer()
-lemmas  = []
-stemmed = []
-
-# This would be better if we passed in a PoS (Part of Speech) tag as well,
-# but processing text for parts of speech is *expensive* and for the purposes
-# of this tutorial, not necessary.
-for s in stopped:
-    lemmas.append([lemmatizer.lemmatize(x) for x in s])
-
-for s in stopped:
-    stemmed.append([stemmer.stem(x) for x in s])
-
-for l in lemmas:
-    as_markdown('Lemmatised',l)
-
-for s in stemmed:
-    as_markdown('Stemmed',s)
-```
-
-#### Compare and Contrast
-
-What are we doing here?
-
-```{python}
-for ix, p in enumerate(stopped):
-    stopped_set = set(stopped[ix])
-    lemma_set   = set(lemmas[ix])
-    print(sorted(stopped_set.symmetric_difference(lemma_set)))
-```
-
-# Pandas.Apply
-
-The above approach is fairly hard going since you need to loop through every list element applying these changes one at a time. Instead, we could convert the column to a corpus (or use pandas `apply`) together with a function imported from a library to do the work.
-
-## Downloading the Custom Module
-
-::: {.callout-tip collapse="true"}
-
-#### Difficulty level: Low.
-
-:::
-
-This custom module is not perfect, but it gets the job done... mostly and has some additional features that you could play around with for a final project (e.g. `detect_entities` and `detect_acronyms`).
-
-```{python}
-import urllib.request
-host  = 'https://orca.casa.ucl.ac.uk'
-turl  = f'{host}/~jreades/__textual__.py'
-tdirs = os.path.join('textual')
-tpath = os.path.join(tdirs,'__init__.py')
-
-if not os.path.exists(tpath):
-    os.makedirs(tdirs, exist_ok=True)
-    urllib.request.urlretrieve(turl, tpath)
-```
-
-## Importing the Custom Module
-
-::: {.callout-tip collapse="true"}
-
-#### Difficulty Level: Low. 
-
-But only because you didn't have to write the module! However, the questions could be hard...
-
-:::
-
-In a Jupyter notebook, this code allows us to edit and reload the library dynamically:
-
-```python
-%load_ext autoreload
-%autoreload 2
-```
-
-Now let's import it.
-
-```{python}
-from textual import *
-```
-
-```{python}
-as_markdown('Input', cleaned)
-```
-
-```{python}
-as_markdown('Normalised', [normalise_document(x, remove_digits=True) for x in cleaned])
-```
-
-```{python}
-help(normalise_document)
-```
-
-### Questions
-
-Let's assume that you want to analyse web page content... 
-
-- Based on the above output, what stopwords do you think are missing?
-- Based on the above output, what should be removed but isn't?
-- Based on the above output, how do you think a computer can work with this text?
-
-::: {.callout-caution}
-
-#### Stop!
-
-Beyond this point, we are moving into Natural Language Processing. If you are already struggling with regular expressions, I would recommend _stopping here_. You can come back to revisit the NLP components and creation of word clouds later.
-
-:::
-
-# Data Normalisation
-
-Now that you've seen how the steps are applied to a 'random' document, let's get back to the problem at hand or, as the French would put it, revenons à nos moutons (let's get back to our sheep).
-
-## Process the Selected Listings
-
-::: {.callout-tip collapse="true"}
-
-#### Difficulty level: Low, but you'll need to be patient!
-
-:::
-
-Notice the use of `%%time` here -- this will tell you how long each block of code takes to complete. It's a really useful technique for reminding *yourself* and others of how long something might take to run. I find that with NLP this is particularly important since you have to do a *lot* of processing on each document in order to normalise it.
-
-::: {.callout-tip}
-
-Notice how we can change the default parameters for `normalise_document` even when using `apply`, but that the syntax is different. So whereas we'd use `normalise_document(doc, remove_digits=True)` if calling the function directly, here it's `.apply(normalise_document, remove_digits=True)`!
-
-:::
-
-:::: {.qna}
-
-#### Question
-
-```python
-%%time 
-# I get about 1 minute on a M2 Mac
-lux['description_norm'] = lux.???.apply(???, remove_digits=True)
-```
-
-```python
-%%time 
-# I get about 1 minute on a M2 Mac
-aff['description_norm'] = aff.???.apply(???, remove_digits=True)
-```
-
-```python
-%%time  
-# I get about 2 seconds on a M2 Mac
-bluesp['description_norm'] = bluesp.???.apply(???, remove_digits=True)
-```
-
-#### Answer
-
-We're only going to show one of these since that speeds up the rendering, for the luxury and affordable samples you are looking at upwards of 1 minute calculation time.
-
-```{python}
-%%time
-# I get about 1 seconds on a M2 Mac
-bluesp['description_norm'] = bluesp.description.apply(normalise_document, remove_digits=True)
-```
-
-::::
-
-## Select and Tokenise
-
-::: {.callout-tip collapse="true"}
-
-#### Difficulty level: Low, except for the double list-comprehension.
-
-:::
-
-### Select and Extract Corpus
-
-See useful tutorial [here](https://towardsdatascience.com/tf-idf-explained-and-python-sklearn-implementation-b020c5e83275). Although we shouldn't have any empty descriptions, by the time we've finished normalising the textual data we may have _created_ some empty values and we need to ensure that we don't accidentally pass a NaN to the vectorisers and frequency distribution functions.
-
-```{python}
-# The data set to which we want to apply
-# the data normalisation code... feel free
-# to change (though so will your results)
-srcdf = bluesp 
-```
-
-::: {.callout-tip}
-
-#### Coding Tip
-
-Notice how you only need to change the value of the variable here to try any of the different selections we did above? This is a simple kind of parameterisation somewhere between a function and hard-coding everything.
-
-:::
-
-```{python}
-corpus = srcdf.description_norm.fillna(' ').values
-print(corpus[0:3])
-```
-
-### Tokenise
-
-There are different forms of tokenisation and different algorithms will expect differing inputs. Here are two:
-
-```{python}
-sentences = [nltk.sent_tokenize(text) for text in corpus]
-words     = [[nltk.tokenize.word_tokenize(sentence) 
-                  for sentence in nltk.sent_tokenize(text)] 
-                  for text in corpus]
-```
-
-Notice how this has turned every sentence into an array and each document into an array of arrays:
-
-```{python}
-print(f"Sentences 0: {sentences[0]}")
-print()
-print(f"Words 0: {words[0]}")
-```
-
-## Frequencies and Ngrams
-
-::: {.callout-warning collapse="true"}
-
-#### Difficulty level: Moderate.
-
-:::
-
-One new thing you'll see here is the `ngram`: ngrams are 'simply' pairs, or triplets, or quadruplets of words. You may come across the terms unigram (`ngram(1,1)`), bigram (`ngram(2,2)`), trigram (`ngram(3,3)`)... typically, you will rarely find anything beyond trigrams, and these present real issues for text2vec algorithms because the embedding for `geographical`, `information`, and `systems` is _not_ the same as for `geographical information systetms`.
-
-### Build Frequency Distribution
-
-Build counts for ngram range 1..3:
-
-```{python}
-fcounts = dict()
-
-# Here we replace all full-stops... can you think why we might do this?
-data = nltk.tokenize.word_tokenize(' '.join([text.replace('.','') for text in corpus]))
-
-for size in 1, 2, 3:
-    fdist = FreqDist(ngrams(data, size))
-    print(fdist)
-    # If you only need one note this: https://stackoverflow.com/a/52193485/4041902
-    fcounts[size] = pd.DataFrame.from_dict({f'Ngram Size {size}': fdist})
-```
-
-### Output Top-n Ngrams
-
-And output the most common ones for each ngram range:
-
-```{python}
-for dfs in fcounts.values():
-    print(dfs.sort_values(by=dfs.columns.values[0], ascending=False).head(10))
-    print()
-```
-
-### Questions
-
-- Can you think why we don't care about punctuation for frequency distributions and n-grams?
-- Do you understand what n-grams *are*?
-
-## Count Vectoriser
-
-::: {.callout-tip collapse="true"}
-
-#### Difficulty level: Low, but the output needs some thought!
-
-:::
-
-This is a big foray into sklearn (sci-kit learn) which is the main machine learning and clustering module for Python. For processing text we use *vectorisers* to convert terms to a vector representation. We're doing this on the smallest of the derived data sets because these processes can take a while to run and generate *huge* matrices (remember: one row and one column for each term!).
-
-### Fit the Vectoriser
-
-```{python}
-cvectorizer = CountVectorizer(ngram_range=(1,3))
-cvectorizer.fit(corpus)
-```
-
-### Brief Demonstration
-
-Find the number associated with a word in the vocabulary and how many times it occurs in the original corpus:
-
-```{python}
-term = 'stratford'
-pd.options.display.max_colwidth=750
-# Find the vocabulary mapping for the term
-print(f"Vocabulary mapping for {term} is {cvectorizer.vocabulary_[term]}")
-# How many times is it in the data
-print(f"Found {srcdf.description_norm.str.contains(term).sum():,} rows containing {term}")
-# Print the descriptions containing the term
-for x in srcdf[srcdf.description_norm.str.contains(term)].description_norm:
-    as_markdown('Stratford',x)
-```
-
-### Transform the Corpus 
-
-You can only *tranform* the entire corpus *after* the vectoriser has been fitted. There is an option to `fit_transform` in one go, but I wanted to demonstrate a few things here and some vectorisers are don't support the one-shot fit-and-transform approach. **Note the type of the transformed corpus**:
-
-```{python}
-cvtcorpus = cvectorizer.transform(corpus)
-cvtcorpus # cvtcorpus for count-vectorised transformed corpus
-```
-
-### Single Document
-
-Here is the **first** document from the corpus:
-
-```{python}
-doc_df = pd.DataFrame(cvtcorpus[0].T.todense(), 
-                      index=cvectorizer.get_feature_names_out(), columns=["Counts"]
-                     ).sort_values('Counts', ascending=False)
-doc_df.head(10)
-```
-
-### Transformed Corpus
-
-```{python}
-cvdf = pd.DataFrame(data=cvtcorpus.toarray(),
-                        columns=cvectorizer.get_feature_names_out())
-print(f"Raw count vectorised data frame has {cvdf.shape[0]:,} rows and {cvdf.shape[1]:,} columns.")
-cvdf.iloc[0:5,0:10]
-```
-
-### Filter Low-Frequency Words
-
-These are likely to be artefacts of text-cleaning or human input error. As well, if we're trying to look across an entire corpus then we might not want to retain words that only appear in a couple of documents.
-
-Let's start by getting the *column* sums:
-
-```{python}
-sums = cvdf.sum(axis=0)
-print(f"There are {len(sums):,} terms in the data set.")
-sums.head()
-```
-
-Remove columns (i.e. terms) appearing in **less than 1% of documents**. You can do this by thinking about what the shape of the data frame means (rows and/or columns) and how you'd get 1% of that!
-
-:::: {.qna}
-
-#### Question
-
-```python
-filter_terms = sums >= cvdf.shape[0] * ???
-```
-
-#### Answer
-
-```{python}
-filter_terms = sums >= cvdf.shape[0] * 0.01
-```
-
-::::
-
-Now see how we can use this to strip out the columns corresponding to low-frequency terms:
-
-```{python}
-fcvdf = cvdf.drop(columns=cvdf.columns[~filter_terms].values)
-print(f"Filtered count vectorised data frame has {fcvdf.shape[0]:,} rows and {fcvdf.shape[1]:,} columns.")
-fcvdf.iloc[0:5,0:10]
-```
-
-```{python}
-fcvdf.sum(axis=0)
-```
-
-### Questions
-
-- Can you explain what `doc_df` contains?
-- What does `cvdf` contain? Explain the rows and columns.
-- What is the function of `filter_terms`?
-
-## TF/IDF Vectoriser
-
-::: {.callout-warning collapse="true"}
-
-#### Difficulty level: Moderate
-
-But only if you want to understand how `max_df` and `min_df` work!
-
-:::
-
-### Fit and Transform
-
-```{python}
-tfvectorizer = TfidfVectorizer(use_idf=True, ngram_range=(1,3), 
-                               max_df=0.75, min_df=0.01) # <-- these matter!
-tftcorpus    = tfvectorizer.fit_transform(corpus) # TF-transformed corpus
-```
-
-### Single Document
-
-```{python}
-doc_df = pd.DataFrame(tftcorpus[0].T.todense(), index=tfvectorizer.get_feature_names_out(), columns=["Weights"])
-doc_df.sort_values('Weights', ascending=False).head(10)
-```
-
-### Transformed Corpus
-
-```{python}
-tfidf = pd.DataFrame(data=tftcorpus.toarray(),
-                        columns=tfvectorizer.get_feature_names_out())
-print(f"TF/IDF data frame has {tfidf.shape[0]:,} rows and {tfidf.shape[1]:,} columns.")
-tfidf.head()
-```
-
-### Questions
-
-- What does the TF/IDF score *represent*?
-- What is the role of `max_df` and `min_df`?
-
-# Word Clouds
-
-## For Counts
-
-::: {.callout-tip collapse="true"}
-
-#### Difficulty level: Easy!
-
-:::
-
-```{python}
-fcvdf.sum().sort_values(ascending=False)
-```
-
-```{python}
-ff = 'RobotoMono-VariableFont_wght.ttf'
-dp = '/home/jovyan/.local/share/fonts/'
-tp = os.path.join(os.path.expanduser('~'),'Library','Fonts')
-if os.path.exists(tp):
-    fp = os.path.join(tp,ff)
-else:
-    fp = os.path.join(dp,ff)
-```
-
-```{python}
-f,ax = plt.subplots(1,1,figsize=(7, 7))
-plt.gcf().set_dpi(150)
-Cloud = WordCloud(
-    background_color="white", 
-    max_words=75,
-    font_path=fp
-).generate_from_frequencies(fcvdf.sum())
-ax.imshow(Cloud) 
-ax.axis("off");
-#plt.savefig("Wordcloud 1.png")
-```
-
-## For TF/IDF Weighting
-
-::: {.callout-tip collapse="true"}
-
-#### Difficulty level: Low, but you'll need to be patient!
-
-:::
-
-```{python}
-tfidf.sum().sort_values(ascending=False)
-```
-
-```{python}
-f,ax = plt.subplots(1,1,figsize=(7, 7))
-plt.gcf().set_dpi(150)
-Cloud = WordCloud(
-    background_color="white", 
-    max_words=100,
-    font_path=fp
-).generate_from_frequencies(tfidf.sum())
-ax.imshow(Cloud) 
-ax.axis("off");
-#plt.savefig("Wordcloud 2.png")
-```
-
-### Questions
-
-- What does the `sum` represent for the count vectoriser?
-- What does the `sum` represent for the TF/IDF vectoriser?
 
 ## Resources
 
