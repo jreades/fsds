@@ -262,7 +262,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#running-docker" id="toc-running-docker" class="nav-link active" data-scroll-target="#running-docker">Running Docker</a></li>
-  <li><a href="#organising-your-workspace" id="toc-organising-your-workspace" class="nav-link" data-scroll-target="#organising-your-workspace">Organising Your Workspace</a></li>
   <li><a href="#setting-up-github" id="toc-setting-up-github" class="nav-link" data-scroll-target="#setting-up-github">Setting Up GitHub</a></li>
   <li><a href="#updating-the-.gitignore-file" id="toc-updating-the-.gitignore-file" class="nav-link" data-scroll-target="#updating-the-.gitignore-file">Updating the .gitignore File</a></li>
   <li><a href="#creating-your-first-remote-file" id="toc-creating-your-first-remote-file" class="nav-link" data-scroll-target="#creating-your-first-remote-file">Creating Your First Remote File</a></li>
@@ -297,6 +296,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>This week’s practical is focussed on getting you set up with the tools and accounts that you’ll need to across many of the CASA modules in Terms 1 and 2, and familiarising you with ‘how people do data science’. Outside of academia, it’s rare to find a data scientist who works entirely on their own: most code is collaborative, as is most analysis! But collaborating effectively requires tools that: get out of the way of doing ‘stuff’; support teams in negotating conflicts in code; make it easy to share results; and make it easy to ensure that everyone is ‘on the same page’.</p>
+<p>You <em>will</em> find things confusing this week, but they will start to make more sense as we move further into the module. The key is to keep trying things out and to ask for help when you get stuck.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -333,43 +333,57 @@ Tips on Using the Command Line
 </div>
 </div>
 </div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Following Convention
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A common convention in programming is to use the <code>&lt;some text or other&gt;</code> to indicate that you should replace the text between the <code>&lt;</code> and <code>&gt;</code> with something that makes sense in your context. For example, if you see <code>cd &lt;directory&gt;</code> you should type <code>cd Documents</code> if you want to change to the <code>Documents</code> directory. If you see <code>&lt;your username here&gt;</code> you should type <code>jreades</code> if that’s your username. And so on. You do <em>not</em> type the <code>&lt;</code> or <code>&gt;</code> characters!</p>
+</div>
+</div>
 <section id="running-docker" class="level1">
 <h1>Running Docker</h1>
 <section id="starting-up-right" class="level2">
 <h2 class="anchored" data-anchor-id="starting-up-right">Starting Up ‘Right’</h2>
 <p>One of the most confusing things about starting a Docker container with a “local volume mount” (i.e.&nbsp;a location on your computer that Docker <em>connects</em> to the container’s file system) is that it seems like magic and it’s often hard to understand why you’re seeing what you are under the <code>work</code> directory.</p>
-<p>So <em>before you do anything else</em> please spend a minute in the Terminal (macOS) or Power Shell (Windows) learning how to get to your home directory and, below that, to a CASA directory where you can store your work and keep Docker from accessing data that it shouldn’t.</p>
+<p>So <em>before you do anything else</em> please spend a minute in the Terminal (macOS) or Power Shell (Windows) learning how to get to your home directory and, within that, to a CASA directory where you can store your work and keep Docker from accessing data that it shouldn’t.</p>
+<p>What we are doing is creating a directory on your computer that you can access from Docker. This is where you will store your notebooks, data, and any other files that you need to work with. The ultimate structure we’ll produce this:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./img/File_Structure.png" class="img-fluid figure-img"></p>
+<figcaption>‘Target’ Directory Structure</figcaption>
+</figure>
+</div>
 <p>On both a Mac and a PC you should be able to run the following:</p>
 <ol type="1">
-<li><code>echo $(pwd)</code> – this should print out the location where the Terminal/Power Shell ‘started’.</li>
-<li><code>cd $HOME</code> – this should take you to your user’s <em>home</em> directory (on a Mac it will be <code>/Users/&lt;your username&gt;</code>, on a PC it will be something like <code>C:\Users\&lt;your username&gt;</code>). <em>Hint: <code>cd</code> means ‘change directory’!</em></li>
-<li><code>cd Documents</code> – this will move you into your ‘Documents’ folder. <em>Note: on Windows this <strong>might</strong> be called <code>My\ Documents</code> and note the “" in the name! If you have set up your computer in another language this might be called something else, but Power Shell still ‘knows’ which folder should contain your documents.</em></li>
-<li><code>mkdir casa</code> – this will create a <code>casa</code> folder in your home directory.</li>
-<li><code>cd casa</code> – you are now changing into the <code>casa</code> directory.</li>
-<li><code>echo $pwd</code> – this should show you the ‘full path’ to your new <code>casa</code> directory (e.g.&nbsp;<code>/Users/&lt;your username&gt;/Documents/casa</code> or something like that).</li>
+<li><code>cd $HOME</code> – this will <strong>c</strong>hange <strong>d</strong>irectory to your <em>home</em> directory (on a Mac it will be <code>/Users/&lt;your username&gt;</code>, on a PC it will be something like <code>C:\Users\&lt;your username&gt;</code>). <em>Hint: <code>cd</code> means ‘change directory’!</em></li>
+<li><code>cd Documents</code> – this will move you into your ‘Documents’ folder. <em>Note: on Windows this <strong>might</strong> be called <code>My\ Documents</code>, in which case it’s <code>cd My\ Documents</code>! If you have set up your computer in another language this might be called something else, but Power Shell still ‘knows’ which folder should contain your documents.</em></li>
+<li><code>mkdir CASA</code> – this will create a <code>CASA</code> folder in your home directory.</li>
+<li><code>cd CASA</code> – you are now changing into the <code>CASA</code> directory.</li>
+<li><code>echo $pwd</code> – this should show you the ‘full path’ to your new <code>CASA</code> directory (e.g.&nbsp;<code>/Users/&lt;your username&gt;/Documents/CASA</code> or something like that).</li>
 </ol>
+<p><strong>Leave the Terminal or PowerShell window open!</strong> You will need it in a moment.</p>
 <p>Perhaps a video will help clarify?</p>
 <div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/5IkwUrYTY78" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 </section>
 <section id="configuring-the-image" class="level2">
 <h2 class="anchored" data-anchor-id="configuring-the-image">Configuring the sds2024 Image</h2>
-<p>During the ‘<a href="https://jreades.github.io/sds_env/setup/install_fest.html">install festival</a>’ you should have installed Docker and, time permitting, ‘pulled’ the image appropriate to your system. If you haven’t, then you should do so as a priority <em>now</em> using either:</p>
-<p>On Windows or Intel Macs:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> pull jreades/sds:2024-intel</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>or M1, M2 or M3 Macs:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> pull jreades/sds:2024-silicon</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This command is run either in the macOS <strong><code>Terminal</code></strong> application (in the Utilties directory of your Applications folder) or using the Windows <strong><code>Power Shell</code></strong> (<em>not</em> the Command Prompt).</p>
-<p>We’d <em>strongly</em> encourage you to ensure that you’re able to run Docker and use one of the above images as soon as possible so that we have as long as possible to help you over any hurdles before we get to week 3 where it will be essential that you are running the environment successfully. In our experience, the students who put off trying to get the environment running end up falling quickly behind as they are unable to complete basic tasks successfully.</p>
+<p>During the ‘<a href="https://jreades.github.io/sds_env/setup/install_fest.html">install festival</a>’ you should have installed Docker and, time permitting, ‘pulled’ the image appropriate to your system. If you haven’t, then you should do so as a priority <em>now</em>.</p>
 </section>
 <section id="running-docker-1" class="level2">
 <h2 class="anchored" data-anchor-id="running-docker-1">Running Docker</h2>
 <p>By default, the best way to start Docker is from the Terminal or Power Shell.</p>
 <section id="on-windows" class="level3">
 <h3 class="anchored" data-anchor-id="on-windows">On Windows</h3>
-<p>Using the Power Shell copy and paste the following <em>all on one line</em>:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--rm</span> <span class="at">-d</span> <span class="at">--name</span> sds2024 <span class="at">-p</span> 8888:8888 </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-v</span> <span class="st">"</span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st">:/home/jovyan/work"</span> jreades/sds:2024-intel start.sh jupyter lab </span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="ex">--LabApp.password=</span><span class="st">''</span> <span class="at">--ServerApp.password</span><span class="op">=</span><span class="st">''</span> <span class="at">--NotebookApp.token</span><span class="op">=</span><span class="st">''</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Using the <em>same</em> Power Shell copy and paste the following <strong>all on one line</strong>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--rm</span> <span class="at">-d</span> <span class="at">--name</span> sds2024 <span class="at">-p</span> 8888:8888 </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-v</span> <span class="st">"</span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st">:/home/jovyan/work"</span> jreades/sds:2024-intel start.sh jupyter lab </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="ex">--LabApp.password=</span><span class="st">''</span> <span class="at">--ServerApp.password</span><span class="op">=</span><span class="st">''</span> <span class="at">--NotebookApp.token</span><span class="op">=</span><span class="st">''</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -386,20 +400,19 @@ Windows Commands and Docker
 </section>
 <section id="on-macos" class="level3">
 <h3 class="anchored" data-anchor-id="on-macos">On macOS</h3>
-<p>Using the Terminal or iTerm2 copy and past the following (change the docker image to <code>jreades/sds:2024-intel</code> if using an older Intel Mac):</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--rm</span> <span class="at">-d</span> <span class="at">--name</span> sds2024 <span class="at">-p</span> 8888:8888 <span class="dt">\</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>   <span class="at">-v</span> <span class="st">"</span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st">:/home/jovyan/work"</span> <span class="dt">\</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  jreades/sds:2024-silicon start.sh jupyter lab <span class="dt">\</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--LabApp.password</span><span class="op">=</span><span class="st">''</span> <span class="at">--ServerApp.password</span><span class="op">=</span><span class="st">''</span> <span class="at">--NotebookApp.token</span><span class="op">=</span><span class="st">''</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Using the <em>same</em> Terminal copy and past the following (change the docker image to <code>jreades/sds:2024-intel</code> if using an older Intel Mac):</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--rm</span> <span class="at">-d</span> <span class="at">--name</span> sds2024 <span class="at">-p</span> 8888:8888 <span class="dt">\</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>   <span class="at">-v</span> <span class="st">"</span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st">:/home/jovyan/work"</span> <span class="dt">\</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  jreades/sds:2024-silicon start.sh jupyter lab <span class="dt">\</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--LabApp.password</span><span class="op">=</span><span class="st">''</span> <span class="at">--ServerApp.password</span><span class="op">=</span><span class="st">''</span> <span class="at">--NotebookApp.token</span><span class="op">=</span><span class="st">''</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
 <section id="how-do-i-know-it-worked" class="level2">
 <h2 class="anchored" data-anchor-id="how-do-i-know-it-worked">How do I Know it Worked?</h2>
-<p>With Docker running, you will <em>mainly</em> interact with Python through a web page (unless you choose the VSCode IDE). To check if it’s running, we just have to visit the web page and see what happens.</p>
-<p>It is likely that the page you want is: <a href="http://localhost:8888/lab/tree/work/">http://localhost:8888/lab/tree/work/</a>. We’ll talk more about exactly what is going on next week as well, but this should show you a page that looks something like this (probably with fewer files listed on the left-hand side):</p>
+<p>With Docker running, you will <em>mainly</em> interact with Python through a web page. To check if it’s running, we just have to visit the web page and see what happens: <a href="http://localhost:8888/lab/tree/work/">http://localhost:8888/lab/tree/work/</a>. We’ll talk more about exactly what is going on over the next few weeks, but this should show you a page that looks something like this (probably with fewer files listed on the left-hand side):</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://github.com/jreades/fsds/raw/master/practicals/img/1.8-Jupyter_Lab.png" class="img-fluid figure-img"></p>
+<p><img src="./img/1.8-Jupyter_Lab.png" class="img-fluid figure-img"></p>
 <figcaption>Screenshot of Jupyter Lab</figcaption>
 </figure>
 </div>
@@ -418,101 +431,20 @@ See Docker Run (and Run)…
 </div>
 </section>
 </section>
-<section id="organising-your-workspace" class="level1">
-<h1>Organising Your Workspace</h1>
-<p>Before we start trying to code, I’d suggest organising a ‘workspace’ on your computer so that it’s easy to find/load data and ‘Jupyter notebooks’ (the tool we’ll be using to write and rung code). The easiest way to do this is to start from your <code>Documents</code> folder and set directories there to hold your code and data. Why? Because leaving everything in the Downloads folder or in random locations all over you computer is likely to be a disaster, especially when you’re under time pressure.</p>
-<p>Here’s <em>one</em> way of organising things, and I’m also taking the opportunity to show you how to do this using the Command Line:</p>
-<ul>
-<li>Using the Jupyter Lab web interface from Docker that we created earlier…</li>
-<li>Click on the <code>Terminal</code> tile (in the <code>Other</code> section) or select <code>File</code> &gt; <code>New</code> &gt; <code>Terminal</code> to open a new shell.</li>
-<li>This should open a new, empty window with a flashing cursor next to something <em>like</em> <code>(base) jovyan@5a4d5a7f2f50:~$</code>.</li>
-</ul>
-<p>This short video will show you how to create a directory called <code>CASA</code> in your Documents folder (or <code>My\ Documents</code> on some Windows machines):</p>
-<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/Fnna4YMdLw4" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
-<p>The commands we used were:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 29%">
-<col style="width: 70%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Command</th>
-<th style="text-align: left;">Means</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;"><code>cd</code></td>
-<td style="text-align: left;">Change directory</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><code>cd $HOME</code></td>
-<td style="text-align: left;">Change to the home directory (wherever shown by <code>echo $HOME</code>)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"><code>cd Documents</code></td>
-<td style="text-align: left;">Change directory to Documents from the current location</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><code>ls</code></td>
-<td style="text-align: left;">List the files in the current directory</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"><code>mkdir CASA</code></td>
-<td style="text-align: left;">Make a directory called <code>CASA</code></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><code>touch test.txt</code></td>
-<td style="text-align: left;">Create an empty file by ‘touching’ it</td>
-</tr>
-</tbody>
-</table>
-<p>Note: <code>$HOME</code> may not be available on Windows machines; however, the Terminal provided in the sds2024 container <em>does</em> allow this because it is a full Linux system running on your computer.</p>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Where are My (Windows) Documents?
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>On some Windows machines you might not have a <code>Documents</code> folder and will need to decide whether to create one or use the Windows-equivalent (probably <code>My\ Documents</code> – notice the “<code>\</code>” instead of a “<code>/</code>”).</p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Organising Your Work
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>There are any number of ways to organise your CASA work, what’s important is that you are <em>logical</em> about things like names and hierarchy. This will make it much easier to access files and notebooks using Docker, Quarto, <em>and</em> Python.</p>
-</div>
-</div>
-</section>
 <section id="setting-up-github" class="level1">
 <h1>Setting Up GitHub</h1>
-<p>Understanding how to use Git and GitHub effectively is a core element of learning to code. So one of the <em>first</em> things that we are going to do is set you up with an account and a new project.</p>
-<p>So in order to complete this task you need to:</p>
+<p>Understanding how to use Git and GitHub effectively is a core element of learning to code. So one of the <em>first</em> things that we are going to do is set you up with an account and a new repository.</p>
+<p>So in order to complete this task you need to do the following (<strong>more detailed explanations below</strong>):</p>
 <ol type="1">
-<li>Create a login with <a href="https://github.com">GitHub</a>.</li>
-<li>Create a new <strong>private</strong> project on GitHub.</li>
-<li>Edit the <code>README.md</code> and <code>.gitignore</code> files for your new project.</li>
-<li>Save the changes (this is called a ‘commit’) and say in a general way what edits you did.</li>
+<li>Create a login with <a href="https://github.com">GitHub</a> (if you’ve not done so already).</li>
+<li>Create a new <strong>private</strong> repository on GitHub.</li>
+<li>Edit the <code>README.md</code> and <code>.gitignore</code> files for your new repository.</li>
+<li>Save the changes (this is called a ‘commit’) and explain in a general way what edits you did.</li>
 <li>Work out how to compare the original and edited versions of any file in your browser.</li>
 </ol>
 <section id="your-new-github-account" class="level2">
 <h2 class="anchored" data-anchor-id="your-new-github-account">Your New GitHub Account</h2>
-<p>You may wish to set up your new GitHub account with your UCL email. GitHub ‘knows’ about educational users and will give you access to more features for free if you use a <code>.ac.uk</code> email address. Once you’ve done this, you can then link a personal email address as well.</p>
+<p>It doesn’t really matter which way you do this, but we recommend that you set up your new GitHub account with <em>both</em> your personal and your UCL email addresses. GitHub ‘knows’ about educational users and will give you access to more features for free if you associate a <code>.ac.uk</code> email address to your account. So choose one email address to start with and then add the other one later.</p>
 <p>From a security standpoint you should <em>also</em> enable 2-factor authentication so that you receive a text message when you log in on a new machine and are asked to confirm a code.</p>
 </section>
 <section id="creating-a-private-repository" class="level2">
@@ -524,7 +456,7 @@ Organising Your Work
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Your Repo Name
+Your ‘Repo’ Name
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -602,7 +534,7 @@ Your Repo Name
 <p>So how would you indicate that <code>data</code> is a directory? Once you’re sure, add the <code>data</code> directory!</p>
 <p>When you are done, don’t forget to add a ‘commit message’ (e.g.&nbsp;‘Added data files to .gitignore’) at the bottom and then click <code>Commit changes</code>.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -611,7 +543,7 @@ Quick Answer
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>I don’t want you to get hung up on this <em>one</em> thing in Practical 1, so if you just can’t make sense of what you’re being asked to do here, have a look at the <a href="#Answers">Answers</a> at the bottom of this page.</p>
 </div>
@@ -660,11 +592,11 @@ Viewing Your Commit History
 <li>An image (<code>![Alt text](image_location)</code>)</li>
 </ul>
 <p>If you’re unsure how these work, just double-click on <em>this text</em> and you’ll see Markdown in a Jupyter notebook. Here’s some sample text to get you started:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">### Foundations of Spatial Data Science</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>This repository contains practicals and notes from the _Foundations_ module. </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>You can find the original <span class="co">[</span><span class="ot">here</span><span class="co">](https://jreades.github.io/fsds/)</span>.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">### Foundations of Spatial Data Science</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>This repository contains practicals and notes from the _Foundations_ module. </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>You can find the original <span class="co">[</span><span class="ot">here</span><span class="co">](https://jreades.github.io/fsds/)</span>.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><strong>Don’t forget to check out the “Preview” tab!</strong></p>
 </section>
 <section id="commiting-a-change" class="level2">
@@ -681,22 +613,36 @@ Viewing Your Commit History
 </section>
 <section id="setting-up-git-locally" class="level1">
 <h1>Setting Up Git Locally</h1>
-<p>I have <a href="https://web.microsoftstream.com/video/29a31977-ff9e-4b53-92d3-ee3bb2a769f6">created a video</a> on Microsoft Streams that runs you through Tasks 6.1 and 6.2 (below). You can refer to it if you find the written instructions hard to follow for any reason or would like a visual check that you’re doing the right thing!</p>
+<p>I have <a href="https://web.microsoftstream.com/video/29a31977-ff9e-4b53-92d3-ee3bb2a769f6">created a video</a> on Microsoft Streams that runs you through the tasks below. You can refer to it if you find the written instructions hard to follow for any reason or would like a visual check that you’re doing the right thing!</p>
 <section id="configuring-defaults" class="level2">
 <h2 class="anchored" data-anchor-id="configuring-defaults">Configuring Defaults</h2>
 <p>The first thing to do is set up the default username and email for GitHub. These can be changed on a project-by-project basis, but to begin with it’s best to set up the <em>global defaults</em>. Using either the Terminal or Bash enter the following (replacing <code>&lt;...&gt;</code> with <em>your</em> details):</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--global</span> user.email <span class="st">'&lt;your GitHub email address&gt;'</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--global</span> user.name <span class="st">'&lt;your GibHub username&gt;'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--global</span> user.email <span class="st">'&lt;your GitHub email address&gt;'</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--global</span> user.name <span class="st">'&lt;your GibHub username&gt;'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Recall: Convention!
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>As a reminder, <code>&lt;...&gt;</code> is a convention in programming to indicate that you should replace the text between the <code>&lt;</code> and <code>&gt;</code> with something that makes sense in your context. For example, if you see <code>'&lt;your GitHub email address&gt;'</code> you should type, for <em>example</em>, <code>'j.reades@ucl.ac.uk'</code>. You do <em>not</em> include the <code>&lt;</code> or <code>&gt;</code> characters!</p>
+</div>
+</div>
 </section>
 <section id="creating-a-personal-access-token" class="level2">
 <h2 class="anchored" data-anchor-id="creating-a-personal-access-token">Creating a Personal Access Token</h2>
-<p>You do not want to have to enter your GitHub password every time you copy changes up to/down from GitHub, and you <em>don’t</em> want to paste your password in plain text into your code! The Personal Access Token is a way to manage this by issuing special passwords that allow only limited access to your account.</p>
+<p>For copying changes up to/down from GitHub, you <em>must</em> use a Personal Access Token. This is like issuing special passwords that allow only limited access to parts of your GitHub account.</p>
 <p>To create a Personal Access Token:</p>
 <ul>
-<li>Visit your GitHub User Page (<a href="https://github.com/jreades">e.g.&nbsp;github.com/jreades</a>)</li>
-<li>Click on your user icon (at the top-right corner of the page) and pick <code>Settings</code></li>
-<li>Scroll down the <a href="https://github.com/settings/profile">settings page</a> until you get to <code>Developer settings</code></li>
+<li>Visit <em>your</em> GitHub User Page (e.g.&nbsp;<a href="https://github.com/jreades">github.com/jreades</a>)</li>
+<li>Click on <em>your</em> user icon (at the top-right corner of the page) and click the <code>Settings</code> link (near the bottom on the right side of the page).</li>
+<li>Scroll down the <a href="https://github.com/settings/profile">settings page</a> until you get to <code>Developer settings</code> (near the bottom on the <em>left</em> side of the page).</li>
 <li>Click the <code>Developer settings</code> link to reach <a href="https://github.com/settings/apps">the ‘apps’ page</a> and then click on the <code>Personal access tokens</code> link.</li>
+<li>Select <code>Tokens (classic)</code> from the left-hand menu and then click the <code>Generate new token</code> button.</li>
 </ul>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -712,8 +658,13 @@ Types of Personal Tokens
 </div>
 </div>
 <ul>
-<li>Click the <code>Generate new token</code> button and set up the token so that it has <strong>read/write <code>repo</code> privileges (full control of private repositories)</strong>. You can change other settings (read/write packages, gists, and notifications) but this is not necessary.</li>
-<li>Save the resulting token somewhere safe as you will need it again!</li>
+<li><code>Generate new token (classic)</code> for general use token and then specify the following:
+<ul>
+<li>I’d suggest writing <code>FSDS Token</code> or something similar in the <code>Note</code> section.</li>
+<li>Set the expiration to <code>90 days</code></li>
+<li>Click the <code>repo</code> tickbox for ‘Full control of private repositories’.</li>
+</ul></li>
+<li>Save the resulting token somewhere safe as you will need it again! (e.g.&nbsp;a Note on your phone, a password manager, etc.).</li>
 </ul>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -735,22 +686,40 @@ Keep your Personal Token Safe
 <p>On your private repository page, click on the green button labeled <code>Code</code> visible in the screenshot below:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://github.com/jreades/i2p/raw/master/lectures/img/Cloning.png" class="img-fluid figure-img"></p>
+<p><img src="https://github.com/jreades/fsds/raw/master/lectures/img/Cloning.png" class="img-fluid figure-img"></p>
 <figcaption>Screenshot of cloning interface</figcaption>
 </figure>
 </div>
-<p>You should then copy the URL (visible in my screenshot as <code>https://github.com/jreades/i2p.git</code>). Switching to the command line, <em>c</em>hange <em>d</em>irectory (<code>cd</code>) to the location where you want your repository to be stored on <em>your</em> machine. For instance, if I wanted to keep all of my <em>Foundations</em> code in the CASA directory then I would do this:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$HOME</span>/work/Documents/CASA/</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone <span class="op">&lt;</span>the_url_that_you_copied_from_the_browser<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>The first time that you do this, you will likely need to provide login information. Use your GitHub username and the Personal Access Token that you just created.</p>
+<p>You should then copy your HTTPS URL (in my screenshot it’s <code>https://github.com/jreades/i2p.git</code>).</p>
+<p>Now go back to the Terminal or PowerShell that you left open earlier and type the following (replacing <code>&lt;the_url_that_you_copied_from_the_browser&gt;</code> with the URL that you copied from GitHub):</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone <span class="op">&lt;</span>the_url_that_you_copied_from_the_browser<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The first time that you do this, you will need to provide login information. Use your GitHub username and the Personal Access Token that you just created. On your computer you should now see a new directory with the same name as your repository. For example: <code>Documents/CASA/fsds</code>.</p>
 </section>
 <section id="storing-credentials-pulling" class="level2">
 <h2 class="anchored" data-anchor-id="storing-credentials-pulling">Storing Credentials &amp; ‘Pulling’</h2>
-<p>You can now activate the credtial helper that will store your Personal Access Token:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> fsds</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config credential.helper store</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You can now activate the credtial helper that will store your Personal Access Token (though you should <em>still</em> keep your secure note!):</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> fsds</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config credential.helper store</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>When you type <code>git pull</code> you <em>should</em> be asked <em>again</em> for your username and password. You should (again) use the Personal Access Token as your password. You should not be asked again for pushing or pulling data into this GitHub repository. If you are <em>not</em> asked for your Personal Access Token then this likely means that your token is already saved and ready to use on all future ‘actions’.</p>
+</section>
+<section id="jupyter---your-computer" class="level2">
+<h2 class="anchored" data-anchor-id="jupyter---your-computer">Jupyter &lt; - &gt; Your Computer</h2>
+<p>If you now go back to Jupyter, you should now see that the <code>work</code> directory is actually the same as the <code>CASA</code> directory that you created earlier; you know this because you can now see an <code>fsds</code> directory containing that wasn’t there before.</p>
+<p>This is because Docker is ‘mounting’ the <code>work</code> directory in the container to the <code>CASA</code> directory on your computer. This means that you can save files in the <code>work</code> directory in Jupyter and they will be saved in the <code>CASA</code> directory on your computer.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Organising Your Work
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There are any number of ways to organise your CASA work, what’s important is that you are <em>logical</em> about things like names and hierarchy. This will make it much easier to access files and notebooks using Docker, Quarto, <em>and</em> Python.</p>
+</div>
+</div>
 </section>
 <section id="adding-a-local-file-to-your-repository" class="level2">
 <h2 class="anchored" data-anchor-id="adding-a-local-file-to-your-repository">Adding a Local File to Your Repository</h2>
@@ -764,7 +733,7 @@ Keep your Personal Token Safe
 <p>So, starting with the ‘raw’ notebook:</p>
 <ol type="1">
 <li>Save this file to your computer as a notebook with the extension <code>.ipynb</code>.</li>
-<li>Move the file to your repostiory folder (<em>e.g.</em> <code>$HOME/work/Documents/CASA/fsds/</code>).</li>
+<li>Move the file to your new repository folder (<em>e.g.</em> <code>$HOME/work/Documents/CASA/fsds/</code>).</li>
 </ol>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -776,13 +745,13 @@ File Extensions
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>It is <em>highly</em> likely that your browser automatically added a <code>.txt</code> extension when you saved the Notebook file to your computer. You need to remove that ending to your file name or Jupyter won’t be able to run it. You can rename a file by <em>moving</em> (bash: <code>mv</code>) from one name to another: <code>mv &lt;notebook_name&gt;.ipynb.txt &lt;notebook_name.ipynb</code></p>
+<p>It is <em>highly</em> likely that your browser automatically added a <code>.txt</code> extension when you saved the Notebook file to your computer. You need to remove that ending to your file name or Jupyter won’t be able to run it. You can rename a file by either doing it directly in the Finder/Windows Explorer, or by <em>moving</em> (bash: <code>mv</code>) the file: <code>mv &lt;notebook_name&gt;.ipynb.txt &lt;notebook_name&gt;.ipynb</code></p>
 </div>
 </div>
-<p>In the Terminal/Bash we now need <code>add</code> this file to Git so that it knows to keep track of it. Unlike Dropbox or OneDrive, just putting a file in a repo directory does <em>not</em> mean that Git will pay attention to it:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming that you are 'in' the 'fsds' directory...</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add Practical-01-Getting_Started.ipynb</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Adding notebook 1 to repo."</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In the Terminal/PowerShell we now need <code>add</code> this file to Git so that it knows to keep track of it. Unlike Dropbox or OneDrive, just putting a file in a repo directory does <em>not</em> mean that Git will pay attention to it:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming that you are 'in' the 'fsds' directory...</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add Practical-01-Getting_Started.ipynb</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Adding notebook 1 to repo."</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -801,29 +770,29 @@ Add, Commit, Push, Repeat
 <section id="status-check" class="level2">
 <h2 class="anchored" data-anchor-id="status-check">Status Check</h2>
 <p>We now want to check that the file has been successfully added to Git. We do this with a <code>status</code> check in the repository directory (<em>i.e.</em> <code>cd $HOME/work/Documents/CASA/fsds/</code>):</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> status</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> status</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>You should see something like:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">On</span> branch master</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Your</span> branch is ahead of <span class="st">'origin/master'</span> by 1 commit.</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">(</span><span class="ex">use</span> <span class="st">"git push"</span> to publish your local commits<span class="kw">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">On</span> branch master</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Your</span> branch is ahead of <span class="st">'origin/master'</span> by 1 commit.</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">(</span><span class="ex">use</span> <span class="st">"git push"</span> to publish your local commits<span class="kw">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This is telling you that your local computer is 1 commit (the one that you <em>just</em> completed) ahead of the ‘origin’, which is on GitHub. GitHub doesn’t <em>have</em> to be the origin (nor does the repository have to be one that we created in order to be an origin) but <em>conceptually</em> and <em>practically</em> it’s easier to create new repositories on GitHub and clone them to our computer.</p>
 </section>
 <section id="keep-pushing" class="level2">
 <h2 class="anchored" data-anchor-id="keep-pushing">Keep Pushing</h2>
 <p>To synchronise the changes we just made, let’s follow Git’s advice:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>You should see <em>something</em> like (the numbers and details will <em>all</em> differ, but the messages will be the same):</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Enumerating</span> objects: 5, done.</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Counting</span> objects: 100% <span class="er">(</span><span class="ex">5/5</span><span class="kw">)</span><span class="ex">,</span> done.</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Delta</span> compression using up to 8 threads</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="ex">Compressing</span> objects: 100% <span class="er">(</span><span class="ex">3/3</span><span class="kw">)</span><span class="ex">,</span> done.</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Writing</span> objects: 100% <span class="er">(</span><span class="ex">3/3</span><span class="kw">)</span><span class="ex">,</span> 306 bytes <span class="kw">|</span> <span class="ex">306.00</span> KiB/s, done.</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="ex">Total</span> 3 <span class="er">(</span><span class="ex">delta</span> 2<span class="kw">)</span><span class="ex">,</span> reused 0 <span class="er">(</span><span class="ex">delta</span> 0<span class="kw">)</span><span class="ex">,</span> pack-reused 0</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="ex">remote:</span> Resolving deltas: 100% <span class="er">(</span><span class="ex">2/2</span><span class="kw">)</span><span class="ex">,</span> completed with 2 local objects.</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="ex">remote:</span> This repository moved. Please use the new location:</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="ex">remote:</span>   https://github.com/jreades/fsds.git</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="ex">To</span> https://github.com/jreades/i2p.git</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>   <span class="ex">7410d0e..45aa80a</span>  master <span class="at">-</span><span class="op">&gt;</span> master</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Enumerating</span> objects: 5, done.</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Counting</span> objects: 100% <span class="er">(</span><span class="ex">5/5</span><span class="kw">)</span><span class="ex">,</span> done.</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Delta</span> compression using up to 8 threads</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="ex">Compressing</span> objects: 100% <span class="er">(</span><span class="ex">3/3</span><span class="kw">)</span><span class="ex">,</span> done.</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Writing</span> objects: 100% <span class="er">(</span><span class="ex">3/3</span><span class="kw">)</span><span class="ex">,</span> 306 bytes <span class="kw">|</span> <span class="ex">306.00</span> KiB/s, done.</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="ex">Total</span> 3 <span class="er">(</span><span class="ex">delta</span> 2<span class="kw">)</span><span class="ex">,</span> reused 0 <span class="er">(</span><span class="ex">delta</span> 0<span class="kw">)</span><span class="ex">,</span> pack-reused 0</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="ex">remote:</span> Resolving deltas: 100% <span class="er">(</span><span class="ex">2/2</span><span class="kw">)</span><span class="ex">,</span> completed with 2 local objects.</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="ex">remote:</span> This repository moved. Please use the new location:</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="ex">remote:</span>   https://github.com/jreades/fsds.git</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="ex">To</span> https://github.com/jreades/fsds.git</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>   <span class="ex">7410d0e..45aa80a</span>  master <span class="at">-</span><span class="op">&gt;</span> master</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>If you now go over to your browser and visit your GitHub repo page (<em>e.g.</em> <code>https://github.com/jreades/fsds</code>) — pressing the <code>Reload</code> button if you had the page open already — then you should see that the file you added <em>on your computer</em> is also showing up on the GitHub site as well! This means it’s now fully version-controlled and backed-up.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -880,7 +849,7 @@ Bonus Content
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>It is not core to this module, but if you’d like to really make the most of Git, why not create a GitHub.io web site? Using Markdown (for the most bare bones effect) and code (via Quarto), you can render and push a web site to <code>&lt;your username&gt;.github.io/</code>. You might find this useful for creating a simple portfolio, blog, or other collection of ‘outputs’ that you can use to demonstrate to employers that you know your way around.</p>
+<p>It is not core to this module, but if you’d like to really make the most of Git, why not create a GitHub.io web site? Using Markdown (for the most bare bones effect) or code (via Quarto), you can render and push a web site to <code>&lt;your GitHub username&gt;.github.io/</code>. You might find this useful for creating a simple portfolio, blog, or other collection of ‘outputs’ that you can use to demonstrate to employers that you know your way around.</p>
 </div>
 </div>
 <p>Rather than create a GitHub.io site using your <em>Foundations</em> repository, we’d recommend building one in the separate ‘main’ repository so that, for example, <a href="https://jreades.github.io">jreades.github.io</a>, returns a web page.</p>
@@ -936,15 +905,15 @@ Advanced Content
 <section id="gitignore" class="level2">
 <h2 class="anchored" data-anchor-id="gitignore">.Gitignore</h2>
 <p>The main thing you should notice is the pattern: <code>*</code> means ‘anything’, while <code>/</code> at the end of a line implies a directory. So the following four lines should be added to your <code>.gitignore</code> file:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ot">*.zip</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ot">*.gz</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="ot">*.csv</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="ot">*.gzip</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="ot">*.feather</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="ot">*.geofeather</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="ot">*.parquet</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="ot">*.geoparquet</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="at">data/</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ot">*.zip</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="ot">*.gz</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="ot">*.csv</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="ot">*.gzip</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="ot">*.feather</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="ot">*.geofeather</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="ot">*.parquet</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="ot">*.geoparquet</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="at">data/</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>That’s it.</p>
 
 
