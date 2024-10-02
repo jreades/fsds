@@ -6,10 +6,12 @@ filters:
   - quarto
 ---
 
-This week’s practical is focussed on getting you set up with the tools and accounts that you’ll need to across many of the CASA modules in Terms 1 and 2, and familiarising you with ‘how people do data science’. Outside of academia, it’s rare to find a data scientist who works entirely on their own: most code is collaborative, as is most analysis! But collaborating effectively requires tools that: get out of the way of doing ‘stuff’; support teams in negotating conflicts in code; make it easy to share results; and make it easy to ensure that everyone is ‘on the same page’.
+This week’s practical is focussed on getting you set up with the tools and accounts that you’ll need to across many of the CASA modules in Terms 1 and 2, and familiarising you with 'how people do data science'. Outside of academia, it’s rare to find a data scientist who works entirely on their own: most code is collaborative, as is most analysis! But collaborating effectively requires tools that: get out of the way of doing ‘stuff’; support teams in negotating conflicts in code; make it easy to share results; and make it easy to ensure that everyone is 'on the same page'.
+
+You *will* find things confusing this week, but they will start to make more sense as we move further into the module. The key is to keep trying things out and to ask for help when you get stuck.
 
 ::: {.callout-warning}
-### Windows Users 
+#### Windows Users 
 
 Please use **Power Shell** instead of the **Command Prompt** (`cmd`). Power Shell behaves much more like the Terminal in macOS and Linux, so the results are more consistent and easier to 'debug'.
 
@@ -18,7 +20,7 @@ Please use **Power Shell** instead of the **Command Prompt** (`cmd`). Power Shel
 If you haven't done this already, you need to follow the instructions for installing all of the tools listed on on the [CASA Computing Environment](https://jreades.github.io/sds_env/setup/install_fest.html) web page. This process will take time, so please keep reading or work on other things to do while you wait!
 
 ::: {.callout-tip collapse=true}
-### Tips on Using the Command Line 
+#### Tips on Using the Command Line 
 
 If you need help understanding how to use the Command Line or want to be able to do *much more* there are a wide range of tutorials available.
 
@@ -30,22 +32,35 @@ Here are some starting points for learning more:
 
 :::
 
+::: {.callout-tip}
+
+#### Following Convention
+
+A common convention in programming is to use the `<some text or other>` to indicate that you should replace the text between the `<` and `>` with something that makes sense in your context. For example, if you see `cd <directory>` you should type `cd Documents` if you want to change to the `Documents` directory. If you see `<your username here>` you should type `jreades` if that's your username. And so on. You do *not* type the `<` or `>` characters!
+
+:::
+
 # Running Docker
 
 ## Starting Up 'Right'
 
 One of the most confusing things about starting a Docker container with a "local volume mount" (i.e. a location on your computer that Docker *connects* to the container's file system) is that it seems like magic and it's often hard to understand why you're seeing what you are under the `work` directory.
 
-So *before you do anything else* please spend a minute in the Terminal (macOS) or Power Shell (Windows) learning how to get to your home directory and, below that, to a CASA directory where you can store your work and keep Docker from accessing data that it shouldn't.
+So *before you do anything else* please spend a minute in the Terminal (macOS) or Power Shell (Windows) learning how to get to your home directory and, within that, to a CASA directory where you can store your work and keep Docker from accessing data that it shouldn't.
+
+What we are doing is creating a directory on your computer that you can access from Docker. This is where you will store your notebooks, data, and any other files that you need to work with. The ultimate structure we'll produce this:
+
+!['Target' Directory Structure](./img/File_Structure.png
 
 On both a Mac and a PC you should be able to run the following:
 
-1. `echo $(pwd)` -- this should print out the location where the Terminal/Power Shell 'started'.
-3. `cd $HOME` -- this should take you to your user's *home* directory (on a Mac it will be `/Users/<your username>`, on a PC it will be something like `C:\Users\<your username>`). *Hint: `cd` means 'change directory'!*
-4. `cd Documents` -- this will move you into your 'Documents' folder. *Note: on Windows this **might** be called `My\ Documents` and note the "\" in the name! If you have set up your computer in another language this might be called something else, but Power Shell still 'knows' which folder should contain your documents.*
-5. `mkdir casa` -- this will create a `casa` folder in your home directory.
-6. `cd casa` -- you are now changing into the `casa` directory.
-7. `echo $pwd` -- this should show you the 'full path' to your new `casa` directory (e.g. `/Users/<your username>/Documents/casa` or something like that).
+1. `cd $HOME` -- this will **c**hange **d**irectory to your *home* directory (on a Mac it will be `/Users/<your username>`, on a PC it will be something like `C:\Users\<your username>`). *Hint: `cd` means 'change directory'!*
+2. `cd Documents` -- this will move you into your 'Documents' folder. *Note: on Windows this **might** be called `My\ Documents` and note the "\" in the name! If you have set up your computer in another language this might be called something else, but Power Shell still 'knows' which folder should contain your documents.*
+3. `mkdir CASA` -- this will create a `CASA` folder in your home directory.
+4. `cd CASA` -- you are now changing into the `CASA` directory.
+5. `echo $pwd` -- this should show you the 'full path' to your new `CASA` directory (e.g. `/Users/<your username>/Documents/CASA` or something like that).
+
+**Leave the Terminal or PowerShell window open!** You will need it in a moment.
 
 Perhaps a video will help clarify?
 
@@ -53,19 +68,7 @@ Perhaps a video will help clarify?
 
 ## Configuring the {{< var docker.name >}} Image
 
-During the '[install festival](https://jreades.github.io/sds_env/setup/install_fest.html)' you should have installed Docker and, time permitting, 'pulled' the image appropriate to your system. If you haven't, then you should do so as a priority *now* using either:
-
-On Windows or Intel Macs:
-```bash
-docker pull {{< var docker.all >}}
-```
-or M1, M2 or M3 Macs:
-```bash
-docker pull {{< var docker.mac >}}
-```
-This command is run either in the macOS **`Terminal`** application (in the Utilties directory of your Applications folder) or using the Windows **`Power Shell`** (_not_ the Command Prompt). 
-
-We'd _strongly_ encourage you to ensure that you're able to run Docker and use one of the above images as soon as possible so that we have as long as possible to help you over any hurdles before we get to week 3 where it will be essential that you are running the environment successfully. In our experience, the students who put off trying to get the environment running end up falling quickly behind as they are unable to complete basic tasks successfully. 
+During the '[install festival](https://jreades.github.io/sds_env/setup/install_fest.html)' you should have installed Docker and, time permitting, 'pulled' the image appropriate to your system. If you haven't, then you should do so as a priority *now*.
 
 ## Running Docker
 
@@ -73,7 +76,7 @@ By default, the best way to start Docker is from the Terminal or Power Shell.
 
 ### On Windows
 
-Using the Power Shell copy and paste the following *all on one line*:
+Using the *same* Power Shell copy and paste the following *all on one line*:
 
 ```bash
 docker run --rm -d --name {{< var docker.name >}} -p 8888:8888 
@@ -90,7 +93,7 @@ docker run --rm -d --name {{< var docker.name >}} -p 8888:8888
 
 ### On macOS
 
-Using the Terminal or iTerm2 copy and past the following (change the docker image to `{{< var docker.all >}}` if using an older Intel Mac):
+Using the *same* Terminal copy and past the following (change the docker image to `{{< var docker.all >}}` if using an older Intel Mac):
 
 ```bash
 docker run --rm -d --name {{< var docker.name >}} -p 8888:8888 \
@@ -101,11 +104,9 @@ docker run --rm -d --name {{< var docker.name >}} -p 8888:8888 \
 
 ## How do I Know it Worked?
 
-With Docker running, you will _mainly_ interact with Python through a web page (unless you choose the VSCode IDE). To check if it's running, we just have to visit the web page and see what happens.
+With Docker running, you will _mainly_ interact with Python through a web page. To check if it's running, we just have to visit the web page and see what happens: [http://localhost:8888/lab/tree/work/](http://localhost:8888/lab/tree/work/). We'll talk more about exactly what is going on over the next few weeks, but this should show you a page that looks something like this (probably with fewer files listed on the left-hand side):
 
-It is likely that the page you want is: [http://localhost:8888/lab/tree/work/](http://localhost:8888/lab/tree/work/). We'll talk more about exactly what is going on next week as well, but this should show you a page that looks something like this (probably with fewer files listed on the left-hand side):
-
-![Screenshot of Jupyter Lab](https://github.com/jreades/fsds/raw/master/practicals/img/1.8-Jupyter_Lab.png)
+![Screenshot of Jupyter Lab](./img/1.8-Jupyter_Lab.png)
 
 ::: {.callout-note}
 ### See Docker Run (and Run)...
@@ -114,62 +115,21 @@ Once you have started a Docker container using any of the above, the machine **w
 
 :::
 
-# Organising Your Workspace
-
-Before we start trying to code, I'd suggest organising a 'workspace' on your computer so that it's easy to find/load data and 'Jupyter notebooks' (the tool we'll be using to write and rung code). The easiest way to do this is to start from your `Documents` folder and set directories there to hold your code and data. Why? Because leaving everything in the Downloads folder or in random locations all over you computer is likely to be a disaster, especially when you're under time pressure.
-
-Here's _one_ way of organising things, and I'm also taking the opportunity to show you how to do this using the Command Line:
-
-- Using the Jupyter Lab web interface from Docker that we created earlier...
-- Click on the `Terminal` tile (in the `Other` section) or select `File` > `New` > `Terminal` to open a new shell.
-- This should open a new, empty window with a flashing cursor next to something *like* `(base) jovyan@5a4d5a7f2f50:~$`.
-
-This short video will show you how to create a directory called `CASA` in your Documents folder (or `My\ Documents` on some Windows machines):
-
-{{< video https://www.youtube.com/embed/Fnna4YMdLw4 >}}
-
-The commands we used were:
-
-| Command          | Means                                  |
-| :--------------- | :------------------------------------- |
-| `cd`             | Change directory                       |
-| `cd $HOME`       | Change to the home directory (wherever shown by `echo $HOME`) |
-| `cd Documents`   | Change directory to Documents from the current location |
-| `ls`             | List the files in the current directory |
-| `mkdir CASA`     | Make a directory called `CASA`          |
-| `touch test.txt` | Create an empty file by 'touching' it   |
-
-Note: `$HOME` may not be available on Windows machines; however, the Terminal provided in the {{< var docker.name >}} container _does_ allow this because it is a full Linux system running on your computer.
-
-::: {.callout-warning collapse=true}
-### Where are My (Windows) Documents?
-
-On some Windows machines you might not have a `Documents` folder and will need to decide whether to create one or use the Windows-equivalent (probably `My\ Documents` -- notice the "`\`" instead of a "`/`").
-
-:::
-
-::: {.callout-note}
-### Organising Your Work 
-
-There are any number of ways to organise your CASA work, what's important is that you are *logical* about things like names and hierarchy. This will make it much easier to access files and notebooks using Docker, Quarto, *and* Python.
-
-:::
-
 # Setting Up GitHub
 
-Understanding how to use Git and GitHub effectively is a core element of learning to code. So one of the _first_ things that we are going to do is set you up with an account and a new project.
+Understanding how to use Git and GitHub effectively is a core element of learning to code. So one of the _first_ things that we are going to do is set you up with an account and a new repository.
 
-So in order to complete this task you need to:
+So in order to complete this task you need to do the following (explanations below):
 
 1. Create a login with [GitHub](https://github.com). 
-2. Create a new **private** project on GitHub. 
-3. Edit the `README.md` and `.gitignore` files for your new project.
+2. Create a new **private** repository on GitHub. 
+3. Edit the `README.md` and `.gitignore` files for your new repository.
 4. Save the changes (this is called a 'commit') and say in a general way what edits you did.
 5. Work out how to compare the original and edited versions of any file in your browser.
 
 ## Your New GitHub Account
 
-You may wish to set up your new GitHub account with your UCL email. GitHub 'knows' about educational users and will give you access to more features for free if you use a `.ac.uk` email address. Once you've done this, you can then link a personal email address as well.
+It doesn't really matter which way you do this, but we recommend that you set up your new GitHub account with *both* your personal and your UCL email addresses. GitHub 'knows' about educational users and will give you access to more features for free if you associate a `.ac.uk` email address to your account.
 
 From a security standpoint you should _also_ enable 2-factor authentication so that you receive a text message when you log in on a new machine and are asked to confirm a code.
 
@@ -179,7 +139,7 @@ To create a repository, click on the `+` at the upper-right corner of the GitHub
 
 ::: {.callout-important}
 
-### Your Repo Name
+### Your 'Repo' Name
 
 For the purposes of this tutorial (and all subsequent tutorials) I will assume that your repository is called `fsds`. You can call it whatever you like, in which case you will *always* need to substitute the name that *you* chose wherever you see me write `fsds`.
 
@@ -302,27 +262,39 @@ git config --global user.email '<your GitHub email address>'
 git config --global user.name '<your GibHub username>'
 ```
 
+::: {.callout-tip}
+
+#### Recall: Convention!
+
+As a reminder, `<...>` is a convention in programming to indicate that you should replace the text between the `<` and `>` with something that makes sense in your context. For example, if you see `'<your GitHub email address>'` you should type, for *example*, `'j.reades@ucl.ac.uk'`. You do *not* include the `<` or `>` characters!
+
+:::
+
 ## Creating a Personal Access Token
 
-You do not want to have to enter your GitHub password every time you copy changes up to/down from GitHub, and you _don't_ want to paste your password in plain text into your code! The Personal Access Token is a way to manage this by issuing special passwords that allow only limited access to your account.
+For copying changes up to/down from GitHub, you *must* use a Personal Access Token. This is like issuing special passwords that allow only limited access to parts of your GitHub account.
 
 To create a Personal Access Token:
 
-- Visit your GitHub User Page ([e.g. github.com/jreades](https://github.com/jreades))
-- Click on your user icon (at the top-right corner of the page) and pick `Settings`
-- Scroll down the [settings page](https://github.com/settings/profile) until you get to `Developer settings`
+- Visit *your* GitHub User Page (e.g. [github.com/jreades](https://github.com/jreades))
+- Click on *your* user icon (at the top-right corner of the page) and click the `Settings` link (near the bottom on the right side of the page).
+- Scroll down the [settings page](https://github.com/settings/profile) until you get to `Developer settings` (near the bottom on the *left* side of the page).
 - Click the `Developer settings` link to reach [the 'apps' page](https://github.com/settings/apps) and then click on the `Personal access tokens` link.
+- Select `Tokens (classic)` from the left-hand menu and then click the `Generate new token` button.
 
 ::: {.callout-tip}
 
-### Types of Personal Tokens
+#### Types of Personal Tokens
 
 You now need to choose the type of token to generate. I *personally* find the old type of tokens easier to work with because the 'new' fine-grained tokens are intended to support complex workflows when all we're trying to do is allow one computer to push/pull from Git. 
 
 :::
   
-- Click the `Generate new token` button and set up the token so that it has **read/write `repo` privileges (full control of private repositories)**. You can change other settings (read/write packages, gists, and notifications) but this is not necessary.
-- Save the resulting token somewhere safe as you will need it again!
+- `Generate new token (classic)` for general use token and then specify the following:
+  - I'd suggest writing `FSDS Token` or something similar in the `Note` section.
+  - Set the expiration to `90 days`
+  - Click the `repo` tickbox for 'Full control of private repositories'.
+- Save the resulting token somewhere safe as you will need it again! (e.g. a Note on your phone, a password manager, etc.).
 
 ::: {.callout-warning}
 
@@ -338,20 +310,21 @@ Now we are going to `clone` (i.e. copy) the repository that you just created on 
 
 On your private repository page, click on the green button labeled `Code` visible in the screenshot below:
 
-![Screenshot of cloning interface](https://github.com/jreades/i2p/raw/master/lectures/img/Cloning.png)
+![Screenshot of cloning interface](https://github.com/jreades/fsds/raw/master/lectures/img/Cloning.png)
 
-You should then copy the URL (visible in my screenshot as `https://github.com/jreades/i2p.git`). Switching to the command line, *c*hange *d*irectory (`cd`) to the location where you want your repository to be stored on _your_ machine. For instance, if I wanted to keep all of my _Foundations_ code in the CASA directory then I would do this:
+You should then copy the HTTPS URL (visible in my screenshot as `https://github.com/jreades/i2p.git`). 
+
+Now go back to the Terminal or PowerShell that you left open earlier and type the following (replacing `<the_url_that_you_copied_from_the_browser>` with the URL that you copied from GitHub):
 
 ```bash
-cd $HOME/work/Documents/CASA/
 git clone <the_url_that_you_copied_from_the_browser>
 ```
 
-The first time that you do this, you will likely need to provide login information. Use your GitHub username and the Personal Access Token that you just created.
+The first time that you do this, you will need to provide login information. Use your GitHub username and the Personal Access Token that you just created. On your computer you should now see a new directory with the same name as your repository. For example: `Documents/CASA/fsds`.
 
 ## Storing Credentials & 'Pulling'
 
-You can now activate the credtial helper that will store your Personal Access Token:
+You can now activate the credtial helper that will store your Personal Access Token (though you should *still* keep your secure note!):
 
 ```bash
 cd fsds
@@ -360,6 +333,19 @@ git pull
 ```
 
 When you type `git pull` you _should_ be asked _again_ for your username and password. You should (again) use the Personal Access Token as your password. You should not be asked again for pushing or pulling data into this GitHub repository. If you are _not_ asked for your Personal Access Token then this likely means that your token is already saved and ready to use on all future 'actions'.
+
+## Jupyter < - > Your Computer
+
+If you now go back to Jupyter, you should now see that the `work` directory is actually the same as the `CASA` directory that you created earlier; you know this because you can now see an `fsds` directory containing that wasn't there before. 
+
+This is because Docker is 'mounting' the `work` directory in the container to the `CASA` directory on your computer. This means that you can save files in the `work` directory in Jupyter and they will be saved in the `CASA` directory on your computer.
+
+::: {.callout-note}
+### Organising Your Work 
+
+There are any number of ways to organise your CASA work, what's important is that you are *logical* about things like names and hierarchy. This will make it much easier to access files and notebooks using Docker, Quarto, *and* Python.
+
+:::
 
 ## Adding a Local File to Your Repository
 
@@ -370,16 +356,16 @@ In order to tie together the different concepts covered above, we are now going 
 So, starting with the 'raw' notebook:
 
 1. Save this file to your computer as a notebook with the extension `.ipynb`. 
-2. Move the file to your repostiory folder (_e.g._ `$HOME/work/Documents/CASA/fsds/`).
+2. Move the file to your new repository folder (_e.g._ `$HOME/work/Documents/CASA/fsds/`).
 
 ::: {.callout-tip}
-### File Extensions
+#### File Extensions
 
-It is *highly* likely that your browser automatically added a `.txt` extension when you saved the Notebook file to your computer. You need to remove that ending to your file name or Jupyter won't be able to run it. You can rename a file by *moving* (bash: `mv`) from one name to another: `mv <notebook_name>.ipynb.txt <notebook_name.ipynb`
+It is *highly* likely that your browser automatically added a `.txt` extension when you saved the Notebook file to your computer. You need to remove that ending to your file name or Jupyter won't be able to run it. You can rename a file by either doing it directly in the Finder/Windows Explorer, or by *moving* (bash: `mv`) the file: `mv <notebook_name>.ipynb.txt <notebook_name>.ipynb`
 
 :::
 
-In the Terminal/Bash we now need `add` this file to Git so that it knows to keep track of it. Unlike Dropbox or OneDrive, just putting a file in a repo directory does _not_ mean that Git will pay attention to it:
+In the Terminal/PowerShell we now need `add` this file to Git so that it knows to keep track of it. Unlike Dropbox or OneDrive, just putting a file in a repo directory does _not_ mean that Git will pay attention to it:
 
 ```bash
 # Assuming that you are 'in' the 'fsds' directory...
@@ -388,7 +374,7 @@ git commit -m "Adding notebook 1 to repo."
 ```
 
 ::: {.callout-warning}
-### Add, Commit, Push, Repeat 
+#### Add, Commit, Push, Repeat 
 
 Unless you have *added* and *committed* a file to Git then it is *not* version controlled.
 
@@ -434,14 +420,14 @@ Total 3 (delta 2), reused 0 (delta 0), pack-reused 0
 remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
 remote: This repository moved. Please use the new location:
 remote:   https://github.com/jreades/fsds.git
-To https://github.com/jreades/i2p.git
+To https://github.com/jreades/fsds.git
    7410d0e..45aa80a  master -> master
 ```
 
 If you now go over to your browser and visit your GitHub repo page (_e.g._ `https://github.com/jreades/fsds`) --- pressing the `Reload` button if you had the page open already --- then you should see that the file you added _on your computer_ is also showing up on the GitHub site as well! This means it's now fully version-controlled and backed-up.
 
 ::: {.callout-warning}
-### Keep Pushing
+#### Keep Pushing
 
 Unless have *pushed* your commits to GitHub they are *only* stored on *your* computer. So your files can be properly version-controlled, but without a *push* if you lose your computer you *still* lose everything!
 
@@ -473,7 +459,7 @@ For the [Group Work](https://jreades.github.io/fsds/assessments/group.html) ever
 ::: {.callout-tip}
 ### Bonus Content 
 
-It is not core to this module, but if you'd like to really make the most of Git, why not create a GitHub.io web site? Using Markdown (for the most bare bones effect) and code (via Quarto), you can render and push a web site to `<your username>.github.io/`. You might find this useful for creating a simple portfolio, blog, or other collection of 'outputs' that you can use to demonstrate to employers that you know your way around.
+It is not core to this module, but if you'd like to really make the most of Git, why not create a GitHub.io web site? Using Markdown (for the most bare bones effect) or code (via Quarto), you can render and push a web site to `<your GitHub username>.github.io/`. You might find this useful for creating a simple portfolio, blog, or other collection of 'outputs' that you can use to demonstrate to employers that you know your way around.
 
 :::
 
