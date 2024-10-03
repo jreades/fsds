@@ -7,7 +7,7 @@ print(f"Tidying up {render_dir}")
 for root, dirs, files in os.walk(render_dir):
     for filename in files:
         print(f"File: {filename}", end=" ")
-        if not (filename.startswith("Practical-") and filename.endswith(".pdf")): 
+        if not (filename.startswith("Practical-") and (filename.endswith(".pdf") or filename.endswith(".ipynb"))): 
             try:
                 os.remove(os.path.join(root, filename))
                 print("x removed")
