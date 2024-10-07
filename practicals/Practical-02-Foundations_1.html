@@ -291,7 +291,7 @@ window.Quarto = {
    
   <ul>
   <li><a href="#setting-up" id="toc-setting-up" class="nav-link active" data-scroll-target="#setting-up">Setting Up</a></li>
-  <li><a href="#hello-world" id="toc-hello-world" class="nav-link" data-scroll-target="#hello-world">Hello World!</a></li>
+  <li><a href="#running-a-notebook" id="toc-running-a-notebook" class="nav-link" data-scroll-target="#running-a-notebook">Running a Notebook</a></li>
   <li><a href="#python-variables" id="toc-python-variables" class="nav-link" data-scroll-target="#python-variables">Python Variables</a></li>
   <li><a href="#python-conditions" id="toc-python-conditions" class="nav-link" data-scroll-target="#python-conditions">Python Conditions</a></li>
   <li><a href="#python-logic" id="toc-python-logic" class="nav-link" data-scroll-target="#python-logic">Python Logic</a></li>
@@ -339,16 +339,67 @@ Remember
 <section id="setting-up" class="level1">
 <h1>Setting Up</h1>
 <p>I’m going to assume that you’ve got Docker installed and have managed to ‘pull’ the <code>jreades/sds:2024-intel</code> or <code>jreades/sds:2024-silicon</code> image at this point. If not, this is your <strong>most urgent</strong> priority. Please make one of us aware of your situation and we’ll do our best to get you going.</p>
-<section id="is-the-container-running" class="level2">
-<h2 class="anchored" data-anchor-id="is-the-container-running">Is the Container Running?</h2>
-<p>Docker will happily keep a container running in the background even if you close every open window. So how do you know if the <code>sds2023</code> container is already running? There are two ways:</p>
+<section id="downloading-the-practical" class="level2">
+<h2 class="anchored" data-anchor-id="downloading-the-practical">Downloading the Practical</h2>
+<p>On the <a href="https://jreades.github.io/fsds/sessions/week2.html#practical">Week 2 of FSDS page</a> you’ll see that there is a ‘preview’ link and a a ‘download’ link in the <a href="https://jreades.github.io/fsds/sessions/week2.html#practical">Practical section</a>. If you click the <code>preview</code> link you will be taken to the GitHub page for the notebook where it has been ‘rendered’ as a web page. But to make the notebook useable on <em>your</em> computer, you need to <code>download</code> the IPYNB file.</p>
+<p>So now:</p>
+<ol type="1">
+<li>Click on the <code>Download</code> link.</li>
+<li>The file should download automatically, but <em>if</em> you see a page of raw code, select <code>File</code> then <code>Save Page As...</code>.</li>
+<li>Make sure you know where to find the file (e.g.&nbsp;Downloads or Desktop).</li>
+<li>Move the file to your GitHub repository folder (e.g.&nbsp;<code>~/Documents/CASA/fsds/</code>)</li>
+<li>Check to see if your browser has added <code>.txt</code> to the file name:
+<ul>
+<li>If no, then you can move to adding the file.</li>
+<li>If yes, then you can either fix the name in the Finder/Windows Explore, or you can do this in the Terminal/PowerShell using <code>mv &lt;name_of_practical&gt;.ipynb.txt &lt;name_of_practical&gt;.ipynb</code> (you can even do this in JupyterLab’s terminal).</li>
+</ul></li>
+<li>Now you can add it to Git and GitHub:
+<ol type="1">
+<li><code>git add &lt;name_of_practical&gt;.ipynb</code></li>
+<li><code>git commit -m "Adding Practical 2"</code></li>
+<li><code>git push</code></li>
+</ol></li>
+</ol>
+<p>The file should now be in your GitHub repository in its ‘original’ format (before you write or run any code).</p>
+</section>
+<section id="running-docker" class="level2">
+<h2 class="anchored" data-anchor-id="running-docker">Running Docker</h2>
+<section id="sec-available" class="level3">
+<h3 class="anchored" data-anchor-id="sec-available">Making the Notebook Available to Jupyter Lab</h3>
+<p>To keep all of your notebooks and other CASA0013 content in Git/GitHub, you need to make sure that JupyterLab can access your local git repository. JupyterLab can <em>only</em> do this if the git folder is a <em>child</em> of the one where you ran <code>docker run ...</code>. So if your git repo is <code>~/Documents/CASA/fsds/</code> then you need to make sure that you start Docker from <code>~/Documents/CASA/fsds</code>, <code>~/Documents/CASA/</code> or <code>~/Documents/</code>.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Wrong Place?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you called <code>docker run ...</code> from the wrong place, then you will need to stop the container. Please see the <a href="#is-the-container-running-sec-containers">section below</a>.</p>
+</div>
+</div>
+<p>Remember that the startup command is something like:</p>
+<pre class="shell"><code>docker run ... -v "$(pwd):/home/jovyan/work" ...</code></pre>
+<p>The <code>-v</code> (short for <em>volume</em>) tells Docker what part of <em>your</em> computer (<code>$(pwd)</code>) to connect to container (<code>/home/jovyan/work</code>). <code>pwd</code> is short-hand for ‘print working directory’ and is the location where you ran the Docker startup command! So we’re talking about the location on <em>your</em> computer when you access the <code>work</code> folder from within Docker/Jupyter Lab:</p>
+<ul>
+<li>On a Mac it will <em>often</em> be your <code>$HOME</code> (also known as <code>~</code>) directory (e.g.&nbsp;<code>/Users/your_username/</code>) because that’s where new Terminal windows start by default.</li>
+<li>On a Windows machine it <em>may</em> be your <code>$HOME</code> directory but we can’t promise.</li>
+</ul>
+<p>Perhaps a video will help clarify?</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/5IkwUrYTY78" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+</section>
+<section id="is-the-container-running-sec-containers" class="level3">
+<h3 class="anchored" data-anchor-id="is-the-container-running-sec-containers">Is the Container Running?</h3>
+<p>Docker will happily keep a container running in the background even if you close every open window. So how do you know if the <code>sds2024</code> container is already running? There are two ways:</p>
 <ol type="1">
 <li>Open the Docker Dashboard/Desktop from the menu and make sure that you select the <code>Containers</code> tab on the left (it may be hidden by a message from Docker about upcoming conferences). You <em>should</em> see something like this if the container is <em>running</em> and <em>available</em>:</li>
 </ol>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="./img/Running_Container.png" class="img-fluid figure-img"></p>
-<figcaption>sds2023 container running</figcaption>
+<figcaption>Container running</figcaption>
 </figure>
 </div>
 <ol start="2" type="1">
@@ -357,65 +408,42 @@ Remember
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="./img/Running_Container_2.png" class="img-fluid figure-img"></p>
-<figcaption>sds2023 container running from Terminal</figcaption>
+<figcaption>Container running from Terminal</figcaption>
 </figure>
 </div>
-<p>If the <code>sds2023</code> <em>container</em> is not running then you’ll need to run the startup command (<code>docker run...</code>) covered in the <a href="../practicals/Practical-01-Getting_Started.html">last practical session</a></p>
+<p>If the <code>sds2024</code> <em>container</em> is not running then you’ll need to run the startup command (<code>docker run...</code>) covered in the <a href="../practicals/Practical-01-Getting_Started.html">last practical session</a>. If it <em>is</em> running but in the wrong place, then you should stop it, use <code>cd</code> to navigate to the correct location, and then restart it.</p>
 </section>
-<section id="connect-to-jupyter-lab" class="level2">
-<h2 class="anchored" data-anchor-id="connect-to-jupyter-lab">Connect to Jupyter Lab</h2>
+<section id="connect-to-jupyter-lab" class="level3">
+<h3 class="anchored" data-anchor-id="connect-to-jupyter-lab">Connect to Jupyter Lab</h3>
 <p>Once you know the container is running you can connected to Jupyter Lab on <a href="http://localhost:8888/lab/tree/work/">localhost:8888</a> and should see something like this:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://github.com/jreades/fsds/raw/master/practicals/img/1.8-Jupyter_Lab.png" height="300" class="figure-img"></p>
-<figcaption>Screenshot of Jupyter Lab</figcaption>
+<figcaption>Screenshot of JupyterLab</figcaption>
 </figure>
 </div>
-<p>You’re connected and can go to <a href="#sec-notebook" class="quarto-xref">Section&nbsp;1.3</a>.</p>
+<p>You’re connected!</p>
 </section>
-<section id="sec-notebook" class="level2">
-<h2 class="anchored" data-anchor-id="sec-notebook">Getting the Notebook</h2>
-<section id="downloading-from-github" class="level3">
-<h3 class="anchored" data-anchor-id="downloading-from-github">Downloading from GitHub</h3>
-<p>On the <a href="https://jreades.github.io/fsds/sessions/week2.html#practical">Week 2 of FSDS page</a> you’ll see that there is a ‘preview’ link and a a ‘download’ link in the <a href="https://jreades.github.io/fsds/sessions/week2.html#practical">Practical section</a>. If you click the preview link you will be taken to the GitHub page for the notebook where it has been ‘rendered’ as a web page by GitHub. But to make the notebook useable on <em>your</em> computer, you need to download the RAW notebook content.</p>
-<p>So now:</p>
+</section>
+</section>
+<section id="running-a-notebook" class="level1">
+<h1>Running a Notebook</h1>
+<section id="hello-world" class="level2">
+<h2 class="anchored" data-anchor-id="hello-world">Hello World!</h2>
+<p>Nearly every introduction to programming course starts with the famous ‘Hello World!’, so why do anything different?</p>
+<p>From <em>within Jupyter Lab</em> you should now able to create a new notebook:</p>
 <ol type="1">
-<li>Click on the <code>Download the Notebook</code> link.</li>
-<li>When you see a page of raw code, select <code>File</code> then <code>Save Page As...</code>.</li>
-<li>Save the file somewhere easy to find (e.g.&nbsp;Downloads or Desktop).</li>
-<li>Notice that <em>most</em> browsers will save the file as <code>Practical-02-Foundations_1.ipynb.txt</code>; they have <em>added</em> <code>.txt</code> to the file name without asking. You will need to correct this by <em>either</em>: 1) changing the name in the command line using <code>mv &lt;name_of_practical&gt;.ipynb.txt &lt;name_of_practical&gt;.ipynb</code> (you can even do this in Jupyter Lab <em>after</em> completing <a href="#sec-available" class="quarto-xref">Section&nbsp;1.3.2</a>); or 2) renaming the file using the Finder (Mac) or Windows Explorer.</li>
+<li>Click on the <code>Python (base)</code> tile in the <code>Notebook</code> section.</li>
+<li>You should see a new tab open with a new notebook (title: <code>Untitled.ipynb</code>).</li>
+<li>In the first cell type <code>print('Hello World!')</code>.</li>
+<li>Click the <code>Run</code> button (▶) in the menu above the notebook.</li>
+<li>You should see Python output <code>Hello World!</code> below the cell.</li>
 </ol>
-</section>
-<section id="sec-available" class="level3">
-<h3 class="anchored" data-anchor-id="sec-available">Making the Notebook Available to Jupyter Lab</h3>
-<p>You now need to place the notebook where Jupyter Lab can access it. There is only <em>one</em> place that you can do this, and that is where you ran the <code>docker run ...</code> command which <strong>mounted</strong> the current working directory to the <code>work</code> directory. Remember that the startup command is something like:</p>
-<pre class="shell"><code>docker run ... -v "$(pwd):/home/jovyan/work" ...</code></pre>
-<p>The <code>-v</code> (short for <em>volume</em>) tells Docker what part of <em>your</em> computer (<code>$(pwd)</code>) to connect to container (<code>/home/jovyan/work</code>). <code>pwd</code> is short-hand for ‘working directory’ and is the location where you ran the Docker startup command! So we’re talking about the location on <em>your</em> computer when you access the <code>work</code> folder from within Docker/Jupyter Lab:</p>
-<ul>
-<li>On a Mac it will most likely be your <code>$HOME</code> directory (e.g.&nbsp;<code>/Users/your_username/</code>).</li>
-<li>On a Windows machine it <em>may</em> be your <code>$HOME</code> directory but we can’t promise. See the steps above for trying to ensure this is where you end up.</li>
-</ul>
-<p>Perhaps a video will help clarify?</p>
-<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/5IkwUrYTY78" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
-</section>
-<section id="staring-the-notebook" class="level3">
-<h3 class="anchored" data-anchor-id="staring-the-notebook">Staring the Notebook</h3>
-<p>From <em>within Jupyter Lab</em> you should now be able to start the notebook:</p>
-<ol type="1">
-<li>Make sure Jupyter Lab is showing (📁<code>/work/</code>) in the left-hand menu.</li>
-<li>Navigate to the location that you saved <code>Practical-02-Foundations_1.ipynb</code>.</li>
-<li>Double-click the file and you should see the notebook appear on the right-hand side.</li>
-</ol>
-<p>Now you can run code directly in your browser, so let’s try it!</p>
-</section>
-</section>
-</section>
-<section id="hello-world" class="level1">
-<h1>Hello World!</h1>
-<p>Nearly every introduction to programming course starts with the famous ‘Hello World!’, so why do anything different? Try typing the below into the empty ‘cell’ that has appeared and then clicking on the right-triangle (▶) in the area above between the clipboard 📋 for copying and the ■ for stopping running code:</p>
+<p>Any time you want to run code you click on the right-triangle (▶); it’s in the area between the clipboard 📋 (for copying) and the ■ (for stopping running code).</p>
+<p>So when you run:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Hello World!'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Hopefully, the following has appeared directly below the code:</p>
-<div id="d942b2d0" class="cell" data-execution_count="1">
+<p>Hopefully, the following appeare directly <em>below</em> the code:</p>
+<div id="3586df03" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-stdout">
 <pre><code>Hello World!</code></pre>
 </div>
@@ -433,6 +461,18 @@ Tip
 <p>You can always click the ▶ icon above, but it will be much <em>faster</em> to get into the habit of type <code>Ctrl</code>+<code>Enter</code> instead when you have placed your cursor in a code cell. This is also how to turn a Markdown cell back into display text.</p>
 </div>
 </div>
+<p>You can now close this notebook. Unless you created this notebook in the <code>work</code> folder, you will not be able to save it permanently. That’s fine.</p>
+</section>
+<section id="starting-the-practical-notebook" class="level2">
+<h2 class="anchored" data-anchor-id="starting-the-practical-notebook">Starting the Practical Notebook</h2>
+<p><em>Now</em> from <em>within Jupyter Lab</em> you should start the Practical 2 notebook:</p>
+<ol type="1">
+<li>Make sure Jupyter Lab is showing (📁<code>/work/</code>) in the left-hand menu.</li>
+<li>Navigate to your git repo (where you saved <code>Practical-02-Foundations_1.ipynb</code>).</li>
+<li>Double-click the file and the notebook should appear on the right-hand side.</li>
+</ol>
+<p>Now you can run code directly in your browser, so let’s try it!</p>
+</section>
 </section>
 <section id="python-variables" class="level1">
 <h1>Python Variables</h1>
@@ -449,8 +489,8 @@ Connections
 <p>This is a short recap of materials covered in this week’s video on <a href="https://jreades.github.io/fsds/sessions/week2.html#lectures">Python: the Basics</a> as well as Code Camp’s <a href="https://jreades.github.io/code-camp/lessons/The_Basics.html">The Basics</a></p>
 </div>
 </div>
-<section id="variables-names" class="level2">
-<h2 class="anchored" data-anchor-id="variables-names">Variables Names</h2>
+<section id="variable-names" class="level2">
+<h2 class="anchored" data-anchor-id="variable-names">Variable Names</h2>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -941,13 +981,12 @@ Connections
 <p>This is quite a lot to get through. If you’ve managed it in under 2 hours then <em>congratulations</em>! Either you must have paid a lot of attention when doing Code Camp, or you might want to check in with us as to whether you should really be doing this module…</p>
 <section id="no-wait-one-more-thing" class="level3">
 <h3 class="anchored" data-anchor-id="no-wait-one-more-thing">No Wait, One More Thing…</h3>
-<p>You might want to refer to both <a href="https://jreades.github.io/fsds/sessions/week2.html#lectures">The Command Line</a> and <a href="https://jreades.github.io/fsds/sessions/week2.html#lectures">Getting Stuck into Git</a> lectures as well as to <a href="https://jreades.github.io/code-camp/lessons/The_Terminal.html">The Terminal</a> Code Camp session.</p>
-<p>You now want to push your completed notebook to your GitHub reposistory. Using the Terminal or Git Bash you need to:</p>
+<p>You now want to add/commit/push your completed notebook to your GitHub reposistory. Using the Terminal (macOS or from with Jupyter/Docker) or Git Bash (Windows) you need to:</p>
 <ol type="1">
-<li>Navigate (if you’ve not got a shell already open there) to <code>$HOME/Documents/CASA/modules/&lt;your repository&gt;</code>.</li>
+<li>Navigate to your repository (e.g.<code>$HOME/Documents/CASA/&lt;your repository&gt;</code>).</li>
 <li>Check the status of your notebooks using <code>git status</code> (you should see that <code>Practical-02-Foundations_1.ipynb has been modified</code>).</li>
-<li>Add this changed notebook to git using <code>git add  Practical-02-Foundations_1.ipynb</code></li>
-<li>Commit this changed notebook with a message using <code>git commit -m "&lt;your message here... but don't use a !&gt;"</code></li>
+<li>Add the <em>changes</em> to Git using <code>git add  Practical-02-Foundations_1.ipynb</code></li>
+<li>Commit this changed notebook with a message using <code>git commit -m "&lt;your message here...&gt;"</code></li>
 <li>Push this change to GitHub using: <code>git push</code></li>
 </ol>
 <p>You should now be able to visit your repository on <a href="https://github.com/">GitHub</a> and see that your changes are now stored there as well!</p>
