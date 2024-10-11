@@ -20,78 +20,99 @@ Please save your work regularly, or prepare to be disappointed. This will be my 
 
 I'm going to assume that you've got Docker installed and have managed to 'pull' the `{{< var docker.all >}}` or `{{< var docker.mac >}}` image at this point. If not, this is your **most urgent** priority. Please make one of us aware of your situation and we'll do our best to get you going.
 
-## Is the Container Running?
+## Downloading the Practical
 
-Docker will happily keep a container running in the background even if you close every open window. So how do you know if the `sds2023` container is already running? There are two ways:
-
-1. Open the Docker Dashboard/Desktop from the menu and make sure that you select the `Containers` tab on the left (it may be hidden by a message from Docker about upcoming conferences). You _should_ see something like this if the container is _running_ and _available_:
-
-![sds2023 container running](./img/Running_Container.png)
-
-2. From the Terminal/Power Shell you should be able to run: `docker ps`. This will give you output something like this:
-
-![sds2023 container running from Terminal](./img/Running_Container_2.png)
-
-If the `sds2023` *container* is not running then you'll need to run the startup command (`docker run...`) covered in the [last practical session](Practical-01-Getting_Started.qmd)
-
-## Connect to Jupyter Lab
-
-Once you know the container is running you can connected to Jupyter Lab on [localhost:8888](http://localhost:8888/lab/tree/work/) and should see something like this:
-
-![Screenshot of Jupyter Lab](https://github.com/jreades/fsds/raw/master/practicals/img/1.8-Jupyter_Lab.png){height=300}
-
-You're connected and can go to @sec-notebook. 
-
-
-## Getting the Notebook {#sec-notebook}
-
-### Downloading from GitHub
-
-On the [Week 2 of FSDS page](https://jreades.github.io/fsds/sessions/week2.html#practical) you'll see that there is a 'preview' link and a a 'download' link in the [Practical section](https://jreades.github.io/fsds/sessions/week2.html#practical). If you click the preview link you will be taken to the GitHub page for the notebook where it has been 'rendered' as a web page by GitHub. But to make the notebook useable on *your* computer, you need to download the RAW notebook content.
+On the [Week 2 of FSDS page](https://jreades.github.io/fsds/sessions/week2.html#practical) you'll see that there is a 'preview' link and a a 'download' link in the [Practical section](https://jreades.github.io/fsds/sessions/week2.html#practical). If you click the `preview` link you will be taken to the GitHub page for the notebook where it has been 'rendered' as a web page. But to make the notebook useable on *your* computer, you need to `download` the IPYNB file.
 
 So now:
 
-1. Click on the `Download the Notebook` link.
-2. When you see a page of raw code, select `File` then `Save Page As...`.
-3. Save the file somewhere easy to find (e.g. Downloads or Desktop). 
-4. Notice that *most* browsers will save the file as `Practical-02-Foundations_1.ipynb.txt`; they have *added* `.txt` to the file name without asking. You will need to correct this by *either*: 1) changing the name in the command line using `mv <name_of_practical>.ipynb.txt <name_of_practical>.ipynb` (you can even do this in Jupyter Lab *after* completing @sec-available); or 2) renaming the file using the Finder (Mac) or Windows Explorer.
+1. Click on the `Download` link.
+2. The file should download automatically, but *if* you see a page of raw code, select `File` then `Save Page As...`.
+3. Make sure you know where to find the file (e.g. Downloads or Desktop). 
+4. Move the file to your GitHub repository folder (e.g. `~/Documents/CASA/fsds/`)
+5. Check to see if your browser has added `.txt` to the file name:
+   - If no, then you can move to adding the file.
+   - If yes, then you can either fix the name in the Finder/Windows Explore, or you can do this in the Terminal/PowerShell using `mv <name_of_practical>.ipynb.txt <name_of_practical>.ipynb` (you can even do this in JupyterLab's terminal).
+6. Now you can add it to Git and GitHub:
+   1. `git add <name_of_practical>.ipynb`
+   2. `git commit -m "Adding Practical 2"`
+   3. `git push`
+
+The file should now be in your GitHub repository in its 'original' format (before you write or run any code).
+
+## Running Docker
 
 ### Making the Notebook Available to Jupyter Lab {#sec-available}
 
-You now need to place the notebook where Jupyter Lab can access it. There is only _one_ place that you can do this, and that is where you ran the `docker run ...` command which **mounted** the current working directory to the `work` directory. Remember that the startup command is something like:
+To keep all of your notebooks and other CASA0013 content in Git/GitHub, you need to make sure that JupyterLab can access your local git repository. JupyterLab can *only* do this if the git folder is a *child* of the one where you ran `docker run ...`. So if your git repo is `~/Documents/CASA/fsds/` then you need to make sure that you start Docker from `~/Documents/CASA/fsds`, `~/Documents/CASA/` or `~/Documents/`.
+
+::: {.callout-warning}
+#### Wrong Place?
+
+If you called `docker run ...` from the wrong place, then you will need to stop the container. Please see the [section below](#is-the-container-running-sec-containers). 
+
+:::
+
+Remember that the startup command is something like:
 
 ```shell
 docker run ... -v "$(pwd):/home/jovyan/work" ...
 ```
 
-The `-v` (short for *volume*) tells Docker what part of _your_ computer (`$(pwd)`) to connect to container (`/home/jovyan/work`). `pwd` is short-hand for 'working directory' and is the location where you ran the Docker startup command! So we're talking about the location on _your_ computer when you access the `work` folder from within Docker/Jupyter Lab:
+The `-v` (short for *volume*) tells Docker what part of _your_ computer (`$(pwd)`) to connect to container (`/home/jovyan/work`). `pwd` is short-hand for 'print working directory' and is the location where you ran the Docker startup command! So we're talking about the location on _your_ computer when you access the `work` folder from within Docker/Jupyter Lab:
 
-- On a Mac it will most likely be your `$HOME` directory (e.g. `/Users/your_username/`).
-- On a Windows machine it _may_ be your `$HOME` directory but we can't promise. See the steps above for trying to ensure this is where you end up.
+- On a Mac it will _often_ be your `$HOME` (also known as `~`) directory (e.g. `/Users/your_username/`) because that's where new Terminal windows start by default.
+- On a Windows machine it _may_ be your `$HOME` directory but we can't promise.
 
 Perhaps a video will help clarify?
 
 {{< video https://www.youtube.com/embed/5IkwUrYTY78 >}}
 
-### Staring the Notebook
+### Is the Container Running? {#is-the-container-running-sec-containers}
 
-From _within Jupyter Lab_ you should now be able to start the notebook:
+Docker will happily keep a container running in the background even if you close every open window. So how do you know if the `{{< var docker.name >}}` container is already running? There are two ways:
 
-1. Make sure Jupyter Lab is showing (&#128193;`/work/`) in the left-hand menu.
-2. Navigate to the location that you saved `Practical-02-Foundations_1.ipynb`.
-3. Double-click the file and you should see the notebook appear on the right-hand side.
+1. Open the Docker Dashboard/Desktop from the menu and make sure that you select the `Containers` tab on the left (it may be hidden by a message from Docker about upcoming conferences). You _should_ see something like this if the container is _running_ and _available_:
 
-Now you can run code directly in your browser, so let's try it!
+![Container running](./img/Running_Container.png)
 
-# Hello World!
+2. From the Terminal/Power Shell you should be able to run: `docker ps`. This will give you output something like this:
 
-Nearly every introduction to programming course starts with the famous 'Hello World!', so why do anything different? Try typing the below into the empty 'cell' that has appeared and then clicking on the right-triangle (&#9654;) in the area above between the clipboard &#128203; for copying and the &#9632; for stopping running code:
+![Container running from Terminal](./img/Running_Container_2.png)
+
+If the `{{< var docker.name >}}` *container* is not running then you'll need to run the startup command (`docker run...`) covered in the [last practical session](Practical-01-Getting_Started.qmd). If it *is* running but in the wrong place, then you should stop it, use `cd` to navigate to the correct location, and then restart it.
+
+### Connect to Jupyter Lab
+
+Once you know the container is running you can connected to Jupyter Lab on [localhost:8888](http://localhost:8888/lab/tree/work/) and should see something like this:
+
+![Screenshot of JupyterLab](https://github.com/jreades/fsds/raw/master/practicals/img/1.8-Jupyter_Lab.png){height=300}
+
+You're connected!
+
+# Running a Notebook
+
+## Hello World!
+
+Nearly every introduction to programming course starts with the famous 'Hello World!', so why do anything different? 
+
+From _within Jupyter Lab_ you should now able to create a new notebook:
+
+1. Click on the `Python (base)` tile in the `Notebook` section.
+2. You should see a new tab open with a new notebook (title: `Untitled.ipynb`).
+3. In the first cell type `print('Hello World!')`.
+4. Click the `Run` button (&#9654;) in the menu above the notebook.
+5. You should see Python output `Hello World!` below the cell.
+
+Any time you want to run code you click on the right-triangle (&#9654;); it's in the area between the clipboard &#128203; (for copying) and the &#9632; (for stopping running code).
+
+So when you run:
 
 ```python
 print('Hello World!')
 ```
 
-Hopefully, the following has appeared directly below the code:
+Hopefully, the following appeare directly *below* the code:
 
 ```{python}
 #| echo: false
@@ -104,6 +125,18 @@ print('Hello World!')
 
 :::
 
+You can now close this notebook. Unless you created this notebook in the `work` folder, you will not be able to save it permanently. That's fine.
+
+## Starting the Practical Notebook
+
+*Now* from _within Jupyter Lab_ you should start the Practical 2 notebook:
+
+1. Make sure Jupyter Lab is showing (&#128193;`/work/`) in the left-hand menu.
+2. Navigate to your git repo (where you saved `Practical-02-Foundations_1.ipynb`).
+3. Double-click the file and the notebook should appear on the right-hand side.
+
+Now you can run code directly in your browser, so let's try it!
+
 # Python Variables
 
 ::: {.callout-note}
@@ -113,7 +146,7 @@ print('Hello World!')
 
 :::
 
-## Variables Names
+## Variable Names
 
 ::: {.callout-note}
 ### Look closer!
@@ -881,14 +914,12 @@ This is quite a lot to get through. If you've managed it in under 2 hours then *
 
 ### No Wait, One More Thing...
 
-You might want to refer to both [The Command Line](https://jreades.github.io/fsds/sessions/week2.html#lectures) and [Getting Stuck into Git](https://jreades.github.io/fsds/sessions/week2.html#lectures) lectures as well as to [The Terminal](https://jreades.github.io/code-camp/lessons/The_Terminal.html) Code Camp session.
+You now want to add/commit/push your completed notebook to your GitHub reposistory. Using the Terminal (macOS or from with Jupyter/Docker) or Git Bash (Windows) you need to:
 
-You now want to push your completed notebook to your GitHub reposistory. Using the Terminal or Git Bash you need to:
-
-1. Navigate (if you've not got a shell already open there) to `$HOME/Documents/CASA/modules/<your repository>`.
+1. Navigate to your repository (e.g.`$HOME/Documents/CASA/<your repository>`).
 2. Check the status of your notebooks using `git status` (you should see that `Practical-02-Foundations_1.ipynb has been modified`).
-3. Add this changed notebook to git using `git add  Practical-02-Foundations_1.ipynb`
-4. Commit this changed notebook with a message using `git commit -m "<your message here... but don't use a !>"`
+3. Add the *changes* to Git using `git add  Practical-02-Foundations_1.ipynb`
+4. Commit this changed notebook with a message using `git commit -m "<your message here...>"`
 5. Push this change to GitHub using: `git push`
 
 You should now be able to visit your repository on [GitHub](https://github.com/) and see that your changes are now stored there as well!
