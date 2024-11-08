@@ -69,22 +69,25 @@ Are there any areas on which you would appreciate more detailed feedback if we'r
 
 # Response to Questions
 
+See the raw file for examples of how to hide computational output as there is code hidden here.
+
 ```{python}
+#| echo: False
 import os
 import pandas as pd
 ```
 
 ```{python}
+#| echo: False
 host = 'https://orca.casa.ucl.ac.uk'
 path = '~jreades/data'
-file = '20240614-London-listings.csv.gz'
-url  = f'{host}/{path}/{file}'
+file = '20240614-London-listings.parquet'
 
 if os.path.exists(file):
-  df = pd.read_csv(file, compression='gzip', low_memory=False)
+  df = pd.read_parquet(file)
 else: 
-  df = pd.read_csv(url, compression='gzip', low_memory=False)
-  df.to_csv(file, compression='gzip', index=False)
+  df = pd.read_parquet(f'{host}/{path}/{file}')
+  df.to_parquet(file)
 ```
 
 ## 1. Who collected the InsideAirbnb data?
@@ -95,9 +98,9 @@ else:
 
 :::
 
-An inline citation: As discussed on @insideairbnb, there are many...
+An inline citation example: As discussed on @insideairbnb, there are many...
 
-A parenthetical citation: There are many ways to research Airbnb [see, for example, @insideairbnb]... 
+A parenthetical citation example: There are many ways to research Airbnb [see, for example, @insideairbnb]... 
 
 ## 2. Why did they collect the InsideAirbnb data?
 
@@ -108,8 +111,11 @@ A parenthetical citation: There are many ways to research Airbnb [see, for examp
 :::
 
 ```{python}
-print(f"Data frame is {df.shape[0]:,} x {df.shape[1]:,}")
+#| output: asis
+print(f"One of way to embed output in the text looks like this: after cleaning, we were left with {df.shape[0]:,} rows of data.")
 ```
+
+This way is also supposed to work (`{python} f"{df.shape[0]:,}" `) but I've found it less reliable.
 
 ```{python}
 ax = df.host_listings_count.plot.hist(bins=50);
@@ -148,7 +154,7 @@ ax.set_xlim([0,500]);
 
 :::
 
-## 7. Drawing on your previous answers, and supporting your response with evidence (e.g. figures, maps, and statistical analysis/models), how *could* the InsideAirbnb data set be used to inform the regulation of Short-Term Lets (STL) in London? 
+## 7. Drawing on your previous answers, and supporting your response with evidence (*e.g.* figures, maps, EDA/ESDA, and simple statistical analysis/models drawing on experience from, e.g., CASA0007), how *could* the InsideAirbnb data set be used to inform the regulation of Short-Term Lets (STL) in London? 
 
 ::: {.duedate}
 
@@ -158,7 +164,9 @@ ax.set_xlim([0,500]);
 
 ## Sustainable Authorship Tools
 
-Your QMD file should automatically download your BibTeX file. We will then re-run the QMD file to generate the output successfully.
+Using the Terminal in Docker, you compile the Quarto report using `quarto render <group_submission_file>.qmd`.
+
+Your QMD file should automatically download your BibTeX and CLS files and any other required files. If this is done right after library loading then the entire report should output successfully.
 
 Written in Markdown and generated from [Quarto](https://quarto.org/). Fonts used: [Spectral](https://fonts.google.com/specimen/Spectral) (mainfont), [Roboto](https://fonts.google.com/specimen/Roboto) (<span style="font-family:Sans-Serif;">sansfont</span>) and [JetBrains Mono](https://fonts.google.com/specimen/JetBrains%20Mono) (`monofont`). 
 
