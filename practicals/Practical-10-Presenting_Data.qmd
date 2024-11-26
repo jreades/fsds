@@ -58,6 +58,24 @@ Nevertheless, the [core components of all matplotlib figures](https://matplotlib
 
 I find matplotlib's use of fonts to be _profoundly_ weird. If you use `conda` and install directly on to the computer then you _might_ have access to all of your computer's fonts (though there are different *types* of fonts as well, not all of which will show up), but for most users it will be those that were installed into Docker. 
 
+### Listing Fonts
+
+```{python}
+from matplotlib import font_manager
+from IPython.core.display import HTML
+
+flist = font_manager.findSystemFonts()
+names = [font_manager.FontProperties(fname=fname).get_name() for fname in flist]
+print(names)
+
+def make_html(fontname):
+    return "<p>{font}: <span style='font-family:{font}; font-size: 24px;'>{font}</p>".format(font=fontname)
+
+code = "\n".join([make_html(font) for font in sorted(set(names))])
+
+HTML("<div style='column-count: 2;'>{}</div>".format(code))
+```
+
 ### Using Fontconfig
 
 `fontconfig` is the base Linux utility for managing fonts. We can list font using `fc-list` and then a set of 'switches' determining the kind of information we want back. Since fontconfig doesn't exist on OSX or Windows, you'll need to do some more investigating and poking around to get these details on a `conda` install (I'll show an option further down)...
@@ -66,7 +84,7 @@ Here we ask fontconfig to format the output so that we only get the first part o
 
 ```{python}
 fonts = ! fc-list --format="%{family[0]}\n" | sort | uniq
-print(fonts)
+print(fonts[:15])
 ```
 
 ::: {.callout-tip}
@@ -80,7 +98,7 @@ The below option also pipes output from fonctconfig, but to the `grep` utility w
 
 ```{python}
 fonts = ! fc-list : family style | grep "Liberation"
-print(sorted(fonts))
+print(sorted(fonts)[:15])
 ```
 
 You can find more examples [here](https://www.geeksforgeeks.org/fc-list-command-in-linux-with-examples/), a more detailed set of instructions [here](https://www.freedesktop.org/software/fontconfig/fontconfig-user.html), and even information about (for example) [supported languages](https://thottingal.in/blog/2016/03/04/fontconfig-language-matching/) based on [RFC 3066](http://www.i18nguy.com/unicode/language-identifiers.html).
@@ -95,30 +113,6 @@ Here are the monospace fonts installed:
 
 ```{python}
 ! fc-list :spacing=mono : family | sort | uniq
-```
-
-### Using Python+Terminal
-
-Another way to get at this information is to try asking matplotlib what fonts it *already* knows about in its cache:
-
-```{python}
-import matplotlib
-loc = matplotlib.get_cachedir()
-!ls {loc}
-```
-
-Hopefully you will see a list of installed fonts when you run this next block of code. See if you can make sense of what this code does!
-
-```{python}
-fonts = !cat {loc + '/fontlist-v330.json'}
-fonts = set(list(filter(lambda x:'"name"' in x, fonts)))
-fonts = [x.replace('      "name": "','').replace('",','') for x in fonts]
-print(fonts)
-```
-
-```{python}
-fonts = ! fc-list : family style | grep "Ubuntu"
-print(sorted(fonts))
 ```
 
 ### Fontdicts
