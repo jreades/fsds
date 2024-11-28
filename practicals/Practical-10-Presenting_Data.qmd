@@ -48,11 +48,11 @@ You might want to bookmark the 'Anatomy of a Figure' image so that you can easil
 
 :::
 
-*One* of the reasons that Matplotlib is so much more complex than `ggplot` is that it can actually *do* a plot more than ggplot, including image manipulation, axis translation, and even 3D. You can get a sense of this by looking at [the tutorials](https://matplotlib.org/stable/tutorials/index.html) since the [Users guide](https://matplotlib.org/stable/users/index.html) can be a bit overwhelming.
+*One* of the reasons that Matplotlib is so much more complex than `ggplot` is that it can actually *do* a lot more than ggplot, including image manipulation, axis translation, and even 3D. You can get a sense of this by looking at [the tutorials](https://matplotlib.org/stable/tutorials/index.html) since the [Users guide](https://matplotlib.org/stable/users/index.html) can be a bit overwhelming.
 
 Nevertheless, the [core components of all matplotlib figures](https://matplotlib.org/stable/gallery/showcase/anatomy.html) can be seen here:
 
-<img src="https://matplotlib.org/stable/_images/sphx_glr_anatomy_001.png" alt="Anatomy of a Figure" style="width:50%" />
+<img src="https://matplotlib.org/stable/_images/sphx_glr_anatomy_001.png" alt="Anatomy of a Figure" style="width:75%" />
 
 ## Finding Fonts
 
@@ -60,16 +60,28 @@ I find matplotlib's use of fonts to be _profoundly_ weird. If you use `conda` an
 
 ### Listing Fonts
 
+::: {.callout-warning}
+
+Depending on how you are running the notebook, you may not be able to see all of the fonts available on your system. If the notebook is running in a Docker container it only has access to the fonts that are installed in the container. In other words: **don't panic if you don't see the font(s) you want.**.
+
+:::
+
 ```{python}
 from matplotlib import font_manager
 from IPython.core.display import HTML
 
 flist = font_manager.findSystemFonts()
-names = [font_manager.FontProperties(fname=fname).get_name() for fname in flist]
-print(names)
+names = []
+for fname in flist:
+    try:
+        names.append(font_manager.FontProperties(fname=fname).get_name())
+    except RuntimeError:
+        pass # Think the issue is emoji-support/colour fonts
+
+print(f"Found {len(names)} fonts.")
 
 def make_html(fontname):
-    return "<p>{font}: <span style='font-family:{font}; font-size: 24px;'>{font}</p>".format(font=fontname)
+    return "<p>{font}: <span style='font-family:{font}; font-size: 18px;'>{font}</p>".format(font=fontname)
 
 code = "\n".join([make_html(font) for font in sorted(set(names))])
 
