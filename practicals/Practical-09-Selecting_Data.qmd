@@ -718,7 +718,7 @@ Notice how we're also demonstrating some additional ways of plotting 'on the fly
 :::
 
 ```{python}
-ldn = gpd.GeoDataFrame(gpd.GeoSeries(data=boros.unary_union)).rename(columns={0:'geometry'}).set_geometry("geometry")
+ldn = gpd.GeoDataFrame(gpd.GeoSeries(data=boros.union_all())).rename(columns={0:'geometry'}).set_geometry("geometry")
 ldn = ldn.set_crs(epsg=27700)
 ax  = ldn.plot(facecolor=(.5, .5, .9, .5))
 msoas.plot(ax=ax, facecolor='none', edgecolor=(.6, .6, .6, .6))
@@ -764,7 +764,7 @@ ax.set_ylim(180000, 195000);
 #### Answer
 
 ```{python}
-ldn['buffered'] = ldn.geometry.buffer(250)
+ldn['buffered'] = ldn.geometry.buffer(250) # The buffer size isn't that important
 ldn = ldn.set_geometry('buffered').set_crs(epsg=27700)
 ax  = ldn.plot(facecolor=(.5, .5, .9, .5))
 msoas.plot(ax=ax, facecolor='none', edgecolor=(.6, .6, .6, .6))
@@ -794,31 +794,19 @@ ldn_msoas.plot()
 
 ::::
 
-:::: {.qna}
+#### Important Note
 
-#### Question
-
-Hmmmm, not quite what you were expecting? See if you can figure out from the list of columns and the documentation for `set_geometry` what is going wrong? This might also help:
+If your plot above looks like the output from `pandas` and not `geopandas` then the list of columns and the documentation for `set_geometry` might help you to understand what is going wrong:
 
 ```{python}
 print(", ".join(ldn_msoas.columns.to_list()))
 ```
 
-#### Answer
+It's important to recognise that `join` and `sjoin` are *not* the same even though they may effectively perform the same function. An issue can arise if we join two *geodata* frames using the join function from `pandas`. The latter doesn't know anything about spatial data and we can therefore 'lose track' of the geometry column. *Worse*, there are actually two geometry columns now, so we need to tell Geopandas which one to use!
 
-```{python}
-ax = ldn_msoas.set_geometry('geometry_left').plot(linewidth=2, facecolor='none', edgecolor=(.6, .6, .6, .6))
-ax.set_xlim(500000, 515000)
-ax.set_ylim(180000, 195000)
-```
+The easiest way to do this is to simply rename the geometry we *want* and then set is as the active geometry. Here's the code to use if you have a `geometry_left` column and aren't able to show a map:
 
-::::
-
-The issue arises because we've joined two geo-data frames but the join function comes from pandas, which doesn't know anything about spatial data and we have therefore 'lost track' of the column in which the geometry is stored. *Worse*, there are actually two geometry columns now, so we need to tell Geopandas which one to use!
-
-The easiest way to do this is to simply rename the geometry we *want* and then set is as the active geometry:
-
-```{python}
+```python
 ldn_msoas = ldn_msoas.rename(columns={'geometry_left':'geometry'}).set_geometry('geometry')
 ldn_msoas.drop(columns='geometry_right', inplace=True)
 ```
@@ -836,7 +824,7 @@ except NameError:
 
 #### Question
 
-- Can you explain *why* the outputs of the `dissolve` and `unary_union` *look* differnet? And use that as the basis for explaining why they *are* different?
+- Can you explain *why* the outputs of the `dissolve` and `union_all` *look* differnet? And use that as the basis for explaining why they *are* different?
 
 > Answer 1
 

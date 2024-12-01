@@ -78,7 +78,7 @@ for fname in flist:
     except RuntimeError:
         pass # Think the issue is emoji-support/colour fonts
 
-print(f"Found {len(names)} fonts.")
+print(f"Found {len(set(names))} fonts.")
 
 def make_html(fontname):
     return "<p>{font}: <span style='font-family:{font}; font-size: 18px;'>{font}</p>".format(font=fontname)
@@ -96,7 +96,7 @@ Here we ask fontconfig to format the output so that we only get the first part o
 
 ```{python}
 fonts = ! fc-list --format="%{family[0]}\n" | sort | uniq
-print(fonts[:15])
+print(fonts[:5])
 ```
 
 ::: {.callout-tip}
@@ -110,7 +110,7 @@ The below option also pipes output from fonctconfig, but to the `grep` utility w
 
 ```{python}
 fonts = ! fc-list : family style | grep "Liberation"
-print(sorted(fonts)[:15])
+print(sorted(fonts)[:5])
 ```
 
 You can find more examples [here](https://www.geeksforgeeks.org/fc-list-command-in-linux-with-examples/), a more detailed set of instructions [here](https://www.freedesktop.org/software/fontconfig/fontconfig-user.html), and even information about (for example) [supported languages](https://thottingal.in/blog/2016/03/04/fontconfig-language-matching/) based on [RFC 3066](http://www.i18nguy.com/unicode/language-identifiers.html).
@@ -118,13 +118,15 @@ You can find more examples [here](https://www.geeksforgeeks.org/fc-list-command-
 Here are the languages supported by the Ubuntu Light font:
 
 ```{python}
-! fc-list "Liberation Mono" : lang
+langs = ! fc-list "Liberation Mono" : lang
+print(sorted(langs)[:5], "...")
 ```
 
 Here are the monospace fonts installed: 
 
 ```{python}
-! fc-list :spacing=mono : family | sort | uniq
+monos = ! fc-list :spacing=mono : family | sort | uniq
+print(sorted(monos)[:5], "...")
 ```
 
 ### Fontdicts
@@ -142,9 +144,10 @@ font = {'family': 'serif',
 ```
 
 ```{python}
-tfont = {'fontname':'Liberation Sans Narrow', 'weight':'bold'}
-bfont = {'fontname':'Liberation Sans Narrow', 'weight':'normal', 'horizontalalignment':'left'}
-afont = {'fontname':'Liberation Sans Narrow', 'weight':'light'}
+ff='Liberation Sans'
+tfont = {'fontname':ff}
+bfont = {'fontname':ff, 'weight':'bold', 'horizontalalignment':'left'}
+afont = {'fontname':ff}
 ```
 
 I am setting the 'title font' (`tfont`) and 'body copy font' (`bfont`) and 'axis font' (`afont`) here to use in the output below. You can pick another font and see what happens. 
@@ -486,7 +489,10 @@ msoageo.total_bounds
 And map it!
 
 ```{python}
-p = bokeh_plot_map(msoageo, 'median', title=f'MSOA-Level Activity in {LA}')
+# Need to drop the right geometry column
+# as Bokeh doesn't know how to handle two
+# and tries to 'serialise' the second geom.
+p = bokeh_plot_map(msoageo.drop(columns=['geometry_right','index_right']), 'median', title=f'MSOA-Level Activity in {LA}')
 
 handle = show(p, notebook_handle=True)
 push_notebook(handle=handle)
