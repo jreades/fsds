@@ -28,6 +28,8 @@ jupyter:
     name: base
 ---
 
+This file shows the fonts installed and accessible to Quarto/Matplotlib. It's used partly to audit the latest Docker/Podman image release and partly to allow students to explore what is available in a reasonably intuitive fashion.
+
 ## Raw List
 
 Taken directly from Matplotlib's font cache:
@@ -38,7 +40,13 @@ Taken directly from Matplotlib's font cache:
 
 ## Formatted List
 
-Taken from Matplotlib's font manager tool:
+Taken from Matplotlib's font manager tool.
+
+::: {.callout-warning}
+
+Please note that fonts may not render correctly in Safari, but will do so in Google Chrome and other browsers. The *list* is correct and these fonts *can* be used to render PDFs from Quarto.
+
+:::
 
 ```{python}
 from matplotlib import font_manager
@@ -55,7 +63,7 @@ for fname in flist:
 print(f"Found {len(set(names))} valid fonts.")
 
 def make_html(fontname):
-    return "<p><span style='font-family:{font}; font-size: 20px;'>{font}</p>".format(font=fontname)
+    return "<p><span style='font-family:{font}; font-size: 20px;'>{font}</span></p>".format(font=fontname)
 
 code = "\n".join([make_html(font) for font in sorted(set(names))])
 
