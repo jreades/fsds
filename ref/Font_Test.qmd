@@ -1,0 +1,66 @@
+---
+title: "Installed Font Test"
+jupyter:
+  kernelspec:
+    display_name: Python (base)
+    language: python
+    name: base
+---
+
+## Raw List
+
+Taken directly from Matplotlib's font cache:
+
+```{python}
+! grep '"name"' ~/.cache/matplotlib/fontlist-v390.json | sort | uniq
+```
+
+## Formatted List
+
+Taken from Matplotlib's font manager tool:
+
+```{python}
+from matplotlib import font_manager
+from IPython.core.display import HTML
+
+flist = font_manager.findSystemFonts()
+names = []
+for fname in flist:
+    try:
+        names.append(font_manager.FontProperties(fname=fname).get_name())
+    except RuntimeError:
+        print(f"- Problem detected with {fname}, skipping...") # Think the issue is emoji-support/colour fonts
+
+print(f"Found {len(set(names))} valid fonts.")
+
+def make_html(fontname):
+    return "<p>{font}: <span style='font-family:{font}; font-size: 14px;'>{font}</p>".format(font=fontname)
+
+code = "\n".join([make_html(font) for font in sorted(set(names))])
+
+HTML("<div style='column-count: 2;'>{}</div>".format(code))
+```
+
+## Plotting Test
+
+A quick test to ensure that a font is rendering correctly.
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+x = np.random.random(20)
+y = np.random.random(20)
+
+ff = 'SPectral SC'
+tfont = {'fontname':ff}
+bfont = {'fontname':ff, 'weight':'bold', 'horizontalalignment':'left'}
+afont = {'fontname':ff}
+
+f,ax = plt.subplots(1,1,figsize=(7,5))
+plt.scatter(x,y)
+f.suptitle("Testing Font Spec", x=0.025, ha='left', size=24, **tfont)
+ax.set_ylabel('Median Price', size=20, **afont)
+ax.set_xlabel('Count', size=20, **afont)
+```
+
+
