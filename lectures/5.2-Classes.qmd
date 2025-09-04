@@ -167,11 +167,80 @@ This is a *class* variable (in the class definition):
   <var> = <something>
 ```
 
-
 # Respect Your *Self*
 
 > So the keyword `self` refers to the *instantiated* object: the object always passes a reference to itself as the **first parameter** in any method.
 
+## Decorating a Class
+
+Classes have additional [decorators](./4.2-Decorators.qmd) you can use:
+
+1. `@staticmethod`: binds any function to a class so objects can use it (but no object or class information is passed to static methods).
+2. `@classmethod`: decorates a function for use by a class, *not* an object (accesses and modifies class state).
+3. `@property`: create 'managed' attributes in classes to 'hide' them from users but keep code clean.
+
+## Class and Static Methods^[From [Geeks for Geeks](https://www.geeksforgeeks.org/python/class-method-vs-static-method-python/).] {.smaller}
+
+```{python}
+from datetime import date
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    # a class method to create a Person object by birth year.
+    @classmethod
+    def fromBirthYear(cls, name, year):
+        return cls(name, date.today().year - year)
+
+    # a static method to check if a Person is adult or not.
+    @staticmethod
+    def isAdult(age):
+        return age > 18
+
+person1 = Person('Andy', 31)
+person2 = Person.fromBirthYear('Jon', 1976)
+
+print(person1.age)
+print(person2.age)
+print(Person.isAdult(22))
+```
+
+## Properties^[Example from [Real Python](https://realpython.com/python-property/).] {.smaller}
+
+```{python}
+class Circle:
+    def __init__(self, radius):
+        self._radius = radius
+
+    @property
+    def radius(self):
+        """The radius property."""
+        print("Get radius")
+        return self._radius
+
+    @radius.setter
+    def radius(self, value):
+        print("Set radius")
+        self._radius = value
+
+    @radius.deleter
+    def radius(self):
+        print("Delete radius")
+        del self._radius
+
+circle = Circle(42.0)
+print(circle.radius)
+circle.radius = 100
+print(circle.radius)
+del(circle.radius)
+```
+
+::: {.notes}
+
+This is a simple example, but notice how we are accessing an attribute with the potential to 'do things' before or after accessing the value of interest. This could have all sorts of useful applications in the real world where lots of things are happening to an application at the same time.
+
+:::
 
 ## Additional Resources {.smaller}
 

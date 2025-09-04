@@ -6,7 +6,7 @@ other: ""
 date-as-string: "1st October 2025"
 format: revealjs
 ---
-
+ 
 ## What is it?
 
 <div align="center">
@@ -177,9 +177,7 @@ Choose the chart to highlight relationships, or the lack thereof:
 # If a picture is worth 1,000 words, make sure those words aren't "blah, blah, blah..."
 
 
-# Beyond the Chart
-
-## Not Everyone Likes Tables
+# Not Everyone Likes Tables
 
 > Getting information from a table is like extracting sunlight from a cucumber.
 > Arthur & Henry Fahrquhar 1891)
@@ -243,214 +241,19 @@ Principles:
 - Remove redundancy (if you find yourself typing ‘millions’ or ‘GBP’ or ‘Male’ repeatedly then you’ve got redundancy).
 - Ensure that meta-data is clearly separate from, but attached to, the graph (*i.e.* source, title, etc.).
 
-
-# In Practice
-
-## Getting Started {.smaller}
-
-You can follow along by loading the Inside Airbnb sample:
-
-```python
-import pandas as pd
-import geopandas as gpd
-url='https://bit.ly/3I0XDrq'
-df = pd.read_csv(url)
-df.set_index('id', inplace=True)
-df['price'] = df.price.str.replace('$','',regex=False).astype('float')
-gdf = gpd.GeoDataFrame(df, 
-            geometry=gpd.points_from_xy(
-                        df['longitude'], 
-                        df['latitude'], 
-                        crs='epsg:4326'
-            )
-      )
-gdf.to_file('Airbnb_Sample.gpkg', driver='GPKG')
-```
-
-::: {.notes}
-Note that this  (re)loads the sampled Airbnb data from GitHub every time you run it. For a large data set on someone else'e server you might want to save and (re)load it locally. A simple helper function would then just check if the file already existed locally *before* trying to download the file again: that would allow you to work while offline and speed up your code substantially too!
-:::
-
-## What Can We Do? (Series) {.smaller}
-
-This is by no means all that we can do...
-
-+---------------------------------------------------------+--------------------------+
-| Command                                                 | Returns                  |
-+=========================================================+==========================+
-| ```python                                               | ```                      |
-| print(f"Host count is {gdf.host_name.count()}")         | Count of non-nulls       |
-| print(f"Mean is {gdf.price.mean():.0f}")                | Mean                     |
-| print(f"Max price is {gdf.price.max()}")                | Highest value            |
-| print(f"Min price is {gdf.price.min()}")                | Lowest value             |
-| print(f"Median price is {gdf.price.median()}")          | Median                   |
-| print(f"Standard dev is {gdf.price.std():.2f}")         | Standard deviation       |
-| print(f"25th quantile is {gdf.price.quantile(q=0.25)}") | 25th quantile            |
-| ```                                                     | ```                      |
-+---------------------------------------------------------+--------------------------+
-
-: Series-level Methods.
-
-## What Can We Do? (Data Frame) {.smaller}
-
-+----------------------+------------------------------------------+
-| Command              | Returns                                  |
-+======================+==========================================+
-| ```python            | ```                                      |
-| print(df.mean())     | Mean of each column                      |
-| print(df.count())    | Number of non-null values in each column |
-| print(df.max())      | Highest value in each column             |
-| # ...                | $\vdots$                                 |
-| print(df.corr())     | Correlation between columns              |
-| print(df.describe()) | Summarise                                |
-| ```                  | ```                                      |
-+----------------------+------------------------------------------+
-
-::: {.notes}
-
-Notice how we have the *same* functionality, but it operates at the level of the data set itself now. We gain a few *new* functions as well that relate to interactions between columns (a.k.a. data series).
-
-:::
-
-## Measures
-
-So pandas provides functions for commonly-used measures:
-
-```python
-print(f"{df.price.mean():.2f}")
-print(f"{df.price.median():.2f}")
-print(f"{df.price.quantile(0.25):.2f}")
-```
-
-Output:
-```
-118.4542
-80.50
-40.75
-```
-
-## More Complex Measures {.smaller}
-
-But Pandas *also* makes it easy to derive new variables... Here's the *z*-score:
-
-$$ z = \frac{x - \bar{x}}{s}$$
-
-```python
-df['zscore'] = (df.price - df.price.mean())/df.price.std()
-df.plot.box(column='zscore')
-```
-
-![](./img/Price_BoxPlot.png)
-
-## And Even More Complex {.smaller}
-
-And here's the Interquartile Range Standardised score:
-
-$$ x_{iqrs} = \frac{x - \widetilde{x}}{Q_{75} - Q_{25}} $$
-
-```python
-df['iqr_std'] = (df.price - df.price.median())/ \
-      (df.price.quantile(q=0.75)-df.price.quantile(q=0.25))
-df.plot.box(column='iqr_std')
-```
-
-![](./img/Price_IQR_Standardised.png)
-
-
-## The Plot Thickens
-
-We'll get to more complex plotting over the course of the term, but here's a good start for *exploring* the data! All plotting depends on `matplotlib` which is the ogre in the attic to R's `ggplot`.
-
-```python
-import matplotlib.pyplot as plt
-```
-
-Get used to this import as it will allow you to save and manipulate the figures created in Python. It is *not* the most intuitive approach (unless you've used MATLAB before) but it *does* work. 
-
-# **Confession Time:** I *do* like `ggplot` and sometimes even finish off graphics for articles in R *just* so that I can use `ggplot`; however, it *is* possible to generate great-looking figures in `matplotlib` but it is often more work because it's a _lot_ less intuitive.
-
-
-## Boxplot
-
-```python
-df.price.plot.box()
-plt.savefig('pboxplot.png', dpi=150, transparent=True)
-```
-
-![](img/pboxplot.png)
-
-
-## Frequency
-
-```python
-df.room_type.value_counts().plot.bar()
-plt.savefig('phistplot.png', dpi=150, transparent=True)
-```
-
-![](img/phistplot.png)
-
-
-## A Correlation Heatmap
-
-We'll get to these in more detail in a couple of weeks, but here's some output... 
-
-![](img/correlation.png)
-
-
-## A 'Map'
-
-```python
-df.plot.scatter(x='longitude',y='latitude')
-plt.savefig('pscatterplot.png', dpi=150, transparent=True)
-```
-
-![](img/pscatterplot.png)
-
-
-## A Fancy 'Map'
-
-```python
-df.plot.scatter(x='longitude',y='latitude',
-                c='price',colormap='viridis',
-                figsize=(10,5),title='London',
-                grid=True,s=24,marker='x')
-plt.savefig('pscatterplot.png', dpi=150, transparent=True)
-```
-
-![](img/pscatterplot-fancy.png)
-
-
-## An Actual 'Map'
-
-```python
-gdf.plot(column='price', cmap='viridis', 
-         scheme='quantiles', markersize=8, legend=True)
-```
-
-![](img/scattermap.png)
-
-
 ## Additional Resources {.smaller}
 
 There's [so much more](https://www.google.com/search?q=eda+with+pandas) to find, but:
 
 :::: {.columns}
 ::: {.column width="50%"}
-- [Pandas Reference](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.plot.html)
-- [A Guide to EDA in Python](https://levelup.gitconnected.com/cozy-up-with-your-data-6aedfb651172) (Looks very promising)
-- [EDA with Pandas on Kaggle](https://www.kaggle.com/kashnitsky/topic-1-exploratory-data-analysis-with-pandas)
-- [EDA Visualisation using Pandas](https://towardsdatascience.com/exploratory-data-analysis-eda-visualization-using-pandas-ca5a04271607)
-- [Python EDA Analysis Tutorial](https://www.datacamp.com/community/tutorials/exploratory-data-analysis-python)
-- [Better EDA with Pandas Profiling](https://towardsdatascience.com/a-better-eda-with-pandas-profiling-e842a00e1136) **[Requires module installation]**
-- [EDA: DataPrep.eda vs Pandas-Profiling](https://towardsdatascience.com/exploratory-data-analysis-dataprep-eda-vs-pandas-profiling-7137683fe47f) **[Requires module installation]**
+- [26 Ways to Enhance your Tables in Tableau](https://www.phdata.io/blog/enhancing-tables-in-tableau/)
+- [Tables Aren't Boring, You Are](https://www.makeit-makesense.com/data/tables-arent-boring-you-are)
 :::
 ::: {.column width="50%"}
-- [A Data Science Project for Beginners (EDA)](https://medium.com/analytics-vidhya/a-data-science-project-for-beginners-exploratory-data-analysis-eda-d334f58f94ee)
-- [EDA: A Pracitcal Guide and Template for Structured Data](https://towardsdatascience.com/exploratory-data-analysis-eda-a-practical-guide-and-template-for-structured-data-abfbf3ee3bd9)
-- [EDA—Don't ask how, ask what](https://medium.com/towards-artificial-intelligence/exploratory-data-analysis-eda-dont-ask-how-ask-what-2e29703fb24a) (Part 1)
-- [Preparing your Dataset for Modeling – Quickly and Easily](https://medium.com/towards-artificial-intelligence/preparing-your-dataset-for-modeling-quickly-and-easily-c8c1b89fdb2e) (Part 2)
-- [Handling Missing Data](https://towardsdatascience.com/handling-missing-data-for-a-beginner-6d6f5ea53436)
-- [Introduction to Exploratory Data Analysis (EDA)](https://medium.com/code-heroku/introduction-to-exploratory-data-analysis-eda-c0257f888676)
+- [The Visual Display of Quantitative Information](https://www.edwardtufte.com/book/the-visual-display-of-quantitative-information/) [the @tufte:1983 classic]
+- [Why Tufte's Wrong...](https://medium.com/@MattDuignan/why-tuftes-wrong-a9bd6a14ff8e)
+- [Tufte is Dead; Long Live Tufte](https://medium.com/the-ux-book-club/tufte-is-dead-long-live-tufte-21f830a0cfa8)
 :::
 :::: 
 

@@ -113,62 +113,29 @@ fig.savefig('Random.png', dpi=150, transparent=True)
 ![](./img/Random.png)
 
 
-# Seeding Keys
+# Seeds and Salts
 
-Computers actually use *pseudo*-random number generators. If they are initialised with a *seed* the will generate the *same* sequence.
+> Computers are *pseudo*-random number generators. Seeds and salts ensure different outputs from the same inputs.
 
-::: {.notes}
-
-You might look at that uniform distribution and think 'not bad', but that's not good enough for encryption and it's also not good for reproducibility.
-
-:::
-
-## Setting a Seed
-
-Two main libraries where seeds are set:
-```python
-import random
-random.seed(42)
-
-import numpy as np
-np.random.seed(42)
-```
+I like [schroeder](https://security.stackexchange.com/a/80988)'s Stack Exchange answer that **seeds** must be secret to protect encryption, while **salts** are generally not secret but make simple attacks harder. 
 
 ::: {.notes}
 
-Why do you often see 42 used as a seed?
+How does that work? Well when you are hashing data a salt combines with the input to generate an ouput that is one-way only — if you use different salts for different users then an attacker who gains access to your account's salt *still* needs to guess lots of passwords to see which one combines with the salt to generate your passward hash. But encryption is reversible, so if I know how you generated the output then I can reverse it to get the input — an encrypted message.
+
+- Hashing is irreversible therefore cannot be compressed and is not a form of encryption as it is a one-way function
+- Salt is added before hashing → then hashed
+- Salts are different even if the seed is the same
+- Digest is the result of hashing → a unique format
+- Digests are the same if the seed is the same
+- Encryption is reversible with a decryption key, while hashing is one-way and irreversible
+- Digests and Salts are not forms of Encryption
 
 :::
 
-## Seeds and State
+## Just add salt
 
-```python
-import random
-random.seed(42)
-st = random.getstate()
-for r in range(0,3):
-    random.setstate(st)
-    print(f"Repetition {r}:")
-    ints = []
-    for i in range(0,10):
-        ints.append(random.randint(0,10))
-    print(f"\t{ints}")
-```
-
-
-# Question!
-
-Where would you use a mix of randomness and reproducbility as part of a *data* analysis process?
-
-
-
-::: {.notes}
-
-Hint: With a large data set it will often be useful to be able draw a random... what? But for reproducible analysis we will that random... what?... to be the same each time!
-
-:::
-
-# Other Applications
+![](./img/Hashing_and_Salts.png)
 
 ## Hashing {.smaller}
 
@@ -227,7 +194,7 @@ But notice that hashes are always the same length. This property is quite useful
 
 ## JupyterLab Password {.smaller}
 
-You may have noticed this in Docker:
+To set a password in JupyterLab you need something like this:
 ```bash
 'sha1:5b1c205a53e14e:0ce169b9834984347d62b20b9a82f6513355f72d'
 ```
@@ -253,10 +220,6 @@ Don't set your passwords [this way](https://edition.cnn.com/2019/04/22/uk/most-c
 Then you can replace the `JUPYTER_PWD` parameter in the start-up string for Docker if you want to set a password.
 :::
 
-## Just add salt
-
-![](./img/Hashing_and_Salts.png)
-
 ## Encryption & Security
 
 Simple hashing algorithms are not normally secure enough for full encryption. Genuine security training takes a whole degree + years of experience.
@@ -267,6 +230,50 @@ Areas to look at if you get involved in applications:
 - Privileges used by Applications (esp. Docker)
 - Revocable Tokens (e.g. for APIs)
 - Injection Attacks (esp. for SQL using NULL-byte and similar)
+
+## Other Types of Seeds
+
+Two main libraries where seeds are set:
+```python
+import random
+random.seed(42)
+
+import numpy as np
+np.random.seed(42)
+```
+
+::: {.notes}
+
+Turning now from the security aspects, let's look at other types seeds.
+
+Why do you often see 42 used as a seed?
+
+:::
+
+## Seeds and State
+
+```python
+import random
+random.seed(42)
+st = random.getstate()
+for r in range(0,3):
+    random.setstate(st)
+    print(f"Repetition {r}:")
+    ints = []
+    for i in range(0,10):
+        ints.append(random.randint(0,10))
+    print(f"\t{ints}")
+```
+
+# Question!
+
+Where would you use a mix of randomness and reproducbility as part of a *data* analysis process?
+
+::: {.notes}
+
+Hint: With a large data set it will often be useful to be able draw a random... what? But for reproducible analysis we will that random... what?... to be the same each time!
+
+:::
 
 # Thank You {background-image="/img/web/title-slide.png" background-color="#0F0C11" background-opacity="0.2"}
 

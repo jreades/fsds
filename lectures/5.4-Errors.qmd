@@ -90,11 +90,14 @@ except CustomError:
   #... do something with CustomError ...
 ```
 
-This means that exceptions could accept custom arguments, perform tidying-up or rollback operations, etc.
+## Why Customise?
 
-::: {.notes}
-Some of the intricacies of errors can seem quite confusing. What's the point of having a `finally` (which we'll get to in a moment), for instance? Well, if your application is connected to a database then `finally` gives your application a chance to disconnect cleanly (freeing up resources for the database) and even to rollback incomplete changes (e.g. a new user whose details were only partially inputted when the application crashed).
-:::
+Custom exceptions can perform a variety of tasks:
+
+1. Distinguish between generic issues and those specific to your application.
+2. Triage issues based on your understanding of your application and the severity.
+3. Provide detailed insight based on fuller access to the state of your application.
+4. Perform important tidying-up or rollback operations, etc.
 
 ## So Errors can be Trapped
 
@@ -115,6 +118,7 @@ You can use *any* or *all* of these together: you can have multiple named `excep
 
 So it makes sense to think: "Well, let's **try** this and see what happens. If we have a problem of *this* type then it's not serious and we should carry on. But if we have a problem *that* type then we need to stop what we're doing right away."
 
+Some of the intricacies of errors can seem quite confusing. What's the point of having a `finally` (which we'll get to in a moment), for instance? Well, if your application is connected to a database then `finally` gives your application a chance to disconnect cleanly (freeing up resources for the database) and even to rollback incomplete changes (e.g. a new user whose details were only partially inputted when the application crashed).
 :::
 
 ## Trapping Errors
