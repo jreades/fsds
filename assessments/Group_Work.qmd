@@ -54,34 +54,30 @@ Date:
 
 Student Numbers: 
 
-## Brief Group Reflection
-
-| What Went Well | What Was Challenging |
-| -------------- | -------------------- |
-| A              | B                    |
-| C              | D                    |
-
 ## Priorities for Feedback
 
 Are there any areas on which you would appreciate more detailed feedback if we're able to offer it?
 
 {{< pagebreak >}}
 
-# Response to Questions
+# Code Example
+
+This page has example code to show you can include outputs while hiding code in Quarto, as well as some tools for interpolating data in the text. Remove this page (up to the next `pagebreak`) prior to submission!
 
 See the raw file for examples of how to hide computational output as there is code hidden here.
 
 ```{python}
-#| echo: False
+#| echo: True 
+# This code will be shown, 
+# but the next block will not
 import os
 import pandas as pd
 ```
 
 ```{python}
-#| echo: False
 host = 'https://orca.casa.ucl.ac.uk'
 path = '~jreades/data'
-file = '20240614-London-listings.parquet'
+file = '20250615-London-listings.parquet'
 
 if os.path.exists(file):
   df = pd.read_parquet(file)
@@ -90,84 +86,34 @@ else:
   df.to_parquet(file)
 ```
 
-## 1. Who collected the InsideAirbnb data?
-
-::: {.duedate}
-
-( 2 points; Answer due Week 7 )
-
-:::
-
 An inline citation example: As discussed on @insideairbnb, there are many...
 
 A parenthetical citation example: There are many ways to research Airbnb [see, for example, @insideairbnb]... 
 
-## 2. Why did they collect the InsideAirbnb data?
-
-::: {.duedate}
-
-( 4 points; Answer due Week 7 )
-
-:::
-
 ```{python}
 #| output: asis
+# This is one way to write dynamic text (as markdown, basically)
+# The other way is to ensure that your variables are *simple* 
+# data types that Quarto can understand.
 print(f"One of way to embed output in the text looks like this: after cleaning, we were left with {df.shape[0]:,} rows of data.")
 ```
 
-This way is also supposed to work (`{python} f"{df.shape[0]:,}" `) but I've found it less reliable.
+```{python}
+# This should also work, but is sometimes less predictably
+# reliable.
+row_count = f"{df.shape[0]:,}"
+```
+This way is also supposed to work (`{python} row_count `) but I've found it less reliable.
 
 ```{python}
 ax = df.host_listings_count.plot.hist(bins=50);
 ax.set_xlim([0,500]);
 ```
 
-## 3. How did they collect it?
+{{< pagebreak >}}
 
-::: {.duedate}
+# Briefing
 
-( 5 points; Answer due Week 8 )
-
-:::
-
-## 4. How does the method of collection (Q3) impact the completeness and/or accuracy of the InsideAirbnb data? How well does it represent the process it seeks to study, and what wider issues does this raise?
-
-::: {.duedate}
-
-( 11 points; Answer due Week 9 )
-
-:::
-
-## 5. What ethical considerations does the use of the InsideAirbnb data raise? 
-
-::: {.duedate}
-
-( 18 points; Answer due {{< var assess.group-date >}} )
-
-:::
-
-## 6. With reference to the InsideAirbnb data (*i.e.* using numbers, figures, maps, and descriptive statistics), what does an analysis of Hosts and the types of properties that they list suggest about the nature of Airbnb lettings in London? 
-
-::: {.duedate}
-
-( 15 points; Answer due {{< var assess.group-date >}} )
-
-:::
-
-## 7. Drawing on your previous answers, and supporting your response with evidence (*e.g.* figures, maps, EDA/ESDA, and simple statistical analysis/models drawing on experience from, e.g., CASA0007), how *could* the InsideAirbnb data set be used to inform the regulation of Short-Term Lets (STL) in London? 
-
-::: {.duedate}
-
-( 45 points; Answer due {{< var assess.group-date >}} )
-
-:::
-
-## Sustainable Authorship Tools
-
-Using the Terminal in Docker, you compile the Quarto report using `quarto render <group_submission_file>.qmd`.
-
-Your QMD file should automatically download your BibTeX and CLS files and any other required files. If this is done right after library loading then the entire report should output successfully.
-
-Written in Markdown and generated from [Quarto](https://quarto.org/). Fonts used: [Spectral](https://fonts.google.com/specimen/Spectral) (mainfont), [Roboto](https://fonts.google.com/specimen/Roboto) (<span style="font-family:Sans-Serif;">sansfont</span>) and [JetBrains Mono](https://fonts.google.com/specimen/JetBrains%20Mono) (`monofont`). 
+{{< include _questions.qmd >}}
 
 ## References
