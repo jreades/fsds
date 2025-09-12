@@ -1,0 +1,105 @@
+---
+title: Running Multiple Containers
+author: Jon Reades
+date: last-modified
+format: html
+---
+
+### Step 1. Find a PostGIS Image
+
+Search https://quay.io/ -- on a Mac you now need to find arm64 images, on Windows it's amd64; however, in most cases you don't need to find these explicitly because 'builds' are completed for both.
+
+### Step 2. Create a 'Pod'
+
+This pod exposes two 'ports' (8888 and 5432) to the wider world. 
+
+```bash
+podman pod create -p 8888:8888 -p 5432:5432 myapp
+```
+
+In this case we 'map' 8888 inside the pod to 8888 outside the pod, but we could change this: `-p 7777:8888` so that requests for `7777` from the outside world are 'forwarded' to `8888` inside the pod. 
+
+### Step 3. Attach the PostGIS Container
+
+There's a lot going on here that took quite some to figure out, but the key thing turned out to be the `pg_hba.conf` file which tells Postgres on which ports it can listen.
+
+```bash
+podman run --rm -d --name postgres --pod myapp \
+-e POSTGRES_USER=postgres \
+-e POSTGRES_PASSWORD=test \
+-e POSTGRES_DB=test \
+-e PGDATA=/var/lib/postgresql/data/pgdata \
+-v "${PWD}"/data/postgres:/var/lib/postgresql/data \
+-v /tmp:/tmp \
+-v "${PWD}"/data/postgres/pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf quay.io/taolu/postgis:14-3.5-alpine
+```
+
+You can now connect using `psql` on 5432.
+
+### Step 4. Attach the SDS Container
+
+```bash
+podman run --rm -d --name sds --pod=myapp \
+-v "$(pwd):/home/jovyan/work" \
+docker.io/jreades/sds:2025-arm \
+start.sh jupyter lab --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
+```
+
+You can now connect using your browser: [http://localhost:8888/](http://localhost:8888/)
+
+### Step 5. Install psycopg2
+
+`pip install psycopg2` -- `sqlalchemy` already there but `psycopg2` isn't
+
+#### Load Some Data
+
+```python
+from sqlalchemy import create_engine
+engine = create_engine('postgresql://postgres:test@localhost:5432/test')
+
+import geopandas as gpd
+gdf = gpd.read_file('work/data/src/TM_WORLD_BORDERS-0.3.gpkg')
+gdf.to_postgis('world', engine)
+```
+
+### Step 6. Run Python
+
+```python
+insp = inspect(engine) 
+insp.get_table_names()
+```
+
+```python
+import geopandas as gpd
+
+gdf = gpd.read_postgis('SELECT * FROM msoa', geom_col='geometry', con=engine)
+
+gdf.head(2)
+```
+
+````python
+gdf.plot()
+````
+
+```python
+gdf = gpd.read_postgis("""
+    SELECT * 
+    FROM msoa 
+    WHERE "MSOA21NM" LIKE 'Waltham%%'
+""", geom_col='geometry', con=con)
+gdf.plot()
+```
+
+#### Query the Data without Python
+
+```bash
+psql -h localhost -p 5432 -U postgres -d test
+```
+
+```sql
+SELECT * FROM world LIMIT 0;
+SELECT "NAME", "ISO3", "POP2005", "REGION" FROM world LIMIT 5;
+SELECT "NAME", "POP2005" FROM world WHERE AREA > 900000;
+```
+
+### 

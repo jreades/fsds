@@ -1,0 +1,463 @@
+---
+author: "Jon Reades"
+email: "j.reades@ucl.ac.uk"
+title: "Tools of the Trade"
+other: ""
+date-as-string: "1st October 2025"
+format: revealjs
+nocite: |
+  @Abhinav:2025
+---
+
+## Literate Programming
+
+Ideally, we want to 'do' data science in ways that are '[literate](https://en.wikipedia.org/wiki/Literate_programming)'.
+
+> The best programs are written so that computing machines can perform them quickly and so that human beings can understand them clearly. A programmer is ideally an essayist who works with traditional aesthetic and literary forms as well as mathematical concepts, to communicate the way that an algorithm works and to convince a reader that the results will be correct. ~ @knuth:1996
+
+## Key Tenets
+
+What we want:
+
+1. **Weaving**: the code and its documentation are together.
+2. **Tangling**: the code can be run directly.
+
+In an ideal world, these are the *same* file...
+
+---
+
+<div style="margin-top: 250px;">
+<h1>But **why** would we want this?</h1>
+</div>
+
+## And **how** do we do this?
+
+*Hint*: it's more than just one thing...
+
+::: {.incremental}
+1. **JupyterLab**: how we do 'data science'.
+2. **Virtualisation**: separate your computer from your coding environment.
+3. **Version Control**: manage your code, your data, and even your reports.
+4. **Markup**: focus on the *structure* while you write!
+5. **Render**: creating documents and web pages from code and markup.
+::: 
+
+# Jupyter(Lab) & Notebooks
+
+> Browser + JupyterLab + Markup == Tangled, Woven code in (m)any languages
+
+::: {.notes}
+
+*Note*: you can set equations too!
+
+:::
+
+## Why Use JupyterLab?
+
+Coding in JupyterLab has a number of advantages over 'point-and-click':
+
+::: {.incremental}
+1. Coding requires our instructions to be unambiguous and logical.^[This does not guarantee that they'll be *correct*.]
+2. Computers are infinitely patient so we can re-run as many times as necessary to get it 'right'.
+3. There is nothing to install (runs in your web browser).
+4. You can run code from anywhere (runs in your web browser).
+:::
+
+## The Bigger Picture
+
+> If we can't explain it simply enough that a computer can do it, perhaps we don't actually understand it?
+
+::: {.incremental}
+- Together with the other tools in this talk, you can largely stop worrying about *where* code is running.
+- It's easy to forget how you obtained a particular result when you are clicking around inside software like ArcGIS; this is *much* harder when using code.
+- In analysing the problem so that we can submit it to the computer we often develop a better understanding of the problem ourselves!
+- Why spend your time doing the boring stuff???
+::: 
+
+::: {.notes}
+Conversely, perhaps the *real* value of humans over AI lies in what *cannot* be explained to the computer.
+:::
+
+## JupyterLab + Python
+
+![](./img/Notebook.png){style="width:85%;"}
+
+# Virtualisation
+
+> ... a technology that enables the creation of virtual environments from a single physical machine, allowing for more efficient use of resources by distributing them across computing environments.
+> 
+> Source: @susnjara:2025
+
+## Two Basic 'Flavours'
+
+Both do the *same* thing: separate the platform from the hardware, but they do this in defferent ways for different reasons.
+
+- A 'full' Virtual Machine (VM) includes the Operating System and behaves like a *separate computer* even though it may share hardware with other VMs.
+- A 'container' is a 'lightweight' VM running only the application and its dependencies; everything else is managed by the host Operating System so the resulting 'image' is small and easy to distribute.
+
+Short version: if you have to install an Operating System you are using a full VM; otherwise you are probably using a containerisation tool/
+
+Many things, including storage, networks, CPUs, GPUs, etc. can be virtualised.
+
+## Why Use Containers?
+
+We gain quite a few benefits:
+
+1. Easier installation and 'everyone' has the same versions of the code.
+2. Each container is isolated and read-only.
+3. Easy to tidy up when you’re done.
+4. Easy to scale up and scale down, or to link them together via 'microservices'.
+5. Used in the ‘real world’ by *many* companies (JP Morgan Chase, GSK, PayPal, Twitter, Spotify, Uber...).
+
+## The Bigger Picture
+
+> Rather than having one environment for *every* project, we have one environment for *each* project.
+
+- 'Computing contexts' are disposable, while data and code are persistent when I need them.
+- I don't care where my code and data are, so long as they're accessible when I need them.
+- I don't care if containers are created or destroyed, so long as they're available when I need them. 
+- I rebuild or update the computing context when I am ready to do so.
+
+## Podman
+
+![](./img/Podman-logo.png){style="width:85%;"}
+
+> Podman is an **open source** container and image management engine. Podman makes it easy to find, run, build, and share containers.
+
+## Using Podman
+
+Podman makes configuring a development environment (fairly) simple. If a Podman image works for us then we *know*[^1] it works for you. 
+
+Use either: 
+
+1. `{{< var docker.all >}}` (Windows and Older Macs)
+2. `{{< var docker.mac >}}` (Newer Macs)
+
+[^1]: Usually, but not always, true.
+
+# Version Control
+
+> ... is the practice of tracking and managing changes to software code.
+>
+> Source: [Altassian](https://www.atlassian.com/git/tutorials/what-is-version-control)
+
+## Why use Version Control?
+
+> ... If a mistake is made, developers can turn back the clock and compare earlier versions of the code to help fix the mistake while minimizing disruption to all team members.
+>
+> Source: [Altassian](https://www.atlassian.com/git/tutorials/what-is-version-control)
+
+In addition:
+
+::: {.incremental}
+- We can **share** code with others (directly) as source code or (indirectly) as the product of compiling that source code.
+- We can **rewind**, **fast forward**, and **combine** changes by different people working on different features.
+- We gain detailed, incremental **backups** that help us tro track down the changes that introduced a bug when something goes wrong.
+:::
+
+::: {.notes}
+
+Discuss comparison with Dropbox or OneDrive. How are they similar, how are they different? File level vs. row-level views. 
+:::
+
+## The Bigger Picture
+
+> In open source projects there may be no *one* view of what the 'right' solution/version of a project is, so differences need to be *negotiated*.
+
+- Every computer with version control might have the 'right' version of the code for a given user, so there is no 'master' view of a project.
+- We need to be able to choose whether to *merge* other people's changes with our changes, rather than having everything forced on us.
+- We still want to be able to share *our* version of the code / outputs of the code with other people, and a web site is a good way to do that.
+
+## Git
+
+:::: {.columns}
+::: {.column width="30%"}
+![](./img/Git.png)
+:::
+::: {.column width="70%"}
+Version control allows us to:
+
+1. Track changes to files with a high level of detail using `commit`.
+2. `push` these changes out to others.
+3. `pull` down changes made by others.
+4. `merge` and resolve conflicting changes.
+5. Create a `tag` when a 'milestones' is reached.
+6. Create a `branch` to add a feature.
+7. Retrieve specific versions or branches with a `checkout`.
+
+:::
+::::
+
+## GitHub
+
+:::: {.columns}
+::: {.column width="30%"}
+![](./img/Octocat.png)
+:::
+::: {.column width="70%"}
+Git is distributed, meaning that every computer is a potential server *and* a potential authority. **Result**: commits on a plane!
+
+But how do people find and access your code if your 'server' is a home machine that goes to sleep at night? **Result**: GitHub.
+
+GitHub is 'just' a very large Git server with a *lot* of nice web-friendly features tacked on: create a web site, issue/bug tracking, promote your project... 
+
+:::
+::::
+
+## Git+GitHub is for... anything!
+
+```{=html}
+<iframe width="780" height="500" src="https://jreades.github.io/jaipur/" title="Jaipur Workshop Web Site"></iframe>
+```
+
+::: {.notes}
+
+This whole course is on GitHub.
+
+:::
+
+## Oh My Git!
+
+{{< video https://ohmygit.org/assets/trailer.mov >}}
+
+::: {style="width: 95%; text-align: right; font-size: small;"}
+Source: [OhMyGit](https://ohmygit.org/)
+:::
+
+# Markup
+
+> A markup language is a text-encoding system which specifies the structure and formatting of a document...
+>
+> Source: [Wikipedia](https://en.wikipedia.org/wiki/Markup_language)
+
+## Why use Markup?
+
+::: {.incremental}
+- Quickly sketch out the structure of a document.
+- Focus on the substance, not the style.
+- Works well with version control (line-by-line changes + GitHub.io web site).
+- Combine code, documentation, and narrative easily.
+:::
+
+## The Bigger Picture
+
+> I spend a *lot* less time 'faffing' writing in Markdown than I used to. Spend more time on *what* you want to say and worry about the *how* later.
+
+:::: {.columns}
+::: {.column width=48%}
+```
+### A Subtitle
+
+Some text in **bold** and *italics* with a [link](https://jreades.github.io/).
+
+> A blockquote
+```
+:::
+::: {.column width=48%}
+### A Subtitle
+
+Some text in **bold** and *italics* with a [link](https://jreades.github.io/).
+
+> A blockquote
+:::
+::::
+
+## Markdown Examples {.smaller}
+
+See [CommonMark](https://commonmark.org/help/) and the [Markdown Guide](https://www.markdownguide.org/basic-syntax/) for more:
+
+```{=html}
+<table>
+  <tr>
+    <th style="font-weight: bold; font-size: larger;">Format</th>
+    <th style="font-weight: bold; font-size: larger;">Output</th>
+  </tr><tr>
+    <td>Plain text...</td><td>Plain text</td>
+        </tr><tr>
+        <td>## A Large Heading</td><td><h2>A Large Heading</h2></td>
+  </tr><tr>
+        <td>### A Medium Heading</td><td><h3>A Medium Heading</h3></td>
+  </tr><tr>
+        <td>&#45; A list<br />&#45; More list</td><td><ul>
+                <li>A list</li>
+                <li>More list</li>
+        </ul></td>
+  </tr><tr>
+        <td>1&#46; An ordered list<br />2&#46; More ordered list</td>
+        <td><ol>
+      <li>An ordered list</li>
+      <li>More ordered list</li>
+    </ol></td>
+  </tr><tr>
+        <td>&lsqb;A link&rsqb;(http://casa.ucl.ac.uk)</td><td><a href="http://casa.ucl.ac.uk">A link</a></td>
+  </tr>
+</table>
+```
+
+::: {.notes}
+[This guide](https://www.toptal.com/designers/htmlarrows/punctuation/) is good for HTML entities, though Google will also give you them pretty easily if you type `HTML entity code for copyright`...
+:::
+
+---
+
+```{=html}
+<table>
+  <tr>
+    <th style="font-weight: bold; font-size: larger;">Format</th>
+    <th style="font-weight: bold; font-size: larger;">Output</th>
+  </tr><tr>
+        <td>!&lsqb;Alt Text&rsqb;(casa_logo.jpg)</td><td><img src="https://github.com/jreades/fsds/raw/master/img/casa_logo.jpg" width="100" alt="Alt Text"/></td>
+  </tr><tr>
+        <td>&#96;x=y+1&#96;</td>
+        <td><div class="sourceCode">
+          <code class="sourceCode python">
+            <span class="co">
+              x=y+1
+            </span>
+          </code>
+        </div></td>
+  </tr><tr>
+        <td>&#96;&#96;&#96;&lcub;python&rcub;<br />
+        # A block of Python code<br />
+        x = y+1<br />
+    &#96;&#96;&#96;
+        </td><td><div class="sourceCode">
+          <code class="sourceCode python">
+            <span class="co">
+# A block of Python code<br />
+&nbsp;&nbsp;x = y+1
+            </span>
+          </code>
+        </div></td>
+  </tr>
+</table>
+```
+
+---
+
+### Embedded Maths
+
+<pre>
+$$
+f(a) = \frac{1}{2\pi i} <br />&nbsp;&nbsp;&nbsp; \oint_{\gamma} \frac{f(z)}{z-a} dz
+$$
+</pre>
+
+&nbsp;
+
+$$
+f(a) = \frac{1}{2\pi i} \oint_{\gamma} \frac{f(z)}{z-a} dz
+$$
+
+### Custom Markup
+
+<pre>
+&lt;div style="border: dotted 2px red; margin-top: 25px; background-color: rgb(230,230,230)"&gt;
+  This content has HTML formatting attached.
+&lt;/div&gt;
+</pre>
+
+&nbsp;
+
+<div style="border: dotted 2px red; margin-top: 25px; background-color: rgb(230,230,230)">
+  This content has HTML formatting attached.
+</div>
+
+# Render
+
+> 'Rendering' is the process of taking all of the code and markup and outputting it to a particular format (web page, web site, PDF, etc.). So it's the last piece of this pipeline for working with data, code, and text.
+
+## Why Render?
+
+::: {.incremental}
+- Outputs can be: web pages, Jupyter notebooks, Word documents, PDFs, presentations... 
+- It can be really useful to have a single input and *multiple* outputs because requirements and needs *always* change.
+- It teaches you to focus on the process, not the minutiae.
+:::
+
+## The Bigger Picture
+
+> **Everything** this week was created using these basic tools and techniques. It has transformed the way I teach, do research, and write! It **embodies** the potential of 'literate programming' [@knuth:1984].
+
+# Recap
+
+- Podman is how you will run a virtual machine with all the necessary tools pre-installed.
+- JupyterLab is how you will 'talk' to the virtual machine and tell it to run code.
+- Markdown is how you will write simply-formatted content (in JupyterLab and Quarto)
+- Git/GitHub is how you ~will~ *can* manage code and content so that you always have a backup plan.
+- Rendering in Quarto is how you will output nicely formatted code and content.
+
+---
+
+<div style="margin-top: 200px">
+<h1>Don't just take our word for it...</h1>
+</div>
+
+## Programming Languages (Used)
+
+::: {.scroll-container style="overflow-y: scroll; height: 575px;"}
+![](./img/stackoverflow-dev-survey-2024-technology-most-popular-technologies-language-social.svg)
+:::
+
+## Databases (Used)
+
+::: {.scroll-container style="overflow-y: scroll; height: 575px;"}
+![](./img/stackoverflow-dev-survey-2024-technology-most-popular-technologies-database-social.svg)
+:::
+
+## Frameworks & Libraries (Used)
+
+::: {.scroll-container style="overflow-y: scroll; height: 575px;"}
+![](./img/stackoverflow-dev-survey-2024-technology-most-popular-technologies-misc-tech-social.svg)
+:::
+
+## Virtualisation & Other Tools (Used)
+
+::: {.scroll-container style="overflow-y: scroll; height: 575px;"}
+![](./img/stackoverflow-dev-survey-2024-technology-most-popular-technologies-tools-tech-social.svg)
+:::
+
+## Programming Languages (Desired/Admired)
+
+::: {.scroll-container style="overflow-y: scroll; height: 575px;"}
+![](./img/stackoverflow-dev-survey-2024-technology-admired-and-desired-language-desire-admire-social.svg)
+:::
+
+## Databases (Desired/Admired)
+
+::: {.scroll-container style="overflow-y: scroll; height: 575px;"}
+![](./img/stackoverflow-dev-survey-2024-technology-admired-and-desired-database-desire-admire-social.svg)
+:::
+
+<!-- 
+## Frameworks & Libraries (Desired/Admired)
+
+::: {.scroll-container style="overflow-y: scroll; height: 575px;"}
+![](./img/stackoverflow-dev-survey-2024-technology-admired-and-desired-misc-tech-desire-admire-social.svg)
+:::
+
+## Virtualisation & Other Tools (Desired/Admired)
+
+::: {.scroll-container style="overflow-y: scroll; height: 575px;"}
+![](./img/stackoverflow-dev-survey-2024-technology-admired-and-desired-tools-desire-admire-social.svg)
+:::
+-->
+
+## Additional Resources {.smaller}
+
+- [Getting Started with Markdown](https://www.markdownguide.org/getting-started/)
+- [An online interactive tutorial for Markdown](https://www.markdowntutorial.com)
+- [Markdown Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
+- [What is Python?](https://www.linkedin.com/learning/python-quick-start/what-is-python)
+- [Why Python?](https://www.linkedin.com/learning/python-quick-start/why-python)
+- [Programming Foundations: Fundamentals](https://www.linkedin.com/learning/programming-foundations-fundamentals-3/why-python)
+- [Python is eating the world](https://www.techrepublic.com/article/python-is-eating-the-world-how-one-developers-side-project-became-the-hottest-programming-language-on-the-planet/)
+- [What can you do with Python?](https://www.linkedin.com/learning/python-for-students/what-can-you-do-with-python)
+- [Git for Decolonisation](https://www.learngit.xyz)^[Part art, part activism, part tech!]
+- [This guide](https://www.toptal.com/designers/htmlarrows/punctuation/) is good for HTML entities, though Google will also give you them pretty easily if you type `HTML entity code for copyright`...
+
+And once you're ready to get 'serious', check out [this tutorial](https://programminghistorian.org/en/lessons/sustainable-authorship-in-plain-text-using-pandoc-and-markdown) on *Sustainable Authorship in Plain Text using Pandoc and Markdown* from [The Programming  Historian](https://programminghistorian.org/en/lessons/)! That's what actually underpins Quarto, but you can do so much more...
+
+# Let's Get Started! {background-image="/img/web/title-slide.png" background-color="#0F0C11" background-opacity="0.2"}
+
+<h3>References</h3>

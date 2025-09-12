@@ -1,0 +1,306 @@
+---
+author: "Jon Reades"
+email: "j.reades@ucl.ac.uk"
+title: "Getting to Grips with Git"
+other: ""
+date-as-string: "1st October 2025"
+format: revealjs
+---
+
+# Why Git?
+
+::: {.notes}
+
+You will need two things to get started (you should have *already* done this if following the class in sequence):
+
+1. `git` installed on *your* computer: [git-scm.com/downloads](https://git-scm.com/downloads)
+2. A GitHub account: [github.com](https://github.com/join?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F&source=header-home)
+
+:::
+
+---
+
+![](img/phd101212s.gif){.r-stretch}
+
+::: {.notes}
+
+Version control has been around longer than the Internet. Broadly, it was designed to achieve three things:
+
+1. A record of any and all edits made to a file containing code.
+2. A means of allowing developers to share edits with one another.
+3. A way of reconciling conflicts when two (or more) developers edited the same code.
+
+:::
+
+# > You can use Git **anywhere** you have files that are changing (*hint:* essays, notes, projects, assessments, code...) and need/want to track them. 
+
+::: {.notes}
+
+**Bonus:** you *also* gain free backups if some part of your version control system is on a different computer!
+
+::: 
+
+## How It Works
+
+The **natural way** normal people think about managing versions of a document is to save a copy with a new name that somehow shows which version is most recent. 
+
+The **natural way** developers *used* to think about managing versions of a document is to have a master copy *somewhere*. Everyone asks the server for the master copy, makes some changes, and then checks those changes back in.
+
+This is **not** how Git works.
+
+::: {.notes}
+
+The way normal people approach this problem assumes that, usually, only one or two people are making changes. But how do you coordinate with 20 other people to find out who has the most recent copy then collect all 21 people's changes?
+
+The way developers *used* to approach this problem assumes that someone is in final charge. That a company or organisation runs a server which will decide whose changes are allowed, and whose are not.
+
+:::
+
+## How Git Works
+
+Git is **distributed**, meaning that *every* computer where git is installed has its *own* master copy. 
+
+So every computer has a **full history** of any git project (aka. repository or 'repo'). Indeed, you don't *have* to synchronise your repo with *any* other computer or server at all! ^[I'd suggest that this is leaving the benefit of free backups on the table for no good reason!]
+
+::: {.notes}
+
+In order to make this **useful**, you need ways to synchronise changes between computers that all think *they're* right.
+
+:::
+
+## GitHub
+
+GitHub is **nothing special** to Git, just another Git server with which to negotiate changes. Do *not* think of GitHub as the 'master' copy. There isn't one.
+
+There *are*, however, upstream and remote repositories.
+
+::: {.notes}
+
+An 'upstream' repository is where there's a 'gatekeeper': e.g. the people who *run* PySAL have a repo that is considered the 'gatekeeper' for PySAL.
+
+A remote repository is any repository with which your copy synchronises. So the remote repository can be 'upstream' or it can just be another computer you run, or you GitHub account.
+
+:::
+
+## A Dropbox Analogy
+
+- Think of JupyterLab as being like Word or Excel: an application that allows you to read/write/edit notebook files.
+- Think of GitHub as being like Dropbox: a place somewhere in the cloud that files on your home machine can be backed up.
+
+But Dropbox doesn't have the `.gitignore` file and fine-grained control over what is synchronised when!
+
+::: {.notes}
+
+GitHub offers a lot of 'value added' features (like simple text editing) on top of the basic service of 'storing files'.
+
+:::
+
+# Using Git
+
+## Getting Started
+
+| Term | Means |
+| :--- | :---- |
+| Repository (Repo) | A project or achive stored in Git. |
+| init | To create a new repo *on your computer*. |
+| clone | To make a full copy of a repo somewhere else. |
+
+This creates a local repo that is *unsynchronised* with anything else:
+```bash
+mkdir test
+cd test
+git init
+```
+Whereas this creates a local clone that is *fully synchronised* with GitHub:
+```bash
+cd .. # To move out of 'test'
+git clone https://github.com/jreades/fsds.git
+```
+
+
+## Working on a File {.smaller}
+
+| Term | Means |
+| :--- | :------- |
+| `add` | Add a file to a repo. |
+| `mv` | Move/Rename a file in a repo. |
+| `rm` | Remove a file from a repo. |
+
+For example:
+```bash
+cd test # Back into the new Repo
+touch README.md # Create empty file called README.md
+git add README.md # Add it to the repository
+git mv README.md fileA.md # Rename it (move it)
+git rm fileA.md # Remove it... which is an Error!
+```
+This produces:
+```bash
+error: the following file has changes staged in the index:
+    fileA.md
+(use --cached to keep the file, or -f to force removal)
+```
+
+::: {.notes}
+
+This is telling you that you can force remove (`git rm -f fileA.md`) if you really want, but you'd probably be better off commiting the changes that have been 'staged'... more on this in a second!
+
+*Also*: no one *else* knows about these changes yet!
+
+:::
+
+## Looking at the History {.smaller}
+
+| Term | Means |
+| :--- | :---- |
+| `diff` | Show changes between commits. |
+| `status` | Show status of files in repo. |
+| `log` | Show history of commits. |
+
+For example:
+```bash
+cd ../test/ # In case you weren't already there
+git status  # What's the status
+```
+
+This produces:
+```bash
+On branch master
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+	new file:   fileA.md
+```
+
+::: {.notes}
+
+So again, git is giving us hints as to the options: 'changes to be *committed*' vs. '*unstage*' the changes. We can also see what files are to be committed (i.e. have changed).
+
+:::
+
+## Working on a Project or File {.smaller}
+| Term | Means |
+| :--- | :---- |
+| `commit` | To record changes to the repo. |
+| `branch` | Create or delete branches. |
+| `checkout` | Jump to a different branch. |
+
+For example:
+```bash
+git commit -m "Added and then renamed the README."
+git status
+```
+
+You should see:
+```bash
+[master (root-commit) e7a0b25] Added and then renamed the README Markdown file.
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 fileA.md
+# ... and then this:
+On branch master
+nothing to commit, working tree clean
+```
+
+**Make a note of the number after 'root-commit'!**
+
+---
+
+## Recovery
+
+```bash
+git rm fileA.md
+git status
+git commit -m "Removed file."
+ls 
+git checkout <number you wrote down earlier>
+ls 
+```
+
+::: {.notes}
+
+So *every* operation on a file is recorded in the repository: adding, renaming, deleting, and so on. And we can roll back any change at any time. For plain-text files (such as Markdown, Python and R scripts) these changes are recorded at the level of each line of code: so you can jump around through your entire history of a project and trace exactly when and what changes you (or anyone else) made.
+
+:::
+
+## A Rock-Climbing Analogy
+
+![](https://openscapes.org/img/blog/github-illustrated-series/github_wickham_bryan_git_quote.png)
+
+## Collaborating on a Project {.smaller}
+
+| Term | Means |
+| :--- | :---- |
+| `pull` | To *request* changes on a repo *from* another computer. |
+| `push` | To *send* changes on a repo *to* another computer. |
+
+For example:
+```
+git push 
+```
+
+
+# All changes are local until `push`ed. 
+
+If you forget to `push` your changes (e.g. to GitHub) then you are **not backed up** if your computer dies.
+
+## A Note on Workflow {.smaller}
+
+So your workflow should be:
+
+1. Save edits to Jupyter notebook.
+2. Run `git add <filename.ipynb>` to record changes to the notebook (*Note:* replace `<filename.ipynb>` *completely* with the notebook filename).
+3. Run `git commit -m "Adding notes based on lecture"` (or whatever message is appropriate: `-m` means 'message').
+4. Then run `git push` to push the changes to GitHub.
+
+If any of those commands indicate that there are no changes being recorded/pushed then it might be that you’re not editing the file that you think you are (this happens to me!).
+
+On the GitHub web site you may need to force reload the view of the repository: `Shift` + the Reload button usually does it in most browsers. You may also need to wait 5 to 10 seconds for the changes to become ‘visible’ before reloading. It’s not quite instantaeous.
+
+## This is *not* easy
+
+![](img/xkcd-git.png){fig-align="middle"}
+
+[Source](https://xkcd.com/1597/)
+
+
+## So here are some cheat sheets
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+![](./img/Git_Cheat_Sheet.png)
+
+:::
+
+::: {.column width="50%"}
+
+![](./img/Git_Cheat_Sheet_2.png)
+
+:::
+
+::::
+
+
+## Additional Resources {.smaller}
+
+- [Understanding Git (Part 1) -- Explain it Like I'm Five](https://hackernoon.com/understanding-git-fcffd87c15a3)
+- [Trying Git](https://try.github.io)
+- [Visualising Git](http://git-school.github.io/visualizing-git/)
+- [Git Novice](http://swcarpentry.github.io/git-novice/)
+- [Confusing Git Terminology](https://jvns.ca/blog/2023/11/01/confusing-git-terminology/)
+- [Git Cheat Sheet: Commands and Best Practices](https://www.jrebel.com/blog/git-cheat-sheet)
+- [Andy's R-focussed Tutorial](https://andrewmaclachlan.github.io/CASA0005repo/git-github-and-rmarkdown.html#set-up-your-github)
+
+
+::: {.notes}
+
+I now have everything in Git repos: articles, research, presentations, modules... the uses are basically endless once you start using Markdown heavily (even if you don't do much coding).
+
+:::
+
+# Thank You {background-image="/img/web/title-slide.png" background-color="#0F0C11" background-opacity="0.2"}
+
+<h3>References</h3>

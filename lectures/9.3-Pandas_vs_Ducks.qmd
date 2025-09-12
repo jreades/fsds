@@ -1,0 +1,97 @@
+---
+author: "Jon Reades"
+email: "j.reades@ucl.ac.uk"
+title: "Pandas v Ducks"
+other: ""
+date-as-string: "1st October 2025"
+format: revealjs
+---
+
+# Loading
+
+# Summarising
+
+## Useful, But Limited?
+
+| Method           | Achieves                        |
+| ---------------- | ------------------------------- |
+| `count()`          | Total number of items           |
+| `first()`, `last()`  | First and last item             |
+| `mean()`, `median()` | Mean and median                 |
+| `min()`, `max()`     | Minimum and maximum             |
+| `std()`, `var()`     | Standard deviation and variance |
+| `mad()`            | Mean absolute deviation         |
+| `prod()`           | Product of all items            |
+| `sum()`            | Sum of all items                |
+
+::: {.notes}
+Here are a bunch of pandas functions that have to do with aggregating data in some way. Some of these you'll have seen before, some you may not. However, up to this point if you wanted to to know the median price of each type of Airbnb listing, or the sum of each type of vehicle sold, you'd have had to select out one listing type or vehicle type, call median or sum, and then remember the result. Let's change that.
+:::
+
+## Grouping Operations
+
+In Pandas these follow a split / apply / combine approach:
+
+![](img/Split-Apply-Combine.png)
+
+::: {.notes}
+
+Note that, for simplicity, I've abbreviate the Local Authority names since this is just a simplified example: `TH` (Tower Hamlets), `HAK` (Hackney), `W` (Westminster).
+
+:::
+
+## In Practice {.smaller}
+
+```python
+grouped_df = df.groupby(<fields>).<function>
+```
+
+For instance, if we had a Local Authority (`LA`) field:
+
+```python
+grouped_df = df.groupby('LA').sum()
+```
+
+Using `apply` the function could be anything:
+
+```python
+def norm_by_data(x): # x is a column from the grouped df
+	x['d1'] /= x['d2'].sum() 
+	return x
+
+df.groupby('LA').apply(norm_by_data)
+```
+
+## Grouping by Arbitrary Mappings
+
+```python
+mapping = {'HAK':'Inner', 'TH':'Outer', 'W':'Inner'}
+df.set_index('LA', inplace=True)
+df.groupby(mapping).sum()
+```
+
+![](img/Arbitrary_Mappings.png)
+
+## Pivot Tables
+
+A 'special case' of Group By features:
+
+- Commonly-used in business to summarise data for reporting.
+- Grouping (summarisation) happens along both axes (Group By operates only on one).
+- `pandas.cut(<series>, <bins>)` can be a useful feature here since it chops a continuous feature into bins suitable for grouping.
+
+## In Practice
+
+```python
+age = pd.cut(titanic['age'], [0, 18, 80])
+titanic.pivot_table('survived', ['sex', age], 'class')
+```
+
+![](img/Pivot_Table.png)
+
+## Counts
+
+
+## Pivots & Groups
+
+# Extracting
