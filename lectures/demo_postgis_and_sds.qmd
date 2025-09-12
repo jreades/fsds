@@ -1,68 +1,106 @@
 ---
-title: Running Multiple Containers
-author: Jon Reades
-date: last-modified
-format: html
+author: "Jon Reades"
+email: "j.reades@ucl.ac.uk"
+title: "Running Multiple Containers"
+subtitle: "Using Pods to link it all together"
+other: ""
+date-as-string: "1st October 2025"
+format: revealjs
+user: postgres 
+password: test
+db: test
+pod: myapp
 ---
 
-### Step 1. Find a PostGIS Image
+## Find a PostGIS Image
 
-Search https://quay.io/ -- on a Mac you now need to find arm64 images, on Windows it's amd64; however, in most cases you don't need to find these explicitly because 'builds' are completed for both.
+Search [Quay.io](https://quay.io/) -- on a modern M-chip Mac you need to use `arm64` images, on Windows it's usually `amd64`; however, in most cases you don't need to search for these explicitly because 'builds' for most images are completed for both.
 
-### Step 2. Create a 'Pod'
+## Create a 'Pod'
 
-This pod exposes two 'ports' (8888 and 5432) to the wider world. 
+This pod exposes two 'ports' (`8888` and `5432`) to the wider world. 
 
 ```bash
-podman pod create -p 8888:8888 -p 5432:5432 myapp
+podman pod create -p 8888:8888 -p 5432:5432 {{< meta pod >}}
 ```
 
-In this case we 'map' 8888 inside the pod to 8888 outside the pod, but we could change this: `-p 7777:8888` so that requests for `7777` from the outside world are 'forwarded' to `8888` inside the pod. 
+In this case we 'map' `8888` inside the pod to `8888` outside the pod, but we could change this: `-p 7777:8888` so that requests for `7777` from the outside world are 'forwarded' to `8888` inside the pod. 
 
-### Step 3. Attach the PostGIS Container
 
-There's a lot going on here that took quite some to figure out, but the key thing turned out to be the `pg_hba.conf` file which tells Postgres on which ports it can listen.
+## Attach PostGIS to the Pod
+
+
+There's a lot going on here that took quite some to figure out^[Part of an ESRC research project I was supporting.], but the key thing turned out to be the `pg_hba.conf` file which tells Postgres on which ports it can listen. 
 
 ```bash
-podman run --rm -d --name postgres --pod myapp \
--e POSTGRES_USER=postgres \
--e POSTGRES_PASSWORD=test \
--e POSTGRES_DB=test \
+podman run --rm -d --name postgres --pod {{< meta pod >}} \
+-e POSTGRES_USER={{< meta user >}} \
+-e POSTGRES_PASSWORD={{< meta password >}} \
+-e POSTGRES_DB={{< meta db >}} \
 -e PGDATA=/var/lib/postgresql/data/pgdata \
 -v "${PWD}"/data/postgres:/var/lib/postgresql/data \
 -v /tmp:/tmp \
--v "${PWD}"/data/postgres/pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf quay.io/taolu/postgis:14-3.5-alpine
+-v "${PWD}"/data/postgres/pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf \
+quay.io/taolu/postgis:14-3.5-alpine
 ```
 
-You can now connect using `psql` on 5432.
+This command is telling Podman to start a postgis image (`14-3.5-alpine`) it downloads from Quay with a test of startup options set at launch. The first three are specifying the databasei, user, and password. The remainder are connecting various 'mount points' on the container to locations on the host computer. So the data that is added to the database will be stored under the *current working directory* (`PWD` == Print Working Directory). We allow Postgis to the use the computer's `/tmp` folder for working data. And the final bit is taking a local copy that we've set up of `pg_hba.conf` and putting that in the place that a regular Postgres server would expect to find it.
 
-### Step 4. Attach the SDS Container
+You can now connect using `psql` on port `5432`.
+
+For example:
+
+```bash 
+psql -h localhost -p 5432 -U {{< meta user >}} -d {{< meta db >}} 
+```
+
+##  Attach SDS to the Pod
+
+Only containers *inside* the Pod can talk to other containers in the pod. So for the SDS container to talk to PostGIS, they both need to be attached to the pod using `{{< meta pod >}}`.
 
 ```bash
-podman run --rm -d --name sds --pod=myapp \
+podman run --rm -d --name sds --pod={{< meta pod >}} \
 -v "$(pwd):/home/jovyan/work" \
-docker.io/jreades/sds:2025-arm \
-start.sh jupyter lab --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
+docker.io/{{< var docker.all >}} \
+start.sh \
+jupyter lab --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
 ```
 
 You can now connect using your browser: [http://localhost:8888/](http://localhost:8888/)
 
-### Step 5. Install psycopg2
+::: {.callout-tip}
 
-`pip install psycopg2` -- `sqlalchemy` already there but `psycopg2` isn't
+The rest of this short tutorial is all run on the SDS container using your browser as the interface. This is true even for bits about the command line interface: in Jupyter you pick `File` > `New` > `Terminal`.
 
-#### Load Some Data
+:::
+
+
+## Install psycopg2
+
+If I haven't had time to update the SDS container then you can do this on the *SDS Terminal* in your browser using the folllowing command:
+
+```bash
+pip install psycopg2`
+```
+
+This is because the `sqlalchemy` framework is already there but the `psycopg2` driver for Postgres isn't.
+
+## Run Python 
+
+Now you will start a new Notebook (`File` > `New` > `Notebook`) and create code cells for each of the following sections of code.
+
+### Load Data
 
 ```python
 from sqlalchemy import create_engine
-engine = create_engine('postgresql://postgres:test@localhost:5432/test')
+engine = create_engine('postgresql://postgres:{{< meta password >}}@localhost:5432/{{< meta db >}}')
 
 import geopandas as gpd
 gdf = gpd.read_file('work/data/src/TM_WORLD_BORDERS-0.3.gpkg')
 gdf.to_postgis('world', engine)
 ```
 
-### Step 6. Run Python
+### Query Data
 
 ```python
 insp = inspect(engine) 
@@ -90,10 +128,12 @@ gdf = gpd.read_postgis("""
 gdf.plot()
 ```
 
-#### Query the Data without Python
+## Query the Data without Python
+
+One final thing: if you run a Terminal on your computer (so *not* in the SDS terminal any more) you can *also* query the data that was just loaded. Your computer is the only other machine that access the pod.
 
 ```bash
-psql -h localhost -p 5432 -U postgres -d test
+psql -h localhost -p 5432 -U {{< meta user >}} -d {{< meta db >}}
 ```
 
 ```sql
@@ -102,4 +142,4 @@ SELECT "NAME", "ISO3", "POP2005", "REGION" FROM world LIMIT 5;
 SELECT "NAME", "POP2005" FROM world WHERE AREA > 900000;
 ```
 
-### 
+

@@ -1,4 +1,5 @@
 ---
+date: last-modified
 bibliography: bio.bib
 csl: harvard-cite-them-right.csl
 title: Group Name's Group Project
@@ -58,11 +59,15 @@ Student Numbers:
 
 Are there any areas on which you would appreciate more detailed feedback if we're able to offer it?
 
+## Word Counts
+
+We will only count the text that you've added in the final PDF. Headings, guidance, etc. do no count towards the total. References do. And please also see the rest of guidance relating to [Content](./content.qmd).
+
 {{< pagebreak >}}
 
-# Code Example
+# Code Examples
 
-This page has example code to show you can include outputs while hiding code in Quarto, as well as some tools for interpolating data in the text. Remove this page (up to the next `pagebreak`) prior to submission!
+This page has example code to show you can include outputs while hiding code in Quarto, as well as some tools for interpolating data in the text. **Remove this page (up to the next `pagebreak`) prior to submission!**
 
 See the raw file for examples of how to hide computational output as there is code hidden here.
 
@@ -75,6 +80,11 @@ import pandas as pd
 ```
 
 ```{python}
+# This code is not shown because echo was
+# set to False in the header. You should
+# think carefully about whether you want
+# or need to show any code to the reader
+# in the PDf.
 host = 'https://orca.casa.ucl.ac.uk'
 path = '~jreades/data'
 file = '20250615-London-listings.parquet'
@@ -92,18 +102,27 @@ A parenthetical citation example: There are many ways to research Airbnb [see, f
 
 ```{python}
 #| output: asis
-# This is one way to write dynamic text (as markdown, basically)
-# The other way is to ensure that your variables are *simple* 
-# data types that Quarto can understand.
+# This is one way to write dynamic text. 'As is' means
+# it will interpret the result as regular Quarto markdown 
+# so the below `print` statement becomes plain text with
+# the size of the dataframe interpolated into the string.
+# When Quarto is done running the Python code what's left
+# is plain-text and that is then treated as a paragraph
+# like it would be if you'd written it in Quarto.
 print(f"One of way to embed output in the text looks like this: after cleaning, we were left with {df.shape[0]:,} rows of data.")
 ```
 
 ```{python}
-# This should also work, but is sometimes less predictably
+# The other way is to ensure that your variables are *simple* 
+# data types that Quarto can understand. So notice below that
+# we just have a single, inline `{python} with the value of
+# the row directly inserted into the sentence. his should also work, but is sometimes less predictably
 # reliable.
 row_count = f"{df.shape[0]:,}"
 ```
-This way is also supposed to work (`{python} row_count `) but I've found it less reliable.
+The other way is to interpolate it directly into the sentence like this (`{python} row_count `); however, I've found it less reliable and it really requires you to be careful about data types. So `{python} print(f"{df.shape[0]:,}") ` probably won't work and you'll just see some Python code instead.
+
+And here's a nice little chart straight into the document!
 
 ```{python}
 ax = df.host_listings_count.plot.hist(bins=50);
