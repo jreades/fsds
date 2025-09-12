@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jon Reades">
+
+<title>Signal &amp; Noise – Foundations of Spatial Data Science</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="..//img/favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-fb446d74831b8ff67c69632cb314b545.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-c734b2b4d74e7e594e143a63449c09f7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<meta property="og:title" content="Signal &amp; Noise – Foundations of Spatial Data Science">
+<meta property="og:description" content="">
+<meta property="og:image" content="img/Quartet.png">
+<meta property="og:site_name" content="Foundations">
+<meta property="og:locale" content="en_GB">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-md " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../img/logo/logo_only_sm.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Foundations of Spatial Data Science</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../setup/index.html"> 
+<span class="menu-text">Setup</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-week-by-week" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Week-by-Week</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-week-by-week">    
+        <li>
+    <a class="dropdown-item" href="../sessions/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Part 1: Foundations</li>
+        <li>
+    <a class="dropdown-item" href="../sessions/week1.html">
+ <span class="dropdown-text">1. Setting Up</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week2.html">
+ <span class="dropdown-text">2. Foundations (Pt.1)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week3.html">
+ <span class="dropdown-text">3. Foundations (Pt.2)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week4.html">
+ <span class="dropdown-text">4. Efficient Code</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week5.html">
+ <span class="dropdown-text">5. Objects</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/reading_week.html">
+ <span class="dropdown-text">Reading Week</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Part 2: Process</li>
+        <li>
+    <a class="dropdown-item" href="../sessions/week6.html">
+ <span class="dropdown-text">6. Numeric Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week7.html">
+ <span class="dropdown-text">7. Spatial Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week8.html">
+ <span class="dropdown-text">8. Textual Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week9.html">
+ <span class="dropdown-text">9. Selecting Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week10.html">
+ <span class="dropdown-text">10. Presenting Data</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Part 3: Bonus</li>
+        <li>
+    <a class="dropdown-item" href="../sessions/week11.html">
+ <span class="dropdown-text">11. Dimensions in Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week12.html">
+ <span class="dropdown-text">12. Grouping Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../references.html">
+ <span class="dropdown-text">Bibliography</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-assessments" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Assessments</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-assessments">    
+        <li>
+    <a class="dropdown-item" href="../assessments/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Elements</li>
+        <li>
+    <a class="dropdown-item" href="../assessments/exam.html">
+ <span class="dropdown-text">Timed Open Book Exam</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../assessments/group.html">
+ <span class="dropdown-text">Group Work</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../assessments/peer.html">
+ <span class="dropdown-text">Group Self-Evaluation</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../help.html"> 
+<span class="menu-text">Getting Help</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#what-is-it" id="toc-what-is-it" class="nav-link active" data-scroll-target="#what-is-it">What is it?</a></li>
+  <li><a href="#what-is-it-1" id="toc-what-is-it-1" class="nav-link" data-scroll-target="#what-is-it-1">What is it?</a></li>
+  <li><a href="#what-is-it-2" id="toc-what-is-it-2" class="nav-link" data-scroll-target="#what-is-it-2">What is it?</a></li>
+  <li><a href="#start-with-a-chart" id="toc-start-with-a-chart" class="nav-link" data-scroll-target="#start-with-a-chart">Start with a Chart</a></li>
+  <li><a href="#anscombes-quartet" id="toc-anscombes-quartet" class="nav-link" data-scroll-target="#anscombes-quartet">Anscombe’s Quartet</a></li>
+  <li><a href="#summary-statistics-for-the-quartet" id="toc-summary-statistics-for-the-quartet" class="nav-link" data-scroll-target="#summary-statistics-for-the-quartet">Summary Statistics for the Quartet</a></li>
+  <li><a href="#but-what-do-they-look-like" id="toc-but-what-do-they-look-like" class="nav-link" data-scroll-target="#but-what-do-they-look-like">But What do They <em>Look</em> Like?</a></li>
+  <li><a href="#the-tiger-that-isnt" id="toc-the-tiger-that-isnt" class="nav-link" data-scroll-target="#the-tiger-that-isnt">The Tiger that Isn’t</a>
+  <ul class="collapse">
+  <li><a href="#think-it-through" id="toc-think-it-through" class="nav-link" data-scroll-target="#think-it-through">Think it Through</a></li>
+  <li><a href="#what-makes-a-good-plot" id="toc-what-makes-a-good-plot" class="nav-link" data-scroll-target="#what-makes-a-good-plot">What Makes a Good Plot?</a></li>
+  <li><a href="#for-example" id="toc-for-example" class="nav-link" data-scroll-target="#for-example">For Example…</a></li>
+  <li><a href="#goals-by-world-cup-final" id="toc-goals-by-world-cup-final" class="nav-link" data-scroll-target="#goals-by-world-cup-final">Goals by World Cup Final</a></li>
+  <li><a href="#goals-by-world-cup-final-1" id="toc-goals-by-world-cup-final-1" class="nav-link" data-scroll-target="#goals-by-world-cup-final-1">Goals by World Cup Final</a></li>
+  <li><a href="#average-goals-by-world-cup-final" id="toc-average-goals-by-world-cup-final" class="nav-link" data-scroll-target="#average-goals-by-world-cup-final">Average Goals by World Cup Final</a></li>
+  <li><a href="#how-far-from-equality" id="toc-how-far-from-equality" class="nav-link" data-scroll-target="#how-far-from-equality">How far from Equality?</a></li>
+  <li><a href="#how-far-from-equality-1" id="toc-how-far-from-equality-1" class="nav-link" data-scroll-target="#how-far-from-equality-1">How far from Equality?</a></li>
+  <li><a href="#the-purpose-of-a-chart" id="toc-the-purpose-of-a-chart" class="nav-link" data-scroll-target="#the-purpose-of-a-chart">The Purpose of a Chart</a></li>
+  </ul></li>
+  <li><a href="#if-a-picture-is-worth-1000-words-make-sure-those-words-arent-blah-blah-blah" id="toc-if-a-picture-is-worth-1000-words-make-sure-those-words-arent-blah-blah-blah" class="nav-link" data-scroll-target="#if-a-picture-is-worth-1000-words-make-sure-those-words-arent-blah-blah-blah">If a picture is worth 1,000 words, make sure those words aren’t “blah, blah, blah…”</a></li>
+  <li><a href="#not-everyone-likes-tables" id="toc-not-everyone-likes-tables" class="nav-link" data-scroll-target="#not-everyone-likes-tables">Not Everyone Likes Tables</a>
+  <ul class="collapse">
+  <li><a href="#real-numbers" id="toc-real-numbers" class="nav-link" data-scroll-target="#real-numbers">Real Numbers</a></li>
+  <li><a href="#theres-still-a-role-for-tables" id="toc-theres-still-a-role-for-tables" class="nav-link" data-scroll-target="#theres-still-a-role-for-tables">There’s <em>Still</em> a Role for Tables</a></li>
+  <li><a href="#undergraduate-tables-failing-grade" id="toc-undergraduate-tables-failing-grade" class="nav-link" data-scroll-target="#undergraduate-tables-failing-grade">Undergraduate Tables (Failing Grade)</a></li>
+  <li><a href="#undergraduate-tables-passing-grade" id="toc-undergraduate-tables-passing-grade" class="nav-link" data-scroll-target="#undergraduate-tables-passing-grade">Undergraduate Tables (Passing Grade)</a></li>
+  <li><a href="#postgraduate-tables-failing-grade" id="toc-postgraduate-tables-failing-grade" class="nav-link" data-scroll-target="#postgraduate-tables-failing-grade">Postgraduate Tables (Failing Grade)</a></li>
+  <li><a href="#postgraduate-tables-passing-grade" id="toc-postgraduate-tables-passing-grade" class="nav-link" data-scroll-target="#postgraduate-tables-passing-grade">Postgraduate Tables (Passing Grade)</a></li>
+  <li><a href="#design-for-tables" id="toc-design-for-tables" class="nav-link" data-scroll-target="#design-for-tables">Design for Tables</a></li>
+  <li><a href="#additional-resources" id="toc-additional-resources" class="nav-link" data-scroll-target="#additional-resources">Additional Resources</a></li>
+  </ul></li>
+  <li><a href="#thank-you" id="toc-thank-you" class="nav-link" data-scroll-target="#thank-you">Thank You</a></li>
+  </ul>
+<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/jreades/fsds/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="7.4-Signal_and_Noise.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Signal &amp; Noise</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jon Reades </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="what-is-it" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-it">What is it?</h2>
+<div data-align="center">
+<p><img src="https://github.com/jreades/i2p/raw/master/lectures/img/Doggy.png" width="90%"></p>
+</div>
+</section>
+<section id="what-is-it-1" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-it-1">What is it?</h2>
+<div data-align="center">
+<p><img src="https://github.com/jreades/i2p/raw/master/lectures/img/Cow.png" width="90%"></p>
+</div>
+</section>
+<section id="what-is-it-2" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-it-2">What is it?</h2>
+<div data-align="center">
+<p><img src="https://github.com/jreades/i2p/raw/master/lectures/img/Kanizsa.png" width="65%"></p>
+</div>
+</section>
+<section id="start-with-a-chart" class="level2">
+<h2 class="anchored" data-anchor-id="start-with-a-chart">Start with a Chart</h2>
+<p>The problem of relying on statistics alone was amply illustrated by Anscombe’s Quartet (1973)…</p>
+<ul>
+<li>We <em>are not</em> very good at looking at spreadsheets.</li>
+<li>We <em>are</em> very good at spotting patterns visually.</li>
+</ul>
+<p>Sometimes, we are <em>too</em> good; that’s where the stats comes in. Think of it as the ‘tiger in the jungle’ problem..</p>
+</section>
+<section id="anscombes-quartet" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="anscombes-quartet">Anscombe’s Quartet</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: right;">X1</th>
+<th style="text-align: right;">Y1</th>
+<th style="text-align: right;">X2</th>
+<th style="text-align: right;">Y2</th>
+<th style="text-align: right;">X3</th>
+<th style="text-align: right;">Y3</th>
+<th style="text-align: right;">X4</th>
+<th style="text-align: right;">Y4</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">10.0</td>
+<td style="text-align: right;">8.04</td>
+<td style="text-align: right;">10.0</td>
+<td style="text-align: right;">9.14</td>
+<td style="text-align: right;">10.0</td>
+<td style="text-align: right;">7.46</td>
+<td style="text-align: right;">10.0</td>
+<td style="text-align: right;">6.58</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8.0</td>
+<td style="text-align: right;">6.95</td>
+<td style="text-align: right;">8.0</td>
+<td style="text-align: right;">8.14</td>
+<td style="text-align: right;">8.0</td>
+<td style="text-align: right;">6.77</td>
+<td style="text-align: right;">8.0</td>
+<td style="text-align: right;">5.76</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">13.0</td>
+<td style="text-align: right;">7.58</td>
+<td style="text-align: right;">13.0</td>
+<td style="text-align: right;">8.74</td>
+<td style="text-align: right;">13.0</td>
+<td style="text-align: right;">12.74</td>
+<td style="text-align: right;">13.0</td>
+<td style="text-align: right;">7.71</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">9.0</td>
+<td style="text-align: right;">8.81</td>
+<td style="text-align: right;">9.0</td>
+<td style="text-align: right;">8.77</td>
+<td style="text-align: right;">9.0</td>
+<td style="text-align: right;">7.11</td>
+<td style="text-align: right;">9.0</td>
+<td style="text-align: right;">8.84</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">11.0</td>
+<td style="text-align: right;">8.33</td>
+<td style="text-align: right;">11.0</td>
+<td style="text-align: right;">9.26</td>
+<td style="text-align: right;">11.0</td>
+<td style="text-align: right;">7.81</td>
+<td style="text-align: right;">11.0</td>
+<td style="text-align: right;">8.47</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">14.0</td>
+<td style="text-align: right;">9.96</td>
+<td style="text-align: right;">14.0</td>
+<td style="text-align: right;">8.10</td>
+<td style="text-align: right;">14.0</td>
+<td style="text-align: right;">8.84</td>
+<td style="text-align: right;">14.0</td>
+<td style="text-align: right;">7.04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">6.0</td>
+<td style="text-align: right;">7.24</td>
+<td style="text-align: right;">6.0</td>
+<td style="text-align: right;">6.13</td>
+<td style="text-align: right;">6.0</td>
+<td style="text-align: right;">6.08</td>
+<td style="text-align: right;">6.0</td>
+<td style="text-align: right;">5.25</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4.0</td>
+<td style="text-align: right;">4.26</td>
+<td style="text-align: right;">4.0</td>
+<td style="text-align: right;">3.10</td>
+<td style="text-align: right;">4.0</td>
+<td style="text-align: right;">5.39</td>
+<td style="text-align: right;">4.0</td>
+<td style="text-align: right;">12.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">12.0</td>
+<td style="text-align: right;">10.84</td>
+<td style="text-align: right;">12.0</td>
+<td style="text-align: right;">9.13</td>
+<td style="text-align: right;">12.0</td>
+<td style="text-align: right;">8.15</td>
+<td style="text-align: right;">12.0</td>
+<td style="text-align: right;">5.56</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">7.0</td>
+<td style="text-align: right;">4.82</td>
+<td style="text-align: right;">7.0</td>
+<td style="text-align: right;">7.26</td>
+<td style="text-align: right;">7.0</td>
+<td style="text-align: right;">6.42</td>
+<td style="text-align: right;">7.0</td>
+<td style="text-align: right;">7.91</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">5.68</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">4.74</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">5.73</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">6.89</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="summary-statistics-for-the-quartet" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="summary-statistics-for-the-quartet">Summary Statistics for the Quartet</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Property</th>
+<th style="text-align: right;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Mean of <code>x</code></td>
+<td style="text-align: right;">9.0</td>
+</tr>
+<tr class="even">
+<td>Variance of <code>x</code></td>
+<td style="text-align: right;">11.0</td>
+</tr>
+<tr class="odd">
+<td>Mean of <code>y</code></td>
+<td style="text-align: right;">7.5</td>
+</tr>
+<tr class="even">
+<td>Variance of <code>y</code></td>
+<td style="text-align: right;">4.12</td>
+</tr>
+<tr class="odd">
+<td>Correlation between <code>x</code> and <code>y</code></td>
+<td style="text-align: right;">0.816</td>
+</tr>
+<tr class="even">
+<td>Linear Model</td>
+<td style="text-align: right;"><code>y = 3 + 0.5x</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="but-what-do-they-look-like" class="level2">
+<h2 class="anchored" data-anchor-id="but-what-do-they-look-like">But What do They <em>Look</em> Like?</h2>
+<p><a href="img/Quartet.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="img/Quartet.png" class="img-fluid"></a></p>
+</section>
+<section id="the-tiger-that-isnt" class="level1">
+<h1>The Tiger that Isn’t</h1>
+<blockquote class="blockquote">
+<p>I would argue that the basic purpose of charts and of statistics as a whole is to help us untangle signal from noise. We are ‘programmed’ to see signals, so we need to set the standard for ‘it’s a tiger!’ quite high in research &amp; in policy-making.</p>
+</blockquote>
+<div class="notes">
+<p>Or, as Albert Einstein reportedly said: “If I can’t picture it, I can’t understand it.”</p>
+</div>
+<section id="think-it-through" class="level2">
+<h2 class="anchored" data-anchor-id="think-it-through">Think it Through</h2>
+<p>You can make a lot of progress in your research without <em>any</em> advanced statistics!</p>
+<ul>
+<li>A ‘picture’ isn’t <em>just</em> worth 1,000 words, it could be a whole dissertation!</li>
+<li>The right chart makes your case eloquently and succinctly.</li>
+</ul>
+<p>Always ask yourself:</p>
+<ul>
+<li>What am I trying to say?</li>
+<li>How can I say it most effectively?</li>
+<li>Is there anything I’m overlooking in the data?</li>
+</ul>
+<p>A good chart is a good way to start!</p>
+</section>
+<section id="what-makes-a-good-plot" class="level2">
+<h2 class="anchored" data-anchor-id="what-makes-a-good-plot">What Makes a Good Plot?</h2>
+<p>A good chart or table:</p>
+<ol type="1">
+<li>Serves a <strong>purpose</strong> — it is clear how it advances the argument in a way that could not be done in the text <em>alone</em>.</li>
+<li>Contains only what is <strong>relevant</strong> — zeroes in on what the reader <em>needs</em> and is not needlessly cluttered.</li>
+<li>Uses precision that is <strong>meaningful</strong> — doesn’t clutter the chart with needless numbers.</li>
+</ol>
+<div class="notes">
+<p>Far too many charts or tables could be easily written up in a single sentence.</p>
+<p>Far too many charts or tables contain redundancy, clutter, and ‘flair’.</p>
+<p>Don’t report average height of your class to sub-millimeter level accuracy, or lat/long to sub-atomic scale.</p>
+</div>
+</section>
+<section id="for-example" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="for-example">For Example…</h2>
+<p>How much precision is necessary in measuring <a href="https://en.wikipedia.org/wiki/Decimal_degrees#Precision">degrees at the equator</a>?</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Decimal Places</th>
+<th>Degrees</th>
+<th style="text-align: right;">Distance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>1</td>
+<td style="text-align: right;">111km</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>0.1</td>
+<td style="text-align: right;">11.1km</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>0.01</td>
+<td style="text-align: right;">1.11km</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>0.001</td>
+<td style="text-align: right;">111m</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>0.0001</td>
+<td style="text-align: right;">11.1m</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>0.00001</td>
+<td style="text-align: right;">1.11m</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>0.000001</td>
+<td style="text-align: right;">11.1cm</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>0.0000001</td>
+<td style="text-align: right;">1.11cm</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>0.00000001</td>
+<td style="text-align: right;">1.11mm</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="goals-by-world-cup-final" class="level2">
+<h2 class="anchored" data-anchor-id="goals-by-world-cup-final">Goals by World Cup Final</h2>
+<p><a href="img/Goals_1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="img/Goals_1.png" class="img-fluid" data-align="center"></a></p>
+</section>
+<section id="goals-by-world-cup-final-1" class="level2">
+<h2 class="anchored" data-anchor-id="goals-by-world-cup-final-1">Goals by World Cup Final</h2>
+<p><a href="img/Goals_2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="img/Goals_2.png" class="img-fluid" data-align="center"></a></p>
+</section>
+<section id="average-goals-by-world-cup-final" class="level2">
+<h2 class="anchored" data-anchor-id="average-goals-by-world-cup-final">Average Goals by World Cup Final</h2>
+<p><a href="img/Goals_3.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="img/Goals_3.png" class="img-fluid" data-align="center"></a></p>
+<div class="notes">
+<p>In 1982 the number of teams went from 16 to 24, and in 1998 it went from 24 to 32!</p>
+</div>
+</section>
+<section id="how-far-from-equality" class="level2">
+<h2 class="anchored" data-anchor-id="how-far-from-equality">How far from Equality?</h2>
+<p><a href="img/Brazil_Senate_1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="img/Brazil_Senate_1.png" class="img-fluid" data-align="center"></a></p>
+</section>
+<section id="how-far-from-equality-1" class="level2">
+<h2 class="anchored" data-anchor-id="how-far-from-equality-1">How far from Equality?</h2>
+<p><a href="img/Brazil_Senate_2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="img/Brazil_Senate_2.png" class="img-fluid" data-align="center"></a></p>
+</section>
+<section id="the-purpose-of-a-chart" class="level2">
+<h2 class="anchored" data-anchor-id="the-purpose-of-a-chart">The Purpose of a Chart</h2>
+<p>The purpose of a graph is to show that there are <em>relationships</em> within the data set that are <em>not</em> trivial/expected.</p>
+<p>Choose the chart to highlight relationships, or the lack thereof:</p>
+<ul>
+<li>Think of a chart or table as part of your ‘argument’ – if you can’t tell me how a figure advances your argument (or if your explanation is more concise than the figure) then you probably don’t need it.</li>
+<li>Identify &amp; prioritise the relationships in the data.</li>
+<li>Choose a chart type/chart symbology that gives emphasis to the most important relationships.</li>
+</ul>
+</section>
+</section>
+<section id="if-a-picture-is-worth-1000-words-make-sure-those-words-arent-blah-blah-blah" class="level1">
+<h1>If a picture is worth 1,000 words, make sure those words aren’t “blah, blah, blah…”</h1>
+</section>
+<section id="not-everyone-likes-tables" class="level1">
+<h1>Not Everyone Likes Tables</h1>
+<blockquote class="blockquote">
+<p>Getting information from a table is like extracting sunlight from a cucumber. Arthur &amp; Henry Fahrquhar 1891)</p>
+</blockquote>
+<section id="real-numbers" class="level2">
+<h2 class="anchored" data-anchor-id="real-numbers">Real Numbers</h2>
+<p>Consider the difference in emphasis between:</p>
+<ul>
+<li>11316149</li>
+<li>11,316,149</li>
+<li>11.3 million</li>
+<li>11 x 10<span class="math inline">\(^{6}\)</span></li>
+<li>22%</li>
+<li>22.2559%</li>
+</ul>
+<p>Always keep in mind the <em>purpose</em> of the number.</p>
+</section>
+<section id="theres-still-a-role-for-tables" class="level2">
+<h2 class="anchored" data-anchor-id="theres-still-a-role-for-tables">There’s <em>Still</em> a Role for Tables</h2>
+<p>Why a table is sometimes better than a chart:</p>
+<ul>
+<li>You need to present data values with greater detail</li>
+<li>You need to enable readers to draw comparisons between data values</li>
+<li>You need to present the same data in multiple ways (<em>e.g.</em> raw number <em>and</em> percentage)</li>
+<li>You want to show many dimensions for a small number of observations</li>
+</ul>
+<div class="notes">
+<p><em>e.g.</em> percentage of people falling into each ethnic or income category for a small number of wards or boroughs.</p>
+</div>
+</section>
+<section id="undergraduate-tables-failing-grade" class="level2">
+<h2 class="anchored" data-anchor-id="undergraduate-tables-failing-grade">Undergraduate Tables (Failing Grade)</h2>
+<p><a href="img/ugtables-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="img/ugtables-1.png" class="img-fluid"></a></p>
+</section>
+<section id="undergraduate-tables-passing-grade" class="level2">
+<h2 class="anchored" data-anchor-id="undergraduate-tables-passing-grade">Undergraduate Tables (Passing Grade)</h2>
+<p><a href="img/ugtables-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="img/ugtables-2.png" class="img-fluid"></a></p>
+</section>
+<section id="postgraduate-tables-failing-grade" class="level2">
+<h2 class="anchored" data-anchor-id="postgraduate-tables-failing-grade">Postgraduate Tables (Failing Grade)</h2>
+<p><a href="img/pgtables-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img src="img/pgtables-1.png" class="img-fluid"></a></p>
+</section>
+<section id="postgraduate-tables-passing-grade" class="level2">
+<h2 class="anchored" data-anchor-id="postgraduate-tables-passing-grade">Postgraduate Tables (Passing Grade)</h2>
+<p><a href="img/pgtables-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img src="img/pgtables-2.png" class="img-fluid"></a></p>
+</section>
+<section id="design-for-tables" class="level2">
+<h2 class="anchored" data-anchor-id="design-for-tables">Design for Tables</h2>
+<p>Principles:</p>
+<ul>
+<li>Reduce the number of lines to a minimum (and you should almost never need vertical lines).</li>
+<li>Use ‘white-space’ to create visual space between groups of unrelated (or less related) elements.</li>
+<li>Remove redundancy (if you find yourself typing ‘millions’ or ‘GBP’ or ‘Male’ repeatedly then you’ve got redundancy).</li>
+<li>Ensure that meta-data is clearly separate from, but attached to, the graph (<em>i.e.</em> source, title, etc.).</li>
+</ul>
+</section>
+<section id="additional-resources" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="additional-resources">Additional Resources</h2>
+<p>There’s <a href="https://www.google.com/search?q=eda+with+pandas">so much more</a> to find, but:</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li><a href="https://www.phdata.io/blog/enhancing-tables-in-tableau/">26 Ways to Enhance your Tables in Tableau</a></li>
+<li><a href="https://www.makeit-makesense.com/data/tables-arent-boring-you-are">Tables Aren’t Boring, You Are</a></li>
+</ul>
+</div><div class="column" style="width:50%;">
+<ul>
+<li><a href="https://www.edwardtufte.com/book/the-visual-display-of-quantitative-information/">The Visual Display of Quantitative Information</a> <span class="citation" data-cites="tufte:1983">(the <a href="#ref-tufte:1983" role="doc-biblioref">Tufte and Graves-Morris 1983</a> classic)</span></li>
+<li><a href="https://medium.com/@MattDuignan/why-tuftes-wrong-a9bd6a14ff8e">Why Tufte’s Wrong…</a></li>
+<li><a href="https://medium.com/the-ux-book-club/tufte-is-dead-long-live-tufte-21f830a0cfa8">Tufte is Dead; Long Live Tufte</a></li>
+</ul>
+</div>
+</div>
+</section>
+</section>
+<section id="thank-you" class="level1" data-background-image="../img/web/title-slide.png" data-background-color="#0F0C11" data-background-opacity="0.2">
+<h1 data-background-image="/img/web/title-slide.png" data-background-color="#0F0C11" data-background-opacity="0.2">Thank You</h1>
+<h3 class="anchored" data-anchor-id="thank-you">
+References
+</h3>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-tufte:1983" class="csl-entry" role="listitem">
+Tufte, Edward R, and Peter R Graves-Morris. 1983. <em>The Visual Display of Quantitative Information</em>. Vol. 2. 9. Graphics press Cheshire, CT.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 2022–2025, Jon Reades</p>
+</div>   
+    <div class="nav-footer-center">
+<p><img src="../img/logo/logo_only_sm.png" height="25"> Foundations of Spatial Data Science</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jreades/fsds/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jreades/fsds">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://bsky.app/profile/jreades.bsky.social/">
+      <i class="bi bi-twitter" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+</body></html>

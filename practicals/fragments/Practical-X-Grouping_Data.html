@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.56">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -70,10 +70,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-fb446d74831b8ff67c69632cb314b545.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-c734b2b4d74e7e594e143a63449c09f7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -133,7 +133,7 @@ window.Quarto = {
 </script>
 
 <meta property="og:title" content="Preamble – Foundations of Spatial Data Science">
-<meta property="og:image" content="img/CASA_Logo_no_text.png">
+<meta property="og:image" content="img/logo/full_sm.png">
 <meta property="og:site_name" content="Foundations">
 <meta property="og:locale" content="en_GB">
 </head>
@@ -146,7 +146,7 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../../img/CASA_Logo_no_text.png" alt="" class="navbar-logo">
+    <img src="../../img/logo/logo_only_sm.png" alt="" class="navbar-logo">
     </a>
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Foundations of Spatial Data Science</span>
@@ -158,10 +158,6 @@ window.Quarto = {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="../../index.html"> 
-<span class="menu-text">Welcome</span></a>
-  </li>  
   <li class="nav-item">
     <a class="nav-link" href="../../setup/index.html"> 
 <span class="menu-text">Setup</span></a>
@@ -330,130 +326,130 @@ Note
 <pre><code>**&amp;#128279; Connections**: </code></pre>
 </div>
 </div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.cm <span class="im">as</span> cm</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib <span class="im">as</span> mpl</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.colors <span class="im">import</span> ListedColormap</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># All of these are potentially useful, though</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># not all have been used in this practical --</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># I'd suggest exploring the use of different </span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Scalers/Transformers as well as clustering </span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co"># algorithms...</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sklearn</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.neighbors <span class="im">import</span> NearestNeighbors</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.manifold <span class="im">import</span> TSNE</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> PowerTransformer, RobustScaler, StandardScaler, MinMaxScaler</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> KMeans, DBSCAN, OPTICS</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> esda.adbscan <span class="im">import</span> ADBSCAN</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>random.seed(<span class="dv">42</span>)    <span class="co"># For reproducibility</span></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">42</span>) <span class="co"># For reproducibility</span></span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Make numeric display a bit neater</span></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>pd.set_option(<span class="st">'display.float_format'</span>, <span class="kw">lambda</span> x: <span class="st">'</span><span class="sc">{:,.2f}</span><span class="st">'</span>.<span class="bu">format</span>(x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="im">import</span> matplotlib.cm <span class="im">as</span> cm</span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="im">import</span> matplotlib <span class="im">as</span> mpl</span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="im">import</span> re</span>
+<span id="cb3-9"><a href="#cb3-9"></a><span class="im">import</span> os</span>
+<span id="cb3-10"><a href="#cb3-10"></a></span>
+<span id="cb3-11"><a href="#cb3-11"></a><span class="im">from</span> matplotlib.colors <span class="im">import</span> ListedColormap</span>
+<span id="cb3-12"><a href="#cb3-12"></a></span>
+<span id="cb3-13"><a href="#cb3-13"></a><span class="co"># All of these are potentially useful, though</span></span>
+<span id="cb3-14"><a href="#cb3-14"></a><span class="co"># not all have been used in this practical --</span></span>
+<span id="cb3-15"><a href="#cb3-15"></a><span class="co"># I'd suggest exploring the use of different </span></span>
+<span id="cb3-16"><a href="#cb3-16"></a><span class="co"># Scalers/Transformers as well as clustering </span></span>
+<span id="cb3-17"><a href="#cb3-17"></a><span class="co"># algorithms...</span></span>
+<span id="cb3-18"><a href="#cb3-18"></a><span class="im">import</span> sklearn</span>
+<span id="cb3-19"><a href="#cb3-19"></a><span class="im">from</span> sklearn.neighbors <span class="im">import</span> NearestNeighbors</span>
+<span id="cb3-20"><a href="#cb3-20"></a><span class="im">from</span> sklearn.manifold <span class="im">import</span> TSNE</span>
+<span id="cb3-21"><a href="#cb3-21"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
+<span id="cb3-22"><a href="#cb3-22"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> PowerTransformer, RobustScaler, StandardScaler, MinMaxScaler</span>
+<span id="cb3-23"><a href="#cb3-23"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> KMeans, DBSCAN, OPTICS</span>
+<span id="cb3-24"><a href="#cb3-24"></a><span class="im">from</span> esda.adbscan <span class="im">import</span> ADBSCAN</span>
+<span id="cb3-25"><a href="#cb3-25"></a></span>
+<span id="cb3-26"><a href="#cb3-26"></a><span class="im">import</span> random</span>
+<span id="cb3-27"><a href="#cb3-27"></a>random.seed(<span class="dv">42</span>)    <span class="co"># For reproducibility</span></span>
+<span id="cb3-28"><a href="#cb3-28"></a>np.random.seed(<span class="dv">42</span>) <span class="co"># For reproducibility</span></span>
+<span id="cb3-29"><a href="#cb3-29"></a></span>
+<span id="cb3-30"><a href="#cb3-30"></a><span class="co"># Make numeric display a bit neater</span></span>
+<span id="cb3-31"><a href="#cb3-31"></a>pd.set_option(<span class="st">'display.float_format'</span>, <span class="kw">lambda</span> x: <span class="st">'</span><span class="sc">{:,.2f}</span><span class="st">'</span>.<span class="bu">format</span>(x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="initialise-the-scalers-and-transformers" class="level4">
 <h4 class="anchored" data-anchor-id="initialise-the-scalers-and-transformers">Initialise the Scalers and Transformers</h4>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>rbs <span class="op">=</span> RobustScaler(quantile_range<span class="op">=</span>[<span class="fl">0.025</span>,<span class="fl">0.975</span>])</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>mms <span class="op">=</span> MinMaxScaler(feature_range<span class="op">=</span>(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>))</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>pts <span class="op">=</span> PowerTransformer()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>rbs <span class="op">=</span> RobustScaler(quantile_range<span class="op">=</span>[<span class="fl">0.025</span>,<span class="fl">0.975</span>])</span>
+<span id="cb4-2"><a href="#cb4-2"></a>mms <span class="op">=</span> MinMaxScaler(feature_range<span class="op">=</span>(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb4-3"><a href="#cb4-3"></a>pts <span class="op">=</span> PowerTransformer()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="set-up-functions-for-plotting" class="level4">
 <h4 class="anchored" data-anchor-id="set-up-functions-for-plotting">Set Up Functions for Plotting</h4>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plt_ldn(w, b):</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">12</span>))</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    w.plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'#79aef5'</span>, zorder<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    b.plot(ax<span class="op">=</span>ax, edgecolor<span class="op">=</span><span class="st">'#cc2d2d'</span>, facecolor<span class="op">=</span><span class="st">'None'</span>, zorder<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    ax.set_xlim([<span class="dv">502000</span>,<span class="dv">563000</span>])</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    ax.set_ylim([<span class="dv">155000</span>,<span class="dv">201500</span>])</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    ax.spines[<span class="st">'top'</span>].set_visible(<span class="va">False</span>)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    ax.spines[<span class="st">'right'</span>].set_visible(<span class="va">False</span>)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    ax.spines[<span class="st">'bottom'</span>].set_visible(<span class="va">False</span>)</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    ax.spines[<span class="st">'left'</span>].set_visible(<span class="va">False</span>)</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fig, ax</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">########################</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co"># These may no longer be relevant because of changes to geopandas API</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> default_cmap(n, outliers<span class="op">=</span><span class="va">False</span>):</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    cmap <span class="op">=</span> mpl.cm.get_cmap(<span class="st">'viridis_r'</span>, n)</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    colors <span class="op">=</span> cmap(np.linspace(<span class="dv">0</span>,<span class="dv">1</span>,n))</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> outliers:</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        gray <span class="op">=</span> np.array([<span class="dv">225</span><span class="op">/</span><span class="dv">256</span>, <span class="dv">225</span><span class="op">/</span><span class="dv">256</span>, <span class="dv">225</span><span class="op">/</span><span class="dv">256</span>, <span class="dv">1</span>])</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>        colors <span class="op">=</span> np.insert(colors, <span class="dv">0</span>, gray, axis<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ListedColormap(colors)</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co"># mappable = ax.collections[-1] if you add the geopandas</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co"># plot last.</span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> add_colorbar(mappable, ax, cmap, norm, breaks, outliers<span class="op">=</span><span class="va">False</span>):</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    cb <span class="op">=</span> fig.colorbar(mappable, ax<span class="op">=</span>ax, cmap<span class="op">=</span>cmap, norm<span class="op">=</span>norm,</span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>                    boundaries<span class="op">=</span>breaks,</span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>                    extend<span class="op">=</span>(<span class="st">'min'</span> <span class="cf">if</span> outliers <span class="cf">else</span> <span class="st">'neither'</span>), </span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>                    spacing<span class="op">=</span><span class="st">'uniform'</span>,</span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>                    orientation<span class="op">=</span><span class="st">'horizontal'</span>,</span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>                    fraction<span class="op">=</span><span class="fl">0.05</span>, shrink<span class="op">=</span><span class="fl">0.5</span>, pad<span class="op">=</span><span class="fl">0.05</span>)</span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    cb.set_label(<span class="st">"Cluster Number"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">def</span> plt_ldn(w, b):</span>
+<span id="cb5-2"><a href="#cb5-2"></a>    fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">12</span>))</span>
+<span id="cb5-3"><a href="#cb5-3"></a>    w.plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'#79aef5'</span>, zorder<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb5-4"><a href="#cb5-4"></a>    b.plot(ax<span class="op">=</span>ax, edgecolor<span class="op">=</span><span class="st">'#cc2d2d'</span>, facecolor<span class="op">=</span><span class="st">'None'</span>, zorder<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb5-5"><a href="#cb5-5"></a>    ax.set_xlim([<span class="dv">502000</span>,<span class="dv">563000</span>])</span>
+<span id="cb5-6"><a href="#cb5-6"></a>    ax.set_ylim([<span class="dv">155000</span>,<span class="dv">201500</span>])</span>
+<span id="cb5-7"><a href="#cb5-7"></a>    ax.spines[<span class="st">'top'</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb5-8"><a href="#cb5-8"></a>    ax.spines[<span class="st">'right'</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb5-9"><a href="#cb5-9"></a>    ax.spines[<span class="st">'bottom'</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb5-10"><a href="#cb5-10"></a>    ax.spines[<span class="st">'left'</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb5-11"><a href="#cb5-11"></a>    <span class="cf">return</span> fig, ax</span>
+<span id="cb5-12"><a href="#cb5-12"></a></span>
+<span id="cb5-13"><a href="#cb5-13"></a><span class="co">########################</span></span>
+<span id="cb5-14"><a href="#cb5-14"></a><span class="co"># These may no longer be relevant because of changes to geopandas API</span></span>
+<span id="cb5-15"><a href="#cb5-15"></a></span>
+<span id="cb5-16"><a href="#cb5-16"></a><span class="kw">def</span> default_cmap(n, outliers<span class="op">=</span><span class="va">False</span>):</span>
+<span id="cb5-17"><a href="#cb5-17"></a>    cmap <span class="op">=</span> mpl.cm.get_cmap(<span class="st">'viridis_r'</span>, n)</span>
+<span id="cb5-18"><a href="#cb5-18"></a>    colors <span class="op">=</span> cmap(np.linspace(<span class="dv">0</span>,<span class="dv">1</span>,n))</span>
+<span id="cb5-19"><a href="#cb5-19"></a>    <span class="cf">if</span> outliers:</span>
+<span id="cb5-20"><a href="#cb5-20"></a>        gray <span class="op">=</span> np.array([<span class="dv">225</span><span class="op">/</span><span class="dv">256</span>, <span class="dv">225</span><span class="op">/</span><span class="dv">256</span>, <span class="dv">225</span><span class="op">/</span><span class="dv">256</span>, <span class="dv">1</span>])</span>
+<span id="cb5-21"><a href="#cb5-21"></a>        colors <span class="op">=</span> np.insert(colors, <span class="dv">0</span>, gray, axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb5-22"><a href="#cb5-22"></a>    <span class="cf">return</span> ListedColormap(colors)</span>
+<span id="cb5-23"><a href="#cb5-23"></a></span>
+<span id="cb5-24"><a href="#cb5-24"></a><span class="co"># mappable = ax.collections[-1] if you add the geopandas</span></span>
+<span id="cb5-25"><a href="#cb5-25"></a><span class="co"># plot last.</span></span>
+<span id="cb5-26"><a href="#cb5-26"></a><span class="kw">def</span> add_colorbar(mappable, ax, cmap, norm, breaks, outliers<span class="op">=</span><span class="va">False</span>):</span>
+<span id="cb5-27"><a href="#cb5-27"></a>    cb <span class="op">=</span> fig.colorbar(mappable, ax<span class="op">=</span>ax, cmap<span class="op">=</span>cmap, norm<span class="op">=</span>norm,</span>
+<span id="cb5-28"><a href="#cb5-28"></a>                    boundaries<span class="op">=</span>breaks,</span>
+<span id="cb5-29"><a href="#cb5-29"></a>                    extend<span class="op">=</span>(<span class="st">'min'</span> <span class="cf">if</span> outliers <span class="cf">else</span> <span class="st">'neither'</span>), </span>
+<span id="cb5-30"><a href="#cb5-30"></a>                    spacing<span class="op">=</span><span class="st">'uniform'</span>,</span>
+<span id="cb5-31"><a href="#cb5-31"></a>                    orientation<span class="op">=</span><span class="st">'horizontal'</span>,</span>
+<span id="cb5-32"><a href="#cb5-32"></a>                    fraction<span class="op">=</span><span class="fl">0.05</span>, shrink<span class="op">=</span><span class="fl">0.5</span>, pad<span class="op">=</span><span class="fl">0.05</span>)</span>
+<span id="cb5-33"><a href="#cb5-33"></a>    cb.set_label(<span class="st">"Cluster Number"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="load-data" class="level2">
 <h2 class="anchored" data-anchor-id="load-data">Load Data</h2>
 <section id="load-water-and-boroughs" class="level4">
 <h4 class="anchored" data-anchor-id="load-water-and-boroughs">Load Water and Boroughs</h4>
-<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load Water GeoPackage</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>w_path <span class="op">=</span> os.path.join(<span class="st">'data'</span>,<span class="st">'geo'</span>,<span class="st">'Water.gpkg'</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> os.path.exists(w_path):</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    water <span class="op">=</span> gpd.read_file(<span class="st">'https://github.com/jreades/i2p/blob/master/data/src/Water.gpkg?raw=true'</span>)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    water.to_file(w_path)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Downloaded Water.gpkg file."</span>)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    water <span class="op">=</span> gpd.read_file(w_path)</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Boroughs GeoPackage</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>b_path <span class="op">=</span> os.path.join(<span class="st">'data'</span>,<span class="st">'geo'</span>,<span class="st">'Boroughs.gpkg'</span>)</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> os.path.exists(b_path):</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    boroughs <span class="op">=</span> gpd.read_file(<span class="st">'https://github.com/jreades/i2p/blob/master/data/src/Boroughs.gpkg?raw=true'</span>)</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    boroughs.to_file(b_path)</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Downloaded Boroughs.gpkg file."</span>)</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    boroughs <span class="op">=</span> gpd.read_file(b_path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># Load Water GeoPackage</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>w_path <span class="op">=</span> os.path.join(<span class="st">'data'</span>,<span class="st">'geo'</span>,<span class="st">'Water.gpkg'</span>)</span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="cf">if</span> <span class="kw">not</span> os.path.exists(w_path):</span>
+<span id="cb6-4"><a href="#cb6-4"></a>    water <span class="op">=</span> gpd.read_file(<span class="st">'https://github.com/jreades/i2p/blob/master/data/src/Water.gpkg?raw=true'</span>)</span>
+<span id="cb6-5"><a href="#cb6-5"></a>    water.to_file(w_path)</span>
+<span id="cb6-6"><a href="#cb6-6"></a>    <span class="bu">print</span>(<span class="st">"Downloaded Water.gpkg file."</span>)</span>
+<span id="cb6-7"><a href="#cb6-7"></a><span class="cf">else</span>:</span>
+<span id="cb6-8"><a href="#cb6-8"></a>    water <span class="op">=</span> gpd.read_file(w_path)</span>
+<span id="cb6-9"><a href="#cb6-9"></a></span>
+<span id="cb6-10"><a href="#cb6-10"></a><span class="co"># Boroughs GeoPackage</span></span>
+<span id="cb6-11"><a href="#cb6-11"></a>b_path <span class="op">=</span> os.path.join(<span class="st">'data'</span>,<span class="st">'geo'</span>,<span class="st">'Boroughs.gpkg'</span>)</span>
+<span id="cb6-12"><a href="#cb6-12"></a><span class="cf">if</span> <span class="kw">not</span> os.path.exists(b_path):</span>
+<span id="cb6-13"><a href="#cb6-13"></a>    boroughs <span class="op">=</span> gpd.read_file(<span class="st">'https://github.com/jreades/i2p/blob/master/data/src/Boroughs.gpkg?raw=true'</span>)</span>
+<span id="cb6-14"><a href="#cb6-14"></a>    boroughs.to_file(b_path)</span>
+<span id="cb6-15"><a href="#cb6-15"></a>    <span class="bu">print</span>(<span class="st">"Downloaded Boroughs.gpkg file."</span>)</span>
+<span id="cb6-16"><a href="#cb6-16"></a><span class="cf">else</span>:</span>
+<span id="cb6-17"><a href="#cb6-17"></a>    boroughs <span class="op">=</span> gpd.read_file(b_path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="load-the-msoa-geodata" class="level4">
 <h4 class="anchored" data-anchor-id="load-the-msoa-geodata">Load the MSOA GeoData</h4>
 <p>You should have this locally…</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>msoas <span class="op">=</span> gpd.read_file(os.path.join(<span class="st">'data'</span>,<span class="st">'geo'</span>,<span class="st">'London_MSOAs.gpkg'</span>), driver<span class="op">=</span><span class="st">'GPKG'</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>msoas <span class="op">=</span> msoas.drop(columns<span class="op">=</span>[<span class="st">'OBJECTID'</span>,<span class="st">'MSOA11NM'</span>,<span class="st">'BNG_E'</span>,<span class="st">'BNG_N'</span>,<span class="st">'Borough'</span>,<span class="st">'msoa11hclnm'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>msoas <span class="op">=</span> gpd.read_file(os.path.join(<span class="st">'data'</span>,<span class="st">'geo'</span>,<span class="st">'London_MSOAs.gpkg'</span>), driver<span class="op">=</span><span class="st">'GPKG'</span>)</span>
+<span id="cb7-2"><a href="#cb7-2"></a>msoas <span class="op">=</span> msoas.drop(columns<span class="op">=</span>[<span class="st">'OBJECTID'</span>,<span class="st">'MSOA11NM'</span>,<span class="st">'BNG_E'</span>,<span class="st">'BNG_N'</span>,<span class="st">'Borough'</span>,<span class="st">'msoa11hclnm'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="load-the-listings-data" class="level4">
 <h4 class="anchored" data-anchor-id="load-the-listings-data">Load the Listings Data</h4>
 <p>Feel free to load your local copy rather than loading via the URL:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://github.com/jreades/i2p/blob/master/data/clean/2020-08-24-listings.csv.gz?raw=true'</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(url, compression<span class="op">=</span><span class="st">'gzip'</span>, low_memory<span class="op">=</span><span class="va">False</span>, </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                 usecols<span class="op">=</span>[<span class="st">'room_type'</span>,<span class="st">'longitude'</span>,<span class="st">'latitude'</span>,<span class="st">'price'</span>])</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Data frame is </span><span class="sc">{</span>df<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> x </span><span class="sc">{</span>df<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>url <span class="op">=</span> <span class="st">'https://github.com/jreades/i2p/blob/master/data/clean/2020-08-24-listings.csv.gz?raw=true'</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a>df <span class="op">=</span> pd.read_csv(url, compression<span class="op">=</span><span class="st">'gzip'</span>, low_memory<span class="op">=</span><span class="va">False</span>, </span>
+<span id="cb8-3"><a href="#cb8-3"></a>                 usecols<span class="op">=</span>[<span class="st">'room_type'</span>,<span class="st">'longitude'</span>,<span class="st">'latitude'</span>,<span class="st">'price'</span>])</span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="bu">print</span>(<span class="ss">f"Data frame is </span><span class="sc">{</span>df<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> x </span><span class="sc">{</span>df<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>You should have: <code>Data frame is 74,120 x 4</code>.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>gdf <span class="op">=</span> gpd.GeoDataFrame(df, </span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>      geometry<span class="op">=</span>gpd.points_from_xy(?, ?, crs<span class="op">=</span>?))</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>gdf <span class="op">=</span> gdf.to_crs(?)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>gdf.plot(column<span class="op">=</span><span class="st">'price'</span>, cmap<span class="op">=</span><span class="st">'plasma'</span>, scheme<span class="op">=</span><span class="st">'quantiles'</span>, k<span class="op">=</span><span class="dv">10</span>, markersize<span class="op">=</span><span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">6</span>))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>gdf <span class="op">=</span> gpd.GeoDataFrame(df, </span>
+<span id="cb9-2"><a href="#cb9-2"></a>      geometry<span class="op">=</span>gpd.points_from_xy(?, ?, crs<span class="op">=</span>?))</span>
+<span id="cb9-3"><a href="#cb9-3"></a>gdf <span class="op">=</span> gdf.to_crs(?)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>gdf.plot(column<span class="op">=</span><span class="st">'price'</span>, cmap<span class="op">=</span><span class="st">'plasma'</span>, scheme<span class="op">=</span><span class="st">'quantiles'</span>, k<span class="op">=</span><span class="dv">10</span>, markersize<span class="op">=</span><span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">6</span>))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="aggregate-listings-by-msoa" class="level4">
 <h4 class="anchored">Aggregate Listings by MSOA</h4>
 <p>Next, use a spatial join to link the listings to MSOAs.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ml == MSOA Listings</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>ml <span class="op">=</span> gpd.sjoin(??).drop(</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                    columns<span class="op">=</span>[<span class="st">'latitude'</span>,<span class="st">'longitude'</span>,<span class="st">'index_right'</span>]</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># ml == MSOA Listings</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a>ml <span class="op">=</span> gpd.sjoin(??).drop(</span>
+<span id="cb11-3"><a href="#cb11-3"></a>                    columns<span class="op">=</span>[<span class="st">'latitude'</span>,<span class="st">'longitude'</span>,<span class="st">'index_right'</span>]</span>
+<span id="cb11-4"><a href="#cb11-4"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Now we want a count of room types by MSOA:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>mlgc <span class="op">=</span> ml.groupby([??])[<span class="st">'price'</span>].agg(Count<span class="op">=</span><span class="st">'??'</span>).reset_index() <span class="co"># msoa listings grouped counts</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>mlgc.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>mlgc <span class="op">=</span> ml.groupby([??])[<span class="st">'price'</span>].agg(Count<span class="op">=</span><span class="st">'??'</span>).reset_index() <span class="co"># msoa listings grouped counts</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a>mlgc.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>You should get:</p>
 <table class="caption-top table">
 <thead>
@@ -498,8 +494,8 @@ Note
 </tbody>
 </table>
 <p>And let’s also get the median price by MSOA…</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mlgp <span class="op">=</span> ml.groupby(<span class="st">'MSOA11CD'</span>)[<span class="st">'price'</span>].agg(??).reset_index() <span class="co"># msoa listings grouped price</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>mlgp.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>mlgp <span class="op">=</span> ml.groupby(<span class="st">'MSOA11CD'</span>)[<span class="st">'price'</span>].agg(??).reset_index() <span class="co"># msoa listings grouped price</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a>mlgp.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>For comparison purposes:</p>
 <table class="caption-top table">
 <thead>
@@ -542,7 +538,7 @@ Note
 <p><em>Warning</em>: I have a strong suspicion that price is <em>so</em> skewed that using it in most clustering contexts is almost impossible. This is why I use the PowerTransformer below.</p>
 <p>:::</p>
 <p>Now we can make use of the pivot table function to generate counts by MSOA in ‘wide’ format. I’d suggest using the empty cell below to work out the pivot table function first before assigning it back to the <code>mlgc</code> variable and overwriting the existing data.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#mlgc.pivot(index=??, columns=??, values=??).reset_index()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="co">#mlgc.pivot(index=??, columns=??, values=??).reset_index()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 6%">
@@ -597,18 +593,18 @@ Note
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>mlgc <span class="op">=</span> mlgc.pivot().reset_index()</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>mlgc.columns <span class="op">=</span> [<span class="st">'MSOA11CD'</span>,<span class="st">'Entire home/apt'</span>,<span class="st">'Hotel room'</span>,<span class="st">'Private room'</span>,<span class="st">'Shared room'</span>]</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>mlgc.drop(columns<span class="op">=</span>[<span class="st">'Hotel room'</span>,<span class="st">'Shared room'</span>], inplace<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>mlgc.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>mlgc <span class="op">=</span> mlgc.pivot().reset_index()</span>
+<span id="cb15-2"><a href="#cb15-2"></a>mlgc.columns <span class="op">=</span> [<span class="st">'MSOA11CD'</span>,<span class="st">'Entire home/apt'</span>,<span class="st">'Hotel room'</span>,<span class="st">'Private room'</span>,<span class="st">'Shared room'</span>]</span>
+<span id="cb15-3"><a href="#cb15-3"></a>mlgc.drop(columns<span class="op">=</span>[<span class="st">'Hotel room'</span>,<span class="st">'Shared room'</span>], inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb15-4"><a href="#cb15-4"></a>mlgc.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Merge the grouped counts and price back to a <code>mlg</code> (MSOA Listings Grouped) data frame:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>mlg <span class="op">=</span> pd.merge(mlgc, mlgp, on<span class="op">=</span>??)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>mlg <span class="op">=</span> mlg.fillna(<span class="dv">0</span>).set_index(<span class="st">'MSOA11CD'</span>)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>mlg.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>mlg <span class="op">=</span> pd.merge(mlgc, mlgp, on<span class="op">=</span>??)</span>
+<span id="cb16-2"><a href="#cb16-2"></a>mlg <span class="op">=</span> mlg.fillna(<span class="dv">0</span>).set_index(<span class="st">'MSOA11CD'</span>)</span>
+<span id="cb16-3"><a href="#cb16-3"></a>mlg.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Apply a PowerTransform to every column using a loop and <code>fit_transform</code>:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> mlg.columns.values:</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    mlg[c] <span class="op">=</span> ??</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>mlg.head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="cf">for</span> c <span class="kw">in</span> mlg.columns.values:</span>
+<span id="cb17-2"><a href="#cb17-2"></a>    mlg[c] <span class="op">=</span> ??</span>
+<span id="cb17-3"><a href="#cb17-3"></a>mlg.head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>For comparison:</p>
 <table class="caption-top table">
 <thead>
@@ -646,29 +642,29 @@ Note
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>sns.<span class="bu">set</span>(style<span class="op">=</span><span class="st">"white"</span>)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>sns.pairplot(mlg, markers<span class="op">=</span><span class="st">"."</span>, height<span class="op">=</span><span class="dv">3</span>, diag_kind<span class="op">=</span><span class="st">'kde'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a>sns.<span class="bu">set</span>(style<span class="op">=</span><span class="st">"white"</span>)</span>
+<span id="cb18-2"><a href="#cb18-2"></a>sns.pairplot(mlg, markers<span class="op">=</span><span class="st">"."</span>, height<span class="op">=</span><span class="dv">3</span>, diag_kind<span class="op">=</span><span class="st">'kde'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="load-the-reduced-dimension-data-from-week-9" class="level4">
 <h4 class="anchored" data-anchor-id="load-the-reduced-dimension-data-from-week-9">Load the Reduced Dimension Data from Week 9</h4>
-<div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>rddf <span class="op">=</span> gpd.read_file(os.path.join(<span class="st">'data'</span>,<span class="st">'clean'</span>,<span class="st">'Reduced_Dimension_Data.gpkg'</span>), driver<span class="op">=</span><span class="st">'GPKG'</span>).set_index(<span class="st">'MSOA11CD'</span>)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>rddf.drop(columns<span class="op">=</span>[<span class="st">'OBJECTID'</span>,<span class="st">'MSOA11NM'</span>,<span class="st">'BNG_E'</span>,<span class="st">'BNG_N'</span>,<span class="st">'Borough'</span>,<span class="st">'msoa11hclnm'</span>,<span class="st">'Subregion'</span>,</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'geometry'</span>,<span class="st">'Dimension 1'</span>,<span class="st">'Dimension 2'</span>], inplace<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Reduced Dimensionality Data Frame is </span><span class="sc">{</span>rddf<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> x </span><span class="sc">{</span>rddf<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">:,}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>rddf <span class="op">=</span> gpd.read_file(os.path.join(<span class="st">'data'</span>,<span class="st">'clean'</span>,<span class="st">'Reduced_Dimension_Data.gpkg'</span>), driver<span class="op">=</span><span class="st">'GPKG'</span>).set_index(<span class="st">'MSOA11CD'</span>)</span>
+<span id="cb19-2"><a href="#cb19-2"></a>rddf.drop(columns<span class="op">=</span>[<span class="st">'OBJECTID'</span>,<span class="st">'MSOA11NM'</span>,<span class="st">'BNG_E'</span>,<span class="st">'BNG_N'</span>,<span class="st">'Borough'</span>,<span class="st">'msoa11hclnm'</span>,<span class="st">'Subregion'</span>,</span>
+<span id="cb19-3"><a href="#cb19-3"></a>                   <span class="st">'geometry'</span>,<span class="st">'Dimension 1'</span>,<span class="st">'Dimension 2'</span>], inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb19-4"><a href="#cb19-4"></a><span class="bu">print</span>(<span class="ss">f"Reduced Dimensionality Data Frame is </span><span class="sc">{</span>rddf<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> x </span><span class="sc">{</span>rddf<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">:,}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>You should get <code>Reduced Dimensionality Data Frame is 983 x 10</code>.</p>
 <p>Merge the <code>rddf</code> and <code>mlg</code> files using the MSOA11CD and rescale all columns using MinMaxScaler:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge the reducded dimensionality data frame with the msoa listings grouped data frame</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>cldf <span class="op">=</span> pd.merge(??)</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Rescale the columns using the MinMaxScaler set up in the Preamble</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> cldf.columns:</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    cldf[c] <span class="op">=</span> ??</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co"># We also create a 'result set' (rs) data frame to hold the </span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="co"># results of the clustering operation</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>rs   <span class="op">=</span> pd.merge(msoas, cldf, left_on<span class="op">=</span><span class="st">'MSOA11CD'</span>, right_index<span class="op">=</span><span class="va">True</span>).set_index(<span class="st">'MSOA11CD'</span>)</span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Check output</span></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>cldf.head(<span class="dv">2</span>)[[<span class="st">'Component 1'</span>,<span class="st">'Component 2'</span>,<span class="st">'price'</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># Merge the reducded dimensionality data frame with the msoa listings grouped data frame</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a>cldf <span class="op">=</span> pd.merge(??)</span>
+<span id="cb20-3"><a href="#cb20-3"></a></span>
+<span id="cb20-4"><a href="#cb20-4"></a><span class="co"># Rescale the columns using the MinMaxScaler set up in the Preamble</span></span>
+<span id="cb20-5"><a href="#cb20-5"></a><span class="cf">for</span> c <span class="kw">in</span> cldf.columns:</span>
+<span id="cb20-6"><a href="#cb20-6"></a>    cldf[c] <span class="op">=</span> ??</span>
+<span id="cb20-7"><a href="#cb20-7"></a></span>
+<span id="cb20-8"><a href="#cb20-8"></a><span class="co"># We also create a 'result set' (rs) data frame to hold the </span></span>
+<span id="cb20-9"><a href="#cb20-9"></a><span class="co"># results of the clustering operation</span></span>
+<span id="cb20-10"><a href="#cb20-10"></a>rs   <span class="op">=</span> pd.merge(msoas, cldf, left_on<span class="op">=</span><span class="st">'MSOA11CD'</span>, right_index<span class="op">=</span><span class="va">True</span>).set_index(<span class="st">'MSOA11CD'</span>)</span>
+<span id="cb20-11"><a href="#cb20-11"></a></span>
+<span id="cb20-12"><a href="#cb20-12"></a><span class="co"># Check output</span></span>
+<span id="cb20-13"><a href="#cb20-13"></a>cldf.head(<span class="dv">2</span>)[[<span class="st">'Component 1'</span>,<span class="st">'Component 2'</span>,<span class="st">'price'</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>A partial sample:</p>
 <table class="caption-top table">
 <thead>
@@ -698,33 +694,33 @@ Note
 <section id="select-columns-to-plot" class="level4">
 <h4 class="anchored" data-anchor-id="select-columns-to-plot">Select columns to plot</h4>
 <p>Plotting all columns is computationally costly and for little utility… it’s better to just select a few at random.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>cols_to_plot <span class="op">=</span> np.random.choice(cldf.columns.values, <span class="dv">4</span>, replace<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(cols_to_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a>cols_to_plot <span class="op">=</span> np.random.choice(cldf.columns.values, <span class="dv">4</span>, replace<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb21-2"><a href="#cb21-2"></a><span class="bu">print</span>(cols_to_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="first-k-means-clustering" class="level2">
 <h2 class="anchored" data-anchor-id="first-k-means-clustering">First K-Means Clustering</h2>
-<div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>c_nm   <span class="op">=</span> <span class="st">'KMeans'</span> <span class="co"># Clustering name</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>k_pref <span class="op">=</span> <span class="dv">3</span> <span class="co"># Number of clusters</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>kmeans <span class="op">=</span> KMeans(n_clusters<span class="op">=</span>k_pref, n_init<span class="op">=</span><span class="dv">25</span>, random_state<span class="op">=</span><span class="dv">42</span>).fit(cldf) <span class="co"># The process</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(kmeans.labels_) <span class="co"># The results</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a>c_nm   <span class="op">=</span> <span class="st">'KMeans'</span> <span class="co"># Clustering name</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a>k_pref <span class="op">=</span> <span class="dv">3</span> <span class="co"># Number of clusters</span></span>
+<span id="cb22-3"><a href="#cb22-3"></a></span>
+<span id="cb22-4"><a href="#cb22-4"></a>kmeans <span class="op">=</span> KMeans(n_clusters<span class="op">=</span>k_pref, n_init<span class="op">=</span><span class="dv">25</span>, random_state<span class="op">=</span><span class="dv">42</span>).fit(cldf) <span class="co"># The process</span></span>
+<span id="cb22-5"><a href="#cb22-5"></a></span>
+<span id="cb22-6"><a href="#cb22-6"></a><span class="bu">print</span>(kmeans.labels_) <span class="co"># The results</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Now capture the labels (i.e.&nbsp;clusters) and write them to a data series that we store on the result set df (<code>rs</code>):</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add it to the data frame</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>rs[c_nm] <span class="op">=</span> pd.Series(kmeans.labels_, index<span class="op">=</span>cldf.index)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># How are the clusters distributed?</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> sns.histplot(data<span class="op">=</span>rs, x<span class="op">=</span>c_nm, bins<span class="op">=</span>k_pref)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Going to be a bit hard to read if </span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># we plot every variable against every</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># other variables, so we'll just pick a few</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>sns.<span class="bu">set</span>(style<span class="op">=</span><span class="st">"white"</span>)</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>sns.pairplot(rs, </span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>             <span class="bu">vars</span><span class="op">=</span>cols_to_plot, </span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>             hue<span class="op">=</span>c_nm, markers<span class="op">=</span><span class="st">"."</span>, height<span class="op">=</span><span class="dv">3</span>, diag_kind<span class="op">=</span><span class="st">'kde'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a><span class="co"># Add it to the data frame</span></span>
+<span id="cb23-2"><a href="#cb23-2"></a>rs[c_nm] <span class="op">=</span> pd.Series(kmeans.labels_, index<span class="op">=</span>cldf.index)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a><span class="co"># How are the clusters distributed?</span></span>
+<span id="cb24-2"><a href="#cb24-2"></a>ax <span class="op">=</span> sns.histplot(data<span class="op">=</span>rs, x<span class="op">=</span>c_nm, bins<span class="op">=</span>k_pref)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1"></a><span class="co"># Going to be a bit hard to read if </span></span>
+<span id="cb25-2"><a href="#cb25-2"></a><span class="co"># we plot every variable against every</span></span>
+<span id="cb25-3"><a href="#cb25-3"></a><span class="co"># other variables, so we'll just pick a few</span></span>
+<span id="cb25-4"><a href="#cb25-4"></a>sns.<span class="bu">set</span>(style<span class="op">=</span><span class="st">"white"</span>)</span>
+<span id="cb25-5"><a href="#cb25-5"></a>sns.pairplot(rs, </span>
+<span id="cb25-6"><a href="#cb25-6"></a>             <span class="bu">vars</span><span class="op">=</span>cols_to_plot, </span>
+<span id="cb25-7"><a href="#cb25-7"></a>             hue<span class="op">=</span>c_nm, markers<span class="op">=</span><span class="st">"."</span>, height<span class="op">=</span><span class="dv">3</span>, diag_kind<span class="op">=</span><span class="st">'kde'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>And here’s a map!</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt_ldn(water, boroughs)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>fig.suptitle(<span class="ss">f"</span><span class="sc">{</span>c_nm<span class="sc">}</span><span class="ss"> Results (k=</span><span class="sc">{</span>k_pref<span class="sc">}</span><span class="ss">)"</span>, fontsize<span class="op">=</span><span class="dv">20</span>, y<span class="op">=</span><span class="fl">0.92</span>)</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>rs.plot(column<span class="op">=</span>??, ax<span class="op">=</span>ax, linewidth<span class="op">=</span><span class="dv">0</span>, zorder<span class="op">=</span><span class="dv">0</span>, categorical<span class="op">=</span><span class="va">True</span>, legend<span class="op">=</span><span class="va">True</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1"></a>fig, ax <span class="op">=</span> plt_ldn(water, boroughs)</span>
+<span id="cb26-2"><a href="#cb26-2"></a>fig.suptitle(<span class="ss">f"</span><span class="sc">{</span>c_nm<span class="sc">}</span><span class="ss"> Results (k=</span><span class="sc">{</span>k_pref<span class="sc">}</span><span class="ss">)"</span>, fontsize<span class="op">=</span><span class="dv">20</span>, y<span class="op">=</span><span class="fl">0.92</span>)</span>
+<span id="cb26-3"><a href="#cb26-3"></a>rs.plot(column<span class="op">=</span>??, ax<span class="op">=</span>ax, linewidth<span class="op">=</span><span class="dv">0</span>, zorder<span class="op">=</span><span class="dv">0</span>, categorical<span class="op">=</span><span class="va">True</span>, legend<span class="op">=</span><span class="va">True</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div style="border: dotted 1px red; padding: 10px; margin: 5px; background-color: rgb(255,249,249);">
 <p><em>Stop</em>: What critical assumption did we make when running this analysis?</p>
 <p>:::</p>
@@ -736,173 +732,173 @@ Note
 <p>Another way to try to make the process of selecting the number of clusters a little less arbitrary is called the silhouette plot and (like WCSS) it allows us to evaluate the ‘quality’ of the clustering outcome by examining the distance between each observation and the rest of the cluster. In this case it’s based on Partitioning Around the Medoid (PAM).</p>
 <p>Either way, to evaluate this in a systematic way, we want to do multiple k-means clusterings for multiple values of k and then we can look at which gives the best results…</p>
 <p>Let’s try clustering across a wider range.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Adapted from: http://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_silhouette_analysis.html</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> silhouette_samples, silhouette_score</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> []</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> []</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(??,??):</span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">#############</span></span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Do the clustering using the main columns</span></span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>    kmeans <span class="op">=</span> KMeans(??).fit(cldf)</span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate the overall silhouette score</span></span>
-<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>    silhouette_avg <span class="op">=</span> silhouette_score(cldf, kmeans.labels_)</span>
-<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>    y.append(k)</span>
-<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>    x.append(silhouette_avg)</span>
-<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'.'</span>, end<span class="op">=</span><span class="st">''</span>)</span>
-<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
-<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Largest silhouette score was </span><span class="sc">{</span><span class="bu">max</span>(x)<span class="sc">:6.4f}</span><span class="ss"> for k=</span><span class="sc">{</span>y[x.index(<span class="bu">max</span>(x))]<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>plt.plot(y, x)</span>
-<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>plt.gcf().suptitle(<span class="st">"Average Silhouette Scores"</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1"></a><span class="co"># Adapted from: http://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_silhouette_analysis.html</span></span>
+<span id="cb27-2"><a href="#cb27-2"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> silhouette_samples, silhouette_score</span>
+<span id="cb27-3"><a href="#cb27-3"></a></span>
+<span id="cb27-4"><a href="#cb27-4"></a>x <span class="op">=</span> []</span>
+<span id="cb27-5"><a href="#cb27-5"></a>y <span class="op">=</span> []</span>
+<span id="cb27-6"><a href="#cb27-6"></a></span>
+<span id="cb27-7"><a href="#cb27-7"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(??,??):</span>
+<span id="cb27-8"><a href="#cb27-8"></a>    </span>
+<span id="cb27-9"><a href="#cb27-9"></a>    <span class="co">#############</span></span>
+<span id="cb27-10"><a href="#cb27-10"></a>    <span class="co"># Do the clustering using the main columns</span></span>
+<span id="cb27-11"><a href="#cb27-11"></a>    kmeans <span class="op">=</span> KMeans(??).fit(cldf)</span>
+<span id="cb27-12"><a href="#cb27-12"></a>    </span>
+<span id="cb27-13"><a href="#cb27-13"></a>    <span class="co"># Calculate the overall silhouette score</span></span>
+<span id="cb27-14"><a href="#cb27-14"></a>    silhouette_avg <span class="op">=</span> silhouette_score(cldf, kmeans.labels_)</span>
+<span id="cb27-15"><a href="#cb27-15"></a>    </span>
+<span id="cb27-16"><a href="#cb27-16"></a>    y.append(k)</span>
+<span id="cb27-17"><a href="#cb27-17"></a>    x.append(silhouette_avg)</span>
+<span id="cb27-18"><a href="#cb27-18"></a>    </span>
+<span id="cb27-19"><a href="#cb27-19"></a>    <span class="bu">print</span>(<span class="st">'.'</span>, end<span class="op">=</span><span class="st">''</span>)</span>
+<span id="cb27-20"><a href="#cb27-20"></a></span>
+<span id="cb27-21"><a href="#cb27-21"></a><span class="bu">print</span>()</span>
+<span id="cb27-22"><a href="#cb27-22"></a><span class="bu">print</span>(<span class="ss">f"Largest silhouette score was </span><span class="sc">{</span><span class="bu">max</span>(x)<span class="sc">:6.4f}</span><span class="ss"> for k=</span><span class="sc">{</span>y[x.index(<span class="bu">max</span>(x))]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb27-23"><a href="#cb27-23"></a></span>
+<span id="cb27-24"><a href="#cb27-24"></a>plt.plot(y, x)</span>
+<span id="cb27-25"><a href="#cb27-25"></a>plt.gcf().suptitle(<span class="st">"Average Silhouette Scores"</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>We can use the largest average silhouette score to determine the ‘natural’ number of clusters in the data, but that that’s only if we don’t have any kind of underlying theory, other empirical evidence, or even just a reason for choosing a different value… Again, we’re now getting in areas where your judgement and your ability to communicate your rationale to readers is the key thing.</p>
 </section>
 <section id="final-clustering" class="level4">
 <h4 class="anchored">Final Clustering</h4>
 <p>So although we should probably pick the largest silhouette scores, that’s <code>k=2</code> which kind of defeats the purpose of clustering in the first place. In the absence of a <em>compelling</em> reason to pick 2 or 3 clusters, let’s have a closer look at the <em>next</em> maximum silhouetted score:</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>k_pref<span class="op">=</span>??</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co">#############</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Do the clustering using the main columns</span></span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>kmeans <span class="op">=</span> KMeans(??).fit(cldf)</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to a series</span></span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> pd.Series(kmeans.labels_, index<span class="op">=</span>cldf.index, name<span class="op">=</span>c_nm)</span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>rs[c_nm] <span class="op">=</span> s</span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the overall silhouette score</span></span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>silhouette_avg <span class="op">=</span> silhouette_score(cldf, kmeans.labels_)</span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the silhouette values</span></span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>sample_silhouette_values <span class="op">=</span> silhouette_samples(cldf, kmeans.labels_)</span>
-<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a><span class="co">#############</span></span>
-<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a subplot with 1 row and 2 columns</span></span>
-<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>)</span>
-<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>fig.set_size_inches(<span class="dv">9</span>, <span class="dv">5</span>)</span>
-<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a><span class="co"># The 1st subplot is the silhouette plot</span></span>
-<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a><span class="co"># The silhouette coefficient can range from -1, 1</span></span>
-<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>ax1.set_xlim([<span class="op">-</span><span class="fl">1.0</span>, <span class="fl">1.0</span>]) <span class="co"># Changed from -0.1, 1</span></span>
-<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a><span class="co"># The (n_clusters+1)*10 is for inserting blank space between silhouette</span></span>
-<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a><span class="co"># plots of individual clusters, to demarcate them clearly.</span></span>
-<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>ax1.set_ylim([<span class="dv">0</span>, cldf.shape[<span class="dv">0</span>] <span class="op">+</span> (k <span class="op">+</span> <span class="dv">1</span>) <span class="op">*</span> <span class="dv">10</span>])</span>
-<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a>y_lower <span class="op">=</span> <span class="dv">10</span></span>
-<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a><span class="co"># For each of the clusters...</span></span>
-<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(k_pref):</span>
-<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Aggregate the silhouette scores for samples belonging to</span></span>
-<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a>    <span class="co"># cluster i, and sort them</span></span>
-<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a>    ith_cluster_silhouette_values <span class="op">=</span> <span class="op">\</span></span>
-<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a>        sample_silhouette_values[kmeans.labels_ <span class="op">==</span> i]</span>
-<span id="cb28-38"><a href="#cb28-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-39"><a href="#cb28-39" aria-hidden="true" tabindex="-1"></a>    ith_cluster_silhouette_values.sort()</span>
-<span id="cb28-40"><a href="#cb28-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-41"><a href="#cb28-41" aria-hidden="true" tabindex="-1"></a>    size_cluster_i <span class="op">=</span> ith_cluster_silhouette_values.shape[<span class="dv">0</span>]</span>
-<span id="cb28-42"><a href="#cb28-42" aria-hidden="true" tabindex="-1"></a>    y_upper <span class="op">=</span> y_lower <span class="op">+</span> size_cluster_i</span>
-<span id="cb28-43"><a href="#cb28-43" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb28-44"><a href="#cb28-44" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Set the color ramp</span></span>
-<span id="cb28-45"><a href="#cb28-45" aria-hidden="true" tabindex="-1"></a>    color <span class="op">=</span> plt.cm.Spectral(i<span class="op">/</span>k)</span>
-<span id="cb28-46"><a href="#cb28-46" aria-hidden="true" tabindex="-1"></a>    ax1.fill_betweenx(np.arange(y_lower, y_upper),</span>
-<span id="cb28-47"><a href="#cb28-47" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">0</span>, ith_cluster_silhouette_values,</span>
-<span id="cb28-48"><a href="#cb28-48" aria-hidden="true" tabindex="-1"></a>                        facecolor<span class="op">=</span>color, edgecolor<span class="op">=</span>color, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
-<span id="cb28-49"><a href="#cb28-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-50"><a href="#cb28-50" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Label the silhouette plots with their cluster numbers at the middle</span></span>
-<span id="cb28-51"><a href="#cb28-51" aria-hidden="true" tabindex="-1"></a>    ax1.text(<span class="op">-</span><span class="fl">0.05</span>, y_lower <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> size_cluster_i, <span class="bu">str</span>(i))</span>
-<span id="cb28-52"><a href="#cb28-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-53"><a href="#cb28-53" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Compute the new y_lower for next plot</span></span>
-<span id="cb28-54"><a href="#cb28-54" aria-hidden="true" tabindex="-1"></a>    y_lower <span class="op">=</span> y_upper <span class="op">+</span> <span class="dv">10</span>  <span class="co"># 10 for the 0 samples</span></span>
-<span id="cb28-55"><a href="#cb28-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-56"><a href="#cb28-56" aria-hidden="true" tabindex="-1"></a>    ax1.set_title(<span class="st">"The silhouette plot for the clusters."</span>)</span>
-<span id="cb28-57"><a href="#cb28-57" aria-hidden="true" tabindex="-1"></a>    ax1.set_xlabel(<span class="st">"The silhouette coefficient values"</span>)</span>
-<span id="cb28-58"><a href="#cb28-58" aria-hidden="true" tabindex="-1"></a>    ax1.set_ylabel(<span class="st">"Cluster label"</span>)</span>
-<span id="cb28-59"><a href="#cb28-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-60"><a href="#cb28-60" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The vertical line for average silhouette score of all the values</span></span>
-<span id="cb28-61"><a href="#cb28-61" aria-hidden="true" tabindex="-1"></a>    ax1.axvline(x<span class="op">=</span>silhouette_avg, color<span class="op">=</span><span class="st">"red"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>, linewidth<span class="op">=</span><span class="fl">0.5</span>)</span>
-<span id="cb28-62"><a href="#cb28-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-63"><a href="#cb28-63" aria-hidden="true" tabindex="-1"></a>    ax1.set_yticks([])  <span class="co"># Clear the yaxis labels / ticks</span></span>
-<span id="cb28-64"><a href="#cb28-64" aria-hidden="true" tabindex="-1"></a>    ax1.set_xticks(np.arange(<span class="op">-</span><span class="fl">1.0</span>, <span class="fl">1.1</span>, <span class="fl">0.2</span>)) <span class="co"># Was: [-0.1, 0, 0.2, 0.4, 0.6, 0.8, 1]</span></span>
-<span id="cb28-65"><a href="#cb28-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-66"><a href="#cb28-66" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 2nd Plot showing the actual clusters formed --</span></span>
-<span id="cb28-67"><a href="#cb28-67" aria-hidden="true" tabindex="-1"></a>    <span class="co"># we can only do this for the first two dimensions</span></span>
-<span id="cb28-68"><a href="#cb28-68" aria-hidden="true" tabindex="-1"></a>    <span class="co"># so we may not see fully what is causing the </span></span>
-<span id="cb28-69"><a href="#cb28-69" aria-hidden="true" tabindex="-1"></a>    <span class="co"># resulting assignment</span></span>
-<span id="cb28-70"><a href="#cb28-70" aria-hidden="true" tabindex="-1"></a>    colors <span class="op">=</span> plt.cm.Spectral(kmeans.labels_.astype(<span class="bu">float</span>) <span class="op">/</span> k)</span>
-<span id="cb28-71"><a href="#cb28-71" aria-hidden="true" tabindex="-1"></a>    ax2.scatter(cldf[cldf.columns[<span class="dv">0</span>]], cldf[cldf.columns[<span class="dv">1</span>]], </span>
-<span id="cb28-72"><a href="#cb28-72" aria-hidden="true" tabindex="-1"></a>                marker<span class="op">=</span><span class="st">'.'</span>, s<span class="op">=</span><span class="dv">30</span>, lw<span class="op">=</span><span class="dv">0</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, c<span class="op">=</span>colors)</span>
-<span id="cb28-73"><a href="#cb28-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-74"><a href="#cb28-74" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Labeling the clusters</span></span>
-<span id="cb28-75"><a href="#cb28-75" aria-hidden="true" tabindex="-1"></a>    centers <span class="op">=</span> kmeans.cluster_centers_</span>
-<span id="cb28-76"><a href="#cb28-76" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb28-77"><a href="#cb28-77" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Draw white circles at cluster centers</span></span>
-<span id="cb28-78"><a href="#cb28-78" aria-hidden="true" tabindex="-1"></a>    ax2.scatter(centers[:, <span class="dv">0</span>], centers[:, <span class="dv">1</span>],</span>
-<span id="cb28-79"><a href="#cb28-79" aria-hidden="true" tabindex="-1"></a>                marker<span class="op">=</span><span class="st">'o'</span>, c<span class="op">=</span><span class="st">"white"</span>, alpha<span class="op">=</span><span class="dv">1</span>, s<span class="op">=</span><span class="dv">200</span>)</span>
-<span id="cb28-80"><a href="#cb28-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-81"><a href="#cb28-81" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, c <span class="kw">in</span> <span class="bu">enumerate</span>(centers):</span>
-<span id="cb28-82"><a href="#cb28-82" aria-hidden="true" tabindex="-1"></a>        ax2.scatter(c[<span class="dv">0</span>], c[<span class="dv">1</span>], marker<span class="op">=</span><span class="st">'$</span><span class="sc">%d</span><span class="st">$'</span> <span class="op">%</span> i, alpha<span class="op">=</span><span class="dv">1</span>, s<span class="op">=</span><span class="dv">50</span>)</span>
-<span id="cb28-83"><a href="#cb28-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-84"><a href="#cb28-84" aria-hidden="true" tabindex="-1"></a>    ax2.set_title(<span class="st">"Visualization of the clustered data"</span>)</span>
-<span id="cb28-85"><a href="#cb28-85" aria-hidden="true" tabindex="-1"></a>    ax2.set_xlabel(<span class="st">"Feature space for the 1st feature"</span>)</span>
-<span id="cb28-86"><a href="#cb28-86" aria-hidden="true" tabindex="-1"></a>    ax2.set_ylabel(<span class="st">"Feature space for the 2nd feature"</span>)</span>
-<span id="cb28-87"><a href="#cb28-87" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-88"><a href="#cb28-88" aria-hidden="true" tabindex="-1"></a>plt.suptitle((<span class="st">"Silhouette results for KMeans clustering "</span></span>
-<span id="cb28-89"><a href="#cb28-89" aria-hidden="true" tabindex="-1"></a>                <span class="st">"with </span><span class="sc">%d</span><span class="st"> clusters"</span> <span class="op">%</span> k_pref),</span>
-<span id="cb28-90"><a href="#cb28-90" aria-hidden="true" tabindex="-1"></a>                fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
-<span id="cb28-91"><a href="#cb28-91" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-92"><a href="#cb28-92" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1"></a>k_pref<span class="op">=</span>??</span>
+<span id="cb28-2"><a href="#cb28-2"></a>    </span>
+<span id="cb28-3"><a href="#cb28-3"></a><span class="co">#############</span></span>
+<span id="cb28-4"><a href="#cb28-4"></a><span class="co"># Do the clustering using the main columns</span></span>
+<span id="cb28-5"><a href="#cb28-5"></a>kmeans <span class="op">=</span> KMeans(??).fit(cldf)</span>
+<span id="cb28-6"><a href="#cb28-6"></a></span>
+<span id="cb28-7"><a href="#cb28-7"></a><span class="co"># Convert to a series</span></span>
+<span id="cb28-8"><a href="#cb28-8"></a>s <span class="op">=</span> pd.Series(kmeans.labels_, index<span class="op">=</span>cldf.index, name<span class="op">=</span>c_nm)</span>
+<span id="cb28-9"><a href="#cb28-9"></a>rs[c_nm] <span class="op">=</span> s</span>
+<span id="cb28-10"><a href="#cb28-10"></a>    </span>
+<span id="cb28-11"><a href="#cb28-11"></a><span class="co"># Calculate the overall silhouette score</span></span>
+<span id="cb28-12"><a href="#cb28-12"></a>silhouette_avg <span class="op">=</span> silhouette_score(cldf, kmeans.labels_)</span>
+<span id="cb28-13"><a href="#cb28-13"></a></span>
+<span id="cb28-14"><a href="#cb28-14"></a><span class="co"># Calculate the silhouette values</span></span>
+<span id="cb28-15"><a href="#cb28-15"></a>sample_silhouette_values <span class="op">=</span> silhouette_samples(cldf, kmeans.labels_)</span>
+<span id="cb28-16"><a href="#cb28-16"></a>    </span>
+<span id="cb28-17"><a href="#cb28-17"></a><span class="co">#############</span></span>
+<span id="cb28-18"><a href="#cb28-18"></a><span class="co"># Create a subplot with 1 row and 2 columns</span></span>
+<span id="cb28-19"><a href="#cb28-19"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb28-20"><a href="#cb28-20"></a>fig.set_size_inches(<span class="dv">9</span>, <span class="dv">5</span>)</span>
+<span id="cb28-21"><a href="#cb28-21"></a></span>
+<span id="cb28-22"><a href="#cb28-22"></a><span class="co"># The 1st subplot is the silhouette plot</span></span>
+<span id="cb28-23"><a href="#cb28-23"></a><span class="co"># The silhouette coefficient can range from -1, 1</span></span>
+<span id="cb28-24"><a href="#cb28-24"></a>ax1.set_xlim([<span class="op">-</span><span class="fl">1.0</span>, <span class="fl">1.0</span>]) <span class="co"># Changed from -0.1, 1</span></span>
+<span id="cb28-25"><a href="#cb28-25"></a>    </span>
+<span id="cb28-26"><a href="#cb28-26"></a><span class="co"># The (n_clusters+1)*10 is for inserting blank space between silhouette</span></span>
+<span id="cb28-27"><a href="#cb28-27"></a><span class="co"># plots of individual clusters, to demarcate them clearly.</span></span>
+<span id="cb28-28"><a href="#cb28-28"></a>ax1.set_ylim([<span class="dv">0</span>, cldf.shape[<span class="dv">0</span>] <span class="op">+</span> (k <span class="op">+</span> <span class="dv">1</span>) <span class="op">*</span> <span class="dv">10</span>])</span>
+<span id="cb28-29"><a href="#cb28-29"></a>    </span>
+<span id="cb28-30"><a href="#cb28-30"></a>y_lower <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb28-31"><a href="#cb28-31"></a>    </span>
+<span id="cb28-32"><a href="#cb28-32"></a><span class="co"># For each of the clusters...</span></span>
+<span id="cb28-33"><a href="#cb28-33"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(k_pref):</span>
+<span id="cb28-34"><a href="#cb28-34"></a>    <span class="co"># Aggregate the silhouette scores for samples belonging to</span></span>
+<span id="cb28-35"><a href="#cb28-35"></a>    <span class="co"># cluster i, and sort them</span></span>
+<span id="cb28-36"><a href="#cb28-36"></a>    ith_cluster_silhouette_values <span class="op">=</span> <span class="op">\</span></span>
+<span id="cb28-37"><a href="#cb28-37"></a>        sample_silhouette_values[kmeans.labels_ <span class="op">==</span> i]</span>
+<span id="cb28-38"><a href="#cb28-38"></a></span>
+<span id="cb28-39"><a href="#cb28-39"></a>    ith_cluster_silhouette_values.sort()</span>
+<span id="cb28-40"><a href="#cb28-40"></a></span>
+<span id="cb28-41"><a href="#cb28-41"></a>    size_cluster_i <span class="op">=</span> ith_cluster_silhouette_values.shape[<span class="dv">0</span>]</span>
+<span id="cb28-42"><a href="#cb28-42"></a>    y_upper <span class="op">=</span> y_lower <span class="op">+</span> size_cluster_i</span>
+<span id="cb28-43"><a href="#cb28-43"></a>        </span>
+<span id="cb28-44"><a href="#cb28-44"></a>    <span class="co"># Set the color ramp</span></span>
+<span id="cb28-45"><a href="#cb28-45"></a>    color <span class="op">=</span> plt.cm.Spectral(i<span class="op">/</span>k)</span>
+<span id="cb28-46"><a href="#cb28-46"></a>    ax1.fill_betweenx(np.arange(y_lower, y_upper),</span>
+<span id="cb28-47"><a href="#cb28-47"></a>                        <span class="dv">0</span>, ith_cluster_silhouette_values,</span>
+<span id="cb28-48"><a href="#cb28-48"></a>                        facecolor<span class="op">=</span>color, edgecolor<span class="op">=</span>color, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb28-49"><a href="#cb28-49"></a></span>
+<span id="cb28-50"><a href="#cb28-50"></a>    <span class="co"># Label the silhouette plots with their cluster numbers at the middle</span></span>
+<span id="cb28-51"><a href="#cb28-51"></a>    ax1.text(<span class="op">-</span><span class="fl">0.05</span>, y_lower <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> size_cluster_i, <span class="bu">str</span>(i))</span>
+<span id="cb28-52"><a href="#cb28-52"></a></span>
+<span id="cb28-53"><a href="#cb28-53"></a>    <span class="co"># Compute the new y_lower for next plot</span></span>
+<span id="cb28-54"><a href="#cb28-54"></a>    y_lower <span class="op">=</span> y_upper <span class="op">+</span> <span class="dv">10</span>  <span class="co"># 10 for the 0 samples</span></span>
+<span id="cb28-55"><a href="#cb28-55"></a></span>
+<span id="cb28-56"><a href="#cb28-56"></a>    ax1.set_title(<span class="st">"The silhouette plot for the clusters."</span>)</span>
+<span id="cb28-57"><a href="#cb28-57"></a>    ax1.set_xlabel(<span class="st">"The silhouette coefficient values"</span>)</span>
+<span id="cb28-58"><a href="#cb28-58"></a>    ax1.set_ylabel(<span class="st">"Cluster label"</span>)</span>
+<span id="cb28-59"><a href="#cb28-59"></a></span>
+<span id="cb28-60"><a href="#cb28-60"></a>    <span class="co"># The vertical line for average silhouette score of all the values</span></span>
+<span id="cb28-61"><a href="#cb28-61"></a>    ax1.axvline(x<span class="op">=</span>silhouette_avg, color<span class="op">=</span><span class="st">"red"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>, linewidth<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb28-62"><a href="#cb28-62"></a></span>
+<span id="cb28-63"><a href="#cb28-63"></a>    ax1.set_yticks([])  <span class="co"># Clear the yaxis labels / ticks</span></span>
+<span id="cb28-64"><a href="#cb28-64"></a>    ax1.set_xticks(np.arange(<span class="op">-</span><span class="fl">1.0</span>, <span class="fl">1.1</span>, <span class="fl">0.2</span>)) <span class="co"># Was: [-0.1, 0, 0.2, 0.4, 0.6, 0.8, 1]</span></span>
+<span id="cb28-65"><a href="#cb28-65"></a></span>
+<span id="cb28-66"><a href="#cb28-66"></a>    <span class="co"># 2nd Plot showing the actual clusters formed --</span></span>
+<span id="cb28-67"><a href="#cb28-67"></a>    <span class="co"># we can only do this for the first two dimensions</span></span>
+<span id="cb28-68"><a href="#cb28-68"></a>    <span class="co"># so we may not see fully what is causing the </span></span>
+<span id="cb28-69"><a href="#cb28-69"></a>    <span class="co"># resulting assignment</span></span>
+<span id="cb28-70"><a href="#cb28-70"></a>    colors <span class="op">=</span> plt.cm.Spectral(kmeans.labels_.astype(<span class="bu">float</span>) <span class="op">/</span> k)</span>
+<span id="cb28-71"><a href="#cb28-71"></a>    ax2.scatter(cldf[cldf.columns[<span class="dv">0</span>]], cldf[cldf.columns[<span class="dv">1</span>]], </span>
+<span id="cb28-72"><a href="#cb28-72"></a>                marker<span class="op">=</span><span class="st">'.'</span>, s<span class="op">=</span><span class="dv">30</span>, lw<span class="op">=</span><span class="dv">0</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, c<span class="op">=</span>colors)</span>
+<span id="cb28-73"><a href="#cb28-73"></a></span>
+<span id="cb28-74"><a href="#cb28-74"></a>    <span class="co"># Labeling the clusters</span></span>
+<span id="cb28-75"><a href="#cb28-75"></a>    centers <span class="op">=</span> kmeans.cluster_centers_</span>
+<span id="cb28-76"><a href="#cb28-76"></a>    </span>
+<span id="cb28-77"><a href="#cb28-77"></a>    <span class="co"># Draw white circles at cluster centers</span></span>
+<span id="cb28-78"><a href="#cb28-78"></a>    ax2.scatter(centers[:, <span class="dv">0</span>], centers[:, <span class="dv">1</span>],</span>
+<span id="cb28-79"><a href="#cb28-79"></a>                marker<span class="op">=</span><span class="st">'o'</span>, c<span class="op">=</span><span class="st">"white"</span>, alpha<span class="op">=</span><span class="dv">1</span>, s<span class="op">=</span><span class="dv">200</span>)</span>
+<span id="cb28-80"><a href="#cb28-80"></a></span>
+<span id="cb28-81"><a href="#cb28-81"></a>    <span class="cf">for</span> i, c <span class="kw">in</span> <span class="bu">enumerate</span>(centers):</span>
+<span id="cb28-82"><a href="#cb28-82"></a>        ax2.scatter(c[<span class="dv">0</span>], c[<span class="dv">1</span>], marker<span class="op">=</span><span class="st">'$</span><span class="sc">%d</span><span class="st">$'</span> <span class="op">%</span> i, alpha<span class="op">=</span><span class="dv">1</span>, s<span class="op">=</span><span class="dv">50</span>)</span>
+<span id="cb28-83"><a href="#cb28-83"></a></span>
+<span id="cb28-84"><a href="#cb28-84"></a>    ax2.set_title(<span class="st">"Visualization of the clustered data"</span>)</span>
+<span id="cb28-85"><a href="#cb28-85"></a>    ax2.set_xlabel(<span class="st">"Feature space for the 1st feature"</span>)</span>
+<span id="cb28-86"><a href="#cb28-86"></a>    ax2.set_ylabel(<span class="st">"Feature space for the 2nd feature"</span>)</span>
+<span id="cb28-87"><a href="#cb28-87"></a></span>
+<span id="cb28-88"><a href="#cb28-88"></a>plt.suptitle((<span class="st">"Silhouette results for KMeans clustering "</span></span>
+<span id="cb28-89"><a href="#cb28-89"></a>                <span class="st">"with </span><span class="sc">%d</span><span class="st"> clusters"</span> <span class="op">%</span> k_pref),</span>
+<span id="cb28-90"><a href="#cb28-90"></a>                fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb28-91"><a href="#cb28-91"></a></span>
+<span id="cb28-92"><a href="#cb28-92"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div style="border: dotted 1px red; padding: 10px; margin: 5px; background-color: rgb(255,249,249);">
 <p><em>Stop</em>: Make sure that you understand how the silhouette plot and value work, and why your results may diverge from mine..</p>
 <p>:::</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt_ldn(water, boroughs)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>fig.suptitle(<span class="ss">f"</span><span class="sc">{</span>c_nm<span class="sc">}</span><span class="ss"> Results (k=</span><span class="sc">{</span>k_pref<span class="sc">}</span><span class="ss">)"</span>, fontsize<span class="op">=</span><span class="dv">20</span>, y<span class="op">=</span><span class="fl">0.92</span>)</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>rs.plot(column<span class="op">=</span>c_nm, ax<span class="op">=</span>ax, linewidth<span class="op">=</span><span class="dv">0</span>, zorder<span class="op">=</span><span class="dv">0</span>, categorical<span class="op">=</span><span class="va">True</span>, legend<span class="op">=</span><span class="va">True</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1"></a>fig, ax <span class="op">=</span> plt_ldn(water, boroughs)</span>
+<span id="cb29-2"><a href="#cb29-2"></a>fig.suptitle(<span class="ss">f"</span><span class="sc">{</span>c_nm<span class="sc">}</span><span class="ss"> Results (k=</span><span class="sc">{</span>k_pref<span class="sc">}</span><span class="ss">)"</span>, fontsize<span class="op">=</span><span class="dv">20</span>, y<span class="op">=</span><span class="fl">0.92</span>)</span>
+<span id="cb29-3"><a href="#cb29-3"></a>rs.plot(column<span class="op">=</span>c_nm, ax<span class="op">=</span>ax, linewidth<span class="op">=</span><span class="dv">0</span>, zorder<span class="op">=</span><span class="dv">0</span>, categorical<span class="op">=</span><span class="va">True</span>, legend<span class="op">=</span><span class="va">True</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="representative-centroids" class="level4">
 <h4 class="anchored" data-anchor-id="representative-centroids">‘Representative’ Centroids</h4>
 <p>To get a sense of how these clusters differ we can try to extract ‘representative’ centroids (mid-points of the multi-dimensional cloud that constitutes a cluster). In the case of k-means this will work quite will since the clusters are explicitly built around mean centroids. There’s also a k-medoids clustering approach built around the median centroid.</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>centroids <span class="op">=</span> <span class="va">None</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">sorted</span>(rs[c_nm].unique()):</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Processing cluster </span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    c <span class="op">=</span> rs[rs[c_nm]<span class="op">==</span>k]</span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> centroids <span class="kw">is</span> <span class="va">None</span>:</span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>        centroids <span class="op">=</span> pd.DataFrame(columns<span class="op">=</span>c.columns.values)</span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    centroids <span class="op">=</span> centroids.append(c.mean(), ignore_index<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>odf <span class="op">=</span> pd.DataFrame(columns<span class="op">=</span>[<span class="st">'Variable'</span>,<span class="st">'Cluster'</span>,<span class="st">'Std. Value'</span>])</span>
-<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="bu">len</span>(centroids.index)):</span>
-<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>    row <span class="op">=</span> centroids.iloc[i,:]</span>
-<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>    c_index <span class="op">=</span> <span class="bu">list</span>(centroids.columns.values).index(c_nm)</span>
-<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> c <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,c_index):</span>
-<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>        d <span class="op">=</span> {<span class="st">'Variable'</span>:centroids.columns[c], <span class="st">'Cluster'</span>:row[c_index], <span class="st">'Std. Value'</span>:row[c]}</span>
-<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>        odf <span class="op">=</span> odf.append(d, ignore_index<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>odf <span class="op">=</span> odf[<span class="op">~</span>odf.Variable.isin([<span class="st">'Borough'</span>,<span class="st">'msoa11hclnm'</span>,<span class="st">'Subregion'</span>,<span class="st">'geometry'</span>])]</span>
-<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> sns.FacetGrid(odf, col<span class="op">=</span><span class="st">"Variable"</span>, col_wrap<span class="op">=</span><span class="dv">3</span>, height<span class="op">=</span><span class="dv">3</span>, aspect<span class="op">=</span><span class="fl">1.5</span>, margin_titles<span class="op">=</span><span class="va">True</span>, sharey<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> g.<span class="bu">map</span>(plt.plot, <span class="st">"Cluster"</span>, <span class="st">"Std. Value"</span>, marker<span class="op">=</span><span class="st">"."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1"></a>centroids <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb30-2"><a href="#cb30-2"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">sorted</span>(rs[c_nm].unique()):</span>
+<span id="cb30-3"><a href="#cb30-3"></a>    <span class="bu">print</span>(<span class="ss">f"Processing cluster </span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb30-4"><a href="#cb30-4"></a></span>
+<span id="cb30-5"><a href="#cb30-5"></a>    c <span class="op">=</span> rs[rs[c_nm]<span class="op">==</span>k]</span>
+<span id="cb30-6"><a href="#cb30-6"></a>    <span class="cf">if</span> centroids <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb30-7"><a href="#cb30-7"></a>        centroids <span class="op">=</span> pd.DataFrame(columns<span class="op">=</span>c.columns.values)</span>
+<span id="cb30-8"><a href="#cb30-8"></a>    centroids <span class="op">=</span> centroids.append(c.mean(), ignore_index<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb30-9"><a href="#cb30-9"></a>    </span>
+<span id="cb30-10"><a href="#cb30-10"></a>odf <span class="op">=</span> pd.DataFrame(columns<span class="op">=</span>[<span class="st">'Variable'</span>,<span class="st">'Cluster'</span>,<span class="st">'Std. Value'</span>])</span>
+<span id="cb30-11"><a href="#cb30-11"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="bu">len</span>(centroids.index)):</span>
+<span id="cb30-12"><a href="#cb30-12"></a>    row <span class="op">=</span> centroids.iloc[i,:]</span>
+<span id="cb30-13"><a href="#cb30-13"></a>    c_index <span class="op">=</span> <span class="bu">list</span>(centroids.columns.values).index(c_nm)</span>
+<span id="cb30-14"><a href="#cb30-14"></a>    <span class="cf">for</span> c <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,c_index):</span>
+<span id="cb30-15"><a href="#cb30-15"></a>        d <span class="op">=</span> {<span class="st">'Variable'</span>:centroids.columns[c], <span class="st">'Cluster'</span>:row[c_index], <span class="st">'Std. Value'</span>:row[c]}</span>
+<span id="cb30-16"><a href="#cb30-16"></a>        odf <span class="op">=</span> odf.append(d, ignore_index<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb30-17"><a href="#cb30-17"></a></span>
+<span id="cb30-18"><a href="#cb30-18"></a>odf <span class="op">=</span> odf[<span class="op">~</span>odf.Variable.isin([<span class="st">'Borough'</span>,<span class="st">'msoa11hclnm'</span>,<span class="st">'Subregion'</span>,<span class="st">'geometry'</span>])]</span>
+<span id="cb30-19"><a href="#cb30-19"></a>g <span class="op">=</span> sns.FacetGrid(odf, col<span class="op">=</span><span class="st">"Variable"</span>, col_wrap<span class="op">=</span><span class="dv">3</span>, height<span class="op">=</span><span class="dv">3</span>, aspect<span class="op">=</span><span class="fl">1.5</span>, margin_titles<span class="op">=</span><span class="va">True</span>, sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb30-20"><a href="#cb30-20"></a>g <span class="op">=</span> g.<span class="bu">map</span>(plt.plot, <span class="st">"Cluster"</span>, <span class="st">"Std. Value"</span>, marker<span class="op">=</span><span class="st">"."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="dbscan" class="level2">
 <h2 class="anchored" data-anchor-id="dbscan">DBSCAN</h2>
 <p>For what it’s worth, I’ve had <em>enormous</em> trouble with DBSCAN and this kind of data. I don’t think it deals very well with more than three dimensions, so the flexbility to not have to specify the number of clusters is balanced with a density-based approach that is severely hampered by high-dimensional distance-inflation.</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>cldf2 <span class="op">=</span> cldf.loc[:,[<span class="st">'Component 1'</span>,<span class="st">'Component 2'</span>]]</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>cldf2.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1"></a>cldf2 <span class="op">=</span> cldf.loc[:,[<span class="st">'Component 1'</span>,<span class="st">'Component 2'</span>]]</span>
+<span id="cb31-2"><a href="#cb31-2"></a>cldf2.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="work-out-the-neighbour-distance" class="level4">
 <h4 class="anchored" data-anchor-id="work-out-the-neighbour-distance">Work out the Neighbour Distance</h4>
 <p>We normally look for some kind of ‘knee’ to set the distance.</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>nbrs <span class="op">=</span> NearestNeighbors(n_neighbors<span class="op">=</span><span class="dv">2</span>).fit(cldf2)</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>distances, indices <span class="op">=</span> nbrs.kneighbors(cldf2)</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>distances <span class="op">=</span> np.sort(distances, axis<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>distances <span class="op">=</span> distances[:,<span class="dv">1</span>]</span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>plt.plot(distances)</span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>plt.gcf().suptitle(<span class="st">"Nearest Neighbour Distances"</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1"></a>nbrs <span class="op">=</span> NearestNeighbors(n_neighbors<span class="op">=</span><span class="dv">2</span>).fit(cldf2)</span>
+<span id="cb32-2"><a href="#cb32-2"></a>distances, indices <span class="op">=</span> nbrs.kneighbors(cldf2)</span>
+<span id="cb32-3"><a href="#cb32-3"></a></span>
+<span id="cb32-4"><a href="#cb32-4"></a>distances <span class="op">=</span> np.sort(distances, axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb32-5"><a href="#cb32-5"></a>distances <span class="op">=</span> distances[:,<span class="dv">1</span>]</span>
+<span id="cb32-6"><a href="#cb32-6"></a>plt.plot(distances)</span>
+<span id="cb32-7"><a href="#cb32-7"></a>plt.gcf().suptitle(<span class="st">"Nearest Neighbour Distances"</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="exploration" class="level4">
 <h4 class="anchored">Exploration</h4>
@@ -910,101 +906,101 @@ Note
 <div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">
 <p>WARNING. This next step may take quite a lot of time since we are iterating through many, many values of Epsilon to explore how the clustering result changes and how well this matches up with (or doesn’t) the graph above.</p>
 <p>:::</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>c_nm <span class="op">=</span> <span class="st">'DBSCAN'</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Make numeric display a bit neater</span></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>pd.set_option(<span class="st">'display.float_format'</span>, <span class="kw">lambda</span> x: <span class="st">'</span><span class="sc">{:,.4f}</span><span class="st">'</span>.<span class="bu">format</span>(x))</span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>el  <span class="op">=</span> []</span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>max_clusters  <span class="op">=</span> <span class="dv">10</span></span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>cluster_count <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>iters <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> e <span class="kw">in</span> np.arange(<span class="fl">0.025</span>, <span class="fl">0.25</span>, <span class="fl">0.005</span>):</span>
-<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> iters <span class="op">%</span> <span class="dv">25</span><span class="op">==</span><span class="dv">0</span>: <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>iters<span class="sc">}</span><span class="ss"> epsilons explored."</span>) </span>
-<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Run the clustering</span></span>
-<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>    dbs <span class="op">=</span> DBSCAN(eps<span class="op">=</span>e, min_samples<span class="op">=</span>cldf2.shape[<span class="dv">1</span>]<span class="op">+</span><span class="dv">1</span>).fit(cldf2)</span>
-<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># See how we did</span></span>
-<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>    s <span class="op">=</span> pd.Series(dbs.labels_, index<span class="op">=</span>cldf2.index, name<span class="op">=</span>c_nm)</span>
-<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a>    row <span class="op">=</span> [e]</span>
-<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> s.value_counts()</span>
-<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> c <span class="kw">in</span> <span class="bu">range</span>(<span class="op">-</span><span class="dv">1</span>, max_clusters<span class="op">+</span><span class="dv">1</span>):</span>
-<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>:</span>
-<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> np.isnan(data[c]):</span>
-<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a>                row.append(<span class="va">None</span>)</span>
-<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>: </span>
-<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a>                row.append(data[c])</span>
-<span id="cb33-32"><a href="#cb33-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span> <span class="pp">KeyError</span>:</span>
-<span id="cb33-33"><a href="#cb33-33" aria-hidden="true" tabindex="-1"></a>            row.append(<span class="va">None</span>)</span>
-<span id="cb33-34"><a href="#cb33-34" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb33-35"><a href="#cb33-35" aria-hidden="true" tabindex="-1"></a>    el.append(row)</span>
-<span id="cb33-36"><a href="#cb33-36" aria-hidden="true" tabindex="-1"></a>    iters<span class="op">+=</span><span class="dv">1</span></span>
-<span id="cb33-37"><a href="#cb33-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-38"><a href="#cb33-38" aria-hidden="true" tabindex="-1"></a>edf <span class="op">=</span> pd.DataFrame(el, columns<span class="op">=</span>[<span class="st">'Epsilon'</span>]<span class="op">+</span>[<span class="st">"Cluster "</span> <span class="op">+</span> <span class="bu">str</span>(x) <span class="cf">for</span> x <span class="kw">in</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="op">-</span><span class="dv">1</span>,max_clusters<span class="op">+</span><span class="dv">1</span>))])</span>
-<span id="cb33-39"><a href="#cb33-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-40"><a href="#cb33-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Make numeric display a bit neater</span></span>
-<span id="cb33-41"><a href="#cb33-41" aria-hidden="true" tabindex="-1"></a>pd.set_option(<span class="st">'display.float_format'</span>, <span class="kw">lambda</span> x: <span class="st">'</span><span class="sc">{:,.2f}</span><span class="st">'</span>.<span class="bu">format</span>(x))</span>
-<span id="cb33-42"><a href="#cb33-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-43"><a href="#cb33-43" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Done."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>odf <span class="op">=</span> pd.DataFrame(columns<span class="op">=</span>[<span class="st">'Epsilon'</span>,<span class="st">'Cluster'</span>,<span class="st">'Count'</span>])</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="bu">len</span>(edf.index)):</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    row <span class="op">=</span> edf.iloc[i,:]</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> c <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,<span class="bu">len</span>(edf.columns.values)):</span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> row[c] <span class="op">!=</span> <span class="va">None</span> <span class="kw">and</span> <span class="kw">not</span> np.isnan(row[c]):</span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>            d <span class="op">=</span> {<span class="st">'Epsilon'</span>:row[<span class="dv">0</span>], <span class="st">'Cluster'</span>:<span class="ss">f"Cluster </span><span class="sc">{</span>c<span class="op">-</span><span class="dv">2</span><span class="sc">}</span><span class="ss">"</span>, <span class="st">'Count'</span>:row[c]}</span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>            odf <span class="op">=</span> odf.append(d, ignore_index<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>odf[<span class="st">'Count'</span>] <span class="op">=</span> odf.Count.astype(<span class="bu">float</span>)</span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">8</span>))</span>
-<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>sns.lineplot(data<span class="op">=</span>odf, x<span class="op">=</span><span class="st">'Epsilon'</span>, y<span class="op">=</span><span class="st">'Count'</span>, hue<span class="op">=</span><span class="st">'Cluster'</span>)<span class="op">;</span></span>
-<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>ax.vlines(<span class="fl">0.06</span>, <span class="dv">0</span>, ax.get_ylim()[<span class="dv">1</span>], linestyle<span class="op">=</span><span class="st">'dashed'</span>, color<span class="op">=</span><span class="st">'r'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>e <span class="op">=</span> <span class="fl">0.06</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>dbs <span class="op">=</span> DBSCAN(eps<span class="op">=</span>e, min_samples<span class="op">=</span>cldf2.shape[<span class="dv">1</span>]<span class="op">+</span><span class="dv">1</span>).fit(cldf2.values)</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> pd.Series(dbs.labels_, index<span class="op">=</span>cldf2.index, name<span class="op">=</span>c_nm)</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>rs[c_nm] <span class="op">=</span> s</span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s.value_counts())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1"></a>c_nm <span class="op">=</span> <span class="st">'DBSCAN'</span></span>
+<span id="cb33-2"><a href="#cb33-2"></a></span>
+<span id="cb33-3"><a href="#cb33-3"></a><span class="co"># Make numeric display a bit neater</span></span>
+<span id="cb33-4"><a href="#cb33-4"></a>pd.set_option(<span class="st">'display.float_format'</span>, <span class="kw">lambda</span> x: <span class="st">'</span><span class="sc">{:,.4f}</span><span class="st">'</span>.<span class="bu">format</span>(x))</span>
+<span id="cb33-5"><a href="#cb33-5"></a></span>
+<span id="cb33-6"><a href="#cb33-6"></a>el  <span class="op">=</span> []</span>
+<span id="cb33-7"><a href="#cb33-7"></a></span>
+<span id="cb33-8"><a href="#cb33-8"></a>max_clusters  <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb33-9"><a href="#cb33-9"></a>cluster_count <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb33-10"><a href="#cb33-10"></a></span>
+<span id="cb33-11"><a href="#cb33-11"></a>iters <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb33-12"><a href="#cb33-12"></a></span>
+<span id="cb33-13"><a href="#cb33-13"></a><span class="cf">for</span> e <span class="kw">in</span> np.arange(<span class="fl">0.025</span>, <span class="fl">0.25</span>, <span class="fl">0.005</span>):</span>
+<span id="cb33-14"><a href="#cb33-14"></a>    </span>
+<span id="cb33-15"><a href="#cb33-15"></a>    <span class="cf">if</span> iters <span class="op">%</span> <span class="dv">25</span><span class="op">==</span><span class="dv">0</span>: <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>iters<span class="sc">}</span><span class="ss"> epsilons explored."</span>) </span>
+<span id="cb33-16"><a href="#cb33-16"></a>    </span>
+<span id="cb33-17"><a href="#cb33-17"></a>    <span class="co"># Run the clustering</span></span>
+<span id="cb33-18"><a href="#cb33-18"></a>    dbs <span class="op">=</span> DBSCAN(eps<span class="op">=</span>e, min_samples<span class="op">=</span>cldf2.shape[<span class="dv">1</span>]<span class="op">+</span><span class="dv">1</span>).fit(cldf2)</span>
+<span id="cb33-19"><a href="#cb33-19"></a>    </span>
+<span id="cb33-20"><a href="#cb33-20"></a>    <span class="co"># See how we did</span></span>
+<span id="cb33-21"><a href="#cb33-21"></a>    s <span class="op">=</span> pd.Series(dbs.labels_, index<span class="op">=</span>cldf2.index, name<span class="op">=</span>c_nm)</span>
+<span id="cb33-22"><a href="#cb33-22"></a>    </span>
+<span id="cb33-23"><a href="#cb33-23"></a>    row <span class="op">=</span> [e]</span>
+<span id="cb33-24"><a href="#cb33-24"></a>    data <span class="op">=</span> s.value_counts()</span>
+<span id="cb33-25"><a href="#cb33-25"></a>    </span>
+<span id="cb33-26"><a href="#cb33-26"></a>    <span class="cf">for</span> c <span class="kw">in</span> <span class="bu">range</span>(<span class="op">-</span><span class="dv">1</span>, max_clusters<span class="op">+</span><span class="dv">1</span>):</span>
+<span id="cb33-27"><a href="#cb33-27"></a>        <span class="cf">try</span>:</span>
+<span id="cb33-28"><a href="#cb33-28"></a>            <span class="cf">if</span> np.isnan(data[c]):</span>
+<span id="cb33-29"><a href="#cb33-29"></a>                row.append(<span class="va">None</span>)</span>
+<span id="cb33-30"><a href="#cb33-30"></a>            <span class="cf">else</span>: </span>
+<span id="cb33-31"><a href="#cb33-31"></a>                row.append(data[c])</span>
+<span id="cb33-32"><a href="#cb33-32"></a>        <span class="cf">except</span> <span class="pp">KeyError</span>:</span>
+<span id="cb33-33"><a href="#cb33-33"></a>            row.append(<span class="va">None</span>)</span>
+<span id="cb33-34"><a href="#cb33-34"></a>    </span>
+<span id="cb33-35"><a href="#cb33-35"></a>    el.append(row)</span>
+<span id="cb33-36"><a href="#cb33-36"></a>    iters<span class="op">+=</span><span class="dv">1</span></span>
+<span id="cb33-37"><a href="#cb33-37"></a></span>
+<span id="cb33-38"><a href="#cb33-38"></a>edf <span class="op">=</span> pd.DataFrame(el, columns<span class="op">=</span>[<span class="st">'Epsilon'</span>]<span class="op">+</span>[<span class="st">"Cluster "</span> <span class="op">+</span> <span class="bu">str</span>(x) <span class="cf">for</span> x <span class="kw">in</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="op">-</span><span class="dv">1</span>,max_clusters<span class="op">+</span><span class="dv">1</span>))])</span>
+<span id="cb33-39"><a href="#cb33-39"></a></span>
+<span id="cb33-40"><a href="#cb33-40"></a><span class="co"># Make numeric display a bit neater</span></span>
+<span id="cb33-41"><a href="#cb33-41"></a>pd.set_option(<span class="st">'display.float_format'</span>, <span class="kw">lambda</span> x: <span class="st">'</span><span class="sc">{:,.2f}</span><span class="st">'</span>.<span class="bu">format</span>(x))</span>
+<span id="cb33-42"><a href="#cb33-42"></a></span>
+<span id="cb33-43"><a href="#cb33-43"></a><span class="bu">print</span>(<span class="st">"Done."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1"></a>odf <span class="op">=</span> pd.DataFrame(columns<span class="op">=</span>[<span class="st">'Epsilon'</span>,<span class="st">'Cluster'</span>,<span class="st">'Count'</span>])</span>
+<span id="cb34-2"><a href="#cb34-2"></a></span>
+<span id="cb34-3"><a href="#cb34-3"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="bu">len</span>(edf.index)):</span>
+<span id="cb34-4"><a href="#cb34-4"></a>    row <span class="op">=</span> edf.iloc[i,:]</span>
+<span id="cb34-5"><a href="#cb34-5"></a>    <span class="cf">for</span> c <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,<span class="bu">len</span>(edf.columns.values)):</span>
+<span id="cb34-6"><a href="#cb34-6"></a>        <span class="cf">if</span> row[c] <span class="op">!=</span> <span class="va">None</span> <span class="kw">and</span> <span class="kw">not</span> np.isnan(row[c]):</span>
+<span id="cb34-7"><a href="#cb34-7"></a>            d <span class="op">=</span> {<span class="st">'Epsilon'</span>:row[<span class="dv">0</span>], <span class="st">'Cluster'</span>:<span class="ss">f"Cluster </span><span class="sc">{</span>c<span class="op">-</span><span class="dv">2</span><span class="sc">}</span><span class="ss">"</span>, <span class="st">'Count'</span>:row[c]}</span>
+<span id="cb34-8"><a href="#cb34-8"></a>            odf <span class="op">=</span> odf.append(d, ignore_index<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb34-9"><a href="#cb34-9"></a></span>
+<span id="cb34-10"><a href="#cb34-10"></a>odf[<span class="st">'Count'</span>] <span class="op">=</span> odf.Count.astype(<span class="bu">float</span>)</span>
+<span id="cb34-11"><a href="#cb34-11"></a></span>
+<span id="cb34-12"><a href="#cb34-12"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">8</span>))</span>
+<span id="cb34-13"><a href="#cb34-13"></a>sns.lineplot(data<span class="op">=</span>odf, x<span class="op">=</span><span class="st">'Epsilon'</span>, y<span class="op">=</span><span class="st">'Count'</span>, hue<span class="op">=</span><span class="st">'Cluster'</span>)<span class="op">;</span></span>
+<span id="cb34-14"><a href="#cb34-14"></a>ax.vlines(<span class="fl">0.06</span>, <span class="dv">0</span>, ax.get_ylim()[<span class="dv">1</span>], linestyle<span class="op">=</span><span class="st">'dashed'</span>, color<span class="op">=</span><span class="st">'r'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1"></a>e <span class="op">=</span> <span class="fl">0.06</span></span>
+<span id="cb35-2"><a href="#cb35-2"></a>dbs <span class="op">=</span> DBSCAN(eps<span class="op">=</span>e, min_samples<span class="op">=</span>cldf2.shape[<span class="dv">1</span>]<span class="op">+</span><span class="dv">1</span>).fit(cldf2.values)</span>
+<span id="cb35-3"><a href="#cb35-3"></a>s <span class="op">=</span> pd.Series(dbs.labels_, index<span class="op">=</span>cldf2.index, name<span class="op">=</span>c_nm)</span>
+<span id="cb35-4"><a href="#cb35-4"></a>rs[c_nm] <span class="op">=</span> s</span>
+<span id="cb35-5"><a href="#cb35-5"></a><span class="bu">print</span>(s.value_counts())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="mapping-clustering-results" class="level4">
 <h4 class="anchored">Mapping Clustering Results</h4>
 <div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">
 <p>WARNING. My sense is that these results are a bit rubbish: the majority of items are assigned to <em>one cluster</em>??? I’ve tried PCA on the standardised data and that made little difference. This should also have worked <em>better</em> but it seems that a small number of LSOAs are so utterly different that the more sophisticated clustering algorithm effectively ‘chokes’ on them.</p>
 <p>:::</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt_ldn(water, boroughs)</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>fig.suptitle(<span class="ss">f"</span><span class="sc">{</span>c_nm<span class="sc">}</span><span class="ss"> Results"</span>, fontsize<span class="op">=</span><span class="dv">20</span>, y<span class="op">=</span><span class="fl">0.92</span>)</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>rs.plot(column<span class="op">=</span>c_nm, ax<span class="op">=</span>ax, linewidth<span class="op">=</span><span class="dv">0</span>, zorder<span class="op">=</span><span class="dv">0</span>, legend<span class="op">=</span><span class="va">True</span>, categorical<span class="op">=</span><span class="va">True</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>centroids <span class="op">=</span> <span class="va">None</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">sorted</span>(rs[c_nm].unique()):</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Processing cluster </span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    clsoas <span class="op">=</span> rs[rs[c_nm]<span class="op">==</span>k]</span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> centroids <span class="kw">is</span> <span class="va">None</span>:</span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>        centroids <span class="op">=</span> pd.DataFrame(columns<span class="op">=</span>clsoas.columns.values)</span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>    centroids <span class="op">=</span> centroids.append(clsoas.mean(), ignore_index<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>odf <span class="op">=</span> pd.DataFrame(columns<span class="op">=</span>[<span class="st">'Variable'</span>,<span class="st">'Cluster'</span>,<span class="st">'Std. Value'</span>])</span>
-<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="bu">len</span>(centroids.index)):</span>
-<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>    row <span class="op">=</span> centroids.iloc[i,:]</span>
-<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>    c_index <span class="op">=</span> <span class="bu">list</span>(centroids.columns.values).index(c_nm)</span>
-<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> c <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,c_index):</span>
-<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>        d <span class="op">=</span> {<span class="st">'Variable'</span>:centroids.columns[c], <span class="st">'Cluster'</span>:row[c_index], <span class="st">'Std. Value'</span>:row[c]}</span>
-<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>        odf <span class="op">=</span> odf.append(d, ignore_index<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Drop outliers</span></span>
-<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>odf <span class="op">=</span> odf[odf.Cluster <span class="op">&gt;=</span> <span class="dv">0</span>]</span>
-<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>odf.drop(index<span class="op">=</span>odf[odf.Variable.isin([<span class="st">'geometry'</span>,<span class="st">'KMeans'</span>])].index, inplace<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> sns.FacetGrid(odf, col<span class="op">=</span><span class="st">"Variable"</span>, col_wrap<span class="op">=</span><span class="dv">3</span>, height<span class="op">=</span><span class="dv">3</span>, aspect<span class="op">=</span><span class="fl">1.5</span>, margin_titles<span class="op">=</span><span class="va">True</span>, sharey<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> g.<span class="bu">map</span>(plt.plot, <span class="st">"Cluster"</span>, <span class="st">"Std. Value"</span>, marker<span class="op">=</span><span class="st">"."</span>)</span>
-<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a><span class="kw">del</span>(odf, centroids)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1"></a>fig, ax <span class="op">=</span> plt_ldn(water, boroughs)</span>
+<span id="cb36-2"><a href="#cb36-2"></a>fig.suptitle(<span class="ss">f"</span><span class="sc">{</span>c_nm<span class="sc">}</span><span class="ss"> Results"</span>, fontsize<span class="op">=</span><span class="dv">20</span>, y<span class="op">=</span><span class="fl">0.92</span>)</span>
+<span id="cb36-3"><a href="#cb36-3"></a>rs.plot(column<span class="op">=</span>c_nm, ax<span class="op">=</span>ax, linewidth<span class="op">=</span><span class="dv">0</span>, zorder<span class="op">=</span><span class="dv">0</span>, legend<span class="op">=</span><span class="va">True</span>, categorical<span class="op">=</span><span class="va">True</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1"></a>centroids <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb37-2"><a href="#cb37-2"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">sorted</span>(rs[c_nm].unique()):</span>
+<span id="cb37-3"><a href="#cb37-3"></a>    <span class="bu">print</span>(<span class="ss">f"Processing cluster </span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb37-4"><a href="#cb37-4"></a></span>
+<span id="cb37-5"><a href="#cb37-5"></a>    clsoas <span class="op">=</span> rs[rs[c_nm]<span class="op">==</span>k]</span>
+<span id="cb37-6"><a href="#cb37-6"></a>    <span class="cf">if</span> centroids <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb37-7"><a href="#cb37-7"></a>        centroids <span class="op">=</span> pd.DataFrame(columns<span class="op">=</span>clsoas.columns.values)</span>
+<span id="cb37-8"><a href="#cb37-8"></a>    centroids <span class="op">=</span> centroids.append(clsoas.mean(), ignore_index<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb37-9"><a href="#cb37-9"></a></span>
+<span id="cb37-10"><a href="#cb37-10"></a>odf <span class="op">=</span> pd.DataFrame(columns<span class="op">=</span>[<span class="st">'Variable'</span>,<span class="st">'Cluster'</span>,<span class="st">'Std. Value'</span>])</span>
+<span id="cb37-11"><a href="#cb37-11"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="bu">len</span>(centroids.index)):</span>
+<span id="cb37-12"><a href="#cb37-12"></a>    row <span class="op">=</span> centroids.iloc[i,:]</span>
+<span id="cb37-13"><a href="#cb37-13"></a>    c_index <span class="op">=</span> <span class="bu">list</span>(centroids.columns.values).index(c_nm)</span>
+<span id="cb37-14"><a href="#cb37-14"></a>    <span class="cf">for</span> c <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,c_index):</span>
+<span id="cb37-15"><a href="#cb37-15"></a>        d <span class="op">=</span> {<span class="st">'Variable'</span>:centroids.columns[c], <span class="st">'Cluster'</span>:row[c_index], <span class="st">'Std. Value'</span>:row[c]}</span>
+<span id="cb37-16"><a href="#cb37-16"></a>        odf <span class="op">=</span> odf.append(d, ignore_index<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb37-17"><a href="#cb37-17"></a></span>
+<span id="cb37-18"><a href="#cb37-18"></a><span class="co"># Drop outliers</span></span>
+<span id="cb37-19"><a href="#cb37-19"></a>odf <span class="op">=</span> odf[odf.Cluster <span class="op">&gt;=</span> <span class="dv">0</span>]</span>
+<span id="cb37-20"><a href="#cb37-20"></a>odf.drop(index<span class="op">=</span>odf[odf.Variable.isin([<span class="st">'geometry'</span>,<span class="st">'KMeans'</span>])].index, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb37-21"><a href="#cb37-21"></a></span>
+<span id="cb37-22"><a href="#cb37-22"></a>g <span class="op">=</span> sns.FacetGrid(odf, col<span class="op">=</span><span class="st">"Variable"</span>, col_wrap<span class="op">=</span><span class="dv">3</span>, height<span class="op">=</span><span class="dv">3</span>, aspect<span class="op">=</span><span class="fl">1.5</span>, margin_titles<span class="op">=</span><span class="va">True</span>, sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb37-23"><a href="#cb37-23"></a>g <span class="op">=</span> g.<span class="bu">map</span>(plt.plot, <span class="st">"Cluster"</span>, <span class="st">"Std. Value"</span>, marker<span class="op">=</span><span class="st">"."</span>)</span>
+<span id="cb37-24"><a href="#cb37-24"></a></span>
+<span id="cb37-25"><a href="#cb37-25"></a><span class="kw">del</span>(odf, centroids)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="bonus" class="level4">
 <h4 class="anchored" data-anchor-id="bonus">Bonus!</h4>
 <p>See if you can work out why we have this issue by plotting the first 2 components… We <em>could</em> actually try clusteirng on secondary components instead (e.g.&nbsp;2 and 3, or 3 and 4) on the basis that the first one is so dominant.</p>
@@ -1015,44 +1011,44 @@ Note
 <div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">
 <p>WARNING. This next step may take quite a lot of time since the algorithm is making far fewer assumptions about the structure of the data. On a 2018 MacBook Pro with 16GB of RAM it took about 5 minutes.</p>
 <p>:::</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>c_nm <span class="op">=</span> <span class="st">'Optics'</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Can try to set this from DBSCAN results</span></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>e <span class="op">=</span> <span class="fl">0.06</span></span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the clustering</span></span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>opt <span class="op">=</span> OPTICS(min_samples<span class="op">=</span><span class="bu">len</span>(cldf2.columns)<span class="op">+</span><span class="dv">1</span>, max_eps<span class="op">=</span>math.ceil(e <span class="op">*</span> <span class="dv">100</span>)<span class="op">/</span><span class="dv">10</span>, n_jobs<span class="op">=-</span><span class="dv">1</span>).fit(cldf2)</span>
-<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a><span class="co"># See how we did</span></span>
-<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> pd.Series(opt.labels_, index<span class="op">=</span>cldf.index, name<span class="op">=</span>c_nm)</span>
-<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>rs[c_nm] <span class="op">=</span> s</span>
-<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Distribution</span></span>
-<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s.value_counts())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1"></a>c_nm <span class="op">=</span> <span class="st">'Optics'</span></span>
+<span id="cb38-2"><a href="#cb38-2"></a></span>
+<span id="cb38-3"><a href="#cb38-3"></a><span class="co"># Can try to set this from DBSCAN results</span></span>
+<span id="cb38-4"><a href="#cb38-4"></a>e <span class="op">=</span> <span class="fl">0.06</span></span>
+<span id="cb38-5"><a href="#cb38-5"></a></span>
+<span id="cb38-6"><a href="#cb38-6"></a><span class="im">import</span> math</span>
+<span id="cb38-7"><a href="#cb38-7"></a></span>
+<span id="cb38-8"><a href="#cb38-8"></a><span class="co"># Run the clustering</span></span>
+<span id="cb38-9"><a href="#cb38-9"></a>opt <span class="op">=</span> OPTICS(min_samples<span class="op">=</span><span class="bu">len</span>(cldf2.columns)<span class="op">+</span><span class="dv">1</span>, max_eps<span class="op">=</span>math.ceil(e <span class="op">*</span> <span class="dv">100</span>)<span class="op">/</span><span class="dv">10</span>, n_jobs<span class="op">=-</span><span class="dv">1</span>).fit(cldf2)</span>
+<span id="cb38-10"><a href="#cb38-10"></a></span>
+<span id="cb38-11"><a href="#cb38-11"></a><span class="co"># See how we did</span></span>
+<span id="cb38-12"><a href="#cb38-12"></a>s <span class="op">=</span> pd.Series(opt.labels_, index<span class="op">=</span>cldf.index, name<span class="op">=</span>c_nm)</span>
+<span id="cb38-13"><a href="#cb38-13"></a>rs[c_nm] <span class="op">=</span> s</span>
+<span id="cb38-14"><a href="#cb38-14"></a></span>
+<span id="cb38-15"><a href="#cb38-15"></a><span class="co"># Distribution</span></span>
+<span id="cb38-16"><a href="#cb38-16"></a><span class="bu">print</span>(s.value_counts())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="self-organising-maps" class="level2">
 <h2 class="anchored" data-anchor-id="self-organising-maps">Self-Organising Maps</h2>
 <p>SOMs offer a <em>fourth</em> type of clustering algorithm. They are a relatively ‘simple’ type of neural network in which the ‘map’ (of the SOM) adjusts to the data: we’re going to see how this works over the next few code blocks, but the main thing is that, unlike the above approaches, SOMs build a 2D map of a higher-dimensional space and use this as a mechanism for subsequently clustering the raw data. In this sense there is a conceptual link between SOMs and PCA or tSNE (another form of dimensionality reduction).</p>
 <section id="training-the-som" class="level4">
 <h4 class="anchored" data-anchor-id="training-the-som">Training the SOM</h4>
 <p>We are going to actually train the SOM using the input data. This is where you specify the input parameters that have the main effect on the clustering results.</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sompy.sompy <span class="im">import</span> SOMFactory</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>c_nm <span class="op">=</span> <span class="st">'SOM'</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>sm <span class="op">=</span> SOMFactory().build(</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    cldf.values, mapsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">15</span>),</span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    normalization<span class="op">=</span><span class="st">'var'</span>, initialization<span class="op">=</span><span class="st">'random'</span>, component_names<span class="op">=</span>cldf.columns.values)</span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>sm.train(n_job<span class="op">=</span><span class="dv">4</span>, verbose<span class="op">=</span><span class="va">False</span>, train_rough_len<span class="op">=</span><span class="dv">2</span>, train_finetune_len<span class="op">=</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1"></a><span class="im">from</span> sompy.sompy <span class="im">import</span> SOMFactory</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1"></a>c_nm <span class="op">=</span> <span class="st">'SOM'</span></span>
+<span id="cb40-2"><a href="#cb40-2"></a></span>
+<span id="cb40-3"><a href="#cb40-3"></a>sm <span class="op">=</span> SOMFactory().build(</span>
+<span id="cb40-4"><a href="#cb40-4"></a>    cldf.values, mapsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">15</span>),</span>
+<span id="cb40-5"><a href="#cb40-5"></a>    normalization<span class="op">=</span><span class="st">'var'</span>, initialization<span class="op">=</span><span class="st">'random'</span>, component_names<span class="op">=</span>cldf.columns.values)</span>
+<span id="cb40-6"><a href="#cb40-6"></a>sm.train(n_job<span class="op">=</span><span class="dv">4</span>, verbose<span class="op">=</span><span class="va">False</span>, train_rough_len<span class="op">=</span><span class="dv">2</span>, train_finetune_len<span class="op">=</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>How good is the fit?</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>topographic_error  <span class="op">=</span> sm.calculate_topographic_error()</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>quantization_error <span class="op">=</span> np.mean(sm._bmu[<span class="dv">1</span>])</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Topographic error = </span><span class="sc">{0:0.5f}</span><span class="st">; Quantization error = </span><span class="sc">{1:0.5f}</span><span class="st">"</span>.<span class="bu">format</span>(topographic_error, quantization_error))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1"></a>topographic_error  <span class="op">=</span> sm.calculate_topographic_error()</span>
+<span id="cb41-2"><a href="#cb41-2"></a>quantization_error <span class="op">=</span> np.mean(sm._bmu[<span class="dv">1</span>])</span>
+<span id="cb41-3"><a href="#cb41-3"></a><span class="bu">print</span>(<span class="st">"Topographic error = </span><span class="sc">{0:0.5f}</span><span class="st">; Quantization error = </span><span class="sc">{1:0.5f}</span><span class="st">"</span>.<span class="bu">format</span>(topographic_error, quantization_error))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>How do the results look?</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sompy.visualization.mapview <span class="im">import</span> View2D</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>view2D <span class="op">=</span> View2D(<span class="dv">10</span>, <span class="dv">10</span>, <span class="st">"rand data"</span>, text_size<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>view2D.show(sm, col_sz<span class="op">=</span><span class="dv">4</span>, which_dim<span class="op">=</span><span class="st">"all"</span>, denormalize<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="ss">f"</span><span class="sc">{</span>c_nm<span class="sc">}</span><span class="ss">-Map.png"</span>, dpi<span class="op">=</span><span class="dv">200</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1"></a><span class="im">from</span> sompy.visualization.mapview <span class="im">import</span> View2D</span>
+<span id="cb42-2"><a href="#cb42-2"></a>view2D <span class="op">=</span> View2D(<span class="dv">10</span>, <span class="dv">10</span>, <span class="st">"rand data"</span>, text_size<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb42-3"><a href="#cb42-3"></a>view2D.show(sm, col_sz<span class="op">=</span><span class="dv">4</span>, which_dim<span class="op">=</span><span class="st">"all"</span>, denormalize<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb42-4"><a href="#cb42-4"></a>plt.savefig(<span class="ss">f"</span><span class="sc">{</span>c_nm<span class="sc">}</span><span class="ss">-Map.png"</span>, dpi<span class="op">=</span><span class="dv">200</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="heres-what-i-got" class="level4">
 <h4 class="anchored">Here’s What I Got</h4>
@@ -1061,38 +1057,38 @@ Note
 <p>:::</p>
 <p><img src="https://github.com/jreades/i2p/blob/master/practicals/img/SOM-Map.png?raw=true" alt="SOM Clustering Results" width="800"></p>
 <p>How many data points were assigned to each BMU?</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sompy.visualization.bmuhits <span class="im">import</span> BmuHitsView</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>vhts <span class="op">=</span> BmuHitsView(<span class="dv">15</span>, <span class="dv">15</span>, <span class="st">"Hits Map"</span>, text_size<span class="op">=</span><span class="dv">8</span>)</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>vhts.show(sm, anotate<span class="op">=</span><span class="va">True</span>, onlyzeros<span class="op">=</span><span class="va">False</span>, labelsize<span class="op">=</span><span class="dv">9</span>, cmap<span class="op">=</span><span class="st">"plasma"</span>, logaritmic<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="ss">f"</span><span class="sc">{</span>c_nm<span class="sc">}</span><span class="ss">-BMU Hit View.png"</span>, dpi<span class="op">=</span><span class="dv">200</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1"></a><span class="im">from</span> sompy.visualization.bmuhits <span class="im">import</span> BmuHitsView</span>
+<span id="cb43-2"><a href="#cb43-2"></a>vhts <span class="op">=</span> BmuHitsView(<span class="dv">15</span>, <span class="dv">15</span>, <span class="st">"Hits Map"</span>, text_size<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb43-3"><a href="#cb43-3"></a>vhts.show(sm, anotate<span class="op">=</span><span class="va">True</span>, onlyzeros<span class="op">=</span><span class="va">False</span>, labelsize<span class="op">=</span><span class="dv">9</span>, cmap<span class="op">=</span><span class="st">"plasma"</span>, logaritmic<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb43-4"><a href="#cb43-4"></a>plt.savefig(<span class="ss">f"</span><span class="sc">{</span>c_nm<span class="sc">}</span><span class="ss">-BMU Hit View.png"</span>, dpi<span class="op">=</span><span class="dv">200</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>How many clusters do we want and where are they on the map?</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sompy.visualization.hitmap <span class="im">import</span> HitMapView</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>k_val <span class="op">=</span> <span class="dv">6</span> <span class="co"># The way this library is set up it's hard to explore the k-means clustering of Hits</span></span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>sm.cluster(k_val)</span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>hits  <span class="op">=</span> HitMapView(<span class="dv">15</span>, <span class="dv">15</span>, <span class="st">"Clustering"</span>, text_size<span class="op">=</span><span class="dv">14</span>)</span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>a     <span class="op">=</span> hits.show(sm)</span>
-<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="ss">f"</span><span class="sc">{</span>c_nm<span class="sc">}</span><span class="ss">-Hit Map View.png"</span>, dpi<span class="op">=</span><span class="dv">200</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1"></a><span class="im">from</span> sompy.visualization.hitmap <span class="im">import</span> HitMapView</span>
+<span id="cb44-2"><a href="#cb44-2"></a></span>
+<span id="cb44-3"><a href="#cb44-3"></a>k_val <span class="op">=</span> <span class="dv">6</span> <span class="co"># The way this library is set up it's hard to explore the k-means clustering of Hits</span></span>
+<span id="cb44-4"><a href="#cb44-4"></a>sm.cluster(k_val)</span>
+<span id="cb44-5"><a href="#cb44-5"></a>hits  <span class="op">=</span> HitMapView(<span class="dv">15</span>, <span class="dv">15</span>, <span class="st">"Clustering"</span>, text_size<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb44-6"><a href="#cb44-6"></a>a     <span class="op">=</span> hits.show(sm)</span>
+<span id="cb44-7"><a href="#cb44-7"></a>plt.savefig(<span class="ss">f"</span><span class="sc">{</span>c_nm<span class="sc">}</span><span class="ss">-Hit Map View.png"</span>, dpi<span class="op">=</span><span class="dv">200</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Finally, let’s get the cluster results and map them back on to the data points:</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the labels for each BMU</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="co"># in the SOM (15 * 10 neurons)</span></span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>clabs <span class="op">=</span> sm.cluster_labels</span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Project the data on to the SOM</span></span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a><span class="co"># so that we get the BMU for each</span></span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a><span class="co"># of the original data points </span></span>
-<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a><span class="co"># (This is similar to the transform </span></span>
-<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a><span class="co"># function is sklearn)</span></span>
-<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>bmus  <span class="op">=</span> sm.project_data(cldf.values)</span>
-<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Turn the BMUs into cluster labels</span></span>
-<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a><span class="co"># and append to the data frame</span></span>
-<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> pd.Series(clabs[bmus], index<span class="op">=</span>cldf.index, name<span class="op">=</span>c_nm)</span>
-<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a>rs[c_nm] <span class="op">=</span> s</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt_ldn(water, boroughs)</span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>fig.suptitle(<span class="ss">f"</span><span class="sc">{</span>c_nm<span class="sc">}</span><span class="ss"> Results"</span>, fontsize<span class="op">=</span><span class="dv">20</span>, y<span class="op">=</span><span class="fl">0.92</span>)</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>rs.plot(column<span class="op">=</span>c_nm, ax<span class="op">=</span>ax, linewidth<span class="op">=</span><span class="dv">0</span>, zorder<span class="op">=</span><span class="dv">0</span>, legend<span class="op">=</span><span class="va">True</span>, categorical<span class="op">=</span><span class="va">True</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1"></a><span class="co"># Get the labels for each BMU</span></span>
+<span id="cb45-2"><a href="#cb45-2"></a><span class="co"># in the SOM (15 * 10 neurons)</span></span>
+<span id="cb45-3"><a href="#cb45-3"></a>clabs <span class="op">=</span> sm.cluster_labels</span>
+<span id="cb45-4"><a href="#cb45-4"></a></span>
+<span id="cb45-5"><a href="#cb45-5"></a><span class="co"># Project the data on to the SOM</span></span>
+<span id="cb45-6"><a href="#cb45-6"></a><span class="co"># so that we get the BMU for each</span></span>
+<span id="cb45-7"><a href="#cb45-7"></a><span class="co"># of the original data points </span></span>
+<span id="cb45-8"><a href="#cb45-8"></a><span class="co"># (This is similar to the transform </span></span>
+<span id="cb45-9"><a href="#cb45-9"></a><span class="co"># function is sklearn)</span></span>
+<span id="cb45-10"><a href="#cb45-10"></a>bmus  <span class="op">=</span> sm.project_data(cldf.values)</span>
+<span id="cb45-11"><a href="#cb45-11"></a></span>
+<span id="cb45-12"><a href="#cb45-12"></a><span class="co"># Turn the BMUs into cluster labels</span></span>
+<span id="cb45-13"><a href="#cb45-13"></a><span class="co"># and append to the data frame</span></span>
+<span id="cb45-14"><a href="#cb45-14"></a>s <span class="op">=</span> pd.Series(clabs[bmus], index<span class="op">=</span>cldf.index, name<span class="op">=</span>c_nm)</span>
+<span id="cb45-15"><a href="#cb45-15"></a></span>
+<span id="cb45-16"><a href="#cb45-16"></a>rs[c_nm] <span class="op">=</span> s</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1"></a>fig, ax <span class="op">=</span> plt_ldn(water, boroughs)</span>
+<span id="cb46-2"><a href="#cb46-2"></a>fig.suptitle(<span class="ss">f"</span><span class="sc">{</span>c_nm<span class="sc">}</span><span class="ss"> Results"</span>, fontsize<span class="op">=</span><span class="dv">20</span>, y<span class="op">=</span><span class="fl">0.92</span>)</span>
+<span id="cb46-3"><a href="#cb46-3"></a>rs.plot(column<span class="op">=</span>c_nm, ax<span class="op">=</span>ax, linewidth<span class="op">=</span><span class="dv">0</span>, zorder<span class="op">=</span><span class="dv">0</span>, legend<span class="op">=</span><span class="va">True</span>, categorical<span class="op">=</span><span class="va">True</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="result" class="level4">
 <h4 class="anchored">Result!</h4>
 <div style="padding:5px;margin-top:5px;margin-bottom:5px;border:dotted 1px red;background-color:rgb(255,233,233);color:red">
@@ -1223,8 +1219,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -1335,7 +1329,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
@@ -1565,10 +1558,10 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 2022–2024, Jon Reades</p>
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 2022–2025, Jon Reades</p>
 </div>   
     <div class="nav-footer-center">
-<p><img src="../../img/favicon-16x16.png" class="height:10px img-fluid"> Foundations of Spatial Data Science</p>
+<p><img src="../../img/logo/logo_only_sm.png" height="25"> Foundations of Spatial Data Science</p>
 <div class="toc-actions"><ul><li><a href="https://github.com/jreades/fsds/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
@@ -1579,7 +1572,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </a>
   </li>  
     <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/jreades">
+    <a class="nav-link" href="https://bsky.app/profile/jreades.bsky.social/">
       <i class="bi bi-twitter" role="img">
 </i> 
     </a>

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.39">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -70,10 +70,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-94502d3d680d4f599d90f0c2e6fbae98.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-fb446d74831b8ff67c69632cb314b545.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-393972cfcb964df2eba7c7df233894c6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-c734b2b4d74e7e594e143a63449c09f7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -137,6 +140,7 @@ window.Quarto = {
 <meta property="og:image" content="./img/completely_different.png">
 <meta property="og:site_name" content="Foundations">
 <meta property="og:locale" content="en_GB">
+<meta property="og:image:alt" content="And now for something completely different">
 </head>
 
 <body class="nav-fixed">
@@ -147,7 +151,7 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../img/CASA_Logo_no_text.png" alt="" class="navbar-logo">
+    <img src="../img/logo/logo_only_sm.png" alt="" class="navbar-logo">
     </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Foundations of Spatial Data Science</span>
@@ -159,10 +163,6 @@ window.Quarto = {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
-<span class="menu-text">Welcome</span></a>
-  </li>  
   <li class="nav-item">
     <a class="nav-link" href="../setup/index.html"> 
 <span class="menu-text">Setup</span></a>
@@ -344,7 +344,7 @@ Group Sign-Up
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>You should now make it a priority <a href="https://forms.office.com/e/2ij0sWHnpR">Sign Up</a>!</p>
+<p>You should now make it a priority <a href="https://outlook.office.com/bookwithme/user/056224a5314e48a8ae9805186115b859@ucl.ac.uk/meetingtype/ppQB8pyeHEmCe0u2YNgMHg2?anonymous&amp;ismsaljsauthenabled&amp;ep=mlink">Sign Up</a>!</p>
 </div>
 </div>
 <section id="why-obvious-is-not-always-right-revisited" class="level1">
@@ -368,38 +368,38 @@ Group Sign-Up
 <h2 class="anchored" data-anchor-id="the-way-that-doesnt-work">The Way That Doesn’t Work</h2>
 <p>Recall that this is how four rows of ‘data’ for city sizes organised by <em>row</em> as a list-of-lists look:</p>
 <div id="2b65473f" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>myData <span class="op">=</span> [</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    [<span class="st">'id'</span>, <span class="st">'Name'</span>, <span class="st">'Rank'</span>, <span class="st">'Longitude'</span>, <span class="st">'Latitude'</span>, <span class="st">'Population'</span>], </span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    [<span class="st">'1'</span>, <span class="st">'Greater London'</span>, <span class="st">'1'</span>, <span class="st">'-18162.92767'</span>, <span class="st">'6711153.709'</span>, <span class="st">'9787426'</span>], </span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    [<span class="st">'2'</span>, <span class="st">'Greater Manchester'</span>, <span class="st">'2'</span>, <span class="st">'-251761.802'</span>, <span class="st">'7073067.458'</span>, <span class="st">'2553379'</span>], </span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    [<span class="st">'3'</span>, <span class="st">'West Midlands'</span>, <span class="st">'3'</span>, <span class="st">'-210635.2396'</span>, <span class="st">'6878950.083'</span>, <span class="st">'2440986'</span>]</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>myData <span class="op">=</span> [</span>
+<span id="cb1-2"><a href="#cb1-2"></a>    [<span class="st">'id'</span>, <span class="st">'Name'</span>, <span class="st">'Rank'</span>, <span class="st">'Longitude'</span>, <span class="st">'Latitude'</span>, <span class="st">'Population'</span>], </span>
+<span id="cb1-3"><a href="#cb1-3"></a>    [<span class="st">'1'</span>, <span class="st">'Greater London'</span>, <span class="st">'1'</span>, <span class="st">'-18162.92767'</span>, <span class="st">'6711153.709'</span>, <span class="st">'9787426'</span>], </span>
+<span id="cb1-4"><a href="#cb1-4"></a>    [<span class="st">'2'</span>, <span class="st">'Greater Manchester'</span>, <span class="st">'2'</span>, <span class="st">'-251761.802'</span>, <span class="st">'7073067.458'</span>, <span class="st">'2553379'</span>], </span>
+<span id="cb1-5"><a href="#cb1-5"></a>    [<span class="st">'3'</span>, <span class="st">'West Midlands'</span>, <span class="st">'3'</span>, <span class="st">'-210635.2396'</span>, <span class="st">'6878950.083'</span>, <span class="st">'2440986'</span>]</span>
+<span id="cb1-6"><a href="#cb1-6"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To print out a list of every city in the data set <em>when</em> we don’t know where the <code>Name</code> column is in the file we have to jump through some hoops:</p>
 <div id="4d2a9c78" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cities <span class="op">=</span> []</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>col    <span class="op">=</span> myData[<span class="dv">0</span>].index(<span class="st">'Name'</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(myData)):</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    cities.append(myData[i][col])</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"The cities in the data set are: "</span> <span class="op">+</span> <span class="st">", "</span>.join(cities))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>cities <span class="op">=</span> []</span>
+<span id="cb2-2"><a href="#cb2-2"></a></span>
+<span id="cb2-3"><a href="#cb2-3"></a>col    <span class="op">=</span> myData[<span class="dv">0</span>].index(<span class="st">'Name'</span>)</span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(myData)):</span>
+<span id="cb2-5"><a href="#cb2-5"></a>    cities.append(myData[i][col])</span>
+<span id="cb2-6"><a href="#cb2-6"></a></span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="bu">print</span>(<span class="st">"The cities in the data set are: "</span> <span class="op">+</span> <span class="st">", "</span>.join(cities))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>The cities in the data set are: Greater London, Greater Manchester, West Midlands</code></pre>
 </div>
 </div>
 <p>And it’s the same kind of faff if we want to find out if <code>Edinburgh</code> is included in the data set:</p>
 <div id="713cca7e" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>col   <span class="op">=</span> myData[<span class="dv">0</span>].index(<span class="st">'Name'</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>found <span class="op">=</span> <span class="va">False</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(myData)):</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> myData[i][col] <span class="op">==</span> <span class="st">'Edinburgh'</span>:</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"Found Edinburgh in the data set!"</span>)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        found <span class="op">=</span> <span class="va">True</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> found <span class="op">==</span> <span class="va">False</span>:</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Didn't find Edinburgh in the data set."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>col   <span class="op">=</span> myData[<span class="dv">0</span>].index(<span class="st">'Name'</span>)</span>
+<span id="cb4-2"><a href="#cb4-2"></a>found <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(myData)):</span>
+<span id="cb4-4"><a href="#cb4-4"></a>    <span class="cf">if</span> myData[i][col] <span class="op">==</span> <span class="st">'Edinburgh'</span>:</span>
+<span id="cb4-5"><a href="#cb4-5"></a>        <span class="bu">print</span>(<span class="st">"Found Edinburgh in the data set!"</span>)</span>
+<span id="cb4-6"><a href="#cb4-6"></a>        found <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a>        <span class="cf">break</span></span>
+<span id="cb4-8"><a href="#cb4-8"></a></span>
+<span id="cb4-9"><a href="#cb4-9"></a><span class="cf">if</span> found <span class="op">==</span> <span class="va">False</span>:</span>
+<span id="cb4-10"><a href="#cb4-10"></a>    <span class="bu">print</span>(<span class="st">"Didn't find Edinburgh in the data set."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Didn't find Edinburgh in the data set.</code></pre>
 </div>
@@ -409,28 +409,28 @@ Group Sign-Up
 <h2 class="anchored" data-anchor-id="the-way-that-does-work">The Way That Does Work</h2>
 <p>Compare that code to how it works for a dictionary-of-lists organised by <em>column</em>. Now try printing out the cities in the data:</p>
 <div id="f7ebcdc7" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>myData <span class="op">=</span> {</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'id'</span>         : [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>],</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Name'</span>       : [<span class="st">'Greater London'</span>, <span class="st">'Greater Manchester'</span>, <span class="st">'Birmingham'</span>,<span class="st">'Edinburgh'</span>,<span class="st">'Inverness'</span>,<span class="st">'Lerwick'</span>],</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Rank'</span>       : [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>],</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Longitude'</span>  : [<span class="op">-</span><span class="fl">0.128</span>, <span class="op">-</span><span class="fl">2.245</span>, <span class="op">-</span><span class="fl">1.903</span>, <span class="op">-</span><span class="fl">3.189</span>, <span class="op">-</span><span class="fl">4.223</span>, <span class="op">-</span><span class="fl">1.145</span>],</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Latitude'</span>   : [<span class="fl">51.507</span>, <span class="fl">53.479</span>, <span class="fl">52.480</span>, <span class="fl">55.953</span>, <span class="fl">57.478</span>, <span class="fl">60.155</span>],</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Population'</span> : [<span class="dv">9787426</span>, <span class="dv">2705000</span>, <span class="dv">1141816</span>, <span class="dv">901455</span>, <span class="dv">70000</span>, <span class="dv">6958</span>],</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>myData <span class="op">=</span> {</span>
+<span id="cb6-2"><a href="#cb6-2"></a>    <span class="st">'id'</span>         : [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>],</span>
+<span id="cb6-3"><a href="#cb6-3"></a>    <span class="st">'Name'</span>       : [<span class="st">'Greater London'</span>, <span class="st">'Greater Manchester'</span>, <span class="st">'Birmingham'</span>,<span class="st">'Edinburgh'</span>,<span class="st">'Inverness'</span>,<span class="st">'Lerwick'</span>],</span>
+<span id="cb6-4"><a href="#cb6-4"></a>    <span class="st">'Rank'</span>       : [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>],</span>
+<span id="cb6-5"><a href="#cb6-5"></a>    <span class="st">'Longitude'</span>  : [<span class="op">-</span><span class="fl">0.128</span>, <span class="op">-</span><span class="fl">2.245</span>, <span class="op">-</span><span class="fl">1.903</span>, <span class="op">-</span><span class="fl">3.189</span>, <span class="op">-</span><span class="fl">4.223</span>, <span class="op">-</span><span class="fl">1.145</span>],</span>
+<span id="cb6-6"><a href="#cb6-6"></a>    <span class="st">'Latitude'</span>   : [<span class="fl">51.507</span>, <span class="fl">53.479</span>, <span class="fl">52.480</span>, <span class="fl">55.953</span>, <span class="fl">57.478</span>, <span class="fl">60.155</span>],</span>
+<span id="cb6-7"><a href="#cb6-7"></a>    <span class="st">'Population'</span> : [<span class="dv">9787426</span>, <span class="dv">2705000</span>, <span class="dv">1141816</span>, <span class="dv">901455</span>, <span class="dv">70000</span>, <span class="dv">6958</span>],</span>
+<span id="cb6-8"><a href="#cb6-8"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To print out a list of every city in the data set:</p>
 <div id="9b6ed236" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">", "</span>.join(myData[<span class="st">'Name'</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="bu">print</span>(<span class="st">", "</span>.join(myData[<span class="st">'Name'</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Greater London, Greater Manchester, Birmingham, Edinburgh, Inverness, Lerwick</code></pre>
 </div>
 </div>
 <p>To find out if <code>Edinburgh</code> is included in the list of data:</p>
 <div id="03e02751" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">'Edinburgh'</span> <span class="kw">in</span> myData[<span class="st">'Name'</span>]:</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Found Edinburgh in the data set!"</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Didn't find Edinburgh in the data set."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="cf">if</span> <span class="st">'Edinburgh'</span> <span class="kw">in</span> myData[<span class="st">'Name'</span>]:</span>
+<span id="cb9-2"><a href="#cb9-2"></a>    <span class="bu">print</span>(<span class="st">"Found Edinburgh in the data set!"</span>)</span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="cf">else</span>:</span>
+<span id="cb9-4"><a href="#cb9-4"></a>    <span class="bu">print</span>(<span class="st">"Didn't find Edinburgh in the data set."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Found Edinburgh in the data set!</code></pre>
 </div>
@@ -444,10 +444,10 @@ Group Sign-Up
 <h2 class="anchored" data-anchor-id="calculate-mean">Calculate Mean</h2>
 <p>Let’s start by calculating the sample mean (use Google: <code>Python numpy mean...</code>):</p>
 <div id="0e2a75f0" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Use numpy functions to calculate mean and standard deviation</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>mean <span class="op">=</span> np.mean(myData[<span class="st">'Population'</span>])</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"City distribution has a mean of </span><span class="sc">{</span>mean<span class="sc">:,.0f}</span><span class="ss">."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="co"># Use numpy functions to calculate mean and standard deviation</span></span>
+<span id="cb11-3"><a href="#cb11-3"></a>mean <span class="op">=</span> np.mean(myData[<span class="st">'Population'</span>])</span>
+<span id="cb11-4"><a href="#cb11-4"></a><span class="bu">print</span>(<span class="ss">f"City distribution has a mean of </span><span class="sc">{</span>mean<span class="sc">:,.0f}</span><span class="ss">."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>City distribution has a mean of 2,435,442.</code></pre>
 </div>
@@ -475,10 +475,10 @@ Difficulty level: Low-ish.
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Use numpy functions to calculate mean and standard deviation</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>std  <span class="op">=</span> np.??(??)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"City distribution has a standard deviation of </span><span class="sc">{</span>std<span class="sc">:,.2f}</span><span class="ss">."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="co"># Use numpy functions to calculate mean and standard deviation</span></span>
+<span id="cb13-3"><a href="#cb13-3"></a>std  <span class="op">=</span> np.??(??)</span>
+<span id="cb13-4"><a href="#cb13-4"></a><span class="bu">print</span>(<span class="ss">f"City distribution has a standard deviation of </span><span class="sc">{</span>std<span class="sc">:,.2f}</span><span class="ss">."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>So the <code>numpy</code> package gives us a way to calculate the mean and standard deviation <em>quickly</em> and without having to reinvent the wheel. The other potentially new thing here is <code>{std:,.2f}</code>. This is about <a href="https://www.w3schools.com/python/ref_string_format.asp">string formatting</a> and the main thing to recognise is that this means ‘format this float with commas separating the thousands/millions and 2 digits to the right’. The link I’ve provided uses the slightly older approach of <code>&lt;str&gt;.format()</code> but the formatting approach is the same.</p>
 </section>
@@ -505,8 +505,8 @@ Difficulty level: Medium.
 <p>In Python you will see code like this a lot: <code>[x for x in list]</code>. This syntax is known as a ‘list comprehension’ and is basically a <code>for</code> loop on one line with the output being assigned to a list. So we can apply an operation (converting to a string, subtracting a value, etc.) to every item in a list without writing out a full for loop.</p>
 <p>Here’s a quick example just to show you what’s going on:</p>
 <div id="e156af87" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>demo <span class="op">=</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">10</span>) <span class="co"># &lt;- a *range* of numbers between 0 and 9 (stop at 10)</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>([x<span class="op">**</span><span class="dv">2</span> <span class="cf">for</span> x <span class="kw">in</span> demo]) <span class="co"># square every element of demo</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>demo <span class="op">=</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">10</span>) <span class="co"># &lt;- a *range* of numbers between 0 and 9 (stop at 10)</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="bu">print</span>([x<span class="op">**</span><span class="dv">2</span> <span class="cf">for</span> x <span class="kw">in</span> demo]) <span class="co"># square every element of demo</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[0, 1, 4, 9, 16, 25, 36, 49, 64, 81]</code></pre>
 </div>
@@ -522,8 +522,8 @@ z = \frac{x - \mu}{\sigma}
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>rs <span class="op">=</span> [(x <span class="op">-</span> ??)<span class="op">/</span>?? <span class="cf">for</span> x <span class="kw">in</span> myData[<span class="st">'Population'</span>]] <span class="co"># rs == result set</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>([<span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:.3f}</span><span class="ss">"</span> <span class="cf">for</span> x <span class="kw">in</span> rs])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>rs <span class="op">=</span> [(x <span class="op">-</span> ??)<span class="op">/</span>?? <span class="cf">for</span> x <span class="kw">in</span> myData[<span class="st">'Population'</span>]] <span class="co"># rs == result set</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a><span class="bu">print</span>([<span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:.3f}</span><span class="ss">"</span> <span class="cf">for</span> x <span class="kw">in</span> rs])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -547,17 +547,17 @@ Difficulty level: trivial
 </div>
 <p>And now let’s add it to the data set:</p>
 <div id="e0761677" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>myData[<span class="st">'Std. Population'</span>] <span class="op">=</span> rs</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(myData[<span class="st">'Std. Population'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a>myData[<span class="st">'Std. Population'</span>] <span class="op">=</span> rs</span>
+<span id="cb17-2"><a href="#cb17-2"></a><span class="bu">print</span>(myData[<span class="st">'Std. Population'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[np.float64(2.1579383252868527), np.float64(0.0791199354729932), np.float64(-0.3797024575689938), np.float64(-0.45025269939207097), np.float64(-0.6942995760276591), np.float64(-0.7128035277711219)]</code></pre>
 </div>
 </div>
 <p>And just to show how everything is in a single data structure:</p>
 <div id="02a53f8d" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> myData[<span class="st">'Name'</span>]:</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    idx <span class="op">=</span> myData[<span class="st">'Name'</span>].index(c)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>c<span class="sc">}</span><span class="ss"> has a population of </span><span class="sc">{</span>myData[<span class="st">'Population'</span>][idx]<span class="sc">:,}</span><span class="ss"> and standardised score of </span><span class="sc">{</span>myData[<span class="st">'Std. Population'</span>][idx]<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a><span class="cf">for</span> c <span class="kw">in</span> myData[<span class="st">'Name'</span>]:</span>
+<span id="cb19-2"><a href="#cb19-2"></a>    idx <span class="op">=</span> myData[<span class="st">'Name'</span>].index(c)</span>
+<span id="cb19-3"><a href="#cb19-3"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>c<span class="sc">}</span><span class="ss"> has a population of </span><span class="sc">{</span>myData[<span class="st">'Population'</span>][idx]<span class="sc">:,}</span><span class="ss"> and standardised score of </span><span class="sc">{</span>myData[<span class="st">'Std. Population'</span>][idx]<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Greater London has a population of 9,787,426 and standardised score of 2.158
 Greater Manchester has a population of 2,705,000 and standardised score of 0.079
@@ -604,21 +604,21 @@ Difficulty level: Low
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> urllib.request <span class="im">import</span> urlopen</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> csv</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/jreades/fsds/master/data/src/Wikipedia-Cities-simple.csv"</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>urlData <span class="op">=</span> [] <span class="co"># Somewhere to store the data</span></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> urlopen(url) <span class="co">#&nbsp;Get the data using the urlopen function</span></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>csvfile  <span class="op">=</span> csv.reader(response.read().decode(<span class="st">'utf-8'</span>).splitlines()) <span class="co"># Pass it over to the reader</span></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> row <span class="kw">in</span> csvfile:</span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    urlData.append(??)</span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"urlData has "</span> <span class="op">+</span> <span class="bu">str</span>(<span class="bu">len</span>(urlData)) <span class="op">+</span> <span class="st">" rows and "</span> <span class="op">+</span> <span class="bu">str</span>(<span class="bu">len</span>(urlData[<span class="dv">0</span>])) <span class="op">+</span> <span class="st">" columns."</span>)</span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(urlData[<span class="op">-</span><span class="dv">1</span>]) <span class="co"># Check it worked!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a><span class="im">from</span> urllib.request <span class="im">import</span> urlopen</span>
+<span id="cb21-2"><a href="#cb21-2"></a><span class="im">import</span> csv</span>
+<span id="cb21-3"><a href="#cb21-3"></a></span>
+<span id="cb21-4"><a href="#cb21-4"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/jreades/fsds/master/data/src/Wikipedia-Cities-simple.csv"</span></span>
+<span id="cb21-5"><a href="#cb21-5"></a></span>
+<span id="cb21-6"><a href="#cb21-6"></a>urlData <span class="op">=</span> [] <span class="co"># Somewhere to store the data</span></span>
+<span id="cb21-7"><a href="#cb21-7"></a></span>
+<span id="cb21-8"><a href="#cb21-8"></a>response <span class="op">=</span> urlopen(url) <span class="co">#&nbsp;Get the data using the urlopen function</span></span>
+<span id="cb21-9"><a href="#cb21-9"></a>csvfile  <span class="op">=</span> csv.reader(response.read().decode(<span class="st">'utf-8'</span>).splitlines()) <span class="co"># Pass it over to the reader</span></span>
+<span id="cb21-10"><a href="#cb21-10"></a></span>
+<span id="cb21-11"><a href="#cb21-11"></a><span class="cf">for</span> row <span class="kw">in</span> csvfile:</span>
+<span id="cb21-12"><a href="#cb21-12"></a>    urlData.append(??)</span>
+<span id="cb21-13"><a href="#cb21-13"></a></span>
+<span id="cb21-14"><a href="#cb21-14"></a><span class="bu">print</span>(<span class="st">"urlData has "</span> <span class="op">+</span> <span class="bu">str</span>(<span class="bu">len</span>(urlData)) <span class="op">+</span> <span class="st">" rows and "</span> <span class="op">+</span> <span class="bu">str</span>(<span class="bu">len</span>(urlData[<span class="dv">0</span>])) <span class="op">+</span> <span class="st">" columns."</span>)</span>
+<span id="cb21-15"><a href="#cb21-15"></a><span class="bu">print</span>(urlData[<span class="op">-</span><span class="dv">1</span>]) <span class="co"># Check it worked!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>You should get:</p>
 <p><code>urlData has 11 rows and 4 columns.</code> <br> <code>[‘Bangor’, ‘18808’, ‘53.228’, ‘-4.128’]</code></p>
@@ -650,9 +650,9 @@ Difficulty level: Low
 <p>You will find that the <code>os</code> module helps here because of the <code>path</code> function. And you will <a href="https://lmgtfy.app/?q=check+if+file+exists+python">need to Google</a> how to test if a file exists. I would normally select a StackOverflow link in the results list over anything else because there will normally be an <em>explanation</em> included of why a particular answer is a ‘good one’. I also look at which answers got the most votes (not always the same as the one that was the ‘accepted answer’). In this particular case, I also found <a href="https://careerkarma.com/blog/python-check-if-file-exists/">this answer</a> useful.</p>
 <p>I would start by setting my inputs:</p>
 <div id="4e964d8a" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/jreades/fsds/master/data/src/Wikipedia-Cities-simple.csv"</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>out <span class="op">=</span> os.path.join(<span class="st">'data'</span>,<span class="st">'Wikipedia-Cities.csv'</span>) <span class="co"># Print `out` if you aren't sure what this has done!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a><span class="im">import</span> os</span>
+<span id="cb22-2"><a href="#cb22-2"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/jreades/fsds/master/data/src/Wikipedia-Cities-simple.csv"</span></span>
+<span id="cb22-3"><a href="#cb22-3"></a>out <span class="op">=</span> os.path.join(<span class="st">'data'</span>,<span class="st">'Wikipedia-Cities.csv'</span>) <span class="co"># Print `out` if you aren't sure what this has done!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="sketching-the-function" class="level3">
@@ -677,19 +677,19 @@ Difficulty level: Low, if you’ve watched the videos…
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> urllib.request <span class="im">import</span> urlopen</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_url(src, dest):</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Check if dest exists -- if it does</span></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># then we can skip downloading the file,</span></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># otherwise we have to download it!</span></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> os.path.isfile(??):</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>dest<span class="sc">}</span><span class="ss"> found!"</span>)</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>dest<span class="sc">}</span><span class="ss"> *not* found!"</span>)</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>get_url(url, out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a><span class="im">from</span> urllib.request <span class="im">import</span> urlopen</span>
+<span id="cb23-2"><a href="#cb23-2"></a></span>
+<span id="cb23-3"><a href="#cb23-3"></a><span class="kw">def</span> get_url(src, dest):</span>
+<span id="cb23-4"><a href="#cb23-4"></a>    </span>
+<span id="cb23-5"><a href="#cb23-5"></a>    <span class="co"># Check if dest exists -- if it does</span></span>
+<span id="cb23-6"><a href="#cb23-6"></a>    <span class="co"># then we can skip downloading the file,</span></span>
+<span id="cb23-7"><a href="#cb23-7"></a>    <span class="co"># otherwise we have to download it!</span></span>
+<span id="cb23-8"><a href="#cb23-8"></a>    <span class="cf">if</span> os.path.isfile(??):</span>
+<span id="cb23-9"><a href="#cb23-9"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>dest<span class="sc">}</span><span class="ss"> found!"</span>)</span>
+<span id="cb23-10"><a href="#cb23-10"></a>    <span class="cf">else</span>:</span>
+<span id="cb23-11"><a href="#cb23-11"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>dest<span class="sc">}</span><span class="ss"> *not* found!"</span>)</span>
+<span id="cb23-12"><a href="#cb23-12"></a>        </span>
+<span id="cb23-13"><a href="#cb23-13"></a>get_url(url, out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -713,42 +713,42 @@ Difficulty level: Medium
 </div>
 <p>I would then flesh out the code so that it downloads the file if it isn’t found and then, either way, returns the <em>local</em> file path for our CSV reader to extract:</p>
 <div id="df26c21b" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_url(src, dest):</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Check if dest does *not* exist -- that</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># would mean we had to download it!</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> os.path.isfile(dest):</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>dest<span class="sc">}</span><span class="ss"> found locally!"</span>)</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>dest<span class="sc">}</span><span class="ss"> not found, downloading!"</span>)</span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>        <span class="co">#&nbsp;Get the data using the urlopen function</span></span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>        response <span class="op">=</span> urlopen(src) </span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>        filedata <span class="op">=</span> response.read().decode(<span class="st">'utf-8'</span>)</span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Extract the part of the dest(ination) that is *not*</span></span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># the actual filename--have a look at how </span></span>
-<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>        <span class="co"># os.path.split works using `help(os.path.split)`</span></span>
-<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>        path <span class="op">=</span> <span class="bu">list</span>(os.path.split(dest)[:<span class="op">-</span><span class="dv">1</span>])</span>
-<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Create any missing directories in dest(ination) path</span></span>
-<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># -- os.path.join is the reverse of split (as you saw above)</span></span>
-<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>        <span class="co"># but it doesn't work with lists... so I had to google how </span></span>
-<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>        <span class="co"># to use the 'splat' operator! os.makedirs creates missing </span></span>
-<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># directories in a path automatically.</span></span>
-<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">len</span>(path) <span class="op">&gt;=</span> <span class="dv">1</span> <span class="kw">and</span> path[<span class="dv">0</span>] <span class="op">!=</span> <span class="st">''</span>:</span>
-<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>            os.makedirs(os.path.join(<span class="op">*</span>path), exist_ok<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> <span class="bu">open</span>(dest, <span class="st">'w'</span>) <span class="im">as</span> f:</span>
-<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>            f.write(filedata)</span>
-<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>            </span>
-<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Data written to </span><span class="sc">{</span>dest<span class="sc">}</span><span class="ss">!"</span>)</span>
-<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> dest</span>
-<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Using the `return contents` line we make it easy to </span></span>
-<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a><span class="co"># see what our function is up to.</span></span>
-<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a>src <span class="op">=</span> get_url(url, out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a><span class="kw">def</span> get_url(src, dest):</span>
+<span id="cb24-2"><a href="#cb24-2"></a>    </span>
+<span id="cb24-3"><a href="#cb24-3"></a>    <span class="co"># Check if dest does *not* exist -- that</span></span>
+<span id="cb24-4"><a href="#cb24-4"></a>    <span class="co"># would mean we had to download it!</span></span>
+<span id="cb24-5"><a href="#cb24-5"></a>    <span class="cf">if</span> os.path.isfile(dest):</span>
+<span id="cb24-6"><a href="#cb24-6"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>dest<span class="sc">}</span><span class="ss"> found locally!"</span>)</span>
+<span id="cb24-7"><a href="#cb24-7"></a>    <span class="cf">else</span>:</span>
+<span id="cb24-8"><a href="#cb24-8"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>dest<span class="sc">}</span><span class="ss"> not found, downloading!"</span>)</span>
+<span id="cb24-9"><a href="#cb24-9"></a>        </span>
+<span id="cb24-10"><a href="#cb24-10"></a>        <span class="co">#&nbsp;Get the data using the urlopen function</span></span>
+<span id="cb24-11"><a href="#cb24-11"></a>        response <span class="op">=</span> urlopen(src) </span>
+<span id="cb24-12"><a href="#cb24-12"></a>        filedata <span class="op">=</span> response.read().decode(<span class="st">'utf-8'</span>)</span>
+<span id="cb24-13"><a href="#cb24-13"></a>        </span>
+<span id="cb24-14"><a href="#cb24-14"></a>        <span class="co"># Extract the part of the dest(ination) that is *not*</span></span>
+<span id="cb24-15"><a href="#cb24-15"></a>        <span class="co"># the actual filename--have a look at how </span></span>
+<span id="cb24-16"><a href="#cb24-16"></a>        <span class="co"># os.path.split works using `help(os.path.split)`</span></span>
+<span id="cb24-17"><a href="#cb24-17"></a>        path <span class="op">=</span> <span class="bu">list</span>(os.path.split(dest)[:<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb24-18"><a href="#cb24-18"></a>        </span>
+<span id="cb24-19"><a href="#cb24-19"></a>        <span class="co"># Create any missing directories in dest(ination) path</span></span>
+<span id="cb24-20"><a href="#cb24-20"></a>        <span class="co"># -- os.path.join is the reverse of split (as you saw above)</span></span>
+<span id="cb24-21"><a href="#cb24-21"></a>        <span class="co"># but it doesn't work with lists... so I had to google how </span></span>
+<span id="cb24-22"><a href="#cb24-22"></a>        <span class="co"># to use the 'splat' operator! os.makedirs creates missing </span></span>
+<span id="cb24-23"><a href="#cb24-23"></a>        <span class="co"># directories in a path automatically.</span></span>
+<span id="cb24-24"><a href="#cb24-24"></a>        <span class="cf">if</span> <span class="bu">len</span>(path) <span class="op">&gt;=</span> <span class="dv">1</span> <span class="kw">and</span> path[<span class="dv">0</span>] <span class="op">!=</span> <span class="st">''</span>:</span>
+<span id="cb24-25"><a href="#cb24-25"></a>            os.makedirs(os.path.join(<span class="op">*</span>path), exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb24-26"><a href="#cb24-26"></a>        </span>
+<span id="cb24-27"><a href="#cb24-27"></a>        <span class="cf">with</span> <span class="bu">open</span>(dest, <span class="st">'w'</span>) <span class="im">as</span> f:</span>
+<span id="cb24-28"><a href="#cb24-28"></a>            f.write(filedata)</span>
+<span id="cb24-29"><a href="#cb24-29"></a>            </span>
+<span id="cb24-30"><a href="#cb24-30"></a>        <span class="bu">print</span>(<span class="ss">f"Data written to </span><span class="sc">{</span>dest<span class="sc">}</span><span class="ss">!"</span>)</span>
+<span id="cb24-31"><a href="#cb24-31"></a>    </span>
+<span id="cb24-32"><a href="#cb24-32"></a>    <span class="cf">return</span> dest</span>
+<span id="cb24-33"><a href="#cb24-33"></a>        </span>
+<span id="cb24-34"><a href="#cb24-34"></a><span class="co"># Using the `return contents` line we make it easy to </span></span>
+<span id="cb24-35"><a href="#cb24-35"></a><span class="co"># see what our function is up to.</span></span>
+<span id="cb24-36"><a href="#cb24-36"></a>src <span class="op">=</span> get_url(url, out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>data/Wikipedia-Cities.csv found locally!</code></pre>
 </div>
@@ -760,49 +760,49 @@ Difficulty level: Medium
 <p>Let’s now look into simplifying this code using a dectorator! Our function has become a bit unwieldy and we want to look at how we can simplify that.</p>
 <p>The ‘obvious’ (i.e.&nbsp;not obvious) way to do this is to implement the check for a local copy as a decorator on the downloading function. So we have a function that downloads, and a decorator function that checks if the download should even be triggered.</p>
 <div id="78db4ffc" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> functools <span class="im">import</span> wraps</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> check_cache(f):</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">@wraps</span>(f)</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> wrapper(<span class="op">*</span>args, <span class="op">**</span>kwargs):</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>        src  <span class="op">=</span> args[<span class="dv">0</span>]</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>        dest <span class="op">=</span> args[<span class="dv">1</span>]</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> os.path.isfile(dest):</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>dest<span class="sc">}</span><span class="ss"> found locally!"</span>)</span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span>(dest)</span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>dest<span class="sc">}</span><span class="ss"> not found, downloading!"</span>)</span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span>(f(src, dest))</span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> wrapper</span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="at">@check_cache</span></span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_url(src, dest):    </span>
-<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>    <span class="co">#&nbsp;Get the data using the urlopen function</span></span>
-<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>    response <span class="op">=</span> urlopen(src) </span>
-<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>    filedata <span class="op">=</span> response.read().decode(<span class="st">'utf-8'</span>)</span>
-<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>     </span>
-<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract the part of the dest(ination) that is *not*</span></span>
-<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># the actual filename--have a look at how </span></span>
-<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># os.path.split works using `help(os.path.split)`</span></span>
-<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> <span class="bu">list</span>(os.path.split(dest)[:<span class="op">-</span><span class="dv">1</span>])</span>
-<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>     </span>
-<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create any missing directories in dest(ination) path</span></span>
-<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># -- os.path.join is the reverse of split (as you saw above)</span></span>
-<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># but it doesn't work with lists... so I had to google how </span></span>
-<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># to use the 'splat' operator! os.makedirs creates missing </span></span>
-<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># directories in a path automatically.</span></span>
-<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(path) <span class="op">&gt;=</span> <span class="dv">1</span> <span class="kw">and</span> path[<span class="dv">0</span>] <span class="op">!=</span> <span class="st">''</span>:</span>
-<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>        os.makedirs(os.path.join(<span class="op">*</span>path), exist_ok<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>     </span>
-<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> <span class="bu">open</span>(dest, <span class="st">'w'</span>) <span class="im">as</span> f:</span>
-<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a>        f.write(filedata)</span>
-<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a>         </span>
-<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Data written to </span><span class="sc">{</span>dest<span class="sc">}</span><span class="ss">!"</span>)</span>
-<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> dest</span>
-<span id="cb26-40"><a href="#cb26-40" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb26-41"><a href="#cb26-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Using the `return contents` line we make it easy to </span></span>
-<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a><span class="co"># see what our function is up to.</span></span>
-<span id="cb26-43"><a href="#cb26-43" aria-hidden="true" tabindex="-1"></a>src <span class="op">=</span> get_url(url, out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1"></a><span class="im">from</span> functools <span class="im">import</span> wraps</span>
+<span id="cb26-2"><a href="#cb26-2"></a><span class="kw">def</span> check_cache(f):</span>
+<span id="cb26-3"><a href="#cb26-3"></a>    <span class="at">@wraps</span>(f)</span>
+<span id="cb26-4"><a href="#cb26-4"></a>    <span class="kw">def</span> wrapper(<span class="op">*</span>args, <span class="op">**</span>kwargs):</span>
+<span id="cb26-5"><a href="#cb26-5"></a>        src  <span class="op">=</span> args[<span class="dv">0</span>]</span>
+<span id="cb26-6"><a href="#cb26-6"></a>        dest <span class="op">=</span> args[<span class="dv">1</span>]</span>
+<span id="cb26-7"><a href="#cb26-7"></a>        <span class="cf">if</span> os.path.isfile(dest):</span>
+<span id="cb26-8"><a href="#cb26-8"></a>            <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>dest<span class="sc">}</span><span class="ss"> found locally!"</span>)</span>
+<span id="cb26-9"><a href="#cb26-9"></a>            <span class="cf">return</span>(dest)</span>
+<span id="cb26-10"><a href="#cb26-10"></a>        <span class="cf">else</span>:</span>
+<span id="cb26-11"><a href="#cb26-11"></a>            <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>dest<span class="sc">}</span><span class="ss"> not found, downloading!"</span>)</span>
+<span id="cb26-12"><a href="#cb26-12"></a>            <span class="cf">return</span>(f(src, dest))</span>
+<span id="cb26-13"><a href="#cb26-13"></a>    <span class="cf">return</span> wrapper</span>
+<span id="cb26-14"><a href="#cb26-14"></a></span>
+<span id="cb26-15"><a href="#cb26-15"></a><span class="at">@check_cache</span></span>
+<span id="cb26-16"><a href="#cb26-16"></a><span class="kw">def</span> get_url(src, dest):    </span>
+<span id="cb26-17"><a href="#cb26-17"></a>    <span class="co">#&nbsp;Get the data using the urlopen function</span></span>
+<span id="cb26-18"><a href="#cb26-18"></a>    response <span class="op">=</span> urlopen(src) </span>
+<span id="cb26-19"><a href="#cb26-19"></a>    filedata <span class="op">=</span> response.read().decode(<span class="st">'utf-8'</span>)</span>
+<span id="cb26-20"><a href="#cb26-20"></a>     </span>
+<span id="cb26-21"><a href="#cb26-21"></a>    <span class="co"># Extract the part of the dest(ination) that is *not*</span></span>
+<span id="cb26-22"><a href="#cb26-22"></a>    <span class="co"># the actual filename--have a look at how </span></span>
+<span id="cb26-23"><a href="#cb26-23"></a>    <span class="co"># os.path.split works using `help(os.path.split)`</span></span>
+<span id="cb26-24"><a href="#cb26-24"></a>    path <span class="op">=</span> <span class="bu">list</span>(os.path.split(dest)[:<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb26-25"><a href="#cb26-25"></a>     </span>
+<span id="cb26-26"><a href="#cb26-26"></a>    <span class="co"># Create any missing directories in dest(ination) path</span></span>
+<span id="cb26-27"><a href="#cb26-27"></a>    <span class="co"># -- os.path.join is the reverse of split (as you saw above)</span></span>
+<span id="cb26-28"><a href="#cb26-28"></a>    <span class="co"># but it doesn't work with lists... so I had to google how </span></span>
+<span id="cb26-29"><a href="#cb26-29"></a>    <span class="co"># to use the 'splat' operator! os.makedirs creates missing </span></span>
+<span id="cb26-30"><a href="#cb26-30"></a>    <span class="co"># directories in a path automatically.</span></span>
+<span id="cb26-31"><a href="#cb26-31"></a>    <span class="cf">if</span> <span class="bu">len</span>(path) <span class="op">&gt;=</span> <span class="dv">1</span> <span class="kw">and</span> path[<span class="dv">0</span>] <span class="op">!=</span> <span class="st">''</span>:</span>
+<span id="cb26-32"><a href="#cb26-32"></a>        os.makedirs(os.path.join(<span class="op">*</span>path), exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb26-33"><a href="#cb26-33"></a>     </span>
+<span id="cb26-34"><a href="#cb26-34"></a>    <span class="cf">with</span> <span class="bu">open</span>(dest, <span class="st">'w'</span>) <span class="im">as</span> f:</span>
+<span id="cb26-35"><a href="#cb26-35"></a>        f.write(filedata)</span>
+<span id="cb26-36"><a href="#cb26-36"></a>         </span>
+<span id="cb26-37"><a href="#cb26-37"></a>    <span class="bu">print</span>(<span class="ss">f"Data written to </span><span class="sc">{</span>dest<span class="sc">}</span><span class="ss">!"</span>)</span>
+<span id="cb26-38"><a href="#cb26-38"></a>    </span>
+<span id="cb26-39"><a href="#cb26-39"></a>    <span class="cf">return</span> dest</span>
+<span id="cb26-40"><a href="#cb26-40"></a>        </span>
+<span id="cb26-41"><a href="#cb26-41"></a><span class="co"># Using the `return contents` line we make it easy to </span></span>
+<span id="cb26-42"><a href="#cb26-42"></a><span class="co"># see what our function is up to.</span></span>
+<span id="cb26-43"><a href="#cb26-43"></a>src <span class="op">=</span> get_url(url, out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>data/Wikipedia-Cities.csv found locally!</code></pre>
 </div>
@@ -844,23 +844,23 @@ Difficulty: Low
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> csv</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> read_csv(src):</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    csvdata <span class="op">=</span> []</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> <span class="bu">open</span>(src, <span class="st">'r'</span>) <span class="im">as</span> f:</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>        csvr <span class="op">=</span> csv.??(f)</span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> r <span class="kw">in</span> csvr:</span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>            csvdata.append(??)</span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Return list of lists</span></span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ??</span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>read_csv(src)</span>
-<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a><span class="co">#read_csv('foo.bar') # &lt;- Notice what happens if you try to run this code</span></span>
-<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a><span class="co">#read_csv('Practical-04-Objects-Answers.ipynb') # Or this code!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1"></a><span class="im">import</span> csv</span>
+<span id="cb28-2"><a href="#cb28-2"></a></span>
+<span id="cb28-3"><a href="#cb28-3"></a><span class="kw">def</span> read_csv(src):</span>
+<span id="cb28-4"><a href="#cb28-4"></a>    </span>
+<span id="cb28-5"><a href="#cb28-5"></a>    csvdata <span class="op">=</span> []</span>
+<span id="cb28-6"><a href="#cb28-6"></a>    <span class="cf">with</span> <span class="bu">open</span>(src, <span class="st">'r'</span>) <span class="im">as</span> f:</span>
+<span id="cb28-7"><a href="#cb28-7"></a>        csvr <span class="op">=</span> csv.??(f)</span>
+<span id="cb28-8"><a href="#cb28-8"></a>        </span>
+<span id="cb28-9"><a href="#cb28-9"></a>        <span class="cf">for</span> r <span class="kw">in</span> csvr:</span>
+<span id="cb28-10"><a href="#cb28-10"></a>            csvdata.append(??)</span>
+<span id="cb28-11"><a href="#cb28-11"></a>    </span>
+<span id="cb28-12"><a href="#cb28-12"></a>    <span class="co"># Return list of lists</span></span>
+<span id="cb28-13"><a href="#cb28-13"></a>    <span class="cf">return</span> ??</span>
+<span id="cb28-14"><a href="#cb28-14"></a></span>
+<span id="cb28-15"><a href="#cb28-15"></a>read_csv(src)</span>
+<span id="cb28-16"><a href="#cb28-16"></a><span class="co">#read_csv('foo.bar') # &lt;- Notice what happens if you try to run this code</span></span>
+<span id="cb28-17"><a href="#cb28-17"></a><span class="co">#read_csv('Practical-04-Objects-Answers.ipynb') # Or this code!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>You should get:</p>
 <p><code> [[‘City’, ‘Population’, ‘Latitude’, ‘Longitude’], [‘Perth’, ‘45770’, ‘56.39583’, ‘-3.43333’], [‘Armagh’, ‘14777’, ‘54.3499’, ‘-6.6546’], [‘Dundee’, ‘147268’, ‘56.462’, ‘-2.9707’], [‘Colchester’, ‘194706’, ‘51.88861’, ‘0.90361’], [‘Salisbury’, ‘40302’, ‘51.07’, ‘-1.79’], [‘Portsmouth’, ‘205056’, ‘50.80583’, ‘-1.08722’], [‘Wakefield’, ‘325837’, ‘53.683’, ‘-1.499’], [‘Bradford’, ‘522452’, ‘53.792’, ‘-1.754’], [‘Lancaster’, ‘138375’, ‘54.047’, ‘-2.801’], [‘Bangor’, ‘18808’, ‘53.228’, ‘-4.128’]] </code></p>
@@ -888,34 +888,34 @@ Difficulty: Medium.
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> read_csv(src):</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    csvdata <span class="op">=</span> {} <span class="co"># An empty dictionary-of-lists</span></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> <span class="bu">open</span>(??, <span class="st">'r'</span>) <span class="im">as</span> f:</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>        csvr <span class="op">=</span> csv.reader(f)</span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>        <span class="co">#&nbsp;Read in our column names and</span></span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>        <span class="co"># initialise the dictionary-of-lists</span></span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>        csvcols <span class="op">=</span> <span class="bu">next</span>(csvr) </span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> c <span class="kw">in</span> csvcols:</span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>            csvdata[c] <span class="op">=</span> []</span>
-<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Notice this code is still the same, </span></span>
-<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># we just used next(csvr) to get the </span></span>
-<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>        <span class="co"># header row first!</span></span>
-<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> r <span class="kw">in</span> ??: </span>
-<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Although you can often assume that the order </span></span>
-<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>            <span class="co"># of the keys is the same, Python doesn't </span></span>
-<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>            <span class="co">#&nbsp;guarantee it; this way we will always make</span></span>
-<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>            <span class="co"># the correct assignment.</span></span>
-<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> idx, c <span class="kw">in</span> <span class="bu">enumerate</span>(csvcols):</span>
-<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>                csvdata[??].append(r[idx])</span>
-<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Return dictionary of lists</span></span>
-<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> csvdata</span>
-<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a>read_csv(src)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1"></a><span class="kw">def</span> read_csv(src):</span>
+<span id="cb29-2"><a href="#cb29-2"></a>    </span>
+<span id="cb29-3"><a href="#cb29-3"></a>    csvdata <span class="op">=</span> {} <span class="co"># An empty dictionary-of-lists</span></span>
+<span id="cb29-4"><a href="#cb29-4"></a>    </span>
+<span id="cb29-5"><a href="#cb29-5"></a>    <span class="cf">with</span> <span class="bu">open</span>(??, <span class="st">'r'</span>) <span class="im">as</span> f:</span>
+<span id="cb29-6"><a href="#cb29-6"></a>        csvr <span class="op">=</span> csv.reader(f)</span>
+<span id="cb29-7"><a href="#cb29-7"></a>        </span>
+<span id="cb29-8"><a href="#cb29-8"></a>        <span class="co">#&nbsp;Read in our column names and</span></span>
+<span id="cb29-9"><a href="#cb29-9"></a>        <span class="co"># initialise the dictionary-of-lists</span></span>
+<span id="cb29-10"><a href="#cb29-10"></a>        csvcols <span class="op">=</span> <span class="bu">next</span>(csvr) </span>
+<span id="cb29-11"><a href="#cb29-11"></a>        <span class="cf">for</span> c <span class="kw">in</span> csvcols:</span>
+<span id="cb29-12"><a href="#cb29-12"></a>            csvdata[c] <span class="op">=</span> []</span>
+<span id="cb29-13"><a href="#cb29-13"></a>        </span>
+<span id="cb29-14"><a href="#cb29-14"></a>        <span class="co"># Notice this code is still the same, </span></span>
+<span id="cb29-15"><a href="#cb29-15"></a>        <span class="co"># we just used next(csvr) to get the </span></span>
+<span id="cb29-16"><a href="#cb29-16"></a>        <span class="co"># header row first!</span></span>
+<span id="cb29-17"><a href="#cb29-17"></a>        <span class="cf">for</span> r <span class="kw">in</span> ??: </span>
+<span id="cb29-18"><a href="#cb29-18"></a>            <span class="co"># Although you can often assume that the order </span></span>
+<span id="cb29-19"><a href="#cb29-19"></a>            <span class="co"># of the keys is the same, Python doesn't </span></span>
+<span id="cb29-20"><a href="#cb29-20"></a>            <span class="co">#&nbsp;guarantee it; this way we will always make</span></span>
+<span id="cb29-21"><a href="#cb29-21"></a>            <span class="co"># the correct assignment.</span></span>
+<span id="cb29-22"><a href="#cb29-22"></a>            <span class="cf">for</span> idx, c <span class="kw">in</span> <span class="bu">enumerate</span>(csvcols):</span>
+<span id="cb29-23"><a href="#cb29-23"></a>                csvdata[??].append(r[idx])</span>
+<span id="cb29-24"><a href="#cb29-24"></a>    </span>
+<span id="cb29-25"><a href="#cb29-25"></a>    <span class="co"># Return dictionary of lists</span></span>
+<span id="cb29-26"><a href="#cb29-26"></a>    <span class="cf">return</span> csvdata</span>
+<span id="cb29-27"><a href="#cb29-27"></a></span>
+<span id="cb29-28"><a href="#cb29-28"></a>read_csv(src)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>You should get something that starts:</p>
 <div id="4afcf1e4" class="cell" data-execution_count="23">
@@ -949,43 +949,43 @@ Difficulty: Low
 <li>Provided hints to Python about the expected input and output data types. This can help to ensure consistency and is also critical in testing / continuous integration when working with others on a codebase.</li>
 </ol>
 <div id="9a978239" class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> read_csv(src:<span class="bu">str</span>) <span class="op">-&gt;</span> <span class="bu">dict</span>:</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Converts a CSV file to a dictionary-of-lists (dol),</span></span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co">    using the first row to create column names.</span></span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="co">    param src: a local CSV file</span></span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="co">    returns: a dictionary-of-lists</span></span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>    csvdata <span class="op">=</span> {} <span class="co"># An empty dictionary-of-lists</span></span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> <span class="bu">open</span>(src, <span class="st">'r'</span>) <span class="im">as</span> f:</span>
-<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>        csvr <span class="op">=</span> csv.reader(f)</span>
-<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>        <span class="co">#&nbsp;Read in our column names and</span></span>
-<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># initialise the dictionary-of-lists</span></span>
-<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>        csvcols <span class="op">=</span> <span class="bu">next</span>(csvr) </span>
-<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> c <span class="kw">in</span> csvcols:</span>
-<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>            csvdata[c] <span class="op">=</span> []</span>
-<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Notice this code is still the same, </span></span>
-<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>        <span class="co"># we just used next(csvr) to get the </span></span>
-<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>        <span class="co"># header row first!</span></span>
-<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> r <span class="kw">in</span> csvr: </span>
-<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Although you can often assume that the order </span></span>
-<span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a>            <span class="co"># of the keys is the same, Python doesn't </span></span>
-<span id="cb31-26"><a href="#cb31-26" aria-hidden="true" tabindex="-1"></a>            <span class="co">#&nbsp;guarantee it; this way we will always make</span></span>
-<span id="cb31-27"><a href="#cb31-27" aria-hidden="true" tabindex="-1"></a>            <span class="co"># the correct assignment.</span></span>
-<span id="cb31-28"><a href="#cb31-28" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> idx, c <span class="kw">in</span> <span class="bu">enumerate</span>(csvcols):</span>
-<span id="cb31-29"><a href="#cb31-29" aria-hidden="true" tabindex="-1"></a>                csvdata[c].append(r[idx])</span>
-<span id="cb31-30"><a href="#cb31-30" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb31-31"><a href="#cb31-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Return dictionary of lists</span></span>
-<span id="cb31-32"><a href="#cb31-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> csvdata</span>
-<span id="cb31-33"><a href="#cb31-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-34"><a href="#cb31-34" aria-hidden="true" tabindex="-1"></a>ds <span class="op">=</span> read_csv(src)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1"></a><span class="kw">def</span> read_csv(src:<span class="bu">str</span>) <span class="op">-&gt;</span> <span class="bu">dict</span>:</span>
+<span id="cb31-2"><a href="#cb31-2"></a>    <span class="co">"""</span></span>
+<span id="cb31-3"><a href="#cb31-3"></a><span class="co">    Converts a CSV file to a dictionary-of-lists (dol),</span></span>
+<span id="cb31-4"><a href="#cb31-4"></a><span class="co">    using the first row to create column names.</span></span>
+<span id="cb31-5"><a href="#cb31-5"></a><span class="co">    </span></span>
+<span id="cb31-6"><a href="#cb31-6"></a><span class="co">    param src: a local CSV file</span></span>
+<span id="cb31-7"><a href="#cb31-7"></a><span class="co">    returns: a dictionary-of-lists</span></span>
+<span id="cb31-8"><a href="#cb31-8"></a><span class="co">    """</span></span>
+<span id="cb31-9"><a href="#cb31-9"></a>    csvdata <span class="op">=</span> {} <span class="co"># An empty dictionary-of-lists</span></span>
+<span id="cb31-10"><a href="#cb31-10"></a>    </span>
+<span id="cb31-11"><a href="#cb31-11"></a>    <span class="cf">with</span> <span class="bu">open</span>(src, <span class="st">'r'</span>) <span class="im">as</span> f:</span>
+<span id="cb31-12"><a href="#cb31-12"></a>        csvr <span class="op">=</span> csv.reader(f)</span>
+<span id="cb31-13"><a href="#cb31-13"></a>        </span>
+<span id="cb31-14"><a href="#cb31-14"></a>        <span class="co">#&nbsp;Read in our column names and</span></span>
+<span id="cb31-15"><a href="#cb31-15"></a>        <span class="co"># initialise the dictionary-of-lists</span></span>
+<span id="cb31-16"><a href="#cb31-16"></a>        csvcols <span class="op">=</span> <span class="bu">next</span>(csvr) </span>
+<span id="cb31-17"><a href="#cb31-17"></a>        <span class="cf">for</span> c <span class="kw">in</span> csvcols:</span>
+<span id="cb31-18"><a href="#cb31-18"></a>            csvdata[c] <span class="op">=</span> []</span>
+<span id="cb31-19"><a href="#cb31-19"></a>        </span>
+<span id="cb31-20"><a href="#cb31-20"></a>        <span class="co"># Notice this code is still the same, </span></span>
+<span id="cb31-21"><a href="#cb31-21"></a>        <span class="co"># we just used next(csvr) to get the </span></span>
+<span id="cb31-22"><a href="#cb31-22"></a>        <span class="co"># header row first!</span></span>
+<span id="cb31-23"><a href="#cb31-23"></a>        <span class="cf">for</span> r <span class="kw">in</span> csvr: </span>
+<span id="cb31-24"><a href="#cb31-24"></a>            <span class="co"># Although you can often assume that the order </span></span>
+<span id="cb31-25"><a href="#cb31-25"></a>            <span class="co"># of the keys is the same, Python doesn't </span></span>
+<span id="cb31-26"><a href="#cb31-26"></a>            <span class="co">#&nbsp;guarantee it; this way we will always make</span></span>
+<span id="cb31-27"><a href="#cb31-27"></a>            <span class="co"># the correct assignment.</span></span>
+<span id="cb31-28"><a href="#cb31-28"></a>            <span class="cf">for</span> idx, c <span class="kw">in</span> <span class="bu">enumerate</span>(csvcols):</span>
+<span id="cb31-29"><a href="#cb31-29"></a>                csvdata[c].append(r[idx])</span>
+<span id="cb31-30"><a href="#cb31-30"></a>    </span>
+<span id="cb31-31"><a href="#cb31-31"></a>    <span class="co"># Return dictionary of lists</span></span>
+<span id="cb31-32"><a href="#cb31-32"></a>    <span class="cf">return</span> csvdata</span>
+<span id="cb31-33"><a href="#cb31-33"></a></span>
+<span id="cb31-34"><a href="#cb31-34"></a>ds <span class="op">=</span> read_csv(src)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="1d702bb4" class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="bu">help</span>(read_csv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1"></a><span class="bu">help</span>(read_csv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Help on function read_csv in module __main__:
 
@@ -999,10 +999,10 @@ read_csv(src: str) -&gt; dict
 </div>
 </div>
 <div id="269c7e78" class="cell" data-execution_count="26">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Columns are: "</span> <span class="op">+</span> <span class="st">", "</span>.join(ds.keys()))</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"First two cities are: </span><span class="sc">{</span>ds[<span class="st">'City'</span>][:<span class="dv">2</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"First two populations are: </span><span class="sc">{</span>ds[<span class="st">'Population'</span>][:<span class="dv">2</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"First two latitudes are: </span><span class="sc">{</span>ds[<span class="st">'Latitude'</span>][:<span class="dv">2</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1"></a><span class="bu">print</span>(<span class="st">"Columns are: "</span> <span class="op">+</span> <span class="st">", "</span>.join(ds.keys()))</span>
+<span id="cb34-2"><a href="#cb34-2"></a><span class="bu">print</span>(<span class="ss">f"First two cities are: </span><span class="sc">{</span>ds[<span class="st">'City'</span>][:<span class="dv">2</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb34-3"><a href="#cb34-3"></a><span class="bu">print</span>(<span class="ss">f"First two populations are: </span><span class="sc">{</span>ds[<span class="st">'Population'</span>][:<span class="dv">2</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb34-4"><a href="#cb34-4"></a><span class="bu">print</span>(<span class="ss">f"First two latitudes are: </span><span class="sc">{</span>ds[<span class="st">'Latitude'</span>][:<span class="dv">2</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Columns are: City, Population, Latitude, Longitude
 First two cities are: ['Perth', 'Armagh']
@@ -1028,7 +1028,7 @@ First two latitudes are: ['56.39583', '54.3499']</code></pre>
 <p>So, in the immortal words of Monty Python…</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./img/completely_different.png" class="img-fluid figure-img"></p>
+<p><a href="./img/completely_different.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="And now for something completely different"><img src="./img/completely_different.png" class="img-fluid figure-img" alt="And now for something completely different"></a></p>
 <figcaption>And now for something completely different</figcaption>
 </figure>
 </div>
@@ -1087,34 +1087,34 @@ Difficulty: 🤯.
 <li>It provides methods (which only raise exceptions) that will allow one shape to be used in the place of any other shape that inherits from <code>shape</code>.</li>
 </ol>
 <div id="3f8a4c58" class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Base class shape</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> shape(<span class="bu">object</span>): <span class="co"># Inherit from base class </span></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dimension:<span class="bu">float</span><span class="op">=</span><span class="va">None</span>):</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.shape_type <span class="op">=</span> <span class="va">self</span>.__class__.<span class="va">__name__</span>.capitalize()</span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.dim <span class="op">=</span> dimension</span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span></span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> diameter(<span class="va">self</span>):</span>
-<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">Exception</span>(<span class="st">"Unimplmented method error."</span>)</span>
-<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> volume(<span class="va">self</span>):</span>
-<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">Exception</span>(<span class="st">"Unimplmented method error."</span>)</span>
-<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> surface(<span class="va">self</span>):</span>
-<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">Exception</span>(<span class="st">"Unimplmented method error."</span>)</span>
-<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="bu">type</span>(<span class="va">self</span>):</span>
-<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span>(<span class="va">self</span>.shape_type)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1"></a><span class="co"># Base class shape</span></span>
+<span id="cb36-2"><a href="#cb36-2"></a><span class="kw">class</span> shape(<span class="bu">object</span>): <span class="co"># Inherit from base class </span></span>
+<span id="cb36-3"><a href="#cb36-3"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dimension:<span class="bu">float</span><span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb36-4"><a href="#cb36-4"></a>        <span class="va">self</span>.shape_type <span class="op">=</span> <span class="va">self</span>.__class__.<span class="va">__name__</span>.capitalize()</span>
+<span id="cb36-5"><a href="#cb36-5"></a>        <span class="va">self</span>.dim <span class="op">=</span> dimension</span>
+<span id="cb36-6"><a href="#cb36-6"></a>        <span class="cf">return</span></span>
+<span id="cb36-7"><a href="#cb36-7"></a>    </span>
+<span id="cb36-8"><a href="#cb36-8"></a>    <span class="kw">def</span> diameter(<span class="va">self</span>):</span>
+<span id="cb36-9"><a href="#cb36-9"></a>        <span class="cf">raise</span> <span class="pp">Exception</span>(<span class="st">"Unimplmented method error."</span>)</span>
+<span id="cb36-10"><a href="#cb36-10"></a>    </span>
+<span id="cb36-11"><a href="#cb36-11"></a>    <span class="kw">def</span> volume(<span class="va">self</span>):</span>
+<span id="cb36-12"><a href="#cb36-12"></a>        <span class="cf">raise</span> <span class="pp">Exception</span>(<span class="st">"Unimplmented method error."</span>)</span>
+<span id="cb36-13"><a href="#cb36-13"></a>    </span>
+<span id="cb36-14"><a href="#cb36-14"></a>    <span class="kw">def</span> surface(<span class="va">self</span>):</span>
+<span id="cb36-15"><a href="#cb36-15"></a>        <span class="cf">raise</span> <span class="pp">Exception</span>(<span class="st">"Unimplmented method error."</span>)</span>
+<span id="cb36-16"><a href="#cb36-16"></a>        </span>
+<span id="cb36-17"><a href="#cb36-17"></a>    <span class="kw">def</span> <span class="bu">type</span>(<span class="va">self</span>):</span>
+<span id="cb36-18"><a href="#cb36-18"></a>        <span class="cf">return</span>(<span class="va">self</span>.shape_type)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can now create a new shape object (an <em>instance</em> of the shape class) but we can’t do much that is useful with it:</p>
 <div id="a5589376" class="cell" data-execution_count="28">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> shape(<span class="dv">15</span>)</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>: </span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"I am a </span><span class="sc">{</span>s<span class="sc">.</span><span class="bu">type</span>()<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"My volume is </span><span class="sc">{</span>s<span class="sc">.</span>volume()<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Error: </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1"></a>s <span class="op">=</span> shape(<span class="dv">15</span>)</span>
+<span id="cb37-2"><a href="#cb37-2"></a></span>
+<span id="cb37-3"><a href="#cb37-3"></a><span class="cf">try</span>: </span>
+<span id="cb37-4"><a href="#cb37-4"></a>    <span class="bu">print</span>(<span class="ss">f"I am a </span><span class="sc">{</span>s<span class="sc">.</span><span class="bu">type</span>()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb37-5"><a href="#cb37-5"></a>    <span class="bu">print</span>(<span class="ss">f"My volume is </span><span class="sc">{</span>s<span class="sc">.</span>volume()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb37-6"><a href="#cb37-6"></a><span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
+<span id="cb37-7"><a href="#cb37-7"></a>    <span class="bu">print</span>(<span class="ss">f"Error: </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>I am a Shape
 Error: Unimplmented method error.</code></pre>
@@ -1133,30 +1133,30 @@ Error: Unimplmented method error.</code></pre>
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <p>Can you work out the missing elements that will allow you to create a cube class?</p>
 <div class="cell">
-<div class="sourceCode" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cube class</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> cube(shape): <span class="co"># Inherit from shape </span></span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim:<span class="bu">float</span>):</span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(dim)</span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span></span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> diameter(<span class="va">self</span>):</span>
-<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> (<span class="dv">3</span> <span class="op">*</span> <span class="va">self</span>.??<span class="op">**</span><span class="dv">2</span>)<span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)</span>
-<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> volume(<span class="va">self</span>):</span>
-<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.dim<span class="op">**</span><span class="dv">3</span></span>
-<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> surface(<span class="va">self</span>):</span>
-<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> ??<span class="op">*</span>(<span class="va">self</span>.dim<span class="op">**</span><span class="dv">2</span>)</span>
-<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a><span class="co"># If you've done everything correctly then</span></span>
-<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a><span class="co"># you will no longer get an error here...</span></span>
-<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> cube(<span class="dv">15</span>)</span>
-<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>: </span>
-<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"I am a </span><span class="sc">{</span>s<span class="sc">.</span><span class="bu">type</span>()<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"My volume is </span><span class="sc">{</span>s<span class="sc">.</span>volume()<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
-<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Error: </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1"></a><span class="co"># Cube class</span></span>
+<span id="cb39-2"><a href="#cb39-2"></a><span class="kw">class</span> cube(shape): <span class="co"># Inherit from shape </span></span>
+<span id="cb39-3"><a href="#cb39-3"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim:<span class="bu">float</span>):</span>
+<span id="cb39-4"><a href="#cb39-4"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(dim)</span>
+<span id="cb39-5"><a href="#cb39-5"></a>        <span class="cf">return</span></span>
+<span id="cb39-6"><a href="#cb39-6"></a>    </span>
+<span id="cb39-7"><a href="#cb39-7"></a>    <span class="kw">def</span> diameter(<span class="va">self</span>):</span>
+<span id="cb39-8"><a href="#cb39-8"></a>        <span class="cf">return</span> (<span class="dv">3</span> <span class="op">*</span> <span class="va">self</span>.??<span class="op">**</span><span class="dv">2</span>)<span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)</span>
+<span id="cb39-9"><a href="#cb39-9"></a>    </span>
+<span id="cb39-10"><a href="#cb39-10"></a>    <span class="kw">def</span> volume(<span class="va">self</span>):</span>
+<span id="cb39-11"><a href="#cb39-11"></a>        <span class="cf">return</span> <span class="va">self</span>.dim<span class="op">**</span><span class="dv">3</span></span>
+<span id="cb39-12"><a href="#cb39-12"></a>    </span>
+<span id="cb39-13"><a href="#cb39-13"></a>    <span class="kw">def</span> surface(<span class="va">self</span>):</span>
+<span id="cb39-14"><a href="#cb39-14"></a>        <span class="cf">return</span> ??<span class="op">*</span>(<span class="va">self</span>.dim<span class="op">**</span><span class="dv">2</span>)</span>
+<span id="cb39-15"><a href="#cb39-15"></a></span>
+<span id="cb39-16"><a href="#cb39-16"></a><span class="co"># If you've done everything correctly then</span></span>
+<span id="cb39-17"><a href="#cb39-17"></a><span class="co"># you will no longer get an error here...</span></span>
+<span id="cb39-18"><a href="#cb39-18"></a>s <span class="op">=</span> cube(<span class="dv">15</span>)</span>
+<span id="cb39-19"><a href="#cb39-19"></a></span>
+<span id="cb39-20"><a href="#cb39-20"></a><span class="cf">try</span>: </span>
+<span id="cb39-21"><a href="#cb39-21"></a>    <span class="bu">print</span>(<span class="ss">f"I am a </span><span class="sc">{</span>s<span class="sc">.</span><span class="bu">type</span>()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb39-22"><a href="#cb39-22"></a>    <span class="bu">print</span>(<span class="ss">f"My volume is </span><span class="sc">{</span>s<span class="sc">.</span>volume()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb39-23"><a href="#cb39-23"></a><span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
+<span id="cb39-24"><a href="#cb39-24"></a>    <span class="bu">print</span>(<span class="ss">f"Error: </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -1173,30 +1173,30 @@ Error: Unimplmented method error.</code></pre>
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <p>Can you work out the missing elements that will allow you to create a cube class?</p>
 <div class="cell">
-<div class="sourceCode" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sphere class</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> math <span class="im">import</span> pi</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> sphere(shape): <span class="co"># Inherit from shape</span></span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim:<span class="bu">float</span>):</span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Something...</span></span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> diameter(<span class="va">self</span>):</span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Something...</span></span>
-<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> volume(<span class="va">self</span>):</span>
-<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Something</span></span>
-<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> surface(<span class="va">self</span>):</span>
-<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Something</span></span>
-<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a><span class="co"># If you've done everything correctly then</span></span>
-<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a><span class="co"># you will no longer get an error here...</span></span>
-<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> sphere(<span class="dv">15</span>)</span>
-<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>: </span>
-<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"I am a </span><span class="sc">{</span>s<span class="sc">.</span><span class="bu">type</span>()<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"My volume is </span><span class="sc">{</span>s<span class="sc">.</span>volume()<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
-<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Error: </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1"></a><span class="co"># Sphere class</span></span>
+<span id="cb40-2"><a href="#cb40-2"></a><span class="im">from</span> math <span class="im">import</span> pi</span>
+<span id="cb40-3"><a href="#cb40-3"></a><span class="kw">class</span> sphere(shape): <span class="co"># Inherit from shape</span></span>
+<span id="cb40-4"><a href="#cb40-4"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim:<span class="bu">float</span>):</span>
+<span id="cb40-5"><a href="#cb40-5"></a>        <span class="co"># Something...</span></span>
+<span id="cb40-6"><a href="#cb40-6"></a></span>
+<span id="cb40-7"><a href="#cb40-7"></a>    <span class="kw">def</span> diameter(<span class="va">self</span>):</span>
+<span id="cb40-8"><a href="#cb40-8"></a>        <span class="co"># Something...</span></span>
+<span id="cb40-9"><a href="#cb40-9"></a></span>
+<span id="cb40-10"><a href="#cb40-10"></a>    <span class="kw">def</span> volume(<span class="va">self</span>):</span>
+<span id="cb40-11"><a href="#cb40-11"></a>        <span class="co"># Something</span></span>
+<span id="cb40-12"><a href="#cb40-12"></a></span>
+<span id="cb40-13"><a href="#cb40-13"></a>    <span class="kw">def</span> surface(<span class="va">self</span>):</span>
+<span id="cb40-14"><a href="#cb40-14"></a>        <span class="co"># Something</span></span>
+<span id="cb40-15"><a href="#cb40-15"></a></span>
+<span id="cb40-16"><a href="#cb40-16"></a><span class="co"># If you've done everything correctly then</span></span>
+<span id="cb40-17"><a href="#cb40-17"></a><span class="co"># you will no longer get an error here...</span></span>
+<span id="cb40-18"><a href="#cb40-18"></a>s <span class="op">=</span> sphere(<span class="dv">15</span>)</span>
+<span id="cb40-19"><a href="#cb40-19"></a></span>
+<span id="cb40-20"><a href="#cb40-20"></a><span class="cf">try</span>: </span>
+<span id="cb40-21"><a href="#cb40-21"></a>    <span class="bu">print</span>(<span class="ss">f"I am a </span><span class="sc">{</span>s<span class="sc">.</span><span class="bu">type</span>()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb40-22"><a href="#cb40-22"></a>    <span class="bu">print</span>(<span class="ss">f"My volume is </span><span class="sc">{</span>s<span class="sc">.</span>volume()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb40-23"><a href="#cb40-23"></a><span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
+<span id="cb40-24"><a href="#cb40-24"></a>    <span class="bu">print</span>(<span class="ss">f"Error: </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -1226,27 +1226,27 @@ Class Variables
 </div>
 </div>
 <div id="349c4a2e" class="cell" data-execution_count="31">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pyramid class</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> pyramid(shape): <span class="co"># Inherit from shape</span></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    has_mummies <span class="op">=</span> <span class="va">True</span> <span class="co"># This is for *all* regular pyramids</span></span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim:<span class="bu">float</span>):</span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(dim)</span>
-<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.shape_type <span class="op">=</span> <span class="st">'Regular Pyramid'</span></span>
-<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span></span>
-<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> diameter(<span class="va">self</span>):</span>
-<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> (<span class="va">self</span>.dim<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="va">self</span>.dim<span class="op">**</span><span class="dv">2</span>)<span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)</span>
-<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> height(<span class="va">self</span>):</span>
-<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> (<span class="va">self</span>.diameter()<span class="op">/</span><span class="dv">2</span> <span class="op">+</span> <span class="va">self</span>.dim<span class="op">**</span><span class="dv">2</span>)<span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)</span>
-<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> volume(<span class="va">self</span>):</span>
-<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.dim<span class="op">**</span><span class="dv">2</span> <span class="op">*</span> <span class="va">self</span>.height() <span class="op">/</span> <span class="dv">3</span></span>
-<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> surface(<span class="va">self</span>):</span>
-<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.dim<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="va">self</span>.dim<span class="op">**</span><span class="dv">2</span> <span class="op">*</span> <span class="dv">3</span><span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1"></a><span class="co"># Pyramid class</span></span>
+<span id="cb41-2"><a href="#cb41-2"></a><span class="kw">class</span> pyramid(shape): <span class="co"># Inherit from shape</span></span>
+<span id="cb41-3"><a href="#cb41-3"></a></span>
+<span id="cb41-4"><a href="#cb41-4"></a>    has_mummies <span class="op">=</span> <span class="va">True</span> <span class="co"># This is for *all* regular pyramids</span></span>
+<span id="cb41-5"><a href="#cb41-5"></a></span>
+<span id="cb41-6"><a href="#cb41-6"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim:<span class="bu">float</span>):</span>
+<span id="cb41-7"><a href="#cb41-7"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(dim)</span>
+<span id="cb41-8"><a href="#cb41-8"></a>        <span class="va">self</span>.shape_type <span class="op">=</span> <span class="st">'Regular Pyramid'</span></span>
+<span id="cb41-9"><a href="#cb41-9"></a>        <span class="cf">return</span></span>
+<span id="cb41-10"><a href="#cb41-10"></a></span>
+<span id="cb41-11"><a href="#cb41-11"></a>    <span class="kw">def</span> diameter(<span class="va">self</span>):</span>
+<span id="cb41-12"><a href="#cb41-12"></a>        <span class="cf">return</span> (<span class="va">self</span>.dim<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="va">self</span>.dim<span class="op">**</span><span class="dv">2</span>)<span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)</span>
+<span id="cb41-13"><a href="#cb41-13"></a></span>
+<span id="cb41-14"><a href="#cb41-14"></a>    <span class="kw">def</span> height(<span class="va">self</span>):</span>
+<span id="cb41-15"><a href="#cb41-15"></a>        <span class="cf">return</span> (<span class="va">self</span>.diameter()<span class="op">/</span><span class="dv">2</span> <span class="op">+</span> <span class="va">self</span>.dim<span class="op">**</span><span class="dv">2</span>)<span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)</span>
+<span id="cb41-16"><a href="#cb41-16"></a></span>
+<span id="cb41-17"><a href="#cb41-17"></a>    <span class="kw">def</span> volume(<span class="va">self</span>):</span>
+<span id="cb41-18"><a href="#cb41-18"></a>        <span class="cf">return</span> <span class="va">self</span>.dim<span class="op">**</span><span class="dv">2</span> <span class="op">*</span> <span class="va">self</span>.height() <span class="op">/</span> <span class="dv">3</span></span>
+<span id="cb41-19"><a href="#cb41-19"></a></span>
+<span id="cb41-20"><a href="#cb41-20"></a>    <span class="kw">def</span> surface(<span class="va">self</span>):</span>
+<span id="cb41-21"><a href="#cb41-21"></a>        <span class="cf">return</span> <span class="va">self</span>.dim<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="va">self</span>.dim<span class="op">**</span><span class="dv">2</span> <span class="op">*</span> <span class="dv">3</span><span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="triangular-pyramid" class="level2">
@@ -1266,82 +1266,82 @@ Class Variables
 <p>Triangular pyramids do <em>not</em> have a problem with mummies.</p>
 <p>Why don’t you add some documentation to this class and the regular pyramid class so that we know how to use them correctly?</p>
 <div id="ad172d0d" class="cell" data-execution_count="32">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Triangular Pyramid class</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> t_pyramid(pyramid): <span class="co"># Inherit from regular pyramid</span></span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    has_mummies <span class="op">=</span> <span class="va">False</span> <span class="co"># This is for all triangular pyramids</span></span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim:<span class="bu">float</span>):</span>
-<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(dim)</span>
-<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.shape_type <span class="op">=</span> <span class="st">'Triangular Pyramid'</span></span>
-<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span></span>
-<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> diameter(<span class="va">self</span>):</span>
-<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.dim</span>
-<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> height(<span class="va">self</span>):</span>
-<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># h = sqrt(6)/3 * d</span></span>
-<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">6</span><span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)<span class="op">/</span><span class="dv">3</span> <span class="op">*</span> <span class="va">self</span>.dim</span>
-<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> base(<span class="va">self</span>):</span>
-<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">3</span><span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)<span class="op">/</span><span class="dv">4</span> <span class="op">*</span> <span class="va">self</span>.dim<span class="op">**</span><span class="dv">2</span></span>
-<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> volume(<span class="va">self</span>):</span>
-<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> (<span class="dv">1</span><span class="op">/</span><span class="dv">3</span>) <span class="op">*</span> <span class="va">self</span>.base() <span class="op">*</span> <span class="va">self</span>.height()</span>
-<span id="cb42-23"><a href="#cb42-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-24"><a href="#cb42-24" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> surface(<span class="va">self</span>):</span>
-<span id="cb42-25"><a href="#cb42-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">4</span> <span class="op">*</span> <span class="va">self</span>.base()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1"></a><span class="co"># Triangular Pyramid class</span></span>
+<span id="cb42-2"><a href="#cb42-2"></a><span class="kw">class</span> t_pyramid(pyramid): <span class="co"># Inherit from regular pyramid</span></span>
+<span id="cb42-3"><a href="#cb42-3"></a></span>
+<span id="cb42-4"><a href="#cb42-4"></a>    has_mummies <span class="op">=</span> <span class="va">False</span> <span class="co"># This is for all triangular pyramids</span></span>
+<span id="cb42-5"><a href="#cb42-5"></a></span>
+<span id="cb42-6"><a href="#cb42-6"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim:<span class="bu">float</span>):</span>
+<span id="cb42-7"><a href="#cb42-7"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(dim)</span>
+<span id="cb42-8"><a href="#cb42-8"></a>        <span class="va">self</span>.shape_type <span class="op">=</span> <span class="st">'Triangular Pyramid'</span></span>
+<span id="cb42-9"><a href="#cb42-9"></a>        <span class="cf">return</span></span>
+<span id="cb42-10"><a href="#cb42-10"></a></span>
+<span id="cb42-11"><a href="#cb42-11"></a>    <span class="kw">def</span> diameter(<span class="va">self</span>):</span>
+<span id="cb42-12"><a href="#cb42-12"></a>        <span class="cf">return</span> <span class="va">self</span>.dim</span>
+<span id="cb42-13"><a href="#cb42-13"></a></span>
+<span id="cb42-14"><a href="#cb42-14"></a>    <span class="kw">def</span> height(<span class="va">self</span>):</span>
+<span id="cb42-15"><a href="#cb42-15"></a>        <span class="co"># h = sqrt(6)/3 * d</span></span>
+<span id="cb42-16"><a href="#cb42-16"></a>        <span class="cf">return</span> <span class="dv">6</span><span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)<span class="op">/</span><span class="dv">3</span> <span class="op">*</span> <span class="va">self</span>.dim</span>
+<span id="cb42-17"><a href="#cb42-17"></a></span>
+<span id="cb42-18"><a href="#cb42-18"></a>    <span class="kw">def</span> base(<span class="va">self</span>):</span>
+<span id="cb42-19"><a href="#cb42-19"></a>        <span class="cf">return</span> <span class="dv">3</span><span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)<span class="op">/</span><span class="dv">4</span> <span class="op">*</span> <span class="va">self</span>.dim<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb42-20"><a href="#cb42-20"></a></span>
+<span id="cb42-21"><a href="#cb42-21"></a>    <span class="kw">def</span> volume(<span class="va">self</span>):</span>
+<span id="cb42-22"><a href="#cb42-22"></a>        <span class="cf">return</span> (<span class="dv">1</span><span class="op">/</span><span class="dv">3</span>) <span class="op">*</span> <span class="va">self</span>.base() <span class="op">*</span> <span class="va">self</span>.height()</span>
+<span id="cb42-23"><a href="#cb42-23"></a></span>
+<span id="cb42-24"><a href="#cb42-24"></a>    <span class="kw">def</span> surface(<span class="va">self</span>):</span>
+<span id="cb42-25"><a href="#cb42-25"></a>        <span class="cf">return</span> <span class="dv">4</span> <span class="op">*</span> <span class="va">self</span>.base()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="testing-your-classes" class="level2">
 <h2 class="anchored" data-anchor-id="testing-your-classes">Testing Your Classes</h2>
 <p>If you’ve implemented everything correctly then the following code should run.</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># How would you test these changes?</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> sphere(<span class="dv">10</span>)</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s.<span class="bu">type</span>())</span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Volume is: </span><span class="sc">{</span>s<span class="sc">.</span>volume()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Diameter is: </span><span class="sc">{</span>s<span class="sc">.</span>diameter()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Surface Area is: </span><span class="sc">{</span>s<span class="sc">.</span>surface()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">""</span>)</span>
-<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> cube(<span class="dv">10</span>)</span>
-<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(c.<span class="bu">type</span>())</span>
-<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Volume is: </span><span class="sc">{</span>c<span class="sc">.</span>volume()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
-<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Diameter is: </span><span class="sc">{</span>c<span class="sc">.</span>diameter()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
-<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Surface Area is: </span><span class="sc">{</span>c<span class="sc">.</span>surface()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
-<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">""</span>)</span>
-<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> pyramid(<span class="dv">10</span>)</span>
-<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p.<span class="bu">type</span>())</span>
-<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Volume is: </span><span class="sc">{</span>p<span class="sc">.</span>volume()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
-<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Diameter is: </span><span class="sc">{</span>p<span class="sc">.</span>diameter()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
-<span id="cb43-20"><a href="#cb43-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Surface Area is: </span><span class="sc">{</span>p<span class="sc">.</span>surface()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
-<span id="cb43-21"><a href="#cb43-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Height is: </span><span class="sc">{</span>p<span class="sc">.</span>height()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
-<span id="cb43-22"><a href="#cb43-22" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> p.has_mummies <span class="kw">is</span> <span class="va">True</span>:</span>
-<span id="cb43-23"><a href="#cb43-23" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\t</span><span class="st">Mummies? Aaaaaaaaargh!"</span>)</span>
-<span id="cb43-24"><a href="#cb43-24" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb43-25"><a href="#cb43-25" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\t</span><span class="st">Phew, no mummies!"</span>)</span>
-<span id="cb43-26"><a href="#cb43-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">""</span>)</span>
-<span id="cb43-27"><a href="#cb43-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-28"><a href="#cb43-28" aria-hidden="true" tabindex="-1"></a>p2 <span class="op">=</span> t_pyramid(<span class="dv">10</span>)</span>
-<span id="cb43-29"><a href="#cb43-29" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p2.<span class="bu">type</span>())</span>
-<span id="cb43-30"><a href="#cb43-30" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Volume is: </span><span class="sc">{</span>p2<span class="sc">.</span>volume()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
-<span id="cb43-31"><a href="#cb43-31" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Diameter is: </span><span class="sc">{</span>p2<span class="sc">.</span>diameter()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
-<span id="cb43-32"><a href="#cb43-32" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Surface Area is: </span><span class="sc">{</span>p2<span class="sc">.</span>surface()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
-<span id="cb43-33"><a href="#cb43-33" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Height is: </span><span class="sc">{</span>p2<span class="sc">.</span>height()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
-<span id="cb43-34"><a href="#cb43-34" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> p2.has_mummies <span class="kw">is</span> <span class="va">True</span>:</span>
-<span id="cb43-35"><a href="#cb43-35" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\t</span><span class="st">Mummies?&nbsp;Aaaaaaaaargh!"</span>)</span>
-<span id="cb43-36"><a href="#cb43-36" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb43-37"><a href="#cb43-37" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\t</span><span class="st">Phew,&nbsp;no&nbsp;mummies!"</span>)</span>
-<span id="cb43-38"><a href="#cb43-38" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">""</span>)</span>
-<span id="cb43-39"><a href="#cb43-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-40"><a href="#cb43-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&nbsp;Useful&nbsp;demonstration&nbsp;of&nbsp;how&nbsp;to&nbsp;find&nbsp;out&nbsp;if&nbsp;a&nbsp;method&nbsp;or&nbsp;attribute&nbsp;is</span></span>
-<span id="cb43-41"><a href="#cb43-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&nbsp;associated&nbsp;with&nbsp;a&nbsp;particular&nbsp;object</span></span>
-<span id="cb43-42"><a href="#cb43-42" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">hasattr</span>(p2,<span class="st">'base_area'</span>):</span>
-<span id="cb43-43"><a href="#cb43-43" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Shape&nbsp;of&nbsp;type '</span><span class="sc">{</span>p2<span class="sc">.</span><span class="bu">type</span>()<span class="sc">}</span><span class="ss">'&nbsp;has&nbsp;attribute&nbsp;or&nbsp;method&nbsp;'base_area'"</span>)</span>
-<span id="cb43-44"><a href="#cb43-44" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb43-45"><a href="#cb43-45" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Shape&nbsp;of&nbsp;type&nbsp;'</span><span class="sc">{</span>p2<span class="sc">.</span><span class="bu">type</span>()<span class="sc">}</span><span class="ss">'&nbsp;does&nbsp;*not*&nbsp;have&nbsp;attribute&nbsp;or&nbsp;method&nbsp;'base_area'"</span>)</span>
-<span id="cb43-46"><a href="#cb43-46" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1"></a><span class="co"># How would you test these changes?</span></span>
+<span id="cb43-2"><a href="#cb43-2"></a>s <span class="op">=</span> sphere(<span class="dv">10</span>)</span>
+<span id="cb43-3"><a href="#cb43-3"></a><span class="bu">print</span>(s.<span class="bu">type</span>())</span>
+<span id="cb43-4"><a href="#cb43-4"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Volume is: </span><span class="sc">{</span>s<span class="sc">.</span>volume()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb43-5"><a href="#cb43-5"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Diameter is: </span><span class="sc">{</span>s<span class="sc">.</span>diameter()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb43-6"><a href="#cb43-6"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Surface Area is: </span><span class="sc">{</span>s<span class="sc">.</span>surface()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb43-7"><a href="#cb43-7"></a><span class="bu">print</span>(<span class="st">""</span>)</span>
+<span id="cb43-8"><a href="#cb43-8"></a></span>
+<span id="cb43-9"><a href="#cb43-9"></a>c <span class="op">=</span> cube(<span class="dv">10</span>)</span>
+<span id="cb43-10"><a href="#cb43-10"></a><span class="bu">print</span>(c.<span class="bu">type</span>())</span>
+<span id="cb43-11"><a href="#cb43-11"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Volume is: </span><span class="sc">{</span>c<span class="sc">.</span>volume()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb43-12"><a href="#cb43-12"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Diameter is: </span><span class="sc">{</span>c<span class="sc">.</span>diameter()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb43-13"><a href="#cb43-13"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Surface Area is: </span><span class="sc">{</span>c<span class="sc">.</span>surface()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb43-14"><a href="#cb43-14"></a><span class="bu">print</span>(<span class="st">""</span>)</span>
+<span id="cb43-15"><a href="#cb43-15"></a></span>
+<span id="cb43-16"><a href="#cb43-16"></a>p <span class="op">=</span> pyramid(<span class="dv">10</span>)</span>
+<span id="cb43-17"><a href="#cb43-17"></a><span class="bu">print</span>(p.<span class="bu">type</span>())</span>
+<span id="cb43-18"><a href="#cb43-18"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Volume is: </span><span class="sc">{</span>p<span class="sc">.</span>volume()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb43-19"><a href="#cb43-19"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Diameter is: </span><span class="sc">{</span>p<span class="sc">.</span>diameter()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb43-20"><a href="#cb43-20"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Surface Area is: </span><span class="sc">{</span>p<span class="sc">.</span>surface()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb43-21"><a href="#cb43-21"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Height is: </span><span class="sc">{</span>p<span class="sc">.</span>height()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb43-22"><a href="#cb43-22"></a><span class="cf">if</span> p.has_mummies <span class="kw">is</span> <span class="va">True</span>:</span>
+<span id="cb43-23"><a href="#cb43-23"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\t</span><span class="st">Mummies? Aaaaaaaaargh!"</span>)</span>
+<span id="cb43-24"><a href="#cb43-24"></a><span class="cf">else</span>:</span>
+<span id="cb43-25"><a href="#cb43-25"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\t</span><span class="st">Phew, no mummies!"</span>)</span>
+<span id="cb43-26"><a href="#cb43-26"></a><span class="bu">print</span>(<span class="st">""</span>)</span>
+<span id="cb43-27"><a href="#cb43-27"></a></span>
+<span id="cb43-28"><a href="#cb43-28"></a>p2 <span class="op">=</span> t_pyramid(<span class="dv">10</span>)</span>
+<span id="cb43-29"><a href="#cb43-29"></a><span class="bu">print</span>(p2.<span class="bu">type</span>())</span>
+<span id="cb43-30"><a href="#cb43-30"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Volume is: </span><span class="sc">{</span>p2<span class="sc">.</span>volume()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb43-31"><a href="#cb43-31"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Diameter is: </span><span class="sc">{</span>p2<span class="sc">.</span>diameter()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb43-32"><a href="#cb43-32"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Surface Area is: </span><span class="sc">{</span>p2<span class="sc">.</span>surface()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb43-33"><a href="#cb43-33"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Height is: </span><span class="sc">{</span>p2<span class="sc">.</span>height()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb43-34"><a href="#cb43-34"></a><span class="cf">if</span> p2.has_mummies <span class="kw">is</span> <span class="va">True</span>:</span>
+<span id="cb43-35"><a href="#cb43-35"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\t</span><span class="st">Mummies?&nbsp;Aaaaaaaaargh!"</span>)</span>
+<span id="cb43-36"><a href="#cb43-36"></a><span class="cf">else</span>:</span>
+<span id="cb43-37"><a href="#cb43-37"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\t</span><span class="st">Phew,&nbsp;no&nbsp;mummies!"</span>)</span>
+<span id="cb43-38"><a href="#cb43-38"></a><span class="bu">print</span>(<span class="st">""</span>)</span>
+<span id="cb43-39"><a href="#cb43-39"></a></span>
+<span id="cb43-40"><a href="#cb43-40"></a><span class="co">#&nbsp;Useful&nbsp;demonstration&nbsp;of&nbsp;how&nbsp;to&nbsp;find&nbsp;out&nbsp;if&nbsp;a&nbsp;method&nbsp;or&nbsp;attribute&nbsp;is</span></span>
+<span id="cb43-41"><a href="#cb43-41"></a><span class="co">#&nbsp;associated&nbsp;with&nbsp;a&nbsp;particular&nbsp;object</span></span>
+<span id="cb43-42"><a href="#cb43-42"></a><span class="cf">if</span> <span class="bu">hasattr</span>(p2,<span class="st">'base_area'</span>):</span>
+<span id="cb43-43"><a href="#cb43-43"></a>    <span class="bu">print</span>(<span class="ss">f"Shape&nbsp;of&nbsp;type '</span><span class="sc">{</span>p2<span class="sc">.</span><span class="bu">type</span>()<span class="sc">}</span><span class="ss">'&nbsp;has&nbsp;attribute&nbsp;or&nbsp;method&nbsp;'base_area'"</span>)</span>
+<span id="cb43-44"><a href="#cb43-44"></a><span class="cf">else</span>:</span>
+<span id="cb43-45"><a href="#cb43-45"></a>    <span class="bu">print</span>(<span class="ss">f"Shape&nbsp;of&nbsp;type&nbsp;'</span><span class="sc">{</span>p2<span class="sc">.</span><span class="bu">type</span>()<span class="sc">}</span><span class="ss">'&nbsp;does&nbsp;*not*&nbsp;have&nbsp;attribute&nbsp;or&nbsp;method&nbsp;'base_area'"</span>)</span>
+<span id="cb43-46"><a href="#cb43-46"></a><span class="bu">print</span>(<span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>I get the following output:</p>
 <div id="404c6363" class="cell" data-execution_count="33">
 <div class="cell-output cell-output-stdout">
@@ -1380,40 +1380,40 @@ Shape&nbsp;of&nbsp;type&nbsp;'Triangular Pyramid'&nbsp;does&nbsp;*not*&nbsp;have
 <section id="cell-magic" class="level3">
 <h3 class="anchored" data-anchor-id="cell-magic">Cell Magic</h3>
 <p>This code allows Jupyter to reload external libraries if they are edited after you import them. When you are working on your own packages this is rather useful since you tend to make a <em>lot</em> of mistakes when packaging code up this way and it’s handy not to have to restart the entire notebook every time you fix a typo or change a function.</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext autoreload</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>autoreload <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1"></a><span class="op">%</span>load_ext autoreload</span>
+<span id="cb45-2"><a href="#cb45-2"></a><span class="op">%</span>autoreload <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="import-shapes" class="level3">
 <h3 class="anchored" data-anchor-id="import-shapes">Import Shapes</h3>
 <p>My suggestion is that you create a directory called <code>shapes</code> and copy all of the shape code (that’s the code for <code>shape</code>, <code>cube</code>, <code>sphere</code>, <code>pyramid</code>, <code>tpyramid</code>) into a file called <code>__init__.py</code> inside the <code>shapes</code> directory. You should then able to run the following:</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> s <span class="kw">in</span> [<span class="st">'shape'</span>,<span class="st">'sphere'</span>,<span class="st">'cube'</span>,<span class="st">'pyramid'</span>,<span class="st">'t_pyramid'</span>]:</span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> s <span class="kw">in</span> <span class="bu">locals</span>():</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>        <span class="kw">del</span>(s)</span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> shapes <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1"></a><span class="cf">for</span> s <span class="kw">in</span> [<span class="st">'shape'</span>,<span class="st">'sphere'</span>,<span class="st">'cube'</span>,<span class="st">'pyramid'</span>,<span class="st">'t_pyramid'</span>]:</span>
+<span id="cb46-2"><a href="#cb46-2"></a>    <span class="cf">if</span> s <span class="kw">in</span> <span class="bu">locals</span>():</span>
+<span id="cb46-3"><a href="#cb46-3"></a>        <span class="kw">del</span>(s)</span>
+<span id="cb46-4"><a href="#cb46-4"></a><span class="im">from</span> shapes <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>We need those first three lines of code to delete the existing classes from Python’s ‘memory’ so that we can be sure we’re importing the versions we saved to <code>shapes/__init__.py</code>.</p>
 </section>
 <section id="adding-documentation" class="level3">
 <h3 class="anchored" data-anchor-id="adding-documentation">Adding Documentation</h3>
 <p>In an ideal world, this would also be the time to properly document your classes and methods. Here as some examples that you could add to the <code>__init__.py</code> package file.</p>
 <p>Underneath the line <code>class shape(object):</code>, add:</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Abstract base class for all ideal shape classes.</span></span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Keyword arguments:</span></span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="co">    dimension -- the principle dimension of the shape (default None)</span></span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1"></a>    <span class="co">"""Abstract base class for all ideal shape classes.</span></span>
+<span id="cb47-2"><a href="#cb47-2"></a></span>
+<span id="cb47-3"><a href="#cb47-3"></a><span class="co">    Keyword arguments:</span></span>
+<span id="cb47-4"><a href="#cb47-4"></a><span class="co">    dimension -- the principle dimension of the shape (default None)</span></span>
+<span id="cb47-5"><a href="#cb47-5"></a><span class="co">    """</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Underneath the line <code>def type(self):</code>, add:</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="co">        Returns the formatted name of the shape type. </span></span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="co">        </span></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="co">        This is set automatically, but can be overwritten by setting the attribute shape_type.</span></span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="co">        </span></span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="co">        :returns: the name of the class, so shapes.cube is a `Cube` shape type</span></span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="co">        :rtype: str</span></span>
-<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a><span class="co">        """</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1"></a>        <span class="co">"""</span></span>
+<span id="cb48-2"><a href="#cb48-2"></a><span class="co">        Returns the formatted name of the shape type. </span></span>
+<span id="cb48-3"><a href="#cb48-3"></a><span class="co">        </span></span>
+<span id="cb48-4"><a href="#cb48-4"></a><span class="co">        This is set automatically, but can be overwritten by setting the attribute shape_type.</span></span>
+<span id="cb48-5"><a href="#cb48-5"></a><span class="co">        </span></span>
+<span id="cb48-6"><a href="#cb48-6"></a><span class="co">        :returns: the name of the class, so shapes.cube is a `Cube` shape type</span></span>
+<span id="cb48-7"><a href="#cb48-7"></a><span class="co">        :rtype: str</span></span>
+<span id="cb48-8"><a href="#cb48-8"></a><span class="co">        """</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This would then allow you to run:</p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> shapes <span class="im">import</span> <span class="op">*</span> <span class="co"># &lt;-- Change this if you didn't call your package `shapes`!</span></span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="bu">help</span>(shape)</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="bu">help</span>(shape.<span class="bu">type</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1"></a><span class="im">from</span> shapes <span class="im">import</span> <span class="op">*</span> <span class="co"># &lt;-- Change this if you didn't call your package `shapes`!</span></span>
+<span id="cb49-2"><a href="#cb49-2"></a><span class="bu">help</span>(shape)</span>
+<span id="cb49-3"><a href="#cb49-3"></a><span class="bu">help</span>(shape.<span class="bu">type</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
 </section>
@@ -1842,10 +1842,10 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 2022–2024, Jon Reades</p>
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 2022–2025, Jon Reades</p>
 </div>   
     <div class="nav-footer-center">
-<p><img src="../img/favicon-16x16.png" class="height:10px img-fluid"> Foundations of Spatial Data Science</p>
+<p><img src="../img/logo/logo_only_sm.png" height="25"> Foundations of Spatial Data Science</p>
 <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jreades/fsds/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
@@ -1856,7 +1856,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </a>
   </li>  
     <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/jreades">
+    <a class="nav-link" href="https://bsky.app/profile/jreades.bsky.social/">
       <i class="bi bi-twitter" role="img">
 </i> 
     </a>
@@ -1865,6 +1865,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 

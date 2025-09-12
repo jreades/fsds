@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jon Reades">
+
+<title>Exploratory (Spatial) Data Analysis – Foundations of Spatial Data Science</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="..//img/favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-fb446d74831b8ff67c69632cb314b545.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-c734b2b4d74e7e594e143a63449c09f7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<meta property="og:title" content="Exploratory (Spatial) Data Analysis – Foundations of Spatial Data Science">
+<meta property="og:description" content="">
+<meta property="og:image" content="img/Borough_Map.png">
+<meta property="og:site_name" content="Foundations">
+<meta property="og:locale" content="en_GB">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-md " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../img/logo/logo_only_sm.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Foundations of Spatial Data Science</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../setup/index.html"> 
+<span class="menu-text">Setup</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-week-by-week" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Week-by-Week</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-week-by-week">    
+        <li>
+    <a class="dropdown-item" href="../sessions/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Part 1: Foundations</li>
+        <li>
+    <a class="dropdown-item" href="../sessions/week1.html">
+ <span class="dropdown-text">1. Setting Up</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week2.html">
+ <span class="dropdown-text">2. Foundations (Pt.1)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week3.html">
+ <span class="dropdown-text">3. Foundations (Pt.2)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week4.html">
+ <span class="dropdown-text">4. Efficient Code</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week5.html">
+ <span class="dropdown-text">5. Objects</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/reading_week.html">
+ <span class="dropdown-text">Reading Week</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Part 2: Process</li>
+        <li>
+    <a class="dropdown-item" href="../sessions/week6.html">
+ <span class="dropdown-text">6. Numeric Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week7.html">
+ <span class="dropdown-text">7. Spatial Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week8.html">
+ <span class="dropdown-text">8. Textual Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week9.html">
+ <span class="dropdown-text">9. Selecting Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week10.html">
+ <span class="dropdown-text">10. Presenting Data</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Part 3: Bonus</li>
+        <li>
+    <a class="dropdown-item" href="../sessions/week11.html">
+ <span class="dropdown-text">11. Dimensions in Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week12.html">
+ <span class="dropdown-text">12. Grouping Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../references.html">
+ <span class="dropdown-text">Bibliography</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-assessments" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Assessments</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-assessments">    
+        <li>
+    <a class="dropdown-item" href="../assessments/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Elements</li>
+        <li>
+    <a class="dropdown-item" href="../assessments/exam.html">
+ <span class="dropdown-text">Timed Open Book Exam</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../assessments/group.html">
+ <span class="dropdown-text">Group Work</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../assessments/peer.html">
+ <span class="dropdown-text">Group Self-Evaluation</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../help.html"> 
+<span class="menu-text">Getting Help</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#getting-spatial-with-boroughs" id="toc-getting-spatial-with-boroughs" class="nav-link active" data-scroll-target="#getting-spatial-with-boroughs">Getting Spatial (with Boroughs)</a></li>
+  <li><a href="#convex-hull" id="toc-convex-hull" class="nav-link" data-scroll-target="#convex-hull">Convex Hull</a></li>
+  <li><a href="#dissolve" id="toc-dissolve" class="nav-link" data-scroll-target="#dissolve">Dissolve</a></li>
+  <li><a href="#simplify" id="toc-simplify" class="nav-link" data-scroll-target="#simplify">Simplify</a></li>
+  <li><a href="#buffer" id="toc-buffer" class="nav-link" data-scroll-target="#buffer">Buffer</a></li>
+  <li><a href="#buffer-simplify" id="toc-buffer-simplify" class="nav-link" data-scroll-target="#buffer-simplify">Buffer &amp; Simplify</a></li>
+  <li><a href="#difference" id="toc-difference" class="nav-link" data-scroll-target="#difference">Difference</a></li>
+  <li><a href="#legendgrams" id="toc-legendgrams" class="nav-link" data-scroll-target="#legendgrams">Legendgrams</a></li>
+  <li><a href="#handy-recall" id="toc-handy-recall" class="nav-link" data-scroll-target="#handy-recall">Handy Recall</a></li>
+  <li><a href="#implementing-legendgrams" id="toc-implementing-legendgrams" class="nav-link" data-scroll-target="#implementing-legendgrams">Implementing Legendgrams</a></li>
+  <li><a href="#knn-weights" id="toc-knn-weights" class="nav-link" data-scroll-target="#knn-weights">KNN Weights</a></li>
+  <li><a href="#implementing-knn" id="toc-implementing-knn" class="nav-link" data-scroll-target="#implementing-knn">Implementing KNN</a></li>
+  <li><a href="#spatial-lag-of-distance-band" id="toc-spatial-lag-of-distance-band" class="nav-link" data-scroll-target="#spatial-lag-of-distance-band">Spatial Lag of Distance Band</a></li>
+  <li><a href="#implementing-db" id="toc-implementing-db" class="nav-link" data-scroll-target="#implementing-db">Implementing DB</a></li>
+  <li><a href="#morans-i" id="toc-morans-i" class="nav-link" data-scroll-target="#morans-i">Moran’s I</a></li>
+  <li><a href="#local-morans-i" id="toc-local-morans-i" class="nav-link" data-scroll-target="#local-morans-i">Local Moran’s I</a></li>
+  <li><a href="#implementing-local-morans-i" id="toc-implementing-local-morans-i" class="nav-link" data-scroll-target="#implementing-local-morans-i">Implementing Local Moran’s I</a></li>
+  <li><a href="#full-lisa" id="toc-full-lisa" class="nav-link" data-scroll-target="#full-lisa">Full LISA</a></li>
+  <li><a href="#additional-resources" id="toc-additional-resources" class="nav-link" data-scroll-target="#additional-resources">Additional Resources</a></li>
+  <li><a href="#thank-you" id="toc-thank-you" class="nav-link" data-scroll-target="#thank-you">Thank You</a></li>
+  </ul>
+<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/jreades/fsds/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="7.5-ESDA.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Exploratory (Spatial) Data Analysis</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jon Reades </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><a href="https://pysal.org/pysal1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="https://pysal.org/pysal1.png" class="img-fluid"></a></p>
+<p>For this one, you really need to <a href="https://pysal.org/docs/users/">read the docs</a>.</p>
+<section id="getting-spatial-with-boroughs" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="getting-spatial-with-boroughs">Getting Spatial (with Boroughs)</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
+<span id="cb1-2"><a href="#cb1-2"></a>url <span class="op">=</span> <span class="st">'https://bit.ly/3neINBV'</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a>boros <span class="op">=</span> gpd.read_file(url, driver<span class="op">=</span><span class="st">'GPKG'</span>)</span>
+<span id="cb1-4"><a href="#cb1-4"></a>boros.plot(color<span class="op">=</span><span class="st">'none'</span>, edgecolor<span class="op">=</span><span class="st">'red'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><a href="img/Borough_Map.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="img/Borough_Map.png" class="img-fluid"></a></p>
+</section>
+<section id="convex-hull" class="level2">
+<h2 class="anchored" data-anchor-id="convex-hull">Convex Hull</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>boros[<span class="st">'hulls'</span>] <span class="op">=</span> boros.geometry.convex_hull</span>
+<span id="cb2-2"><a href="#cb2-2"></a>boros <span class="op">=</span> boros.set_geometry(<span class="st">'hulls'</span>)</span>
+<span id="cb2-3"><a href="#cb2-3"></a>boros.plot(column<span class="op">=</span><span class="st">'NAME'</span>, categorical<span class="op">=</span><span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><a href="img/Boroughs_Hull.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="img/Boroughs_Hull.png" class="img-fluid"></a></p>
+</section>
+<section id="dissolve" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="dissolve">Dissolve</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>boros[<span class="st">'region'</span>] <span class="op">=</span> <span class="st">'London'</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>boros <span class="op">=</span> boros.set_geometry(<span class="st">'geometry'</span>) <span class="co"># Set back to original geom</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a>ldn   <span class="op">=</span> boros.dissolve(by<span class="op">=</span><span class="st">'region'</span>)    <span class="co"># And dissolve to a single poly</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a></span>
+<span id="cb3-5"><a href="#cb3-5"></a>f,ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">8</span>))    <span class="co"># New plot</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a>ldn.plot(ax<span class="op">=</span>ax)                        <span class="co"># Add London layer to axis</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><a href="img/London.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="img/London.png" height="400"></a></p>
+</section>
+<section id="simplify" class="level2">
+<h2 class="anchored" data-anchor-id="simplify">Simplify</h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>ldn.simplify(<span class="dv">500</span>).plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><a href="img/London_Simplify.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="img/London_Simplify.png" height="500"></a></p>
+</section>
+<section id="buffer" class="level2">
+<h2 class="anchored" data-anchor-id="buffer">Buffer</h2>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>ldn.<span class="bu">buffer</span>(<span class="dv">500</span>).plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><a href="img/London_Buffer.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="img/London_Buffer.png" height="500"></a></p>
+</section>
+<section id="buffer-simplify" class="level2">
+<h2 class="anchored" data-anchor-id="buffer-simplify">Buffer &amp; Simplify</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>ldn.<span class="bu">buffer</span>(<span class="dv">1000</span>).simplify(<span class="dv">1000</span>).plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><a href="img/London_Buffer_Simplify.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="img/London_Buffer_Simplify.png" height="500"></a></p>
+</section>
+<section id="difference" class="level2">
+<h2 class="anchored" data-anchor-id="difference">Difference</h2>
+<p>And some nice chaining…</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>ldn.<span class="bu">buffer</span>(<span class="dv">3000</span>).simplify(<span class="dv">2500</span>).difference(ldn.geometry).plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><a href="img/London_Buffer_Simplify_Diff.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="img/London_Buffer_Simplify_Diff.png" height="500"></a></p>
+</section>
+<section id="legendgrams" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="legendgrams">Legendgrams</h2>
+<p><a href="img/Legendgram.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img src="img/Legendgram.png" height="500"></a></p>
+
+<div class="no-row-height column-margin column-container"><div class="margin-aside">
+<p>Code begins on next slide.</p>
+</div></div></section>
+<section id="handy-recall" class="level2" data-visibility="hidden">
+<h2 data-visibility="hidden" class="anchored" data-anchor-id="handy-recall">Handy Recall</h2>
+<p>Load the CSV file and convert to GeoDataFrame:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb8-2"><a href="#cb8-2"></a>url <span class="op">=</span> <span class="st">'https://bit.ly/3I0XDrq'</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a>df  <span class="op">=</span> pd.read_csv(url) </span>
+<span id="cb8-4"><a href="#cb8-4"></a>df[<span class="st">'price'</span>] <span class="op">=</span> df.price.<span class="bu">str</span>.replace(<span class="st">'$'</span>,<span class="st">''</span>,regex<span class="op">=</span><span class="va">False</span>).astype(<span class="st">'float'</span>)</span>
+<span id="cb8-5"><a href="#cb8-5"></a>df.set_index(<span class="st">'id'</span>,inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb8-6"><a href="#cb8-6"></a>gdf <span class="op">=</span> gpd.GeoDataFrame(df, </span>
+<span id="cb8-7"><a href="#cb8-7"></a>        geometry<span class="op">=</span>gpd.points_from_xy(</span>
+<span id="cb8-8"><a href="#cb8-8"></a>          df[<span class="st">'longitude'</span>], df[<span class="st">'latitude'</span>], crs<span class="op">=</span><span class="st">'epsg:4326'</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a>        )</span>
+<span id="cb8-10"><a href="#cb8-10"></a>      )</span>
+<span id="cb8-11"><a href="#cb8-11"></a>gdf <span class="op">=</span> gdf.to_crs(<span class="st">'epsg:27700'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="implementing-legendgrams" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="implementing-legendgrams">Implementing Legendgrams</h2>
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="im">import</span> pysal <span class="im">as</span> ps</span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="co"># https://github.com/pysal/mapclassify</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="im">import</span> mapclassify <span class="im">as</span> mc</span>
+<span id="cb9-4"><a href="#cb9-4"></a><span class="co">#&nbsp;https://jiffyclub.github.io/palettable/</span></span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="im">import</span> palettable.matplotlib <span class="im">as</span> palmpl</span>
+<span id="cb9-6"><a href="#cb9-6"></a><span class="im">from</span> legendgram <span class="im">import</span> legendgram</span>
+<span id="cb9-7"><a href="#cb9-7"></a></span>
+<span id="cb9-8"><a href="#cb9-8"></a>f,ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">8</span>))</span>
+<span id="cb9-9"><a href="#cb9-9"></a>gdf.plot(column<span class="op">=</span><span class="st">'price'</span>, scheme<span class="op">=</span><span class="st">'Quantiles'</span>, cmap<span class="op">=</span><span class="st">'magma'</span>, k<span class="op">=</span><span class="dv">5</span>, ax<span class="op">=</span>ax)</span>
+<span id="cb9-10"><a href="#cb9-10"></a>q <span class="op">=</span> mc.Quantiles(gdf.price.array, k<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb9-11"><a href="#cb9-11"></a></span>
+<span id="cb9-12"><a href="#cb9-12"></a><span class="co"># https://github.com/pysal/legendgram/blob/master/legendgram/legendgram.py</span></span>
+<span id="cb9-13"><a href="#cb9-13"></a>legendgram(f, ax, </span>
+<span id="cb9-14"><a href="#cb9-14"></a>               gdf.price, q.bins, pal<span class="op">=</span>palmpl.Magma_5,</span>
+<span id="cb9-15"><a href="#cb9-15"></a>               legend_size<span class="op">=</span>(<span class="fl">.4</span>,<span class="fl">.2</span>), <span class="co"># legend size in fractions of the axis</span></span>
+<span id="cb9-16"><a href="#cb9-16"></a>               loc <span class="op">=</span> <span class="st">'upper left'</span>, <span class="co"># mpl-style legend loc</span></span>
+<span id="cb9-17"><a href="#cb9-17"></a>               clip <span class="op">=</span> (<span class="dv">0</span>,<span class="dv">500</span>), <span class="co"># clip range of the histogram</span></span>
+<span id="cb9-18"><a href="#cb9-18"></a>               frameon<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="notes">
+<p>Note that the number of colours need to match <em>k</em>, which is 5 in this case.</p>
+<p>It <em>should</em> be possible to set up the colormap and bins such that they can be passed to both GeoPandas and Legendgram.</p>
+</div>
+</section>
+<section id="knn-weights" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="knn-weights">KNN Weights</h2>
+<p><a href="img/Airbnb_KNN.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img src="img/Airbnb_KNN.png" class="img-fluid"></a></p>
+</section>
+<section id="implementing-knn" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="implementing-knn">Implementing KNN</h2>
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="im">from</span> pysal.lib <span class="im">import</span> weights</span>
+<span id="cb10-2"><a href="#cb10-2"></a>w <span class="op">=</span> weights.KNN.from_dataframe(gdf, k<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb10-3"><a href="#cb10-3"></a>gdf[<span class="st">'w_price'</span>] <span class="op">=</span> weights.lag_spatial(w, gdf.price)</span>
+<span id="cb10-4"><a href="#cb10-4"></a>gdf[[<span class="st">'name'</span>,<span class="st">'price'</span>,<span class="st">'w_price'</span>]].sample(<span class="dv">5</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 36%">
+<col style="width: 22%">
+<col style="width: 31%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">name</th>
+<th style="text-align: right;">price</th>
+<th style="text-align: right;">w_price</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">83</td>
+<td style="text-align: left;">Southfields Home</td>
+<td style="text-align: right;">85.0</td>
+<td style="text-align: right;">263.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">53</td>
+<td style="text-align: left;">Flat in Islington, Central London</td>
+<td style="text-align: right;">55.0</td>
+<td style="text-align: right;">190.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">70</td>
+<td style="text-align: left;">3bedroom Family Home minutes from Kensington Tube</td>
+<td style="text-align: right;">221.0</td>
+<td style="text-align: right;">470.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">453</td>
+<td style="text-align: left;">Bed, 20 min to Liverpool st, EAST LONDON</td>
+<td style="text-align: right;">110.0</td>
+<td style="text-align: right;">186.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">44</td>
+<td style="text-align: left;">Avni Kensington Hotel</td>
+<td style="text-align: right;">430.0</td>
+<td style="text-align: right;">821.0</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="spatial-lag-of-distance-band" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="spatial-lag-of-distance-band">Spatial Lag of Distance Band</h2>
+<p><a href="img/Airbnb_DistanceBand.png" class="lightbox" data-gallery="quarto-lightbox-gallery-11"><img src="img/Airbnb_DistanceBand.png" class="img-fluid"></a></p>
+</section>
+<section id="implementing-db" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="implementing-db">Implementing DB</h2>
+<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>w2 <span class="op">=</span> weights.DistanceBand.from_dataframe(gdf, threshold<span class="op">=</span><span class="dv">2000</span>, alpha<span class="op">=-</span><span class="fl">0.25</span>)</span>
+<span id="cb11-2"><a href="#cb11-2"></a>gdf[<span class="st">'price_std'</span>] <span class="op">=</span> (gdf.price <span class="op">-</span> gdf.price.mean()) <span class="op">/</span> gdf.price.std()</span>
+<span id="cb11-3"><a href="#cb11-3"></a>gdf[<span class="st">'w_price_std'</span>] <span class="op">=</span> weights.lag_spatial(w2, gdf.price_std)</span>
+<span id="cb11-4"><a href="#cb11-4"></a>gdf[[<span class="st">'name'</span>,<span class="st">'price_std'</span>,<span class="st">'w_price_std'</span>]].sample(<span class="dv">5</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">name</th>
+<th style="text-align: right;">price_std</th>
+<th style="text-align: right;">w_price_std</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">83</td>
+<td style="text-align: left;">Southfields Home</td>
+<td style="text-align: right;">-0.27</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">53</td>
+<td style="text-align: left;">Flat in Islington, Central London</td>
+<td style="text-align: right;">-0.51</td>
+<td style="text-align: right;">-0.58</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">70</td>
+<td style="text-align: left;">3bedroom Family Home minutes from Kensington Tube</td>
+<td style="text-align: right;">0.83</td>
+<td style="text-align: right;">0.46</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">453</td>
+<td style="text-align: left;">Bed, 20 min to Liverpool st, EAST LONDON</td>
+<td style="text-align: right;">-0.07</td>
+<td style="text-align: right;">-0.82</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">44</td>
+<td style="text-align: left;">Avni Kensington Hotel</td>
+<td style="text-align: right;">2.52</td>
+<td style="text-align: right;">3.25</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="morans-i" class="level2">
+<h2 class="anchored" data-anchor-id="morans-i">Moran’s I</h2>
+<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>mi <span class="op">=</span> esda.Moran(gdf[<span class="st">'price'</span>], w)</span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>mi<span class="sc">.</span>I<span class="sc">:0.4f}</span><span class="ss">"</span>)</span>
+<span id="cb12-3"><a href="#cb12-3"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>mi<span class="sc">.</span>p_sim<span class="sc">:0.4f}</span><span class="ss">"</span>)</span>
+<span id="cb12-4"><a href="#cb12-4"></a>moran_scatterplot(mi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><a href="img/Moran_Global.png" class="lightbox" data-gallery="quarto-lightbox-gallery-12"><img src="img/Moran_Global.png" class="img-fluid"></a></p>
+</section>
+<section id="local-morans-i" class="level2">
+<h2 class="anchored" data-anchor-id="local-morans-i">Local Moran’s I</h2>
+<p><a href="img/Moran_Local.png" class="lightbox" data-gallery="quarto-lightbox-gallery-13"><img src="img/Moran_Local.png" class="img-fluid"></a></p>
+</section>
+<section id="implementing-local-morans-i" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="implementing-local-morans-i">Implementing Local Moran’s I</h2>
+<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>lisa <span class="op">=</span> esda.Moran_Local(gdf.price, w)</span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="co"># Break observations into significant or not</span></span>
+<span id="cb13-3"><a href="#cb13-3"></a>gdf[<span class="st">'sig'</span>] <span class="op">=</span> lisa.p_sim <span class="op">&lt;</span> <span class="fl">0.05</span></span>
+<span id="cb13-4"><a href="#cb13-4"></a><span class="co"># Store the quadrant they belong to</span></span>
+<span id="cb13-5"><a href="#cb13-5"></a>gdf[<span class="st">'quad'</span>] <span class="op">=</span> lisa.q</span>
+<span id="cb13-6"><a href="#cb13-6"></a>gdf[[<span class="st">'name'</span>,<span class="st">'price'</span>,<span class="st">'sig'</span>,<span class="st">'quad'</span>]].sample(<span class="dv">5</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 19%">
+<col style="width: 23%">
+<col style="width: 33%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">name</th>
+<th style="text-align: right;">price</th>
+<th style="text-align: right;">sig</th>
+<th style="text-align: right;">quad</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">83</td>
+<td style="text-align: left;">Southfields Home</td>
+<td style="text-align: right;">85.0</td>
+<td style="text-align: right;">False</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">53</td>
+<td style="text-align: left;">Flat in Islington, Central London</td>
+<td style="text-align: right;">55.0</td>
+<td style="text-align: right;">False</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">70</td>
+<td style="text-align: left;">3bedroom Family Home minutes from Kensington Tube</td>
+<td style="text-align: right;">221.0</td>
+<td style="text-align: right;">False</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">453</td>
+<td style="text-align: left;">Bed, 20 min to Liverpool st, EAST LONDON</td>
+<td style="text-align: right;">110.0</td>
+<td style="text-align: right;">False</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">44</td>
+<td style="text-align: left;">Avni Kensington Hotel</td>
+<td style="text-align: right;">430.0</td>
+<td style="text-align: right;">False</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="full-lisa" class="level2">
+<h2 class="anchored" data-anchor-id="full-lisa">Full LISA</h2>
+<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>plot_local_autocorrelation(lisa, gdf, <span class="st">'price'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><a href="img/LISA.png" class="lightbox" data-gallery="quarto-lightbox-gallery-14"><img src="img/LISA.png" class="img-fluid"></a></p>
+</section>
+<section id="additional-resources" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="additional-resources">Additional Resources</h2>
+<p>There’s <a href="https://www.google.com/search?q=eda+with+pandas">so much more</a> to find, but:</p>
+<ul>
+<li><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.plot.html">Pandas Reference</a></li>
+<li><a href="https://www.kaggle.com/kashnitsky/topic-1-exploratory-data-analysis-with-pandas">EDA with Pandas on Kaggle</a></li>
+<li><a href="https://towardsdatascience.com/exploratory-data-analysis-eda-visualization-using-pandas-ca5a04271607">EDA Visualisation using Pandas</a></li>
+<li><a href="https://www.datacamp.com/community/tutorials/exploratory-data-analysis-python">Python EDA Analysis Tutorial</a></li>
+<li><a href="https://towardsdatascience.com/a-better-eda-with-pandas-profiling-e842a00e1136">Better EDA with Pandas Profiling</a> <em>[Requires module installation]</em></li>
+<li><a href="https://geopandas.org/mapping.html#missing-data">Visualising Missing Data</a></li>
+<li><a href="https://geopandas.org/mapping.html#choosing-colors">Choosing Map Colours</a></li>
+</ul>
+</section>
+<section id="thank-you" class="level1" data-background-image="../img/web/title-slide.png" data-background-color="#0F0C11" data-background-opacity="0.2">
+<h1 data-background-image="/img/web/title-slide.png" data-background-color="#0F0C11" data-background-opacity="0.2">Thank You</h1>
+<h3 class="anchored" data-anchor-id="thank-you">
+References
+</h3>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 2022–2025, Jon Reades</p>
+</div>   
+    <div class="nav-footer-center">
+<p><img src="../img/logo/logo_only_sm.png" height="25"> Foundations of Spatial Data Science</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jreades/fsds/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jreades/fsds">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://bsky.app/profile/jreades.bsky.social/">
+      <i class="bi bi-twitter" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+</body></html>

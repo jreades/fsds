@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.39">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -70,10 +70,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-94502d3d680d4f599d90f0c2e6fbae98.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-fb446d74831b8ff67c69632cb314b545.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-393972cfcb964df2eba7c7df233894c6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-c734b2b4d74e7e594e143a63449c09f7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -137,6 +140,7 @@ window.Quarto = {
 <meta property="og:image" content="./img/Running_Container.png">
 <meta property="og:site_name" content="Foundations">
 <meta property="og:locale" content="en_GB">
+<meta property="og:image:alt" content="Container running">
 </head>
 
 <body class="nav-fixed">
@@ -147,7 +151,7 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../img/CASA_Logo_no_text.png" alt="" class="navbar-logo">
+    <img src="../img/logo/logo_only_sm.png" alt="" class="navbar-logo">
     </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Foundations of Spatial Data Science</span>
@@ -159,10 +163,6 @@ window.Quarto = {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
-<span class="menu-text">Welcome</span></a>
-  </li>  
   <li class="nav-item">
     <a class="nav-link" href="../setup/index.html"> 
 <span class="menu-text">Setup</span></a>
@@ -338,7 +338,7 @@ Remember
 </div>
 <section id="setting-up" class="level1">
 <h1>Setting Up</h1>
-<p>I’m going to assume that you’ve got Docker installed and have managed to ‘pull’ the <code>jreades/sds:2024-intel</code> or <code>jreades/sds:2024-silicon</code> image at this point. If not, this is your <strong>most urgent</strong> priority. Please make one of us aware of your situation and we’ll do our best to get you going.</p>
+<p>I’m going to assume that you’ve got Docker installed and have managed to ‘pull’ the <code>jreades/sds:2025-amd</code> or <code>jreades/sds:2025-arm</code> image at this point. If not, this is your <strong>most urgent</strong> priority. Please make one of us aware of your situation and we’ll do our best to get you going.</p>
 <section id="downloading-the-practical" class="level2">
 <h2 class="anchored" data-anchor-id="downloading-the-practical">Downloading the Practical</h2>
 <p>On the <a href="https://jreades.github.io/fsds/sessions/week2.html#practical">Week 2 of FSDS page</a> you’ll see that there is a ‘preview’ link and a a ‘download’ link in the <a href="https://jreades.github.io/fsds/sessions/week2.html#practical">Practical section</a>. If you click the <code>preview</code> link you will be taken to the GitHub page for the notebook where it has been ‘rendered’ as a web page. But to make the notebook useable on <em>your</em> computer, you need to <code>download</code> the IPYNB file.</p>
@@ -381,7 +381,7 @@ Wrong Place?
 </div>
 </div>
 <p>Remember that the startup command is something like:</p>
-<pre class="shell"><code>docker run ... -v "$(pwd):/home/jovyan/work" ...</code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource shell number-lines code-with-copy"><code class="sourceCode"><span id="cb1-1"><a href="#cb1-1"></a>docker run ... -v "$(pwd):/home/jovyan/work" ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The <code>-v</code> (short for <em>volume</em>) tells Docker what part of <em>your</em> computer (<code>$(pwd)</code>) to connect to container (<code>/home/jovyan/work</code>). <code>pwd</code> is short-hand for ‘print working directory’ and is the location where you ran the Docker startup command! So we’re talking about the location on <em>your</em> computer when you access the <code>work</code> folder from within Docker/Jupyter Lab:</p>
 <ul>
 <li>On a Mac it will <em>often</em> be your <code>$HOME</code> (also known as <code>~</code>) directory (e.g.&nbsp;<code>/Users/your_username/</code>) because that’s where new Terminal windows start by default.</li>
@@ -398,7 +398,7 @@ Wrong Place?
 </ol>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./img/Running_Container.png" class="img-fluid figure-img"></p>
+<p><a href="./img/Running_Container.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Container running"><img src="./img/Running_Container.png" class="img-fluid figure-img" alt="Container running"></a></p>
 <figcaption>Container running</figcaption>
 </figure>
 </div>
@@ -407,7 +407,7 @@ Wrong Place?
 </ol>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./img/Running_Container_2.png" class="img-fluid figure-img"></p>
+<p><a href="./img/Running_Container_2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Container running from Terminal"><img src="./img/Running_Container_2.png" class="img-fluid figure-img" alt="Container running from Terminal"></a></p>
 <figcaption>Container running from Terminal</figcaption>
 </figure>
 </div>
@@ -418,7 +418,7 @@ Wrong Place?
 <p>Once you know the container is running you can connected to Jupyter Lab on <a href="http://localhost:8888/lab/tree/work/">localhost:8888</a> and should see something like this:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://github.com/jreades/fsds/raw/master/practicals/img/1.8-Jupyter_Lab.png" height="300" class="figure-img"></p>
+<p><a href="https://github.com/jreades/fsds/raw/master/practicals/img/1.8-Jupyter_Lab.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Screenshot of JupyterLab"><img src="https://github.com/jreades/fsds/raw/master/practicals/img/1.8-Jupyter_Lab.png" height="300" alt="Screenshot of JupyterLab" class="figure-img"></a></p>
 <figcaption>Screenshot of JupyterLab</figcaption>
 </figure>
 </div>
@@ -441,7 +441,7 @@ Wrong Place?
 </ol>
 <p>Any time you want to run code you click on the right-triangle (▶); it’s in the area between the clipboard 📋 (for copying) and the ■ (for stopping running code).</p>
 <p>So when you run:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Hello World!'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="bu">print</span>(<span class="st">'Hello World!'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Hopefully, the following appeare directly <em>below</em> the code:</p>
 <div id="8c03d34b" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-stdout">
@@ -508,14 +508,14 @@ Look closer!
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Pi <span class="op">=</span> <span class="fl">3.14159</span>      <span class="co"># Valid Python</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>pi <span class="op">=</span> <span class="fl">3.14159</span>      <span class="co"># ??</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span><span class="er">pi</span> <span class="op">=</span> <span class="fl">3.14159</span><span class="op">*</span><span class="dv">3</span>   <span class="co"># ??</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>pi_2 <span class="op">=</span> <span class="fl">3.14159</span><span class="op">**</span><span class="dv">2</span> <span class="co"># ??</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>pi<span class="op">^</span><span class="dv">2</span> <span class="op">=</span> <span class="fl">3.14159</span><span class="op">**</span><span class="dv">2</span> <span class="co"># ??</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>my radius <span class="op">=</span> <span class="dv">5</span>     <span class="co"># ??</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>My_Radius <span class="op">=</span> <span class="dv">5</span>     <span class="co"># ??</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="op">=</span> <span class="dv">5</span>         <span class="co"># ??</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>Pi <span class="op">=</span> <span class="fl">3.14159</span>      <span class="co"># Valid Python</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>pi <span class="op">=</span> <span class="fl">3.14159</span>      <span class="co"># ??</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="dv">3</span><span class="er">pi</span> <span class="op">=</span> <span class="fl">3.14159</span><span class="op">*</span><span class="dv">3</span>   <span class="co"># ??</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a>pi_2 <span class="op">=</span> <span class="fl">3.14159</span><span class="op">**</span><span class="dv">2</span> <span class="co"># ??</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a>pi<span class="op">^</span><span class="dv">2</span> <span class="op">=</span> <span class="fl">3.14159</span><span class="op">**</span><span class="dv">2</span> <span class="co"># ??</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a>my radius <span class="op">=</span> <span class="dv">5</span>     <span class="co"># ??</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a>My_Radius <span class="op">=</span> <span class="dv">5</span>     <span class="co"># ??</span></span>
+<span id="cb4-8"><a href="#cb4-8"></a><span class="kw">class</span> <span class="op">=</span> <span class="dv">5</span>         <span class="co"># ??</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -525,19 +525,19 @@ Look closer!
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="st">'2'</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> z <span class="op">=</span> <span class="dv">2</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y <span class="op">*</span> z)    <span class="co"># 4</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x <span class="op">*</span> y)    <span class="co"># ??</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x <span class="op">+</span> x)    <span class="co"># ??</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>((y<span class="op">+</span>z)<span class="op">**</span>z) <span class="co"># ??</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y<span class="op">/</span>(y<span class="op">+</span>z))  <span class="co"># ??</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>( <span class="bu">type</span>(x <span class="op">*</span> y) )    <span class="co"># ??</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>( <span class="bu">type</span>(y <span class="op">*</span> z) )    <span class="co"># ??</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>( <span class="bu">type</span>((y<span class="op">+</span>z)<span class="op">**</span>z) ) <span class="co"># ??</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>( <span class="bu">type</span>(y<span class="op">/</span>(y<span class="op">+</span>z)) )  <span class="co"># ??</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>x <span class="op">=</span> <span class="st">'2'</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>y <span class="op">=</span> z <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a></span>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="bu">print</span>(y <span class="op">*</span> z)    <span class="co"># 4</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="bu">print</span>(x <span class="op">*</span> y)    <span class="co"># ??</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a><span class="bu">print</span>(x <span class="op">+</span> x)    <span class="co"># ??</span></span>
+<span id="cb5-7"><a href="#cb5-7"></a><span class="bu">print</span>((y<span class="op">+</span>z)<span class="op">**</span>z) <span class="co"># ??</span></span>
+<span id="cb5-8"><a href="#cb5-8"></a><span class="bu">print</span>(y<span class="op">/</span>(y<span class="op">+</span>z))  <span class="co"># ??</span></span>
+<span id="cb5-9"><a href="#cb5-9"></a></span>
+<span id="cb5-10"><a href="#cb5-10"></a><span class="bu">print</span>( <span class="bu">type</span>(x <span class="op">*</span> y) )    <span class="co"># ??</span></span>
+<span id="cb5-11"><a href="#cb5-11"></a><span class="bu">print</span>( <span class="bu">type</span>(y <span class="op">*</span> z) )    <span class="co"># ??</span></span>
+<span id="cb5-12"><a href="#cb5-12"></a><span class="bu">print</span>( <span class="bu">type</span>((y<span class="op">+</span>z)<span class="op">**</span>z) ) <span class="co"># ??</span></span>
+<span id="cb5-13"><a href="#cb5-13"></a><span class="bu">print</span>( <span class="bu">type</span>(y<span class="op">/</span>(y<span class="op">+</span>z)) )  <span class="co"># ??</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -547,16 +547,16 @@ Look closer!
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="dv">12</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> <span class="dv">10</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> x <span class="op">+</span> y <span class="co"># ??</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> x <span class="op">+</span> y <span class="co"># ??</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> z <span class="op">+</span> y <span class="co"># ??</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># print(x)</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># ??</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># ??</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>x <span class="op">=</span> <span class="dv">12</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>y <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a></span>
+<span id="cb6-4"><a href="#cb6-4"></a>z <span class="op">=</span> x <span class="op">+</span> y <span class="co"># ??</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a>x <span class="op">=</span> x <span class="op">+</span> y <span class="co"># ??</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a>y <span class="op">=</span> z <span class="op">+</span> y <span class="co"># ??</span></span>
+<span id="cb6-7"><a href="#cb6-7"></a></span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="co"># print(x)</span></span>
+<span id="cb6-9"><a href="#cb6-9"></a><span class="co"># ??</span></span>
+<span id="cb6-10"><a href="#cb6-10"></a><span class="co"># ??</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Once you have worked out what you think <code>x</code>, <code>y</code> and <code>z</code> are, add <code>print(...)</code> statements to the code above to check your answers!</p>
 <p>Make sure you understand the results you find. <strong>Ask someone if you need help to understand.</strong></p>
@@ -581,13 +581,13 @@ Tip
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="dv">1</span> <span class="op">+</span> (<span class="dv">2</span> <span class="op">*</span> <span class="dv">3</span>) <span class="op">/</span> <span class="dv">4</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> (<span class="dv">1</span> <span class="op">+</span> <span class="dv">2</span>) <span class="op">*</span> (<span class="dv">3</span> <span class="op">/</span> <span class="dv">4</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> <span class="dv">1</span> <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> (<span class="dv">3</span> <span class="op">/</span> <span class="dv">4</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x) <span class="co"># x is </span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y) <span class="co">#&nbsp;y is </span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(z) <span class="co">#&nbsp;z is </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>x <span class="op">=</span> <span class="dv">1</span> <span class="op">+</span> (<span class="dv">2</span> <span class="op">*</span> <span class="dv">3</span>) <span class="op">/</span> <span class="dv">4</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>y <span class="op">=</span> (<span class="dv">1</span> <span class="op">+</span> <span class="dv">2</span>) <span class="op">*</span> (<span class="dv">3</span> <span class="op">/</span> <span class="dv">4</span>)</span>
+<span id="cb7-3"><a href="#cb7-3"></a>z <span class="op">=</span> <span class="dv">1</span> <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> (<span class="dv">3</span> <span class="op">/</span> <span class="dv">4</span>)</span>
+<span id="cb7-4"><a href="#cb7-4"></a></span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="bu">print</span>(x) <span class="co"># x is </span></span>
+<span id="cb7-6"><a href="#cb7-6"></a><span class="bu">print</span>(y) <span class="co">#&nbsp;y is </span></span>
+<span id="cb7-7"><a href="#cb7-7"></a><span class="bu">print</span>(z) <span class="co">#&nbsp;z is </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Once you have calculated what you think <code>x</code>, <code>y</code> and <code>z</code> are, run the code to check.</p>
 </section>
@@ -599,15 +599,15 @@ Tip
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="dv">10</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> <span class="dv">3</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>( x ?? y ) <span class="co"># 1</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>( x ?? y ) <span class="co"># 13</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>( x ?? y ) <span class="co"># False</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>( x ?? y ) <span class="co"># 1000</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>( x ?? y ) <span class="co">#&nbsp;7</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>( x ?? y ) <span class="co"># 3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>x <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a>y <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="bu">print</span>( x ?? y ) <span class="co"># 1</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="bu">print</span>( x ?? y ) <span class="co"># 13</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a><span class="bu">print</span>( x ?? y ) <span class="co"># False</span></span>
+<span id="cb8-7"><a href="#cb8-7"></a><span class="bu">print</span>( x ?? y ) <span class="co"># 1000</span></span>
+<span id="cb8-8"><a href="#cb8-8"></a><span class="bu">print</span>( x ?? y ) <span class="co">#&nbsp;7</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a><span class="bu">print</span>( x ?? y ) <span class="co"># 3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -636,9 +636,9 @@ Tip
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> math <span class="im">import</span> ??</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>v <span class="op">=</span> ??</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>v<span class="sc">:0.3f}</span><span class="ss"> cm3"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="im">from</span> math <span class="im">import</span> ??</span>
+<span id="cb9-2"><a href="#cb9-2"></a>v <span class="op">=</span> ??</span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>v<span class="sc">:0.3f}</span><span class="ss"> cm3"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>I get an answer of 904.779cm<span class="math inline">\(^3\)</span>.</p>
 </section>
@@ -674,10 +674,10 @@ Tip
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> math <span class="im">import</span> pi</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>v <span class="op">=</span> <span class="dv">14137</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> ??</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(??)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="im">from</span> math <span class="im">import</span> pi</span>
+<span id="cb10-2"><a href="#cb10-2"></a>v <span class="op">=</span> <span class="dv">14137</span></span>
+<span id="cb10-3"><a href="#cb10-3"></a>r <span class="op">=</span> ??</span>
+<span id="cb10-4"><a href="#cb10-4"></a><span class="bu">print</span>(??)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -723,29 +723,29 @@ Hint
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>hours <span class="op">=</span> <span class="dv">2</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> hours ??:</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">" "</span>)</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="cf">elif</span> hours ??:</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">" "</span>)</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">" "</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>hours <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a></span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="cf">if</span> hours ??:</span>
+<span id="cb11-4"><a href="#cb11-4"></a>    <span class="bu">print</span>(<span class="st">" "</span>)</span>
+<span id="cb11-5"><a href="#cb11-5"></a><span class="cf">elif</span> hours ??:</span>
+<span id="cb11-6"><a href="#cb11-6"></a>    <span class="bu">print</span>(<span class="st">" "</span>)</span>
+<span id="cb11-7"><a href="#cb11-7"></a><span class="cf">else</span>:</span>
+<span id="cb11-8"><a href="#cb11-8"></a>    <span class="bu">print</span>(<span class="st">" "</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
 <section id="flow-control" class="level2">
 <h2 class="anchored" data-anchor-id="flow-control">Flow Control</h2>
 <p>Using the flow chart shown in the image below as a model, write the code to make this condition work. You will need to complete the code such that it produces the following: 1. When <code>a = 2</code> and <code>b = 2</code> four lines of output will be written 2. When <code>a = 1</code> and <code>b = 2</code> one line of output will be written</p>
-<p><img src="https://kingsgeocomputation.files.wordpress.com/2016/09/geocompweek2_task3_3.jpg" class="img-fluid" width="600"></p>
+<p><a href="https://kingsgeocomputation.files.wordpress.com/2016/09/geocompweek2_task3_3.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="https://kingsgeocomputation.files.wordpress.com/2016/09/geocompweek2_task3_3.jpg" class="img-fluid" width="600"></a></p>
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># &lt;your code here&gt;</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>??</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>a <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a>b <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb12-3"><a href="#cb12-3"></a></span>
+<span id="cb12-4"><a href="#cb12-4"></a><span class="co"># &lt;your code here&gt;</span></span>
+<span id="cb12-5"><a href="#cb12-5"></a>??</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -778,23 +778,23 @@ Connections
 <li>Is there any value for which all three names will be printed?</li>
 </ol>
 <div class="cell">
-<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> ??</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> x <span class="op">&gt;</span> <span class="dv">0</span> <span class="kw">and</span> x <span class="op">&lt;</span> <span class="dv">5</span>:</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Joe"</span>)</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> x <span class="op">&gt;</span> <span class="dv">0</span> <span class="kw">or</span> x <span class="op">&lt;</span> <span class="dv">5</span>:</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Aled"</span>)</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span>(x <span class="op">&gt;</span> <span class="dv">0</span>):</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Sarah"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>x <span class="op">=</span> ??</span>
+<span id="cb13-2"><a href="#cb13-2"></a></span>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="cf">if</span> x <span class="op">&gt;</span> <span class="dv">0</span> <span class="kw">and</span> x <span class="op">&lt;</span> <span class="dv">5</span>:</span>
+<span id="cb13-4"><a href="#cb13-4"></a>    <span class="bu">print</span>(<span class="st">"Joe"</span>)</span>
+<span id="cb13-5"><a href="#cb13-5"></a></span>
+<span id="cb13-6"><a href="#cb13-6"></a><span class="cf">if</span> x <span class="op">&gt;</span> <span class="dv">0</span> <span class="kw">or</span> x <span class="op">&lt;</span> <span class="dv">5</span>:</span>
+<span id="cb13-7"><a href="#cb13-7"></a>    <span class="bu">print</span>(<span class="st">"Aled"</span>)</span>
+<span id="cb13-8"><a href="#cb13-8"></a></span>
+<span id="cb13-9"><a href="#cb13-9"></a><span class="cf">if</span> <span class="kw">not</span>(x <span class="op">&gt;</span> <span class="dv">0</span>):</span>
+<span id="cb13-10"><a href="#cb13-10"></a>    <span class="bu">print</span>(<span class="st">"Sarah"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
 <section id="logic-contd" class="level2">
 <h2 class="anchored" data-anchor-id="logic-contd">Logic (Cont’d)</h2>
 <p>Study the flow chart below.</p>
-<p><img src="https://kingsgeocomputation.files.wordpress.com/2016/09/geocompweek2_task3_5.jpg" class="img-fluid" width="600"></p>
+<p><a href="https://kingsgeocomputation.files.wordpress.com/2016/09/geocompweek2_task3_5.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="https://kingsgeocomputation.files.wordpress.com/2016/09/geocompweek2_task3_5.jpg" class="img-fluid" width="600"></a></p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -812,9 +812,9 @@ Tip
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">9</span>):</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">#... do something...</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    ??</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="cf">for</span> x <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">9</span>):</span>
+<span id="cb14-2"><a href="#cb14-2"></a>    <span class="co">#... do something...</span></span>
+<span id="cb14-3"><a href="#cb14-3"></a>    ??</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -824,20 +824,20 @@ Tip
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="dv">5</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> <span class="dv">4</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> x <span class="op">!=</span> y:                                 <span class="co">#line 1</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"x is not equal to y"</span>)</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(x <span class="op">&gt;</span> y):                             <span class="co">#line 4</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"x is greater than y"</span>)</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:                                  <span class="co">#line 7</span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"x is less than y"</span>)</span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"&lt;insert conclusion here&gt;"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>x <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a>y <span class="op">=</span> <span class="dv">4</span></span>
+<span id="cb15-3"><a href="#cb15-3"></a></span>
+<span id="cb15-4"><a href="#cb15-4"></a><span class="cf">if</span> x <span class="op">!=</span> y:                                 <span class="co">#line 1</span></span>
+<span id="cb15-5"><a href="#cb15-5"></a>    <span class="bu">print</span>(<span class="st">"x is not equal to y"</span>)</span>
+<span id="cb15-6"><a href="#cb15-6"></a>    </span>
+<span id="cb15-7"><a href="#cb15-7"></a>    <span class="cf">if</span>(x <span class="op">&gt;</span> y):                             <span class="co">#line 4</span></span>
+<span id="cb15-8"><a href="#cb15-8"></a>        <span class="bu">print</span>(<span class="st">"x is greater than y"</span>)</span>
+<span id="cb15-9"><a href="#cb15-9"></a>    </span>
+<span id="cb15-10"><a href="#cb15-10"></a>    <span class="cf">else</span>:                                  <span class="co">#line 7</span></span>
+<span id="cb15-11"><a href="#cb15-11"></a>        <span class="bu">print</span>(<span class="st">"x is less than y"</span>)</span>
+<span id="cb15-12"><a href="#cb15-12"></a></span>
+<span id="cb15-13"><a href="#cb15-13"></a><span class="cf">else</span>:</span>
+<span id="cb15-14"><a href="#cb15-14"></a>    <span class="bu">print</span>(<span class="st">"&lt;insert conclusion here&gt;"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Note how the indentation makes it easier to work out which ‘level’ (outer or inner condition) the code is operating on. In the code above, lines 4 and 7 are at the same indentation meaning that <em>both will be skipped</em> if the initial condition (on line 1) is <code>False</code>.</p>
 <p>To check you understand how the code above works:</p>
@@ -870,25 +870,25 @@ Connections
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>cities <span class="op">=</span> [<span class="st">'New York'</span>, <span class="st">'London'</span>, <span class="st">'Beijing'</span>, <span class="st">'Tokyo'</span>, <span class="st">'Delhi'</span>]</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Print out London from cities:</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>( ?? )</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Print out Tokyo using *negative* indexing:</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>( ?? )</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Print out Beijing *and* Tokyo using a list slice</span></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>( ?? )</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Print out London to Delhi using a slice</span></span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>( ?? ) <span class="co"># You could also do cities[1:5] but this way is neater</span></span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&nbsp;Combine positive and negative indexing to print out London, Beijing and Tokyo using a list slice</span></span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>( ?? )</span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Print out the position of New York in the list by searching for it (i.e. you can't just type 0)</span></span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>( ?? )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>cities <span class="op">=</span> [<span class="st">'New York'</span>, <span class="st">'London'</span>, <span class="st">'Beijing'</span>, <span class="st">'Tokyo'</span>, <span class="st">'Delhi'</span>]</span>
+<span id="cb16-2"><a href="#cb16-2"></a></span>
+<span id="cb16-3"><a href="#cb16-3"></a><span class="co"># Print out London from cities:</span></span>
+<span id="cb16-4"><a href="#cb16-4"></a><span class="bu">print</span>( ?? )</span>
+<span id="cb16-5"><a href="#cb16-5"></a></span>
+<span id="cb16-6"><a href="#cb16-6"></a><span class="co"># Print out Tokyo using *negative* indexing:</span></span>
+<span id="cb16-7"><a href="#cb16-7"></a><span class="bu">print</span>( ?? )</span>
+<span id="cb16-8"><a href="#cb16-8"></a></span>
+<span id="cb16-9"><a href="#cb16-9"></a><span class="co"># Print out Beijing *and* Tokyo using a list slice</span></span>
+<span id="cb16-10"><a href="#cb16-10"></a><span class="bu">print</span>( ?? )</span>
+<span id="cb16-11"><a href="#cb16-11"></a></span>
+<span id="cb16-12"><a href="#cb16-12"></a><span class="co"># Print out London to Delhi using a slice</span></span>
+<span id="cb16-13"><a href="#cb16-13"></a><span class="bu">print</span>( ?? ) <span class="co"># You could also do cities[1:5] but this way is neater</span></span>
+<span id="cb16-14"><a href="#cb16-14"></a></span>
+<span id="cb16-15"><a href="#cb16-15"></a><span class="co">#&nbsp;Combine positive and negative indexing to print out London, Beijing and Tokyo using a list slice</span></span>
+<span id="cb16-16"><a href="#cb16-16"></a><span class="bu">print</span>( ?? )</span>
+<span id="cb16-17"><a href="#cb16-17"></a></span>
+<span id="cb16-18"><a href="#cb16-18"></a><span class="co"># Print out the position of New York in the list by searching for it (i.e. you can't just type 0)</span></span>
+<span id="cb16-19"><a href="#cb16-19"></a><span class="bu">print</span>( ?? )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -900,8 +900,8 @@ Connections
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cause an 'IndexError: list index out of range' errr</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>??</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># Cause an 'IndexError: list index out of range' errr</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a>??</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -910,8 +910,8 @@ Connections
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cause a ValueError using the city of Toronto</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>??</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># Cause a ValueError using the city of Toronto</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a>??</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -921,8 +921,8 @@ Connections
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>??</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(cities)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>??</span>
+<span id="cb19-2"><a href="#cb19-2"></a><span class="bu">print</span>(cities)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The output from this should be: <code>[‘Tokyo’, ‘New York’, ‘London’, ‘Delhi’, ‘Beijing’]</code></p>
 </section>
@@ -936,11 +936,11 @@ Connections
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Just in case you make a mistake...</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>cities <span class="op">=</span> [<span class="st">'Tokyo'</span>, <span class="st">'New York'</span>, <span class="st">'London'</span>, <span class="st">'Delhi'</span>, <span class="st">'Beijing'</span>]</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>??</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(cities)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># Just in case you make a mistake...</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a>cities <span class="op">=</span> [<span class="st">'Tokyo'</span>, <span class="st">'New York'</span>, <span class="st">'London'</span>, <span class="st">'Delhi'</span>, <span class="st">'Beijing'</span>]</span>
+<span id="cb20-3"><a href="#cb20-3"></a></span>
+<span id="cb20-4"><a href="#cb20-4"></a>??</span>
+<span id="cb20-5"><a href="#cb20-5"></a><span class="bu">print</span>(cities)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The output should be: <code>[‘Tokyo’, ‘New York’, ‘Toronto’, ‘London’, ‘Delhi’, ‘Beijing’]</code></p>
 </section>
@@ -951,9 +951,9 @@ Connections
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>??</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(cities)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a>??</span>
+<span id="cb21-2"><a href="#cb21-2"></a><span class="bu">print</span>(p)</span>
+<span id="cb21-3"><a href="#cb21-3"></a><span class="bu">print</span>(cities)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The output should be:</p>
 <ul>
@@ -968,10 +968,10 @@ Connections
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> ??</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    ??</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    ??</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a><span class="cf">if</span> ??</span>
+<span id="cb22-2"><a href="#cb22-2"></a>    ??</span>
+<span id="cb22-3"><a href="#cb22-3"></a><span class="cf">else</span>:</span>
+<span id="cb22-4"><a href="#cb22-4"></a>    ??</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -1435,10 +1435,10 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 2022–2024, Jon Reades</p>
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 2022–2025, Jon Reades</p>
 </div>   
     <div class="nav-footer-center">
-<p><img src="../img/favicon-16x16.png" class="height:10px img-fluid"> Foundations of Spatial Data Science</p>
+<p><img src="../img/logo/logo_only_sm.png" height="25"> Foundations of Spatial Data Science</p>
 <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jreades/fsds/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
@@ -1449,7 +1449,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </a>
   </li>  
     <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/jreades">
+    <a class="nav-link" href="https://bsky.app/profile/jreades.bsky.social/">
       <i class="bi bi-twitter" role="img">
 </i> 
     </a>
@@ -1458,6 +1458,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 

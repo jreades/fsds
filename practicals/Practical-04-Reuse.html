@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.39">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -70,10 +70,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-94502d3d680d4f599d90f0c2e6fbae98.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-fb446d74831b8ff67c69632cb314b545.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-393972cfcb964df2eba7c7df233894c6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-c734b2b4d74e7e594e143a63449c09f7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -105,7 +108,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <meta property="og:title" content="Practical 4: Efficient Code – Foundations of Spatial Data Science">
 <meta property="og:description" content="Packages, Decorators, and Functions">
-<meta property="og:image" content="img/CASA_Logo_no_text.png">
+<meta property="og:image" content="img/logo/full_sm.png">
 <meta property="og:site_name" content="Foundations">
 <meta property="og:locale" content="en_GB">
 </head>
@@ -118,7 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../img/CASA_Logo_no_text.png" alt="" class="navbar-logo">
+    <img src="../img/logo/logo_only_sm.png" alt="" class="navbar-logo">
     </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Foundations of Spatial Data Science</span>
@@ -130,10 +133,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
-<span class="menu-text">Welcome</span></a>
-  </li>  
   <li class="nav-item">
     <a class="nav-link" href="../setup/index.html"> 
 <span class="menu-text">Setup</span></a>
@@ -336,7 +335,7 @@ Difficulty: Medium.
 <p>Some steps in a program are done so many times by so many people that, eventually, someone writes a <em>package</em> that bundles up those operations into something easy to use that saves <em>you</em> having to figure out the gory details. Reading a file (even one on a computer halfway round the world) is one of those things. Making sense of the data <em>in</em> that file for you is probably not.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://imgs.xkcd.com/comics/tasks.png" class="img-fluid figure-img"></p>
+<p><a href="https://imgs.xkcd.com/comics/tasks.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="xkcd: Easy vs.&nbsp;Hard"><img src="https://imgs.xkcd.com/comics/tasks.png" class="img-fluid figure-img" alt="xkcd: Easy vs.&nbsp;Hard"></a></p>
 <figcaption>xkcd: Easy vs.&nbsp;Hard</figcaption>
 </figure>
 </div>
@@ -374,8 +373,8 @@ Difficulty: Medium.
 </style>
 <div class="longform">
 <div id="f5aebc6a" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> urllib.request <span class="im">import</span> urlopen</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">help</span>(urlopen)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">from</span> urllib.request <span class="im">import</span> urlopen</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="bu">help</span>(urlopen)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Help on function urlopen in module urllib.request:
 
@@ -465,36 +464,36 @@ os.environ['HTTPS_PROXY'] = 'http://127.0.0.1:10809'</code></pre>
 </div>
 </div>
 <p>Before you start working on the code, why not open the data file <a href="https://raw.githubusercontent.com/jreades/fsds/master/data/src/Wikipedia-Cities-simple.csv">directly in your browser</a>? It’s pretty small, and it will give you a sense of what is going on.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> urllib.request <span class="im">import</span> URLError</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> urllib.request <span class="im">import</span> urlopen</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Given the info you were given above, what do you </span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># think the value of 'url' should be? What</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># type of variable is it? int or string? </span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com/jreades/fsds/master/data/src/Wikipedia-Cities-simple.csv'</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the URL stream into variable called 'response'</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># using the function that we imported above</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    response <span class="op">=</span> urlopen(url)</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> URLError <span class="im">as</span> e:</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Unable to connect to URL!"</span>)</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(e)</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co"># You might want to explore what `__class__` and `__name__`</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co"># are doing, but basically the give us a way of finding out what</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co"># is 'behind' more complex variables</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Now read from the stream, decoding so that we get actual text</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>raw <span class="op">=</span> response.read()</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"'raw' variable is of type: '</span><span class="sc">{</span>raw<span class="sc">.</span>__class__<span class="sc">.</span><span class="va">__name__</span><span class="sc">}</span><span class="ss">'."</span>)</span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Raw content is:</span><span class="ch">\n</span><span class="sc">{</span>raw[:<span class="dv">75</span>]<span class="sc">}</span><span class="ss">...</span><span class="ch">\n</span><span class="ss">"</span>)</span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> raw.decode(<span class="st">'utf-8'</span>)</span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"'data' variable is of type: '</span><span class="sc">{</span>data<span class="sc">.</span>__class__<span class="sc">.</span><span class="va">__name__</span><span class="sc">}</span><span class="ss">'."</span>)</span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Decoded content is:</span><span class="ch">\n</span><span class="sc">{</span>data[:<span class="dv">75</span>]<span class="sc">}</span><span class="ss">..."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">from</span> urllib.request <span class="im">import</span> URLError</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="im">from</span> urllib.request <span class="im">import</span> urlopen</span>
+<span id="cb4-3"><a href="#cb4-3"></a></span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="co"># Given the info you were given above, what do you </span></span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="co"># think the value of 'url' should be? What</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a><span class="co"># type of variable is it? int or string? </span></span>
+<span id="cb4-7"><a href="#cb4-7"></a>url <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com/jreades/fsds/master/data/src/Wikipedia-Cities-simple.csv'</span></span>
+<span id="cb4-8"><a href="#cb4-8"></a></span>
+<span id="cb4-9"><a href="#cb4-9"></a><span class="co"># Read the URL stream into variable called 'response'</span></span>
+<span id="cb4-10"><a href="#cb4-10"></a><span class="co"># using the function that we imported above</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a><span class="cf">try</span>:</span>
+<span id="cb4-12"><a href="#cb4-12"></a>    response <span class="op">=</span> urlopen(url)</span>
+<span id="cb4-13"><a href="#cb4-13"></a><span class="cf">except</span> URLError <span class="im">as</span> e:</span>
+<span id="cb4-14"><a href="#cb4-14"></a>    <span class="bu">print</span>(<span class="st">"Unable to connect to URL!"</span>)</span>
+<span id="cb4-15"><a href="#cb4-15"></a>    <span class="bu">print</span>(e)</span>
+<span id="cb4-16"><a href="#cb4-16"></a></span>
+<span id="cb4-17"><a href="#cb4-17"></a><span class="co"># You might want to explore what `__class__` and `__name__`</span></span>
+<span id="cb4-18"><a href="#cb4-18"></a><span class="co"># are doing, but basically the give us a way of finding out what</span></span>
+<span id="cb4-19"><a href="#cb4-19"></a><span class="co"># is 'behind' more complex variables</span></span>
+<span id="cb4-20"><a href="#cb4-20"></a></span>
+<span id="cb4-21"><a href="#cb4-21"></a><span class="co"># Now read from the stream, decoding so that we get actual text</span></span>
+<span id="cb4-22"><a href="#cb4-22"></a>raw <span class="op">=</span> response.read()</span>
+<span id="cb4-23"><a href="#cb4-23"></a></span>
+<span id="cb4-24"><a href="#cb4-24"></a><span class="bu">print</span>(<span class="ss">f"'raw' variable is of type: '</span><span class="sc">{</span>raw<span class="sc">.</span>__class__<span class="sc">.</span><span class="va">__name__</span><span class="sc">}</span><span class="ss">'."</span>)</span>
+<span id="cb4-25"><a href="#cb4-25"></a><span class="bu">print</span>(<span class="ss">f"Raw content is:</span><span class="ch">\n</span><span class="sc">{</span>raw[:<span class="dv">75</span>]<span class="sc">}</span><span class="ss">...</span><span class="ch">\n</span><span class="ss">"</span>)</span>
+<span id="cb4-26"><a href="#cb4-26"></a></span>
+<span id="cb4-27"><a href="#cb4-27"></a>data <span class="op">=</span> raw.decode(<span class="st">'utf-8'</span>)</span>
+<span id="cb4-28"><a href="#cb4-28"></a></span>
+<span id="cb4-29"><a href="#cb4-29"></a><span class="bu">print</span>(<span class="ss">f"'data' variable is of type: '</span><span class="sc">{</span>data<span class="sc">.</span>__class__<span class="sc">.</span><span class="va">__name__</span><span class="sc">}</span><span class="ss">'."</span>)</span>
+<span id="cb4-30"><a href="#cb4-30"></a><span class="bu">print</span>(<span class="ss">f"Decoded content is:</span><span class="ch">\n</span><span class="sc">{</span>data[:<span class="dv">75</span>]<span class="sc">}</span><span class="ss">..."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -510,8 +509,8 @@ Note
 </div>
 <p>Remember that you can treat strings <em>as lists</em>, so when we <code>print</code> below we cut off the output using the <code>list[:&lt;Some Number&gt;]</code> syntax.</p>
 <div id="bd57b81a" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"There are </span><span class="sc">{</span><span class="bu">len</span>(data)<span class="sc">}</span><span class="ss"> characters in the data variable."</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"The first 125 characters are: '</span><span class="sc">{</span>data[:<span class="dv">125</span>]<span class="sc">}</span><span class="ss">'"</span>) <span class="co"># Notice that '\n' count here!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="bu">print</span>(<span class="ss">f"There are </span><span class="sc">{</span><span class="bu">len</span>(data)<span class="sc">}</span><span class="ss"> characters in the data variable."</span>)</span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="bu">print</span>(<span class="ss">f"The first 125 characters are: '</span><span class="sc">{</span>data[:<span class="dv">125</span>]<span class="sc">}</span><span class="ss">'"</span>) <span class="co"># Notice that '\n' count here!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>There are 352 characters in the data variable.
 The first 125 characters are: 'City,Population,Latitude,Longitude
@@ -524,20 +523,20 @@ Dundee,147268,56.462,-2.9707'</code></pre>
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> ??.splitlines()</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"'rows' variable is of type: </span><span class="sc">{</span>rows<span class="sc">.</span>__class__<span class="sc">.</span><span class="va">__name__</span><span class="sc">}</span><span class="ss">'."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>rows <span class="op">=</span> ??.splitlines()</span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="bu">print</span>(<span class="ss">f"'rows' variable is of type: </span><span class="sc">{</span>rows<span class="sc">.</span>__class__<span class="sc">.</span><span class="va">__name__</span><span class="sc">}</span><span class="ss">'."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Note now, how the <em>data</em> variable has type <code>list</code>. So to view the data as we see them in the original online file, we can now use a <code>for</code> loop to print out each element of the <code>list</code> (each element being a row of the original online file):</p>
 </section>
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"There are </span><span class="sc">{??}</span><span class="ss"> rows of data."</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>.join(??[<span class="dv">0</span>:<span class="dv">2</span>])) <span class="co"># New syntax alert! notice we can *join* list elements</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="bu">print</span>(<span class="ss">f"There are </span><span class="sc">{??}</span><span class="ss"> rows of data."</span>)</span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>.join(??[<span class="dv">0</span>:<span class="dv">2</span>])) <span class="co"># New syntax alert! notice we can *join* list elements</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>That’s a little hard to read, though something has clearly changed. Let’s try printing the last row:</p>
 <div id="144ea7bf" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(rows[<span class="op">-</span><span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="bu">print</span>(rows[<span class="op">-</span><span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Bangor,18808,53.228,-4.128</code></pre>
 </div>
@@ -550,14 +549,14 @@ Dundee,147268,56.462,-2.9707'</code></pre>
 <p>We now need to work on turning the response into useful data. We got partway there by splitting on line-breaks (<code>splitlines()</code>), but now we need to get columns for each line. You’ll notice that we are dealing with a <em>CSV</em> (Comma-Separated Value) file and that the format <em>looks</em> quite simple… So, in theory, to turn this into data we ‘just’ need to <em>split</em> each row into separate fields using the commas.</p>
 <p>There’s a handy function associated with strings called <code>split</code>:</p>
 <div id="d7d51fe6" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'abcdefgh'</span>.split(<span class="st">'d'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="bu">print</span>(<span class="st">'abcdefgh'</span>.split(<span class="st">'d'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['abc', 'efgh']</code></pre>
 </div>
 </div>
 <p>You can also investigate further how the split function works using:</p>
 <div id="59b2aada" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">help</span>(<span class="st">'abcdefgh'</span>.split)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="bu">help</span>(<span class="st">'abcdefgh'</span>.split)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Help on built-in function split:
 
@@ -584,9 +583,9 @@ split(sep=None, maxsplit=-1) method of builtins.str instance
 </div>
 <p>So this seems like a good solution to turn our text into <em>data</em>:</p>
 <div id="888dd03f" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>test <span class="op">=</span> rows[<span class="op">-</span><span class="dv">1</span>].split(<span class="st">','</span>)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(test)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"The population of </span><span class="sc">{</span>test[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> is </span><span class="sc">{</span><span class="bu">int</span>(test[<span class="dv">1</span>])<span class="sc">:,}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>test <span class="op">=</span> rows[<span class="op">-</span><span class="dv">1</span>].split(<span class="st">','</span>)</span>
+<span id="cb15-2"><a href="#cb15-2"></a><span class="bu">print</span>(test)</span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="bu">print</span>(<span class="ss">f"The population of </span><span class="sc">{</span>test[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> is </span><span class="sc">{</span><span class="bu">int</span>(test[<span class="dv">1</span>])<span class="sc">:,}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['Bangor', '18808', '53.228', '-4.128']
 The population of Bangor is 18,808</code></pre>
@@ -616,23 +615,23 @@ Caution
 </ol>
 <p>This is where using code that someone <em>else</em> who is much more interested (and knowledgeable) has written and contributed is helpful: we don’t need to think through how to deal with this sort of thing ourselves, we can just find a library that does what we need and make use of <em>its</em> functionality. I’ve given you the skeleton of the answer below, but you’ll need to do a little Googling to find out how to <code>"read csv python"</code>.</p>
 <p><strong>Note:</strong> For now just focus on problem #2.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> urllib.request <span class="im">import</span> urlopen</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> csv</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com/jreades/fsds/master/data/src/Wikipedia-Cities-simple.csv'</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> urlopen(url)</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>raw <span class="op">=</span> response.read()</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Now take the raw data, decode it, and then</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co"># pass it over to the CSV reader function</span></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>csvfile  <span class="op">=</span> csv.reader(raw.decode(<span class="st">'utf-8'</span>).splitlines()) </span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>urlData <span class="op">=</span> [] <span class="co"># Somewhere to store the data</span></span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> row <span class="kw">in</span> csvfile:              </span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>    urlData.append( row )</span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"urlData has "</span> <span class="op">+</span> <span class="bu">str</span>(<span class="bu">len</span>(urlData)) <span class="op">+</span> <span class="st">" rows and "</span> <span class="op">+</span> <span class="bu">str</span>(<span class="bu">len</span>(urlData[<span class="dv">0</span>])) <span class="op">+</span> <span class="st">" columns."</span>)</span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(urlData[<span class="op">-</span><span class="dv">1</span>]) <span class="co"># Check it worked!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="im">from</span> urllib.request <span class="im">import</span> urlopen</span>
+<span id="cb17-2"><a href="#cb17-2"></a><span class="im">import</span> csv</span>
+<span id="cb17-3"><a href="#cb17-3"></a></span>
+<span id="cb17-4"><a href="#cb17-4"></a>url <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com/jreades/fsds/master/data/src/Wikipedia-Cities-simple.csv'</span></span>
+<span id="cb17-5"><a href="#cb17-5"></a>response <span class="op">=</span> urlopen(url)</span>
+<span id="cb17-6"><a href="#cb17-6"></a>raw <span class="op">=</span> response.read()</span>
+<span id="cb17-7"><a href="#cb17-7"></a></span>
+<span id="cb17-8"><a href="#cb17-8"></a><span class="co"># Now take the raw data, decode it, and then</span></span>
+<span id="cb17-9"><a href="#cb17-9"></a><span class="co"># pass it over to the CSV reader function</span></span>
+<span id="cb17-10"><a href="#cb17-10"></a>csvfile  <span class="op">=</span> csv.reader(raw.decode(<span class="st">'utf-8'</span>).splitlines()) </span>
+<span id="cb17-11"><a href="#cb17-11"></a></span>
+<span id="cb17-12"><a href="#cb17-12"></a>urlData <span class="op">=</span> [] <span class="co"># Somewhere to store the data</span></span>
+<span id="cb17-13"><a href="#cb17-13"></a><span class="cf">for</span> row <span class="kw">in</span> csvfile:              </span>
+<span id="cb17-14"><a href="#cb17-14"></a>    urlData.append( row )</span>
+<span id="cb17-15"><a href="#cb17-15"></a></span>
+<span id="cb17-16"><a href="#cb17-16"></a><span class="bu">print</span>(<span class="st">"urlData has "</span> <span class="op">+</span> <span class="bu">str</span>(<span class="bu">len</span>(urlData)) <span class="op">+</span> <span class="st">" rows and "</span> <span class="op">+</span> <span class="bu">str</span>(<span class="bu">len</span>(urlData[<span class="dv">0</span>])) <span class="op">+</span> <span class="st">" columns."</span>)</span>
+<span id="cb17-17"><a href="#cb17-17"></a><span class="bu">print</span>(urlData[<span class="op">-</span><span class="dv">1</span>]) <span class="co"># Check it worked!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>If it worked, then you should have this output:</p>
 <div id="265f6cf5" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-stdout">
@@ -642,8 +641,8 @@ Caution
 </div>
 <p>To you that might look a lot <em>worse</em> that the data that you originally had, but to a computer that list-of-lists is something it can work with; check it out:</p>
 <div id="ceabaed4" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> u <span class="kw">in</span> urlData[<span class="dv">1</span>:<span class="dv">6</span>]: <span class="co"># For each row in the first 5 items in list</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"The city of '</span><span class="sc">{</span>u[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">' has a population of </span><span class="sc">{</span><span class="bu">int</span>(u[<span class="dv">1</span>])<span class="sc">:,}</span><span class="ss">"</span>) <span class="co"># Print out the name and pop</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a><span class="cf">for</span> u <span class="kw">in</span> urlData[<span class="dv">1</span>:<span class="dv">6</span>]: <span class="co"># For each row in the first 5 items in list</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a>    <span class="bu">print</span>(<span class="ss">f"The city of '</span><span class="sc">{</span>u[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">' has a population of </span><span class="sc">{</span><span class="bu">int</span>(u[<span class="dv">1</span>])<span class="sc">:,}</span><span class="ss">"</span>) <span class="co"># Print out the name and pop</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>The city of 'Perth' has a population of 45,770
 The city of 'Armagh' has a population of 14,777
@@ -668,24 +667,24 @@ Note
 </div>
 </div>
 <p>Let’s try this with a ‘bigger’ data set… In an ideal world, the ‘power’ of code is that once we’ve solved the problem <em>once</em>, we’ve solved it more generally as well. So let’s try with the ‘scaled-up’ data set and see waht happens!</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> urllib.request <span class="im">import</span> urlopen</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> csv</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/jreades/fsds/master/data/src/Wikipedia-Cities.csv"</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> urlopen(url)</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>raw <span class="op">=</span> response.read()</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>csvfile <span class="op">=</span> csv.reader(raw.decode(<span class="st">'utf-8'</span>).splitlines())</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>urlData <span class="op">=</span> [] <span class="co"># Somewhere to store the data</span></span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> row <span class="kw">in</span> csvfile:              </span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    urlData.append( row )</span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"urlData has </span><span class="sc">{</span><span class="bu">len</span>(urlData)<span class="sc">}</span><span class="ss"> rows and </span><span class="sc">{</span><span class="bu">len</span>(urlData[<span class="dv">0</span>])<span class="sc">}</span><span class="ss"> columns."</span>)</span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> u <span class="kw">in</span> urlData[<span class="dv">70</span>:]:  <span class="co"># For each row in the list</span></span>
-<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"The city of '</span><span class="sc">{</span>u[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">' has a population of </span><span class="sc">{</span>u[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">"</span>) <span class="co"># Print out the name and pop</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a><span class="im">from</span> urllib.request <span class="im">import</span> urlopen</span>
+<span id="cb21-2"><a href="#cb21-2"></a><span class="im">import</span> csv</span>
+<span id="cb21-3"><a href="#cb21-3"></a></span>
+<span id="cb21-4"><a href="#cb21-4"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/jreades/fsds/master/data/src/Wikipedia-Cities.csv"</span></span>
+<span id="cb21-5"><a href="#cb21-5"></a>response <span class="op">=</span> urlopen(url)</span>
+<span id="cb21-6"><a href="#cb21-6"></a>raw <span class="op">=</span> response.read()</span>
+<span id="cb21-7"><a href="#cb21-7"></a></span>
+<span id="cb21-8"><a href="#cb21-8"></a>csvfile <span class="op">=</span> csv.reader(raw.decode(<span class="st">'utf-8'</span>).splitlines())</span>
+<span id="cb21-9"><a href="#cb21-9"></a></span>
+<span id="cb21-10"><a href="#cb21-10"></a>urlData <span class="op">=</span> [] <span class="co"># Somewhere to store the data</span></span>
+<span id="cb21-11"><a href="#cb21-11"></a></span>
+<span id="cb21-12"><a href="#cb21-12"></a><span class="cf">for</span> row <span class="kw">in</span> csvfile:              </span>
+<span id="cb21-13"><a href="#cb21-13"></a>    urlData.append( row )</span>
+<span id="cb21-14"><a href="#cb21-14"></a></span>
+<span id="cb21-15"><a href="#cb21-15"></a><span class="bu">print</span>(<span class="ss">f"urlData has </span><span class="sc">{</span><span class="bu">len</span>(urlData)<span class="sc">}</span><span class="ss"> rows and </span><span class="sc">{</span><span class="bu">len</span>(urlData[<span class="dv">0</span>])<span class="sc">}</span><span class="ss"> columns."</span>)</span>
+<span id="cb21-16"><a href="#cb21-16"></a></span>
+<span id="cb21-17"><a href="#cb21-17"></a><span class="cf">for</span> u <span class="kw">in</span> urlData[<span class="dv">70</span>:]:  <span class="co"># For each row in the list</span></span>
+<span id="cb21-18"><a href="#cb21-18"></a>    <span class="bu">print</span>(<span class="ss">f"The city of '</span><span class="sc">{</span>u[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">' has a population of </span><span class="sc">{</span>u[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">"</span>) <span class="co"># Print out the name and pop</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -700,7 +699,7 @@ What mistake have I made here?
 <div class="callout-body-container callout-body">
 <p>I have assumed that, just because the files have similar names, they must also have similar layouts!</p>
 <div id="0f16700c" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"The URL's data labels are: </span><span class="sc">{</span><span class="st">', '</span><span class="sc">.</span>join(urlData[<span class="dv">0</span>])<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a><span class="bu">print</span>(<span class="ss">f"The URL's data labels are: </span><span class="sc">{</span><span class="st">', '</span><span class="sc">.</span>join(urlData[<span class="dv">0</span>])<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>The URL's data labels are: City, Population, Latitude, Longitude</code></pre>
 </div>
@@ -768,25 +767,25 @@ Difficulty: Hard.
 <h3 class="anchored" data-anchor-id="a-dictionary-of-lists-to-the-rescue">A Dictionary of Lists to the Rescue</h3>
 <p>So, if we don’t care about column order, only row order, then a dictionary of lists would be a nice way to handle things. And why should we care about column order? With our CSV files above we already saw what a pain it was to fix things when the layout of the columns changed from one data set to the next. If, instead, we can just reference the ‘description’ column then it doesn’t matter where that column actually is. Why is that?</p>
 <p>Well, here are the first four rows of data from a list-of-lists for city sizes:</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>myData <span class="op">=</span> [</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  [<span class="st">'id'</span>, <span class="st">'Name'</span>, <span class="st">'Rank'</span>, <span class="st">'Longitude'</span>, <span class="st">'Latitude'</span>, <span class="st">'Population'</span>], </span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  [<span class="st">'1'</span>, <span class="st">'Greater London'</span>, <span class="st">'1'</span>, <span class="st">'-18162.92767'</span>, <span class="st">'6711153.709'</span>, <span class="st">'9787426'</span>], </span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  [<span class="st">'2'</span>, <span class="st">'Greater Manchester'</span>, <span class="st">'2'</span>, <span class="st">'-251761.802'</span>, <span class="st">'7073067.458'</span>, <span class="st">'2553379'</span>], </span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  [<span class="st">'3'</span>, <span class="st">'West Midlands'</span>, <span class="st">'3'</span>, <span class="st">'-210635.2396'</span>, <span class="st">'6878950.083'</span>, <span class="st">'2440986'</span>]</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a>myData <span class="op">=</span> [</span>
+<span id="cb24-2"><a href="#cb24-2"></a>  [<span class="st">'id'</span>, <span class="st">'Name'</span>, <span class="st">'Rank'</span>, <span class="st">'Longitude'</span>, <span class="st">'Latitude'</span>, <span class="st">'Population'</span>], </span>
+<span id="cb24-3"><a href="#cb24-3"></a>  [<span class="st">'1'</span>, <span class="st">'Greater London'</span>, <span class="st">'1'</span>, <span class="st">'-18162.92767'</span>, <span class="st">'6711153.709'</span>, <span class="st">'9787426'</span>], </span>
+<span id="cb24-4"><a href="#cb24-4"></a>  [<span class="st">'2'</span>, <span class="st">'Greater Manchester'</span>, <span class="st">'2'</span>, <span class="st">'-251761.802'</span>, <span class="st">'7073067.458'</span>, <span class="st">'2553379'</span>], </span>
+<span id="cb24-5"><a href="#cb24-5"></a>  [<span class="st">'3'</span>, <span class="st">'West Midlands'</span>, <span class="st">'3'</span>, <span class="st">'-210635.2396'</span>, <span class="st">'6878950.083'</span>, <span class="st">'2440986'</span>]</span>
+<span id="cb24-6"><a href="#cb24-6"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Now, here’s how it would look as a dictionary of lists organised by <em>column</em>, and <em>not</em> by row:</p>
 <div id="3a2a1be8" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>myData <span class="op">=</span> {</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'id'</span>         : [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>],</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Name'</span>       : [<span class="st">'London'</span>, <span class="st">'Manchester'</span>, <span class="st">'Birmingham'</span>,<span class="st">'Edinburgh'</span>,<span class="st">'Inverness'</span>,<span class="st">'Lerwick'</span>],</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Rank'</span>       : [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>],</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Longitude'</span>  : [<span class="op">-</span><span class="fl">0.128</span>, <span class="op">-</span><span class="fl">2.245</span>, <span class="op">-</span><span class="fl">1.903</span>, <span class="op">-</span><span class="fl">3.189</span>, <span class="op">-</span><span class="fl">4.223</span>, <span class="op">-</span><span class="fl">1.145</span>],</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Latitude'</span>   : [<span class="fl">51.507</span>, <span class="fl">53.479</span>, <span class="fl">52.480</span>, <span class="fl">55.953</span>, <span class="fl">57.478</span>, <span class="fl">60.155</span>],</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Population'</span> : [<span class="dv">9787426</span>, <span class="dv">2705000</span>, <span class="dv">1141816</span>, <span class="dv">901455</span>, <span class="dv">70000</span>, <span class="dv">6958</span>],</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(myData[<span class="st">'Name'</span>])</span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(myData[<span class="st">'Population'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1"></a>myData <span class="op">=</span> {</span>
+<span id="cb25-2"><a href="#cb25-2"></a>    <span class="st">'id'</span>         : [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>],</span>
+<span id="cb25-3"><a href="#cb25-3"></a>    <span class="st">'Name'</span>       : [<span class="st">'London'</span>, <span class="st">'Manchester'</span>, <span class="st">'Birmingham'</span>,<span class="st">'Edinburgh'</span>,<span class="st">'Inverness'</span>,<span class="st">'Lerwick'</span>],</span>
+<span id="cb25-4"><a href="#cb25-4"></a>    <span class="st">'Rank'</span>       : [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>],</span>
+<span id="cb25-5"><a href="#cb25-5"></a>    <span class="st">'Longitude'</span>  : [<span class="op">-</span><span class="fl">0.128</span>, <span class="op">-</span><span class="fl">2.245</span>, <span class="op">-</span><span class="fl">1.903</span>, <span class="op">-</span><span class="fl">3.189</span>, <span class="op">-</span><span class="fl">4.223</span>, <span class="op">-</span><span class="fl">1.145</span>],</span>
+<span id="cb25-6"><a href="#cb25-6"></a>    <span class="st">'Latitude'</span>   : [<span class="fl">51.507</span>, <span class="fl">53.479</span>, <span class="fl">52.480</span>, <span class="fl">55.953</span>, <span class="fl">57.478</span>, <span class="fl">60.155</span>],</span>
+<span id="cb25-7"><a href="#cb25-7"></a>    <span class="st">'Population'</span> : [<span class="dv">9787426</span>, <span class="dv">2705000</span>, <span class="dv">1141816</span>, <span class="dv">901455</span>, <span class="dv">70000</span>, <span class="dv">6958</span>],</span>
+<span id="cb25-8"><a href="#cb25-8"></a>}</span>
+<span id="cb25-9"><a href="#cb25-9"></a></span>
+<span id="cb25-10"><a href="#cb25-10"></a><span class="bu">print</span>(myData[<span class="st">'Name'</span>])</span>
+<span id="cb25-11"><a href="#cb25-11"></a><span class="bu">print</span>(myData[<span class="st">'Population'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['London', 'Manchester', 'Birmingham', 'Edinburgh', 'Inverness', 'Lerwick']
 [9787426, 2705000, 1141816, 901455, 70000, 6958]</code></pre>
@@ -815,9 +814,9 @@ We’ll step through most of these in detail below.
 </div>
 <p>Find the latitude of Manchester:</p>
 <div id="0ec0bd23" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>city <span class="op">=</span> <span class="st">"Manchester"</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>lat <span class="op">=</span> myData[<span class="st">'Latitude'</span>][ myData[<span class="st">'Name'</span>].index(city) ]</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>city<span class="sc">}</span><span class="ss">'s latitude is </span><span class="sc">{</span>lat<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1"></a>city <span class="op">=</span> <span class="st">"Manchester"</span></span>
+<span id="cb27-2"><a href="#cb27-2"></a>lat <span class="op">=</span> myData[<span class="st">'Latitude'</span>][ myData[<span class="st">'Name'</span>].index(city) ]</span>
+<span id="cb27-3"><a href="#cb27-3"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>city<span class="sc">}</span><span class="ss">'s latitude is </span><span class="sc">{</span>lat<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Manchester's latitude is 53.479</code></pre>
 </div>
@@ -826,26 +825,26 @@ We’ll step through most of these in detail below.
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>city <span class="op">=</span> <span class="st">"Lerwick"</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"The town of </span><span class="sc">{</span>city<span class="sc">}</span><span class="ss"> can be found at "</span> <span class="op">+</span> </span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>      <span class="ss">f"</span><span class="sc">{</span><span class="bu">abs</span>(myData[??][ ?? ])<span class="sc">}</span><span class="ss">ºW, </span><span class="sc">{</span>myData[<span class="st">'Latitude'</span>][ ?? ]<span class="sc">}</span><span class="ss">ºN"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1"></a>city <span class="op">=</span> <span class="st">"Lerwick"</span></span>
+<span id="cb29-2"><a href="#cb29-2"></a><span class="bu">print</span>(<span class="ss">f"The town of </span><span class="sc">{</span>city<span class="sc">}</span><span class="ss"> can be found at "</span> <span class="op">+</span> </span>
+<span id="cb29-3"><a href="#cb29-3"></a>      <span class="ss">f"</span><span class="sc">{</span><span class="bu">abs</span>(myData[??][ ?? ])<span class="sc">}</span><span class="ss">ºW, </span><span class="sc">{</span>myData[<span class="st">'Latitude'</span>][ ?? ]<span class="sc">}</span><span class="ss">ºN"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Find the easternmost city:</p>
 </section>
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>city <span class="op">=</span> myData[<span class="st">'Name'</span>][ myData[??].index( <span class="bu">max</span>(myData[??]) ) ]</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"The easternmost city is: </span><span class="sc">{</span>city<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1"></a>city <span class="op">=</span> myData[<span class="st">'Name'</span>][ myData[??].index( <span class="bu">max</span>(myData[??]) ) ]</span>
+<span id="cb30-2"><a href="#cb30-2"></a><span class="bu">print</span>(<span class="ss">f"The easternmost city is: </span><span class="sc">{</span>city<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Find the <code>mean</code> population of the cities using a handy package called numpy:</p>
 </section>
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>mean <span class="op">=</span> np.??(myData[<span class="st">'Population'</span>])</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"The mean population is: </span><span class="sc">{</span>mean<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb31-2"><a href="#cb31-2"></a>mean <span class="op">=</span> np.??(myData[<span class="st">'Population'</span>])</span>
+<span id="cb31-3"><a href="#cb31-3"></a><span class="bu">print</span>(<span class="ss">f"The mean population is: </span><span class="sc">{</span>mean<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -867,7 +866,7 @@ Warning
 <h3 class="anchored" data-anchor-id="the-population-of-manchester">The Population of Manchester</h3>
 <p>The code can look pretty daunting, so let’s break it down into two parts. What would you get if you ran just this code?</p>
 <div id="52966719" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>myData[<span class="st">'Population'</span>][<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1"></a>myData[<span class="st">'Population'</span>][<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="52">
 <pre><code>2705000</code></pre>
 </div>
@@ -875,7 +874,7 @@ Warning
 <p>Remember that this is a dictionary-of-lists (DoL). So, Python first looks for a key named <code>Population</code> in the myData dictionary. It finds out that the value associated with this key is a <em>list</em> and in this example, it just pulls out the second value (index <code>1</code>). Does <strong>that part</strong> make sense?</p>
 <p>Now, to the second part:</p>
 <div id="1b42326a" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>myData[<span class="st">'Name'</span>].index(<span class="st">'Manchester'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1"></a>myData[<span class="st">'Name'</span>].index(<span class="st">'Manchester'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="54">
 <pre><code>1</code></pre>
 </div>
@@ -887,7 +886,7 @@ Warning
 <h3 class="anchored" data-anchor-id="the-easternmost-city">The Easternmost City</h3>
 <p>Where this approach really comes into its own is on problems that involve maths. To figure out the easternmost city in this list we need to find the <em>maximum</em> Longitude and then use <em>that</em> value to look up the city name. So let’s do the same process of pulling this apart into two steps. Let start with the easier bit:</p>
 <div id="e5325930" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>myData[<span class="st">'Name'</span>][<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1"></a>myData[<span class="st">'Name'</span>][<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="55">
 <pre><code>'London'</code></pre>
 </div>
@@ -899,20 +898,20 @@ Warning
 </ol>
 <p>So Step 1 would be:</p>
 <div id="a10a251f" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>max_lon <span class="op">=</span> <span class="bu">max</span>(myData[<span class="st">'Longitude'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1"></a>max_lon <span class="op">=</span> <span class="bu">max</span>(myData[<span class="st">'Longitude'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Because the <code>max(...)</code> helps us to find the maximum longitude in the Longitude list. Now that we have that we can proceed to Step 2:</p>
 <div id="c23c3ad4" class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>myData[<span class="st">'Longitude'</span>].index(max_lon)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1"></a>myData[<span class="st">'Longitude'</span>].index(max_lon)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="57">
 <pre><code>0</code></pre>
 </div>
 </div>
 <p>So now we ask Python to find the position of <code>max_lon</code> in the list. But rather than doing this in two steps we can combine into one if we write it down to make it easier to read:</p>
 <div id="f1983406" class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>myData[<span class="st">'Longitude'</span>].index(</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">max</span>(myData[<span class="st">'Longitude'</span>])</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1"></a>myData[<span class="st">'Longitude'</span>].index(</span>
+<span id="cb41-2"><a href="#cb41-2"></a>    <span class="bu">max</span>(myData[<span class="st">'Longitude'</span>])</span>
+<span id="cb41-3"><a href="#cb41-3"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="58">
 <pre><code>0</code></pre>
 </div>
@@ -931,9 +930,9 @@ Warning
 <p>Anyway, this one <em>might</em> be a tiny bit easier conceptually than the other problems, except that I’ve deliberately used a slightly different way of showing the output that might be confusing:</p>
 <p>Print the location of Lerwick:</p>
 <div id="79cd69e1" class="cell" data-execution_count="26">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>city <span class="op">=</span> <span class="st">"Lerwick"</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"The town of </span><span class="sc">{</span>city<span class="sc">}</span><span class="ss"> can be found at "</span> <span class="op">+</span> </span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>      <span class="ss">f"</span><span class="sc">{</span><span class="bu">abs</span>(myData[<span class="st">'Longitude'</span>][myData[<span class="st">'Name'</span>].index(city)])<span class="sc">}</span><span class="ss">ºW, </span><span class="sc">{</span>myData[<span class="st">'Latitude'</span>][myData[<span class="st">'Name'</span>].index(city)]<span class="sc">}</span><span class="ss">ºN"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1"></a>city <span class="op">=</span> <span class="st">"Lerwick"</span></span>
+<span id="cb43-2"><a href="#cb43-2"></a><span class="bu">print</span>(<span class="ss">f"The town of </span><span class="sc">{</span>city<span class="sc">}</span><span class="ss"> can be found at "</span> <span class="op">+</span> </span>
+<span id="cb43-3"><a href="#cb43-3"></a>      <span class="ss">f"</span><span class="sc">{</span><span class="bu">abs</span>(myData[<span class="st">'Longitude'</span>][myData[<span class="st">'Name'</span>].index(city)])<span class="sc">}</span><span class="ss">ºW, </span><span class="sc">{</span>myData[<span class="st">'Latitude'</span>][myData[<span class="st">'Name'</span>].index(city)]<span class="sc">}</span><span class="ss">ºN"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>The town of Lerwick can be found at 1.145ºW, 60.155ºN</code></pre>
 </div>
@@ -949,21 +948,21 @@ Warning
 <p>This one is hard because there’s just a <em>lot</em> of code there. But, again, if we start with what we recognise that it gets just a little bit more manageable… Also, it stands to reason that the only difference between the two outputs is that one asks for the ‘Longitude’ and the other for the ‘Latitude’. So if you can make sense of one you have <em>automatically</em> made sense of the other and don’t need to work it all out.</p>
 <p>Let’s start with a part that you might recognise:</p>
 <div id="fd2491cc" class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>myData[<span class="st">'Name'</span>].index(city)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1"></a>myData[<span class="st">'Name'</span>].index(city)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="60">
 <pre><code>5</code></pre>
 </div>
 </div>
 <p>You’ve <em>got</em> this. This is just asking Python to work out the index of Lerwick (because <code>city = 'Lerwick'</code>). So it’s a number. 5 in this case. And we can then think, ’OK so what does this return:</p>
 <div id="08b268e3" class="cell" data-execution_count="28">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>myData[<span class="st">'Longitude'</span>][<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1"></a>myData[<span class="st">'Longitude'</span>][<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="61">
 <pre><code>-1.145</code></pre>
 </div>
 </div>
 <p>And the answer is <code>-1.145</code>. That’s the Longitude of Lerwick! There’s just <em>one</em> last thing: notice that we’re talking about degrees West here. So the answer isn’t a negative (because negative West degrees would be <em>East</em>!), it’s the <em>absolute</em> value. And that is the final piece of the puzzle: <code>abs(...)</code> gives us the absolute value of a number!</p>
 <div id="1e243e4a" class="cell" data-execution_count="30">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="bu">help</span>(<span class="bu">abs</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1"></a><span class="bu">help</span>(<span class="bu">abs</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Help on built-in function abs in module builtins:
 
@@ -978,7 +977,7 @@ abs(x, /)
 <h3 class="anchored" data-anchor-id="the-average-city-size">The Average City Size</h3>
 <p>Here we’re going to ‘cheat’ a little bit: rather than writing our own function, we’re going to import a package and use someone <em>else’s</em> function. The <code>numpy</code> package contains a <em>lot</em> of useful functions that we can call on (if you don’t believe me, add “<code>dir(np)</code>” on a new line after the <code>import</code> statement), and one of them calculates the average of a list or array of data.</p>
 <div id="9dbeba27" class="cell" data-execution_count="31">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"The mean population is </span><span class="sc">{</span>np<span class="sc">.</span>mean(myData[<span class="st">'Population'</span>])<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1"></a><span class="bu">print</span>(<span class="ss">f"The mean population is </span><span class="sc">{</span>np<span class="sc">.</span>mean(myData[<span class="st">'Population'</span>])<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>The mean population is 2435442.5</code></pre>
 </div>
@@ -1032,10 +1031,10 @@ Tip
 <section class="level4 qna-question">
 <h4 class="qna-question anchored" data-anchor-id="">Question</h4>
 <div class="cell">
-<div class="sourceCode" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print out the name of the 4th most populous city-region</span></span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>city <span class="op">=</span> ??</span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"The fourth most populous city is: "</span> <span class="op">+</span> <span class="bu">str</span>(city))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1"></a><span class="co"># Print out the name of the 4th most populous city-region</span></span>
+<span id="cb53-2"><a href="#cb53-2"></a>city <span class="op">=</span> ??</span>
+<span id="cb53-3"><a href="#cb53-3"></a></span>
+<span id="cb53-4"><a href="#cb53-4"></a><span class="bu">print</span>(<span class="st">"The fourth most populous city is: "</span> <span class="op">+</span> <span class="bu">str</span>(city))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The answer is Edinburgh.</p>
 </section>
@@ -1471,10 +1470,10 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 2022–2024, Jon Reades</p>
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 2022–2025, Jon Reades</p>
 </div>   
     <div class="nav-footer-center">
-<p><img src="../img/favicon-16x16.png" class="height:10px img-fluid"> Foundations of Spatial Data Science</p>
+<p><img src="../img/logo/logo_only_sm.png" height="25"> Foundations of Spatial Data Science</p>
 <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jreades/fsds/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
@@ -1485,7 +1484,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </a>
   </li>  
     <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/jreades">
+    <a class="nav-link" href="https://bsky.app/profile/jreades.bsky.social/">
       <i class="bi bi-twitter" role="img">
 </i> 
     </a>
@@ -1494,6 +1493,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 
