@@ -1,343 +1,242 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
-
-<meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.40">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
-<meta name="author" content="Jon Reades">
-
-<title>Geopandas – Foundations of Spatial Data Science</title>
-<style>
-code{white-space: pre-wrap;}
-span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
-div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-ul.task-list{list-style: none;}
-ul.task-list li input[type="checkbox"] {
-  width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
-  vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
-</style>
-
-
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
+<html lang="en"><head>
 <link href="..//img/favicon.ico" rel="icon">
-<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-fb446d74831b8ff67c69632cb314b545.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-c734b2b4d74e7e594e143a63449c09f7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-1092c56c6cadf2eb47b1bc8063ab382a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
-<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
-<script id="quarto-search-options" type="application/json">{
-  "location": "navbar",
-  "copy-button": false,
-  "collapse-after": 3,
-  "panel-placement": "end",
-  "type": "overlay",
-  "limit": 50,
-  "keyboard-shortcut": [
-    "f",
-    "/",
-    "s"
-  ],
-  "show-item-context": false,
-  "language": {
-    "search-no-results-text": "No results",
-    "search-matching-documents-text": "matching documents",
-    "search-copy-link-title": "Copy link to search",
-    "search-hide-matches-text": "Hide additional matches",
-    "search-more-match-text": "more match in this document",
-    "search-more-matches-text": "more matches in this document",
-    "search-clear-button-title": "Clear",
-    "search-text-placeholder": "",
-    "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
-  }
-}</script>
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.40">
 
-
+  <meta name="author" content="Jon Reades">
+  <title>Foundations of Spatial Data Science – Geopandas</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-11712cb7c673cbf1341c876f451d5cec.css">
+  <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
 <meta property="og:title" content="Geopandas – Foundations of Spatial Data Science">
-<meta property="og:image" content="./img/World_Demo.png">
+<meta property="og:image" content="img/logo/full_sm.png">
 <meta property="og:site_name" content="Foundations">
 <meta property="og:locale" content="en_GB">
 </head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
 
-<body class="nav-fixed">
 
-<div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-md " data-bs-theme="dark">
-      <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container mx-auto">
-    <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../img/logo/logo_only_sm.png" alt="" class="navbar-logo">
-    </a>
-    <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">Foundations of Spatial Data Science</span>
-    </a>
-  </div>
-            <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-  <span class="navbar-toggler-icon"></span>
-</button>
-          <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="../setup/index.html"> 
-<span class="menu-text">Setup</span></a>
-  </li>  
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-week-by-week" role="link" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">Week-by-Week</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-week-by-week">    
-        <li>
-    <a class="dropdown-item" href="../sessions/index.html">
- <span class="dropdown-text">Overview</span></a>
-  </li>  
-        <li><hr class="dropdown-divider"></li>
-        <li class="dropdown-header">Part 1: Foundations</li>
-        <li>
-    <a class="dropdown-item" href="../sessions/week1.html">
- <span class="dropdown-text">1. Setting Up</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../sessions/week2.html">
- <span class="dropdown-text">2. Foundations (Pt.1)</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../sessions/week3.html">
- <span class="dropdown-text">3. Foundations (Pt.2)</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../sessions/week4.html">
- <span class="dropdown-text">4. Efficient Code</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../sessions/week5.html">
- <span class="dropdown-text">5. Objects</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../sessions/reading_week.html">
- <span class="dropdown-text">Reading Week</span></a>
-  </li>  
-        <li><hr class="dropdown-divider"></li>
-        <li class="dropdown-header">Part 2: Process</li>
-        <li>
-    <a class="dropdown-item" href="../sessions/week6.html">
- <span class="dropdown-text">6. Numeric Data</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../sessions/week7.html">
- <span class="dropdown-text">7. Spatial Data</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../sessions/week8.html">
- <span class="dropdown-text">8. Textual Data</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../sessions/week9.html">
- <span class="dropdown-text">9. Selecting Data</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../sessions/week10.html">
- <span class="dropdown-text">10. Presenting Data</span></a>
-  </li>  
-        <li><hr class="dropdown-divider"></li>
-        <li class="dropdown-header">Part 3: Bonus</li>
-        <li>
-    <a class="dropdown-item" href="../sessions/week11.html">
- <span class="dropdown-text">11. Dimensions in Data</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../sessions/week12.html">
- <span class="dropdown-text">12. Grouping Data</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../references.html">
- <span class="dropdown-text">Bibliography</span></a>
-  </li>  
-    </ul>
-  </li>
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-assessments" role="link" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">Assessments</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-assessments">    
-        <li>
-    <a class="dropdown-item" href="../assessments/index.html">
- <span class="dropdown-text">Overview</span></a>
-  </li>  
-        <li><hr class="dropdown-divider"></li>
-        <li class="dropdown-header">Elements</li>
-        <li>
-    <a class="dropdown-item" href="../assessments/exam.html">
- <span class="dropdown-text">Timed Open Book Exam</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../assessments/group.html">
- <span class="dropdown-text">Group Work</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../assessments/peer.html">
- <span class="dropdown-text">Group Self-Evaluation</span></a>
-  </li>  
-    </ul>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href="../help.html"> 
-<span class="menu-text">Getting Help</span></a>
-  </li>  
-</ul>
-          </div> <!-- /navcollapse -->
-            <div class="quarto-navbar-tools">
-  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
-  <div class="quarto-reader-toggle-btn">
-  <i class="bi"></i>
-  </div>
-</a>
-</div>
-      </div> <!-- /container-fluid -->
-    </nav>
-</header>
-<!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
-<!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul class="collapse">
-  <li><a href="#pandas-learns-about-maps" id="toc-pandas-learns-about-maps" class="nav-link active" data-scroll-target="#pandas-learns-about-maps">Pandas Learns about Maps</a></li>
-  <li><a href="#basic-functionality" id="toc-basic-functionality" class="nav-link" data-scroll-target="#basic-functionality">Basic Functionality</a>
-  <ul class="collapse">
-  <li><a href="#reading-writing" id="toc-reading-writing" class="nav-link" data-scroll-target="#reading-writing">Reading &amp; Writing</a></li>
-  <li><a href="#reading-remote-files" id="toc-reading-remote-files" class="nav-link" data-scroll-target="#reading-remote-files">Reading (Remote Files)</a></li>
-  <li><a href="#writing-local-files" id="toc-writing-local-files" class="nav-link" data-scroll-target="#writing-local-files">Writing (Local Files)</a></li>
-  <li><a href="#data-structures" id="toc-data-structures" class="nav-link" data-scroll-target="#data-structures">Data Structures</a></li>
-  <li><a href="#consider" id="toc-consider" class="nav-link" data-scroll-target="#consider">Consider</a></li>
-  <li><a href="#projections" id="toc-projections" class="nav-link" data-scroll-target="#projections">Projections</a></li>
-  <li><a href="#finding-projections" id="toc-finding-projections" class="nav-link" data-scroll-target="#finding-projections">Finding Projections</a></li>
-  <li><a href="#reprojection" id="toc-reprojection" class="nav-link" data-scroll-target="#reprojection">Reprojection</a></li>
-  <li><a href="#the-spatial-index" id="toc-the-spatial-index" class="nav-link" data-scroll-target="#the-spatial-index">The Spatial Index</a></li>
-  <li><a href="#attributes" id="toc-attributes" class="nav-link" data-scroll-target="#attributes">Attributes</a></li>
-  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a></li>
-  <li><a href="#relationship-tests" id="toc-relationship-tests" class="nav-link" data-scroll-target="#relationship-tests">Relationship Tests</a></li>
-  </ul></li>
-  <li><a href="#point-data" id="toc-point-data" class="nav-link" data-scroll-target="#point-data">Point Data</a>
-  <ul class="collapse">
-  <li><a href="#converting-non-spatial-data-1" id="toc-converting-non-spatial-data-1" class="nav-link" data-scroll-target="#converting-non-spatial-data-1">Converting Non-Spatial Data 1</a></li>
-  <li><a href="#csv-to-points-in-3-lines" id="toc-csv-to-points-in-3-lines" class="nav-link" data-scroll-target="#csv-to-points-in-3-lines">CSV to Points in 3 Lines!</a></li>
-  <li><a href="#converting-non-spatial-data-2" id="toc-converting-non-spatial-data-2" class="nav-link" data-scroll-target="#converting-non-spatial-data-2">Converting Non-Spatial Data 2</a></li>
-  <li><a href="#from-text-to-bounding-box" id="toc-from-text-to-bounding-box" class="nav-link" data-scroll-target="#from-text-to-bounding-box">From Text to Bounding Box</a></li>
-  <li><a href="#additional-resources" id="toc-additional-resources" class="nav-link" data-scroll-target="#additional-resources">Additional Resources</a></li>
-  </ul></li>
-  <li><a href="#thank-you" id="toc-thank-you" class="nav-link" data-scroll-target="#thank-you">Thank You</a></li>
-  </ul>
-<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/jreades/fsds/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="7.2-Geopandas.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
-    </div>
-<!-- main -->
-<main class="content" id="quarto-document-content">
+<section id="title-slide" data-background-color="#4e3c56" data-background-image="../img/web/title-slide.png" data-background-opacity="0.08" data-background-size="stretch" style="height:100%" class="center">
 
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
+<br>
+<br>
+
 <h1 class="title">Geopandas</h1>
-</div>
 
 
+<p><span style="margin:0px; font-weight:700;" class="author">Jon Reades</span> - j.reades@ucl.ac.uk </p>
 
-<div class="quarto-title-meta">
+<p style="opacity: 0.8">1st October 2025</p>
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Jon Reades </p>
-          </div>
-  </div>
-    
-  
-    
-  </div>
-  
+<p style="opacity:0.8;"></p>
 
-
-</header>
-
-
-<section id="pandas-learns-about-maps" class="level1">
+</section>
+<section>
+<section id="pandas-learns-about-maps" class="title-slide slide level1 center">
 <h1>Pandas Learns about Maps</h1>
-<hr>
-<section id="geopandas" class="level3">
-<h3 class="anchored" data-anchor-id="geopandas">Geopandas</h3>
+
+</section>
+<section class="slide level2">
+
+<h3 id="geopandas">Geopandas</h3>
 <p>‘Geospatial Pandas’ provides a set of tools for working with <em>geo-data</em> in a pandas-like way. See: <a href="https://geopandas.org/">GeoPandas.org</a> and <a href="https://geopandas.readthedocs.io/en/latest/docs.html">Read the Docs</a>.</p>
-</section>
-<section id="pysal" class="level3">
-<h3 class="anchored" data-anchor-id="pysal">PySAL</h3>
+<h3 id="pysal">PySAL</h3>
 <p>The Python Spatial Analysis Library provides an array of tools for performing spatial <em>analysis</em>. Now uses geo-pandas as default data structure. See: <a href="https://pysal.org/">PySAL.org</a> and <a href="https://splot.readthedocs.io/en/stable/index.html">Read the Docs</a>.</p>
-</section>
-<section id="moving-pandas" class="level3">
-<h3 class="anchored" data-anchor-id="moving-pandas">Moving Pandas</h3>
+<h3 id="moving-pandas">Moving Pandas</h3>
 <p>A newer library that builds on Geopandas to offer <a href="https://anitagraser.github.io/movingpandas/">movement analysis tools</a>.</p>
-</section>
-</section>
-<section id="basic-functionality" class="level1">
+</section></section>
+<section>
+<section id="basic-functionality" class="title-slide slide level1 center">
 <h1>Basic Functionality</h1>
-<section id="reading-writing" class="level2">
-<h2 class="anchored" data-anchor-id="reading-writing">Reading &amp; Writing</h2>
+
+</section>
+<section id="reading-writing" class="slide level2">
+<h2>Reading &amp; Writing</h2>
 <p>Supported file formats:</p>
-<table class="caption-top table">
+<table class="caption-top">
 <thead>
 <tr class="header">
 <th style="text-align: left;">Type</th>
@@ -380,28 +279,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <p>Additionally, it is possible to read only <a href="https://geopandas.org/io.html#reading-subsets-of-the-data">subsets of the data</a> using row, column, geometry, and bbox filters.</p>
 </section>
-<section id="reading-remote-files" class="level2">
-<h2 class="anchored" data-anchor-id="reading-remote-files">Reading (Remote Files)</h2>
+<section id="reading-remote-files" class="slide level2">
+<h2>Reading (Remote Files)</h2>
 <p>Again, depending on file size you may want to save these locally, but…</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
-<span id="cb1-2"><a href="#cb1-2"></a>gpkg_src <span class="op">=</span> <span class="st">'https://bit.ly/2K4JcsB'</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a>world <span class="op">=</span> gpd.read_file(gpkg_src)</span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="co"># The ';' suppresses matplotlib output</span></span>
-<span id="cb1-5"><a href="#cb1-5"></a>world.plot(facecolor<span class="op">=</span><span class="st">'white'</span>, edgecolor<span class="op">=</span><span class="st">'darkblue'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><a href="./img/World_Demo.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="./img/World_Demo.png" class="img-fluid"></a></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
+<span id="cb1-2"><a></a>gpkg_src <span class="op">=</span> <span class="st">'https://bit.ly/2K4JcsB'</span></span>
+<span id="cb1-3"><a></a>world <span class="op">=</span> gpd.read_file(gpkg_src)</span>
+<span id="cb1-4"><a></a><span class="co"># The ';' suppresses matplotlib output</span></span>
+<span id="cb1-5"><a></a>world.plot(facecolor<span class="op">=</span><span class="st">'white'</span>, edgecolor<span class="op">=</span><span class="st">'darkblue'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><a href="./img/World_Demo.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img data-src="./img/World_Demo.png"></a></p>
 </section>
-<section id="writing-local-files" class="level2">
-<h2 class="anchored" data-anchor-id="writing-local-files">Writing (Local Files)</h2>
+<section id="writing-local-files" class="slide level2">
+<h2>Writing (Local Files)</h2>
 <p>Write any OGR-supported <a href="https://gdal.org/drivers/vector/index.html">vector drivers</a>.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>world.to_file(<span class="st">'world.gpkg'</span>, driver<span class="op">=</span><span class="st">'GPKG'</span>)</span>
-<span id="cb2-2"><a href="#cb2-2"></a>world.to_file(<span class="st">'world.shp'</span>, driver<span class="op">=</span><span class="st">'ESRI Shapefile'</span>)</span>
-<span id="cb2-3"><a href="#cb2-3"></a>world.to_file(<span class="st">'world.geojson'</span>, driver<span class="op">=</span><span class="st">'GeoJSON'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="notes">
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>world.to_file(<span class="st">'world.gpkg'</span>, driver<span class="op">=</span><span class="st">'GPKG'</span>)</span>
+<span id="cb2-2"><a></a>world.to_file(<span class="st">'world.shp'</span>, driver<span class="op">=</span><span class="st">'ESRI Shapefile'</span>)</span>
+<span id="cb2-3"><a></a>world.to_file(<span class="st">'world.geojson'</span>, driver<span class="op">=</span><span class="st">'GeoJSON'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<aside class="notes">
 <p>If you forget to specify the driver it writes shapefiles by default. This is mainly an issue if you try to write a GeoPackage or GeoJSON file but then end up writing a shapefile to a directory called <code>world.gpkg</code>!</p>
-</div>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="data-structures" class="level2">
-<h2 class="anchored" data-anchor-id="data-structures">Data Structures</h2>
+<section id="data-structures" class="slide level2">
+<h2>Data Structures</h2>
 <p>GeoPandas does all this by adding just <em>two</em> new classes:</p>
 <ul>
 <li><a href="https://geopandas.org/data_structures.html#geodataframe">GeoDataFrame</a></li>
@@ -414,30 +323,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Polygons / Multi-Polygons</li>
 </ol>
 </section>
-<section id="consider" class="level2">
-<h2 class="anchored" data-anchor-id="consider">Consider</h2>
+<section id="consider" class="slide level2">
+<h2>Consider</h2>
 <p>Recall that we can ask if a particular object is an <em><a href="https://www.w3schools.com/python/ref_func_isinstance.asp">instance</a></em> of any given class:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="bu">print</span>(<span class="bu">isinstance</span>(world, <span class="bu">str</span>))</span>
-<span id="cb3-3"><a href="#cb3-3"></a><span class="bu">print</span>(<span class="bu">isinstance</span>(world, pd.DataFrame))</span>
-<span id="cb3-4"><a href="#cb3-4"></a><span class="bu">print</span>(<span class="bu">isinstance</span>(world, gpd.GeoDataFrame))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb3-2"><a></a><span class="bu">print</span>(<span class="bu">isinstance</span>(world, <span class="bu">str</span>))</span>
+<span id="cb3-3"><a></a><span class="bu">print</span>(<span class="bu">isinstance</span>(world, pd.DataFrame))</span>
+<span id="cb3-4"><a></a><span class="bu">print</span>(<span class="bu">isinstance</span>(world, gpd.GeoDataFrame))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Prints: <code>False</code>, <code>True</code>, <code>True</code>.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="bu">print</span>(<span class="bu">isinstance</span>(world.geometry, <span class="bu">str</span>))</span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="bu">print</span>(<span class="bu">isinstance</span>(world.geometry, pd.Series))</span>
-<span id="cb4-4"><a href="#cb4-4"></a><span class="bu">print</span>(<span class="bu">isinstance</span>(world.geometry, gpd.GeoSeries))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb4-2"><a></a><span class="bu">print</span>(<span class="bu">isinstance</span>(world.geometry, <span class="bu">str</span>))</span>
+<span id="cb4-3"><a></a><span class="bu">print</span>(<span class="bu">isinstance</span>(world.geometry, pd.Series))</span>
+<span id="cb4-4"><a></a><span class="bu">print</span>(<span class="bu">isinstance</span>(world.geometry, gpd.GeoSeries))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Also prints: <code>False</code>, <code>True</code>, <code>True</code>.</p>
-<div class="notes">
+<aside class="notes">
 <p>So converting from Pandas to GeoPandas works well because GeoPandas knows all about Pandas.</p>
 <p>You can use a GeoDataFrame anywhere you’d use a DataFrame with <em>no</em> loss of functionality! Same for a GeoSeries, though in this case a GeoSeries cannot perform the same statistical operations.</p>
-</div>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="projections" class="level2 smaller">
-<h2 class="smaller anchored" data-anchor-id="projections">Projections</h2>
+<section id="projections" class="slide level2 smaller">
+<h2>Projections</h2>
 <p>Depending on your data source, you may or may not have projection information attached to your GeoDataFrame:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="bu">print</span>(world.crs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="bu">print</span>(world.crs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>outputs <code>epsg:4326</code>, but:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>world.crs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a>world.crs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>outputs:</p>
 <pre><code>&lt;Geographic 2D CRS: EPSG:4326&gt;
 Name: WGS 84
@@ -451,8 +370,8 @@ Datum: World Geodetic System 1984
 - Ellipsoid: WGS 84
 - Prime Meridian: Greenwich</code></pre>
 </section>
-<section id="finding-projections" class="level2 smaller">
-<h2 class="smaller anchored" data-anchor-id="finding-projections">Finding Projections</h2>
+<section id="finding-projections" class="slide level2 smaller">
+<h2>Finding Projections</h2>
 <p>You’ll have already covered this in GIS, but you can find nearly any EPSG you might need at <a href="http://epsg.io/">epsg.io</a>. By far the most commonly-used <em>here</em> are:</p>
 <ul>
 <li><a href="http://epsg.io/4326">EPSG:4326</a> for the World Geodetic System 84 used in GPS.</li>
@@ -460,30 +379,40 @@ Datum: World Geodetic System 1984
 </ul>
 <p><em>Note</em>: recall that large territories (such as Canada, China and Russia) may well have <em>multiple</em> projections at the state of provincial level.</p>
 </section>
-<section id="reprojection" class="level2">
-<h2 class="anchored" data-anchor-id="reprojection">Reprojection</h2>
+<section id="reprojection" class="slide level2">
+<h2>Reprojection</h2>
 <p>For data sets <em>without</em> projection information (i.e.&nbsp;often anything loaded from a shapefile) you must <code>gdf.set_crs(&lt;spec&gt;)</code>. For all others you should <code>gdf.to_crs(&lt;spec&gt;)</code>.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>world2 <span class="op">=</span> world.to_crs(<span class="st">'ESRI:54030'</span>)</span>
-<span id="cb8-2"><a href="#cb8-2"></a>world2.plot()<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><a href="img/World_Reprojected.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="img/World_Reprojected.png" class="img-fluid"></a></p>
-<div class="notes">
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a>world2 <span class="op">=</span> world.to_crs(<span class="st">'ESRI:54030'</span>)</span>
+<span id="cb8-2"><a></a>world2.plot()<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><a href="img/World_Reprojected.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img data-src="img/World_Reprojected.png"></a></p>
+<aside class="notes">
 <p>Unlike a shapefile, you can have more than one geometry column, each with a different projection. However, only <em>one</em> will be plotted (the one named <code>geometry</code> or specified via <code>set_geometry()</code>).</p>
-</div>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="the-spatial-index" class="level2 smaller">
-<h2 class="smaller anchored" data-anchor-id="the-spatial-index">The Spatial Index</h2>
+<section id="the-spatial-index" class="slide level2 smaller">
+<h2>The Spatial Index</h2>
 <p>We can use GeoSeries’ spatial index directly to perform simple spatial queries:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb9-2"><a href="#cb9-2"></a>wslice <span class="op">=</span> world.cx[<span class="op">-</span><span class="dv">50</span>:<span class="dv">50</span>, <span class="op">-</span><span class="dv">20</span>:<span class="dv">20</span>] <span class="co"># cx = coordinate index</span></span>
-<span id="cb9-3"><a href="#cb9-3"></a>ax <span class="op">=</span> wslice.plot()</span>
-<span id="cb9-4"><a href="#cb9-4"></a>plt.axvline(<span class="op">-</span><span class="dv">50</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span><span class="st">'red'</span>)</span>
-<span id="cb9-5"><a href="#cb9-5"></a>plt.axvline(<span class="dv">50</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span><span class="st">'red'</span>)</span>
-<span id="cb9-6"><a href="#cb9-6"></a>plt.axhline(<span class="op">-</span><span class="dv">20</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span><span class="st">'red'</span>)</span>
-<span id="cb9-7"><a href="#cb9-7"></a>plt.axhline(<span class="dv">20</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span><span class="st">'red'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><a href="img/geo-index.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="img/geo-index.png" class="img-fluid"></a></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb9-2"><a></a>wslice <span class="op">=</span> world.cx[<span class="op">-</span><span class="dv">50</span>:<span class="dv">50</span>, <span class="op">-</span><span class="dv">20</span>:<span class="dv">20</span>] <span class="co"># cx = coordinate index</span></span>
+<span id="cb9-3"><a></a>ax <span class="op">=</span> wslice.plot()</span>
+<span id="cb9-4"><a></a>plt.axvline(<span class="op">-</span><span class="dv">50</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span><span class="st">'red'</span>)</span>
+<span id="cb9-5"><a></a>plt.axvline(<span class="dv">50</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span><span class="st">'red'</span>)</span>
+<span id="cb9-6"><a></a>plt.axhline(<span class="op">-</span><span class="dv">20</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span><span class="st">'red'</span>)</span>
+<span id="cb9-7"><a></a>plt.axhline(<span class="dv">20</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span><span class="st">'red'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><a href="img/geo-index.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img data-src="img/geo-index.png"></a></p>
 </section>
-<section id="attributes" class="level2">
-<h2 class="anchored" data-anchor-id="attributes">Attributes</h2>
+<section id="attributes" class="slide level2">
+<h2>Attributes</h2>
 <p>A GeoSeries has attributes like any other Series, but also includes some spatially-specifc ones:</p>
 <ul>
 <li><code>area</code> — if a polygon</li>
@@ -493,8 +422,8 @@ Datum: World Geodetic System 1984
 <li><code>is_valid</code> — if you need to test</li>
 </ul>
 </section>
-<section id="methods" class="level2">
-<h2 class="anchored" data-anchor-id="methods">Methods</h2>
+<section id="methods" class="slide level2">
+<h2>Methods</h2>
 <p>Additional GeoSeries methods icnlude:</p>
 <ul>
 <li><code>distance()</code> — returns <code>Series</code> measuring distances to some <em>other</em> feature (called as: <code>&lt;GeoSeries&gt;.distance(&lt;feature&gt;)</code>)</li>
@@ -502,574 +431,568 @@ Datum: World Geodetic System 1984
 <li><code>representative_point()</code> — returns <code>GeoSeries</code> of points <strong>within</strong> features</li>
 <li><code>to_crs()</code> and <code>plot()</code>, which you’ve already seen.</li>
 </ul>
-<div class="notes">
+<aside class="notes">
 <p>Note that centroid is <em>not</em> called with parentheses. Technically it’s more like an attribute than a method.</p>
-</div>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="relationship-tests" class="level2">
-<h2 class="anchored" data-anchor-id="relationship-tests">Relationship Tests</h2>
+<section id="relationship-tests" class="slide level2">
+<h2>Relationship Tests</h2>
 <p>Simple geographical tests:</p>
 <ul>
 <li><code>geom_almost_equals()</code> — tries to deal with rounding issues when comparing two features.</li>
 <li><code>contains()</code> — is shape contained within some <em>other</em> features.</li>
 <li><code>intersects()</code> — does shape intersect some <em>other</em> features.</li>
 </ul>
-</section>
-</section>
-<section id="point-data" class="level1">
+</section></section>
+<section>
+<section id="point-data" class="title-slide slide level1 center">
 <h1>Point Data</h1>
-<section id="converting-non-spatial-data-1" class="level2">
-<h2 class="anchored" data-anchor-id="converting-non-spatial-data-1">Converting Non-Spatial Data 1</h2>
+
+</section>
+<section id="converting-non-spatial-data-1" class="slide level2">
+<h2>Converting Non-Spatial Data 1</h2>
 <p>Lat/Long and Northing/Easting benefit from a helper function <code>gpd.points_from_xy()</code>:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>url <span class="op">=</span> <span class="st">'https://bit.ly/3I0XDrq'</span></span>
-<span id="cb10-2"><a href="#cb10-2"></a>df  <span class="op">=</span> pd.read_csv(url)</span>
-<span id="cb10-3"><a href="#cb10-3"></a></span>
-<span id="cb10-4"><a href="#cb10-4"></a>gdf <span class="op">=</span> gpd.GeoDataFrame(df, </span>
-<span id="cb10-5"><a href="#cb10-5"></a>            geometry<span class="op">=</span>gpd.points_from_xy(</span>
-<span id="cb10-6"><a href="#cb10-6"></a>                        df[<span class="st">'longitude'</span>], </span>
-<span id="cb10-7"><a href="#cb10-7"></a>                        df[<span class="st">'latitude'</span>], </span>
-<span id="cb10-8"><a href="#cb10-8"></a>                        crs<span class="op">=</span><span class="st">'epsg:4326'</span></span>
-<span id="cb10-9"><a href="#cb10-9"></a>            )</span>
-<span id="cb10-10"><a href="#cb10-10"></a>      )</span>
-<span id="cb10-11"><a href="#cb10-11"></a>gdf.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="notes">
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>url <span class="op">=</span> <span class="st">'https://bit.ly/3I0XDrq'</span></span>
+<span id="cb10-2"><a></a>df  <span class="op">=</span> pd.read_csv(url)</span>
+<span id="cb10-3"><a></a></span>
+<span id="cb10-4"><a></a>gdf <span class="op">=</span> gpd.GeoDataFrame(df, </span>
+<span id="cb10-5"><a></a>            geometry<span class="op">=</span>gpd.points_from_xy(</span>
+<span id="cb10-6"><a></a>                        df[<span class="st">'longitude'</span>], </span>
+<span id="cb10-7"><a></a>                        df[<span class="st">'latitude'</span>], </span>
+<span id="cb10-8"><a></a>                        crs<span class="op">=</span><span class="st">'epsg:4326'</span></span>
+<span id="cb10-9"><a></a>            )</span>
+<span id="cb10-10"><a></a>      )</span>
+<span id="cb10-11"><a></a>gdf.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<aside class="notes">
 <p>You can also use list comprehensions (<code>[x for x in list]</code>) and <code>zip</code> to combine two lists but then need to specify the CRS as a separate step!</p>
-</div>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="csv-to-points-in-3-lines" class="level2">
-<h2 class="anchored" data-anchor-id="csv-to-points-in-3-lines">CSV to Points in 3 Lines!</h2>
-<p><a href="img/Airbnb_Sample.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="img/Airbnb_Sample.png" class="img-fluid"></a></p>
-<div class="notes">
+<section id="csv-to-points-in-3-lines" class="slide level2">
+<h2>CSV to Points in 3 Lines!</h2>
+<p><a href="img/Airbnb_Sample.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img data-src="img/Airbnb_Sample.png"></a></p>
+<aside class="notes">
 <p>Notice that the default plot from a GeoDataFrame is… a map!</p>
-</div>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="converting-non-spatial-data-2" class="level2">
-<h2 class="anchored" data-anchor-id="converting-non-spatial-data-2">Converting Non-Spatial Data 2</h2>
+<section id="converting-non-spatial-data-2" class="slide level2">
+<h2>Converting Non-Spatial Data 2</h2>
 <p>Other feature types need to be in some kind of regular format such as <a href="https://www.vertica.com/docs/9.2.x/HTML/Content/Authoring/AnalyzingData/Geospatial/Spatial_Definitions/WellknownTextWKT.htm">Well-Known Text</a> (WKT), <a href="https://geojson.org/">GeoJSON</a>, or something readable <em>as</em> a Shapely geometry.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="im">from</span> shapely <span class="im">import</span> wkt</span>
-<span id="cb11-2"><a href="#cb11-2"></a></span>
-<span id="cb11-3"><a href="#cb11-3"></a><span class="co"># Notice coordinate pairs and last point is same as first one</span></span>
-<span id="cb11-4"><a href="#cb11-4"></a>bbox <span class="op">=</span> <span class="st">'POLYGON((5000000.0 2500000.0, 5000000.0 -2500000.0, -5000000.0 -2500000.0, -5000000.0 2500000.0, 5000000.0 2500000.0))'</span></span>
-<span id="cb11-5"><a href="#cb11-5"></a></span>
-<span id="cb11-6"><a href="#cb11-6"></a><span class="co"># Create GeoPandas from dict just like Pandas</span></span>
-<span id="cb11-7"><a href="#cb11-7"></a>bgdf <span class="op">=</span> gpd.GeoDataFrame({<span class="st">'id'</span>:[<span class="dv">0</span>], <span class="st">'coordinates'</span>:bbox})</span>
-<span id="cb11-8"><a href="#cb11-8"></a></span>
-<span id="cb11-9"><a href="#cb11-9"></a><span class="co"># Turn it into a geometry</span></span>
-<span id="cb11-10"><a href="#cb11-10"></a>bgdf[<span class="st">'geometry'</span>] <span class="op">=</span> bgdf.coordinates.<span class="bu">apply</span>(wkt.loads)</span>
-<span id="cb11-11"><a href="#cb11-11"></a>bgdf <span class="op">=</span> bgdf.set_crs(<span class="st">'ESRI:54030'</span>)</span>
-<span id="cb11-12"><a href="#cb11-12"></a>bgdf.plot() <span class="co"># Not very interesting but...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="notes">
+<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a><span class="im">from</span> shapely <span class="im">import</span> wkt</span>
+<span id="cb11-2"><a></a></span>
+<span id="cb11-3"><a></a><span class="co"># Notice coordinate pairs and last point is same as first one</span></span>
+<span id="cb11-4"><a></a>bbox <span class="op">=</span> <span class="st">'POLYGON((5000000.0 2500000.0, 5000000.0 -2500000.0, -5000000.0 -2500000.0, -5000000.0 2500000.0, 5000000.0 2500000.0))'</span></span>
+<span id="cb11-5"><a></a></span>
+<span id="cb11-6"><a></a><span class="co"># Create GeoPandas from dict just like Pandas</span></span>
+<span id="cb11-7"><a></a>bgdf <span class="op">=</span> gpd.GeoDataFrame({<span class="st">'id'</span>:[<span class="dv">0</span>], <span class="st">'coordinates'</span>:bbox})</span>
+<span id="cb11-8"><a></a></span>
+<span id="cb11-9"><a></a><span class="co"># Turn it into a geometry</span></span>
+<span id="cb11-10"><a></a>bgdf[<span class="st">'geometry'</span>] <span class="op">=</span> bgdf.coordinates.<span class="bu">apply</span>(wkt.loads)</span>
+<span id="cb11-11"><a></a>bgdf <span class="op">=</span> bgdf.set_crs(<span class="st">'ESRI:54030'</span>)</span>
+<span id="cb11-12"><a></a>bgdf.plot() <span class="co"># Not very interesting but...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<aside class="notes">
 <p>These are more rarely used for our purposes but knowing that they exist is useful.</p>
-</div>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="from-text-to-bounding-box" class="level2 smaller">
-<h2 class="smaller anchored" data-anchor-id="from-text-to-bounding-box">From Text to Bounding Box</h2>
-<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>scale <span class="op">=</span> <span class="bu">int</span>(<span class="bu">float</span>(<span class="st">'1e7'</span>))</span>
-<span id="cb12-2"><a href="#cb12-2"></a>f,ax<span class="op">=</span>plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">4</span>))</span>
-<span id="cb12-3"><a href="#cb12-3"></a>world2.plot(ax<span class="op">=</span>ax)</span>
-<span id="cb12-4"><a href="#cb12-4"></a>bgdf.plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'none'</span>, edgecolor<span class="op">=</span><span class="st">'r'</span>)</span>
-<span id="cb12-5"><a href="#cb12-5"></a>ax.set_xlim([<span class="op">-</span><span class="fl">0.75</span><span class="op">*</span>scale, <span class="op">+</span><span class="fl">0.75</span><span class="op">*</span>scale])</span>
-<span id="cb12-6"><a href="#cb12-6"></a>ax.set_ylim([<span class="op">-</span><span class="dv">3</span><span class="op">*</span>scale<span class="op">/</span><span class="dv">10</span>, <span class="op">+</span><span class="dv">3</span><span class="op">*</span>scale<span class="op">/</span><span class="dv">10</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><a href="img/WKT_Example.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="img/WKT_Example.png" class="img-fluid"></a></p>
+<section id="from-text-to-bounding-box" class="slide level2 smaller">
+<h2>From Text to Bounding Box</h2>
+<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>scale <span class="op">=</span> <span class="bu">int</span>(<span class="bu">float</span>(<span class="st">'1e7'</span>))</span>
+<span id="cb12-2"><a></a>f,ax<span class="op">=</span>plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">4</span>))</span>
+<span id="cb12-3"><a></a>world2.plot(ax<span class="op">=</span>ax)</span>
+<span id="cb12-4"><a></a>bgdf.plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'none'</span>, edgecolor<span class="op">=</span><span class="st">'r'</span>)</span>
+<span id="cb12-5"><a></a>ax.set_xlim([<span class="op">-</span><span class="fl">0.75</span><span class="op">*</span>scale, <span class="op">+</span><span class="fl">0.75</span><span class="op">*</span>scale])</span>
+<span id="cb12-6"><a></a>ax.set_ylim([<span class="op">-</span><span class="dv">3</span><span class="op">*</span>scale<span class="op">/</span><span class="dv">10</span>, <span class="op">+</span><span class="dv">3</span><span class="op">*</span>scale<span class="op">/</span><span class="dv">10</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><a href="img/WKT_Example.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img data-src="img/WKT_Example.png"></a></p>
 </section>
-<section id="additional-resources" class="level2 smaller">
-<h2 class="smaller anchored" data-anchor-id="additional-resources">Additional Resources</h2>
+<section id="additional-resources" class="slide level2 smaller">
+<h2>Additional Resources</h2>
 <ul>
 <li><a href="https://ihatecoordinatesystems.com/">I Hate Coordinate Systems</a></li>
 <li><a href="https://geopandas.readthedocs.io/en/latest/docs.html">GeoPandas on ReadTheDocs</a></li>
 <li><a href="https://darribas.org/gds_course/content/home.html">Dani’s GDS Course</a></li>
 <li><a href="http://darribas.org/wmn/">Dani’s Web Mapping Course</a></li>
 </ul>
-</section>
-</section>
-<section id="thank-you" class="level1" data-background-image="../img/web/title-slide.png" data-background-color="#0F0C11" data-background-opacity="0.2">
-<h1 data-background-image="/img/web/title-slide.png" data-background-color="#0F0C11" data-background-opacity="0.2">Thank You</h1>
-<h3 class="anchored" data-anchor-id="thank-you">
+</section></section>
+<section id="thank-you" class="title-slide slide level1 center" data-background-image="../img/web/title-slide.png" data-background-color="#0F0C11" data-background-opacity="0.2">
+<h1>Thank You</h1>
+<h3>
 References
 </h3>
 
 
 </section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<p><img src="../img/logo/full.svg" class="slide-logo"></p>
+<div class="footer footer-default">
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2025 | Jon Reades</a></p>
+</div>
+</div></div>
 
-</main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
-      }
-    }
-    return false;
-  }
-  const onCopySuccess = function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': true,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
         }
       }
-      return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
-  });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
-    });
-    clipboardModal.on('success', onCopySuccess);
-  }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
         }
       }
-    }
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-    const config = {
-      allowHTML: true,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start',
-    };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
-    });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
-        }
-      }
-    }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
           }
         }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
+        return false;
+      }
+      const onCopySuccess = function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
         }
-        return container.innerHTML
-      } else {
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(note);
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
+      });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
         }
-        return note.innerHTML;
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
       }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
       }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
-      }
-    }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
           }
         } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
-          .then(res => res.text())
-          .then(html => {
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
-            if (note !== null) {
-              const html = processXRef(id, note);
-              instance.setContent(html);
-            } 
-          }).finally(() => {
-            instance.enable();
-            instance.show();
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
           });
         }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
+      }
+    });
+    </script>
+    <script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+    (function() {
+      let previousOnload = window.onload;
+      window.onload = () => {
+        if (previousOnload) {
+          previousOnload();
+        }
+        lightboxQuarto.on('slide_before_load', (data) => {
+          const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+          const href = trigger.getAttribute('href');
+          if (href !== null) {
+            const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+            if (imgEl !== null) {
+              const srcAttr = imgEl.getAttribute("src");
+              if (srcAttr && srcAttr.startsWith("data:")) {
+                slideConfig.href = srcAttr;
+              }
             }
-            const html = processXRef(null, note);
-            instance.setContent(html);
           } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
         });
-      }
-    }, function(instance) {
-    });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
+      
+        lightboxQuarto.on('slide_after_load', (data) => {
+          const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(slideNode);
           }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            div.style.left = 0;
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
+        });
+      
       };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
-      });
-    }
-  }
-});
-</script>
-</div> <!-- /content -->
-<footer class="footer">
-  <div class="nav-footer">
-    <div class="nav-footer-left">
-<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 2022–2025, Jon Reades</p>
-</div>   
-    <div class="nav-footer-center">
-<p><img src="../img/logo/logo_only_sm.png" height="25"> Foundations of Spatial Data Science</p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jreades/fsds/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
-    <div class="nav-footer-right">
-      <ul class="footer-items list-unstyled">
-    <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/jreades/fsds">
-      <i class="bi bi-github" role="img">
-</i> 
-    </a>
-  </li>  
-    <li class="nav-item compact">
-    <a class="nav-link" href="https://bsky.app/profile/jreades.bsky.social/">
-      <i class="bi bi-twitter" role="img">
-</i> 
-    </a>
-  </li>  
-</ul>
-    </div>
-  </div>
-</footer>
-<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
-(function() {
-  let previousOnload = window.onload;
-  window.onload = () => {
-    if (previousOnload) {
-      previousOnload();
-    }
-    lightboxQuarto.on('slide_before_load', (data) => {
-      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-      const href = trigger.getAttribute('href');
-      if (href !== null) {
-        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
-        if (imgEl !== null) {
-          const srcAttr = imgEl.getAttribute("src");
-          if (srcAttr && srcAttr.startsWith("data:")) {
-            slideConfig.href = srcAttr;
-          }
-        }
-      } 
-    });
-  
-    lightboxQuarto.on('slide_after_load', (data) => {
-      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(slideNode);
-      }
-    });
-  
-  };
-  
-})();
-          </script>
-
-
-
+      
+    })();
+              </script>
+    
 
 </body></html>

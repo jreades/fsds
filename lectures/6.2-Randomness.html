@@ -1,343 +1,269 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
-
-<meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.40">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
-<meta name="author" content="Jon Reades">
-
-<title>Randomness – Foundations of Spatial Data Science</title>
-<style>
-code{white-space: pre-wrap;}
-span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
-div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-ul.task-list{list-style: none;}
-ul.task-list li input[type="checkbox"] {
-  width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
-  vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
-</style>
-
-
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
+<html lang="en"><head>
 <link href="..//img/favicon.ico" rel="icon">
-<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-fb446d74831b8ff67c69632cb314b545.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-c734b2b4d74e7e594e143a63449c09f7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-1092c56c6cadf2eb47b1bc8063ab382a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
-<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
-<script id="quarto-search-options" type="application/json">{
-  "location": "navbar",
-  "copy-button": false,
-  "collapse-after": 3,
-  "panel-placement": "end",
-  "type": "overlay",
-  "limit": 50,
-  "keyboard-shortcut": [
-    "f",
-    "/",
-    "s"
-  ],
-  "show-item-context": false,
-  "language": {
-    "search-no-results-text": "No results",
-    "search-matching-documents-text": "matching documents",
-    "search-copy-link-title": "Copy link to search",
-    "search-hide-matches-text": "Hide additional matches",
-    "search-more-match-text": "more match in this document",
-    "search-more-matches-text": "more matches in this document",
-    "search-clear-button-title": "Clear",
-    "search-text-placeholder": "",
-    "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
-  }
-}</script>
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.40">
 
-
+  <meta name="author" content="Jon Reades">
+  <title>Foundations of Spatial Data Science – Randomness</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-11712cb7c673cbf1341c876f451d5cec.css">
+  <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
 <meta property="og:title" content="Randomness – Foundations of Spatial Data Science">
-<meta property="og:description" content="">
-<meta property="og:image" content="./img/Benford.png">
+<meta property="og:image" content="img/logo/full_sm.png">
 <meta property="og:site_name" content="Foundations">
 <meta property="og:locale" content="en_GB">
 </head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
 
-<body class="nav-fixed">
 
-<div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-md " data-bs-theme="dark">
-      <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container mx-auto">
-    <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../img/logo/logo_only_sm.png" alt="" class="navbar-logo">
-    </a>
-    <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">Foundations of Spatial Data Science</span>
-    </a>
-  </div>
-            <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-  <span class="navbar-toggler-icon"></span>
-</button>
-          <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="../setup/index.html"> 
-<span class="menu-text">Setup</span></a>
-  </li>  
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-week-by-week" role="link" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">Week-by-Week</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-week-by-week">    
-        <li>
-    <a class="dropdown-item" href="../sessions/index.html">
- <span class="dropdown-text">Overview</span></a>
-  </li>  
-        <li><hr class="dropdown-divider"></li>
-        <li class="dropdown-header">Part 1: Foundations</li>
-        <li>
-    <a class="dropdown-item" href="../sessions/week1.html">
- <span class="dropdown-text">1. Setting Up</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../sessions/week2.html">
- <span class="dropdown-text">2. Foundations (Pt.1)</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../sessions/week3.html">
- <span class="dropdown-text">3. Foundations (Pt.2)</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../sessions/week4.html">
- <span class="dropdown-text">4. Efficient Code</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../sessions/week5.html">
- <span class="dropdown-text">5. Objects</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../sessions/reading_week.html">
- <span class="dropdown-text">Reading Week</span></a>
-  </li>  
-        <li><hr class="dropdown-divider"></li>
-        <li class="dropdown-header">Part 2: Process</li>
-        <li>
-    <a class="dropdown-item" href="../sessions/week6.html">
- <span class="dropdown-text">6. Numeric Data</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../sessions/week7.html">
- <span class="dropdown-text">7. Spatial Data</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../sessions/week8.html">
- <span class="dropdown-text">8. Textual Data</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../sessions/week9.html">
- <span class="dropdown-text">9. Selecting Data</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../sessions/week10.html">
- <span class="dropdown-text">10. Presenting Data</span></a>
-  </li>  
-        <li><hr class="dropdown-divider"></li>
-        <li class="dropdown-header">Part 3: Bonus</li>
-        <li>
-    <a class="dropdown-item" href="../sessions/week11.html">
- <span class="dropdown-text">11. Dimensions in Data</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../sessions/week12.html">
- <span class="dropdown-text">12. Grouping Data</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../references.html">
- <span class="dropdown-text">Bibliography</span></a>
-  </li>  
-    </ul>
-  </li>
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-assessments" role="link" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">Assessments</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-assessments">    
-        <li>
-    <a class="dropdown-item" href="../assessments/index.html">
- <span class="dropdown-text">Overview</span></a>
-  </li>  
-        <li><hr class="dropdown-divider"></li>
-        <li class="dropdown-header">Elements</li>
-        <li>
-    <a class="dropdown-item" href="../assessments/exam.html">
- <span class="dropdown-text">Timed Open Book Exam</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../assessments/group.html">
- <span class="dropdown-text">Group Work</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../assessments/peer.html">
- <span class="dropdown-text">Group Self-Evaluation</span></a>
-  </li>  
-    </ul>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href="../help.html"> 
-<span class="menu-text">Getting Help</span></a>
-  </li>  
-</ul>
-          </div> <!-- /navcollapse -->
-            <div class="quarto-navbar-tools">
-  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
-  <div class="quarto-reader-toggle-btn">
-  <i class="bi"></i>
-  </div>
-</a>
-</div>
-      </div> <!-- /container-fluid -->
-    </nav>
-</header>
-<!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
-<!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul class="collapse">
-  <li><a href="#many-things-are-surprisingly-non-random" id="toc-many-things-are-surprisingly-non-random" class="nav-link active" data-scroll-target="#many-things-are-surprisingly-non-random">Many things are surprisingly <em>non</em>-random…</a>
-  <ul class="collapse">
-  <li><a href="#reproducibility-good-or-bad" id="toc-reproducibility-good-or-bad" class="nav-link" data-scroll-target="#reproducibility-good-or-bad">Reproducibility: Good or Bad?</a></li>
-  <li><a href="#not-very-good-encryption" id="toc-not-very-good-encryption" class="nav-link" data-scroll-target="#not-very-good-encryption">Not Very Good Encryption</a></li>
-  <li><a href="#python-is-random" id="toc-python-is-random" class="nav-link" data-scroll-target="#python-is-random">Python is Random</a></li>
-  <li><a href="#and-repeat" id="toc-and-repeat" class="nav-link" data-scroll-target="#and-repeat">And Repeat…</a></li>
-  <li><a href="#aaaaaaaaaaand-repeat" id="toc-aaaaaaaaaaand-repeat" class="nav-link" data-scroll-target="#aaaaaaaaaaand-repeat">Aaaaaaaaaaand Repeat</a></li>
-  <li><a href="#aaaaaaaaaaand-repeat-1" id="toc-aaaaaaaaaaand-repeat-1" class="nav-link" data-scroll-target="#aaaaaaaaaaand-repeat-1">Aaaaaaaaaaand Repeat</a></li>
-  </ul></li>
-  <li><a href="#seeds-and-salts" id="toc-seeds-and-salts" class="nav-link" data-scroll-target="#seeds-and-salts">Seeds and Salts</a>
-  <ul class="collapse">
-  <li><a href="#just-add-salt" id="toc-just-add-salt" class="nav-link" data-scroll-target="#just-add-salt">Just add salt</a></li>
-  <li><a href="#hashing" id="toc-hashing" class="nav-link" data-scroll-target="#hashing">Hashing</a></li>
-  <li><a href="#and-note" id="toc-and-note" class="nav-link" data-scroll-target="#and-note">And Note…</a></li>
-  <li><a href="#jupyterlab-password" id="toc-jupyterlab-password" class="nav-link" data-scroll-target="#jupyterlab-password">JupyterLab Password</a></li>
-  <li><a href="#encryption-security" id="toc-encryption-security" class="nav-link" data-scroll-target="#encryption-security">Encryption &amp; Security</a></li>
-  <li><a href="#other-types-of-seeds" id="toc-other-types-of-seeds" class="nav-link" data-scroll-target="#other-types-of-seeds">Other Types of Seeds</a></li>
-  <li><a href="#seeds-and-state" id="toc-seeds-and-state" class="nav-link" data-scroll-target="#seeds-and-state">Seeds and State</a></li>
-  </ul></li>
-  <li><a href="#question" id="toc-question" class="nav-link" data-scroll-target="#question">Question!</a></li>
-  <li><a href="#thank-you" id="toc-thank-you" class="nav-link" data-scroll-target="#thank-you">Thank You</a></li>
-  </ul>
-<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/jreades/fsds/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="6.2-Randomness.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
-    </div>
-<!-- main -->
-<main class="content page-columns page-full" id="quarto-document-content">
+<section id="title-slide" data-background-color="#4e3c56" data-background-image="../img/web/title-slide.png" data-background-opacity="0.08" data-background-size="stretch" style="height:100%" class="center">
 
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
+<br>
+<br>
+
 <h1 class="title">Randomness</h1>
-</div>
 
 
+<p><span style="margin:0px; font-weight:700;" class="author">Jon Reades</span> - j.reades@ucl.ac.uk </p>
 
-<div class="quarto-title-meta">
+<p style="opacity: 0.8">1st October 2025</p>
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Jon Reades </p>
-          </div>
-  </div>
-    
-  
-    
-  </div>
-  
+<p style="opacity:0.8;"></p>
 
-
-</header>
-
-
-<section id="many-things-are-surprisingly-non-random" class="level1">
+</section>
+<section>
+<section id="many-things-are-surprisingly-non-random" class="title-slide slide level1 center">
 <h1>Many things are surprisingly <em>non</em>-random…</h1>
-<hr>
-<p><a href="./img/Benford.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="./img/Benford.png" height="550"></a></p>
+
+</section>
+<section class="slide level2">
+
+<p><a href="./img/Benford.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img data-src="./img/Benford.png" height="550"></a></p>
 <p><a href="https://en.wikipedia.org/wiki/Benford%27s_law#:~:text=Benford's%20law%2C%20also%20called%20the,life%20sets%20of%20numerical%20data.&amp;text=If%20the%20digits%20were%20distributed,about%2011.1%25%20of%20the%20time">Benford’s Law</a>, which has <a href="https://towardsdatascience.com/what-is-benfords-law-and-why-is-it-important-for-data-science-312cb8b61048">applications in data science</a> and <a href="https://www.journalofaccountancy.com/issues/2017/apr/excel-and-benfords-law-to-detect-fraud.html">fraud detection</a>.</p>
-<div class="notes">
+<aside class="notes">
 <p>Genuine randomness is <em>hard</em>. Most of us, both humans and computers, tend to use shortcuts when generating random numbers.</p>
 <p>People are <em>really</em> bad at generating random numbers. Bendford’s law is used by auditors to look for abnormalities in financial returns.</p>
 <p>Computers are better, but they are also lazy.</p>
-</div>
-<section id="reproducibility-good-or-bad" class="level2">
-<h2 class="anchored" data-anchor-id="reproducibility-good-or-bad">Reproducibility: Good or Bad?</h2>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="reproducibility-good-or-bad" class="slide level2">
+<h2>Reproducibility: Good or Bad?</h2>
 <p>Depends on the problem:</p>
 <ul>
 <li>Banking and encryption?</li>
 <li>Sampling and testing?</li>
 <li>Reproducing research/documentation?</li>
 </ul>
-<div class="notes">
+<aside class="notes">
 <p>OK, technically, even encryption needs to be reproducible to allow for <em>de</em>cryption, but you sure don’t want it to be <em>easy</em>.</p>
-</div>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="not-very-good-encryption" class="level2">
-<h2 class="anchored" data-anchor-id="not-very-good-encryption">Not Very Good Encryption</h2>
-<table class="caption-top table">
+<section id="not-very-good-encryption" class="slide level2">
+<h2>Not Very Good Encryption</h2>
+<table class="caption-top">
 <thead>
 <tr class="header">
 <th style="text-align: left;">Cyphertext</th>
@@ -369,63 +295,73 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <p>ROT is known as the Caesar Cypher, but since the transformation is simple (<code>A..Z+=x</code>) decryption is easy now. How can we make this harder?</p>
 </section>
-<section id="python-is-random" class="level2">
-<h2 class="anchored" data-anchor-id="python-is-random">Python is Random</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> random</span>
-<span id="cb1-2"><a href="#cb1-2"></a>random.randint(<span class="dv">0</span>,<span class="dv">10</span>)</span>
-<span id="cb1-3"><a href="#cb1-3"></a>random.randint(<span class="dv">0</span>,<span class="dv">10</span>)</span>
-<span id="cb1-4"><a href="#cb1-4"></a>random.randint(<span class="dv">0</span>,<span class="dv">10</span>)</span>
-<span id="cb1-5"><a href="#cb1-5"></a>random.randint(<span class="dv">0</span>,<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="python-is-random" class="slide level2">
+<h2>Python is Random</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> random</span>
+<span id="cb1-2"><a></a>random.randint(<span class="dv">0</span>,<span class="dv">10</span>)</span>
+<span id="cb1-3"><a></a>random.randint(<span class="dv">0</span>,<span class="dv">10</span>)</span>
+<span id="cb1-4"><a></a>random.randint(<span class="dv">0</span>,<span class="dv">10</span>)</span>
+<span id="cb1-5"><a></a>random.randint(<span class="dv">0</span>,<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>See also: <code>random.randrange</code>, <code>random.choice</code>, <code>random.sample</code>, <code>random.random</code>, <code>random.gauss</code>, etc.</p>
 </section>
-<section id="and-repeat" class="level2">
-<h2 class="anchored" data-anchor-id="and-repeat">And Repeat…</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">import</span> random</span>
-<span id="cb2-2"><a href="#cb2-2"></a>size <span class="op">=</span> <span class="dv">10</span></span>
-<span id="cb2-3"><a href="#cb2-3"></a>results <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> size</span>
-<span id="cb2-4"><a href="#cb2-4"></a></span>
-<span id="cb2-5"><a href="#cb2-5"></a>tests <span class="op">=</span> <span class="dv">100000</span></span>
-<span id="cb2-6"><a href="#cb2-6"></a><span class="cf">while</span> tests <span class="op">&gt;</span> <span class="dv">0</span>:</span>
-<span id="cb2-7"><a href="#cb2-7"></a>    results[random.randint(<span class="dv">0</span>,<span class="bu">len</span>(results)<span class="op">-</span><span class="dv">1</span>)] <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb2-8"><a href="#cb2-8"></a>    tests <span class="op">-=</span> <span class="dv">1</span></span>
-<span id="cb2-9"><a href="#cb2-9"></a></span>
-<span id="cb2-10"><a href="#cb2-10"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="bu">len</span>(results)):</span>
-<span id="cb2-11"><a href="#cb2-11"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss"> -&gt; </span><span class="sc">{</span>results[i]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="notes">
+<section id="and-repeat" class="slide level2">
+<h2>And Repeat…</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">import</span> random</span>
+<span id="cb2-2"><a></a>size <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb2-3"><a></a>results <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> size</span>
+<span id="cb2-4"><a></a></span>
+<span id="cb2-5"><a></a>tests <span class="op">=</span> <span class="dv">100000</span></span>
+<span id="cb2-6"><a></a><span class="cf">while</span> tests <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb2-7"><a></a>    results[random.randint(<span class="dv">0</span>,<span class="bu">len</span>(results)<span class="op">-</span><span class="dv">1</span>)] <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb2-8"><a></a>    tests <span class="op">-=</span> <span class="dv">1</span></span>
+<span id="cb2-9"><a></a></span>
+<span id="cb2-10"><a></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="bu">len</span>(results)):</span>
+<span id="cb2-11"><a></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss"> -&gt; </span><span class="sc">{</span>results[i]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<aside class="notes">
 <p>What will this return?</p>
 <p>Will it hold for more than 10 numbers?</p>
-</div>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="aaaaaaaaaaand-repeat" class="level2 smaller">
-<h2 class="smaller anchored" data-anchor-id="aaaaaaaaaaand-repeat">Aaaaaaaaaaand Repeat</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="im">import</span> random </span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot <span class="im">as</span> plt</span>
-<span id="cb3-3"><a href="#cb3-3"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb3-4"><a href="#cb3-4"></a></span>
-<span id="cb3-5"><a href="#cb3-5"></a>size <span class="op">=</span> <span class="dv">1000</span></span>
-<span id="cb3-6"><a href="#cb3-6"></a>data <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> size</span>
-<span id="cb3-7"><a href="#cb3-7"></a></span>
-<span id="cb3-8"><a href="#cb3-8"></a>tests <span class="op">=</span> <span class="dv">10000000</span></span>
-<span id="cb3-9"><a href="#cb3-9"></a><span class="cf">while</span> tests <span class="op">&gt;</span> <span class="dv">0</span>:</span>
-<span id="cb3-10"><a href="#cb3-10"></a>    data[random.randint(<span class="dv">0</span>,<span class="bu">len</span>(data)<span class="op">-</span><span class="dv">1</span>)] <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb3-11"><a href="#cb3-11"></a>    tests <span class="op">-=</span> <span class="dv">1</span></span>
-<span id="cb3-12"><a href="#cb3-12"></a></span>
-<span id="cb3-13"><a href="#cb3-13"></a>fig <span class="op">=</span> plt.figure()</span>
-<span id="cb3-14"><a href="#cb3-14"></a>plt.bar(np.arange(<span class="dv">0</span>,<span class="bu">len</span>(data)), data)</span>
-<span id="cb3-15"><a href="#cb3-15"></a>fig.savefig(<span class="st">'Random.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="aaaaaaaaaaand-repeat" class="slide level2 smaller">
+<h2>Aaaaaaaaaaand Repeat</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">import</span> random </span>
+<span id="cb3-2"><a></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot <span class="im">as</span> plt</span>
+<span id="cb3-3"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-4"><a></a></span>
+<span id="cb3-5"><a></a>size <span class="op">=</span> <span class="dv">1000</span></span>
+<span id="cb3-6"><a></a>data <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> size</span>
+<span id="cb3-7"><a></a></span>
+<span id="cb3-8"><a></a>tests <span class="op">=</span> <span class="dv">10000000</span></span>
+<span id="cb3-9"><a></a><span class="cf">while</span> tests <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb3-10"><a></a>    data[random.randint(<span class="dv">0</span>,<span class="bu">len</span>(data)<span class="op">-</span><span class="dv">1</span>)] <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb3-11"><a></a>    tests <span class="op">-=</span> <span class="dv">1</span></span>
+<span id="cb3-12"><a></a></span>
+<span id="cb3-13"><a></a>fig <span class="op">=</span> plt.figure()</span>
+<span id="cb3-14"><a></a>plt.bar(np.arange(<span class="dv">0</span>,<span class="bu">len</span>(data)), data)</span>
+<span id="cb3-15"><a></a>fig.savefig(<span class="st">'Random.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="aaaaaaaaaaand-repeat-1" class="level2">
-<h2 class="anchored" data-anchor-id="aaaaaaaaaaand-repeat-1">Aaaaaaaaaaand Repeat</h2>
-<p><a href="./img/Random.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="./img/Random.png" class="img-fluid"></a></p>
-</section>
-</section>
-<section id="seeds-and-salts" class="level1 page-columns page-full">
+<section id="aaaaaaaaaaand-repeat-1" class="slide level2">
+<h2>Aaaaaaaaaaand Repeat</h2>
+<p><a href="./img/Random.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img data-src="./img/Random.png"></a></p>
+</section></section>
+<section>
+<section id="seeds-and-salts" class="title-slide slide level1 center">
 <h1>Seeds and Salts</h1>
-<blockquote class="blockquote">
+<blockquote>
 <p>Computers are <em>pseudo</em>-random number generators. Seeds and salts ensure different outputs from the same inputs.</p>
 </blockquote>
 <p>I like <a href="https://security.stackexchange.com/a/80988">schroeder</a>’s Stack Exchange answer that <strong>seeds</strong> must be secret to protect encryption, while <strong>salts</strong> are generally not secret but make simple attacks harder.</p>
-<div class="notes">
+<aside class="notes">
 <p>How does that work? Well when you are hashing data a salt combines with the input to generate an ouput that is one-way only — if you use different salts for different users then an attacker who gains access to your account’s salt <em>still</em> needs to guess lots of passwords to see which one combines with the salt to generate your passward hash. But encryption is reversible, so if I know how you generated the output then I can reverse it to get the input — an encrypted message.</p>
 <ul>
 <li>Hashing is irreversible therefore cannot be compressed and is not a form of encryption as it is a one-way function</li>
@@ -436,72 +372,113 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Encryption is reversible with a decryption key, while hashing is one-way and irreversible</li>
 <li>Digests and Salts are not forms of Encryption</li>
 </ul>
-</div>
-<section id="just-add-salt" class="level2">
-<h2 class="anchored" data-anchor-id="just-add-salt">Just add salt</h2>
-<p><a href="./img/Hashing_and_Salts.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="./img/Hashing_and_Salts.png" class="img-fluid"></a></p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="hashing" class="level2 smaller">
-<h2 class="smaller anchored" data-anchor-id="hashing">Hashing</h2>
+<section id="just-add-salt" class="slide level2">
+<h2>Just add salt</h2>
+<p><a href="./img/Hashing_and_Salts.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img data-src="./img/Hashing_and_Salts.png"></a></p>
+</section>
+<section id="hashing" class="slide level2 smaller">
+<h2>Hashing</h2>
 <p>Checking for changes (usally in a security context).</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">import</span> hashlib <span class="co"># Can take a 'salt' (similar to a 'seed')</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a></span>
-<span id="cb4-3"><a href="#cb4-3"></a>r1 <span class="op">=</span> hashlib.md5(<span class="st">'CASA Intro to Programming'</span>.encode())</span>
-<span id="cb4-4"><a href="#cb4-4"></a><span class="bu">print</span>(<span class="ss">f"The hashed equivalent of r1 is: </span><span class="sc">{</span>r1<span class="sc">.</span>hexdigest()<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb4-5"><a href="#cb4-5"></a></span>
-<span id="cb4-6"><a href="#cb4-6"></a>r2 <span class="op">=</span> hashlib.md5(<span class="st">'CASA Intro to Programming '</span>.encode())</span>
-<span id="cb4-7"><a href="#cb4-7"></a><span class="bu">print</span>(<span class="ss">f"The hashed equivalent of r2 is: </span><span class="sc">{</span>r2<span class="sc">.</span>hexdigest()<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb4-8"><a href="#cb4-8"></a></span>
-<span id="cb4-9"><a href="#cb4-9"></a>r3 <span class="op">=</span> hashlib.md5(<span class="st">'CASA Intro to Programming'</span>.encode())</span>
-<span id="cb4-10"><a href="#cb4-10"></a><span class="bu">print</span>(<span class="ss">f"The hashed equivalent of r3 is: </span><span class="sc">{</span>r3<span class="sc">.</span>hexdigest()<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="im">import</span> hashlib <span class="co"># Can take a 'salt' (similar to a 'seed')</span></span>
+<span id="cb4-2"><a></a></span>
+<span id="cb4-3"><a></a>r1 <span class="op">=</span> hashlib.md5(<span class="st">'CASA Intro to Programming'</span>.encode())</span>
+<span id="cb4-4"><a></a><span class="bu">print</span>(<span class="ss">f"The hashed equivalent of r1 is: </span><span class="sc">{</span>r1<span class="sc">.</span>hexdigest()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb4-5"><a></a></span>
+<span id="cb4-6"><a></a>r2 <span class="op">=</span> hashlib.md5(<span class="st">'CASA Intro to Programming '</span>.encode())</span>
+<span id="cb4-7"><a></a><span class="bu">print</span>(<span class="ss">f"The hashed equivalent of r2 is: </span><span class="sc">{</span>r2<span class="sc">.</span>hexdigest()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb4-8"><a></a></span>
+<span id="cb4-9"><a></a>r3 <span class="op">=</span> hashlib.md5(<span class="st">'CASA Intro to Programming'</span>.encode())</span>
+<span id="cb4-10"><a></a><span class="bu">print</span>(<span class="ss">f"The hashed equivalent of r3 is: </span><span class="sc">{</span>r3<span class="sc">.</span>hexdigest()<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Outputs:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1"></a><span class="st">"The hashed equivalent of r1 is: acd601db5552408851070043947683ef"</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="st">"The hashed equivalent of r2 is: 4458e89e9eb806f1ac60acfdf45d85b6"</span></span>
-<span id="cb5-3"><a href="#cb5-3"></a><span class="st">"The hashed equivalent of r3 is: acd601db5552408851070043947683ef"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="notes">
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a></a><span class="st">"The hashed equivalent of r1 is: acd601db5552408851070043947683ef"</span></span>
+<span id="cb5-2"><a></a><span class="st">"The hashed equivalent of r2 is: 4458e89e9eb806f1ac60acfdf45d85b6"</span></span>
+<span id="cb5-3"><a></a><span class="st">"The hashed equivalent of r3 is: acd601db5552408851070043947683ef"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<aside class="notes">
 <p>This is like generating a ‘fingerprint’ of an application or file. In fact, it’s what is going on behind the scenes when you download something to install on macOS or Windows and you’re told that the installer is being ‘verified’ before it will run: the computer is generating a hash of the application’s codebase, and sending that to the Apple Store or Windows Store or direct to the developer in order to check that the file hasn’t been tampered with.</p>
-</div>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="and-note" class="level2 smaller">
-<h2 class="smaller anchored" data-anchor-id="and-note">And Note…</h2>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="im">import</span> requests</span>
-<span id="cb6-2"><a href="#cb6-2"></a>night <span class="op">=</span> requests.get(<span class="st">"http://www.gutenberg.org/ebooks/1514.txt.utf-8"</span>)</span>
-<span id="cb6-3"><a href="#cb6-3"></a><span class="bu">print</span>(<span class="ss">f"The text is </span><span class="sc">{</span>night<span class="sc">.</span>text[<span class="dv">30</span>:<span class="dv">70</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb6-4"><a href="#cb6-4"></a><span class="bu">print</span>(<span class="ss">f"The text is </span><span class="sc">{</span><span class="bu">len</span>(night.text)<span class="sc">:,}</span><span class="ss"> characters long"</span>)</span>
-<span id="cb6-5"><a href="#cb6-5"></a><span class="bu">hash</span> <span class="op">=</span> hashlib.md5(night.text.encode())</span>
-<span id="cb6-6"><a href="#cb6-6"></a><span class="bu">print</span>(<span class="ss">f"This can be hashed into: </span><span class="sc">{</span><span class="bu">hash</span><span class="sc">.</span>hexdigest()<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="and-note" class="slide level2 smaller">
+<h2>And Note…</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="im">import</span> requests</span>
+<span id="cb6-2"><a></a>night <span class="op">=</span> requests.get(<span class="st">"http://www.gutenberg.org/ebooks/1514.txt.utf-8"</span>)</span>
+<span id="cb6-3"><a></a><span class="bu">print</span>(<span class="ss">f"The text is </span><span class="sc">{</span>night<span class="sc">.</span>text[<span class="dv">30</span>:<span class="dv">70</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-4"><a></a><span class="bu">print</span>(<span class="ss">f"The text is </span><span class="sc">{</span><span class="bu">len</span>(night.text)<span class="sc">:,}</span><span class="ss"> characters long"</span>)</span>
+<span id="cb6-5"><a></a><span class="bu">hash</span> <span class="op">=</span> hashlib.md5(night.text.encode())</span>
+<span id="cb6-6"><a></a><span class="bu">print</span>(<span class="ss">f"This can be hashed into: </span><span class="sc">{</span><span class="bu">hash</span><span class="sc">.</span>hexdigest()<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Outputs:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1"></a><span class="st">"The text is A Midsummer Night's Dream by Shakespeare"</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a><span class="st">"The text is 112,127 characters long"</span></span>
-<span id="cb7-3"><a href="#cb7-3"></a><span class="st">"This can be hashed into: cce0d35b8b2c4dafcbde3deb983fec0a"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="notes">
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a></a><span class="st">"The text is A Midsummer Night's Dream by Shakespeare"</span></span>
+<span id="cb7-2"><a></a><span class="st">"The text is 112,127 characters long"</span></span>
+<span id="cb7-3"><a></a><span class="st">"This can be hashed into: cce0d35b8b2c4dafcbde3deb983fec0a"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<aside class="notes">
 <p>Can be applied to <em>anything</em>: even one byte’s difference (e.g.&nbsp;in a application) can lead to a different hash output.</p>
 <p>But notice that hashes are always the same length. This property is quite useful for databases and verifying the integrity of applications (MD5 Checksums).</p>
-</div>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="jupyterlab-password" class="level2 smaller page-columns page-full">
-<h2 class="smaller anchored" data-anchor-id="jupyterlab-password">JupyterLab Password</h2>
+<section id="jupyterlab-password" class="slide level2 smaller">
+<h2>JupyterLab Password</h2>
 <p>To set a password in JupyterLab you need something like this:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1"></a><span class="st">'sha1:5b1c205a53e14e:0ce169b9834984347d62b20b9a82f6513355f72d'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a></a><span class="st">'sha1:5b1c205a53e14e:0ce169b9834984347d62b20b9a82f6513355f72d'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>How this was generated:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="im">import</span> uuid, hashlib</span>
-<span id="cb9-2"><a href="#cb9-2"></a>salt <span class="op">=</span> uuid.uuid4().<span class="bu">hex</span>[:<span class="dv">16</span>] <span class="co"># Truncate salt</span></span>
-<span id="cb9-3"><a href="#cb9-3"></a>password <span class="op">=</span> <span class="st">'casa2021'</span>        <span class="co"># Set password</span></span>
-<span id="cb9-4"><a href="#cb9-4"></a></span>
-<span id="cb9-5"><a href="#cb9-5"></a><span class="co"># Here we combine the password and salt to </span></span>
-<span id="cb9-6"><a href="#cb9-6"></a><span class="co"># 'add complexity' to the hash</span></span>
-<span id="cb9-7"><a href="#cb9-7"></a>hashed_password <span class="op">=</span> hashlib.sha1(password.encode() <span class="op">+</span> </span>
-<span id="cb9-8"><a href="#cb9-8"></a>                  salt.encode()).hexdigest()</span>
-<span id="cb9-9"><a href="#cb9-9"></a><span class="bu">print</span>(<span class="st">':'</span>.join([<span class="st">'sha1'</span>,salt,hashed_password]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a><span class="im">import</span> uuid, hashlib</span>
+<span id="cb9-2"><a></a>salt <span class="op">=</span> uuid.uuid4().<span class="bu">hex</span>[:<span class="dv">16</span>] <span class="co"># Truncate salt</span></span>
+<span id="cb9-3"><a></a>password <span class="op">=</span> <span class="st">'casa2021'</span>        <span class="co"># Set password</span></span>
+<span id="cb9-4"><a></a></span>
+<span id="cb9-5"><a></a><span class="co"># Here we combine the password and salt to </span></span>
+<span id="cb9-6"><a></a><span class="co"># 'add complexity' to the hash</span></span>
+<span id="cb9-7"><a></a>hashed_password <span class="op">=</span> hashlib.sha1(password.encode() <span class="op">+</span> </span>
+<span id="cb9-8"><a></a>                  salt.encode()).hexdigest()</span>
+<span id="cb9-9"><a></a><span class="bu">print</span>(<span class="st">':'</span>.join([<span class="st">'sha1'</span>,salt,hashed_password]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
-<div class="no-row-height column-margin column-container"><div class="margin-aside">
-<p>Don’t set your passwords <a href="https://edition.cnn.com/2019/04/22/uk/most-common-passwords-scli-gbr-intl/index.html">this way</a>.</p>
-</div></div><div class="notes">
+<aside class="notes">
 <p>Then you can replace the <code>JUPYTER_PWD</code> parameter in the start-up string for Podman/Docker if you want to set a password.</p>
-</div>
-</section>
-<section id="encryption-security" class="level2">
-<h2 class="anchored" data-anchor-id="encryption-security">Encryption &amp; Security</h2>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+<aside><div>
+<p>Don’t set your passwords <a href="https://edition.cnn.com/2019/04/22/uk/most-common-passwords-scli-gbr-intl/index.html">this way</a>.</p>
+</div></aside></section>
+<section id="encryption-security" class="slide level2">
+<h2>Encryption &amp; Security</h2>
 <p>Simple hashing algorithms are not normally secure enough for full encryption. Genuine security training takes a whole degree + years of experience.</p>
 <p>Areas to look at if you get involved in applications:</p>
 <ul>
@@ -511,528 +488,501 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Injection Attacks (esp.&nbsp;for SQL using NULL-byte and similar)</li>
 </ul>
 </section>
-<section id="other-types-of-seeds" class="level2">
-<h2 class="anchored" data-anchor-id="other-types-of-seeds">Other Types of Seeds</h2>
+<section id="other-types-of-seeds" class="slide level2">
+<h2>Other Types of Seeds</h2>
 <p>Two main libraries where seeds are set:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="im">import</span> random</span>
-<span id="cb10-2"><a href="#cb10-2"></a>random.seed(<span class="dv">42</span>)</span>
-<span id="cb10-3"><a href="#cb10-3"></a></span>
-<span id="cb10-4"><a href="#cb10-4"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb10-5"><a href="#cb10-5"></a>np.random.seed(<span class="dv">42</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="notes">
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a><span class="im">import</span> random</span>
+<span id="cb10-2"><a></a>random.seed(<span class="dv">42</span>)</span>
+<span id="cb10-3"><a></a></span>
+<span id="cb10-4"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb10-5"><a></a>np.random.seed(<span class="dv">42</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<aside class="notes">
 <p>Turning now from the security aspects, let’s look at other types seeds.</p>
 <p>Why do you often see 42 used as a seed?</p>
-</div>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="seeds-and-state" class="level2">
-<h2 class="anchored" data-anchor-id="seeds-and-state">Seeds and State</h2>
-<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="im">import</span> random</span>
-<span id="cb11-2"><a href="#cb11-2"></a>random.seed(<span class="dv">42</span>)</span>
-<span id="cb11-3"><a href="#cb11-3"></a>st <span class="op">=</span> random.getstate()</span>
-<span id="cb11-4"><a href="#cb11-4"></a><span class="cf">for</span> r <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">3</span>):</span>
-<span id="cb11-5"><a href="#cb11-5"></a>    random.setstate(st)</span>
-<span id="cb11-6"><a href="#cb11-6"></a>    <span class="bu">print</span>(<span class="ss">f"Repetition </span><span class="sc">{</span>r<span class="sc">}</span><span class="ss">:"</span>)</span>
-<span id="cb11-7"><a href="#cb11-7"></a>    ints <span class="op">=</span> []</span>
-<span id="cb11-8"><a href="#cb11-8"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">10</span>):</span>
-<span id="cb11-9"><a href="#cb11-9"></a>        ints.append(random.randint(<span class="dv">0</span>,<span class="dv">10</span>))</span>
-<span id="cb11-10"><a href="#cb11-10"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="sc">{</span>ints<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-</section>
-<section id="question" class="level1">
+<section id="seeds-and-state" class="slide level2">
+<h2>Seeds and State</h2>
+<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a><span class="im">import</span> random</span>
+<span id="cb11-2"><a></a>random.seed(<span class="dv">42</span>)</span>
+<span id="cb11-3"><a></a>st <span class="op">=</span> random.getstate()</span>
+<span id="cb11-4"><a></a><span class="cf">for</span> r <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">3</span>):</span>
+<span id="cb11-5"><a></a>    random.setstate(st)</span>
+<span id="cb11-6"><a></a>    <span class="bu">print</span>(<span class="ss">f"Repetition </span><span class="sc">{</span>r<span class="sc">}</span><span class="ss">:"</span>)</span>
+<span id="cb11-7"><a></a>    ints <span class="op">=</span> []</span>
+<span id="cb11-8"><a></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">10</span>):</span>
+<span id="cb11-9"><a></a>        ints.append(random.randint(<span class="dv">0</span>,<span class="dv">10</span>))</span>
+<span id="cb11-10"><a></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="sc">{</span>ints<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section></section>
+<section id="question" class="title-slide slide level1 center">
 <h1>Question!</h1>
 <p>Where would you use a mix of randomness and reproducbility as part of a <em>data</em> analysis process?</p>
-<div class="notes">
+<aside class="notes">
 <p>Hint: With a large data set it will often be useful to be able draw a random… what? But for reproducible analysis we will that random… what?… to be the same each time!</p>
-</div>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
-<section id="thank-you" class="level1" data-background-image="../img/web/title-slide.png" data-background-color="#0F0C11" data-background-opacity="0.2">
-<h1 data-background-image="/img/web/title-slide.png" data-background-color="#0F0C11" data-background-opacity="0.2">Thank You</h1>
-<h3 class="anchored" data-anchor-id="thank-you">
+
+<section id="thank-you" class="title-slide slide level1 center" data-background-image="../img/web/title-slide.png" data-background-color="#0F0C11" data-background-opacity="0.2">
+<h1>Thank You</h1>
+<h3>
 References
 </h3>
 
 
 </section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<p><img src="../img/logo/full.svg" class="slide-logo"></p>
+<div class="footer footer-default">
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2025 | Jon Reades</a></p>
+</div>
+</div></div>
 
-</main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
-      }
-    }
-    return false;
-  }
-  const onCopySuccess = function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': true,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
         }
       }
-      return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
-  });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
-    });
-    clipboardModal.on('success', onCopySuccess);
-  }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
         }
       }
-    }
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-    const config = {
-      allowHTML: true,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start',
-    };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
-    });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
-        }
-      }
-    }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
           }
         }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
+        return false;
+      }
+      const onCopySuccess = function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
         }
-        return container.innerHTML
-      } else {
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(note);
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
+      });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
         }
-        return note.innerHTML;
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
       }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
       }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
-      }
-    }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
           }
         } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
-          .then(res => res.text())
-          .then(html => {
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
-            if (note !== null) {
-              const html = processXRef(id, note);
-              instance.setContent(html);
-            } 
-          }).finally(() => {
-            instance.enable();
-            instance.show();
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
           });
         }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
+      }
+    });
+    </script>
+    <script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+    (function() {
+      let previousOnload = window.onload;
+      window.onload = () => {
+        if (previousOnload) {
+          previousOnload();
+        }
+        lightboxQuarto.on('slide_before_load', (data) => {
+          const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+          const href = trigger.getAttribute('href');
+          if (href !== null) {
+            const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+            if (imgEl !== null) {
+              const srcAttr = imgEl.getAttribute("src");
+              if (srcAttr && srcAttr.startsWith("data:")) {
+                slideConfig.href = srcAttr;
+              }
             }
-            const html = processXRef(null, note);
-            instance.setContent(html);
           } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
         });
-      }
-    }, function(instance) {
-    });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
+      
+        lightboxQuarto.on('slide_after_load', (data) => {
+          const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(slideNode);
           }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            div.style.left = 0;
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
+        });
+      
       };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
-      });
-    }
-  }
-});
-</script>
-</div> <!-- /content -->
-<footer class="footer">
-  <div class="nav-footer">
-    <div class="nav-footer-left">
-<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 2022–2025, Jon Reades</p>
-</div>   
-    <div class="nav-footer-center">
-<p><img src="../img/logo/logo_only_sm.png" height="25"> Foundations of Spatial Data Science</p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jreades/fsds/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
-    <div class="nav-footer-right">
-      <ul class="footer-items list-unstyled">
-    <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/jreades/fsds">
-      <i class="bi bi-github" role="img">
-</i> 
-    </a>
-  </li>  
-    <li class="nav-item compact">
-    <a class="nav-link" href="https://bsky.app/profile/jreades.bsky.social/">
-      <i class="bi bi-twitter" role="img">
-</i> 
-    </a>
-  </li>  
-</ul>
-    </div>
-  </div>
-</footer>
-<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
-(function() {
-  let previousOnload = window.onload;
-  window.onload = () => {
-    if (previousOnload) {
-      previousOnload();
-    }
-    lightboxQuarto.on('slide_before_load', (data) => {
-      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-      const href = trigger.getAttribute('href');
-      if (href !== null) {
-        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
-        if (imgEl !== null) {
-          const srcAttr = imgEl.getAttribute("src");
-          if (srcAttr && srcAttr.startsWith("data:")) {
-            slideConfig.href = srcAttr;
-          }
-        }
-      } 
-    });
-  
-    lightboxQuarto.on('slide_after_load', (data) => {
-      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(slideNode);
-      }
-    });
-  
-  };
-  
-})();
-          </script>
-
-
-
+      
+    })();
+              </script>
+    
 
 </body></html>

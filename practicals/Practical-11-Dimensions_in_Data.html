@@ -354,7 +354,7 @@ window.Quarto = {
 <section id="preamble" class="level1">
 <h1>Preamble</h1>
 <p>Let’s start with the usual bits of code to ensure plotting works, to import packages and load the data into memory.</p>
-<div id="d6aeeedb" class="cell" data-execution_count="1">
+<div id="c6b415e7" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> os</span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> re</span>
 <span id="cb1-3"><a href="#cb1-3"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -373,7 +373,7 @@ window.Quarto = {
 <span id="cb1-16"><a href="#cb1-16"></a><span class="im">from</span> kneed <span class="im">import</span> knee_locator</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Notice here that we’ve moved the function from last week’s notebook to a separate file <code>cache.py</code> from which we import the <code>cache_data</code> function. This should give you some ideas about how to work from script -&gt; function -&gt; library effectively.</p>
-<div id="92b89d5d" class="cell" data-execution_count="2">
+<div id="817c9d13" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">from</span> cache <span class="im">import</span> cache_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
@@ -430,7 +430,7 @@ Difficulty level: Low.
 </div>
 </div>
 <p>You might like to load the cached copy of the file into Excel so that you can see how the next bit works. You can find the rest of the MSOA Atlas <a href="https://data.london.gov.uk/dataset/msoa-atlas">here</a>.</p>
-<div id="6ae8ba7e" class="cell" data-execution_count="3">
+<div id="04c233e7" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>src_url   <span class="op">=</span> <span class="st">'https://data.london.gov.uk/download/msoa-atlas/39fdd8eb-e977-4d32-85a4-f65b92f29dcb/msoa-data.xls'</span></span>
 <span id="cb3-2"><a href="#cb3-2"></a>dest_path <span class="op">=</span> os.path.join(<span class="st">'data'</span>,<span class="st">'msoa'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -444,7 +444,7 @@ Difficulty level: Low.
 <span id="cb4-4"><a href="#cb4-4"></a>    header<span class="op">=</span>[<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>])            <span class="co"># Where are the column names... there's three of them!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<div id="fc7c4b88" class="cell" data-execution_count="4">
+<div id="488c72f5" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>excel_atlas <span class="op">=</span> pd.read_excel(</span>
 <span id="cb5-2"><a href="#cb5-2"></a>    cache_data(src_url, dest_path),</span>
 <span id="cb5-3"><a href="#cb5-3"></a>    sheet_name<span class="op">=</span><span class="st">'iadatasheet1'</span>, <span class="co"># Which sheet is the data in?</span></span>
@@ -458,7 +458,7 @@ Difficulty level: Low.
 </div>
 </div>
 <p>Notice the format of the output and notice that all of the empty cells in the Excel sheet have come through as <code>Unnamed: &lt;col_no&gt;_level_&lt;level_no&gt;</code>:</p>
-<div id="43f480f5" class="cell" data-execution_count="5">
+<div id="577e7d15" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>excel_atlas.head(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <div>
@@ -593,7 +593,7 @@ Difficulty: Moderate.
 <p>Of course, one way to get at the data is to use <code>.iloc[...]</code> since that refers to columns by <em>position</em> and ignores the complexity of the index. Try printing out the the first five rows of the first column using <code>iloc</code>:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>excel_atlas.iloc[???]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>You should get:</p>
-<div id="f5dc381a" class="cell" data-execution_count="6">
+<div id="a40e9f6b" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display" data-execution_count="6">
 <pre><code>0    E02000001
 1    E02000002
@@ -607,7 +607,7 @@ Name: (Unnamed: 0_level_0, Unnamed: 0_level_1, MSOA Code), dtype: object</code><
 <section id="named-access" class="level3">
 <h3 class="anchored" data-anchor-id="named-access">Named Access</h3>
 <p>But to do it by name is a little trickier:</p>
-<div id="70e0cfa6" class="cell" data-execution_count="7">
+<div id="36a37bcc" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>excel_atlas.columns.tolist()[:<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
 <pre><code>[('Unnamed: 0_level_0', 'Unnamed: 0_level_1', 'MSOA Code'),
@@ -626,7 +626,7 @@ Name: (Unnamed: 0_level_0, Unnamed: 0_level_1, MSOA Code), dtype: object</code><
 <div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>excel_atlas.loc[<span class="dv">0</span>:<span class="dv">5</span>, ???]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
-<div id="07a4c576" class="cell" data-execution_count="8">
+<div id="a21b69c9" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>excel_atlas.loc[<span class="dv">0</span>:<span class="dv">5</span>, (<span class="st">'Unnamed: 0_level_0'</span>,<span class="st">'Unnamed: 0_level_1'</span>,<span class="st">'MSOA Code'</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
 <pre><code>0    E02000001
@@ -646,7 +646,7 @@ Name: (Unnamed: 0_level_0, Unnamed: 0_level_1, MSOA Code), dtype: object</code><
 <section id="grouped-access" class="level3">
 <h3 class="anchored" data-anchor-id="grouped-access">Grouped Access</h3>
 <p>Despite this, <em>one</em> way that MultiIndexes can be useful is for accessing column-slices from a ‘wide’ dataframe. We can, for instance, select all of the Age Structure columns in one go and it will be <em>simpler</em> than what we did above.</p>
-<div id="6b8c8d6e" class="cell" data-execution_count="9">
+<div id="84abf2d1" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>excel_atlas.loc[<span class="dv">0</span>:<span class="dv">5</span>, (<span class="st">'Age Structure (2011 Census)'</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="9">
 <div>
@@ -746,7 +746,7 @@ Name: (Unnamed: 0_level_0, Unnamed: 0_level_1, MSOA Code), dtype: object</code><
 <section id="understanding-levels" class="level3">
 <h3 class="anchored" data-anchor-id="understanding-levels">Understanding Levels</h3>
 <p>This works because the MultiIndex tracks the columns using <em>levels</em>, with level 0 at the ‘top’ and level 2 (in our case) at the bottom. These are the unique <em>values</em> for the top level (‘row 0’):</p>
-<div id="3d2eb3eb" class="cell" data-execution_count="10">
+<div id="68bfa3d0" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a>excel_atlas.columns.levels[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
 <pre><code>Index(['Adults in Employment (2011 Census)', 'Age Structure (2011 Census)',
@@ -766,7 +766,7 @@ Name: (Unnamed: 0_level_0, Unnamed: 0_level_1, MSOA Code), dtype: object</code><
 </div>
 </div>
 <p>These are the <em>values</em> for those levels across the actual columns in the data frame, notice the repeated ‘Age Structure (2011 Census)’:</p>
-<div id="7cbd12ff" class="cell" data-execution_count="11">
+<div id="d5508ac7" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>excel_atlas.columns.get_level_values(<span class="dv">0</span>)[:<span class="dv">10</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="11">
 <pre><code>Index(['Unnamed: 0_level_0', 'Unnamed: 1_level_0',
@@ -778,7 +778,7 @@ Name: (Unnamed: 0_level_0, Unnamed: 0_level_1, MSOA Code), dtype: object</code><
 </div>
 </div>
 <p>And here are the <em>values</em> for the second level of the index (‘row 1’ in the Excel file):</p>
-<div id="55c503de" class="cell" data-execution_count="12">
+<div id="e9d2ad75" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a>excel_atlas.columns.get_level_values(<span class="dv">1</span>)[:<span class="dv">10</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="12">
 <pre><code>Index(['Unnamed: 0_level_1', 'Unnamed: 1_level_1', 'All Ages', '0-15', '16-29',
@@ -787,7 +787,7 @@ Name: (Unnamed: 0_level_0, Unnamed: 0_level_1, MSOA Code), dtype: object</code><
 </div>
 </div>
 <p>By extension, if we drop a level 0 index then <em>all</em> of the columns that it supports at levels 1 and 2 are <em>also</em> dropped: so when we drop <code>Mid-year Estimate totals</code> from level 0 then all 11 of the ‘Mid-year Estimate totals (2002…2012)’ columns are dropped in one go.</p>
-<div id="24f1c595" class="cell" data-execution_count="13">
+<div id="e18ae260" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a>excel_atlas[[<span class="st">'Mid-year Estimate totals'</span>]].head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="13">
 <div>
@@ -867,7 +867,7 @@ Name: (Unnamed: 0_level_0, Unnamed: 0_level_1, MSOA Code), dtype: object</code><
 </div>
 </div>
 </div>
-<div id="38a8d4f3" class="cell" data-execution_count="14">
+<div id="7845b776" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a>test <span class="op">=</span> excel_atlas.drop(columns<span class="op">=</span>[<span class="st">'Mid-year Estimate totals'</span>], axis<span class="op">=</span><span class="dv">1</span>, level<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb24-2"><a href="#cb24-2"></a></span>
 <span id="cb24-3"><a href="#cb24-3"></a><span class="bu">print</span>(<span class="ss">f"Excel source had </span><span class="sc">{</span>excel_atlas<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss"> columns."</span>)</span>
@@ -877,7 +877,7 @@ Name: (Unnamed: 0_level_0, Unnamed: 0_level_1, MSOA Code), dtype: object</code><
 Test now has 196 columns.</code></pre>
 </div>
 </div>
-<div id="28022123" class="cell" data-execution_count="15">
+<div id="ed6e1d13" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1"></a><span class="co"># Tidy up if the variable exists</span></span>
 <span id="cb26-2"><a href="#cb26-2"></a><span class="cf">if</span> <span class="st">'test'</span> <span class="kw">in</span> <span class="bu">locals</span>():</span>
 <span id="cb26-3"><a href="#cb26-3"></a>    <span class="kw">del</span>(test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -913,7 +913,7 @@ Difficulty level: Low
 <section id="dropping-named-levels" class="level3">
 <h3 class="anchored" data-anchor-id="dropping-named-levels">Dropping Named Levels</h3>
 <p>There’s a <em>lot</em> of data in the data frame that we don’t need for our Airbnb work, so let’s go a bit further with the dropping of column-groups using the MultiIndex.</p>
-<div id="d00a8111" class="cell" data-execution_count="16">
+<div id="72bd02c5" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1"></a>to_drop <span class="op">=</span> [<span class="st">'Mid-year Estimate totals'</span>,<span class="st">'Mid-year Estimates 2012, by age'</span>,<span class="st">'Religion (2011)'</span>,</span>
 <span id="cb27-2"><a href="#cb27-2"></a>           <span class="st">'Land Area'</span>,<span class="st">'Lone Parents (2011 Census)'</span>,<span class="st">'Central Heating (2011 Census)'</span>,<span class="st">'Health (2011 Census)'</span>,</span>
 <span id="cb27-3"><a href="#cb27-3"></a>           <span class="st">'Low Birth Weight Births (2007-2011)'</span>,<span class="st">'Obesity'</span>,<span class="st">'Incidence of Cancer'</span>,<span class="st">'Life Expectancy'</span>,</span>
@@ -925,7 +925,7 @@ Difficulty level: Low
 </div>
 </div>
 <p>This should drop you down to 984 x 111. Notice below that the multi-level <em>index</em> has not changed but the multi-level <em>values</em> remaining have!</p>
-<div id="60fbaa99" class="cell" data-execution_count="17">
+<div id="506d426f" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1"></a><span class="bu">print</span>(<span class="ss">f"There are </span><span class="sc">{</span><span class="bu">len</span>(tidy.columns.levels[<span class="dv">0</span>].unique())<span class="sc">}</span><span class="ss"> categories."</span>) <span class="co"># The categories</span></span>
 <span id="cb29-2"><a href="#cb29-2"></a><span class="bu">print</span>(<span class="ss">f"But only </span><span class="sc">{</span><span class="bu">len</span>(tidy.columns.get_level_values(<span class="dv">0</span>).unique())<span class="sc">}</span><span class="ss"> values."</span>) <span class="co">#&nbsp;The actual values</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -949,7 +949,7 @@ But only 18 values.</code></pre>
 <div class="sourceCode" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1"></a><span class="bu">print</span>([x <span class="cf">for</span> x <span class="kw">in</span> tidy.columns.get_level_values(<span class="dv">1</span>) <span class="cf">if</span> re.search(???, x)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
-<div id="c826be83" class="cell" data-execution_count="18">
+<div id="26441368" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1"></a>to_drop <span class="op">=</span> [x <span class="cf">for</span> x <span class="kw">in</span> tidy.columns.get_level_values(<span class="dv">1</span>) <span class="cf">if</span> (</span>
 <span id="cb33-2"><a href="#cb33-2"></a>    x.endswith(<span class="st">"(%)"</span>) <span class="kw">or</span> x.startswith(<span class="st">"%"</span>) <span class="kw">or</span> x.endswith(<span class="st">"Percentages"</span>) <span class="kw">or</span> x.endswith(<span class="st">"%"</span>))]</span>
 <span id="cb33-3"><a href="#cb33-3"></a><span class="bu">print</span>(to_drop)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -957,7 +957,7 @@ But only 18 values.</code></pre>
 <pre><code>['Percentages', 'Percentages', 'Percentages', 'Percentages', 'Percentages', 'White (%)', 'Mixed/multiple ethnic groups (%)', 'Asian/Asian British (%)', 'Black/African/Caribbean/Black British (%)', 'Other ethnic group (%)', 'BAME (%)', 'United Kingdom (%)', 'Not United Kingdom (%)', '% of people aged 16 and over in household have English as a main language', '% of households where no people in household have English as a main language', 'Owned: Owned outright (%)', 'Owned: Owned with a mortgage or loan (%)', 'Social rented (%)', 'Private rented (%)', 'Household spaces with at least one usual resident (%)', 'Household spaces with no usual residents (%)', 'Whole house or bungalow: Detached (%)', 'Whole house or bungalow: Semi-detached (%)', 'Whole house or bungalow: Terraced (including end-terrace) (%)', 'Flat, maisonette or apartment (%)', 'Economically active %', 'Economically inactive %', '% of households with no adults in employment: With dependent children', '% living in income deprived households reliant on means tested benefit', '% of people aged over 60 who live in pension credit households', 'No cars or vans in household (%)', '1 car or van in household (%)', '2 cars or vans in household (%)', '3 cars or vans in household (%)', '4 or more cars or vans in household (%)']</code></pre>
 </div>
 </div>
-<div id="4b41de95" class="cell" data-execution_count="19">
+<div id="0377bdd9" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1"></a><span class="bu">print</span>([x <span class="cf">for</span> x <span class="kw">in</span> tidy.columns.get_level_values(<span class="dv">1</span>) <span class="cf">if</span> re.search(<span class="st">"(?:%|Percentages)"</span>, x)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['Percentages', 'Percentages', 'Percentages', 'Percentages', 'Percentages', 'White (%)', 'Mixed/multiple ethnic groups (%)', 'Asian/Asian British (%)', 'Black/African/Caribbean/Black British (%)', 'Other ethnic group (%)', 'BAME (%)', 'United Kingdom (%)', 'Not United Kingdom (%)', '% of people aged 16 and over in household have English as a main language', '% of households where no people in household have English as a main language', 'Owned: Owned outright (%)', 'Owned: Owned with a mortgage or loan (%)', 'Social rented (%)', 'Private rented (%)', 'Household spaces with at least one usual resident (%)', 'Household spaces with no usual residents (%)', 'Whole house or bungalow: Detached (%)', 'Whole house or bungalow: Semi-detached (%)', 'Whole house or bungalow: Terraced (including end-terrace) (%)', 'Flat, maisonette or apartment (%)', 'Economically active %', 'Economically inactive %', '% of households with no adults in employment: With dependent children', '% living in income deprived households reliant on means tested benefit', '% of people aged over 60 who live in pension credit households', 'No cars or vans in household (%)', '1 car or van in household (%)', '2 cars or vans in household (%)', '3 cars or vans in household (%)', '4 or more cars or vans in household (%)']</code></pre>
@@ -968,7 +968,7 @@ But only 18 values.</code></pre>
 </div>
 <p>With both you should get:</p>
 <div class="longform">
-<div id="51f9658f" class="cell" data-execution_count="20">
+<div id="11d5d9d6" class="cell" data-execution_count="20">
 <div class="cell-output cell-output-display" data-execution_count="20">
 <pre><code>['Percentages',
  'Percentages',
@@ -1033,7 +1033,7 @@ But only 18 values.</code></pre>
 <span id="cb38-2"><a href="#cb38-2"></a><span class="bu">print</span>(<span class="ss">f"Shape of the MSOA Atlas data frame is now: </span><span class="sc">{</span>tidy<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> x </span><span class="sc">{</span>tidy<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
-<div id="060efd23" class="cell" data-execution_count="21">
+<div id="96df26ba" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1"></a>tidy.drop(to_drop, axis<span class="op">=</span><span class="dv">1</span>, level<span class="op">=</span><span class="dv">1</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb39-2"><a href="#cb39-2"></a><span class="bu">print</span>(<span class="ss">f"Shape of the MSOA Atlas data frame is now: </span><span class="sc">{</span>tidy<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> x </span><span class="sc">{</span>tidy<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1048,7 +1048,7 @@ But only 18 values.</code></pre>
 <section id="flattening-the-index" class="level3">
 <h3 class="anchored" data-anchor-id="flattening-the-index">Flattening the Index</h3>
 <p>Although this ia big improvement, you’ll have trouble saving or linking this data to other inputs. The problem is that Level 2 of the multi-index is mainly composed of ‘Unnamed’ values and so we need to merge it with Level 1 to simplify our data frame, and then merge <em>that</em> with level 0…</p>
-<div id="e7f0f8eb" class="cell" data-execution_count="22">
+<div id="6a8b0820" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1"></a>tidy.columns.values[:<span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="22">
 <pre><code>array([('Unnamed: 0_level_0', 'Unnamed: 0_level_1', 'MSOA Code'),
@@ -1058,7 +1058,7 @@ But only 18 values.</code></pre>
 </div>
 </div>
 <p>Let’s use code to sort this out!</p>
-<div id="9e5b9d32" class="cell" data-execution_count="23">
+<div id="2e860e92" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1"></a>new_cols <span class="op">=</span> []</span>
 <span id="cb43-2"><a href="#cb43-2"></a><span class="cf">for</span> c <span class="kw">in</span> tidy.columns.values:</span>
 <span id="cb43-3"><a href="#cb43-3"></a>    </span>
@@ -1092,7 +1092,7 @@ But only 18 values.</code></pre>
 <span id="cb43-31"><a href="#cb43-31"></a>    new_cols.append(clabel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="longform">
-<div id="03479c38" class="cell" data-execution_count="24">
+<div id="2a090dc9" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1"></a>new_cols</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="24">
 <pre><code>['MSOA Code',
@@ -1187,7 +1187,7 @@ Stop
 <p>Make sure you understand what is happening here before just moving on to the next thing. Try adding <code>print()</code> statements if it will help it to make sense. This sort of code comes up a <em>lot</em> in the real world.</p>
 </div>
 </div>
-<div id="b1111e18" class="cell" data-execution_count="25">
+<div id="db36b8a2" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1"></a>tidy.columns <span class="op">=</span> new_cols  <span class="co"># &lt;- Blow away complex index, replace with simple</span></span>
 <span id="cb46-2"><a href="#cb46-2"></a>tidy.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="25">
@@ -1350,14 +1350,14 @@ Stop
 </div>
 </div>
 <p>You might want to have a look at <em>what</em> the code below drops first before just running it… remember that you can pull apart any complex code into pieces:</p>
-<div id="8371cf9e" class="cell" data-execution_count="26">
+<div id="9e3472c4" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1"></a>tidy[<span class="st">'MSOA Code'</span>].isna()</span>
 <span id="cb47-2"><a href="#cb47-2"></a>tidy[tidy[<span class="st">'MSOA Code'</span>].isna()].index</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="26">
 <pre><code>Index([983], dtype='int64')</code></pre>
 </div>
 </div>
-<div id="6d092d09" class="cell" data-execution_count="27">
+<div id="5d4ee9dd" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1"></a>tidy.drop(index<span class="op">=</span>tidy[tidy[<span class="st">'MSOA Code'</span>].isna()].index, inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
@@ -1405,7 +1405,7 @@ Difficulty: Moderate, since I’m not giving you many clues.
 <span id="cb50-2"><a href="#cb50-2"></a>tidy.Borough.unique()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
-<div id="63155054" class="cell" data-execution_count="28">
+<div id="6aa9f184" class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1"></a>tidy[<span class="st">'Borough'</span>] <span class="op">=</span> tidy[<span class="st">'MSOA Name'</span>].<span class="bu">str</span>.replace(<span class="vs">r' \d+$'</span>,<span class="st">''</span>,regex<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb51-2"><a href="#cb51-2"></a>tidy.Borough.unique()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="28">
@@ -1423,7 +1423,7 @@ Difficulty: Moderate, since I’m not giving you many clues.
 </div>
 </div>
 <p>You should get:</p>
-<div id="6e912bb2" class="cell" data-execution_count="29">
+<div id="580595a0" class="cell" data-execution_count="29">
 <div class="cell-output cell-output-display" data-execution_count="29">
 <pre><code>array(['City of London', 'Barking and Dagenham', 'Barnet', 'Bexley',
        'Brent', 'Bromley', 'Camden', 'Croydon', 'Ealing', 'Enfield',
@@ -1439,7 +1439,7 @@ Difficulty: Moderate, since I’m not giving you many clues.
 <section id="map-boroughs-to-subregions" class="level3">
 <h3 class="anchored" data-anchor-id="map-boroughs-to-subregions">Map Boroughs to Subregions</h3>
 <p>And now you need to understand how to <em>apply</em> the mapping ot the Borough field using a <code>lambda</code> function. It’s fairly straightforward once you know the syntax: just a dictionary lookup. But as usual, you might want to first create a new cell and experiment with the output from the apply function before using it to write the <code>Subregion</code> field of the data frame…</p>
-<div id="011dd74b" class="cell" data-execution_count="30">
+<div id="63277c7f" class="cell" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1"></a>mapping <span class="op">=</span> {}</span>
 <span id="cb54-2"><a href="#cb54-2"></a><span class="cf">for</span> b <span class="kw">in</span> [<span class="st">'Enfield'</span>,<span class="st">'Waltham Forest'</span>,<span class="st">'Redbridge'</span>,<span class="st">'Barking and Dagenham'</span>,<span class="st">'Havering'</span>,<span class="st">'Greenwich'</span>,<span class="st">'Bexley'</span>]:</span>
 <span id="cb54-3"><a href="#cb54-3"></a>    mapping[b]<span class="op">=</span><span class="st">'Outer East and North East'</span></span>
@@ -1459,7 +1459,7 @@ Difficulty: Moderate, since I’m not giving you many clues.
 <div class="sourceCode" id="cb55"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1"></a>tidy[<span class="st">'Subregion'</span>] <span class="op">=</span> tidy.Borough.<span class="bu">apply</span>(???)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
-<div id="0553aaf9" class="cell" data-execution_count="31">
+<div id="fe52916f" class="cell" data-execution_count="31">
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1"></a>tidy[<span class="st">'Subregion'</span>] <span class="op">=</span> tidy.Borough.<span class="bu">apply</span>(<span class="kw">lambda</span> x: mapping[x])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
@@ -1469,7 +1469,7 @@ Difficulty: Moderate, since I’m not giving you many clues.
 <section id="and-save" class="level3">
 <h3 class="anchored" data-anchor-id="and-save">And Save</h3>
 <p>There’s a little snipped of useful code to work out here: we need to check if the <code>clean</code> directory exists in the <code>data</code> directory; if we don’t then the <code>tidy.to_parquet()</code> call will fail.</p>
-<div id="b7156d99" class="cell" data-execution_count="32">
+<div id="67e67d3e" class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1"></a><span class="cf">if</span> <span class="kw">not</span> os.path.exists(os.path.join(<span class="st">'data'</span>,<span class="st">'clean'</span>)):</span>
 <span id="cb57-2"><a href="#cb57-2"></a>    os.makedirs(os.path.join(<span class="st">'data'</span>,<span class="st">'clean'</span>))</span>
 <span id="cb57-3"><a href="#cb57-3"></a>tidy.to_parquet(os.path.join(<span class="st">'data'</span>,<span class="st">'clean'</span>,<span class="st">'MSOA_Atlas.parquet'</span>))</span>
@@ -1519,7 +1519,7 @@ Difficulty: Low, except for plotting.
 </div>
 </div>
 <p>First, we need to download the MSOA source file, which is a zipped archive of a Shapefile:</p>
-<div id="8f16c517" class="cell" data-execution_count="33">
+<div id="66dd992d" class="cell" data-execution_count="33">
 <div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1"></a><span class="co"># Oh look, we can read a Shapefile without needing to unzip it!</span></span>
 <span id="cb59-2"><a href="#cb59-2"></a>msoas <span class="op">=</span> gpd.read_file(</span>
 <span id="cb59-3"><a href="#cb59-3"></a>    cache_data(<span class="st">'https://github.com/jreades/fsds/blob/master/data/src/Middle_Layer_Super_Output_Areas__December_2011__EW_BGC_V2-shp.zip?raw=true'</span>, </span>
@@ -1528,13 +1528,19 @@ Difficulty: Low, except for plotting.
 <pre><code>Found data/geo/Middle_Layer_Super_Output_Areas__December_2011__EW_BGC_V2-shp.zip locally!
     Size is 7 MB (7,381,177 bytes)</code></pre>
 </div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/Users/jreades/anaconda3/envs/sds/lib/python3.12/site-packages/pyogrio/raw.py:198: RuntimeWarning:
+
+driver ESRI Shapefile does not support open option DRIVER
+</code></pre>
+</div>
 </div>
 <section id="identifying-matching-columns" class="level3">
 <h3 class="anchored" data-anchor-id="identifying-matching-columns">Identifying Matching Columns</h3>
 <p>Looking at the first few columns of each data frame, which one might allow us to link the two files together? You’ve done this in GIS. <em>Remember</em>: the column <em>names</em> don’t need to match for us to use them in a join, it’s the <em>values</em> that matter.</p>
-<div id="eefff254" class="cell" data-execution_count="34">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1"></a><span class="bu">print</span>(<span class="ss">f"Column names: </span><span class="sc">{</span><span class="st">', '</span><span class="sc">.</span>join(tidy.columns.tolist()[:<span class="dv">5</span>])<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb61-2"><a href="#cb61-2"></a>tidy.iloc[:<span class="dv">3</span>,:<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="188ce7b0" class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1"></a><span class="bu">print</span>(<span class="ss">f"Column names: </span><span class="sc">{</span><span class="st">', '</span><span class="sc">.</span>join(tidy.columns.tolist()[:<span class="dv">5</span>])<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb62-2"><a href="#cb62-2"></a>tidy.iloc[:<span class="dv">3</span>,:<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Column names: MSOA Code, MSOA Name, Age-All Ages, Age-0-15, Age-16-29</code></pre>
 </div>
@@ -1592,17 +1598,17 @@ Difficulty: Low, except for plotting.
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true">Question</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false">Answer</a></li></ul>
 <div class="tab-content">
 <div id="tabset-7-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-7-1-tab">
-<div class="sourceCode" id="cb63"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb63-1"><a href="#cb63-1"></a>gdf <span class="op">=</span> pd.merge(msoas, tidy, left_on<span class="op">=</span>???, right_on<span class="op">=</span>???, how<span class="op">=</span><span class="st">'inner'</span>)</span>
-<span id="cb63-2"><a href="#cb63-2"></a>gdf <span class="op">=</span> gdf.drop(columns<span class="op">=</span>[<span class="st">'MSOA11CD'</span>,<span class="st">'MSOA11NM'</span>,<span class="st">'OBJECTID'</span>])</span>
-<span id="cb63-3"><a href="#cb63-3"></a></span>
-<span id="cb63-4"><a href="#cb63-4"></a><span class="bu">print</span>(<span class="ss">f"Final MSOA Atlas data frame has shape </span><span class="sc">{</span>gdf<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> x </span><span class="sc">{</span>gdf<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="tabset-7-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-2-tab">
-<div id="2a0de3fb" class="cell" data-execution_count="35">
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1"></a>gdf <span class="op">=</span> pd.merge(msoas, tidy, left_on<span class="op">=</span><span class="st">'MSOA11CD'</span>, right_on<span class="op">=</span><span class="st">'MSOA Code'</span>, how<span class="op">=</span><span class="st">'inner'</span>)</span>
+<div class="sourceCode" id="cb64"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1"></a>gdf <span class="op">=</span> pd.merge(msoas, tidy, left_on<span class="op">=</span>???, right_on<span class="op">=</span>???, how<span class="op">=</span><span class="st">'inner'</span>)</span>
 <span id="cb64-2"><a href="#cb64-2"></a>gdf <span class="op">=</span> gdf.drop(columns<span class="op">=</span>[<span class="st">'MSOA11CD'</span>,<span class="st">'MSOA11NM'</span>,<span class="st">'OBJECTID'</span>])</span>
 <span id="cb64-3"><a href="#cb64-3"></a></span>
 <span id="cb64-4"><a href="#cb64-4"></a><span class="bu">print</span>(<span class="ss">f"Final MSOA Atlas data frame has shape </span><span class="sc">{</span>gdf<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> x </span><span class="sc">{</span>gdf<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="tabset-7-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-2-tab">
+<div id="b0c4cfae" class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb65-1"><a href="#cb65-1"></a>gdf <span class="op">=</span> pd.merge(msoas, tidy, left_on<span class="op">=</span><span class="st">'MSOA11CD'</span>, right_on<span class="op">=</span><span class="st">'MSOA Code'</span>, how<span class="op">=</span><span class="st">'inner'</span>)</span>
+<span id="cb65-2"><a href="#cb65-2"></a>gdf <span class="op">=</span> gdf.drop(columns<span class="op">=</span>[<span class="st">'MSOA11CD'</span>,<span class="st">'MSOA11NM'</span>,<span class="st">'OBJECTID'</span>])</span>
+<span id="cb65-3"><a href="#cb65-3"></a></span>
+<span id="cb65-4"><a href="#cb65-4"></a><span class="bu">print</span>(<span class="ss">f"Final MSOA Atlas data frame has shape </span><span class="sc">{</span>gdf<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> x </span><span class="sc">{</span>gdf<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Final MSOA Atlas data frame has shape 983 x 86</code></pre>
 </div>
@@ -1615,29 +1621,29 @@ Difficulty: Low, except for plotting.
 <section id="plot-choropleth" class="level3">
 <h3 class="anchored" data-anchor-id="plot-choropleth">Plot Choropleth</h3>
 <p>Let’s plot the median income in 2011 column using the <code>plasma</code> colour ramp… The rest is to show you how to customise a legend.</p>
-<div class="sourceCode" id="cb66"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1"></a>col <span class="op">=</span> <span class="st">'Median-2011'</span></span>
-<span id="cb66-2"><a href="#cb66-2"></a>fig <span class="op">=</span> gdf.plot(column<span class="op">=</span>???, cmap<span class="op">=</span><span class="st">'???'</span>, </span>
-<span id="cb66-3"><a href="#cb66-3"></a>         scheme<span class="op">=</span><span class="st">'FisherJenks'</span>, k<span class="op">=</span><span class="dv">7</span>, edgecolor<span class="op">=</span><span class="st">'None'</span>, </span>
-<span id="cb66-4"><a href="#cb66-4"></a>         legend<span class="op">=</span><span class="va">True</span>, legend_kwds<span class="op">=</span>{<span class="st">'frameon'</span>:<span class="va">False</span>, <span class="st">'fontsize'</span>:<span class="dv">8</span>},</span>
-<span id="cb66-5"><a href="#cb66-5"></a>         figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">7</span>))<span class="op">;</span></span>
-<span id="cb66-6"><a href="#cb66-6"></a>plt.title(col.replace(<span class="st">'-'</span>,<span class="st">' '</span>))<span class="op">;</span></span>
-<span id="cb66-7"><a href="#cb66-7"></a></span>
-<span id="cb66-8"><a href="#cb66-8"></a><span class="co"># Now to modify the legend: googling "geopandas format legend"</span></span>
-<span id="cb66-9"><a href="#cb66-9"></a><span class="co"># brings me to: https://stackoverflow.com/a/56591102/4041902</span></span>
-<span id="cb66-10"><a href="#cb66-10"></a>leg <span class="op">=</span> fig.get_legend()</span>
-<span id="cb66-11"><a href="#cb66-11"></a>leg._loc <span class="op">=</span> <span class="dv">3</span></span>
-<span id="cb66-12"><a href="#cb66-12"></a></span>
-<span id="cb66-13"><a href="#cb66-13"></a><span class="cf">for</span> lbl <span class="kw">in</span> leg.get_texts():</span>
-<span id="cb66-14"><a href="#cb66-14"></a>    label_text <span class="op">=</span> lbl.get_text()</span>
-<span id="cb66-15"><a href="#cb66-15"></a>    [low, hi] <span class="op">=</span> label_text.split(<span class="st">', '</span>)</span>
-<span id="cb66-16"><a href="#cb66-16"></a>    new_text <span class="op">=</span> <span class="ss">f'£</span><span class="sc">{</span><span class="bu">float</span>(low)<span class="sc">:,.0f}</span><span class="ss"> - £</span><span class="sc">{</span><span class="bu">float</span>(hi)<span class="sc">:,.0f}</span><span class="ss">'</span></span>
-<span id="cb66-17"><a href="#cb66-17"></a>    lbl.set_text(new_text)</span>
-<span id="cb66-18"><a href="#cb66-18"></a></span>
-<span id="cb66-19"><a href="#cb66-19"></a>plt.show()<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb67"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1"></a>col <span class="op">=</span> <span class="st">'Median-2011'</span></span>
+<span id="cb67-2"><a href="#cb67-2"></a>fig <span class="op">=</span> gdf.plot(column<span class="op">=</span>???, cmap<span class="op">=</span><span class="st">'???'</span>, </span>
+<span id="cb67-3"><a href="#cb67-3"></a>         scheme<span class="op">=</span><span class="st">'FisherJenks'</span>, k<span class="op">=</span><span class="dv">7</span>, edgecolor<span class="op">=</span><span class="st">'None'</span>, </span>
+<span id="cb67-4"><a href="#cb67-4"></a>         legend<span class="op">=</span><span class="va">True</span>, legend_kwds<span class="op">=</span>{<span class="st">'frameon'</span>:<span class="va">False</span>, <span class="st">'fontsize'</span>:<span class="dv">8</span>},</span>
+<span id="cb67-5"><a href="#cb67-5"></a>         figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">7</span>))<span class="op">;</span></span>
+<span id="cb67-6"><a href="#cb67-6"></a>plt.title(col.replace(<span class="st">'-'</span>,<span class="st">' '</span>))<span class="op">;</span></span>
+<span id="cb67-7"><a href="#cb67-7"></a></span>
+<span id="cb67-8"><a href="#cb67-8"></a><span class="co"># Now to modify the legend: googling "geopandas format legend"</span></span>
+<span id="cb67-9"><a href="#cb67-9"></a><span class="co"># brings me to: https://stackoverflow.com/a/56591102/4041902</span></span>
+<span id="cb67-10"><a href="#cb67-10"></a>leg <span class="op">=</span> fig.get_legend()</span>
+<span id="cb67-11"><a href="#cb67-11"></a>leg._loc <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb67-12"><a href="#cb67-12"></a></span>
+<span id="cb67-13"><a href="#cb67-13"></a><span class="cf">for</span> lbl <span class="kw">in</span> leg.get_texts():</span>
+<span id="cb67-14"><a href="#cb67-14"></a>    label_text <span class="op">=</span> lbl.get_text()</span>
+<span id="cb67-15"><a href="#cb67-15"></a>    [low, hi] <span class="op">=</span> label_text.split(<span class="st">', '</span>)</span>
+<span id="cb67-16"><a href="#cb67-16"></a>    new_text <span class="op">=</span> <span class="ss">f'£</span><span class="sc">{</span><span class="bu">float</span>(low)<span class="sc">:,.0f}</span><span class="ss"> - £</span><span class="sc">{</span><span class="bu">float</span>(hi)<span class="sc">:,.0f}</span><span class="ss">'</span></span>
+<span id="cb67-17"><a href="#cb67-17"></a>    lbl.set_text(new_text)</span>
+<span id="cb67-18"><a href="#cb67-18"></a></span>
+<span id="cb67-19"><a href="#cb67-19"></a>plt.show()<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="save" class="level3">
 <h3 class="anchored" data-anchor-id="save">Save</h3>
-<div class="sourceCode" id="cb67"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1"></a>gdf.to_geoparquet(os.path.join(<span class="st">'data'</span>,<span class="st">'geo'</span>,<span class="st">'MSOA_Atlas.geoparquet'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb68"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1"></a>gdf.to_geoparquet(os.path.join(<span class="st">'data'</span>,<span class="st">'geo'</span>,<span class="st">'MSOA_Atlas.geoparquet'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="questions-2" class="level3">
 <h3 class="anchored" data-anchor-id="questions-2">Questions</h3>
@@ -1681,15 +1687,15 @@ Tip
 </div>
 </div>
 <p>On subsequent runs of this notebook you might just want to start here!</p>
-<div class="sourceCode" id="cb70"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1"></a><span class="co"># Notice this handy code: we check if the data is already</span></span>
-<span id="cb70-2"><a href="#cb70-2"></a><span class="co"># in memory. And notice this is just a list comprehension</span></span>
-<span id="cb70-3"><a href="#cb70-3"></a><span class="co"># to see what is locally loaded.</span></span>
-<span id="cb70-4"><a href="#cb70-4"></a><span class="cf">if</span> <span class="st">'gdf'</span> <span class="kw">not</span> <span class="kw">in</span> <span class="bu">locals</span>():</span>
-<span id="cb70-5"><a href="#cb70-5"></a>    gdf <span class="op">=</span> gpd.read_parquet(os.path.join(<span class="st">'data'</span>,<span class="st">'geo'</span>,<span class="st">'MSOA_Atlas.geoparquet'</span>))</span>
-<span id="cb70-6"><a href="#cb70-6"></a><span class="bu">print</span>(gdf.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb71"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb71-1"><a href="#cb71-1"></a>categoricals <span class="op">=</span> [<span class="st">'Borough'</span>,<span class="st">'Subregion'</span>]</span>
-<span id="cb71-2"><a href="#cb71-2"></a><span class="cf">for</span> c <span class="kw">in</span> categoricals:</span>
-<span id="cb71-3"><a href="#cb71-3"></a>    gdf[c] <span class="op">=</span> gdf[c].astype(<span class="st">'category'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb71"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb71-1"><a href="#cb71-1"></a><span class="co"># Notice this handy code: we check if the data is already</span></span>
+<span id="cb71-2"><a href="#cb71-2"></a><span class="co"># in memory. And notice this is just a list comprehension</span></span>
+<span id="cb71-3"><a href="#cb71-3"></a><span class="co"># to see what is locally loaded.</span></span>
+<span id="cb71-4"><a href="#cb71-4"></a><span class="cf">if</span> <span class="st">'gdf'</span> <span class="kw">not</span> <span class="kw">in</span> <span class="bu">locals</span>():</span>
+<span id="cb71-5"><a href="#cb71-5"></a>    gdf <span class="op">=</span> gpd.read_parquet(os.path.join(<span class="st">'data'</span>,<span class="st">'geo'</span>,<span class="st">'MSOA_Atlas.geoparquet'</span>))</span>
+<span id="cb71-6"><a href="#cb71-6"></a><span class="bu">print</span>(gdf.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb72"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1"></a>categoricals <span class="op">=</span> [<span class="st">'Borough'</span>,<span class="st">'Subregion'</span>]</span>
+<span id="cb72-2"><a href="#cb72-2"></a><span class="cf">for</span> c <span class="kw">in</span> categoricals:</span>
+<span id="cb72-3"><a href="#cb72-3"></a>    gdf[c] <span class="op">=</span> gdf[c].astype(<span class="st">'category'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="split" class="level2">
 <h2 class="anchored" data-anchor-id="split">Split</h2>
@@ -1710,22 +1716,22 @@ Difficulty: Low!
 </div>
 </div>
 <p>For our purposes this is a little bit overkill as you could also use pandas’ <code>sample(frac=0.2)</code> and the indexes, but it’s useful to see how this works. You use test/train split to get <strong>four</strong> data sets out: the training data gives you two (predictors + target as separate data sets) and the testing data gives you two as well (predictors + target as separate data sets). These are sized accoridng to the <code>test_size</code> specfied in the <code>test_train_split</code> parameters.</p>
-<div class="sourceCode" id="cb72"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split </span>
-<span id="cb72-2"><a href="#cb72-2"></a></span>
-<span id="cb72-3"><a href="#cb72-3"></a>pdf <span class="op">=</span> gdf[<span class="st">'Median-2011'</span>].copy() <span class="co"># pdf for Median *P*rice b/c we need *something*</span></span>
-<span id="cb72-4"><a href="#cb72-4"></a></span>
-<span id="cb72-5"><a href="#cb72-5"></a><span class="co"># df == *data* frame (a.k.a. predictors or independent variables)</span></span>
-<span id="cb72-6"><a href="#cb72-6"></a><span class="co"># pr == *predicted* value (a.k.a. dependent variable)</span></span>
-<span id="cb72-7"><a href="#cb72-7"></a><span class="co"># Notice we don't want the median price included in our training data</span></span>
-<span id="cb72-8"><a href="#cb72-8"></a>df_train, df_test, pr_train, pr_test <span class="op">=</span> train_test_split(</span>
-<span id="cb72-9"><a href="#cb72-9"></a>                gdf.drop(columns<span class="op">=</span>[<span class="st">'Median-2011'</span>]), pdf, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">44</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb73"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb73-1"><a href="#cb73-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split </span>
+<span id="cb73-2"><a href="#cb73-2"></a></span>
+<span id="cb73-3"><a href="#cb73-3"></a>pdf <span class="op">=</span> gdf[<span class="st">'Median-2011'</span>].copy() <span class="co"># pdf for Median *P*rice b/c we need *something*</span></span>
+<span id="cb73-4"><a href="#cb73-4"></a></span>
+<span id="cb73-5"><a href="#cb73-5"></a><span class="co"># df == *data* frame (a.k.a. predictors or independent variables)</span></span>
+<span id="cb73-6"><a href="#cb73-6"></a><span class="co"># pr == *predicted* value (a.k.a. dependent variable)</span></span>
+<span id="cb73-7"><a href="#cb73-7"></a><span class="co"># Notice we don't want the median price included in our training data</span></span>
+<span id="cb73-8"><a href="#cb73-8"></a>df_train, df_test, pr_train, pr_test <span class="op">=</span> train_test_split(</span>
+<span id="cb73-9"><a href="#cb73-9"></a>                gdf.drop(columns<span class="op">=</span>[<span class="st">'Median-2011'</span>]), pdf, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">44</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Below you should see that the data has been split roughly on the basis of the <code>test_size</code> parameter.</p>
-<div class="sourceCode" id="cb73"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb73-1"><a href="#cb73-1"></a><span class="bu">print</span>(<span class="ss">f"Original data size: </span><span class="sc">{</span>gdf<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> x </span><span class="sc">{</span>gdf<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb73-2"><a href="#cb73-2"></a><span class="bu">print</span>(<span class="ss">f"  Training data size: </span><span class="sc">{</span>df_train<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> x </span><span class="sc">{</span>df_train<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>(df_train.shape[<span class="dv">0</span>]<span class="op">/</span>gdf.shape[<span class="dv">0</span>])<span class="op">*</span><span class="dv">100</span><span class="sc">:.0f}</span><span class="ss">%)"</span>)</span>
-<span id="cb73-3"><a href="#cb73-3"></a><span class="bu">print</span>(<span class="ss">f"  Testing data size:  </span><span class="sc">{</span>df_test<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> x </span><span class="sc">{</span>df_test<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>(df_test.shape[<span class="dv">0</span>]<span class="op">/</span>gdf.shape[<span class="dv">0</span>])<span class="op">*</span><span class="dv">100</span><span class="sc">:.0f}</span><span class="ss">%)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb74"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1"></a><span class="bu">print</span>(<span class="ss">f"Original data size: </span><span class="sc">{</span>gdf<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> x </span><span class="sc">{</span>gdf<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb74-2"><a href="#cb74-2"></a><span class="bu">print</span>(<span class="ss">f"  Training data size: </span><span class="sc">{</span>df_train<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> x </span><span class="sc">{</span>df_train<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>(df_train.shape[<span class="dv">0</span>]<span class="op">/</span>gdf.shape[<span class="dv">0</span>])<span class="op">*</span><span class="dv">100</span><span class="sc">:.0f}</span><span class="ss">%)"</span>)</span>
+<span id="cb74-3"><a href="#cb74-3"></a><span class="bu">print</span>(<span class="ss">f"  Testing data size:  </span><span class="sc">{</span>df_test<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> x </span><span class="sc">{</span>df_test<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>(df_test.shape[<span class="dv">0</span>]<span class="op">/</span>gdf.shape[<span class="dv">0</span>])<span class="op">*</span><span class="dv">100</span><span class="sc">:.0f}</span><span class="ss">%)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Also notice the indexes of each pair of data sets match:</p>
-<div class="sourceCode" id="cb74"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1"></a><span class="bu">print</span>(<span class="st">", "</span>.join([<span class="bu">str</span>(x) <span class="cf">for</span> x <span class="kw">in</span> df_train.index[:<span class="dv">10</span>]]))</span>
-<span id="cb74-2"><a href="#cb74-2"></a><span class="bu">print</span>(<span class="st">", "</span>.join([<span class="bu">str</span>(x) <span class="cf">for</span> x <span class="kw">in</span> pr_train.index[:<span class="dv">10</span>]]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb75"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb75-1"><a href="#cb75-1"></a><span class="bu">print</span>(<span class="st">", "</span>.join([<span class="bu">str</span>(x) <span class="cf">for</span> x <span class="kw">in</span> df_train.index[:<span class="dv">10</span>]]))</span>
+<span id="cb75-2"><a href="#cb75-2"></a><span class="bu">print</span>(<span class="st">", "</span>.join([<span class="bu">str</span>(x) <span class="cf">for</span> x <span class="kw">in</span> pr_train.index[:<span class="dv">10</span>]]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="plot-testtrain-data" class="level2">
 <h2 class="anchored" data-anchor-id="plot-testtrain-data">Plot Test/Train Data</h2>
@@ -1745,19 +1751,19 @@ Difficulty: Low, but important!
 </div>
 </div>
 </div>
-<div class="sourceCode" id="cb75"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb75-1"><a href="#cb75-1"></a>boros <span class="op">=</span> gpd.read_file(os.path.join(<span class="st">'data'</span>,<span class="st">'geo'</span>,<span class="st">'Boroughs.gpkg'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb76"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb76-1"><a href="#cb76-1"></a>f,axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">5</span>))</span>
-<span id="cb76-2"><a href="#cb76-2"></a>df_train.plot(ax<span class="op">=</span>???)</span>
-<span id="cb76-3"><a href="#cb76-3"></a>df_test.plot(ax<span class="op">=</span>???)</span>
-<span id="cb76-4"><a href="#cb76-4"></a>boros.plot(ax<span class="op">=</span>???, facecolor<span class="op">=</span><span class="st">'none'</span>, edgecolor<span class="op">=</span><span class="st">'r'</span>, linewidth<span class="op">=</span><span class="fl">.5</span>, alpha<span class="op">=</span><span class="fl">0.4</span>)</span>
-<span id="cb76-5"><a href="#cb76-5"></a>boros.plot(ax<span class="op">=</span>???, facecolor<span class="op">=</span><span class="st">'none'</span>, edgecolor<span class="op">=</span><span class="st">'r'</span>, linewidth<span class="op">=</span><span class="fl">.5</span>, alpha<span class="op">=</span><span class="fl">0.4</span>)</span>
-<span id="cb76-6"><a href="#cb76-6"></a>axes[<span class="dv">0</span>].set_title(<span class="st">'Training Data'</span>)</span>
-<span id="cb76-7"><a href="#cb76-7"></a>axes[<span class="dv">1</span>].set_title(<span class="st">'Testing Data'</span>)<span class="op">;</span></span>
-<span id="cb76-8"><a href="#cb76-8"></a>axes[<span class="dv">0</span>].set_ylim(<span class="dv">150000</span>,<span class="dv">210000</span>)</span>
-<span id="cb76-9"><a href="#cb76-9"></a>axes[<span class="dv">1</span>].set_ylim(<span class="dv">150000</span>,<span class="dv">210000</span>)</span>
-<span id="cb76-10"><a href="#cb76-10"></a>axes[<span class="dv">0</span>].set_xlim(<span class="dv">500000</span>,<span class="dv">565000</span>)</span>
-<span id="cb76-11"><a href="#cb76-11"></a>axes[<span class="dv">1</span>].set_xlim(<span class="dv">500000</span>,<span class="dv">565000</span>)</span>
-<span id="cb76-12"><a href="#cb76-12"></a>axes[<span class="dv">1</span>].set_yticks([])<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb76"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb76-1"><a href="#cb76-1"></a>boros <span class="op">=</span> gpd.read_file(os.path.join(<span class="st">'data'</span>,<span class="st">'geo'</span>,<span class="st">'Boroughs.gpkg'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb77"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb77-1"><a href="#cb77-1"></a>f,axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">5</span>))</span>
+<span id="cb77-2"><a href="#cb77-2"></a>df_train.plot(ax<span class="op">=</span>???)</span>
+<span id="cb77-3"><a href="#cb77-3"></a>df_test.plot(ax<span class="op">=</span>???)</span>
+<span id="cb77-4"><a href="#cb77-4"></a>boros.plot(ax<span class="op">=</span>???, facecolor<span class="op">=</span><span class="st">'none'</span>, edgecolor<span class="op">=</span><span class="st">'r'</span>, linewidth<span class="op">=</span><span class="fl">.5</span>, alpha<span class="op">=</span><span class="fl">0.4</span>)</span>
+<span id="cb77-5"><a href="#cb77-5"></a>boros.plot(ax<span class="op">=</span>???, facecolor<span class="op">=</span><span class="st">'none'</span>, edgecolor<span class="op">=</span><span class="st">'r'</span>, linewidth<span class="op">=</span><span class="fl">.5</span>, alpha<span class="op">=</span><span class="fl">0.4</span>)</span>
+<span id="cb77-6"><a href="#cb77-6"></a>axes[<span class="dv">0</span>].set_title(<span class="st">'Training Data'</span>)</span>
+<span id="cb77-7"><a href="#cb77-7"></a>axes[<span class="dv">1</span>].set_title(<span class="st">'Testing Data'</span>)<span class="op">;</span></span>
+<span id="cb77-8"><a href="#cb77-8"></a>axes[<span class="dv">0</span>].set_ylim(<span class="dv">150000</span>,<span class="dv">210000</span>)</span>
+<span id="cb77-9"><a href="#cb77-9"></a>axes[<span class="dv">1</span>].set_ylim(<span class="dv">150000</span>,<span class="dv">210000</span>)</span>
+<span id="cb77-10"><a href="#cb77-10"></a>axes[<span class="dv">0</span>].set_xlim(<span class="dv">500000</span>,<span class="dv">565000</span>)</span>
+<span id="cb77-11"><a href="#cb77-11"></a>axes[<span class="dv">1</span>].set_xlim(<span class="dv">500000</span>,<span class="dv">565000</span>)</span>
+<span id="cb77-12"><a href="#cb77-12"></a>axes[<span class="dv">1</span>].set_yticks([])<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="questions-3" class="level3">
 <h3 class="anchored" data-anchor-id="questions-3">Questions</h3>
 <ul>
@@ -1771,12 +1777,12 @@ Difficulty: Low, but important!
 <h1>Normalisation</h1>
 <p>The developers of <a href="https://scikit-learn.org/">SciKit-Learn</a> define <a href="https://scikit-learn.org/stable/modules/preprocessing.html#normalization">normalisation</a> as “scaling individual samples to have <strong>unit norm</strong>.” There are a <em>lot</em> of subtleties to this when you start dealing with ‘sparse’ data, but for the most part it’s worthwhile to think of this as a rescaling of the raw data to have similar ranges in order achieve some kind of comparison. This is such a common problem that sklearn offers a range of such (re)scalers including: <code>MinMaxScaler</code>.</p>
 <p>Let’s see what effect this has on the data!</p>
-<div class="sourceCode" id="cb77"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb77-1"><a href="#cb77-1"></a><span class="co"># Sets some handy 'keywords' to tweak the Seaborn plot</span></span>
-<span id="cb77-2"><a href="#cb77-2"></a>kwds <span class="op">=</span> <span class="bu">dict</span>(s<span class="op">=</span><span class="dv">7</span>,alpha<span class="op">=</span><span class="fl">0.95</span>,edgecolor<span class="op">=</span><span class="st">"none"</span>)</span>
-<span id="cb77-3"><a href="#cb77-3"></a></span>
-<span id="cb77-4"><a href="#cb77-4"></a><span class="co"># Set the *hue order* so that all plots have the *same*</span></span>
-<span id="cb77-5"><a href="#cb77-5"></a><span class="co"># colour on the Subregion</span></span>
-<span id="cb77-6"><a href="#cb77-6"></a>ho <span class="op">=</span> [<span class="st">'Inner East'</span>,<span class="st">'Inner West'</span>,<span class="st">'Outer West and North West'</span>,<span class="st">'Outer South'</span>,<span class="st">'Outer East and North East'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb78"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb78-1"><a href="#cb78-1"></a><span class="co"># Sets some handy 'keywords' to tweak the Seaborn plot</span></span>
+<span id="cb78-2"><a href="#cb78-2"></a>kwds <span class="op">=</span> <span class="bu">dict</span>(s<span class="op">=</span><span class="dv">7</span>,alpha<span class="op">=</span><span class="fl">0.95</span>,edgecolor<span class="op">=</span><span class="st">"none"</span>)</span>
+<span id="cb78-3"><a href="#cb78-3"></a></span>
+<span id="cb78-4"><a href="#cb78-4"></a><span class="co"># Set the *hue order* so that all plots have the *same*</span></span>
+<span id="cb78-5"><a href="#cb78-5"></a><span class="co"># colour on the Subregion</span></span>
+<span id="cb78-6"><a href="#cb78-6"></a>ho <span class="op">=</span> [<span class="st">'Inner East'</span>,<span class="st">'Inner West'</span>,<span class="st">'Outer West and North West'</span>,<span class="st">'Outer South'</span>,<span class="st">'Outer East and North East'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="select-columns" class="level2">
 <h2 class="anchored" data-anchor-id="select-columns">Select Columns</h2>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -1796,11 +1802,11 @@ Difficulty: Low.
 </div>
 </div>
 <p>One thing you’ll need to explain is why I keep writing <code>df[cols+['Subregion']</code> and why I don’t just add it to the <code>cols</code> variable at the start? Don’t try to answer this now, get through the rest of Tasks 3 and 4 and see what you think.</p>
-<div class="sourceCode" id="cb78"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb78-1"><a href="#cb78-1"></a>cols <span class="op">=</span> [<span class="st">'Tenure-Owned outright'</span>, <span class="st">'Tenure-Owned with a mortgage or loan'</span>,</span>
-<span id="cb78-2"><a href="#cb78-2"></a>        <span class="st">'Tenure-Social rented'</span>, <span class="st">'Tenure-Private rented'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb79"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb79-1"><a href="#cb79-1"></a>cols <span class="op">=</span> [<span class="st">'Tenure-Owned outright'</span>, <span class="st">'Tenure-Owned with a mortgage or loan'</span>,</span>
+<span id="cb79-2"><a href="#cb79-2"></a>        <span class="st">'Tenure-Social rented'</span>, <span class="st">'Tenure-Private rented'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><em>Answer</em>: one part of the answer is that it makes it easy to change the columns we select without having to remember to keep <code>Subregion</code>, but the more important reason is that it allows us to re-use <em>this</em> ‘definition’ of <code>cols</code> elsewhere throughout the rest of this practical without needing to remember to <em>remove</em> <code>Subregion</code>.</p>
-<div class="sourceCode" id="cb79"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb79-1"><a href="#cb79-1"></a>tr_raw  <span class="op">=</span> df_train[cols<span class="op">+</span>[<span class="st">'Subregion'</span>]].copy() <span class="co"># train raw</span></span>
-<span id="cb79-2"><a href="#cb79-2"></a>tst_raw <span class="op">=</span> df_test[cols<span class="op">+</span>[<span class="st">'Subregion'</span>]].copy()  <span class="co"># test raw</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb80"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb80-1"><a href="#cb80-1"></a>tr_raw  <span class="op">=</span> df_train[cols<span class="op">+</span>[<span class="st">'Subregion'</span>]].copy() <span class="co"># train raw</span></span>
+<span id="cb80-2"><a href="#cb80-2"></a>tst_raw <span class="op">=</span> df_test[cols<span class="op">+</span>[<span class="st">'Subregion'</span>]].copy()  <span class="co"># test raw</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="fit-to-data" class="level2">
 <h2 class="anchored" data-anchor-id="fit-to-data">Fit to Data</h2>
@@ -1821,10 +1827,10 @@ Difficulty: Moderate if you want to understand what <code>reshape</code> is doin
 </div>
 </div>
 <p>Fit the training data:</p>
-<div class="sourceCode" id="cb80"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb80-1"><a href="#cb80-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> MinMaxScaler</span>
-<span id="cb80-2"><a href="#cb80-2"></a></span>
-<span id="cb80-3"><a href="#cb80-3"></a><span class="co"># Notice what this is doing! See if you can explain it clearly.</span></span>
-<span id="cb80-4"><a href="#cb80-4"></a>scalers <span class="op">=</span> [???.fit(???[x].values.reshape(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>)) <span class="cf">for</span> x <span class="kw">in</span> cols]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb81"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb81-1"><a href="#cb81-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> MinMaxScaler</span>
+<span id="cb81-2"><a href="#cb81-2"></a></span>
+<span id="cb81-3"><a href="#cb81-3"></a><span class="co"># Notice what this is doing! See if you can explain it clearly.</span></span>
+<span id="cb81-4"><a href="#cb81-4"></a>scalers <span class="op">=</span> [???.fit(???[x].values.reshape(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>)) <span class="cf">for</span> x <span class="kw">in</span> cols]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="apply-transformations" class="level2">
 <h2 class="anchored" data-anchor-id="apply-transformations">Apply Transformations</h2>
@@ -1845,16 +1851,16 @@ Difficulty: Moderate.
 </div>
 </div>
 <p>Train:</p>
-<div class="sourceCode" id="cb81"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb81-1"><a href="#cb81-1"></a>tr_normed <span class="op">=</span> tr_raw.copy()</span>
-<span id="cb81-2"><a href="#cb81-2"></a></span>
-<span id="cb81-3"><a href="#cb81-3"></a><span class="cf">for</span> i, sc <span class="kw">in</span> <span class="bu">enumerate</span>(scalers):</span>
-<span id="cb81-4"><a href="#cb81-4"></a>    <span class="co"># Ditto this -- can you explain what this code is doing</span></span>
-<span id="cb81-5"><a href="#cb81-5"></a>    tr_normed[cols[i]] <span class="op">=</span> sc.transform(df_???[cols[i]].values.reshape(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Test:</p>
-<div class="sourceCode" id="cb82"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb82-1"><a href="#cb82-1"></a>tst_normed <span class="op">=</span> tst_raw.copy()</span>
+<div class="sourceCode" id="cb82"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb82-1"><a href="#cb82-1"></a>tr_normed <span class="op">=</span> tr_raw.copy()</span>
 <span id="cb82-2"><a href="#cb82-2"></a></span>
 <span id="cb82-3"><a href="#cb82-3"></a><span class="cf">for</span> i, sc <span class="kw">in</span> <span class="bu">enumerate</span>(scalers):</span>
-<span id="cb82-4"><a href="#cb82-4"></a>    tst_normed[cols[i]] <span class="op">=</span> sc.transform(df_???[cols[i]].values.reshape(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb82-4"><a href="#cb82-4"></a>    <span class="co"># Ditto this -- can you explain what this code is doing</span></span>
+<span id="cb82-5"><a href="#cb82-5"></a>    tr_normed[cols[i]] <span class="op">=</span> sc.transform(df_???[cols[i]].values.reshape(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Test:</p>
+<div class="sourceCode" id="cb83"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb83-1"><a href="#cb83-1"></a>tst_normed <span class="op">=</span> tst_raw.copy()</span>
+<span id="cb83-2"><a href="#cb83-2"></a></span>
+<span id="cb83-3"><a href="#cb83-3"></a><span class="cf">for</span> i, sc <span class="kw">in</span> <span class="bu">enumerate</span>(scalers):</span>
+<span id="cb83-4"><a href="#cb83-4"></a>    tst_normed[cols[i]] <span class="op">=</span> sc.transform(df_???[cols[i]].values.reshape(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1869,9 +1875,9 @@ Note
 </div>
 </div>
 <p>Check out the properties of <code>tst_normed</code> below. If you’ve understood what the <code>MinMaxScaler</code> is doing then you should be able to spot something unexpected in the transformed <em>test</em> outputs. If you’ve <em>really</em> understood this, you’ll see why this result is problematic for <em>models</em>. <em>Hint</em>: one way to think of it is an issue of <strong>extrapolation</strong>.</p>
-<div class="sourceCode" id="cb84"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb84-1"><a href="#cb84-1"></a><span class="cf">for</span> c <span class="kw">in</span> cols:</span>
-<span id="cb84-2"><a href="#cb84-2"></a>    <span class="bu">print</span>(<span class="ss">f"  Minimum: </span><span class="sc">{</span>tst_normed[c]<span class="sc">.</span><span class="bu">min</span>()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
-<span id="cb84-3"><a href="#cb84-3"></a>    ???</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb85"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb85-1"><a href="#cb85-1"></a><span class="cf">for</span> c <span class="kw">in</span> cols:</span>
+<span id="cb85-2"><a href="#cb85-2"></a>    <span class="bu">print</span>(<span class="ss">f"  Minimum: </span><span class="sc">{</span>tst_normed[c]<span class="sc">.</span><span class="bu">min</span>()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb85-3"><a href="#cb85-3"></a>    ???</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="plot-distributions" class="level2">
 <h2 class="anchored" data-anchor-id="plot-distributions">Plot Distributions</h2>
@@ -1891,12 +1897,12 @@ Difficulty: Moderate.
 </div>
 </div>
 </div>
-<div class="sourceCode" id="cb85"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb85-1"><a href="#cb85-1"></a>tr_raw.columns     <span class="op">=</span> [re.sub(<span class="st">'(-|/)'</span>,<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>,x) <span class="cf">for</span> x <span class="kw">in</span> tr_raw.columns.values]</span>
-<span id="cb85-2"><a href="#cb85-2"></a>tst_raw.columns    <span class="op">=</span> [re.sub(<span class="st">'(-|/)'</span>,<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>,x) <span class="cf">for</span> x <span class="kw">in</span> tst_raw.columns.values]</span>
-<span id="cb85-3"><a href="#cb85-3"></a>tr_normed.columns  <span class="op">=</span> [re.sub(<span class="st">'(-|/)'</span>,<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>,x) <span class="cf">for</span> x <span class="kw">in</span> tr_normed.columns.values]</span>
-<span id="cb85-4"><a href="#cb85-4"></a>tst_normed.columns <span class="op">=</span> [re.sub(<span class="st">'(-|/)'</span>,<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>,x) <span class="cf">for</span> x <span class="kw">in</span> tst_normed.columns.values]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb86"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb86-1"><a href="#cb86-1"></a>sns.pairplot(data<span class="op">=</span>tr_raw, hue<span class="op">=</span><span class="st">'Subregion'</span>, diag_kind<span class="op">=</span><span class="st">'kde'</span>, corner<span class="op">=</span><span class="va">True</span>, plot_kws<span class="op">=</span>kwds, hue_order<span class="op">=</span>ho)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb87"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb87-1"><a href="#cb87-1"></a>sns.pairplot(data<span class="op">=</span>tr_normed, hue<span class="op">=</span><span class="st">'Subregion'</span>, diag_kind<span class="op">=</span><span class="st">'kde'</span>, corner<span class="op">=</span><span class="va">True</span>, plot_kws<span class="op">=</span>kwds, hue_order<span class="op">=</span>ho)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb86"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb86-1"><a href="#cb86-1"></a>tr_raw.columns     <span class="op">=</span> [re.sub(<span class="st">'(-|/)'</span>,<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>,x) <span class="cf">for</span> x <span class="kw">in</span> tr_raw.columns.values]</span>
+<span id="cb86-2"><a href="#cb86-2"></a>tst_raw.columns    <span class="op">=</span> [re.sub(<span class="st">'(-|/)'</span>,<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>,x) <span class="cf">for</span> x <span class="kw">in</span> tst_raw.columns.values]</span>
+<span id="cb86-3"><a href="#cb86-3"></a>tr_normed.columns  <span class="op">=</span> [re.sub(<span class="st">'(-|/)'</span>,<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>,x) <span class="cf">for</span> x <span class="kw">in</span> tr_normed.columns.values]</span>
+<span id="cb86-4"><a href="#cb86-4"></a>tst_normed.columns <span class="op">=</span> [re.sub(<span class="st">'(-|/)'</span>,<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>,x) <span class="cf">for</span> x <span class="kw">in</span> tst_normed.columns.values]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb87"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb87-1"><a href="#cb87-1"></a>sns.pairplot(data<span class="op">=</span>tr_raw, hue<span class="op">=</span><span class="st">'Subregion'</span>, diag_kind<span class="op">=</span><span class="st">'kde'</span>, corner<span class="op">=</span><span class="va">True</span>, plot_kws<span class="op">=</span>kwds, hue_order<span class="op">=</span>ho)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb88"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb88-1"><a href="#cb88-1"></a>sns.pairplot(data<span class="op">=</span>tr_normed, hue<span class="op">=</span><span class="st">'Subregion'</span>, diag_kind<span class="op">=</span><span class="st">'kde'</span>, corner<span class="op">=</span><span class="va">True</span>, plot_kws<span class="op">=</span>kwds, hue_order<span class="op">=</span>ho)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="questions-4" class="level3">
 <h3 class="anchored" data-anchor-id="questions-4">Questions</h3>
 <ul>
@@ -1912,9 +1918,9 @@ Difficulty: Moderate.
 <section id="standardisation" class="level1">
 <h1>Standardisation</h1>
 <p>Standardisation is typically focussed on rescaling data to have a mean (or median) of 0 and standard deviation or IQR of 1. That these approaches are conceptually tied to the idea of symmetric, unimodal data such as that encountered in the standard normal distribution. Rather confusingly, many data scientists will use standardisation and normalisation largely interchangeably!</p>
-<div class="sourceCode" id="cb88"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb88-1"><a href="#cb88-1"></a>col <span class="op">=</span> <span class="st">'Vehicles-No cars or vans in hh'</span></span>
-<span id="cb88-2"><a href="#cb88-2"></a>tr  <span class="op">=</span> df_train[[col]].copy()</span>
-<span id="cb88-3"><a href="#cb88-3"></a>tst <span class="op">=</span> df_test[[col]].copy()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb89"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb89-1"><a href="#cb89-1"></a>col <span class="op">=</span> <span class="st">'Vehicles-No cars or vans in hh'</span></span>
+<span id="cb89-2"><a href="#cb89-2"></a>tr  <span class="op">=</span> df_train[[col]].copy()</span>
+<span id="cb89-3"><a href="#cb89-3"></a>tst <span class="op">=</span> df_test[[col]].copy()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="z-score-standardisation" class="level2">
 <h2 class="anchored" data-anchor-id="z-score-standardisation">Z-Score Standardisation</h2>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -1933,10 +1939,10 @@ Difficulty: Low.
 </div>
 </div>
 </div>
-<div class="sourceCode" id="cb89"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb89-1"><a href="#cb89-1"></a>stsc <span class="op">=</span> StandardScaler().fit(tr[col].values.reshape(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>))</span>
-<span id="cb89-2"><a href="#cb89-2"></a></span>
-<span id="cb89-3"><a href="#cb89-3"></a>tr[<span class="ss">f"Z. </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>]  <span class="op">=</span> stsc.transform(???)</span>
-<span id="cb89-4"><a href="#cb89-4"></a>tst[<span class="ss">f"Z. </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> stsc.transform(???)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb90"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb90-1"><a href="#cb90-1"></a>stsc <span class="op">=</span> StandardScaler().fit(tr[col].values.reshape(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb90-2"><a href="#cb90-2"></a></span>
+<span id="cb90-3"><a href="#cb90-3"></a>tr[<span class="ss">f"Z. </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>]  <span class="op">=</span> stsc.transform(???)</span>
+<span id="cb90-4"><a href="#cb90-4"></a>tst[<span class="ss">f"Z. </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> stsc.transform(???)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="inter-quartile-standardisation" class="level2">
 <h2 class="anchored" data-anchor-id="inter-quartile-standardisation">Inter-Quartile Standardisation</h2>
@@ -1956,10 +1962,10 @@ Difficulty: Low.
 </div>
 </div>
 </div>
-<div class="sourceCode" id="cb90"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb90-1"><a href="#cb90-1"></a>rs <span class="op">=</span> ???(quantile_range<span class="op">=</span>(<span class="fl">25.0</span>, <span class="fl">75.0</span>)).fit(???)</span>
-<span id="cb90-2"><a href="#cb90-2"></a></span>
-<span id="cb90-3"><a href="#cb90-3"></a>tr[<span class="ss">f"IQR. </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> rs.transform(???)</span>
-<span id="cb90-4"><a href="#cb90-4"></a>tst[<span class="ss">f"IQR. </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> rs.transform(???)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb91"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb91-1"><a href="#cb91-1"></a>rs <span class="op">=</span> ???(quantile_range<span class="op">=</span>(<span class="fl">25.0</span>, <span class="fl">75.0</span>)).fit(???)</span>
+<span id="cb91-2"><a href="#cb91-2"></a></span>
+<span id="cb91-3"><a href="#cb91-3"></a>tr[<span class="ss">f"IQR. </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> rs.transform(???)</span>
+<span id="cb91-4"><a href="#cb91-4"></a>tst[<span class="ss">f"IQR. </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> rs.transform(???)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="plot-distributions-1" class="level2">
 <h2 class="anchored" data-anchor-id="plot-distributions-1">Plot Distributions</h2>
@@ -1992,15 +1998,15 @@ Difficulty: Low.
 </div>
 </div>
 </div>
-<div class="sourceCode" id="cb92"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb92-1"><a href="#cb92-1"></a>sns.jointplot(data<span class="op">=</span>tr, x<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>, y<span class="op">=</span><span class="ss">f"Z. </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>, kind<span class="op">=</span><span class="st">'kde'</span>)<span class="op">;</span> <span class="co"># hex probably not the best choice</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb93"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb93-1"><a href="#cb93-1"></a>sns.jointplot(data<span class="op">=</span>tr, x<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>, y<span class="op">=</span><span class="ss">f"IQR. </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>, kind<span class="op">=</span><span class="st">'kde'</span>)<span class="op">;</span> <span class="co"># hex probably not the best choice</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb94"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb94-1"><a href="#cb94-1"></a>sns.jointplot(data<span class="op">=</span>tr, x<span class="op">=</span><span class="ss">f"Z. </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>, y<span class="op">=</span><span class="ss">f"IQR. </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>, kind<span class="op">=</span><span class="st">'hex'</span>)<span class="op">;</span> <span class="co"># hex probably not the best choice</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb93"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb93-1"><a href="#cb93-1"></a>sns.jointplot(data<span class="op">=</span>tr, x<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>, y<span class="op">=</span><span class="ss">f"Z. </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>, kind<span class="op">=</span><span class="st">'kde'</span>)<span class="op">;</span> <span class="co"># hex probably not the best choice</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb94"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb94-1"><a href="#cb94-1"></a>sns.jointplot(data<span class="op">=</span>tr, x<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>, y<span class="op">=</span><span class="ss">f"IQR. </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>, kind<span class="op">=</span><span class="st">'kde'</span>)<span class="op">;</span> <span class="co"># hex probably not the best choice</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb95"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb95-1"><a href="#cb95-1"></a>sns.jointplot(data<span class="op">=</span>tr, x<span class="op">=</span><span class="ss">f"Z. </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>, y<span class="op">=</span><span class="ss">f"IQR. </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>, kind<span class="op">=</span><span class="st">'hex'</span>)<span class="op">;</span> <span class="co"># hex probably not the best choice</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Perhaps a little more useful…</p>
-<div class="sourceCode" id="cb95"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb95-1"><a href="#cb95-1"></a>ax <span class="op">=</span> sns.kdeplot(tr[<span class="ss">f"Z. </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>])</span>
-<span id="cb95-2"><a href="#cb95-2"></a>sns.kdeplot(tr[<span class="ss">f"IQR. </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>], color<span class="op">=</span><span class="st">'r'</span>, ax<span class="op">=</span>ax)</span>
-<span id="cb95-3"><a href="#cb95-3"></a>plt.legend(loc<span class="op">=</span><span class="st">'upper right'</span>, labels<span class="op">=</span>[<span class="st">'Standard'</span>, <span class="st">'Robust'</span>]) <span class="co"># title='Foo'</span></span>
-<span id="cb95-4"><a href="#cb95-4"></a>ax.ticklabel_format(useOffset<span class="op">=</span><span class="va">False</span>, style<span class="op">=</span><span class="st">'plain'</span>)</span>
-<span id="cb95-5"><a href="#cb95-5"></a>ax.set_xlabel(<span class="st">"Standardised Value for No cars or vans in hh"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb96"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb96-1"><a href="#cb96-1"></a>ax <span class="op">=</span> sns.kdeplot(tr[<span class="ss">f"Z. </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>])</span>
+<span id="cb96-2"><a href="#cb96-2"></a>sns.kdeplot(tr[<span class="ss">f"IQR. </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>], color<span class="op">=</span><span class="st">'r'</span>, ax<span class="op">=</span>ax)</span>
+<span id="cb96-3"><a href="#cb96-3"></a>plt.legend(loc<span class="op">=</span><span class="st">'upper right'</span>, labels<span class="op">=</span>[<span class="st">'Standard'</span>, <span class="st">'Robust'</span>]) <span class="co"># title='Foo'</span></span>
+<span id="cb96-4"><a href="#cb96-4"></a>ax.ticklabel_format(useOffset<span class="op">=</span><span class="va">False</span>, style<span class="op">=</span><span class="st">'plain'</span>)</span>
+<span id="cb96-5"><a href="#cb96-5"></a>ax.set_xlabel(<span class="st">"Standardised Value for No cars or vans in hh"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="questions-5" class="level3">
 <h3 class="anchored" data-anchor-id="questions-5">Questions?</h3>
 <ul>
@@ -2063,28 +2069,28 @@ Difficulty: Moderate.
 <section id="creating-a-normal-distribution" class="level3">
 <h3 class="anchored" data-anchor-id="creating-a-normal-distribution">Creating a Normal Distribution</h3>
 <p>Below is a function to create that theoretical normal distribution. See if you can understand what’s going and add comments to the code to explain what each line does.</p>
-<div class="sourceCode" id="cb97"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb97-1"><a href="#cb97-1"></a><span class="kw">def</span> normal_from_dist(series): </span>
-<span id="cb97-2"><a href="#cb97-2"></a>    mu <span class="op">=</span> ???          <span class="co"># mean of our data</span></span>
-<span id="cb97-3"><a href="#cb97-3"></a>    sd <span class="op">=</span> ???          <span class="co"># standard deviation of our data</span></span>
-<span id="cb97-4"><a href="#cb97-4"></a>    n  <span class="op">=</span> ???          <span class="co"># count how many observations are in our data</span></span>
-<span id="cb97-5"><a href="#cb97-5"></a>    s <span class="op">=</span> np.random.normal(???, ???, ???)   <span class="co">#use the parameters of the data just calculated to generate n random numbers, drawn from a normal distributions </span></span>
-<span id="cb97-6"><a href="#cb97-6"></a>    <span class="cf">return</span> s                   <span class="co">#return this set of random numbers</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb98-1"><a href="#cb98-1"></a><span class="kw">def</span> normal_from_dist(series): </span>
+<span id="cb98-2"><a href="#cb98-2"></a>    mu <span class="op">=</span> ???          <span class="co"># mean of our data</span></span>
+<span id="cb98-3"><a href="#cb98-3"></a>    sd <span class="op">=</span> ???          <span class="co"># standard deviation of our data</span></span>
+<span id="cb98-4"><a href="#cb98-4"></a>    n  <span class="op">=</span> ???          <span class="co"># count how many observations are in our data</span></span>
+<span id="cb98-5"><a href="#cb98-5"></a>    s <span class="op">=</span> np.random.normal(???, ???, ???)   <span class="co">#use the parameters of the data just calculated to generate n random numbers, drawn from a normal distributions </span></span>
+<span id="cb98-6"><a href="#cb98-6"></a>    <span class="cf">return</span> s                   <span class="co">#return this set of random numbers</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>To make it easier to understand what the function above is doing, let’s use it! We’ll use the function to plot both a distribution plot with both histogram and KDE for our data, and then add a <em>second</em> overplot distplot to the same fig showing the theoretical normal distribution (in red). We’ll do this in a loop for each of the three variables we want to examine.</p>
 </section>
 <section id="visual-comparisons" class="level3">
 <h3 class="anchored" data-anchor-id="visual-comparisons">Visual Comparisons</h3>
 <p>Looking at the output, which of the variables has a roughly normal distribution? Another way to think about this question is, for which of the variables are the mean and standard deviation <em>most</em> appropriate as measures of centrality and spread?</p>
 <p><em>Also</em>, how would you determine the <em>meaning</em> of some of the departures from the normal distribution?</p>
-<div class="sourceCode" id="cb98"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb98-1"><a href="#cb98-1"></a>selection <span class="op">=</span> [x <span class="cf">for</span> x <span class="kw">in</span> df_train.columns.values <span class="cf">if</span> x.startswith(<span class="st">'Composition'</span>)]</span>
-<span id="cb98-2"><a href="#cb98-2"></a></span>
-<span id="cb98-3"><a href="#cb98-3"></a><span class="cf">for</span> c <span class="kw">in</span> selection:</span>
-<span id="cb98-4"><a href="#cb98-4"></a>    ax <span class="op">=</span> sns.kdeplot(df_train[c])</span>
-<span id="cb98-5"><a href="#cb98-5"></a>    sns.kdeplot(normal_from_dist(df_train[c]), color<span class="op">=</span><span class="st">'r'</span>, fill<span class="op">=</span><span class="va">True</span>, ax<span class="op">=</span>ax)</span>
-<span id="cb98-6"><a href="#cb98-6"></a>    plt.legend(loc<span class="op">=</span><span class="st">'upper right'</span>, labels<span class="op">=</span>[<span class="st">'Observed'</span>, <span class="st">'Normal'</span>]) <span class="co"># title='Foo'</span></span>
-<span id="cb98-7"><a href="#cb98-7"></a>    ax.ticklabel_format(useOffset<span class="op">=</span><span class="va">False</span>, style<span class="op">=</span><span class="st">'plain'</span>)</span>
-<span id="cb98-8"><a href="#cb98-8"></a>    <span class="cf">if</span> ax.get_xlim()[<span class="dv">1</span>] <span class="op">&gt;</span> <span class="dv">999999</span>:</span>
-<span id="cb98-9"><a href="#cb98-9"></a>        plt.xticks(rotation<span class="op">=</span><span class="dv">45</span>)</span>
-<span id="cb98-10"><a href="#cb98-10"></a>    plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb99"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb99-1"><a href="#cb99-1"></a>selection <span class="op">=</span> [x <span class="cf">for</span> x <span class="kw">in</span> df_train.columns.values <span class="cf">if</span> x.startswith(<span class="st">'Composition'</span>)]</span>
+<span id="cb99-2"><a href="#cb99-2"></a></span>
+<span id="cb99-3"><a href="#cb99-3"></a><span class="cf">for</span> c <span class="kw">in</span> selection:</span>
+<span id="cb99-4"><a href="#cb99-4"></a>    ax <span class="op">=</span> sns.kdeplot(df_train[c])</span>
+<span id="cb99-5"><a href="#cb99-5"></a>    sns.kdeplot(normal_from_dist(df_train[c]), color<span class="op">=</span><span class="st">'r'</span>, fill<span class="op">=</span><span class="va">True</span>, ax<span class="op">=</span>ax)</span>
+<span id="cb99-6"><a href="#cb99-6"></a>    plt.legend(loc<span class="op">=</span><span class="st">'upper right'</span>, labels<span class="op">=</span>[<span class="st">'Observed'</span>, <span class="st">'Normal'</span>]) <span class="co"># title='Foo'</span></span>
+<span id="cb99-7"><a href="#cb99-7"></a>    ax.ticklabel_format(useOffset<span class="op">=</span><span class="va">False</span>, style<span class="op">=</span><span class="st">'plain'</span>)</span>
+<span id="cb99-8"><a href="#cb99-8"></a>    <span class="cf">if</span> ax.get_xlim()[<span class="dv">1</span>] <span class="op">&gt;</span> <span class="dv">999999</span>:</span>
+<span id="cb99-9"><a href="#cb99-9"></a>        plt.xticks(rotation<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb99-10"><a href="#cb99-10"></a>    plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="questions-6" class="level3">
 <h3 class="anchored" data-anchor-id="questions-6">Questions</h3>
@@ -2116,37 +2122,37 @@ Difficulty: Moderate.
 <p>Let’s perform the transform then compare to the un-transformed data. Comment the code below to ensure that you understand what it is doing.</p>
 <section id="apply-and-plot" class="level3">
 <h3 class="anchored" data-anchor-id="apply-and-plot">Apply and Plot</h3>
-<div class="sourceCode" id="cb99"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb99-1"><a href="#cb99-1"></a>cols <span class="op">=</span> [<span class="st">'Median-2012'</span>,<span class="st">'Total Mean hh Income'</span>]</span>
-<span id="cb99-2"><a href="#cb99-2"></a></span>
-<span id="cb99-3"><a href="#cb99-3"></a><span class="cf">for</span> m <span class="kw">in</span> cols:</span>
-<span id="cb99-4"><a href="#cb99-4"></a>    s  <span class="op">=</span> df_train[m] <span class="co"># s == series</span></span>
-<span id="cb99-5"><a href="#cb99-5"></a>    ts <span class="op">=</span> ???.???(s)   <span class="co"># ts == transformed series</span></span>
-<span id="cb99-6"><a href="#cb99-6"></a>    </span>
-<span id="cb99-7"><a href="#cb99-7"></a>    ax <span class="op">=</span> sns.kdeplot(s)</span>
-<span id="cb99-8"><a href="#cb99-8"></a>    sns.kdeplot(normal_from_dist(s), color<span class="op">=</span><span class="st">'r'</span>, fill<span class="op">=</span><span class="va">True</span>, ax<span class="op">=</span>ax)</span>
-<span id="cb99-9"><a href="#cb99-9"></a>    plt.legend(loc<span class="op">=</span><span class="st">'upper right'</span>, labels<span class="op">=</span>[<span class="st">'Observed'</span>, <span class="st">'Normal'</span>]) <span class="co"># title also an option</span></span>
-<span id="cb99-10"><a href="#cb99-10"></a>    plt.title(<span class="st">"Original Data"</span>)</span>
-<span id="cb99-11"><a href="#cb99-11"></a>    </span>
-<span id="cb99-12"><a href="#cb99-12"></a>    <span class="co">### USEFUL FORMATTING TRICKS </span><span class="al">###</span></span>
-<span id="cb99-13"><a href="#cb99-13"></a>    <span class="co"># This turns off scientific notation in the ticklabels</span></span>
-<span id="cb99-14"><a href="#cb99-14"></a>    ax.ticklabel_format(useOffset<span class="op">=</span><span class="va">False</span>, style<span class="op">=</span><span class="st">'plain'</span>)</span>
-<span id="cb99-15"><a href="#cb99-15"></a>    <span class="co"># Notice this snippet of code</span></span>
-<span id="cb99-16"><a href="#cb99-16"></a>    ax.set_xlabel(ax.get_xlabel() <span class="op">+</span> <span class="st">" (Raw Distribution)"</span>)</span>
-<span id="cb99-17"><a href="#cb99-17"></a>    <span class="co"># Notice this little code snippet too</span></span>
-<span id="cb99-18"><a href="#cb99-18"></a>    <span class="cf">if</span> ax.get_xlim()[<span class="dv">1</span>] <span class="op">&gt;</span> <span class="dv">999999</span>:</span>
-<span id="cb99-19"><a href="#cb99-19"></a>        plt.xticks(rotation<span class="op">=</span><span class="dv">45</span>)</span>
-<span id="cb99-20"><a href="#cb99-20"></a>    </span>
-<span id="cb99-21"><a href="#cb99-21"></a>    plt.show()</span>
-<span id="cb99-22"><a href="#cb99-22"></a>    </span>
-<span id="cb99-23"><a href="#cb99-23"></a>    ax <span class="op">=</span> sns.kdeplot(ts)</span>
-<span id="cb99-24"><a href="#cb99-24"></a>    sns.kdeplot(normal_from_dist(ts), color<span class="op">=</span><span class="st">'r'</span>, fill<span class="op">=</span><span class="va">True</span>, ax<span class="op">=</span>ax)</span>
-<span id="cb99-25"><a href="#cb99-25"></a>    plt.legend(loc<span class="op">=</span><span class="st">'upper right'</span>, labels<span class="op">=</span>[<span class="st">'Observed'</span>, <span class="st">'Normal'</span>])</span>
-<span id="cb99-26"><a href="#cb99-26"></a>    ax.ticklabel_format(useOffset<span class="op">=</span><span class="va">False</span>, style<span class="op">=</span><span class="st">'plain'</span>)</span>
-<span id="cb99-27"><a href="#cb99-27"></a>    ax.set_xlabel(ax.get_xlabel() <span class="op">+</span> <span class="st">" (Logged Distribution)"</span>)</span>
-<span id="cb99-28"><a href="#cb99-28"></a>    <span class="cf">if</span> ax.get_xlim()[<span class="dv">1</span>] <span class="op">&gt;</span> <span class="dv">999999</span>:</span>
-<span id="cb99-29"><a href="#cb99-29"></a>        plt.xticks(rotation<span class="op">=</span><span class="dv">45</span>)</span>
-<span id="cb99-30"><a href="#cb99-30"></a>    plt.title(<span class="st">"Log-Transformed Data"</span>)</span>
-<span id="cb99-31"><a href="#cb99-31"></a>    plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb100"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb100-1"><a href="#cb100-1"></a>cols <span class="op">=</span> [<span class="st">'Median-2012'</span>,<span class="st">'Total Mean hh Income'</span>]</span>
+<span id="cb100-2"><a href="#cb100-2"></a></span>
+<span id="cb100-3"><a href="#cb100-3"></a><span class="cf">for</span> m <span class="kw">in</span> cols:</span>
+<span id="cb100-4"><a href="#cb100-4"></a>    s  <span class="op">=</span> df_train[m] <span class="co"># s == series</span></span>
+<span id="cb100-5"><a href="#cb100-5"></a>    ts <span class="op">=</span> ???.???(s)   <span class="co"># ts == transformed series</span></span>
+<span id="cb100-6"><a href="#cb100-6"></a>    </span>
+<span id="cb100-7"><a href="#cb100-7"></a>    ax <span class="op">=</span> sns.kdeplot(s)</span>
+<span id="cb100-8"><a href="#cb100-8"></a>    sns.kdeplot(normal_from_dist(s), color<span class="op">=</span><span class="st">'r'</span>, fill<span class="op">=</span><span class="va">True</span>, ax<span class="op">=</span>ax)</span>
+<span id="cb100-9"><a href="#cb100-9"></a>    plt.legend(loc<span class="op">=</span><span class="st">'upper right'</span>, labels<span class="op">=</span>[<span class="st">'Observed'</span>, <span class="st">'Normal'</span>]) <span class="co"># title also an option</span></span>
+<span id="cb100-10"><a href="#cb100-10"></a>    plt.title(<span class="st">"Original Data"</span>)</span>
+<span id="cb100-11"><a href="#cb100-11"></a>    </span>
+<span id="cb100-12"><a href="#cb100-12"></a>    <span class="co">### USEFUL FORMATTING TRICKS </span><span class="al">###</span></span>
+<span id="cb100-13"><a href="#cb100-13"></a>    <span class="co"># This turns off scientific notation in the ticklabels</span></span>
+<span id="cb100-14"><a href="#cb100-14"></a>    ax.ticklabel_format(useOffset<span class="op">=</span><span class="va">False</span>, style<span class="op">=</span><span class="st">'plain'</span>)</span>
+<span id="cb100-15"><a href="#cb100-15"></a>    <span class="co"># Notice this snippet of code</span></span>
+<span id="cb100-16"><a href="#cb100-16"></a>    ax.set_xlabel(ax.get_xlabel() <span class="op">+</span> <span class="st">" (Raw Distribution)"</span>)</span>
+<span id="cb100-17"><a href="#cb100-17"></a>    <span class="co"># Notice this little code snippet too</span></span>
+<span id="cb100-18"><a href="#cb100-18"></a>    <span class="cf">if</span> ax.get_xlim()[<span class="dv">1</span>] <span class="op">&gt;</span> <span class="dv">999999</span>:</span>
+<span id="cb100-19"><a href="#cb100-19"></a>        plt.xticks(rotation<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb100-20"><a href="#cb100-20"></a>    </span>
+<span id="cb100-21"><a href="#cb100-21"></a>    plt.show()</span>
+<span id="cb100-22"><a href="#cb100-22"></a>    </span>
+<span id="cb100-23"><a href="#cb100-23"></a>    ax <span class="op">=</span> sns.kdeplot(ts)</span>
+<span id="cb100-24"><a href="#cb100-24"></a>    sns.kdeplot(normal_from_dist(ts), color<span class="op">=</span><span class="st">'r'</span>, fill<span class="op">=</span><span class="va">True</span>, ax<span class="op">=</span>ax)</span>
+<span id="cb100-25"><a href="#cb100-25"></a>    plt.legend(loc<span class="op">=</span><span class="st">'upper right'</span>, labels<span class="op">=</span>[<span class="st">'Observed'</span>, <span class="st">'Normal'</span>])</span>
+<span id="cb100-26"><a href="#cb100-26"></a>    ax.ticklabel_format(useOffset<span class="op">=</span><span class="va">False</span>, style<span class="op">=</span><span class="st">'plain'</span>)</span>
+<span id="cb100-27"><a href="#cb100-27"></a>    ax.set_xlabel(ax.get_xlabel() <span class="op">+</span> <span class="st">" (Logged Distribution)"</span>)</span>
+<span id="cb100-28"><a href="#cb100-28"></a>    <span class="cf">if</span> ax.get_xlim()[<span class="dv">1</span>] <span class="op">&gt;</span> <span class="dv">999999</span>:</span>
+<span id="cb100-29"><a href="#cb100-29"></a>        plt.xticks(rotation<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb100-30"><a href="#cb100-30"></a>    plt.title(<span class="st">"Log-Transformed Data"</span>)</span>
+<span id="cb100-31"><a href="#cb100-31"></a>    plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Hopefully, you can see that the transformed data do indeed look ‘more normal’; the peak of the red and blue lines are closer together and the blue line at the lower extreme is also closer to the red line, but we can check this by seeing what has happened to the z-scores.</p>
 </section>
 </section>
@@ -2168,24 +2174,24 @@ Difficulty: Moderate.
 </div>
 </div>
 </div>
-<div class="sourceCode" id="cb100"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb100-1"><a href="#cb100-1"></a>cols <span class="op">=</span> [<span class="st">'Median-2012'</span>,<span class="st">'Total Mean hh Income'</span>]</span>
-<span id="cb100-2"><a href="#cb100-2"></a>pt <span class="op">=</span> ???(method<span class="op">=</span><span class="st">'yeo-johnson'</span>)</span>
-<span id="cb100-3"><a href="#cb100-3"></a></span>
-<span id="cb100-4"><a href="#cb100-4"></a><span class="cf">for</span> m <span class="kw">in</span> cols:</span>
-<span id="cb100-5"><a href="#cb100-5"></a>    s  <span class="op">=</span> df_train[m] <span class="co"># s == series</span></span>
-<span id="cb100-6"><a href="#cb100-6"></a>    ts <span class="op">=</span> pt.fit_transform(s.values.reshape(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>))</span>
-<span id="cb100-7"><a href="#cb100-7"></a>    <span class="bu">print</span>(<span class="ss">f"Using lambda (transform 'exponent') of </span><span class="sc">{</span>pt<span class="sc">.</span>lambdas_[<span class="dv">0</span>]<span class="sc">:0.5f}</span><span class="ss">"</span>)</span>
-<span id="cb100-8"><a href="#cb100-8"></a>    </span>
-<span id="cb100-9"><a href="#cb100-9"></a>    ax <span class="op">=</span> sns.kdeplot(ts.reshape(<span class="op">-</span><span class="dv">1</span>,))</span>
-<span id="cb100-10"><a href="#cb100-10"></a>    </span>
-<span id="cb100-11"><a href="#cb100-11"></a>    sns.kdeplot(normal_from_dist(???), color<span class="op">=</span><span class="st">'r'</span>, fill<span class="op">=</span><span class="va">True</span>, ax<span class="op">=</span>ax)</span>
-<span id="cb100-12"><a href="#cb100-12"></a>    plt.legend(loc<span class="op">=</span><span class="st">'upper right'</span>, labels<span class="op">=</span>[<span class="st">'Observed'</span>, <span class="st">'Normal'</span>])</span>
-<span id="cb100-13"><a href="#cb100-13"></a>    ax.ticklabel_format(useOffset<span class="op">=</span><span class="va">False</span>, style<span class="op">=</span><span class="st">'plain'</span>)</span>
-<span id="cb100-14"><a href="#cb100-14"></a>    ax.set_xlabel(m <span class="op">+</span> <span class="st">" (Transformed Distribution)"</span>)</span>
-<span id="cb100-15"><a href="#cb100-15"></a>    <span class="cf">if</span> ax.get_xlim()[<span class="dv">1</span>] <span class="op">&gt;</span> <span class="dv">999999</span>: <span class="co"># &lt;-- What does this do?</span></span>
-<span id="cb100-16"><a href="#cb100-16"></a>        plt.xticks(rotation<span class="op">=</span><span class="dv">45</span>)</span>
-<span id="cb100-17"><a href="#cb100-17"></a>    plt.title(<span class="st">"Power-Transformed Data"</span>)</span>
-<span id="cb100-18"><a href="#cb100-18"></a>    plt.show()<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb101"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb101-1"><a href="#cb101-1"></a>cols <span class="op">=</span> [<span class="st">'Median-2012'</span>,<span class="st">'Total Mean hh Income'</span>]</span>
+<span id="cb101-2"><a href="#cb101-2"></a>pt <span class="op">=</span> ???(method<span class="op">=</span><span class="st">'yeo-johnson'</span>)</span>
+<span id="cb101-3"><a href="#cb101-3"></a></span>
+<span id="cb101-4"><a href="#cb101-4"></a><span class="cf">for</span> m <span class="kw">in</span> cols:</span>
+<span id="cb101-5"><a href="#cb101-5"></a>    s  <span class="op">=</span> df_train[m] <span class="co"># s == series</span></span>
+<span id="cb101-6"><a href="#cb101-6"></a>    ts <span class="op">=</span> pt.fit_transform(s.values.reshape(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb101-7"><a href="#cb101-7"></a>    <span class="bu">print</span>(<span class="ss">f"Using lambda (transform 'exponent') of </span><span class="sc">{</span>pt<span class="sc">.</span>lambdas_[<span class="dv">0</span>]<span class="sc">:0.5f}</span><span class="ss">"</span>)</span>
+<span id="cb101-8"><a href="#cb101-8"></a>    </span>
+<span id="cb101-9"><a href="#cb101-9"></a>    ax <span class="op">=</span> sns.kdeplot(ts.reshape(<span class="op">-</span><span class="dv">1</span>,))</span>
+<span id="cb101-10"><a href="#cb101-10"></a>    </span>
+<span id="cb101-11"><a href="#cb101-11"></a>    sns.kdeplot(normal_from_dist(???), color<span class="op">=</span><span class="st">'r'</span>, fill<span class="op">=</span><span class="va">True</span>, ax<span class="op">=</span>ax)</span>
+<span id="cb101-12"><a href="#cb101-12"></a>    plt.legend(loc<span class="op">=</span><span class="st">'upper right'</span>, labels<span class="op">=</span>[<span class="st">'Observed'</span>, <span class="st">'Normal'</span>])</span>
+<span id="cb101-13"><a href="#cb101-13"></a>    ax.ticklabel_format(useOffset<span class="op">=</span><span class="va">False</span>, style<span class="op">=</span><span class="st">'plain'</span>)</span>
+<span id="cb101-14"><a href="#cb101-14"></a>    ax.set_xlabel(m <span class="op">+</span> <span class="st">" (Transformed Distribution)"</span>)</span>
+<span id="cb101-15"><a href="#cb101-15"></a>    <span class="cf">if</span> ax.get_xlim()[<span class="dv">1</span>] <span class="op">&gt;</span> <span class="dv">999999</span>: <span class="co"># &lt;-- What does this do?</span></span>
+<span id="cb101-16"><a href="#cb101-16"></a>        plt.xticks(rotation<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb101-17"><a href="#cb101-17"></a>    plt.title(<span class="st">"Power-Transformed Data"</span>)</span>
+<span id="cb101-18"><a href="#cb101-18"></a>    plt.show()<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
 <section id="principal-components-analysis" class="level1">
@@ -2207,11 +2213,11 @@ Note
 <section id="optional-reload" class="level3">
 <h3 class="anchored" data-anchor-id="optional-reload">Optional Reload</h3>
 <p>Use this is your data gets messy…</p>
-<div class="sourceCode" id="cb102"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb102-1"><a href="#cb102-1"></a>gdf <span class="op">=</span> gpd.read_parquet(os.path.join(<span class="st">'data'</span>,<span class="st">'geo'</span>,<span class="st">'MSOA_Atlas.geoparquet'</span>)).set_index(<span class="st">'MSOA Code'</span>)</span>
-<span id="cb102-2"><a href="#cb102-2"></a><span class="bu">print</span>(gdf.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb103"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb103-1"><a href="#cb103-1"></a>categoricals <span class="op">=</span> [<span class="st">'Borough'</span>,<span class="st">'Subregion'</span>]</span>
-<span id="cb103-2"><a href="#cb103-2"></a><span class="cf">for</span> c <span class="kw">in</span> categoricals:</span>
-<span id="cb103-3"><a href="#cb103-3"></a>    gdf[c] <span class="op">=</span> gdf[c].astype(<span class="st">'category'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb103"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb103-1"><a href="#cb103-1"></a>gdf <span class="op">=</span> gpd.read_parquet(os.path.join(<span class="st">'data'</span>,<span class="st">'geo'</span>,<span class="st">'MSOA_Atlas.geoparquet'</span>)).set_index(<span class="st">'MSOA Code'</span>)</span>
+<span id="cb103-2"><a href="#cb103-2"></a><span class="bu">print</span>(gdf.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb104"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb104-1"><a href="#cb104-1"></a>categoricals <span class="op">=</span> [<span class="st">'Borough'</span>,<span class="st">'Subregion'</span>]</span>
+<span id="cb104-2"><a href="#cb104-2"></a><span class="cf">for</span> c <span class="kw">in</span> categoricals:</span>
+<span id="cb104-3"><a href="#cb104-3"></a>    gdf[c] <span class="op">=</span> gdf[c].astype(<span class="st">'category'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="calculating-shares" class="level2">
 <h2 class="anchored" data-anchor-id="calculating-shares">Calculating Shares</h2>
@@ -2232,40 +2238,40 @@ Difficulty: Hard.
 </div>
 </div>
 <p>Sadly, there’s no transformer to work this out for you automatically, but let’s start by converting the raw population and household figures to shares so that our later dimensionality reduction steps aren’t impacted by the size of the MSOA.</p>
-<div class="sourceCode" id="cb104"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb104-1"><a href="#cb104-1"></a>gdf[[<span class="st">'Age-All Ages'</span>,<span class="st">'Households-All Households'</span>]].head(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb105-1"><a href="#cb105-1"></a>gdf[[<span class="st">'Age-All Ages'</span>,<span class="st">'Households-All Households'</span>]].head(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="specify-totals-columns" class="level3">
 <h3 class="anchored" data-anchor-id="specify-totals-columns">Specify Totals Columns</h3>
-<div class="sourceCode" id="cb105"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb105-1"><a href="#cb105-1"></a>total_pop <span class="op">=</span> gdf[<span class="st">'Age-All Ages'</span>]</span>
-<span id="cb105-2"><a href="#cb105-2"></a>total_hh  <span class="op">=</span> gdf[<span class="st">'Households-All Households'</span>]</span>
-<span id="cb105-3"><a href="#cb105-3"></a>total_vec <span class="op">=</span> gdf[<span class="st">'Vehicles-Sum of all cars or vans in the area'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb106"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb106-1"><a href="#cb106-1"></a>total_pop <span class="op">=</span> gdf[<span class="st">'Age-All Ages'</span>]</span>
+<span id="cb106-2"><a href="#cb106-2"></a>total_hh  <span class="op">=</span> gdf[<span class="st">'Households-All Households'</span>]</span>
+<span id="cb106-3"><a href="#cb106-3"></a>total_vec <span class="op">=</span> gdf[<span class="st">'Vehicles-Sum of all cars or vans in the area'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="specify-columns-for-pop-or-hh-normalisation" class="level3">
 <h3 class="anchored" data-anchor-id="specify-columns-for-pop-or-hh-normalisation">Specify Columns for Pop or HH Normalisation</h3>
-<div class="sourceCode" id="cb106"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb106-1"><a href="#cb106-1"></a>pop_cols  <span class="op">=</span> [<span class="st">'Age-'</span>, <span class="st">'Composition-'</span>, <span class="st">'Qualifications-'</span>, <span class="st">'Economic Activity-'</span>, <span class="st">'White'</span>, <span class="st">'Mixed/multiple'</span>,</span>
-<span id="cb106-2"><a href="#cb106-2"></a>             <span class="st">'Asian/Asian British'</span>, <span class="st">'Black/African'</span>, <span class="st">'BAME'</span>, <span class="st">'Other ethnic'</span>,</span>
-<span id="cb106-3"><a href="#cb106-3"></a>             <span class="st">'Country of Birth-'</span>]</span>
-<span id="cb106-4"><a href="#cb106-4"></a>hh_cols   <span class="op">=</span> [???, ???, ???, <span class="st">'Detached'</span>, <span class="st">'Semi-detached'</span>, <span class="st">'Terraced'</span>, <span class="st">'Flat, '</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb107"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb107-1"><a href="#cb107-1"></a>popre <span class="op">=</span> re.<span class="bu">compile</span>(<span class="vs">r'^(?:'</span> <span class="op">+</span> <span class="st">"|"</span>.join(pop_cols) <span class="op">+</span> <span class="vs">r')'</span>)</span>
-<span id="cb107-2"><a href="#cb107-2"></a>hhre  <span class="op">=</span> re.<span class="bu">compile</span>(<span class="vs">r'^(?:'</span> <span class="op">+</span> <span class="st">"|"</span>.join(???) <span class="op">+</span> <span class="vs">r')'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb107-1"><a href="#cb107-1"></a>pop_cols  <span class="op">=</span> [<span class="st">'Age-'</span>, <span class="st">'Composition-'</span>, <span class="st">'Qualifications-'</span>, <span class="st">'Economic Activity-'</span>, <span class="st">'White'</span>, <span class="st">'Mixed/multiple'</span>,</span>
+<span id="cb107-2"><a href="#cb107-2"></a>             <span class="st">'Asian/Asian British'</span>, <span class="st">'Black/African'</span>, <span class="st">'BAME'</span>, <span class="st">'Other ethnic'</span>,</span>
+<span id="cb107-3"><a href="#cb107-3"></a>             <span class="st">'Country of Birth-'</span>]</span>
+<span id="cb107-4"><a href="#cb107-4"></a>hh_cols   <span class="op">=</span> [???, ???, ???, <span class="st">'Detached'</span>, <span class="st">'Semi-detached'</span>, <span class="st">'Terraced'</span>, <span class="st">'Flat, '</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb108"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb108-1"><a href="#cb108-1"></a>popre <span class="op">=</span> re.<span class="bu">compile</span>(<span class="vs">r'^(?:'</span> <span class="op">+</span> <span class="st">"|"</span>.join(pop_cols) <span class="op">+</span> <span class="vs">r')'</span>)</span>
+<span id="cb108-2"><a href="#cb108-2"></a>hhre  <span class="op">=</span> re.<span class="bu">compile</span>(<span class="vs">r'^(?:'</span> <span class="op">+</span> <span class="st">"|"</span>.join(???) <span class="op">+</span> <span class="vs">r')'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="apply-to-columns" class="level3">
 <h3 class="anchored" data-anchor-id="apply-to-columns">Apply to Columns</h3>
-<div class="sourceCode" id="cb108"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb108-1"><a href="#cb108-1"></a>tr_gdf <span class="op">=</span> gdf.copy()</span>
-<span id="cb108-2"><a href="#cb108-2"></a>tr_gdf[<span class="st">'Mean hh size'</span>] <span class="op">=</span> tr_gdf[<span class="st">'Age-All Ages'</span>]<span class="op">/</span>tr_gdf[<span class="st">'Households-All Households'</span>]</span>
-<span id="cb108-3"><a href="#cb108-3"></a></span>
-<span id="cb108-4"><a href="#cb108-4"></a><span class="cf">for</span> c <span class="kw">in</span> gdf.columns:</span>
-<span id="cb108-5"><a href="#cb108-5"></a>    <span class="bu">print</span>(c)</span>
-<span id="cb108-6"><a href="#cb108-6"></a>    <span class="cf">if</span> popre.match(c):</span>
-<span id="cb108-7"><a href="#cb108-7"></a>        <span class="bu">print</span>(<span class="st">"  Normalising by total population."</span>)</span>
-<span id="cb108-8"><a href="#cb108-8"></a>        tr_gdf[c] <span class="op">=</span> gdf[c]<span class="op">/</span>???</span>
-<span id="cb108-9"><a href="#cb108-9"></a>    <span class="cf">elif</span> ???.match(???):</span>
-<span id="cb108-10"><a href="#cb108-10"></a>        <span class="bu">print</span>(<span class="st">"  Normalising by total households."</span>)</span>
-<span id="cb108-11"><a href="#cb108-11"></a>        tr_gdf[c] <span class="op">=</span> gdf[c]<span class="op">/</span>???</span>
-<span id="cb108-12"><a href="#cb108-12"></a>    <span class="cf">elif</span> c.startswith(<span class="st">'Vehicles-'</span>) <span class="kw">and</span> <span class="kw">not</span> c.startswith(<span class="st">'Vehicles-Cars per hh'</span>):</span>
-<span id="cb108-13"><a href="#cb108-13"></a>        <span class="bu">print</span>(<span class="st">"  Normalising by total vehicles."</span>)</span>
-<span id="cb108-14"><a href="#cb108-14"></a>        tr_gdf[c] <span class="op">=</span> gdf[c]<span class="op">/</span>???</span>
-<span id="cb108-15"><a href="#cb108-15"></a>    <span class="cf">else</span>:</span>
-<span id="cb108-16"><a href="#cb108-16"></a>        <span class="bu">print</span>(<span class="st">"  Passing through."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb109-1"><a href="#cb109-1"></a>tr_gdf <span class="op">=</span> gdf.copy()</span>
+<span id="cb109-2"><a href="#cb109-2"></a>tr_gdf[<span class="st">'Mean hh size'</span>] <span class="op">=</span> tr_gdf[<span class="st">'Age-All Ages'</span>]<span class="op">/</span>tr_gdf[<span class="st">'Households-All Households'</span>]</span>
+<span id="cb109-3"><a href="#cb109-3"></a></span>
+<span id="cb109-4"><a href="#cb109-4"></a><span class="cf">for</span> c <span class="kw">in</span> gdf.columns:</span>
+<span id="cb109-5"><a href="#cb109-5"></a>    <span class="bu">print</span>(c)</span>
+<span id="cb109-6"><a href="#cb109-6"></a>    <span class="cf">if</span> popre.match(c):</span>
+<span id="cb109-7"><a href="#cb109-7"></a>        <span class="bu">print</span>(<span class="st">"  Normalising by total population."</span>)</span>
+<span id="cb109-8"><a href="#cb109-8"></a>        tr_gdf[c] <span class="op">=</span> gdf[c]<span class="op">/</span>???</span>
+<span id="cb109-9"><a href="#cb109-9"></a>    <span class="cf">elif</span> ???.match(???):</span>
+<span id="cb109-10"><a href="#cb109-10"></a>        <span class="bu">print</span>(<span class="st">"  Normalising by total households."</span>)</span>
+<span id="cb109-11"><a href="#cb109-11"></a>        tr_gdf[c] <span class="op">=</span> gdf[c]<span class="op">/</span>???</span>
+<span id="cb109-12"><a href="#cb109-12"></a>    <span class="cf">elif</span> c.startswith(<span class="st">'Vehicles-'</span>) <span class="kw">and</span> <span class="kw">not</span> c.startswith(<span class="st">'Vehicles-Cars per hh'</span>):</span>
+<span id="cb109-13"><a href="#cb109-13"></a>        <span class="bu">print</span>(<span class="st">"  Normalising by total vehicles."</span>)</span>
+<span id="cb109-14"><a href="#cb109-14"></a>        tr_gdf[c] <span class="op">=</span> gdf[c]<span class="op">/</span>???</span>
+<span id="cb109-15"><a href="#cb109-15"></a>    <span class="cf">else</span>:</span>
+<span id="cb109-16"><a href="#cb109-16"></a>        <span class="bu">print</span>(<span class="st">"  Passing through."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
 <section id="removing-columns" class="level2">
@@ -2294,16 +2300,16 @@ Difficulty: Moderate.
 <p>So in practice, it’s probably a good idea to drop categorical data if you’re planning to use PCA.</p>
 <section id="drop-totals-columns" class="level3">
 <h3 class="anchored" data-anchor-id="drop-totals-columns">Drop Totals Columns</h3>
-<div class="sourceCode" id="cb109"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb109-1"><a href="#cb109-1"></a>pcadf <span class="op">=</span> tr_gdf.drop(columns<span class="op">=</span>[<span class="st">'Age-All Ages'</span>, <span class="st">'Households-All Households'</span>,</span>
-<span id="cb109-2"><a href="#cb109-2"></a>                             <span class="st">'Vehicles-Sum of all cars or vans in the area'</span>])</span>
-<span id="cb109-3"><a href="#cb109-3"></a>pcadf <span class="op">=</span> pcadf.set_index(<span class="st">'MSOA Code'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb110"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb110-1"><a href="#cb110-1"></a>pcadf <span class="op">=</span> tr_gdf.drop(columns<span class="op">=</span>[<span class="st">'Age-All Ages'</span>, <span class="st">'Households-All Households'</span>,</span>
+<span id="cb110-2"><a href="#cb110-2"></a>                             <span class="st">'Vehicles-Sum of all cars or vans in the area'</span>])</span>
+<span id="cb110-3"><a href="#cb110-3"></a>pcadf <span class="op">=</span> pcadf.set_index(<span class="st">'MSOA Code'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="drop-non-numeric-columns" class="level3">
 <h3 class="anchored" data-anchor-id="drop-non-numeric-columns">Drop Non-Numeric Columns</h3>
-<div class="sourceCode" id="cb110"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb110-1"><a href="#cb110-1"></a>pcadf.select_dtypes([<span class="st">'category'</span>,<span class="st">'object'</span>]).columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb111"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb111-1"><a href="#cb111-1"></a>pcadf.drop(columns<span class="op">=</span>pcadf.select_dtypes([<span class="st">'category'</span>,<span class="st">'object'</span>]).columns.to_list(), inplace<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb111-2"><a href="#cb111-2"></a>pcadf.drop(columns<span class="op">=</span>[<span class="st">'BNG_E'</span>,<span class="st">'BNG_N'</span>,<span class="st">'geometry'</span>, <span class="st">'LONG'</span>, <span class="st">'LAT'</span>,<span class="st">'Shape__Are'</span>, <span class="st">'Shape__Len'</span>], inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb112"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb112-1"><a href="#cb112-1"></a>pcadf.columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb111"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb111-1"><a href="#cb111-1"></a>pcadf.select_dtypes([<span class="st">'category'</span>,<span class="st">'object'</span>]).columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb112"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb112-1"><a href="#cb112-1"></a>pcadf.drop(columns<span class="op">=</span>pcadf.select_dtypes([<span class="st">'category'</span>,<span class="st">'object'</span>]).columns.to_list(), inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb112-2"><a href="#cb112-2"></a>pcadf.drop(columns<span class="op">=</span>[<span class="st">'BNG_E'</span>,<span class="st">'BNG_N'</span>,<span class="st">'geometry'</span>, <span class="st">'LONG'</span>, <span class="st">'LAT'</span>,<span class="st">'Shape__Are'</span>, <span class="st">'Shape__Len'</span>], inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb113"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb113-1"><a href="#cb113-1"></a>pcadf.columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
 <section id="rescale-reduce" class="level2">
@@ -2328,62 +2334,62 @@ Difficulty: Moderate.
 <section id="robustly-rescale" class="level3">
 <h3 class="anchored" data-anchor-id="robustly-rescale">Robustly Rescale</h3>
 <p>Set up the Robust Rescaler for inter-decile standardisation: 10th and 90th quantiles.</p>
-<div class="sourceCode" id="cb113"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb113-1"><a href="#cb113-1"></a>rs <span class="op">=</span> ???</span>
-<span id="cb113-2"><a href="#cb113-2"></a></span>
-<span id="cb113-3"><a href="#cb113-3"></a><span class="cf">for</span> c <span class="kw">in</span> pcadf.columns.values:</span>
-<span id="cb113-4"><a href="#cb113-4"></a>    pcadf[c] <span class="op">=</span> rs.fit_transform(pcadf[c].values.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb114"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb114-1"><a href="#cb114-1"></a>rs <span class="op">=</span> ???</span>
+<span id="cb114-2"><a href="#cb114-2"></a></span>
+<span id="cb114-3"><a href="#cb114-3"></a><span class="cf">for</span> c <span class="kw">in</span> pcadf.columns.values:</span>
+<span id="cb114-4"><a href="#cb114-4"></a>    pcadf[c] <span class="op">=</span> rs.fit_transform(pcadf[c].values.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="pca-reduce" class="level3">
 <h3 class="anchored" data-anchor-id="pca-reduce">PCA Reduce</h3>
-<div class="sourceCode" id="cb114"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb114-1"><a href="#cb114-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA </span>
-<span id="cb114-2"><a href="#cb114-2"></a></span>
-<span id="cb114-3"><a href="#cb114-3"></a>pca <span class="op">=</span> PCA(n_components<span class="op">=</span><span class="dv">50</span>, whiten<span class="op">=</span><span class="va">True</span>) </span>
-<span id="cb114-4"><a href="#cb114-4"></a></span>
-<span id="cb114-5"><a href="#cb114-5"></a>pca.fit(pcadf)</span>
-<span id="cb114-6"><a href="#cb114-6"></a></span>
-<span id="cb114-7"><a href="#cb114-7"></a>explained_variance <span class="op">=</span> pca.explained_variance_ratio_</span>
-<span id="cb114-8"><a href="#cb114-8"></a>singular_values <span class="op">=</span> pca.singular_values_</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb115"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb115-1"><a href="#cb115-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA </span>
+<span id="cb115-2"><a href="#cb115-2"></a></span>
+<span id="cb115-3"><a href="#cb115-3"></a>pca <span class="op">=</span> PCA(n_components<span class="op">=</span><span class="dv">50</span>, whiten<span class="op">=</span><span class="va">True</span>) </span>
+<span id="cb115-4"><a href="#cb115-4"></a></span>
+<span id="cb115-5"><a href="#cb115-5"></a>pca.fit(pcadf)</span>
+<span id="cb115-6"><a href="#cb115-6"></a></span>
+<span id="cb115-7"><a href="#cb115-7"></a>explained_variance <span class="op">=</span> pca.explained_variance_ratio_</span>
+<span id="cb115-8"><a href="#cb115-8"></a>singular_values <span class="op">=</span> pca.singular_values_</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="examine-explained-variance" class="level3">
 <h3 class="anchored" data-anchor-id="examine-explained-variance">Examine Explained Variance</h3>
-<div class="sourceCode" id="cb115"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb115-1"><a href="#cb115-1"></a>x <span class="op">=</span> np.arange(<span class="dv">1</span>,???)</span>
-<span id="cb115-2"><a href="#cb115-2"></a>plt.plot(x, explained_variance)</span>
-<span id="cb115-3"><a href="#cb115-3"></a>plt.ylabel(<span class="st">'Share of Variance Explained'</span>)</span>
-<span id="cb115-4"><a href="#cb115-4"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb116"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb116-1"><a href="#cb116-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="dv">20</span>):</span>
-<span id="cb116-2"><a href="#cb116-2"></a>    <span class="bu">print</span>(<span class="ss">f"Component </span><span class="sc">{</span>i<span class="sc">:&gt;2}</span><span class="ss"> accounts for </span><span class="sc">{</span>explained_variance[i]<span class="op">*</span><span class="dv">100</span><span class="sc">:&gt;2.2f}</span><span class="ss">% of variance"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb116"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb116-1"><a href="#cb116-1"></a>x <span class="op">=</span> np.arange(<span class="dv">1</span>,???)</span>
+<span id="cb116-2"><a href="#cb116-2"></a>plt.plot(x, explained_variance)</span>
+<span id="cb116-3"><a href="#cb116-3"></a>plt.ylabel(<span class="st">'Share of Variance Explained'</span>)</span>
+<span id="cb116-4"><a href="#cb116-4"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb117"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb117-1"><a href="#cb117-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="dv">20</span>):</span>
+<span id="cb117-2"><a href="#cb117-2"></a>    <span class="bu">print</span>(<span class="ss">f"Component </span><span class="sc">{</span>i<span class="sc">:&gt;2}</span><span class="ss"> accounts for </span><span class="sc">{</span>explained_variance[i]<span class="op">*</span><span class="dv">100</span><span class="sc">:&gt;2.2f}</span><span class="ss">% of variance"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>You should get that Component 0 accounts for 31.35% of the variance and Component 19 accounts for 0.37%.</p>
 <p>###: How Many Components?</p>
 <p>There are a number of ways that we could set a threshold for dimensionality reduction: - The most common is to look for the ‘knee’ in the Explained Variance plot above. That would put us at about 5 retained components. - Another is to just keep all components contributing more than 1% of the variance. That would put us at about 10 components. - You can also (<a href="https://medium.com/@nikolay.oskolkov/hi-jon-reades-my-sincere-apologies-for-this-very-late-reply-444f57054d14">I discovered</a>) look to shuffle the data and repeatedly perform PCA to build confidence intervals. I have not implemented this (yet).</p>
 <p>In order to <em>do</em> anything with these components we need to somehow reattach them to the MSOAs. So that entails taking the transformed results (<code>X_train</code> and <code>X_test</code>)</p>
-<div class="sourceCode" id="cb117"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb117-1"><a href="#cb117-1"></a>kn <span class="op">=</span> knee_locator.KneeLocator(x, explained_variance, </span>
-<span id="cb117-2"><a href="#cb117-2"></a>                              curve<span class="op">=</span><span class="st">'convex'</span>, direction<span class="op">=</span><span class="st">'decreasing'</span>, </span>
-<span id="cb117-3"><a href="#cb117-3"></a>                              interp_method<span class="op">=</span><span class="st">'interp1d'</span>)</span>
-<span id="cb117-4"><a href="#cb117-4"></a><span class="bu">print</span>(<span class="ss">f"Knee detected at: </span><span class="sc">{</span>kn<span class="sc">.</span>knee<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb117-5"><a href="#cb117-5"></a>kn.plot_knee()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb118"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb118-1"><a href="#cb118-1"></a>keep_n_components <span class="op">=</span> <span class="dv">7</span></span>
-<span id="cb118-2"><a href="#cb118-2"></a></span>
-<span id="cb118-3"><a href="#cb118-3"></a><span class="co"># If we weren't changing the number of components we</span></span>
-<span id="cb118-4"><a href="#cb118-4"></a><span class="co"># could re-use the pca object created above. </span></span>
-<span id="cb118-5"><a href="#cb118-5"></a>pca <span class="op">=</span> PCA(n_components<span class="op">=</span>keep_n_components, whiten<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb118-6"><a href="#cb118-6"></a></span>
-<span id="cb118-7"><a href="#cb118-7"></a>X_train <span class="op">=</span> pca.fit_transform(???)</span>
-<span id="cb118-8"><a href="#cb118-8"></a></span>
-<span id="cb118-9"><a href="#cb118-9"></a><span class="co"># Notice that we get the _same_ values out,</span></span>
-<span id="cb118-10"><a href="#cb118-10"></a><span class="co"># so this is a *deterministic* process that</span></span>
-<span id="cb118-11"><a href="#cb118-11"></a><span class="co"># is fully replicable (allowing for algorithmic</span></span>
-<span id="cb118-12"><a href="#cb118-12"></a><span class="co">#&nbsp;and programming language differences).</span></span>
-<span id="cb118-13"><a href="#cb118-13"></a><span class="bu">print</span>(<span class="ss">f"Total explained variance: </span><span class="sc">{</span>pca<span class="sc">.</span>explained_variance_ratio_<span class="sc">.</span><span class="bu">sum</span>()<span class="op">*</span><span class="dv">100</span><span class="sc">:2.2f}</span><span class="ss">%"</span>)</span>
-<span id="cb118-14"><a href="#cb118-14"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, keep_n_components):</span>
-<span id="cb118-15"><a href="#cb118-15"></a>    <span class="bu">print</span>(<span class="ss">f"  Component </span><span class="sc">{</span>i<span class="sc">:&gt;2}</span><span class="ss"> accounts for </span><span class="sc">{</span>pca<span class="sc">.</span>explained_variance_ratio_[i]<span class="op">*</span><span class="dv">100</span><span class="sc">:&gt;5.2f}</span><span class="ss">% of variance"</span>)</span>
-<span id="cb118-16"><a href="#cb118-16"></a></span>
-<span id="cb118-17"><a href="#cb118-17"></a><span class="co"># Notice...</span></span>
-<span id="cb118-18"><a href="#cb118-18"></a><span class="bu">print</span>(<span class="ss">f"X-train shape: </span><span class="sc">{</span><span class="bu">len</span>(X_train)<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb118-19"><a href="#cb118-19"></a><span class="bu">print</span>(<span class="ss">f"PCA df shape: </span><span class="sc">{</span>pcadf<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb118-20"><a href="#cb118-20"></a><span class="co"># So each observation has a row in X_train and there is </span></span>
-<span id="cb118-21"><a href="#cb118-21"></a><span class="co"># 1 column for each component. This defines the mapping</span></span>
-<span id="cb118-22"><a href="#cb118-22"></a><span class="co"># of the original data space into the reduced one</span></span>
-<span id="cb118-23"><a href="#cb118-23"></a><span class="bu">print</span>(<span class="ss">f"Row 0 of X-train contains </span><span class="sc">{</span><span class="bu">len</span>(X_train[<span class="dv">0</span>])<span class="sc">}</span><span class="ss"> elements."</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb118"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb118-1"><a href="#cb118-1"></a>kn <span class="op">=</span> knee_locator.KneeLocator(x, explained_variance, </span>
+<span id="cb118-2"><a href="#cb118-2"></a>                              curve<span class="op">=</span><span class="st">'convex'</span>, direction<span class="op">=</span><span class="st">'decreasing'</span>, </span>
+<span id="cb118-3"><a href="#cb118-3"></a>                              interp_method<span class="op">=</span><span class="st">'interp1d'</span>)</span>
+<span id="cb118-4"><a href="#cb118-4"></a><span class="bu">print</span>(<span class="ss">f"Knee detected at: </span><span class="sc">{</span>kn<span class="sc">.</span>knee<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb118-5"><a href="#cb118-5"></a>kn.plot_knee()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb119"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb119-1"><a href="#cb119-1"></a>keep_n_components <span class="op">=</span> <span class="dv">7</span></span>
+<span id="cb119-2"><a href="#cb119-2"></a></span>
+<span id="cb119-3"><a href="#cb119-3"></a><span class="co"># If we weren't changing the number of components we</span></span>
+<span id="cb119-4"><a href="#cb119-4"></a><span class="co"># could re-use the pca object created above. </span></span>
+<span id="cb119-5"><a href="#cb119-5"></a>pca <span class="op">=</span> PCA(n_components<span class="op">=</span>keep_n_components, whiten<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb119-6"><a href="#cb119-6"></a></span>
+<span id="cb119-7"><a href="#cb119-7"></a>X_train <span class="op">=</span> pca.fit_transform(???)</span>
+<span id="cb119-8"><a href="#cb119-8"></a></span>
+<span id="cb119-9"><a href="#cb119-9"></a><span class="co"># Notice that we get the _same_ values out,</span></span>
+<span id="cb119-10"><a href="#cb119-10"></a><span class="co"># so this is a *deterministic* process that</span></span>
+<span id="cb119-11"><a href="#cb119-11"></a><span class="co"># is fully replicable (allowing for algorithmic</span></span>
+<span id="cb119-12"><a href="#cb119-12"></a><span class="co">#&nbsp;and programming language differences).</span></span>
+<span id="cb119-13"><a href="#cb119-13"></a><span class="bu">print</span>(<span class="ss">f"Total explained variance: </span><span class="sc">{</span>pca<span class="sc">.</span>explained_variance_ratio_<span class="sc">.</span><span class="bu">sum</span>()<span class="op">*</span><span class="dv">100</span><span class="sc">:2.2f}</span><span class="ss">%"</span>)</span>
+<span id="cb119-14"><a href="#cb119-14"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, keep_n_components):</span>
+<span id="cb119-15"><a href="#cb119-15"></a>    <span class="bu">print</span>(<span class="ss">f"  Component </span><span class="sc">{</span>i<span class="sc">:&gt;2}</span><span class="ss"> accounts for </span><span class="sc">{</span>pca<span class="sc">.</span>explained_variance_ratio_[i]<span class="op">*</span><span class="dv">100</span><span class="sc">:&gt;5.2f}</span><span class="ss">% of variance"</span>)</span>
+<span id="cb119-16"><a href="#cb119-16"></a></span>
+<span id="cb119-17"><a href="#cb119-17"></a><span class="co"># Notice...</span></span>
+<span id="cb119-18"><a href="#cb119-18"></a><span class="bu">print</span>(<span class="ss">f"X-train shape: </span><span class="sc">{</span><span class="bu">len</span>(X_train)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb119-19"><a href="#cb119-19"></a><span class="bu">print</span>(<span class="ss">f"PCA df shape: </span><span class="sc">{</span>pcadf<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb119-20"><a href="#cb119-20"></a><span class="co"># So each observation has a row in X_train and there is </span></span>
+<span id="cb119-21"><a href="#cb119-21"></a><span class="co"># 1 column for each component. This defines the mapping</span></span>
+<span id="cb119-22"><a href="#cb119-22"></a><span class="co"># of the original data space into the reduced one</span></span>
+<span id="cb119-23"><a href="#cb119-23"></a><span class="bu">print</span>(<span class="ss">f"Row 0 of X-train contains </span><span class="sc">{</span><span class="bu">len</span>(X_train[<span class="dv">0</span>])<span class="sc">}</span><span class="ss"> elements."</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
 <section id="components-to-columns" class="level2">
@@ -2405,10 +2411,10 @@ Difficulty: Moderate.
 </div>
 </div>
 <p>You could actually do this more quickly (but less clearly) using <code>X_train.T</code> to transpose the matrix!</p>
-<div class="sourceCode" id="cb119"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb119-1"><a href="#cb119-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,keep_n_components):</span>
-<span id="cb119-2"><a href="#cb119-2"></a>    s <span class="op">=</span> pd.Series(X_train[:,???], index<span class="op">=</span>pcadf.???)</span>
-<span id="cb119-3"><a href="#cb119-3"></a>    pcadf[<span class="ss">f"Component </span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> s</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb120"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb120-1"><a href="#cb120-1"></a>pcadf.sample(<span class="dv">3</span>).iloc[:,<span class="op">-</span><span class="dv">10</span>:<span class="op">-</span><span class="dv">4</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb120"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb120-1"><a href="#cb120-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,keep_n_components):</span>
+<span id="cb120-2"><a href="#cb120-2"></a>    s <span class="op">=</span> pd.Series(X_train[:,???], index<span class="op">=</span>pcadf.???)</span>
+<span id="cb120-3"><a href="#cb120-3"></a>    pcadf[<span class="ss">f"Component </span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> s</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb121"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb121-1"><a href="#cb121-1"></a>pcadf.sample(<span class="dv">3</span>).iloc[:,<span class="op">-</span><span class="dv">10</span>:<span class="op">-</span><span class="dv">4</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="reattaching-geodata" class="level2">
 <h2 class="anchored" data-anchor-id="reattaching-geodata">(Re)Attaching GeoData</h2>
@@ -2428,15 +2434,15 @@ Difficulty: Moderate.
 </div>
 </div>
 </div>
-<div class="sourceCode" id="cb121"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb121-1"><a href="#cb121-1"></a>msoas <span class="op">=</span> gpd.read_file(os.path.join(<span class="st">'data'</span>,<span class="st">'geo'</span>,<span class="st">'Middle_Layer_Super_Output_Areas__December_2011__EW_BGC_V2-shp.zip'</span>), driver<span class="op">=</span><span class="st">'ESRI Shapefile'</span>)</span>
-<span id="cb121-2"><a href="#cb121-2"></a>msoas <span class="op">=</span> msoas.set_index(<span class="st">'MSOA11CD'</span>)</span>
-<span id="cb121-3"><a href="#cb121-3"></a><span class="bu">print</span>(msoas.columns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb122"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb122-1"><a href="#cb122-1"></a>msoas.head(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb123"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb123-1"><a href="#cb123-1"></a>pcadf.head(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb124"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb124-1"><a href="#cb124-1"></a>gpcadf <span class="op">=</span> pd.merge(msoas.set_index([<span class="st">'MSOA11CD'</span>], drop<span class="op">=</span><span class="va">True</span>), pcadf, left_index<span class="op">=</span><span class="va">True</span>, right_index<span class="op">=</span><span class="va">True</span>, how<span class="op">=</span><span class="st">'inner'</span>)</span>
-<span id="cb124-2"><a href="#cb124-2"></a><span class="bu">print</span>(<span class="ss">f"Geo-PCA df has shape </span><span class="sc">{</span>gpcadf<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> x </span><span class="sc">{</span>gpcadf<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb122"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb122-1"><a href="#cb122-1"></a>msoas <span class="op">=</span> gpd.read_file(os.path.join(<span class="st">'data'</span>,<span class="st">'geo'</span>,<span class="st">'Middle_Layer_Super_Output_Areas__December_2011__EW_BGC_V2-shp.zip'</span>), driver<span class="op">=</span><span class="st">'ESRI Shapefile'</span>)</span>
+<span id="cb122-2"><a href="#cb122-2"></a>msoas <span class="op">=</span> msoas.set_index(<span class="st">'MSOA11CD'</span>)</span>
+<span id="cb122-3"><a href="#cb122-3"></a><span class="bu">print</span>(msoas.columns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb123"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb123-1"><a href="#cb123-1"></a>msoas.head(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb124"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb124-1"><a href="#cb124-1"></a>pcadf.head(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb125"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb125-1"><a href="#cb125-1"></a>gpcadf <span class="op">=</span> pd.merge(msoas.set_index([<span class="st">'MSOA11CD'</span>], drop<span class="op">=</span><span class="va">True</span>), pcadf, left_index<span class="op">=</span><span class="va">True</span>, right_index<span class="op">=</span><span class="va">True</span>, how<span class="op">=</span><span class="st">'inner'</span>)</span>
+<span id="cb125-2"><a href="#cb125-2"></a><span class="bu">print</span>(<span class="ss">f"Geo-PCA df has shape </span><span class="sc">{</span>gpcadf<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> x </span><span class="sc">{</span>gpcadf<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>You should get <code>PCA df has shape 983 x 89</code>.</p>
-<div class="sourceCode" id="cb125"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb125-1"><a href="#cb125-1"></a>gpcadf[<span class="st">'Borough'</span>] <span class="op">=</span> gpcadf.MSOA11NM.<span class="bu">apply</span>(???)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb126"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb126-1"><a href="#cb126-1"></a>gpcadf[<span class="st">'Borough'</span>] <span class="op">=</span> gpcadf.MSOA11NM.<span class="bu">apply</span>(???)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="map-the-first-n-components" class="level2">
 <h2 class="anchored" data-anchor-id="map-the-first-n-components">Map the First <em>n</em> Components</h2>
@@ -2457,11 +2463,11 @@ Difficulty: Moderate.
 </div>
 </div>
 <p>How would you automate this so that the loop creates one plot for each of the first 3 components? How do you interpret these?</p>
-<div class="sourceCode" id="cb126"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb126-1"><a href="#cb126-1"></a><span class="cf">for</span> comp <span class="kw">in</span> [<span class="ss">f"Component </span><span class="sc">{</span>x<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> x <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,<span class="dv">3</span>)]:</span>
-<span id="cb126-2"><a href="#cb126-2"></a>    ax <span class="op">=</span> gpcadf.plot(column<span class="op">=</span>???, cmap<span class="op">=</span><span class="st">'plasma'</span>, </span>
-<span id="cb126-3"><a href="#cb126-3"></a>         scheme<span class="op">=</span><span class="st">'FisherJenks'</span>, k<span class="op">=</span><span class="dv">7</span>, edgecolor<span class="op">=</span><span class="st">'None'</span>, legend<span class="op">=</span><span class="va">True</span>, figsize<span class="op">=</span>(<span class="dv">9</span>,<span class="dv">7</span>))<span class="op">;</span></span>
-<span id="cb126-4"><a href="#cb126-4"></a>    boros.plot(ax<span class="op">=</span>ax, edgecolor<span class="op">=</span><span class="st">'w'</span>, facecolor<span class="op">=</span><span class="st">'none'</span>, linewidth<span class="op">=</span><span class="dv">1</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
-<span id="cb126-5"><a href="#cb126-5"></a>    ax.set_title(<span class="ss">f'PCA </span><span class="sc">{</span>comp<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb127"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb127-1"><a href="#cb127-1"></a><span class="cf">for</span> comp <span class="kw">in</span> [<span class="ss">f"Component </span><span class="sc">{</span>x<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> x <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,<span class="dv">3</span>)]:</span>
+<span id="cb127-2"><a href="#cb127-2"></a>    ax <span class="op">=</span> gpcadf.plot(column<span class="op">=</span>???, cmap<span class="op">=</span><span class="st">'plasma'</span>, </span>
+<span id="cb127-3"><a href="#cb127-3"></a>         scheme<span class="op">=</span><span class="st">'FisherJenks'</span>, k<span class="op">=</span><span class="dv">7</span>, edgecolor<span class="op">=</span><span class="st">'None'</span>, legend<span class="op">=</span><span class="va">True</span>, figsize<span class="op">=</span>(<span class="dv">9</span>,<span class="dv">7</span>))<span class="op">;</span></span>
+<span id="cb127-4"><a href="#cb127-4"></a>    boros.plot(ax<span class="op">=</span>ax, edgecolor<span class="op">=</span><span class="st">'w'</span>, facecolor<span class="op">=</span><span class="st">'none'</span>, linewidth<span class="op">=</span><span class="dv">1</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb127-5"><a href="#cb127-5"></a>    ax.set_title(<span class="ss">f'PCA </span><span class="sc">{</span>comp<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Your first component map should look something like this:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -2492,22 +2498,22 @@ Difficulty: Hard.
 </div>
 </div>
 </div>
-<div class="sourceCode" id="cb127"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb127-1"><a href="#cb127-1"></a><span class="im">from</span> umap <span class="im">import</span> UMAP</span>
-<span id="cb127-2"><a href="#cb127-2"></a></span>
-<span id="cb127-3"><a href="#cb127-3"></a><span class="co"># You might want to experiment with all</span></span>
-<span id="cb127-4"><a href="#cb127-4"></a><span class="co"># 3 of these values -- it may make sense </span></span>
-<span id="cb127-5"><a href="#cb127-5"></a><span class="co"># to package a lot of this up into a function!</span></span>
-<span id="cb127-6"><a href="#cb127-6"></a>keep_dims<span class="op">=</span><span class="dv">2</span></span>
-<span id="cb127-7"><a href="#cb127-7"></a>rs<span class="op">=</span><span class="dv">42</span></span>
-<span id="cb127-8"><a href="#cb127-8"></a></span>
-<span id="cb127-9"><a href="#cb127-9"></a>u <span class="op">=</span> UMAP(</span>
-<span id="cb127-10"><a href="#cb127-10"></a>    n_neighbors<span class="op">=</span><span class="dv">25</span>,</span>
-<span id="cb127-11"><a href="#cb127-11"></a>    min_dist<span class="op">=</span><span class="fl">0.01</span>,</span>
-<span id="cb127-12"><a href="#cb127-12"></a>    n_components<span class="op">=</span>keep_dims,</span>
-<span id="cb127-13"><a href="#cb127-13"></a>    random_state<span class="op">=</span>rs)</span>
-<span id="cb127-14"><a href="#cb127-14"></a></span>
-<span id="cb127-15"><a href="#cb127-15"></a>X_embedded <span class="op">=</span> u.fit_transform(???)</span>
-<span id="cb127-16"><a href="#cb127-16"></a><span class="bu">print</span>(X_embedded.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb128"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb128-1"><a href="#cb128-1"></a><span class="im">from</span> umap <span class="im">import</span> UMAP</span>
+<span id="cb128-2"><a href="#cb128-2"></a></span>
+<span id="cb128-3"><a href="#cb128-3"></a><span class="co"># You might want to experiment with all</span></span>
+<span id="cb128-4"><a href="#cb128-4"></a><span class="co"># 3 of these values -- it may make sense </span></span>
+<span id="cb128-5"><a href="#cb128-5"></a><span class="co"># to package a lot of this up into a function!</span></span>
+<span id="cb128-6"><a href="#cb128-6"></a>keep_dims<span class="op">=</span><span class="dv">2</span></span>
+<span id="cb128-7"><a href="#cb128-7"></a>rs<span class="op">=</span><span class="dv">42</span></span>
+<span id="cb128-8"><a href="#cb128-8"></a></span>
+<span id="cb128-9"><a href="#cb128-9"></a>u <span class="op">=</span> UMAP(</span>
+<span id="cb128-10"><a href="#cb128-10"></a>    n_neighbors<span class="op">=</span><span class="dv">25</span>,</span>
+<span id="cb128-11"><a href="#cb128-11"></a>    min_dist<span class="op">=</span><span class="fl">0.01</span>,</span>
+<span id="cb128-12"><a href="#cb128-12"></a>    n_components<span class="op">=</span>keep_dims,</span>
+<span id="cb128-13"><a href="#cb128-13"></a>    random_state<span class="op">=</span>rs)</span>
+<span id="cb128-14"><a href="#cb128-14"></a></span>
+<span id="cb128-15"><a href="#cb128-15"></a>X_embedded <span class="op">=</span> u.fit_transform(???)</span>
+<span id="cb128-16"><a href="#cb128-16"></a><span class="bu">print</span>(X_embedded.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="write-to-data-frame" class="level2">
 <h2 class="anchored" data-anchor-id="write-to-data-frame">Write to Data Frame</h2>
@@ -2528,10 +2534,10 @@ Difficulty: Low.
 </div>
 </div>
 <p>Can probably also be solved using <code>X_embedded.T</code>.</p>
-<div class="sourceCode" id="cb128"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb128-1"><a href="#cb128-1"></a><span class="cf">for</span> ix <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,X_embedded.shape[<span class="dv">1</span>]):</span>
-<span id="cb128-2"><a href="#cb128-2"></a>    <span class="bu">print</span>(ix)</span>
-<span id="cb128-3"><a href="#cb128-3"></a>    s <span class="op">=</span> pd.Series(X_embedded[:,???], index<span class="op">=</span>pcadf.???)</span>
-<span id="cb128-4"><a href="#cb128-4"></a>    gpcadf[<span class="ss">f"Dimension </span><span class="sc">{</span>ix<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> s</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb129"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb129-1"><a href="#cb129-1"></a><span class="cf">for</span> ix <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,X_embedded.shape[<span class="dv">1</span>]):</span>
+<span id="cb129-2"><a href="#cb129-2"></a>    <span class="bu">print</span>(ix)</span>
+<span id="cb129-3"><a href="#cb129-3"></a>    s <span class="op">=</span> pd.Series(X_embedded[:,???], index<span class="op">=</span>pcadf.???)</span>
+<span id="cb129-4"><a href="#cb129-4"></a>    gpcadf[<span class="ss">f"Dimension </span><span class="sc">{</span>ix<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> s</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="visualise" class="level2">
 <h2 class="anchored" data-anchor-id="visualise">Visualise!</h2>
@@ -2551,23 +2557,23 @@ Difficulty: Low.
 </div>
 </div>
 </div>
-<div class="sourceCode" id="cb129"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb129-1"><a href="#cb129-1"></a>rddf <span class="op">=</span> gpcadf.copy() <span class="co"># Reduced Dimension Data Frame</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb130"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb130-1"><a href="#cb130-1"></a>rddf <span class="op">=</span> gpcadf.copy() <span class="co"># Reduced Dimension Data Frame</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="simple-scatter" class="level3">
 <h3 class="anchored" data-anchor-id="simple-scatter">Simple Scatter</h3>
-<div class="sourceCode" id="cb130"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb130-1"><a href="#cb130-1"></a>f,ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">1</span>,figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">6</span>))</span>
-<span id="cb130-2"><a href="#cb130-2"></a>sns.scatterplot(x<span class="op">=</span>rddf[???], y<span class="op">=</span>rddf[???], hue<span class="op">=</span>rddf[<span class="st">'Borough'</span>], legend<span class="op">=</span><span class="va">False</span>, ax<span class="op">=</span>ax)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb131"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb131-1"><a href="#cb131-1"></a>f,ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">1</span>,figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">6</span>))</span>
+<span id="cb131-2"><a href="#cb131-2"></a>sns.scatterplot(x<span class="op">=</span>rddf[???], y<span class="op">=</span>rddf[???], hue<span class="op">=</span>rddf[<span class="st">'Borough'</span>], legend<span class="op">=</span><span class="va">False</span>, ax<span class="op">=</span>ax)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="seaborn-jointplot" class="level3">
 <h3 class="anchored" data-anchor-id="seaborn-jointplot">Seaborn Jointplot</h3>
 <p>That is <em>suggestive</em> of there being struccture in the data, but with 983 data points and 33 colours it’s hard to make sense of what the structure <em>might</em> imply. Let’s try this again using the Subregion instead and taking advantage of the Seaborn visualisation library’s <code>jointplot</code> (joint distribution plot):</p>
-<div class="sourceCode" id="cb131"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb131-1"><a href="#cb131-1"></a>rddf[<span class="st">'Subregion'</span>] <span class="op">=</span> rddf.Borough.<span class="bu">apply</span>(<span class="kw">lambda</span> x: mapping[x])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb132"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb132-1"><a href="#cb132-1"></a><span class="co"># Sets some handy 'keywords' to tweak the Seaborn plot</span></span>
-<span id="cb132-2"><a href="#cb132-2"></a>kwds <span class="op">=</span> <span class="bu">dict</span>(s<span class="op">=</span><span class="dv">7</span>,alpha<span class="op">=</span><span class="fl">0.95</span>,edgecolor<span class="op">=</span><span class="st">"none"</span>)</span>
-<span id="cb132-3"><a href="#cb132-3"></a><span class="co"># Set the *hue order* so that all plots have some colouring by Subregion</span></span>
-<span id="cb132-4"><a href="#cb132-4"></a>ho <span class="op">=</span> [<span class="st">'Inner East'</span>,<span class="st">'Inner West'</span>,<span class="st">'Outer West and North West'</span>,<span class="st">'Outer South'</span>,<span class="st">'Outer East and North East'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb133"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb133-1"><a href="#cb133-1"></a>g <span class="op">=</span> sns.jointplot(data<span class="op">=</span>rddf, x<span class="op">=</span>???, y<span class="op">=</span>???, height<span class="op">=</span><span class="dv">8</span>, </span>
-<span id="cb133-2"><a href="#cb133-2"></a>                  hue<span class="op">=</span>???, hue_order<span class="op">=</span>ho, joint_kws<span class="op">=</span>kwds)</span>
-<span id="cb133-3"><a href="#cb133-3"></a>g.ax_joint.legend(loc<span class="op">=</span><span class="st">'upper right'</span>, prop<span class="op">=</span>{<span class="st">'size'</span>: <span class="dv">8</span>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb132"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb132-1"><a href="#cb132-1"></a>rddf[<span class="st">'Subregion'</span>] <span class="op">=</span> rddf.Borough.<span class="bu">apply</span>(<span class="kw">lambda</span> x: mapping[x])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb133"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb133-1"><a href="#cb133-1"></a><span class="co"># Sets some handy 'keywords' to tweak the Seaborn plot</span></span>
+<span id="cb133-2"><a href="#cb133-2"></a>kwds <span class="op">=</span> <span class="bu">dict</span>(s<span class="op">=</span><span class="dv">7</span>,alpha<span class="op">=</span><span class="fl">0.95</span>,edgecolor<span class="op">=</span><span class="st">"none"</span>)</span>
+<span id="cb133-3"><a href="#cb133-3"></a><span class="co"># Set the *hue order* so that all plots have some colouring by Subregion</span></span>
+<span id="cb133-4"><a href="#cb133-4"></a>ho <span class="op">=</span> [<span class="st">'Inner East'</span>,<span class="st">'Inner West'</span>,<span class="st">'Outer West and North West'</span>,<span class="st">'Outer South'</span>,<span class="st">'Outer East and North East'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb134"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb134-1"><a href="#cb134-1"></a>g <span class="op">=</span> sns.jointplot(data<span class="op">=</span>rddf, x<span class="op">=</span>???, y<span class="op">=</span>???, height<span class="op">=</span><span class="dv">8</span>, </span>
+<span id="cb134-2"><a href="#cb134-2"></a>                  hue<span class="op">=</span>???, hue_order<span class="op">=</span>ho, joint_kws<span class="op">=</span>kwds)</span>
+<span id="cb134-3"><a href="#cb134-3"></a>g.ax_joint.legend(loc<span class="op">=</span><span class="st">'upper right'</span>, prop<span class="op">=</span>{<span class="st">'size'</span>: <span class="dv">8</span>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Your jointplot should look like this:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -2577,13 +2583,13 @@ Difficulty: Low.
 </div>
 <p>What do you make of this?</p>
 <p>Maybe let’s give this one last go splitting the plot out by subregion so that we can see how these vary:</p>
-<div class="sourceCode" id="cb134"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb134-1"><a href="#cb134-1"></a><span class="cf">for</span> r <span class="kw">in</span> rddf.Subregion.unique():</span>
-<span id="cb134-2"><a href="#cb134-2"></a>    g <span class="op">=</span> sns.jointplot(data<span class="op">=</span>rddf[rddf.Subregion<span class="op">==</span>r], x<span class="op">=</span><span class="st">'Dimension 1'</span>, y<span class="op">=</span><span class="st">'Dimension 2'</span>, </span>
-<span id="cb134-3"><a href="#cb134-3"></a>                  hue<span class="op">=</span><span class="st">'Borough'</span>, joint_kws<span class="op">=</span>kwds)</span>
-<span id="cb134-4"><a href="#cb134-4"></a>    g.ax_joint.legend(loc<span class="op">=</span><span class="st">'upper right'</span>, prop<span class="op">=</span>{<span class="st">'size'</span>: <span class="dv">8</span>})<span class="op">;</span></span>
-<span id="cb134-5"><a href="#cb134-5"></a>    g.ax_joint.set_ylim(<span class="dv">0</span>,<span class="dv">15</span>)</span>
-<span id="cb134-6"><a href="#cb134-6"></a>    g.ax_joint.set_xlim(<span class="dv">0</span>,<span class="dv">15</span>)</span>
-<span id="cb134-7"><a href="#cb134-7"></a>    plt.suptitle(r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb135"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb135-1"><a href="#cb135-1"></a><span class="cf">for</span> r <span class="kw">in</span> rddf.Subregion.unique():</span>
+<span id="cb135-2"><a href="#cb135-2"></a>    g <span class="op">=</span> sns.jointplot(data<span class="op">=</span>rddf[rddf.Subregion<span class="op">==</span>r], x<span class="op">=</span><span class="st">'Dimension 1'</span>, y<span class="op">=</span><span class="st">'Dimension 2'</span>, </span>
+<span id="cb135-3"><a href="#cb135-3"></a>                  hue<span class="op">=</span><span class="st">'Borough'</span>, joint_kws<span class="op">=</span>kwds)</span>
+<span id="cb135-4"><a href="#cb135-4"></a>    g.ax_joint.legend(loc<span class="op">=</span><span class="st">'upper right'</span>, prop<span class="op">=</span>{<span class="st">'size'</span>: <span class="dv">8</span>})<span class="op">;</span></span>
+<span id="cb135-5"><a href="#cb135-5"></a>    g.ax_joint.set_ylim(<span class="dv">0</span>,<span class="dv">15</span>)</span>
+<span id="cb135-6"><a href="#cb135-6"></a>    g.ax_joint.set_xlim(<span class="dv">0</span>,<span class="dv">15</span>)</span>
+<span id="cb135-7"><a href="#cb135-7"></a>    plt.suptitle(r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>We can’t unfortunately do any clustering at this point to create groups from the data (that’s next week!) so for now note that there are several large-ish groups (in terms of membership) and few small ones picked up by t-SNE. Alos note that there is strong evidence of some incipient structure: Inner East and West largely clump together, while Outher East and Outer South also seem to group together, with Outer West being more distinctive. If you look back at the PCA Components (especially #1) you might be able to speculate about some reasons for this! Please note: this is <em>only</em> speculation at this time!</p>
 <p>Next week we’ll also add the listings data back in as part of the picture!</p>
 </section>
@@ -2606,11 +2612,11 @@ Difficulty: Low.
 </div>
 </div>
 </div>
-<div class="sourceCode" id="cb135"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb135-1"><a href="#cb135-1"></a><span class="cf">for</span> comp <span class="kw">in</span> [<span class="ss">f"Dimension </span><span class="sc">{</span>x<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> x <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,<span class="dv">3</span>)]:</span>
-<span id="cb135-2"><a href="#cb135-2"></a>    f, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">1</span>,figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">8</span>))</span>
-<span id="cb135-3"><a href="#cb135-3"></a>    rddf.plot(???)<span class="op">;</span></span>
-<span id="cb135-4"><a href="#cb135-4"></a>    boros.plot(edgecolor<span class="op">=</span><span class="st">'w'</span>, facecolor<span class="op">=</span><span class="st">'none'</span>, linewidth<span class="op">=</span><span class="dv">1</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, ax<span class="op">=</span>ax)</span>
-<span id="cb135-5"><a href="#cb135-5"></a>    ax.set_title(<span class="ss">f'UMAP </span><span class="sc">{</span>comp<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb136"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb136-1"><a href="#cb136-1"></a><span class="cf">for</span> comp <span class="kw">in</span> [<span class="ss">f"Dimension </span><span class="sc">{</span>x<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> x <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,<span class="dv">3</span>)]:</span>
+<span id="cb136-2"><a href="#cb136-2"></a>    f, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">1</span>,figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">8</span>))</span>
+<span id="cb136-3"><a href="#cb136-3"></a>    rddf.plot(???)<span class="op">;</span></span>
+<span id="cb136-4"><a href="#cb136-4"></a>    boros.plot(edgecolor<span class="op">=</span><span class="st">'w'</span>, facecolor<span class="op">=</span><span class="st">'none'</span>, linewidth<span class="op">=</span><span class="dv">1</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, ax<span class="op">=</span>ax)</span>
+<span id="cb136-5"><a href="#cb136-5"></a>    ax.set_title(<span class="ss">f'UMAP </span><span class="sc">{</span>comp<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Your first dimension map should look something like this:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -2621,7 +2627,7 @@ Difficulty: Low.
 </section>
 <section id="and-save-1" class="level2">
 <h2 class="anchored" data-anchor-id="and-save-1">And Save</h2>
-<div class="sourceCode" id="cb136"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb136-1"><a href="#cb136-1"></a>rddf.to_parquet(os.path.join(<span class="st">'data'</span>,<span class="st">'clean'</span>,<span class="st">'Reduced_Dimension_Data.geoparquet'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb137"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb137-1"><a href="#cb137-1"></a>rddf.to_parquet(os.path.join(<span class="st">'data'</span>,<span class="st">'clean'</span>,<span class="st">'Reduced_Dimension_Data.geoparquet'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="questions-7" class="level3">
 <h3 class="anchored" data-anchor-id="questions-7">Questions</h3>
 <ul>
