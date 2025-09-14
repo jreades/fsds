@@ -7,9 +7,255 @@ date-as-string: "1st October 2025"
 format: revealjs
 ---
 
-# Loading
+# The Challenge
 
-# Summarising
+<h3>
+As the data get bigger<br />
+Pandas gets slower.
+</h3>
+
+::: {.notes}
+
+I don't consider myself to be someone who works with 'big data' any more, but the data sets still range into the tens of millions and there are points where pandas just doesn't work. It gets slower or even breaks down entirely. So now I'm going to talk about some technologies that have changed my life. Sad as that sounds, it has reduced the time need to load and query large data sets from minutes to milliseconds. And it has solved many of the errors that I just listed above!
+
+:::
+
+## The Options
+
+1. Make pandas *faster*.
+2. Make the storage *better*.
+3. Make using more cores *easier*.
+
+::: {.notes}
+
+Within each of these options there are several types of solutions:
+
+1. To make pandas faster we can look both at how it runs code and how it manages data internally.
+2. We could also store data more intelligently so that pandas can access it more efficiently.
+3. Or we could move away from pandas entirely as a tool for managing and analysing data.
+
+There are pros and cons to each of these.
+
+:::
+
+## Make Pandas Faster: Code
+
+::: {style="margin-top: 200px;"}
+<h3>Introducing:<br /> lazy evaluation and filtergraphs.</h3>
+:::
+
+::: {.notes}
+
+This is the approach taken by Polars and Dask. So while something like strong data typing (which all of the tools I'm talking about today do) is an 'easy' win because it allows you to plan make a better plan for handling the data, there are bigger gains to be made from 'lazy evaluation'.
+
+:::
+
+## Make Pandas Faster: Storage
+
+::: {style="margin-top: 200px;"}
+<h3>Introducing:<br /> Arrow and Parquet.</h3>
+:::
+
+::: {.notes}
+
+- **Arrow** is an *in-memory* columnar format for data. Data is stored in a structured way *in RAM* making it blazingly fast for operations.
+- **Parquet** is a highly-compressed columnar *file* format for data. Data is stored in a structured way *on your hard drive*.
+- **Feather** is a raw storage format for Arrow.
+
+TL;DR: for most applications Parquet will give nice, small files on disk and the benefits of columnar file storage; for computationally intensive applications where disk space and interoperability with other systems isn't an issue then Feather might work.
+
+:::
+
+## Make Pandas Faster: Scaling
+
+::: {style="margin-top: 200px;"}
+<h3>Introducing:<br /> Parallelisation.</h3>
+:::
+
+::: {.notes}
+
+We've already talked about this a bit, but let's be explicit: pandas is basically bound to one processor, and if we can find ways to lift that restriction then things are going to run a lot faster. If you build in lazy evaluation, query planning, and better storage, then removing this restriction is a lot easier.
+
+:::
+
+# The Tools
+
+::: {style="margin-top: 200px;"}
+<h3>Introducing:<br /> Polars, Dask, DuckDB, and Postgres.</h3>
+:::
+
+## What About Polars?
+
+:::: {.columns}
+::: {.column width="30%"}
+
+[![](./img/Polars_software_logo.svg)](https://pola.rs/)
+
+:::
+::: {.column width="69%"}
+
+Pros: 
+
+- Looks like pandas code^[This can be a 'gotcha', see [migration guide](https://docs.pola.rs/user-guide/migration/pandas/)], doesn't run like it.
+- Multi-threaded execution.
+- Arrow behind the scenes.
+- Streaming data processing possible.
+
+Cons:
+
+- Easy to miss out on the benefits.
+- Designed for single machines^[Paid for cloud services gets around this, sort of.].
+
+:::
+::::
+
+## What About the Duck?
+
+:::: {.columns}
+::: {.column width="30%"}
+
+[![](./img/DuckDB.png)](https://duckdb.org/)
+
+:::
+::: {.column width="69%"}
+
+Pros:
+
+- Serverless SQL queries against Parquet files.
+- Queries can be returned as Pandas data frames.
+- Select and filter *before* loading using Arrow.
+
+Cons:
+
+- Need to learn SQL.
+- Still constrained by available memory.
+- Really still optimised for a single machine.
+
+:::
+::::
+
+## What About Dask?
+
+:::: {.columns}
+::: {.column width="30%"}
+
+[![](./img/dask_horizontal.svg){width="125%"}](https://www.dask.org/)
+
+:::
+::: {.column width="69%"}
+
+Pros:
+
+- Distributed and parallel data processing
+- Queries returned as Pandas data frames
+- Lazy evaluation of code
+- Built-in scaling
+
+Cons:
+
+- Lots of overhead for small queries.
+- Moving a lot of data around.
+- Not all problems readily parallelisable.
+
+:::
+::::
+
+## Postgres?
+
+:::: {.columns}
+::: {.column width="30%"}
+
+[![](./img/postgres.svg)](https://www.postgresql.org/)
+
+:::
+::: {.column width="69%"}
+
+Pros: 
+
+- Fully-fledged database.
+- Industry-leading handling of geospatial data.
+
+Cons:
+
+- Need to learn SQL.
+- Need to learn how to design databases to maximise gains.
+- Moving lots of data in/out is *slow*.
+
+:::
+::::
+
+## A Simple Comparison
+
+```{python}
+import pandas as pd
+import polars as pl
+import duckdb as duck
+import time
+import seaborn as sns
+sns.load_dataset('titanic').to_parquet('titanic.pq')
+```
+
+```{python}
+#| echo: False
+pd.read_parquet('titanic.pq').head()
+```
+
+## Measuring Performance
+
+We can compare performance using profiling^[See especially the `timeit` module discussed [here](https://data-ai.theodo.com/en/technical-blog/python-profiling)]:
+
+```{python}
+import timeit
+
+def load_pandas():
+    pd.read_parquet('titanic.pq', columns=['age']).age.mean()
+
+def load_polars():
+    pl.read_parquet('titanic.pq', columns=['age'])['age'].mean()
+
+def load_duck():
+	duck.sql("SELECT MEAN(age) FROM read_parquet('titanic.pq')")
+
+num_reps = 1000
+```
+
+## The Results
+
+#### Pandas
+
+```{python}
+pd_execution_time = timeit.timeit(load_pandas, number=num_reps)
+print(f"Pandas execution time: {pd_execution_time:.6f} seconds")
+```
+
+#### Polars
+
+```{python}
+pl_execution_time = timeit.timeit(load_polars, number=num_reps)
+print(f"Polars execution time: {pl_execution_time:.6f} seconds")
+```
+
+```{python}
+#| echo: False
+#| output: asis
+print(f"{abs((pl_execution_time - pd_execution_time)/pd_execution_time*100):0.2f}% faster than pandas.")
+```
+
+#### DuckDB
+
+```{python}
+db_execution_time = timeit.timeit(load_duck, number=num_reps)
+print(f"DuckDB execution time: {db_execution_time:.6f} seconds")
+```
+
+```{python}
+#| echo: False
+#| output: asis
+print(f"{abs((db_execution_time - pd_execution_time)/pd_execution_time*100):0.2f}% faster than pandas and", end=" ")
+print(f"{abs((db_execution_time - pl_execution_time)/pl_execution_time*100):0.2f}% faster than polars.")
+```
+
+# Summarising Data
 
 ## Useful, But Limited?
 
@@ -25,7 +271,9 @@ format: revealjs
 | `sum()`            | Sum of all items                |
 
 ::: {.notes}
+
 Here are a bunch of pandas functions that have to do with aggregating data in some way. Some of these you'll have seen before, some you may not. However, up to this point if you wanted to to know the median price of each type of Airbnb listing, or the sum of each type of vehicle sold, you'd have had to select out one listing type or vehicle type, call median or sum, and then remember the result. Let's change that.
+
 :::
 
 ## Grouping Operations
@@ -95,3 +343,14 @@ titanic.pivot_table('survived', ['sex', age], 'class')
 ## Pivots & Groups
 
 # Extracting
+
+
+# Thank You {background-image="/img/web/title-slide.png" background-color="#0F0C11" background-opacity="0.2"}
+
+<h3>References</h3>
+
+- [Life Altering Postgres Patterns](https://mccue.dev/pages/3-11-25-life-altering-postgresql-patterns)
+- [pandas 2.0 and the Arrow revolution (Part 1)](https://datapythonista.me/blog/pandas-20-and-the-arrow-revolution-part-i)
+- [What parquet files are my preferred API for bulk open data](https://www.robinlinacre.com/parquet_api/)
+- [DuckDB Documentation](https://duckdb.org/docs/)
+- [Migrating from Pandas to Polars](https://docs.pola.rs/user-guide/migration/pandas/)
