@@ -1215,58 +1215,135 @@
     "text": ".Gitignore\nThe main thing you should notice is the pattern: * means ‘anything’, while / at the end of a line implies a directory. So the following four lines should be added to your .gitignore file:\n*.zip\n*.gz\n*.csv\n*.gzip\n*.feather\n*.geofeather\n*.parquet\n*.geoparquet\ndata/\nThat’s it."
   },
   {
-    "objectID": "lectures/9.3-Pandas_vs_Ducks.html#useful-but-limited",
-    "href": "lectures/9.3-Pandas_vs_Ducks.html#useful-but-limited",
-    "title": "Pandas v Ducks",
+    "objectID": "lectures/9.3-Scaling_Data.html#the-options",
+    "href": "lectures/9.3-Scaling_Data.html#the-options",
+    "title": "Scaling Data",
+    "section": "The Options",
+    "text": "The Options\n\nMake pandas faster.\nMake the storage better.\nMake using more cores easier.\n\n\nWithin each of these options there are several types of solutions:\n\nTo make pandas faster we can look both at how it runs code and how it manages data internally.\nWe could also store data more intelligently so that pandas can access it more efficiently.\nOr we could move away from pandas entirely as a tool for managing and analysing data.\n\nThere are pros and cons to each of these."
+  },
+  {
+    "objectID": "lectures/9.3-Scaling_Data.html#make-pandas-faster-code",
+    "href": "lectures/9.3-Scaling_Data.html#make-pandas-faster-code",
+    "title": "Scaling Data",
+    "section": "Make Pandas Faster: Code",
+    "text": "Make Pandas Faster: Code\n\n\nIntroducing: lazy evaluation and filtergraphs.\n\n\n\nThis is the approach taken by Polars and Dask. So while something like strong data typing (which all of the tools I’m talking about today do) is an ‘easy’ win because it allows you to plan make a better plan for handling the data, there are bigger gains to be made from ‘lazy evaluation’."
+  },
+  {
+    "objectID": "lectures/9.3-Scaling_Data.html#make-pandas-faster-storage",
+    "href": "lectures/9.3-Scaling_Data.html#make-pandas-faster-storage",
+    "title": "Scaling Data",
+    "section": "Make Pandas Faster: Storage",
+    "text": "Make Pandas Faster: Storage\n\n\nIntroducing: Arrow and Parquet.\n\n\n\n\nArrow is an in-memory columnar format for data. Data is stored in a structured way in RAM making it blazingly fast for operations.\nParquet is a highly-compressed columnar file format for data. Data is stored in a structured way on your hard drive.\nFeather is a raw storage format for Arrow.\n\nTL;DR: for most applications Parquet will give nice, small files on disk and the benefits of columnar file storage; for computationally intensive applications where disk space and interoperability with other systems isn’t an issue then Feather might work."
+  },
+  {
+    "objectID": "lectures/9.3-Scaling_Data.html#make-pandas-faster-scaling",
+    "href": "lectures/9.3-Scaling_Data.html#make-pandas-faster-scaling",
+    "title": "Scaling Data",
+    "section": "Make Pandas Faster: Scaling",
+    "text": "Make Pandas Faster: Scaling\n\n\nIntroducing: Parallelisation.\n\n\n\nWe’ve already talked about this a bit, but let’s be explicit: pandas is basically bound to one processor, and if we can find ways to lift that restriction then things are going to run a lot faster. If you build in lazy evaluation, query planning, and better storage, then removing this restriction is a lot easier."
+  },
+  {
+    "objectID": "lectures/9.3-Scaling_Data.html#what-about-polars",
+    "href": "lectures/9.3-Scaling_Data.html#what-about-polars",
+    "title": "Scaling Data",
+    "section": "What About Polars?",
+    "text": "What About Polars?\n\n\n\n\nPros:\n\nLooks like pandas code1, doesn’t run like it.\nMulti-threaded execution.\nArrow behind the scenes.\nStreaming data processing possible.\n\nCons:\n\nEasy to miss out on the benefits.\nDesigned for single machines2.\n\n\nThis can be a ‘gotcha’, see migration guidePaid for cloud services gets around this, sort of."
+  },
+  {
+    "objectID": "lectures/9.3-Scaling_Data.html#what-about-the-duck",
+    "href": "lectures/9.3-Scaling_Data.html#what-about-the-duck",
+    "title": "Scaling Data",
+    "section": "What About the Duck?",
+    "text": "What About the Duck?\n\n\n\n\nPros:\n\nServerless SQL queries against Parquet files.\nQueries can be returned as Pandas data frames.\nSelect and filter before loading using Arrow.\nPlugins for geospatial and remote parquet files.\n\nCons:\n\nNeed to learn SQL.\nStill constrained by available memory.\nReally still optimised for a single machine."
+  },
+  {
+    "objectID": "lectures/9.3-Scaling_Data.html#what-about-dask",
+    "href": "lectures/9.3-Scaling_Data.html#what-about-dask",
+    "title": "Scaling Data",
+    "section": "What About Dask?",
+    "text": "What About Dask?\n\n\n\n\nPros:\n\nDistributed and parallel data processing\nQueries returned as Pandas data frames\nLazy evaluation of code\nBuilt-in scaling\n\nCons:\n\nLots of overhead for small queries.\nMoving a lot of data around.\nNot all problems readily parallelisable."
+  },
+  {
+    "objectID": "lectures/9.3-Scaling_Data.html#postgres",
+    "href": "lectures/9.3-Scaling_Data.html#postgres",
+    "title": "Scaling Data",
+    "section": "Postgres?",
+    "text": "Postgres?\n\n\n\n\nPros:\n\nFully-fledged database.\nIndustry-leading handling of geospatial data.\n\nCons:\n\nNeed to learn SQL.\nNeed to learn how to design databases to maximise gains.\nMoving lots of data in/out of the database is slow."
+  },
+  {
+    "objectID": "lectures/9.3-Scaling_Data.html#a-simple-comparison",
+    "href": "lectures/9.3-Scaling_Data.html#a-simple-comparison",
+    "title": "Scaling Data",
+    "section": "A Simple Comparison",
+    "text": "A Simple Comparison\n\nimport pandas as pd\nimport polars as pl\nimport duckdb as duck\nimport time\nimport seaborn as sns\nsns.load_dataset('titanic').to_parquet('titanic.pq')\n\n\n\n\n\n\n\n\n\n\nsurvived\npclass\nsex\nage\nsibsp\nparch\nfare\nembarked\nclass\nwho\nadult_male\ndeck\nembark_town\nalive\nalone\n\n\n\n\n0\n0\n3\nmale\n22.0\n1\n0\n7.2500\nS\nThird\nman\nTrue\nNaN\nSouthampton\nno\nFalse\n\n\n1\n1\n1\nfemale\n38.0\n1\n0\n71.2833\nC\nFirst\nwoman\nFalse\nC\nCherbourg\nyes\nFalse\n\n\n2\n1\n3\nfemale\n26.0\n0\n0\n7.9250\nS\nThird\nwoman\nFalse\nNaN\nSouthampton\nyes\nTrue\n\n\n3\n1\n1\nfemale\n35.0\n1\n0\n53.1000\nS\nFirst\nwoman\nFalse\nC\nSouthampton\nyes\nFalse\n\n\n4\n0\n3\nmale\n35.0\n0\n0\n8.0500\nS\nThird\nman\nTrue\nNaN\nSouthampton\nno\nTrue"
+  },
+  {
+    "objectID": "lectures/9.3-Scaling_Data.html#measuring-performance",
+    "href": "lectures/9.3-Scaling_Data.html#measuring-performance",
+    "title": "Scaling Data",
+    "section": "Measuring Performance",
+    "text": "Measuring Performance\nWe can compare performance using profiling1:\n\nimport timeit\n\ndef load_pandas():\n    pd.read_parquet('titanic.pq', columns=['age']).age.mean()\n\ndef load_polars():\n    pl.read_parquet('titanic.pq', columns=['age'])['age'].mean()\n\ndef load_duck():\n    duck.sql(\"SELECT MEAN(age) FROM read_parquet('titanic.pq')\")\n\nnum_reps = 1000\n\nSee especially the timeit module discussed here"
+  },
+  {
+    "objectID": "lectures/9.3-Scaling_Data.html#the-results",
+    "href": "lectures/9.3-Scaling_Data.html#the-results",
+    "title": "Scaling Data",
+    "section": "The Results",
+    "text": "The Results\nPandas\n\npd_execution_time = timeit.timeit(load_pandas, number=num_reps)\nprint(f\"Pandas execution time: {pd_execution_time:.6f} seconds\")\n\nPandas execution time: 0.775991 seconds\n\n\nPolars\n\npl_execution_time = timeit.timeit(load_polars, number=num_reps)\nprint(f\"Polars execution time: {pl_execution_time:.6f} seconds\")\n\nPolars execution time: 0.162328 seconds\n\n\n79.08% faster than pandas.\nDuckDB\n\ndb_execution_time = timeit.timeit(load_duck, number=num_reps)\nprint(f\"DuckDB execution time: {db_execution_time:.6f} seconds\")\n\nDuckDB execution time: 0.097131 seconds\n\n\n87.48% faster than pandas and 40.16% faster than polars."
+  },
+  {
+    "objectID": "lectures/9.3-Scaling_Data.html#useful-but-limited",
+    "href": "lectures/9.3-Scaling_Data.html#useful-but-limited",
+    "title": "Scaling Data",
     "section": "Useful, But Limited?",
     "text": "Useful, But Limited?\n\n\n\nMethod\nAchieves\n\n\n\n\ncount()\nTotal number of items\n\n\nfirst(), last()\nFirst and last item\n\n\nmean(), median()\nMean and median\n\n\nmin(), max()\nMinimum and maximum\n\n\nstd(), var()\nStandard deviation and variance\n\n\nmad()\nMean absolute deviation\n\n\nprod()\nProduct of all items\n\n\nsum()\nSum of all items\n\n\n\n\nHere are a bunch of pandas functions that have to do with aggregating data in some way. Some of these you’ll have seen before, some you may not. However, up to this point if you wanted to to know the median price of each type of Airbnb listing, or the sum of each type of vehicle sold, you’d have had to select out one listing type or vehicle type, call median or sum, and then remember the result. Let’s change that."
   },
   {
-    "objectID": "lectures/9.3-Pandas_vs_Ducks.html#grouping-operations",
-    "href": "lectures/9.3-Pandas_vs_Ducks.html#grouping-operations",
-    "title": "Pandas v Ducks",
+    "objectID": "lectures/9.3-Scaling_Data.html#grouping-operations",
+    "href": "lectures/9.3-Scaling_Data.html#grouping-operations",
+    "title": "Scaling Data",
     "section": "Grouping Operations",
     "text": "Grouping Operations\nIn Pandas these follow a split / apply / combine approach:\n\n\nNote that, for simplicity, I’ve abbreviate the Local Authority names since this is just a simplified example: TH (Tower Hamlets), HAK (Hackney), W (Westminster)."
   },
   {
-    "objectID": "lectures/9.3-Pandas_vs_Ducks.html#in-practice",
-    "href": "lectures/9.3-Pandas_vs_Ducks.html#in-practice",
-    "title": "Pandas v Ducks",
+    "objectID": "lectures/9.3-Scaling_Data.html#in-practice",
+    "href": "lectures/9.3-Scaling_Data.html#in-practice",
+    "title": "Scaling Data",
     "section": "In Practice",
     "text": "In Practice\ngrouped_df = df.groupby(&lt;fields&gt;).&lt;function&gt;\nFor instance, if we had a Local Authority (LA) field:\ngrouped_df = df.groupby('LA').sum()\nUsing apply the function could be anything:\ndef norm_by_data(x): # x is a column from the grouped df\n    x['d1'] /= x['d2'].sum() \n    return x\n\ndf.groupby('LA').apply(norm_by_data)"
   },
   {
-    "objectID": "lectures/9.3-Pandas_vs_Ducks.html#grouping-by-arbitrary-mappings",
-    "href": "lectures/9.3-Pandas_vs_Ducks.html#grouping-by-arbitrary-mappings",
-    "title": "Pandas v Ducks",
+    "objectID": "lectures/9.3-Scaling_Data.html#grouping-by-arbitrary-mappings",
+    "href": "lectures/9.3-Scaling_Data.html#grouping-by-arbitrary-mappings",
+    "title": "Scaling Data",
     "section": "Grouping by Arbitrary Mappings",
     "text": "Grouping by Arbitrary Mappings\nmapping = {'HAK':'Inner', 'TH':'Outer', 'W':'Inner'}\ndf.set_index('LA', inplace=True)\ndf.groupby(mapping).sum()"
   },
   {
-    "objectID": "lectures/9.3-Pandas_vs_Ducks.html#pivot-tables",
-    "href": "lectures/9.3-Pandas_vs_Ducks.html#pivot-tables",
-    "title": "Pandas v Ducks",
+    "objectID": "lectures/9.3-Scaling_Data.html#pivot-tables",
+    "href": "lectures/9.3-Scaling_Data.html#pivot-tables",
+    "title": "Scaling Data",
     "section": "Pivot Tables",
     "text": "Pivot Tables\nA ‘special case’ of Group By features:\n\nCommonly-used in business to summarise data for reporting.\nGrouping (summarisation) happens along both axes (Group By operates only on one).\npandas.cut(&lt;series&gt;, &lt;bins&gt;) can be a useful feature here since it chops a continuous feature into bins suitable for grouping."
   },
   {
-    "objectID": "lectures/9.3-Pandas_vs_Ducks.html#in-practice-1",
-    "href": "lectures/9.3-Pandas_vs_Ducks.html#in-practice-1",
-    "title": "Pandas v Ducks",
+    "objectID": "lectures/9.3-Scaling_Data.html#in-practice-1",
+    "href": "lectures/9.3-Scaling_Data.html#in-practice-1",
+    "title": "Scaling Data",
     "section": "In Practice",
     "text": "In Practice\nage = pd.cut(titanic['age'], [0, 18, 80])\ntitanic.pivot_table('survived', ['sex', age], 'class')"
   },
   {
-    "objectID": "lectures/9.3-Pandas_vs_Ducks.html#counts",
-    "href": "lectures/9.3-Pandas_vs_Ducks.html#counts",
-    "title": "Pandas v Ducks",
+    "objectID": "lectures/9.3-Scaling_Data.html#counts",
+    "href": "lectures/9.3-Scaling_Data.html#counts",
+    "title": "Scaling Data",
     "section": "Counts",
     "text": "Counts"
   },
   {
-    "objectID": "lectures/9.3-Pandas_vs_Ducks.html#pivots-groups",
-    "href": "lectures/9.3-Pandas_vs_Ducks.html#pivots-groups",
-    "title": "Pandas v Ducks",
+    "objectID": "lectures/9.3-Scaling_Data.html#pivots-groups",
+    "href": "lectures/9.3-Scaling_Data.html#pivots-groups",
+    "title": "Scaling Data",
     "section": "Pivots & Groups",
     "text": "Pivots & Groups"
   },
@@ -1908,32 +1985,11 @@
     "text": "Things That Can Go Wrong…\nA selection of real issues I’ve seen in my life:\n\nTruncation: server ran out of diskspace or memory, or a file transfer was interrupted.\nTranslation: headers don’t line up with data.\nSwapping: column order differs from spec.\nIncompleteness: range of real values differs from spec.\nCorruption: field delimitters included in field values.\nErrors: data entry errors resulted in incorrect values or the spec is downright wrong.\nIrrelevance: fields that simply aren’t relevant to your analysis.\n\nThese will generally require you to engage with columns and rows (via sampling) on an individual level."
   },
   {
-    "objectID": "lectures/6.3-Files.html#arrow-and-parquet",
-    "href": "lectures/6.3-Files.html#arrow-and-parquet",
-    "title": "Data Formats",
-    "section": "Arrow and Parquet",
-    "text": "Arrow and Parquet\n\nArrow is an in-memory columnar format for data. Data is stored in a structured way in RAM making it blazingly fast for operations.\nParquet is a highly-compressed columnar file format for data. Data is stored in a structured way on your hard drive.\nFeather is a raw storage format for Arrow.\n\nTL;DR: for most applications Parquet will give nice, small files on disk and the benefits of columnar file storage; for computationally intensive applications where disk space and interoperability with other systems isn’t an issue then Feather might work."
-  },
-  {
-    "objectID": "lectures/6.3-Files.html#what-about-the-duck",
-    "href": "lectures/6.3-Files.html#what-about-the-duck",
-    "title": "Data Formats",
-    "section": "What About the Duck?",
-    "text": "What About the Duck?\n\n\n\n\n\nServerless SQL queries against Parquet files\nQueries returned as Pandas data frames\nSelect and filter before loading\nFast conversion between CSV and Parquet via Arrow"
-  },
-  {
-    "objectID": "lectures/6.3-Files.html#for-later-reference",
-    "href": "lectures/6.3-Files.html#for-later-reference",
-    "title": "Data Formats",
-    "section": "For (Later) Reference",
-    "text": "For (Later) Reference\n# Notice the engine and dtype_backend options\ndf = pandas.read_csv(fname, engine='pyarrow', \n                dtype_backend='pyarrow')\n\n# And for parquet files\ndf = pandas.read_parquet(fname, columns=[...])\n\n# And for DuckDB we can actually joing two\n# files before they even get to Python!\nq = f'''\n  SELECT * FROM \n    read_parquet('epc-ppd-2022-*.parquet') as ppd, \n    read_parquet('epc-ldd-2022-*.parquet') as ldd,\n  WHERE ppd.uid=ldd.uid\n'''\ndf = duckdb.query(q).df()\nP.S. There’s also a command-line tool for DuckDB so you don’t even need Python."
-  },
-  {
     "objectID": "lectures/6.3-Files.html#additional-resources",
     "href": "lectures/6.3-Files.html#additional-resources",
     "title": "Data Formats",
     "section": "Additional Resources",
-    "text": "Additional Resources\n\n\n\nUnderstanding Directories and Subdirectories\nReading and writing files\nWorking with OS path utilities\nFiles and file writing\nUsing file system shell methods\nOpening files\n\n\n\nText vs. binary mode\nText files\npetl\npandas 2.0 and the Arrow revolution (Part 1)\nWhat parquet files are my preferred API for bulk open data\nDuckDB Documentation"
+    "text": "Additional Resources\n\n\n\nUnderstanding Directories and Subdirectories\nReading and writing files\nWorking with OS path utilities\nFiles and file writing\nUsing file system shell methods\nOpening files\n\n\n\nText vs. binary mode\nText files\npetl"
   },
   {
     "objectID": "lectures/6.1-Logic.html#do-you-want",
@@ -3480,7 +3536,7 @@
     "href": "lectures/1.1-Getting_Started.html#lots-of-help-out-there",
     "title": "Getting Started",
     "section": "Lots of Help ‘Out There’",
-    "text": "Lots of Help ‘Out There’\nWhen you need an answer right now:\n\nGoogle\nStack Overflow\nSlack\nChatGPT / Copilot\n\nWhen you want to learn more:\n\nMedium\nPocket\n\n\nGoogle will become more useful as you learn more and this is definitely one class in which “I Googled it” is a good answer.\nAs of early September 2020, Stack Overflow contains over 1.5 million Python questions alone! Chances are someone else has had your question before."
+    "text": "Lots of Help ‘Out There’\nWhen you need an answer right now:\n\nGoogle\nStack Overflow\nSlack1\nChatGPT / Copilot\n\nWhen you want to learn more:\n\nMedium\nPocket\n\n\nGoogle will become more useful as you learn more and this is definitely one class in which “I Googled it” is a good answer.\nAs of early September 2020, Stack Overflow contains over 1.5 million Python questions alone! Chances are someone else has had your question before.\n\nHere’s the signup link. You must use your UCL address."
   },
   {
     "objectID": "lectures/1.1-Getting_Started.html#when-to-ask-for-help",
@@ -3508,7 +3564,7 @@
     "href": "lectures/1.1-Getting_Started.html#where-to-ask-for-help",
     "title": "Getting Started",
     "section": "Where to Ask for Help",
-    "text": "Where to Ask for Help\nThere is no shame in asking for help. None. We are here to support your learning and we have chosen a range of tools to support that:\n\nSlack: use the #fsds channel for help with coding, practical, and related course questions.\nDrop-in Hours: use Booking Form\nOut-of-Hours: use email to raise personal circumstances and related issues for focussed support.\nEmergencies: contact Bartlett.Postgraduate (CASA)1 for support as-needed and/or to preserve privacy.\n\n\nWe’ll talk about Slack more later, but we think that this is the best way to get help when you need it. Slack enables us to support you as a community of learners across computer / tablet / phone.\nI’ve tried to throw together some ideas on how you can study effectively that covers things relating to managing distractions when you’ve only got limited time, as well as how to read and how to think.\n\nbartlett.pg-casa@ucl.ac.uk"
+    "text": "Where to Ask for Help\nThere is no shame in asking for help. None. We are here to support your learning and we have chosen a range of tools to support that:\n\nSlack: use the #fsds channel for help with coding, practical, and related course questions.\nDrop-in Hours: use Booking Form\nOut-of-Hours: use email to raise personal circumstances and related issues for focussed support.\nEmergencies: contact Bartlett.Postgraduate (CASA)1 for support as-needed and/or to preserve privacy.\n\n\nWe think that this is the best way to get help when you need it. Slack enables us to support you as a community of learners across computer / tablet / phone.\nI’ve tried to throw together some ideas on how you can study effectively that covers things relating to managing distractions when you’ve only got limited time, as well as how to read and how to think.\n\nbartlett.pg-casa@ucl.ac.uk"
   },
   {
     "objectID": "lectures/1.1-Getting_Started.html#learn-from-your-mistakes",
@@ -3661,7 +3717,7 @@
     "href": "assessments/group.html#applying-your-knowledge",
     "title": "Rationale",
     "section": "Applying Your Knowledge",
-    "text": "Applying Your Knowledge\nThe focus of this assessment is therefore the student’s ability to make use of concepts and methods covered in class as part of an analytical process to support decision-making by a non-expert. It is not necessary that you employ every technique covered in class. It is necessary that you justify your approach and results with reference to relevant regulation/legislation, as well as academic and ‘grey’ literature as needed. It is perfectly possible to obtain a distinction-level grade without the use of any advanced analytical techniques (e.g. clustering, NLP, or Random Forests); however, it is unlikely that you would be able to complete this assessment to a high standard without some graphs and some maps chosen for their ability to advance your argument.",
+    "text": "Applying Your Knowledge\nThe focus of this assessment is therefore the student’s ability to make use of concepts and methods covered in class as part of an analytical process to support decision-making by a non-expert. It is not necessary that you employ every technique covered in class. It is necessary that you justify your choices, results, and conclusions usingacademic and ‘grey’ literature as needed. It is perfectly possible to obtain a distinction-level grade without the use of any advanced analytical techniques (e.g. clustering, NLP, or Random Forests); however, it is unlikely that you would be able to complete this assessment to a high standard without some graphs and some maps chosen for their ability to advance your argument.",
     "crumbs": [
       "Elements",
       "Group Work",
@@ -3673,7 +3729,7 @@
     "href": "assessments/group.html#new-code",
     "title": "Rationale",
     "section": "New Code?",
-    "text": "New Code?\nSo the assessment may be completed by drawing on the code written in the practicals and the judicious use of descriptive statistics (see, for instance, Housing and Inequality in London and The suburbanisation of poverty in British cities, 2004-16: extent, processes and nature), but it is likely that a better mark will be obtained by demonstrating the capacity to go beyond exactly what was covered in class.",
+    "text": "New Code?\nSo the assessment may be completed by drawing on the code written in the practicals and the judicious use of descriptive statistics (see, for instance, Housing and Inequality in London and The suburbanisation of poverty in British cities, 2004-16: extent, processes and nature) for examples of how much can be achieved in this way. However, it is likely that a better mark will be obtained by demonstrating the capacity to go beyond exactly what was covered in class by connecting concepts and demonstrating a deeper understanding of how to apply what has been learned across FSDS, QM, and GIS to the problem at hand.",
     "crumbs": [
       "Elements",
       "Group Work",
@@ -3685,7 +3741,7 @@
     "href": "assessments/group.html#two-part-submission",
     "title": "Rationale",
     "section": "Two-Part Submission",
-    "text": "Two-Part Submission\nThe submission will have two parts and both are evaluated as part of your overall grade:\n\nA runnable QMD (Quarto Markdown Document) file that addresses the set questions provided in class. The QMD file allows us to evaluate reproducibility (25% of your module grade) by rendering your QMD file on our computer. So we are looking at whether outputs created by the group run fully and without error on a different computer, and whether they show evidence of thought in relation to the quality of coding and outputs.\nA rendered PDF file that is the output of your QMD file. The PDF file allows us to focus on your content (35% of your module grade), regardless of whether or not there are issues with its reproducibility. So we are looking at whether the group engages with the set questions through a mix of literature, critical thinking, and data analysis.\n\nPlease see Resources for the templates and information about how to create and render the QMD file.",
+    "text": "Two-Part Submission\nThe submission will have two parts and both are evaluated as part of your overall grade:\n\nA runnable QMD (Quarto Markdown Document) file that addresses the set questions appropriately. The QMD will be evaluated for its reproducibility (25% of your module grade) by us rendering your QMD file on our computer. So we are looking at whether outputs created by the group run fully and without error on a different computer, and whether they show evidence of thought in relation to the quality and clarity of the coding and outputs. The simplest way to ceonceptualise this is: if someone vaguely intelligent were provided with only your group’s QMD file, would they be able to produce the PDF that you submitted in Part 2?\nA rendered PDF file that is the output of your QMD file. The PDF file allows us to focus on your content (35% of your module grade) of what you submitted, regardless of whether or not there are issues with its reproducibility. So we are looking at how the group engages with the questions through a mix of literature, critical and creative thinking, and data analysis. You are being asked to operate in a ‘low information environment’, which implies the need to make choices, to justify these, and to present your findings and conclusions in a way that instill confidence in the reader. You will have considered the issues, anchored them in an understanding (or at least awareness) of the relevant laws/regulation and context, and managed to produce a succinct set of results for a non-technical audience.\n\nPlease see Resources for the templates and information about how to create and render the QMD file.",
     "crumbs": [
       "Elements",
       "Group Work",
@@ -3805,7 +3861,7 @@
     "href": "assessments/content.html#assumptions",
     "title": "Content",
     "section": "Assumptions",
-    "text": "Assumptions\nIt is highly likely that you will need to make substantial use of assumptions in developing your briefing for the Mayor. These should be plausible and, where possible, documented. For example:\n\nBased on  (2021), we assume that the average visitor to London walks at a rate of 3m/s (180m/minute). We further assume that a 10-minute walk is reasonable, giving us a limit of 1,800m…\n\nOr:\n\nWe assume that tourists spend approximately £X/day in their local area (see, e.g., , 2016), implying that each property generates a maximum of £Y/year in local spending (assuming continuous occupation). In practice, we adopt the approach of XXX (2019) to estimate occupancy from reviews to generate a more realistic impact of…\n\nSo you can see that neither of these requires more than a couple of citations to allow you to estimate some reasonable threshold for a metric of interest. This will be a lot simpler than trying to look up global tourist spending information or TfL travel stats. Yes, it’s a rough-and-ready estimate, but it also doesn’t pull the number out of thin air.",
+    "text": "Assumptions\nIt is highly likely that you will need to make substantial use of assumptions in developing your briefing for the Mayor. These should be plausible and, where possible, documented. For example (and using randomly selected references):\n\nBased on Travers, Sims, and Bosetti (2016), we assume that the average visitor to London walks at a rate of 3m/s (180m/minute). We further assume that a 10-minute walk is reasonable, giving us a limit of 1,800m…\n\nOr:\n\nWe assume that tourists spend approximately £X/day in their local area (see, e.g., Wachsmuth and Weisler 2018), implying that each property generates a maximum of £Y/year in local spending (assuming continuous occupation). In practice, we adopt the approach of XXX (2019) to estimate occupancy from reviews to generate a more realistic impact of…\n\nSo you can see that neither of these requires more than a couple of citations to allow you to estimate some reasonable threshold for a metric of interest. This will be a lot simpler than trying to look up global tourist spending information or TfL travel stats. Yes, it’s a rough-and-ready estimate, but it also doesn’t pull the number out of thin air.",
     "crumbs": [
       "Elements",
       "Group Work",
@@ -5245,11 +5301,18 @@
     "text": "Why Use it to Learn to Write (Academic English)?\nMany students use LLMs to write their documents for three reasons:\n\nThey are available at all hours as a personal tutor and advisor.\nThey write better sentences, more quickly than a learner.\nThey draw on a wider range of sources and styles than a learner.\n\n\n\n\n\n\n\n\nPro-Tip\n\n\nOnly one of these is a good reason."
   },
   {
+    "objectID": "lectures/2.7-On_Writing.html#dont-take-my-word-for-it",
+    "href": "lectures/2.7-On_Writing.html#dont-take-my-word-for-it",
+    "title": "On Writing & Coding",
+    "section": "Don’t Take My Word for It",
+    "text": "Don’t Take My Word for It\n\nUsing AI in education is like using a forklift at the gym. The weights do not actually need to be moved from place to place. That is not the work. The work is what happens within you. ~ Seemingly a conversation on YouTube?\n\n\nExcellent! I’ve always heard students say, “When will I ever use this in real life?” And no teacher ever said, “These classes are not the work. The work is what happens within you.” Critical thinking, problem solving, the idea that the world is knowable. That is the work happening with you.\nThe problem is that many students don’t come to uni to learn to write essays, even those that come to learn (not just ‘get a degree’) often see learning as an accumulation of knowledge rather than the strengthening of a skill. So this gym analogy is really helpful for that too"
+  },
+  {
     "objectID": "lectures/2.7-On_Writing.html#danger-will-robinson",
     "href": "lectures/2.7-On_Writing.html#danger-will-robinson",
     "title": "On Writing & Coding",
     "section": "Danger, Will Robinson!",
-    "text": "Danger, Will Robinson!\nHere’s what we’ve noticed about LLM use so far:\n\n\nOver-use of flowery language/complex code.\nOver-confidence in recommending solutions.\nLack of overall structure/coherence.\nPoor referencing, including the use of non-existent or irrelevant references/coding libraries.\n\n\n\n\n\n\n\n\n\nThe Underlying Issue\n\n\n\nLack of actual learning by the student.\nUndermining of learning by other students.\nPointless work by staff.\n\n\n\n\n\nThis is very much a ‘brave new world’ and we are all trying to figure it out on the fly.\n\nWe think that ‘intricate methodologies’ and ‘exhaustive reviews’ aren’t just overblown, they actually invite you to be marked down because youre methodology or review are not intricate or exhaustive.\nWe find individual paragraphs that seem reasonable but the whole doesn’t ‘work’ as a single output.\nOne of our PhD students has created a tool to help us find the papers in your bibliography that don’t actually exist, or that seem superficially useful but are not relevant in practice.\nFundamentally, if you’re substituting the LLM for thinking then you’re not going to learn and that means that you are not going to be able to draw the wider connections that mark out strong submissions on assessments and the kind of person that we, or any company, might want to hire!\n\nBasically, they are overconfident and, as a result, tend to either: a) lead the student to think it’s not worth the effort of learning (leading the student into deep trouble); or b) lead the student to overconfidence in their self-assessment of submissions or skills (leading the student into deep trouble)."
+    "text": "Danger, Will Robinson!\nHere’s what we’ve noticed about LLM use so far:\n\n\nOver-use of flowery language/complex code.\nOver-confidence in recommending solutions.\nLack of overall structure/coherence.\nUse of non-existent or irrelevant references/coding libraries.\n\n\n\n\n\n\n\n\n\nThe Underlying Issue\n\n\n\nLack of actual learning by the student.\nUndermining of learning by other students.\nPointless work by staff.\n\n\n\n\n\nThis is very much a ‘brave new world’ and we are all trying to figure it out on the fly.\n\nWe think that ‘intricate methodologies’ and ‘exhaustive reviews’ aren’t just overblown, they actually invite you to be marked down because youre methodology or review are not intricate or exhaustive.\nWe find individual paragraphs that seem reasonable but the whole doesn’t ‘work’ as a single output.\nOne of our PhD students has created a tool to help us find the papers in your bibliography that don’t actually exist, or that seem superficially useful but are not relevant in practice.\nFundamentally, if you’re substituting the LLM for thinking then you’re not going to learn and that means that you are not going to be able to draw the wider connections that mark out strong submissions on assessments and the kind of person that we, or any company, might want to hire!\n\nBasically, they are overconfident and, as a result, tend to either: a) lead the student to think it’s not worth the effort of learning (leading the student into deep trouble); or b) lead the student to overconfidence in their self-assessment of submissions or skills (leading the student into deep trouble)."
   },
   {
     "objectID": "lectures/2.7-On_Writing.html#read-the-fine-print",
@@ -6775,21 +6838,21 @@
     "href": "lectures/demo_postgis_and_sds.html#find-a-postgis-image",
     "title": "Running Multiple Containers",
     "section": "Find a PostGIS Image",
-    "text": "Find a PostGIS Image\nSearch Quay.io – on a modern M-chip Mac you need to use arm64 images, on Windows it’s usually amd64; however, in most cases you don’t need to search for these explicitly because ‘builds’ for most images are completed for both."
+    "text": "Find a PostGIS Image\nSearch Quay.io for an image:\n\nOn a modern M-chip Mac you need to use arm64 images,\nOn Windows it’s usually amd64\n\n\n\n\n\n\n\nTip\n\n\nHowever, in most cases you don’t need to search for these explicitly because ‘builds’ for most images are completed for both."
   },
   {
     "objectID": "lectures/demo_postgis_and_sds.html#create-a-pod",
     "href": "lectures/demo_postgis_and_sds.html#create-a-pod",
     "title": "Running Multiple Containers",
     "section": "Create a ‘Pod’",
-    "text": "Create a ‘Pod’\nThis pod exposes two ‘ports’ (8888 and 5432) to the wider world.\npodman pod create -p 8888:8888 -p 5432:5432 myapp\nIn this case we ‘map’ 8888 inside the pod to 8888 outside the pod, but we could change this: -p 7777:8888 so that requests for 7777 from the outside world are ‘forwarded’ to 8888 inside the pod."
+    "text": "Create a ‘Pod’\nBy default, containers can’t talk to each other for security reasons. We need to join them together in a ‘pod’ to allow this to happen.\nThis command creates a pod that exposes two ‘ports’ (8888 and 5432) to the wider world.\npodman pod create -p 8888:8888 -p 5432:5432 myapp\n\n\n\n\n\n\nTip\n\n\nThis ‘maps’ port 8888 inside the pod to port 8888 outside the pod, but we could change it to -p 7777:8888 so that requests for 7777 from the outside world are ‘forwarded’ to 8888 inside the pod. That would allow copies of containers to run at the same time in different pods."
   },
   {
     "objectID": "lectures/demo_postgis_and_sds.html#attach-postgis-to-the-pod",
     "href": "lectures/demo_postgis_and_sds.html#attach-postgis-to-the-pod",
     "title": "Running Multiple Containers",
     "section": "Attach PostGIS to the Pod",
-    "text": "Attach PostGIS to the Pod\nThere’s a lot going on here that took quite some to figure out1, but the key thing turned out to be the pg_hba.conf file which tells Postgres on which ports it can listen.\npodman run --rm -d --name postgres --pod myapp \\\n-e POSTGRES_USER=postgres \\\n-e POSTGRES_PASSWORD=test \\\n-e POSTGRES_DB=test \\\n-e PGDATA=/var/lib/postgresql/data/pgdata \\\n-v \"${PWD}\"/data/postgres:/var/lib/postgresql/data \\\n-v /tmp:/tmp \\\n-v \"${PWD}\"/data/postgres/pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf \\\nquay.io/taolu/postgis:14-3.5-alpine\nThis command is telling Podman to start a postgis image (14-3.5-alpine) it downloads from Quay with a test of startup options set at launch. The first three are specifying the databasei, user, and password. The remainder are connecting various ‘mount points’ on the container to locations on the host computer. So the data that is added to the database will be stored under the current working directory (PWD == Print Working Directory). We allow Postgis to the use the computer’s /tmp folder for working data. And the final bit is taking a local copy that we’ve set up of pg_hba.conf and putting that in the place that a regular Postgres server would expect to find it.\nYou can now connect using psql on port 5432.\nFor example:\npsql -h localhost -p 5432 -U postgres -d test \nPart of an ESRC research project I was supporting."
+    "text": "Attach PostGIS to the Pod\nThere’s a lot going on here that took quite some to figure out1, but the key thing turned out to be the pg_hba.conf file which tells Postgres on which ports it can use.\npodman run --rm -d --name postgres --pod myapp \\\n-e POSTGRES_USER=postgres \\\n-e POSTGRES_PASSWORD=test \\\n-e POSTGRES_DB=test \\\n-e PGDATA=/var/lib/postgresql/data/pgdata \\\n-v \"${PWD}\"/data/postgres:/var/lib/postgresql/data \\\n-v /tmp:/tmp \\\n-v \"${PWD}\"/data/postgres/pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf \\\nquay.io/taolu/postgis:14-3.5-alpine\n\nThis command is telling Podman to start a postgis image (14-3.5-alpine) it downloads from Quay with a test of startup options set at launch. The first three are specifying the databasei, user, and password. The remainder are connecting various ‘mount points’ on the container to locations on the host computer. So the data that is added to the database will be stored under the current working directory (PWD == Print Working Directory). We allow Postgis to the use the computer’s /tmp folder for working data. And the final bit is taking a local copy that we’ve set up of pg_hba.conf and putting that in the place that a regular Postgres server would expect to find it.\n\nPart of an ESRC research project I was supporting."
   },
   {
     "objectID": "lectures/demo_postgis_and_sds.html#attach-sds-to-the-pod",
@@ -6806,18 +6869,39 @@
     "text": "Install psycopg2\nIf I haven’t had time to update the SDS container then you can do this on the SDS Terminal in your browser using the folllowing command:\npip install psycopg2`\nThis is because the sqlalchemy framework is already there but the psycopg2 driver for Postgres isn’t."
   },
   {
-    "objectID": "lectures/demo_postgis_and_sds.html#run-python",
-    "href": "lectures/demo_postgis_and_sds.html#run-python",
+    "objectID": "lectures/demo_postgis_and_sds.html#load-data",
+    "href": "lectures/demo_postgis_and_sds.html#load-data",
     "title": "Running Multiple Containers",
-    "section": "Run Python",
-    "text": "Run Python\nNow you will start a new Notebook (File &gt; New &gt; Notebook) and create code cells for each of the following sections of code.\nLoad Data\nfrom sqlalchemy import create_engine\nengine = create_engine('postgresql://postgres:test@localhost:5432/test')\n\nimport geopandas as gpd\ngdf = gpd.read_file('work/data/src/TM_WORLD_BORDERS-0.3.gpkg')\ngdf.to_postgis('world', engine)\nQuery Data\ninsp = inspect(engine) \ninsp.get_table_names()\nimport geopandas as gpd\n\ngdf = gpd.read_postgis('SELECT * FROM msoa', geom_col='geometry', con=engine)\n\ngdf.head(2)\ngdf.plot()\ngdf = gpd.read_postgis(\"\"\"\n    SELECT * \n    FROM msoa \n    WHERE \"MSOA21NM\" LIKE 'Waltham%%'\n\"\"\", geom_col='geometry', con=con)\ngdf.plot()"
+    "section": "Load Data",
+    "text": "Load Data\n\n\n\n\n\n\nRun Python\n\n\nNow you will start a new Notebook (File &gt; New &gt; Notebook) and create code cells for each of the following sections of code.\n\n\n\n# Connect to the database\nfrom sqlalchemy import create_engine\nengine = create_engine('postgresql://postgres:test@localhost:5432/test')\n\n# Insert data into a new table\nimport geopandas as gpd\ngdf = gpd.read_file('work/data/src/TM_WORLD_BORDERS-0.3.gpkg')\ngdf.to_postgis('world', engine)"
   },
   {
-    "objectID": "lectures/demo_postgis_and_sds.html#query-the-data-without-python",
-    "href": "lectures/demo_postgis_and_sds.html#query-the-data-without-python",
+    "objectID": "lectures/demo_postgis_and_sds.html#querying-data",
+    "href": "lectures/demo_postgis_and_sds.html#querying-data",
     "title": "Running Multiple Containers",
-    "section": "Query the Data without Python",
-    "text": "Query the Data without Python\nOne final thing: if you run a Terminal on your computer (so not in the SDS terminal any more) you can also query the data that was just loaded. Your computer is the only other machine that access the pod.\npsql -h localhost -p 5432 -U postgres -d test\nSELECT * FROM world LIMIT 0;\nSELECT \"NAME\", \"ISO3\", \"POP2005\", \"REGION\" FROM world LIMIT 5;\nSELECT \"NAME\", \"POP2005\" FROM world WHERE AREA &gt; 900000;"
+    "section": "Querying Data",
+    "text": "Querying Data\n# Get information about the database\ninsp = inspect(engine) \ninsp.get_table_names()\n# Get data out of the database\nimport geopandas as gpd\n\n# Simple query\ngdf = gpd.read_postgis('SELECT * FROM msoa', geom_col='geometry', con=engine)\n\n# What's in the table\ngdf.head(2)"
+  },
+  {
+    "objectID": "lectures/demo_postgis_and_sds.html#plotting-the-data",
+    "href": "lectures/demo_postgis_and_sds.html#plotting-the-data",
+    "title": "Running Multiple Containers",
+    "section": "Plotting the Data",
+    "text": "Plotting the Data\nSince PostGIS is geospatial and Python can ‘talk’ to PostGIS:\n# Plotting the table\ngdf.plot()"
+  },
+  {
+    "objectID": "lectures/demo_postgis_and_sds.html#more-complex-queries",
+    "href": "lectures/demo_postgis_and_sds.html#more-complex-queries",
+    "title": "Running Multiple Containers",
+    "section": "More Complex Queries",
+    "text": "More Complex Queries\n# Query the database\ngdf = gpd.read_postgis(\"\"\"\n    SELECT * \n    FROM msoa \n    WHERE \"MSOA21NM\" \n    LIKE 'Waltham%%'\n\"\"\", geom_col='geometry', con=con)\ngdf.plot()"
+  },
+  {
+    "objectID": "lectures/demo_postgis_and_sds.html#querying-the-data-without-python",
+    "href": "lectures/demo_postgis_and_sds.html#querying-the-data-without-python",
+    "title": "Running Multiple Containers",
+    "section": "Querying the Data without Python",
+    "text": "Querying the Data without Python\nOne final thing: if you run a Terminal on your computer (so not in the SDS terminal any more) you can directly query the data.\npsql -h localhost -p 5432 -U postgres -d test\n\n\n\n\n\n\nTip\n\n\nThe ‘host’ computer is the only other machine that can access the pod.\n\n\n\nSELECT * FROM world LIMIT 0;\nSELECT \"NAME\", \"ISO3\", \"POP2005\", \"REGION\" FROM world LIMIT 5;\nSELECT \"NAME\", \"POP2005\" FROM world WHERE AREA &gt; 900000;"
   },
   {
     "objectID": "practicals/Practical-02-Foundations_1.html",
@@ -8117,7 +8201,7 @@
     "href": "sessions/week9.html#preparatory-lectures",
     "title": "Selecting Data",
     "section": "Preparatory Lectures",
-    "text": "Preparatory Lectures\nYou should by now be familiar with the concept of how to join data from the GIS module (CASA0005), so this focusses on two things: 1) how to do this in Python (with a bit of SQL thrown in); and 2) how to approach this process with large or mismatched data sets.\nSo come to class having watched:\n\n\n\nSession\nVideo\nPresentation\n\n\n\n\nLinking Data\nVideo\nSlides\n\n\nLinking Spatial Data\nVideo\nSlides\n\n\nPandas v Ducks\nVideo\nSlides",
+    "text": "Preparatory Lectures\nYou should by now be familiar with the concept of how to join data from the GIS module (CASA0005), so this focusses on two things: 1) how to do this in Python (with a bit of SQL thrown in); and 2) how to approach this process with large or mismatched data sets.\nSo come to class having watched:\n\n\n\nSession\nVideo\nPresentation\n\n\n\n\nLinking Data\nVideo\nSlides\n\n\nLinking Spatial Data\nVideo\nSlides\n\n\nScaling Data\nVideo\nSlides",
     "crumbs": [
       "Part 2: Process",
       "9. Selecting Data"

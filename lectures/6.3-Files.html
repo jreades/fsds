@@ -32,70 +32,6 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
-    /* CSS for syntax highlighting */
-    pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { line-height: 1.25; }
-    pre > code.sourceCode > span:empty { height: 1.2em; }
-    .sourceCode { overflow: visible; }
-    code.sourceCode > span { color: inherit; text-decoration: inherit; }
-    div.sourceCode { margin: 1em 0; }
-    pre.sourceCode { margin: 0; }
-    @media screen {
-    div.sourceCode { overflow: auto; }
-    }
-    @media print {
-    pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-    }
-    pre.numberSource code
-      { counter-reset: source-line 0; }
-    pre.numberSource code > span
-      { position: relative; left: -4em; counter-increment: source-line; }
-    pre.numberSource code > span > a:first-child::before
-      { content: counter(source-line);
-        position: relative; left: -1em; text-align: right; vertical-align: baseline;
-        border: none; display: inline-block;
-        -webkit-touch-callout: none; -webkit-user-select: none;
-        -khtml-user-select: none; -moz-user-select: none;
-        -ms-user-select: none; user-select: none;
-        padding: 0 4px; width: 4em;
-        color: #aaaaaa;
-      }
-    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-    div.sourceCode
-      {   }
-    @media screen {
-    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-    }
-    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-    code span.at { color: #7d9029; } /* Attribute */
-    code span.bn { color: #40a070; } /* BaseN */
-    code span.bu { color: #008000; } /* BuiltIn */
-    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-    code span.ch { color: #4070a0; } /* Char */
-    code span.cn { color: #880000; } /* Constant */
-    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-    code span.dt { color: #902000; } /* DataType */
-    code span.dv { color: #40a070; } /* DecVal */
-    code span.er { color: #ff0000; font-weight: bold; } /* Error */
-    code span.ex { } /* Extension */
-    code span.fl { color: #40a070; } /* Float */
-    code span.fu { color: #06287e; } /* Function */
-    code span.im { color: #008000; font-weight: bold; } /* Import */
-    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-    code span.op { color: #666666; } /* Operator */
-    code span.ot { color: #007020; } /* Other */
-    code span.pp { color: #bc7a00; } /* Preprocessor */
-    code span.sc { color: #4070a0; } /* SpecialChar */
-    code span.ss { color: #bb6688; } /* SpecialString */
-    code span.st { color: #4070a0; } /* String */
-    code span.va { color: #19177c; } /* Variable */
-    code span.vs { color: #4070a0; } /* VerbatimString */
-    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-11712cb7c673cbf1341c876f451d5cec.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
@@ -537,66 +473,6 @@ How would you divide this up into: Metadata; Column Names; Row Names; and Data?
 <li><strong>Irrelevance</strong>: fields that simply aren’t relevant to your analysis.</li>
 </ol>
 <p>These will generally require you to engage with columns and rows (via sampling) on an <em>individual</em> level.</p>
-</section></section>
-<section>
-<section id="why-we-need-an-arrow-a-duck-and-a-parquet" class="title-slide slide level1 center">
-<h1>&gt; Why We Need an Arrow, a Duck, and a Parquet</h1>
-<aside class="notes">
-<p>These three interconnected technologies (and there are others too!) have changed my life. Sad as that sounds, it has reduced the time need to load and query large data sets from minutes to milliseconds. And it has solved many of the errors that I just listed above!</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
-</section>
-<section id="arrow-and-parquet" class="slide level2">
-<h2>Arrow and Parquet</h2>
-<ul>
-<li><strong>Arrow</strong> is an <em>in-memory</em> columnar format for data. Data is stored in a structured way <em>in RAM</em> making it blazingly fast for operations.</li>
-<li><strong>Parquet</strong> is a highly-compressed columnar <em>file</em> format for data. Data is stored in a structured way <em>on your hard drive</em>.</li>
-<li><strong>Feather</strong> is a raw storage format for Arrow.</li>
-</ul>
-<p>TL;DR: for most applications Parquet will give nice, small files on disk and the benefits of columnar file storage; for computationally intensive applications where disk space and interoperability with other systems isn’t an issue then Feather might work.</p>
-</section>
-<section id="what-about-the-duck" class="slide level2">
-<h2>What About the Duck?</h2>
-<div class="columns">
-<div class="column" style="width:30%;">
-<p><a href="./img/DuckDB.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img data-src="./img/DuckDB.png"></a></p>
-</div><div class="column" style="width:69%;">
-<ul>
-<li>Serverless SQL queries against Parquet files</li>
-<li>Queries returned as Pandas data frames</li>
-<li>Select and filter <em>before</em> loading</li>
-<li>Fast conversion between CSV and Parquet via Arrow</li>
-</ul>
-</div></div>
-</section>
-<section id="for-later-reference" class="slide level2 smaller">
-<h2>For (Later) Reference</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="co"># Notice the engine and dtype_backend options</span></span>
-<span id="cb1-2"><a></a>df <span class="op">=</span> pandas.read_csv(fname, engine<span class="op">=</span><span class="st">'pyarrow'</span>, </span>
-<span id="cb1-3"><a></a>                dtype_backend<span class="op">=</span><span class="st">'pyarrow'</span>)</span>
-<span id="cb1-4"><a></a></span>
-<span id="cb1-5"><a></a><span class="co"># And for parquet files</span></span>
-<span id="cb1-6"><a></a>df <span class="op">=</span> pandas.read_parquet(fname, columns<span class="op">=</span>[...])</span>
-<span id="cb1-7"><a></a></span>
-<span id="cb1-8"><a></a><span class="co"># And for DuckDB we can actually joing two</span></span>
-<span id="cb1-9"><a></a><span class="co"># files before they even get to Python!</span></span>
-<span id="cb1-10"><a></a>q <span class="op">=</span> <span class="ss">f'''</span></span>
-<span id="cb1-11"><a></a><span class="ss">  SELECT * FROM </span></span>
-<span id="cb1-12"><a></a><span class="ss">    read_parquet('epc-ppd-2022-*.parquet') as ppd, </span></span>
-<span id="cb1-13"><a></a><span class="ss">    read_parquet('epc-ldd-2022-*.parquet') as ldd,</span></span>
-<span id="cb1-14"><a></a><span class="ss">  WHERE ppd.uid=ldd.uid</span></span>
-<span id="cb1-15"><a></a><span class="ss">'''</span></span>
-<span id="cb1-16"><a></a>df <span class="op">=</span> duckdb.query(q).df()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>P.S. There’s also a command-line tool for DuckDB so you don’t even need Python.</p>
 </section>
 <section id="additional-resources" class="slide level2 smaller">
 <h2>Additional Resources</h2>
@@ -615,13 +491,10 @@ How would you divide this up into: Metadata; Column Names; Row Names; and Data?
 <li><a href="https://www.linkedin.com/learning/python-essential-training-2/text-vs-binary-mode">Text vs.&nbsp;binary mode</a></li>
 <li><a href="https://www.linkedin.com/learning/python-essential-training-2/text-files">Text files</a></li>
 <li><a href="https://petl.readthedocs.io/en/stable/">petl</a></li>
-<li><a href="https://datapythonista.me/blog/pandas-20-and-the-arrow-revolution-part-i">pandas 2.0 and the Arrow revolution (Part 1)</a></li>
-<li><a href="https://www.robinlinacre.com/parquet_api/">What parquet files are my preferred API for bulk open data</a></li>
-<li><a href="https://duckdb.org/docs/">DuckDB Documentation</a></li>
 </ul>
 </div></div>
 </section></section>
-<section id="thank-you" class="title-slide slide level1 center" data-background-image="../img/web/title-slide.png" data-background-color="#0F0C11" data-background-opacity="0.2">
+<section id="thank-you" class="title-slide slide level1 center" data-background-image="../img/web/title-slide.png" data-background-color="#f7eff5" data-background-opacity="0.2">
 <h1>Thank You</h1>
 <h3>
 References

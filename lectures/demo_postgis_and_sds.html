@@ -215,17 +215,47 @@
 </section>
 <section id="find-a-postgis-image" class="slide level2">
 <h2>Find a PostGIS Image</h2>
-<p>Search <a href="https://quay.io/">Quay.io</a> – on a modern M-chip Mac you need to use <code>arm64</code> images, on Windows it’s usually <code>amd64</code>; however, in most cases you don’t need to search for these explicitly because ‘builds’ for most images are completed for both.</p>
+<p>Search <a href="https://quay.io/">Quay.io</a> for an image:</p>
+<ul>
+<li>On a modern M-chip Mac you need to use <code>arm64</code> images,</li>
+<li>On Windows it’s usually <code>amd64</code></li>
+</ul>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>However, in most cases you don’t need to search for these explicitly because ‘builds’ for most images are completed for both.</p>
+</div>
+</div>
+</div>
 </section>
 <section id="create-a-pod" class="slide level2">
 <h2>Create a ‘Pod’</h2>
-<p>This pod exposes two ‘ports’ (<code>8888</code> and <code>5432</code>) to the wider world.</p>
+<p>By default, containers can’t talk to each other for security reasons. We need to join them together in a ‘pod’ to allow this to happen.</p>
+<p>This command creates a pod that exposes two ‘ports’ (<code>8888</code> and <code>5432</code>) to the wider world.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a></a><span class="ex">podman</span> pod create <span class="at">-p</span> 8888:8888 <span class="at">-p</span> 5432:5432 myapp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>In this case we ‘map’ <code>8888</code> inside the pod to <code>8888</code> outside the pod, but we could change this: <code>-p 7777:8888</code> so that requests for <code>7777</code> from the outside world are ‘forwarded’ to <code>8888</code> inside the pod.</p>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>This ‘maps’ port <code>8888</code> inside the pod to port <code>8888</code> outside the pod, but we could change it to <code>-p 7777:8888</code> so that requests for <code>7777</code> from the outside world are ‘forwarded’ to <code>8888</code> inside the pod. That would allow copies of containers to run at the same time in different pods.</p>
+</div>
+</div>
+</div>
 </section>
 <section id="attach-postgis-to-the-pod" class="slide level2">
 <h2>Attach PostGIS to the Pod</h2>
-<p>There’s a lot going on here that took quite some to figure out<sup>1</sup>, but the key thing turned out to be the <code>pg_hba.conf</code> file which tells Postgres on which ports it can listen.</p>
+<p>There’s a lot going on here that took quite some to figure out<sup>1</sup>, but the key thing turned out to be the <code>pg_hba.conf</code> file which tells Postgres on which ports it can use.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a></a><span class="ex">podman</span> run <span class="at">--rm</span> <span class="at">-d</span> <span class="at">--name</span> postgres <span class="at">--pod</span> myapp <span class="dt">\</span></span>
 <span id="cb2-2"><a></a>-e POSTGRES_USER=postgres <span class="dt">\</span></span>
 <span id="cb2-3"><a></a>-e POSTGRES_PASSWORD=test <span class="dt">\</span></span>
@@ -235,19 +265,28 @@
 <span id="cb2-7"><a></a>-v /tmp:/tmp <span class="dt">\</span></span>
 <span id="cb2-8"><a></a>-v <span class="st">"</span><span class="va">${PWD}</span><span class="st">"</span>/data/postgres/pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf <span class="dt">\</span></span>
 <span id="cb2-9"><a></a>quay.io/taolu/postgis:14-3.5-alpine</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<aside class="notes">
 <p>This command is telling Podman to start a postgis image (<code>14-3.5-alpine</code>) it downloads from Quay with a test of startup options set at launch. The first three are specifying the databasei, user, and password. The remainder are connecting various ‘mount points’ on the container to locations on the host computer. So the data that is added to the database will be stored under the <em>current working directory</em> (<code>PWD</code> == Print Working Directory). We allow Postgis to the use the computer’s <code>/tmp</code> folder for working data. And the final bit is taking a local copy that we’ve set up of <code>pg_hba.conf</code> and putting that in the place that a regular Postgres server would expect to find it.</p>
-<p>You can now connect using <code>psql</code> on port <code>5432</code>.</p>
-<p>For example:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a></a><span class="ex">psql</span> <span class="at">-h</span> localhost <span class="at">-p</span> 5432 <span class="at">-U</span> postgres <span class="at">-d</span> test </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 <aside><ol class="aside-footnotes"><li id="fn1"><p>Part of an ESRC research project I was supporting.</p></li></ol></aside></section>
 <section id="attach-sds-to-the-pod" class="slide level2">
 <h2>Attach SDS to the Pod</h2>
 <p>Only containers <em>inside</em> the Pod can talk to other containers in the pod. So for the SDS container to talk to PostGIS, they both need to be attached to the pod using <code>myapp</code>.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a></a><span class="ex">podman</span> run <span class="at">--rm</span> <span class="at">-d</span> <span class="at">--name</span> sds <span class="at">--pod</span><span class="op">=</span>myapp <span class="dt">\</span></span>
-<span id="cb4-2"><a></a>-v <span class="st">"</span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st">:/home/jovyan/work"</span> <span class="dt">\</span></span>
-<span id="cb4-3"><a></a>docker.io/jreades/sds:2025-amd <span class="dt">\</span></span>
-<span id="cb4-4"><a></a>start.sh <span class="dt">\</span></span>
-<span id="cb4-5"><a></a>jupyter lab <span class="at">--LabApp.password</span><span class="op">=</span><span class="st">''</span> <span class="at">--ServerApp.password</span><span class="op">=</span><span class="st">''</span> <span class="at">--NotebookApp.token</span><span class="op">=</span><span class="st">''</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a></a><span class="ex">podman</span> run <span class="at">--rm</span> <span class="at">-d</span> <span class="at">--name</span> sds <span class="at">--pod</span><span class="op">=</span>myapp <span class="dt">\</span></span>
+<span id="cb3-2"><a></a>-v <span class="st">"</span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st">:/home/jovyan/work"</span> <span class="dt">\</span></span>
+<span id="cb3-3"><a></a>docker.io/jreades/sds:2025-amd <span class="dt">\</span></span>
+<span id="cb3-4"><a></a>start.sh <span class="dt">\</span></span>
+<span id="cb3-5"><a></a>jupyter lab <span class="at">--LabApp.password</span><span class="op">=</span><span class="st">''</span> <span class="at">--ServerApp.password</span><span class="op">=</span><span class="st">''</span> <span class="at">--NotebookApp.token</span><span class="op">=</span><span class="st">''</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>You can now connect using your browser: <a href="http://localhost:8888/">http://localhost:8888/</a></p>
 <div class="callout callout-tip callout-titled callout-style-default">
 <div class="callout-body">
@@ -266,42 +305,84 @@
 <section id="install-psycopg2" class="slide level2">
 <h2>Install psycopg2</h2>
 <p>If I haven’t had time to update the SDS container then you can do this on the <em>SDS Terminal</em> in your browser using the folllowing command:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a></a><span class="ex">pip</span> install psycopg2<span class="kw">`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a></a><span class="ex">pip</span> install psycopg2<span class="kw">`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This is because the <code>sqlalchemy</code> framework is already there but the <code>psycopg2</code> driver for Postgres isn’t.</p>
 </section>
-<section id="run-python" class="slide level2">
-<h2>Run Python</h2>
+<section id="load-data" class="slide level2">
+<h2>Load Data</h2>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Run Python</strong></p>
+</div>
+<div class="callout-content">
 <p>Now you will start a new Notebook (<code>File</code> &gt; <code>New</code> &gt; <code>Notebook</code>) and create code cells for each of the following sections of code.</p>
-<h3 id="load-data">Load Data</h3>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="im">from</span> sqlalchemy <span class="im">import</span> create_engine</span>
-<span id="cb6-2"><a></a>engine <span class="op">=</span> create_engine(<span class="st">'postgresql://postgres:test@localhost:5432/test'</span>)</span>
-<span id="cb6-3"><a></a></span>
-<span id="cb6-4"><a></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
-<span id="cb6-5"><a></a>gdf <span class="op">=</span> gpd.read_file(<span class="st">'work/data/src/TM_WORLD_BORDERS-0.3.gpkg'</span>)</span>
-<span id="cb6-6"><a></a>gdf.to_postgis(<span class="st">'world'</span>, engine)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<h3 id="query-data">Query Data</h3>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>insp <span class="op">=</span> inspect(engine) </span>
-<span id="cb7-2"><a></a>insp.get_table_names()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
-<span id="cb8-2"><a></a></span>
-<span id="cb8-3"><a></a>gdf <span class="op">=</span> gpd.read_postgis(<span class="st">'SELECT * FROM msoa'</span>, geom_col<span class="op">=</span><span class="st">'geometry'</span>, con<span class="op">=</span>engine)</span>
-<span id="cb8-4"><a></a></span>
-<span id="cb8-5"><a></a>gdf.head(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>gdf.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>gdf <span class="op">=</span> gpd.read_postgis(<span class="st">"""</span></span>
-<span id="cb10-2"><a></a><span class="st">    SELECT * </span></span>
-<span id="cb10-3"><a></a><span class="st">    FROM msoa </span></span>
-<span id="cb10-4"><a></a><span class="st">    WHERE "MSOA21NM" LIKE 'Waltham</span><span class="sc">%%</span><span class="st">'</span></span>
-<span id="cb10-5"><a></a><span class="st">"""</span>, geom_col<span class="op">=</span><span class="st">'geometry'</span>, con<span class="op">=</span>con)</span>
-<span id="cb10-6"><a></a>gdf.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="co"># Connect to the database</span></span>
+<span id="cb5-2"><a></a><span class="im">from</span> sqlalchemy <span class="im">import</span> create_engine</span>
+<span id="cb5-3"><a></a>engine <span class="op">=</span> create_engine(<span class="st">'postgresql://postgres:test@localhost:5432/test'</span>)</span>
+<span id="cb5-4"><a></a></span>
+<span id="cb5-5"><a></a><span class="co"># Insert data into a new table</span></span>
+<span id="cb5-6"><a></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
+<span id="cb5-7"><a></a>gdf <span class="op">=</span> gpd.read_file(<span class="st">'work/data/src/TM_WORLD_BORDERS-0.3.gpkg'</span>)</span>
+<span id="cb5-8"><a></a>gdf.to_postgis(<span class="st">'world'</span>, engine)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="query-the-data-without-python" class="slide level2">
-<h2>Query the Data without Python</h2>
-<p>One final thing: if you run a Terminal on your computer (so <em>not</em> in the SDS terminal any more) you can <em>also</em> query the data that was just loaded. Your computer is the only other machine that access the pod.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a></a><span class="ex">psql</span> <span class="at">-h</span> localhost <span class="at">-p</span> 5432 <span class="at">-U</span> postgres <span class="at">-d</span> test</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb12-1"><a></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> world <span class="kw">LIMIT</span> <span class="dv">0</span>;</span>
-<span id="cb12-2"><a></a><span class="kw">SELECT</span> <span class="ot">"NAME"</span>, <span class="ot">"ISO3"</span>, <span class="ot">"POP2005"</span>, <span class="ot">"REGION"</span> <span class="kw">FROM</span> world <span class="kw">LIMIT</span> <span class="dv">5</span>;</span>
-<span id="cb12-3"><a></a><span class="kw">SELECT</span> <span class="ot">"NAME"</span>, <span class="ot">"POP2005"</span> <span class="kw">FROM</span> world <span class="kw">WHERE</span> AREA <span class="op">&gt;</span> <span class="dv">900000</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="querying-data" class="slide level2">
+<h2>Querying Data</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="co"># Get information about the database</span></span>
+<span id="cb6-2"><a></a>insp <span class="op">=</span> inspect(engine) </span>
+<span id="cb6-3"><a></a>insp.get_table_names()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="co"># Get data out of the database</span></span>
+<span id="cb7-2"><a></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
+<span id="cb7-3"><a></a></span>
+<span id="cb7-4"><a></a><span class="co"># Simple query</span></span>
+<span id="cb7-5"><a></a>gdf <span class="op">=</span> gpd.read_postgis(<span class="st">'SELECT * FROM msoa'</span>, geom_col<span class="op">=</span><span class="st">'geometry'</span>, con<span class="op">=</span>engine)</span>
+<span id="cb7-6"><a></a></span>
+<span id="cb7-7"><a></a><span class="co"># What's in the table</span></span>
+<span id="cb7-8"><a></a>gdf.head(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="plotting-the-data" class="slide level2">
+<h2>Plotting the Data</h2>
+<p>Since PostGIS is geospatial and Python can ‘talk’ to PostGIS:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a><span class="co"># Plotting the table</span></span>
+<span id="cb8-2"><a></a>gdf.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="more-complex-queries" class="slide level2">
+<h2>More Complex Queries</h2>
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a><span class="co"># Query the database</span></span>
+<span id="cb9-2"><a></a>gdf <span class="op">=</span> gpd.read_postgis(<span class="st">"""</span></span>
+<span id="cb9-3"><a></a><span class="st">    SELECT * </span></span>
+<span id="cb9-4"><a></a><span class="st">    FROM msoa </span></span>
+<span id="cb9-5"><a></a><span class="st">    WHERE "MSOA21NM" </span></span>
+<span id="cb9-6"><a></a><span class="st">    LIKE 'Waltham</span><span class="sc">%%</span><span class="st">'</span></span>
+<span id="cb9-7"><a></a><span class="st">"""</span>, geom_col<span class="op">=</span><span class="st">'geometry'</span>, con<span class="op">=</span>con)</span>
+<span id="cb9-8"><a></a>gdf.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="querying-the-data-without-python" class="slide level2">
+<h2>Querying the Data without Python</h2>
+<p>One final thing: if you run a Terminal on your computer (so <em>not</em> in the SDS terminal any more) you can directly query the data.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a></a><span class="ex">psql</span> <span class="at">-h</span> localhost <span class="at">-p</span> 5432 <span class="at">-U</span> postgres <span class="at">-d</span> test</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>The ‘host’ computer is the only other machine that can access the pod.</p>
+</div>
+</div>
+</div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb11-1"><a></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> world <span class="kw">LIMIT</span> <span class="dv">0</span>;</span>
+<span id="cb11-2"><a></a><span class="kw">SELECT</span> <span class="ot">"NAME"</span>, <span class="ot">"ISO3"</span>, <span class="ot">"POP2005"</span>, <span class="ot">"REGION"</span> <span class="kw">FROM</span> world <span class="kw">LIMIT</span> <span class="dv">5</span>;</span>
+<span id="cb11-3"><a></a><span class="kw">SELECT</span> <span class="ot">"NAME"</span>, <span class="ot">"POP2005"</span> <span class="kw">FROM</span> world <span class="kw">WHERE</span> AREA <span class="op">&gt;</span> <span class="dv">900000</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
 </section>
