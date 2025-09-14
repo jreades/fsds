@@ -14,23 +14,34 @@ pod: myapp
 
 ## Find a PostGIS Image
 
-Search [Quay.io](https://quay.io/) -- on a modern M-chip Mac you need to use `arm64` images, on Windows it's usually `amd64`; however, in most cases you don't need to search for these explicitly because 'builds' for most images are completed for both.
+Search [Quay.io](https://quay.io/) for an image:
+
+- On a modern M-chip Mac you need to use `arm64` images, 
+- On Windows it's usually `amd64`
+
+::: {.callout-tip} 
+However, in most cases you don't need to search for these explicitly because 'builds' for most images are completed for both.
+::: 
 
 ## Create a 'Pod'
 
-This pod exposes two 'ports' (`8888` and `5432`) to the wider world. 
+By default, containers can't talk to each other for security reasons. We need to join them together in a 'pod' to allow this to happen. 
+
+This command creates a pod that exposes two 'ports' (`8888` and `5432`) to the wider world. 
 
 ```bash
 podman pod create -p 8888:8888 -p 5432:5432 {{< meta pod >}}
 ```
 
-In this case we 'map' `8888` inside the pod to `8888` outside the pod, but we could change this: `-p 7777:8888` so that requests for `7777` from the outside world are 'forwarded' to `8888` inside the pod. 
+::: {.callout-tip}
 
+This 'maps' port `8888` inside the pod to port `8888` outside the pod, but we could change it to `-p 7777:8888` so that requests for `7777` from the outside world are 'forwarded' to `8888` inside the pod. That would allow copies of containers to run at the same time in different pods.
+
+:::
 
 ## Attach PostGIS to the Pod
 
-
-There's a lot going on here that took quite some to figure out^[Part of an ESRC research project I was supporting.], but the key thing turned out to be the `pg_hba.conf` file which tells Postgres on which ports it can listen. 
+There's a lot going on here that took quite some to figure out^[Part of an ESRC research project I was supporting.], but the key thing turned out to be the `pg_hba.conf` file which tells Postgres on which ports it can use. 
 
 ```bash
 podman run --rm -d --name postgres --pod {{< meta pod >}} \
@@ -44,15 +55,11 @@ podman run --rm -d --name postgres --pod {{< meta pod >}} \
 quay.io/taolu/postgis:14-3.5-alpine
 ```
 
+::: {.notes}
+
 This command is telling Podman to start a postgis image (`14-3.5-alpine`) it downloads from Quay with a test of startup options set at launch. The first three are specifying the databasei, user, and password. The remainder are connecting various 'mount points' on the container to locations on the host computer. So the data that is added to the database will be stored under the *current working directory* (`PWD` == Print Working Directory). We allow Postgis to the use the computer's `/tmp` folder for working data. And the final bit is taking a local copy that we've set up of `pg_hba.conf` and putting that in the place that a regular Postgres server would expect to find it.
 
-You can now connect using `psql` on port `5432`.
-
-For example:
-
-```bash 
-psql -h localhost -p 5432 -U {{< meta user >}} -d {{< meta db >}} 
-```
+:::
 
 ##  Attach SDS to the Pod
 
@@ -85,61 +92,84 @@ pip install psycopg2`
 
 This is because the `sqlalchemy` framework is already there but the `psycopg2` driver for Postgres isn't.
 
-## Run Python 
+## Load Data
+
+::: {.callout-tip}
+
+### Run Python 
 
 Now you will start a new Notebook (`File` > `New` > `Notebook`) and create code cells for each of the following sections of code.
 
-### Load Data
+:::
 
 ```python
+# Connect to the database
 from sqlalchemy import create_engine
 engine = create_engine('postgresql://postgres:{{< meta password >}}@localhost:5432/{{< meta db >}}')
 
+# Insert data into a new table
 import geopandas as gpd
 gdf = gpd.read_file('work/data/src/TM_WORLD_BORDERS-0.3.gpkg')
 gdf.to_postgis('world', engine)
 ```
 
-### Query Data
+## Querying Data
 
 ```python
+# Get information about the database
 insp = inspect(engine) 
 insp.get_table_names()
 ```
 
 ```python
+# Get data out of the database
 import geopandas as gpd
 
+# Simple query
 gdf = gpd.read_postgis('SELECT * FROM msoa', geom_col='geometry', con=engine)
 
+# What's in the table
 gdf.head(2)
 ```
 
-````python
-gdf.plot()
-````
+## Plotting the Data
+
+Since PostGIS is geospatial and Python can 'talk' to PostGIS:
 
 ```python
+# Plotting the table
+gdf.plot()
+```
+
+## More Complex Queries
+
+```python
+# Query the database
 gdf = gpd.read_postgis("""
     SELECT * 
     FROM msoa 
-    WHERE "MSOA21NM" LIKE 'Waltham%%'
+    WHERE "MSOA21NM" 
+    LIKE 'Waltham%%'
 """, geom_col='geometry', con=con)
 gdf.plot()
 ```
 
-## Query the Data without Python
+## Querying the Data without Python
 
-One final thing: if you run a Terminal on your computer (so *not* in the SDS terminal any more) you can *also* query the data that was just loaded. Your computer is the only other machine that access the pod.
+One final thing: if you run a Terminal on your computer (so *not* in the SDS terminal any more) you can directly query the data.
 
 ```bash
 psql -h localhost -p 5432 -U {{< meta user >}} -d {{< meta db >}}
 ```
+
+::: {.callout-tip}
+
+The 'host' computer is the only other machine that can access the pod.
+
+:::
 
 ```sql
 SELECT * FROM world LIMIT 0;
 SELECT "NAME", "ISO3", "POP2005", "REGION" FROM world LIMIT 5;
 SELECT "NAME", "POP2005" FROM world WHERE AREA > 900000;
 ```
-
-
