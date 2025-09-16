@@ -1,13 +1,12 @@
 ---
 title: "Practical 3: Foundations (Part 2)"
 subtitle: "Getting to grips with Dictionaries, LOLs and DOLs"
-jupyter: python3
 filters:
   - qna
   - quarto
 ---
 
-In this notebook we are exploring basic (in the sense of fundamental) data structures so that you understand both how to manage more complex types of data and are prepared for what we will encounter when we start using `pandas` to perform data analysis. To achieve that, you will need to be 'fluent' in "nested" lists and dictionaries; we will focus primarily on lists-of-lists and dictionaries-of-lists, but note that file formats like JSON can be understood as dictionaries-of-dictionaries-of-lists-of-... so this is just a *taster* of real-world data structures.
+In this notebook we are exploring basic (in the sense of fundamental) data structures so that you understand both how to manage more complex types of data and are prepared for what we will encounter when we start using `pandas` to perform data analysis. To achieve that, you will need to be 'fluent' in nested lists and dictionaries; we will focus primarily on lists-of-lists and dictionaries-of-lists, but note that file formats like JSON can be understood as dictionaries-of-dictionaries-of-lists-of-... so this is just a *taster* of real-world data structures.
 
 ::: {.callout-tip}
 
@@ -19,8 +18,7 @@ You should download this notebook and then save it to your own copy of the repos
 
 We're going to start off using lists and dictionaries that _we_ define right at the start of the 'program', but the _real_ value of these data structures comes when we build a list or dictionary _from_ data such as a file or a web page... and that's what we're going to do below!
 
-
-First, here's a reminder of some useful methods (_i.e._ functions) that apply to lists which we covered in the [lecture](https://jreades.github.io/fsds/sessions/week2.html#lectures) and [practical](https://jreades.github.io/fsds/sessions/week2.html#practical) in Week 2:
+First, here's a reminder of some useful methods (_i.e._ functions) that apply to lists which we covered in the [lecture]({{< var module.web >}}sessions/week2.html#pre-recorded-lectures) and [practical]({{< var module.web >}}sessions/week2.html#practical) in Week 2:
 
 | Method                 | Action |
 |------------------------|------------------------------------------------------------------|
@@ -53,68 +51,68 @@ As before, `??` will highlight where one or more bit of code are missing and nee
 
 To complete these tasks, all of the methods that you need are listed above, so this is about testing yourself on your understanding *both* of how to read the help *and* how to index elements in a list.
 
-The next line creates a list of city names (each element is a string):
+The next line creates a list of (made up) Airbnb property names where each element is a string:
 
 ```{python}
-cities = ["Bristol", "London", "Manchester", "Edinburgh", "Belfast", "York"]
+listings = ["Sunny 1-Bed", "Fantastic Dbl", "Home-Away-From-Home", "Sunny Single", "Whole House", "Trendy Terrace"]
 ```
 
 ### List Arithmetic
 
-Replace the `??` so that it prints `Belfast`.
+Replace the `??` so that it prints <code>`{python} listings[2+1]`</code>.
 
 :::: {.qna}
 
 #### Question
 
 ```python
-print(cities[?? + 2])
+print(listings[?? + 1])
 ```
 
 #### Answer
 
 ```{python}
-print(cities[2 + 2])
+print(listings[2 + 1])
 ```
 
 ::::
 
 ### Negative List Arithmetic 
 
-Use a **negative** index to print `Belfast`:
+Now use a **negative** index to print <code>`{python} listings[-2]`</code>:
 
 :::: {.qna}
 
 #### Question
 
 ```python
-print(cities[??])
+print(listings[??])
 ```
 
 #### Answer
 
 ```{python}
-print(cities[-2])
+print(listings[-2])
 ```
 
 ::::
 
 ### Finding a Position in a List
 
-Replace the `??` so that it prints the _index_ for Manchester in the list.
+Replace the `??` so that it prints the _index_ for <code>`{python} listings[1]`</code> in the list.
 
 :::: {.qna}
 
 #### Question
 
 ```python
-print("The position of Manchester in the list is: " + str( ?? ))
+print("The position of '`{python} listings[1]`' in the list is: " + str( ?? ))
 ```
 
 #### Answer
 
 ```{python}
-print("The position of Manchester in the list is: " + str( cities.index('Manchester')))
+print("The position of 'Fantastic Dbl' in the list is: " + str( listings.index('Fantastic Dbl')))
 ```
 
 ::::
@@ -125,7 +123,7 @@ print("The position of Manchester in the list is: " + str( cities.index('Manches
 
 #### Connections
 
-This section draws on the [LOLs](https://jreades.github.io/fsds/sessions/week3.html#lectures) lecture and you will also find Code Camp's [Loops](https://jreades.github.io/code-camp/lessons/Loops.html) session useful here.
+This section draws on the [LOLs]({{< var module.web >}}sessions/week3.html#pre-recorded-lectures) lecture and you will also find Code Camp's [Loops]({{< var module.camp >}}lessons/Loops.html) session useful here.
 
 :::
     
@@ -135,36 +133,36 @@ This section draws on the [LOLs](https://jreades.github.io/fsds/sessions/week3.h
 
 :::
 
-Notice that the list of `temperatures` below is the same length as the list of `cities`, that's because these are (roughly) the average temperatures for each city.
+Notice that the list of `prices` is the same length as the list of `listings`, that's because these are (made-up) prices for each listing.
 
 ```{python}
-cities = ["Bristol", "London", "Manchester", "Edinburgh", "Belfast", "York"]
-temperatures = [15.6, 16.5, 13.4, 14.0, 15.2, 14.8]
+listings = ["Sunny 1-Bed", "Fantastic Dbl", "Home-Away-From-Home", "Sunny Single", "Whole House", "Trendy Terrace"]
+prices = [37.50, 46.00, 125.00, 45.00, 299.99, 175.00]
 ```
 
 ### Lateral Thinking
 
-Given what you know about `cities` and `temperatures`, how do you print: 
+Given what you know about `listings` and `prices`, how do you print: 
 
 ```{python}
 #| echo: false
 #| output: asis
-city="Manchester"
-print(f'> "The average temperature in {city} is {temperatures[cities.index(city)]} degrees"')
+listing="Home-Away-From-Home"
+print(f'> "The nightly price for {listing} is £{prices[listings.index(listing)]}."')
 ```
 
 But you have to do this _without_ doing any of the following:
 
-1. Using a list index directly (*i.e.* `cities[2]` and `temperatures[2]`) or 
-2. Hard-coding the name of the city? 
+1. Using a list index directly (*i.e.* `listings[2]` and `prices[2]`) or 
+2. Hard-coding the name of the listing? 
 
 To put it another way, **neither** of these solutions is the answer:
 
 ```python
-print("The average temperature in Manchester is " + str(temperatures[2]) + " degrees.")
+print("The nightly price for `{python} f'{listing}'` is £" + str(prices[2]) + ".")
 # ...OR...
-city=2
-print("The average temperature in " + cities[city] + " is " + str(temperatures[city]) + " degrees.")
+listing=2
+print("The nightly price for `{python} f'{listing}'` is £" + str(prices[listing[2]]) + ".")
 ```
 
 ::: {.callout-tip}
@@ -178,47 +176,51 @@ You will need to combine some of the ideas above and also think about the fact t
 #### Question
 
 ```python
-city="Manchester" # Use this to get the solution...
+listing="Home-Away-From-Home" # Use this to get the solution...
 
 # This way is perfectly fine
-print("The average temperature in " + ?? + " is " + str(??))
+print("The nightly price of " + ?? + " is " + str(??))
 
 # This way is more Python 3 and a bit easier to read
-print(f"The average temperature in {??} is {??}")
+print(f"The nightly price of {??} is {??}")
 ```
 
 #### Answer
 
 ```{python}
-city="Manchester" # Use this to get the solution...
+listing="Home-Away-From-Home" # Use this to get the solution...
 
 # This way is perfectly fine
-print("The average temperature in " + city + " is " + str(temperatures[cities.index(city)]))
+print("The nightly price of " + listing + " is " + str(prices[listings.index(listing)]))
 
 # This way is more Python 3 and a bit easier to read
-print(f"The average temperature in {city} is {temperatures[cities.index(city)]}")
+print(f"The nightly price of {listing} is {prices[listings.index(listing)]}")
 ```
 
 ::::
 
 ### Double-Checking Your Solution
 
-You'll know that you got the 'right' answer to the question above if you can copy+paste your code and change only **one** thing in order to print out: "The average temperature in Belfast is 15.2 degrees"
+```{python}
+listing = 'Sunny Single'
+```
+
+You'll know that you got the 'right' answer to the question above if you can copy+paste your code and change only **one** thing in order to print out: "The nightly price of `{python} listing` is £`{python} prices[listings.index(listing)]`"
 
 :::: {.qna}
 
 #### Question
 
 ```python
-city="Belfast"
+listing = 'Sunny Single'
 print(??)
 ```
 
 #### Answer
 
 ```{python}
-city="Belfast"
-print(f"The average temperature in {city} is {temperatures[cities.index(city)]}")
+listing = 'Sunny Single'
+print(f"The nightly price of {listing} is £{prices[listings.index(listing)]}")
 ```
 
 ::::
@@ -227,12 +229,30 @@ print(f"The average temperature in {city} is {temperatures[cities.index(city)]}"
 
 Now use a `for` loop over the cities to print out the average temperature in each city:
 
+::: {.callout-tip}
+#### Formatting Numbers
+
+We often want to format numbers in a particular way to make the more readable. Commonly, in English we use commas for thousands separators and a full-stop for the decimal. Other countries follow other standards, but by default Python goes the English way. So:
+
+```{python}
+#| echo: True
+print(f"{1234567.25:.0f}")
+print(f"{1234567.25:.1f}")
+print(f"{1234567.25:.2f}")
+print(f"{1234567:.2f}")
+print(f"{1234567:,.2f}")
+```
+
+:::
+
+That should then help you with the output of the following block of code!
+
 :::: {.qna}
 
 #### Question
 
 ```python
-for c in cities:
+for l in listings:
     ??
 ```
 
@@ -240,15 +260,15 @@ The output should be:
 
 ```{python}
 #| echo: false
-for c in cities:
-    print(f"The average temperature in {c} is {temperatures[cities.index(c)]}")
+for l in listings:
+    print(f"The nightly price of {l} is £{prices[listings.index(l)]:0.2f}")
 ```
 
 #### Answer
 
 ```{python}
-for c in cities:
-    print(f"The average temperature in {c} is {temperatures[cities.index(c)]}")
+for l in listings:
+    print(f"The nightly price of {l} is £{prices[listings.index(l)]:0.2f}")
 ```
 
 ::::
@@ -259,7 +279,7 @@ for c in cities:
 
 #### Connections
 
-This section draws on the [Dictionaries](https://jreades.github.io/fsds/sessions/week3.html#lectures) lecture and Code Camp [Dictonaries](https://jreades.github.io/code-camp/lessons/Dicts.html) session.
+This section draws on the [Dictionaries]({{< var module.web >}}sessions/week3.html#pre-recorded-lectures) lecture and Code Camp [Dictionaries]({{< var module.camp >}}lessons/Dicts.html) session.
 
 :::
 
@@ -269,25 +289,25 @@ This section draws on the [Dictionaries](https://jreades.github.io/fsds/sessions
 
 :::
 
-Remember that dictionaries (a.k.a. dicts) are like lists in that they are [data structures](https://docs.python.org/2/tutorial/datastructures.html) containing multiple elements. A key difference between [dictionaries](https://docs.python.org/2/tutorial/datastructures.html#dictionaries) and [lists](https://docs.python.org/2/tutorial/introduction.html#lists) is that while elements in lists are ordered, dicts (in most programming languages, though not Python) are unordered. This means that whereas for lists we use integers as indexes to access elements, in dictonaries we use 'keys' (which can multiple different types; strings, integers, etc.). Consequently, an important concept for dicts is that of key-value pairs. 
+Remember that dictionaries (a.k.a. dicts) are like lists in that they are [data structures](https://docs.python.org/2/tutorial/datastructures.html) containing multiple elements. A key difference between [dictionaries](https://docs.python.org/2/tutorial/datastructures.html#dictionaries) and [lists](https://docs.python.org/2/tutorial/introduction.html#lists) is that while elements in lists are ordered, dicts (in most programming languages, though not Python) are unordered. This means that whereas for lists we use integers as indexes to access elements, in dictonaries we use 'keys' (which can multiple different types; strings, integers, etc.). Consequently, the important term here is key-value pairs. 
 
 ## Creating an Atlas
 
-The code below creates an Atlas using a dictionary. The dictionary `key` is a city name, and the `value` is the latitude, longitude, and main airport code.
+The code below creates an atlas using a dictionary. The dictionary `key` is a listing, and the `value` is the latitude, longitude, and price.
 
 ```{python}
 #| echo: true
-cities = {
-    'San Francisco': [37.77, -122.43, 'SFO'],
-    'London': [51.51, -0.08, 'LDN'],
-    'Paris': [48.86,2.29, 'PAR'],
-    'Beijing': [39.92,116.40 ,'BEI'],
+listings = {
+    'Sunny 1-Bed': [37.77, -122.43, '£37.50'],
+    'Fantastic Dbl': [51.51, -0.08, '£46.00'],
+    'Home-Away-From-Home': [48.86, 2.29, '£125.00'],
+    'Sunny Single': [39.92, 116.40 ,'£45.00'],
 }
 ```
 
 ### Adding to a Dict 
 
-Add a record to the dictionary for Chennai ([data here](https://en.wikipedia.org/wiki/Chennai))
+Add a record to the dictionary for "Whole House" following the same format.
 
 :::: {.qna}
 
@@ -300,14 +320,14 @@ Add a record to the dictionary for Chennai ([data here](https://en.wikipedia.org
 #### Answer
 
 ```{python}
-cities['Chennai'] = [13.08, 80.28, 'MAA']
+listings['Whole House'] = [13.08, 80.28, '£299.99']
 ```
 
 ::::
 
 ### Accessing a Dict 
 
-In *one* line of code, print out the airport code for Chennai (`MAA`):
+In *one* line of code, print out the price for 'Whole House':
 
 :::: {.qna}
 
@@ -321,7 +341,7 @@ In *one* line of code, print out the airport code for Chennai (`MAA`):
 
 ```{python}
 #| echo: true
-print(f"The airport code for Chennai is {cities['Chennai'][2]}")
+print(f"The nightly price for Whole House is {listings['Whole House'][2]}")
 ```
 
 ::::
@@ -332,7 +352,7 @@ Check you understand the difference between the following two blocks of code by 
 
 ```{python}
 try:
-    print(cities['Berlin'])
+    print(listings['Trendy Terrace'])
 except KeyError as e:
     print("Error found")
     print(e)
@@ -340,7 +360,7 @@ except KeyError as e:
 
 ```{python}
 try:
-    print(cities.get('Berlin','Not Found'))
+    print(listings.get('Trendy Terrace','Not Found'))
 except KeyError as e:
     print("Error found")
     print(e)
@@ -350,7 +370,7 @@ Notice that trying to access a non-existent element of a dict triggers a `KeyErr
 
 ## Thinking Data
 
-This section makes use of both the [Dictionaries](https://jreades.github.io/fsds/sessions/week3.html#lectures) lecture and the [DOLs to Data](https://jreades.github.io/fsds/sessions/week3.html#lectures) lecture.
+This section makes use of both the [Dictionaries]({{< var module.web >}}/sessions/week3.html#pre-recorded-lectures) lecture and the [DOLs to Data]({{< var module.web >}}sessions/week3.html#pre-recorded-lectures) lecture.
 
 ::: {.callout-tip}
 
@@ -367,24 +387,22 @@ Adapting the code below, print out the city name and airport code for every city
 #### Question
 
 ```python
-for c in cities.keys():
+for l in listings.keys():
     print(??)
 ```
 
 The output should look something like this:
-```
-San Francisco -> SFO
-London -> LDN
-Paris -> PAR
-Beijing -> BEI
-Chennai -> MAA
+```{python}
+#| echo: False
+for l in listings.keys():
+    print(f"{l} -> {listings[l][2]}")
 ```
 
 #### Answer
 
 ```{python}
-for c in cities.keys():
-    print(f"{c} -> {cities[c][2]}")
+for l in listings.keys():
+    print(f"{l} -> {listings[l][2]}")
 ```
 
 ::::
@@ -395,27 +413,23 @@ How would your code need to change to produce the _same output_ from this data s
 
 ```{python}
 #| echo: true
-cities = {
-    'San Francisco': {
+listings = {
+    'Sunny 1-Bed': {
         'lat': 37.77, 
-        'lon': -122.43,
-        'airport': 'SFO'},
-    'London': {
+        'lon': -122.43, 
+        'price': '£37.50'},
+    'Fantastic Dbl': {
         'lat': 51.51, 
         'lon': -0.08, 
-        'airport': 'LDN'},
-    'Paris': {
-        'lat': 48.86,
+        'price': '£46.00'},
+    'Home-Away-From-Home': {
+        'lat': 48.86, 
         'lon': 2.29, 
-        'airport': 'PAR'},
-    'Beijing': {
-        'lat': 39.92,
-        'lon': 116.40,
-        'airport': 'BEI'},
-    'Chennai': { 
-        'lat': 13.08, 
-        'lon': 80.28, 
-        'airport': 'MAA'}
+        'price': '£125.00'},
+    'Sunny Single': {
+        'lat': 39.92, 
+        'lon': 116.40, 
+        'price': '£45.00'},
 }
 ```
 
@@ -423,30 +437,38 @@ cities = {
 
 #### Question
 
+So to print out the below for each listing it's...
+
 ```python
-for c in cities.keys():
+for l in listings.keys():
     print(??)
+```
+
+```{python}
+#| echo: False
+for l in listings.keys():
+    print(f"{l} -> {listings[l]['price']}")
 ```
 
 #### Answer
 
 ```{python}
-for c in cities.keys():
-    print(f"{c} -> {cities[c]['airport']}")
+for l in listings.keys():
+    print(f"{l} -> {listings[l]['price']}")
 ```
 
 ::::
 
 ### More Dictionary Action! 
 
-And how would it need to change to print out the name and latitude of every city?
+And how would it need to change to print out the name and latitude of every listing?
 
 :::: {.qna}
 
 #### Question
 
 ```python
-for c in cities.keys():
+for l in listings.keys():
     print(??)
 ```
 
@@ -454,16 +476,16 @@ The output should be something like this:
 
 ```{python}
 #| echo: false
-for c in cities.keys():
-    print(f"{c} is at latitude {cities[c]['lat']}")
+for l in listings.keys():
+    print(f"{l} is at latitude {listings[l]['lat']}")
 ```
 
 #### Answer
 
 ```{python}
 #| echo: true
-for c in cities.keys():
-    print(f"{c} is at latitude {cities[c]['lat']}")
+for l in listings.keys():
+    print(f"{l} is at latitude {listings[l]['lat']}")
 ```
 
 ::::
@@ -474,22 +496,22 @@ Now produce the _same output_ using this new data structure:
 
 ```{python}
 #| echo: true
-cities_alt = [
-    {'name':     'San Francisco',
+listings_alt = [
+    {'name':     'Sunny 1-Bed',
      'position': [37.77, -122.43],
-     'airport':  'SFO'},
-    {'name':     'London',
+     'price':    '£37.50'},
+    {'name':     'Fantastic Dbl',
      'position': [51.51, -0.08],
-     'airport':  'LDN'},
-    {'name':     'Paris',
+     'price':    '£46.00'},
+    {'name':     'Home-Away-From-Home',
      'position': [48.86, 2.29],
-     'airport':  'PAR'},
-    {'name':     'Beijing',
+     'price':    '£125.00'},
+    {'name':     'Sunny Single',
      'position': [39.92, 116.40],
-     'airport':  'BEI'},
-    {'name':     'Chennai', 
+     'price':    '£45.00'},
+    {'name':     'Whole House', 
      'position': [13.08, 80.28],
-      'airport': 'MAA'}
+     'price':    '£299.99'}
 ]
 ```
 
@@ -498,26 +520,24 @@ cities_alt = [
 #### Question
 
 ```python
-for c in cities_alt:
+for l in listings_alt:
     print(??)
 ```
 
 The output should be something like this:
 
-```
-San Francisco is at latitude 37.77
-London is at latitude 51.51
-Paris is at latitude 48.86
-Beijing is at latitude 39.92
-Chennai is at latitude 13.08
+```{python}
+#| echo: False
+for l in listings_alt:
+    print(f"{l['name']} is at latitude {l['position'][0]}")
 ```
 
 #### Answer
 
 ```{python}
 #| echo: true
-for c in cities_alt:
-    print(f"{c['name']} is at latitude {c['position'][0]}")
+for l in listings_alt:
+    print(f"{l['name']} is at latitude {l['position'][0]}")
 ```
 
 ::::
@@ -539,4 +559,3 @@ I just want you to think about these *as data*! If you were trying to use `citie
 ## Add to Git/GitHub
 
 Now follow the same process that you used last week to ensure that your edited notebook is updated in Git and then synchronised with GitHub.
-
