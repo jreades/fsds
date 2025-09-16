@@ -1,84 +1,84 @@
 ---
 title: 'Practical 2: Foundations (Part 1)'
 subtitle: "Getting to grips with the 'Basics'"
+format: html
 filters:
   - qna
   - quarto
 ---
 
-This notebook is focussed on ensuring that you're able to run Jupyter notebooks locally (i.e. on youu own computer) in Docker and are comfortable with the basics of Python: if you've already done Code Camp then this will be a refresher and you'll have plenty of time to get to grips with Git and GitHub, which often presents significant practical challenges. You *should* find this notebook quite straightforward, but take any challenges as a sign that you need to keep practicing since subsequent weeks will build on these foundational concepts.
+This week is focussed on ensuring that you're able to run Jupyter notebooks locally (i.e. on your own computer) and are comfortable with the basics of Python: if you've already done Code Camp then this will be a refresher and you'll have plenty of time to get to grips with Git and GitHub, which often presents significant practical challenges. You *should* find this notebook quite straightforward, but take any challenges as a sign that you need to keep practicing since subsequent weeks will build on these foundational concepts.
 
-::: {.callout-warning}
+## Learning Outcomes
 
-### Remember
+- 
 
-Please save your work regularly, or prepare to be disappointed. This will be my only reminder about this!
+
+# Starting the Practical
+
+The process for every week will be the same: download the notebook to your `fsds` folder; `add`, `commit`, and `push` the notebook in Git; switch over to `JupyterLab` (which will be running in Podman) and get to work. When you're done for the day, save your changes to the file, then `add`, `commit`, and `push` your work to save the completed notebook. 
+
+::: {.callout-info}
+
+In your GIS class you will be using the Git Desktop, and if that works for you then I won't insist you use the Terminal; however, I will note that Git only started to make sense (and problems only began to become easier to resolve) once I switched to the Terminal from Git Desktop. 
 
 :::
 
-# Setting Up
+## Download the Notebook
 
-I'm going to assume that you've got Docker installed and have managed to 'pull' the `{{< var docker.all >}}` or `{{< var docker.mac >}}` image at this point. If not, this is your **most urgent** priority. Please make one of us aware of your situation and we'll do our best to get you going.
-
-## Downloading the Practical
-
-On the [Week 2 of FSDS page](https://jreades.github.io/fsds/sessions/week2.html#practical) you'll see that there is a 'preview' link and a a 'download' link in the [Practical section](https://jreades.github.io/fsds/sessions/week2.html#practical). If you click the `preview` link you will be taken to the GitHub page for the notebook where it has been 'rendered' as a web page. But to make the notebook useable on *your* computer, you need to `download` the IPYNB file.
+So for this week, visit the [Week 2 of FSDS page]({{< var module.web >}}sessions/week2.html#practical) you'll see that there is a 'preview' link and a a 'download' link in the [Practical section]({{< var module.web >}}sessions/week2.html#practical). If you click the `preview` link you will be taken to the GitHub page for the notebook where it has been 'rendered' as a web page. But to make the notebook useable on *your* computer, you need to `download` the IPYNB file.
 
 So now:
 
 1. Click on the `Download` link.
 2. The file should download automatically, but *if* you see a page of raw code, select `File` then `Save Page As...`.
 3. Make sure you know where to find the file (e.g. Downloads or Desktop). 
-4. Move the file to your GitHub repository folder (e.g. `~/Documents/CASA/fsds/`)
+4. Move the file to your Git repository folder (e.g. `~/Documents/CASA/fsds/`)
 5. Check to see if your browser has added `.txt` to the file name:
    - If no, then you can move to adding the file.
-   - If yes, then you can either fix the name in the Finder/Windows Explore, or you can do this in the Terminal/PowerShell using `mv <name_of_practical>.ipynb.txt <name_of_practical>.ipynb` (you can even do this in JupyterLab's terminal).
-6. Now you can add it to Git and GitHub:
+   - If yes, then you can either fix the name in the Finder/Windows Explore, or you can do this in the Terminal using `mv <name_of_practical>.ipynb.txt <name_of_practical>.ipynb` (you can even do this in JupyterLab's terminal if it's already running).
+
+## Add the Notebook to Git
+
+1. Now you can add it to Git and synchronise it with GitHub:
    1. `git add <name_of_practical>.ipynb`
    2. `git commit -m "Adding Practical 2"`
    3. `git push`
 
 The file should now be in your GitHub repository in its 'original' format (before you write or run any code).
 
-## Running Docker
+## Switch to JupyterLab {#sec-available}
 
-### Making the Notebook Available to Jupyter Lab {#sec-available}
+I am assuming that you are already running JupyterLab via Podman using the command that we saw in Week 1 and on the [CASA Computing Platform]({{< var module.sds >}}). However, if you called `podman run ...` from the 'wrong place' then you might not be able to see the recently added practical in your work folder. 
 
-To keep all of your notebooks and other CASA0013 content in Git/GitHub, you need to make sure that JupyterLab can access your local git repository. JupyterLab can *only* do this if the git folder is a *child* of the one where you ran `docker run ...`. So if your git repo is `~/Documents/CASA/fsds/` then you need to make sure that you start Docker from `~/Documents/CASA/fsds`, `~/Documents/CASA/` or `~/Documents/`.
-
-::: {.callout-warning}
-#### Wrong Place?
-
-If you called `docker run ...` from the wrong place, then you will need to stop the container. Please see the [section below](#is-the-container-running-sec-containers). 
-
-:::
-
-Remember that the startup command is something like:
+It that's the case, then you will need to stop the container so please see the [section below](#is-the-container-running-sec-containers). You need to remember that the startup command is something like:
 
 ```shell
-docker run ... -v "$(pwd):/home/jovyan/work" ...
+podman run ... -v "$(pwd):/home/jovyan/work" ...
 ```
 
-The `-v` (short for *volume*) tells Docker what part of _your_ computer (`$(pwd)`) to connect to container (`/home/jovyan/work`). `pwd` is short-hand for 'print working directory' and is the location where you ran the Docker startup command! So we're talking about the location on _your_ computer when you access the `work` folder from within Docker/Jupyter Lab:
+The `-v` (short for *volume*) tells Podman what part of _your_ computer should be connected to place in container where we store the work (`/home/jovyan/work`). `pwd` is short for 'print working directory' and is the location where you ran the startup command! So we're talking about the location on _your_ computer when you access the `work` folder from Jupyter Lab:
 
-- On a Mac it will _often_ be your `$HOME` (also known as `~`) directory (e.g. `/Users/your_username/`) because that's where new Terminal windows start by default.
+- On a Mac, if you just opened a new Terminal and run the Podman startup command then it will be your `$HOME` (also known as `~`) directory (e.g. `/Users/<your username>/`) because that's where new Terminal windows start by default.
 - On a Windows machine it _may_ be your `$HOME` directory but we can't promise.
 
-Perhaps a video will help clarify?
+Perhaps a video will help clarify? 
+
+**Note**: Docker and Podman are basically the same!
 
 {{< video https://www.youtube.com/embed/5IkwUrYTY78 >}}
 
-### Is the Container Running? {#is-the-container-running-sec-containers}
+## Is the Container Running? {#is-the-container-running-sec-containers}
 
 Docker will happily keep a container running in the background even if you close every open window. So how do you know if the `{{< var docker.name >}}` container is already running? There are two ways:
 
-1. Open the Docker Dashboard/Desktop from the menu and make sure that you select the `Containers` tab on the left (it may be hidden by a message from Docker about upcoming conferences). You _should_ see something like this if the container is _running_ and _available_:
+1. Open the Podman Desktop from the menu and make sure that you select the `Containers` tab. You _should_ see something like this if the container is _running_ and _available_:
 
-![Container running](./img/Running_Container.png)
+![Container running]({{< var module.web >}}/practicals/img/Running_Container.png)
 
-2. From the Terminal/Power Shell you should be able to run: `docker ps`. This will give you output something like this:
+1. From the Terminal you should be able to run: `podman ps`. This will give you output something like this:
 
-![Container running from Terminal](./img/Running_Container_2.png)
+![Container running from Terminal]({{< var module.web >}}/practicals/img/Running_Container_2.png)
 
 If the `{{< var docker.name >}}` *container* is not running then you'll need to run the startup command (`docker run...`) covered in the [last practical session](Practical-01-Getting_Started.qmd). If it *is* running but in the wrong place, then you should stop it, use `cd` to navigate to the correct location, and then restart it.
 
@@ -86,11 +86,11 @@ If the `{{< var docker.name >}}` *container* is not running then you'll need to 
 
 Once you know the container is running you can connected to Jupyter Lab on [localhost:8888](http://localhost:8888/lab/tree/work/) and should see something like this:
 
-![Screenshot of JupyterLab](https://github.com/jreades/fsds/raw/master/practicals/img/1.8-Jupyter_Lab.png){height=300}
+![Screenshot of JupyterLab]({{< var module.web >}}/practicals/img/1.8-Jupyter_Lab.png){height=300}
 
 You're connected!
 
-# Running a Notebook
+# Running the Notebook
 
 ## Hello World!
 
@@ -98,7 +98,7 @@ Nearly every introduction to programming course starts with the famous 'Hello Wo
 
 From _within Jupyter Lab_ you should now able to create a new notebook:
 
-1. Click on the `Python (base)` tile in the `Notebook` section.
+1. Click on the `Python 3` tile in the `Notebook` section.
 2. You should see a new tab open with a new notebook (title: `Untitled.ipynb`).
 3. In the first cell type `print('Hello World!')`.
 4. Click the `Run` button (&#9654;) in the menu above the notebook.
@@ -131,9 +131,8 @@ You can now close this notebook. Unless you created this notebook in the `work` 
 
 *Now* from _within Jupyter Lab_ you should start the Practical 2 notebook:
 
-1. Make sure Jupyter Lab is showing (&#128193;`/work/`) in the left-hand menu.
-2. Navigate to your git repo (where you saved `Practical-02-Foundations_1.ipynb`).
-3. Double-click the file and the notebook should appear on the right-hand side.
+1. Starting from the `work` folder, navigate to your repo folder where you saved this notebook (`Practical-02-Foundations_1.ipynb`).
+2. Double-click the notebook file and the notebook should appear on the right-hand side. If all you see is reams of plain text then there is probably still a `.txt` extension on your notebook file that hasn't been removed.
 
 Now you can run code directly in your browser, so let's try it!
 
@@ -142,7 +141,7 @@ Now you can run code directly in your browser, so let's try it!
 ::: {.callout-note}
 ### Connections
 
- This is a short recap of materials covered in this week's video on [Python: the Basics](https://jreades.github.io/fsds/sessions/week2.html#lectures) as well as Code Camp's [The Basics](https://jreades.github.io/code-camp/lessons/The_Basics.html)
+ This is a short recap of materials covered in this week's video on [Python: the Basics]({{< var module.web >}}/sessions/week2.html#lectures) as well as Code Camp's [The Basics]({{< var module.camp >}}/lessons/The_Basics.html)
 
 :::
 
@@ -189,7 +188,15 @@ mclass = 5        # Invalid, reserved word
 
 ## Variable Types
 
-**Before running the code** below, work out what the output will be for _each_ of the `print` commands below when the code is executed. Write them as comments on the same line as the code (after the `#`, see example).
+Using only the values for `x`, `y`, and `z`, what operations allow you to print the following?
+
+```bash
+6
+22
+22
+125
+0.4
+```
 
 ::: {.qna}
 
@@ -197,36 +204,28 @@ mclass = 5        # Invalid, reserved word
 
 ```python
 x = '2'
-y = z = 2
+y = 2
+z = 3
 
-print(y * z)    # 4
-print(x * y)    # ??
-print(x + x)    # ??
-print((y+z)**z) # ??
-print(y/(y+z))  # ??
-
-print( type(x * y) )    # ??
-print( type(y * z) )    # ??
-print( type((y+z)**z) ) # ??
-print( type(y/(y+z)) )  # ??
+print( ? ) # 6
+print( ? ) # 22
+print( ? ) # 22 (but a different way!)
+print( ? ) # 125
+print( ? ) # 0.4
 ```
 
 #### Answer
 
 ```{python}
 x = '2'
-y = z = 2
+y = 2
+z = 3
 
-print(y * z)    # 4
-print(x * y)    # ??
-print(x + x)    # ??
-print((y+z)**z) # ??
-print(y/(y+z))  # ??
-
-print( type(x * y) )    # ??
-print( type(y * z) )    # ??
-print( type((y+z)**z) ) # ??
-print( type(y/(y+z)) )  # ??
+print(y * z)
+print(x * y)
+print(x + x)
+print((y+z)**z)
+print(y/(y+z))
 ```
 
 :::
@@ -247,9 +246,9 @@ z = x + y # ??
 x = x + y # ??
 y = z + y # ??
 
-# print(x)
-# ??
-# ??
+print(x)
+print(y)
+print(z)
 ```
 
 #### Answer
@@ -269,7 +268,7 @@ print(z)
 
 :::
 
-Once you have worked out what you think `x`, `y` and `z` are, add `print(...)` statements to the code above to check your answers!
+Once you have worked out what you think `x`, `y` and `z` are, run the code to check your answers!
 
 Make sure you understand the results you find. **Ask someone if you need help to understand.**
 
@@ -287,26 +286,26 @@ Make sure you understand the results you find. **Ask someone if you need help to
 
 #### Question
 
-```python
-x = 1 + (2 * 3) / 4
-y = (1 + 2) * (3 / 4)
-z = 1 + 2 * (3 / 4)
+By adding parentheses adjust the equations below to output the following:
 
-print(x) # x is 
-print(y) # y is 
-print(z) # z is 
+```bash
+2.5
+2.25
+2.5
+```
+
+```python
+print(1 + 2 * 3 / 4)
+print(1 + 2 * 3 / 4)
+print(1 + 2 * 3 / 4)
 ```
 
 #### Answer
 
 ```{python}
-x = 1 + (2 * 3) / 4
-y = (1 + 2) * (3 / 4)
-z = 1 + 2 * (3 / 4)
-
-print(x) # x is 
-print(y) # y is 
-print(z) # z is 
+print(1 + (2 * 3) / 4)
+print((1 + 2) * (3 / 4))
+print(1 + 2 * (3 / 4))
 ```
 
 :::
@@ -317,7 +316,7 @@ Once you have calculated what you think `x`, `y` and `z` are, run the code to ch
 
 Now let's look at some of the stranger operators. Many of these can be very useful in more complex code but can seem a little pointless now.
 
-**Work out what operator should replace the `??`** in each of the lines of code below to produce the output I've shown in the comments. I've mixed in ones you have seen above with ones that we've not seen before.
+**Work out what operator should replace the `?`** in each of the lines of code below to produce the output I've shown in the comments. I've mixed in ones you have seen above with ones that we've not seen before.
 
 ::: {.qna}
 
@@ -327,12 +326,12 @@ Now let's look at some of the stranger operators. Many of these can be very usef
 x = 10
 y = 3
 
-print( x ?? y ) # 1
-print( x ?? y ) # 13
-print( x ?? y ) # False
-print( x ?? y ) # 1000
-print( x ?? y ) # 7
-print( x ?? y ) # 3
+print( x ? y ) # 1
+print( x ? y ) # 13
+print( x ? y ) # False
+print( x ? y ) # 1000
+print( x ? y ) # 7
+print( x ? y ) # 3
 ```
 
 #### Answer
@@ -444,13 +443,13 @@ print("3. " + f"{r:0.0f} cm")
 ::: {.callout-note}
 ### Connections
 
-This is a short recap of material covered in Code Camp's [Truth & Conditions](https://jreades.github.io/code-camp/lessons/Boolean_Logic.html) and, to some extent, the [Iteration](https://jreades.github.io/fsds/sessions/week2.html#lectures) lecture.
+This is a short recap of material covered in Code Camp's [Truth & Conditions]({{< var module.camp >}}lessons/Boolean_Logic.html) and, to some extent, the [Iteration]({{< var module.web >}}sessions/week2.html#pre-recorded-lectures) lecture.
 
 :::
 
 ## Working with Conditions
 
-Use **if, elif, and else** so that you get the following output:
+Use `if`, `elif`, and `else` so that you get the following output:
 
 1. When `hours` is 10 or more, then the code prints `At least 10 hours worked!`
 2. When `hours` is exactly 2, then the code prints `Exactly 2 hours worked.`  
@@ -500,7 +499,7 @@ Using the flow chart shown in the image below as a model, write the code to make
 1. When `a = 2` and `b = 2` four lines of output will be written
 2. When `a = 1` and `b = 2` one line of output will be written
 
-![](https://kingsgeocomputation.files.wordpress.com/2016/09/geocompweek2_task3_3.jpg){width=600}
+![]({{< var module.web >}}/practicals/img/geocompweek2_task3_3.jpg){width=600}
 
 ::: {.qna}
 
@@ -538,7 +537,7 @@ print("after condition")
 
 ### Connections
 
- This is a short recap of Code Camp's [Boolean Logic](https://jreades.github.io/code-camp/lessons/Boolean_Logic.html) session and the [Pthon: the Basics](https://jreades.github.io/fsds/sessions/week2.html#lectures) lecture.
+ This is a short recap of Code Camp's [Boolean Logic]({{< var module.camp >}}lessons/Boolean_Logic.html) session and the [Pthon: the Basics]({{< var module.web >}}/sessions/week2.html#lectures) lecture.
  
 :::
 
@@ -594,7 +593,7 @@ if not(x > 0):
 
 Study the flow chart below.
 
-![](https://kingsgeocomputation.files.wordpress.com/2016/09/geocompweek2_task3_5.jpg){width=600}
+![]({{< var module.web >}}practicals/img/geocompweek2_task3_5.jpg){width=600}
 
 ::: {.callout-tip}
 
@@ -619,11 +618,11 @@ for x in range(0,9):
 ```{python}
 for x in range(0,9):
     #... do something...
+    print(x, end=": ")
     if x%2==0:
         print("x is even.")
     else:
         print("x is odd")
-    print(x)
 ```
 
 :::
@@ -689,7 +688,7 @@ Great! You should now have a pretty good understanding of how conditional and lo
 
 ### Connections
 
- This is a short recap of material covered in the [Lists](https://jreades.github.io/fsds/sessions/week2.html#lectures) lecture and Code Camp's [Lists](https://jreades.github.io/code-camp/lessons/Lists.html) session.
+ This is a short recap of material covered in the [Lists]({{< var module.web >}}sessions/week2.html#lectures) lecture and Code Camp's [Lists]({{< var module.camp >}}lessons/Lists.html) session.
  
 :::
 
@@ -719,7 +718,7 @@ print( ?? ) # You could also do cities[1:5] but this way is neater
 # Combine positive and negative indexing to print out London, Beijing and Tokyo using a list slice
 print( ?? )
 
-# Print out the position of New York in the list by searching for it (i.e. you can't just type 0)
+# Print out the index for New York by searching for it (i.e. you can't just type 0)
 print( ?? )
 ```
 
@@ -914,7 +913,7 @@ This is quite a lot to get through. If you've managed it in under 2 hours then *
 
 ### No Wait, One More Thing...
 
-You now want to add/commit/push your completed notebook to your GitHub reposistory. Using the Terminal (macOS or from with Jupyter/Docker) or Git Bash (Windows) you need to:
+You now want to add/commit/push your completed notebook to your GitHub reposistory. Using the Terminal you need to:
 
 1. Navigate to your repository (e.g.`$HOME/Documents/CASA/<your repository>`).
 2. Check the status of your notebooks using `git status` (you should see that `Practical-02-Foundations_1.ipynb has been modified`).
@@ -923,12 +922,3 @@ You now want to add/commit/push your completed notebook to your GitHub reposisto
 5. Push this change to GitHub using: `git push`
 
 You should now be able to visit your repository on [GitHub](https://github.com/) and see that your changes are now stored there as well!
-
-::: {.callout-note}
- 
- If you are using Docker then you can also save your work as a PDF using: `File` > `Export Notebook As...` (this does not work for notebooks with lots of complex formatting).
- 
-:::
-
-#### License
-These teaching materials are licensed under a mix of the MIT and CC-BY licenses...
