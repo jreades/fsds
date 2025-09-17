@@ -1,16 +1,16 @@
 ```{python}
-import os
+from pathlib import Path
 from requests import get
 from urllib.parse import urlparse
 from functools import wraps
 
 def check_cache(f):
     @wraps(f)
-    def wrapper(src, dst, min_size=100):
-        url = urlparse(src) # We assume that this is some kind of valid URL 
-        fn  = os.path.split(url.path)[-1] # Extract the filename
-        dsn = os.path.join(dst,fn) # Destination filename
-        if os.path.isfile(dsn) and os.path.getsize(dsn) > min_size:
+    def wrapper(src:str, dst:str, min_size=100) -> Path:
+        url = Path(urlparse(src)) # We assume that this is some kind of valid URL 
+        fn  = Path(url.path).name # Extract the filename
+        dsn = Path(f"{dst}/{fn}") # Destination filename
+        if dsn.isfile() and dsn.stat().st_size > min_size:
             print(f"+ {dsn} found locally!")
             return(dsn)
         else:
@@ -19,7 +19,7 @@ def check_cache(f):
     return wrapper
 
 @check_cache
-def cache_data(src:str, dst:str) -> str:
+def cache_data(src:Path, dst:Path) -> Path:
     """Downloads a remote file.
     
     The function sits between the 'read' step of a pandas or geopandas
@@ -40,23 +40,17 @@ def cache_data(src:str, dst:str) -> str:
     str
         A string representing the local location of the file.
     """
-
-    # Convert the path back into a list (without)
-    # the filename -- we need to check that directories
-    # exist first.
-    path = os.path.split(dst)[0]
-    print(f"Path: {path}")
       
     # Create any missing directories in dest(ination) path
     # -- os.path.join is the reverse of split (as you saw above)
     # but it doesn't work with lists... so I had to google how
     # to use the 'splat' operator! os.makedirs creates missing
     # directories in a path automatically.
-    if path != '':
-        os.makedirs(path, exist_ok=True)
+    if not dst.parent.exists():
+        dst.parent.mkdir(parents=True, exist_ok=True)
         
     # Download and write the file
-    with open(dst, "wb") as file:
+    with dst.open(mode='wb') as file:
         response = get(src)
         file.write(response.content)
         

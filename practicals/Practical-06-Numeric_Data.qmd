@@ -5,8 +5,8 @@ format: html
 filters:
   - qna
   - quarto
-html:
-  - embed-resources: true
+# html:
+#   - embed-resources: true
 ---
 
 <style type="text/css">
@@ -50,7 +50,7 @@ So although they don't need to be done now, you probably want to add both those 
 
 #### &#128279; Connections
 
-This is why we spent time talking about [Packages](https://jreades.github.io/fsds/sessions/week3.html#lectures), [Methods](https://jreades.github.io/fsds/sessions/week4.html#lectures) [Classes](https://jreades.github.io/fsds/sessions/week4.html#lectures) in the lectures... because now we're going to be making _intensive_ use of them.
+This is why we spent time talking about [Packages]({{< var module.web >}}sessions/week3.html#pre-recorded-lectures), [Methods]({{< var module.web >}}sessions/week4.html#pre-recorded-lectures) [Classes]({{< var module.web >}}sessions/week4.html#pre-recorded-lectures)... because now we're going to be making _intensive_ use of them.
 
 :::
 
@@ -60,7 +60,7 @@ It's always sensible to import packages these at the top of the notebook:
 2. It's easy to run this and then skip further down the notebook if you have already done *some* of the work and saved an intermediate output.
 
 ```{python}
-import os
+from pathlib import Path
 import numpy as np
 import pandas as pd
 ```
@@ -87,7 +87,7 @@ The `<package_name>.__version__` approach isn't guaranteed to work with _every_ 
 
 #### &#128279; Connections
 
-You will _really_ need to get to grips with Pandas through the lectures on [Data](https://jreades.github.io/fsds/sessions/week5.html#lectures) and [Pandas](https://jreades.github.io/fsds/sessions/week5.html#lectures).
+You will _really_ need to get to grips with Pandas through the lectures on [Data]({{< var module.web >}}sessions/week6.html#pre-recorded-lectures) and [Pandas]({{< var module.web >}}sessions/week6.html#pre-recorded-lectures).
 
 :::
 
@@ -145,17 +145,19 @@ This is a bit of a fuller answer than the question, but hopefully you'll see why
 # are always available because they're so basic.
 from urllib.error import URLError
 
-if not os.path.exists('tmp.csv.gz'):
-    print("Didn't find tmp.csv.gz locally")
+tmp = Path('tmp.csv.gz')
+
+if not tmp.exists():
+    print(f"Didn't find {tmp} locally")
     try:
         df = pd.read_csv(url, compression='gzip', low_memory=False)
-        df.to_csv('tmp.csv.gz', compression='gzip', index=False)
+        df.to_csv(tmp.resolve(), compression='gzip', index=False)
     except URLError as e:
         print(f"Unable to access: {url}")
         print(e)
 else:
-    print("Found tmp.csv.gz locally")
-    df = pd.read_csv('tmp.csv.gz', compression='gzip', low_memory=False)
+    print(f"Found {tmp} locally")
+    df = pd.read_csv(tmp.resolve(), compression='gzip', low_memory=False)
 
 try:
     print(f"Data frame is {df.shape[0]:,} x {df.shape[1]}")
@@ -202,20 +204,20 @@ mem_usage = df.memory_usage(index=True, deep=True)
 
 Describing a data frame provides general information about *numeric* columns, such as the median, IQR, or number of discrete values. 
 
-So to show the 5th and 95th percentiles you need to pass an argument to `describe` to override the default report from pandas:
+So to show the 5th and 95th percentiles you need to pass an argument to `describe` to override the default report from pandas. Notice here how we can subselect columns by name using `df[ [<names of columns>] ]`!
 
 :::: {.qna}
 
 #### Question
 
 ```python
-df.describe(percentiles=[??])
+df[['latitude', 'longitude', 'accommodates', 'bathrooms', 'bedrooms', 'beds']].describe(percentiles=[??])
 ```
 
 #### Answer
 
 ```{python}
-df.describe(percentiles=[.05,0.95]) # 0.5 is always shown
+df[['latitude', 'longitude', 'accommodates', 'bathrooms', 'bedrooms', 'beds']].describe(percentiles=[.05,0.95]) # 0.5 is always shown
 ```
 
 ::::
@@ -274,18 +276,17 @@ You should get a list showing every single column. If you get `Index(['id', 'lis
 Now save the file somewhere local so that you don't have to keep downloading 40MB of compressed data every time you want to start the practical. We'll be using this data for the rest of term, so you might as well save yourself some time and bandwidth! We'll talk more about data processing pipelines over the course of the term, but I'd suggest putting this data set into a `data/raw` folder because then you can have directories like `data/clean` and `data/analytical` as you move through the process of cleaning and prepping your data for analysis.
 
 ```{python}
-path = os.path.join('data','raw') # A default location to save raw data
-fn   = url.split('/')[-1]         # What does this do?
-print(f"Writing to: {fn}")
+path = Path(f"data/raw/{url.split('/')[-1]}") # What does this do?
+print(f"Writing to: {path}")
 ```
 
 ```{python}
-if not os.path.exists(path):      # And what does *this* do?
-    print(f"Creating {path} under {os.getcwd()}")
-    os.makedirs(path)
+if not path.parent.exists():      # And what does *this* do?
+    print(f"Creating {path.parent}")
+    path.parent.mkdir(parents=True, exist_ok=True)
 
-if not os.path.exists(os.path.join(path,fn)):  
-    df.to_csv(os.path.join(path,fn), index=False)
+if not path.exists():  
+    df.to_csv(path, index=False)
     print("Done.")
 ```
 
@@ -365,10 +366,10 @@ Let's tackle the *rows* problem first:
 testing = True
 
 if testing:
-    df = pd.read_csv(os.path.join(path,fn), 
+    df = pd.read_csv(path, 
                 low_memory=??, ??)
 else:
-    df = pd.read_csv(os.path.join(path,fn), 
+    df = pd.read_csv(path, 
                 low_memory=??)
 
 print(f"Data frame is {df.shape[0]:,} x {df.shape[1]}")
@@ -380,10 +381,10 @@ print(f"Data frame is {df.shape[0]:,} x {df.shape[1]}")
 testing = True
 
 if testing:
-    df = pd.read_csv(os.path.join(path,fn), 
+    df = pd.read_csv(path, 
                 low_memory=False, nrows=10000)
 else:
-    df = pd.read_csv(os.path.join(path,fn), 
+    df = pd.read_csv(path, 
                 low_memory=False)
 
 print(f"Data frame is {df.shape[0]:,} x {df.shape[1]}")
@@ -433,10 +434,10 @@ So let's extend our previous answer
 testing = True
 
 if testing:
-    df = pd.read_csv(os.path.join(path,fn), 
+    df = pd.read_csv(opath, 
                 low_memory=False, nrows=10000, ??)
 else:
-    df = pd.read_csv(os.path.join(path,fn), 
+    df = pd.read_csv(path, 
                 low_memory=False, ??)
 
 print(f"Data frame is {df.shape[0]:,} x {df.shape[1]}")
@@ -448,10 +449,10 @@ print(f"Data frame is {df.shape[0]:,} x {df.shape[1]}")
 testing = True
 
 if testing:
-    df = pd.read_csv(os.path.join(path,fn), 
+    df = pd.read_csv(path, 
                 low_memory=False, nrows=10000, usecols=cols)
 else:
-    df = pd.read_csv(os.path.join(path,fn), 
+    df = pd.read_csv(path, 
                 low_memory=False, usecols=cols)
 
 print(f"Data frame is {df.shape[0]:,} x {df.shape[1]}")
@@ -476,7 +477,7 @@ So we use `del(df)` to ensure that we aren't accidentally using the 'old' data f
 Let's start over from the saved data:
 
 ```{python}
-df = pd.read_csv(os.path.join(path,fn), 
+df = pd.read_csv(path, 
                 low_memory=False, usecols=cols)
 ```
 
@@ -1068,13 +1069,13 @@ df.info()
 Also at this point I would save a copy of the cleaned data, though I would only consider this data _partially_ cleaned since we've not made it any further than just ensuring that each column is in an appropriate format and that some particularly problematic rows have been dropped!
 
 ```{python}
-path = os.path.join('data','clean')
+out = Path(f'data/clean/{path.name}')
 
-if not os.path.exists(path):
-    print(f"Creating {path} under {os.getcwd()}")
-    os.makedirs(path)
+if not out.parent.exists():
+    print(f"Creating {out.parent}")
+    out.parent.mkdir(parents=True, exist_ok=True)
     
-df.to_csv(os.path.join(path,fn), index=False)
+df.to_csv(out, index=False)
 print("Done.")
 ```
 
