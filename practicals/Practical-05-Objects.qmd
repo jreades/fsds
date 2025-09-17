@@ -1,7 +1,6 @@
 ---
 title: "Practical 5: Objects"
 subtitle: "From Functions to Classes"
-format: html
 filters:
   - qna
   - quarto
@@ -656,97 +655,98 @@ This will draw on what you've learned in the lectures about [Methods]({{< var mo
 
 :::
 
-We want to create a set of 'shapes' that allow us to calculate various properties of that shape:
-
-- Diameter: which we'll define as the longest line that can be drawn across the inside of the shape.
-- Volume: the total volume of the shape.
-- Surface Area: the total outside area of the shape.
-
-We will create all of these shape classes in the notebook so that we know they work and then will move them to an external package file so that they can be imported and re-used easily in other notebooks.
+We want to create a set of classes to 'help' Airbnb manage bookings -- these will necessarily be highly simplified and are intended more as a teaching resource than a demonstration of outstanding Object-Oriented Design; however, it's my hope that you'll see how classes and objects can support programming and application development.
 
 We're also going to make use of a few features of Python:
 
-- You can access the class name of an instance using: `self.__class__.__name__`. And here's one key point: `self` refers to the specific instance (to *this* particular shape that I've created), not to the class in general (to *all* shapes of the same, er, shape)... we'll see why this matters.
+- You can access the class name of an instance using: `self.__class__.__name__`. And here's one key point: `self` refers to the instance (to *this* particular shape that I've created), not to the class in general (to *all* objects of the same class)... we'll see why this matters.
 - You can raise your own exceptions easily if you don't want to implement a particular method yet. This is giving you control over how your code behaves when something goes 'wrong' -- as we've covered elsewhere sometimes an error is 'expected' and we want to handle the *exception*, other times it is 'unexpected' and we're going to let Python fail so that the user knows something is seriously wrong.
-- You can have an 'abstract' base class that does nothing except provide a template for the 'real' classes so that different types of shapes can be used interchangeably. This is quite an advanced feature, but it gives our script a lot more flexibility: we don't need to worry about whether we're working with a sphere, cube, or pyramid (or a spatial or non-spatial data set) because they are defined in a way that allows this flexibility.
+- You can have an 'abstract' base class that does nothing except provide a template for the 'real' classes so that different types of listings can be used interchangeably. This is quite an advanced feature, but it gives our script a lot more flexibility: we don't need to worry about whether we're working with a flat, house, or houseboat because they are defined in a way that allows this flexibility.
 
 ## Abstract Base Class
 
 This class appears to do very little, but there are two things to notice:
 
-1. It provides a constructor (`__init__`) that sets the `shape_type` to the name of the class automatically (so a `square` object has `shape_type='Square'`) and it stores the critical dimension of the shape in `self.dim`.
-2. It provides methods (which only raise exceptions) that will allow one shape to be used in the place of any other shape that inherits from `shape`.
+1. It provides a constructor (`__init__`) that sets the `listing_type` to the name of the class automatically (so a `flat` object has `shape_type='Flat'`) and it stores the critical accommodation details.
+2. It provides methods (which only raise exceptions) that will allow all listings to be used interchangeably in the right context (e.g. determining availability).
 
 ```{python}
+# We first need to install a library for managing
+# availability in a highly optimised way.
+try:
+    from bitarray import bitarray
+except:
+    ! pip install bitarray
+    from bitarray import bitarray
+```
+
+```{python}
+from bitarray import bitarray
 # Base class shape
-class shape(object): # Inherit from base class 
-    def __init__(self, dimension:float=None):
-        self.shape_type = self.__class__.__name__.capitalize()
-        self.dim = dimension
-        return
+class listing(object): # Inherit from base class 
+    def __init__(self, name:str, price:float, bedrooms:int, availability:bitarray=bitarray(14)):
+        self.listing_type = self.__class__.__name__.capitalize()
+        self.listing_name = name
+        self.listing_price = price
+        self.listing_bedrooms = bedrooms
+        self.listing_availability = availability
     
-    def diameter(self):
-        raise Exception("Unimplmented method error.")
+    def name(self) -> str:
+        raise Exception("Unimplemented method error.")
+
+    def price(self) -> float:
+        return self.listing_price
     
-    def volume(self):
-        raise Exception("Unimplmented method error.")
+    def bedrooms(self) -> int:
+        return self.listing_bedrooms
     
-    def surface(self):
-        raise Exception("Unimplmented method error.")
-        
+    def is_available(self, requested:bitarray) -> bitarray:
+        return bitarray(self.listing_availability & requested).any()
+
     def type(self):
-        return(self.shape_type)
+        return(self.listing_type)
 ```
 
-We can now create a new shape object (an *instance* of the shape class) but we can't do much that is useful with it:
+We can now create a new listing object (an *instance* of the shape class) but we can't do much that is useful with it:
 
 ```{python}
-s = shape(15)
+l = listing('A listing', 25.00, 3, bitarray(14))
 
 try: 
-    print(f"I am a {s.type()}")
-    print(f"My volume is {s.volume()}")
+    print(f"I am a {l.type()}")
+    print(f"My name is {l.name()}")
 except Exception as e:
     print(f"Error: {e}")
 ```
 
-## Cube
+## Flat
 
-Implements a cube:
+Implements a flat:
 
-1. The diameter of the cube is given by the Pythagorean formula for the length of the hypotenuse in 3D between opposing corners: $\sqrt{d^{2} + d^{2} + d^{2}}$ which we can reduce to $\sqrt{3 d^{2}}$.
-2. A cube's volume is given by $d^{3}$.
-3. A cube's surface area will be the sum of its six faces: $6d^{2}$.
+1. Adds 'Flat: ' or 'Studio: ' to all requests for the name.
+2. Adds a 'floor' method to track what floor the flat is on.
+3. Checks if the number of 'bedrooms' is 0 (in which case it's a 'Studio: ') or more (in which case it's a 'Flat: '). 
 
 :::: {.qna}
 
 #### Question
 
-Can you work out the missing elements that will allow you to create a cube class?
+Can you work out the missing elements that will allow you to create a flat class? We'll want to know the floor and whether we're dealing with a Flat or a Studio by looking at the name of the listing.
 
 ```python
-# Cube class
-class cube(shape): # Inherit from shape 
-    def __init__(self, dim:float):
-        super().__init__(dim)
-        return
-    
-    def diameter(self):
-        return (3 * self.??**2)**(1/2)
-    
-    def volume(self):
-        return self.dim**3
-    
-    def surface(self):
-        return ??*(self.dim**2)
+# Flat class
+class flat(listing): # Inherit from listing 
+    def __init__(self, name:str, price:float, bedrooms:int, floor:int, availability:bitarray=bitarray(10)):
+        super().__init__(name, price, bedrooms, availability)
+        self.listing_floor = floor
 
 # If you've done everything correctly then
 # you will no longer get an error here...
-s = cube(15)
+f = flat('Room With a View', 73.00, 0, )
 
 try: 
-    print(f"I am a {s.type()}")
-    print(f"My volume is {s.volume()}")
+    print(f"I am a {f.type()}")
+    print(f"My name is {f.name()}")
 except Exception as e:
     print(f"Error: {e}")
 ```
@@ -754,362 +754,201 @@ except Exception as e:
 #### Answer
 
 ```{python}
-# Cube class
-class cube(shape): # Inherit from shape
-    def __init__(self, dim:float):
-        super().__init__(dim)
-        return
-
-    def diameter(self):
-        return (3 * self.dim**2)**(1/2)
-
-    def volume(self):
-        return self.dim**3
-
-    def surface(self):
-        return 6*(self.dim**2)
+# Flat class
+class flat(listing): # Inherit from listing 
+    def __init__(self, name:str, price:float, bedrooms:int, floor:int, availability:bitarray=bitarray(14)):
+        super().__init__(name, price, bedrooms, availability)
+        self.listing_floor = floor
+    
+    def name(self):
+        if self.listing_bedrooms == 0:
+            return f"Studio: {self.listing_name}"
+        else:
+            return f"Flat: {self.listing_name}"
 
 # If you've done everything correctly then
 # you will no longer get an error here...
-s = cube(15)
+f = flat('Room With a View', 73.00, 0, 5, bitarray('11000001100000'))
 
 try: 
-    print(f"I am a {s.type()}")
-    print(f"My volume is {s.volume()}")
+    print(f"I am a {f.type()}")
+    print(f"My name is {f.name()}")
 except Exception as e:
     print(f"Error: {e}")
 ```
 
 ::::
 
-## Sphere
+You should get: 
+```{python}
+#| echo: false
+#| output: asis
+print(f" - I am a `{f.type()}`")
+print(f" - My name is `{f.name()}`")
+```
 
-Implements a sphere:
-
-1. The diameter is twice the critical dimension (radius): $2r$. 
-2. The volume is $\frac{4}{3} \pi r^{3}$.
-3. The surface area will be $4 \pi r^{2}$.
-
-If we were writing something more general, we'd probably have spheres as a special case of an ellipsoid!
-
-:::: {.qna}
-
-#### Question
-
-Can you work out the missing elements that will allow you to create a cube class?
+If you were to create a *second* flat listing you can see how things change automatically based on the attributes:
 
 ```python
-# Sphere class
-from math import pi
-class sphere(shape): # Inherit from shape
-    def __init__(self, dim:float):
-        # Something...
-
-    def diameter(self):
-        # Something...
-
-    def volume(self):
-        # Something
-
-    def surface(self):
-        # Something
-
-# If you've done everything correctly then
-# you will no longer get an error here...
-s = sphere(15)
-
-try: 
-    print(f"I am a {s.type()}")
-    print(f"My volume is {s.volume()}")
-except Exception as e:
-    print(f"Error: {e}")
+f2 = flat('Room With a Better View', 123.00, 2, 6, bitarray('10000001000000'))
+print(f"I am a `{f2.type()}`")
+print(f"My name is `{f2.name()}`")
 ```
-
-#### Answer
-
-```{python}
-from math import pi
-# Sphere class
-class sphere(shape): # Inherit from shape
-    def __init__(self, dim:float):
-        super().__init__(dim)
-        return
-
-    def diameter(self):
-        return self.dim*2
-
-    def volume(self):
-        return (4/3) * pi * self.dim**3
-
-    def surface(self):
-        return 4 * pi * (self.dim**2)
-
-# If you've done everything correctly then
-# you will no longer get an error here...
-s = sphere(15)
-
-try: 
-    print(f"I am a {s.type()}")
-    print(f"My volume is {s.volume()}")
-except Exception as e:
-    print(f"Error: {e}")
-```
-
-::::
-
-## Regular Pyramid
-
-We're taking this to be a regular pyramid where all sides are equal: 
-
-1. The diameter is a line drawn across the base between opposing corners of the base so it's just $\sqrt{d^{2} + d^{2}}$.
-2. The volume is given by $V = b * h / 3$ (where $b$ is the area of the base, which in this case becomes $d^{2} * h/3$).
-3. The surface area will be the base + 4 equilateral triangles: $d^{2} + 4 (d^{2}\sqrt{3}/4)$ which we can reduce to $d^{2} + d^{2}\sqrt{3}$
-
-But this requires a _height_ method that is specific to pyramids:
-
-4. The height is taken from the centre of the pyramid (which will be half the length of the hypotenuse for two edges): $l = \sqrt{d{^2} + d^{2}}$ and the long side ($d$ again) which gives us $\sqrt{l/2 + d^{2}}$.
-
-::: {.callout-note}
-
-#### Class Variables
-
-Note that this has a **class variable** called `has_mummies` since Egyptian regular pyramids are plagued by them! This class variable is set automatically for *all* instances of the `pyramid` class. Changing this variable can have weird effects so they're not *often* changed.
-
-:::
-
-```{python}
-# Pyramid class
-class pyramid(shape): # Inherit from shape
-
-    has_mummies = True # This is for *all* regular pyramids
-
-    def __init__(self, dim:float):
-        super().__init__(dim)
-        self.shape_type = 'Regular Pyramid'
-        return
-
-    def diameter(self):
-        return (self.dim**2 + self.dim**2)**(1/2)
-
-    def height(self):
-        return (self.diameter()/2 + self.dim**2)**(1/2)
-
-    def volume(self):
-        return self.dim**2 * self.height() / 3
-
-    def surface(self):
-        return self.dim**2 + self.dim**2 * 3**(1/2)
-```
-
-## Triangular Pyramid
-
-We have chosen for triangular pyramid to *inherit* from regular pyramid. However, this is kind of a judgement call since there's very little shared between the two types of pyramid and it's arguable whether this one is actually simpler and should therefore be the parent class... 
-
-Just to note, as well, that since all sides are equal this is an _equilateral_ triangular pyramid.  Anyway, the calculations are:
-
-1. The diameter (longest line through the shape) will just be the edge: $d$.
-2. The volume $V = b * h / 3$ where $b$ is the area of an equilateral triangle.
-3. The surface area will be $4b$ where $b$ is the area of an equilateral triangle.
-
-So we now need two new formulas:
-
-5. The height of the pyramid using ([Pythagoras again](https://www.youtube.com/watch?v=ivF3ndmkMsE)): $h = \sqrt{6}d/3$.
-6. The area of an equilateral triangle: $\frac{\sqrt{3}}{4} d^{2}$
-
-Triangular pyramids do *not* have a problem with mummies.
-
-Why don't you add some documentation to this class and the regular pyramid class so that we know how to use them correctly?
-
-```{python}
-# Triangular Pyramid class
-class t_pyramid(pyramid): # Inherit from regular pyramid
-
-    has_mummies = False # This is for all triangular pyramids
-
-    def __init__(self, dim:float):
-        super().__init__(dim)
-        self.shape_type = 'Triangular Pyramid'
-        return
-
-    def diameter(self):
-        return self.dim
-
-    def height(self):
-        # h = sqrt(6)/3 * d
-        return 6**(1/2)/3 * self.dim
-
-    def base(self):
-        return 3**(1/2)/4 * self.dim**2
-
-    def volume(self):
-        return (1/3) * self.base() * self.height()
-
-    def surface(self):
-        return 4 * self.base()
-```
-
-## Testing Your Classes
-
-If you've implemented everything correctly then the following code should run.
-
-```python
-# How would you test these changes?
-s = sphere(10)
-print(s.type())
-print(f"\tVolume is: {s.volume():5.2f}")
-print(f"\tDiameter is: {s.diameter():5.2f}")
-print(f"\tSurface Area is: {s.surface():5.2f}")
-print("")
-
-c = cube(10)
-print(c.type())
-print(f"\tVolume is: {c.volume():5.2f}")
-print(f"\tDiameter is: {c.diameter():5.2f}")
-print(f"\tSurface Area is: {c.surface():5.2f}")
-print("")
-
-p = pyramid(10)
-print(p.type())
-print(f"\tVolume is: {p.volume():5.2f}")
-print(f"\tDiameter is: {p.diameter():5.2f}")
-print(f"\tSurface Area is: {p.surface():5.2f}")
-print(f"\tHeight is: {p.height():5.2f}")
-if p.has_mummies is True:
-    print("\tMummies? Aaaaaaaaargh!")
-else:
-    print("\tPhew, no mummies!")
-print("")
-
-p2 = t_pyramid(10)
-print(p2.type())
-print(f"\tVolume is: {p2.volume():5.2f}")
-print(f"\tDiameter is: {p2.diameter():5.2f}")
-print(f"\tSurface Area is: {p2.surface():5.2f}")
-print(f"\tHeight is: {p2.height():5.2f}")
-if p2.has_mummies is True:
-    print("\tMummies? Aaaaaaaaargh!")
-else:
-    print("\tPhew, no mummies!")
-print("")
-
-# Useful demonstration of how to find out if a method or attribute is
-# associated with a particular object
-if hasattr(p2,'base_area'):
-    print(f"Shape of type '{p2.type()}' has attribute or method 'base_area'")
-else:
-    print(f"Shape of type '{p2.type()}' does *not* have attribute or method 'base_area'")
-print("")
-```
-
-I get the following output:
 
 ```{python}
 #| echo: false
-# How would you test these changes?
-s = sphere(10)
-print(s.type())
-print(f"\tVolume is: {s.volume():5.2f}")
-print(f"\tDiameter is: {s.diameter():5.2f}")
-print(f"\tSurface Area is: {s.surface():5.2f}")
-print("")
-
-c = cube(10)
-print(c.type())
-print(f"\tVolume is: {c.volume():5.2f}")
-print(f"\tDiameter is: {c.diameter():5.2f}")
-print(f"\tSurface Area is: {c.surface():5.2f}")
-print("")
-
-p = pyramid(10)
-print(p.type())
-print(f"\tVolume is: {p.volume():5.2f}")
-print(f"\tDiameter is: {p.diameter():5.2f}")
-print(f"\tSurface Area is: {p.surface():5.2f}")
-print(f"\tHeight is: {p.height():5.2f}")
-if p.has_mummies is True:
-    print("\tMummies? Aaaaaaaaargh!")
-else:
-    print("\tPhew, no mummies!")
-print("")
-
-p2 = t_pyramid(10)
-print(p2.type())
-print(f"\tVolume is: {p2.volume():5.2f}")
-print(f"\tDiameter is: {p2.diameter():5.2f}")
-print(f"\tSurface Area is: {p2.surface():5.2f}")
-print(f"\tHeight is: {p2.height():5.2f}")
-if p2.has_mummies is True:
-    print("\tMummies? Aaaaaaaaargh!")
-else:
-    print("\tPhew, no mummies!")
-print("")
-
-# Useful demonstration of how to find out if a method or attribute is
-# associated with a particular object
-if hasattr(p2,'base_area'):
-    print(f"Shape of type '{p2.type()}' has attribute or method 'base_area'")
-else:
-    print(f"Shape of type '{p2.type()}' does *not* have attribute or method 'base_area'")
-print("")
+#| output: asis
+f2 = flat('Room With a Better View', 123.00, 2, 6, bitarray('10000001000000'))
+print(f" - I am a `{f2.type()}`")
+print(f" - My name is `{f2.name()}`")
 ```
 
-## Packaging It Up
+## Houseboat
 
-Wait, you're *still* working on this practical and haven't thrown up your hands in disgust yet? OK, in that case you can have *one* more thing to do: turn all the shapes into a package that can be loaded via an `import` statement. 
+Implements a houseboat listing:
 
-### Cell Magic
+1. Adds an 'on_water' boolean attribute.
+2. Adds 'Floating Palace: ' to the name if the houseboat is on water, or 'Grounded! ' if it's not.
 
-This code allows Jupyter to reload external libraries if they are edited after you import them. When you are working on your own packages this is rather useful since you tend to make a *lot* of mistakes when packaging code up this way and it's handy not to have to restart the entire notebook every time you fix a typo or change a function.
+:::: {.qna}
+
+#### Question
+
+Can you work out the missing elements that will allow you to create a houseboat class?
 
 ```python
-%load_ext autoreload
-%autoreload 2
+# Houseboat class
+class houseboat(listing): # Inherit from shape
+    def __init__(self, ...):
+        # Something...
+
+    def on_water(self):
+        # Something...
+
+# If you've done everything correctly then
+# you will no longer get an error here...
+h = houseboat(15)
+
+try: 
+    print(f"I am a {h.type()}")
+    print(f"My name is {h.name()}")
+    if h.on_water():
+        print("Where I expect a houseboat to be.")
+    else:
+        print("Something has gone very wrong!")
+except Exception as e:
+    print(f"Error: {e}")
 ```
 
-### Import Shapes
+#### Answer
 
-My suggestion is that you create a directory called `shapes` and copy all of the shape code (that's the code for `shape`, `cube`, `sphere`, `pyramid`, `tpyramid`) into a file called `__init__.py` inside the `shapes` directory. You should then able to run the following:
+```{python}
+# Houseboat class
+class houseboat(listing): # Inherit from shape
+    def __init__(self, name:str, price:float, bedrooms:int, availability:bitarray=bitarray(14), onwater:bool=True):
+        super().__init__(name, price, bedrooms, availability)
+        self.listing_onwater = onwater
+
+    def name(self):
+        if self.on_water():
+            return f"Floating Palace: {self.listing_name}"
+        else:
+            return f"Grounded! {self.listing_name}"
+
+    def on_water(self):
+        return self.listing_onwater
+
+# If you've done everything correctly then
+# you will no longer get an error here...
+h = houseboat('Bargemaster', 5.25, 1)
+
+try: 
+    print(f"I am a {h.type()}")
+    print(f"My name is {h.name()}")
+    if h.on_water():
+        print("Where I expect a houseboat to be.")
+    else:
+        print("Something has gone very wrong!")
+except Exception as e:
+    print(f"Error: {e}")
+```
+
+::::
+
+## Availability
+
+The last thing we want to do is look at how (and why) we've recorded availability. Let's pretend that this can only be measured 2 weeks in advance (i.e. 14 days). Let's look at how the `bitarray` can help us here:
+
+```{python}
+b1 = bitarray(14)
+b2 = bitarray('11111111111111')
+b3 = bitarray('01010101010101')
+
+print(b1 & b2)
+print(b2 & b3)
+print(b1 | b2)
+print(b1 | b3)
+print(bitarray(b1 & b3).any())
+print(bitarray(b1 | b3).any())
+print(bitarray(b1 & b3).count())
+print(bitarray(b1 | b3).count())
+```
+
+Does it now make sense why the `is_available` is set up the way it is? 
+
+## Pulling It All Together
+
+Let's finish with a demonstration of how we can use these classes in some kind of application:
+
+:::: {.qna}
+
+#### Question
 
 ```python
-for s in ['shape','sphere','cube','pyramid','t_pyramid']:
-    if s in locals():
-        del(s)
-from shapes import *
+f1 = flat('Room With a View', 73.00, 0, 5, bitarray('11000001100000'))
+f2 = flat('Room With a Better View', 123.00, 2, 6, bitarray('10000001000000'))
+h1 = houseboat('Bargemaster', 5.25, 1)
+h2 = houseboat('Sinking', 15.25, 1, bitarray('11111110000000'))
+
+listings = [f1, f2, h1, h2]
+
+# You are looking for availability on Mondays...
+search = bitarray( ?? )
+
+available = [x for x in listings if ??]
+
+print("The following options are available: ")
+for a in available:
+    print(f"\t{a.name()} is available for £{a.price():,.2f}")
 ```
 
-We need those first three lines of code to delete the existing classes from Python's 'memory' so that we can be sure we're importing the versions we saved to `shapes/__init__.py`.
+#### Answer
 
-### Adding Documentation
+```{python}
+f1 = flat('Room With a View', 73.00, 0, 5, bitarray('11000001100000'))
+f2 = flat('Room With a Better View', 123.00, 2, 6, bitarray('10000001000000'))
+h1 = houseboat('Bargemaster', 5.25, 1)
+h2 = houseboat('Sinking', 15.25, 1, bitarray('11111110000000'))
 
-In an ideal world, this would also be the time to properly document your classes and methods. Here as some examples that you could add to the `__init__.py` package file.
+listings = [f1, f2, h1, h2]
 
-Underneath the line `class shape(object):`, add:
+# You are looking for availability on Mondays...
+search = bitarray('01000000100000')
 
-```python
-    """Abstract base class for all ideal shape classes.
+available = [x for x in listings if x.is_available(search)]
 
-    Keyword arguments:
-    dimension -- the principle dimension of the shape (default None)
-    """
+print("The following options are available: ")
+for a in available:
+    print(f"\t{a.name()} is available for £{a.price():,.2f}")
 ```
 
-Underneath the line `def type(self):`, add:
+::::
 
-```python
-        """
-        Returns the formatted name of the shape type. 
-        
-        This is set automatically, but can be overwritten by setting the attribute shape_type.
-        
-        :returns: the name of the class, so shapes.cube is a `Cube` shape type
-        :rtype: str
-        """
+```{python}
+#| echo: false
+#| output: asis
+av = '</code> and <code>'.join([x.name() for x in available])
+print(f"You should get that <code>{ av }</code> are available.")
 ```
 
-This would then allow you to run:
 
-```python
-from shapes import * # <-- Change this if you didn't call your package `shapes`!
-help(shape)
-help(shape.type)
-```
