@@ -1,7 +1,7 @@
 ---
 title: "Practical 5: Objects"
 subtitle: "From Functions to Classes"
-jupyter: python3
+format: html
 filters:
   - qna
   - quarto
@@ -28,72 +28,30 @@ print("You should now make it a priority [Sign Up]({{< var module.signup >}})!")
 
 :::
 
-# Why 'Obvious' is Not Always 'Right' (Revisited)
+# One Last Time Playing with DoLs
 
-Practical 3 is hard, so I want to provide _another_ chance for the concepts to bed in before we use them in an *object-oriented way through Pandas*. Yes, Week 5 will show how we combine concepts covered over the preceding two weeks in *practice* to 'do data science'.
+The preceding practical is hard, so I want to provide _another_ chance for the concepts to bed in before we use them in an *object-oriented way through Pandas*. Yes, Week 5 will show how we combine concepts covered over the preceding two weeks in *practice* to begin to 'do data science'.
 
-First, remember the finding from last week: if we don't really care about column order, then a dictionary of lists is a nice way to handle data. And why should we care about column order? With our CSV file we saw what a pain it was to fix things when even a tiny thing like the layout of the columns changed. But if, instead, we could just reference the 'Description' column in the data set then it doesn't matter where that column actually is *and* we would know that all the descriptions would be *text*, while all the populations or prices would be *numbers*. Why is that? 
+First, remember the finding from last week: if we don't really care about column order, then a dictionary of lists is a nice way to handle data. And why should we care about column order? With our CSV file we saw what a pain it was to fix things when even a tiny thing like the layout of the columns changed. 
+
+But if, instead, we could just reference the 'Description' column in the data set then it doesn't matter where that column actually is *and* we would know that all the descriptions would be *text*, while all the populations or prices would be *numbers*. Why is that? 
 
 ::: {.callout-note}
 
 #### &#128279; Connections
 
-This task briefly recaps the final part of the previous practical and builds on the [DOLs to Data](https://jreades.github.io/fsds/sessions/week3.html#lectures) and [Functions](https://jreades.github.io/fsds/sessions/week4.html#lectures) lectures.
+This task briefly recaps the final part of the previous practical and builds on the [DOLs to Data]({{< var module.web >}}sessions/week3.html#pre-recorded-lectures) and [Functions]({{< var module.web >}}sessions/week4.html#pre-recorded-lectures) lectures.
 
 :::
 
-## The Way That Doesn't Work
-
-Recall that this is how four rows of 'data' for city sizes organised by _row_ as a list-of-lists look:
-
 ```{python}
-myData = [
-    ['id', 'Name', 'Rank', 'Longitude', 'Latitude', 'Population'], 
-    ['1', 'Greater London', '1', '-18162.92767', '6711153.709', '9787426'], 
-    ['2', 'Greater Manchester', '2', '-251761.802', '7073067.458', '2553379'], 
-    ['3', 'West Midlands', '3', '-210635.2396', '6878950.083', '2440986']
-]
-```
-
-To print out a list of every city in the data set *when* we don't know where the `Name` column is in the file we have to jump through some hoops:
-
-```{python}
-cities = []
-
-col    = myData[0].index('Name')
-for i in range(1, len(myData)):
-    cities.append(myData[i][col])
-
-print("The cities in the data set are: " + ", ".join(cities))
-```
-
-And it's the same kind of faff if we want to find out if `Edinburgh` is included in the data set:
-
-```{python}
-col   = myData[0].index('Name')
-found = False
-for i in range(1, len(myData)):
-    if myData[i][col] == 'Edinburgh':
-        print("Found Edinburgh in the data set!")
-        found = True
-        break
-
-if found == False:
-    print("Didn't find Edinburgh in the data set.")
-```
-
-## The Way That Does Work
-
-Compare that code to how it works for a dictionary-of-lists organised by _column_. Now try printing out the cities in the data:
-
-```{python}
+#| echo: true
 myData = {
-    'id'         : [0, 1, 2, 3, 4, 5],
-    'Name'       : ['Greater London', 'Greater Manchester', 'Birmingham','Edinburgh','Inverness','Lerwick'],
-    'Rank'       : [1, 2, 3, 4, 5, 6],
-    'Longitude'  : [-0.128, -2.245, -1.903, -3.189, -4.223, -1.145],
-    'Latitude'   : [51.507, 53.479, 52.480, 55.953, 57.478, 60.155],
-    'Population' : [9787426, 2705000, 1141816, 901455, 70000, 6958],
+    'id'         : [0, 1, 2, 3, 4],
+    'Name'       : ['Gorgeous 2 bed flat w easy access to Earlsfiel...', 'Welcome to London!', '2 bedroom 8th floor serviced apartment.','Prime city studio apartment','Cozy Room near Canary Wharf'],
+    'Longitude'  : [-0.189030, -0.093411, -0.022240, -0.078328, -0.029900],
+    'Latitude'   : [51.442430, 51.593397, 51.499260, 51.525488, 51.514680],
+    'Bedrooms'   : [2, 1, 2, 1, 3],
 }
 ```
 
@@ -103,16 +61,16 @@ To print out a list of every city in the data set:
 print(", ".join(myData['Name']))
 ```
 
-To find out if `Edinburgh` is included in the list of data:
+To find out if `Out in Dalston` is included in the list of data:
 
 ```{python}
-if 'Edinburgh' in myData['Name']:
-    print("Found Edinburgh in the data set!")
+if 'Out in Dalston' in myData['Name']:
+    print("Found 'Out in Dalston' in the data set!")
 else:
-    print("Didn't find Edinburgh in the data set.")
+    print("Didn't find 'Out in Dalston' in the data set.")
 ```
 
-See how even basic questions like "Is Edinburgh in our list of data?" are suddenly easy to answer? We no longer need to loop over the entire data set in order to find one data point. In addition, we know that everything in the 'Name' column will be a string, and that everything in the 'Longitude' column is a float, while the 'Population' column contains integers. So that's made life easier already. But let's test this out and see how it works.
+See how even basic questions like "Is X in our data set?" are now easy (and quick) to answer? We no longer need to loop over the entire data set in order to find one data point. In addition, we know that everything in the 'Name' column will be a string, and that everything in the 'Longitude' column is a float, while the 'Bedrooms' column contains integers. So that's made life easier already. But let's test this out and see how it works.
 
 # Appending a Column
 
@@ -120,12 +78,27 @@ See how even basic questions like "Is Edinburgh in our list of data?" are sudden
 
 Let's start by calculating the sample mean (use Google: `Python numpy mean...`):
 
+:::: {.qna}
+
+#### Question
+
+```python
+import numpy as ??
+# Use numpy function to calculate mean
+mean = ??.??(myData['Bedrooms'])
+print(f"The mean. number of bedrooms is {mean:,.1f}.")
+```
+
+#### Answer
+
 ```{python}
 import numpy as np
-# Use numpy functions to calculate mean and standard deviation
-mean = np.mean(myData['Population'])
-print(f"City distribution has a mean of {mean:,.0f}.")
+# Use numpy function to calculate mean
+mean = np.mean(myData['Bedrooms'])
+print(f"The mean. number of bedrooms is {mean:,.1f}.")
 ```
+
+::::
 
 ## Calculate Standard Deviation
 
@@ -143,25 +116,25 @@ Now let's do the standard deviation:
 
 ```python
 import numpy as np
-# Use numpy functions to calculate mean and standard deviation
+# Use a numpy function to calculate the standard deviation
 std  = np.??(??)
-print(f"City distribution has a standard deviation of {std:,.2f}.")
+print(f"The standard deviation of bedrooms is {std:,.2f}.")
 ```
 
 #### Answer
 
 ```{python}
 import numpy as np
-# Use numpy functions to calculate mean and standard deviation
-std  = np.std(myData['Population'])
-print(f"City distribution has a standard deviation of {std:,.2f}.")
+# Use a numpy function to calculate the standard deviation
+std  = np.std( myData['Bedrooms'] )
+print(f"The standard deviation of bedrooms is {std:,.2f}.")
 ```
 
 ::::
 
 So the `numpy` package gives us a way to calculate the mean and standard deviation _quickly_ and without having to reinvent the wheel. The other potentially new thing here is `{std:,.2f}`. This is about [string formatting](https://www.w3schools.com/python/ref_string_format.asp) and the main thing to recognise is that this means 'format this float with commas separating the thousands/millions and 2 digits to the right'. The link I've provided uses the slightly older approach of `<str>.format()` but the formatting approach is the same.
 
-## For Loops Without For Loops
+# For Loops Without For Loops
 
 ::: {.callout-warning collapse="true"}
 
@@ -197,14 +170,14 @@ $$
 #### Question
 
 ```python
-rs = [(x - ??)/?? for x in myData['Population']] # rs == result set
+rs = [(x - ??)/?? for x in myData['Bedrooms']] # rs == result set
 print([f"{x:.3f}" for x in rs])
 ```
 
 #### Answer
 
 ```{python}
-rs = [(x - mean)/std for x in myData['Population']] # rs == result set
+rs = [(x - mean)/std for x in myData['Bedrooms']] # rs == result set
 print([f"{x:.3f}" for x in rs])
 ```
 
@@ -221,8 +194,8 @@ print([f"{x:.3f}" for x in rs])
 And now let's add it to the data set:
 
 ```{python}
-myData['Std. Population'] = rs
-print(myData['Std. Population'])
+myData['Std. Bedrooms'] = rs
+print(myData['Std. Bedrooms'])
 ```
 
 And just to show how everything is in a single data structure:
@@ -230,17 +203,12 @@ And just to show how everything is in a single data structure:
 ```{python}
 for c in myData['Name']:
     idx = myData['Name'].index(c)
-    print(f"{c} has a population of {myData['Population'][idx]:,} and standardised score of {myData['Std. Population'][idx]:.3f}")
+    print(f"Listing {c} has {myData['Bedrooms'][idx]:,} bedrooms and standardised score of {myData['Std. Bedrooms'][idx]:.3f}")
 ```
 
 # 'Functionalising'
 
-Let's start trying to pull what we've learned over the past two weeks together by creating a a set of functions that will help us to:
-
-1. Download a file from a URL (checking if it has already _been_ downloaded to save bandwidth).
-2. Parse it as a CSV file and...
-3. Convert it to a Dictionary-of-Lists
-4. Perform some simple calculations using the resulting data.
+Let's start trying to pull what we've learned over the past two weeks together by creating a function that will download a file from a URL (checking if it has already _been_ downloaded to save bandwidth).
 
 To be honest, there's not going to be much about writing our _own_ objects here, but we will be making use of them and, conceptually, an understanding of objects and classes is going to be super-useful for understanding what we're doing in the remainder of the term!
 
@@ -256,7 +224,7 @@ Let's focus on the first part *first* because that's the precondition for everyt
 
 :::
 
-First, let's be sensibly lazy--we've already written code to read a file from the Internet and turn it into a list of lists. So I've copy+pasted that into the code block below since we're going to start from this point; however, just to help you check your own understanding, I've removed a few bits and replaced them with `??`. Sorry, it's good practice. 😈
+First, let's be sensibly lazy--we've already written code to read a file from the Internet and save it locally. We're going to start from this point.
 
 ```{python}
 #| echo: false
@@ -265,71 +233,31 @@ from urllib.request import URLError
 from urllib.request import urlopen
 
 try:
-    url = 'https://raw.githubusercontent.com/jreades/fsds/master/data/src/Wikipedia-Cities-simple.csv'
+    url = 'https://orca.casa.ucl.ac.uk/~jreades/data/Listings.csv'
     response = urlopen(url)
     raw  = response.read()
     data = raw.decode('utf-8')
     urlData = [ x.split(',') for x in data.splitlines() ]
 except URLError as e:
-    with open('../data/src/Wikipedia-Cities-simple.csv', 'r') as f:
+    with open('../data/src/Listings.csv', 'r') as f:
         data = f.read()
     urlData = [ x.split(',') for x in data.splitlines() ]
 ```
 
-:::: {.qna}
-
-#### Question
-
 ```python
+from urllib.request import URLError
 from urllib.request import urlopen
-import csv
 
-url = "https://raw.githubusercontent.com/jreades/fsds/master/data/src/Wikipedia-Cities-simple.csv"
-
-urlData = [] # Somewhere to store the data
-
-response = urlopen(url) # Get the data using the urlopen function
-csvfile  = csv.reader(response.read().decode('utf-8').splitlines()) # Pass it over to the reader
-
-for row in csvfile:
-    urlData.append(??)
-
-print("urlData has " + str(len(urlData)) + " rows and " + str(len(urlData[0])) + " columns.")
-print(urlData[-1]) # Check it worked!
+try:
+    url = 'https://orca.casa.ucl.ac.uk/~jreades/data/Listings.csv'
+    response = urlopen(url)
+    raw  = response.read()
+    data = raw.decode('utf-8')
+    with open('Listings.csv', 'w') as f:
+        f.writelines(data)
+except URLError as e:
+    print(f"Unable to download data: {e}")
 ```
-
-You should get: 
-
-```{python}
-#| echo: false
-#| output: asis
-
-print(f"<code>urlData has {len(urlData)} rows and {len(urlData[0])} columns.</code>")
-print("<br />")
-print(f"<code>{ urlData[-1] }</code>")
-```
-
-#### Answer
-
-```python
-from urllib.request import urlopen
-import csv
-
-url = "https://raw.githubusercontent.com/jreades/fsds/master/data/src/Wikipedia-Cities-simple.csv"
-
-urlData = [] # Somewhere to store the data
-
-response = urlopen(url) # Get the data using the urlopen function
-csvfile  = csv.reader(response.read().decode('utf-8').splitlines()) # Pass it over to the reader
-
-for row in csvfile:
-    urlData.append(row)
-
-print("urlData has " + str(len(urlData)) + " rows and " + str(len(urlData[0])) + " columns.")
-print(urlData[-1]) # Check it worked!
-```
-
-::::
 
 ### Getting Organised
 
@@ -341,8 +269,8 @@ print(urlData[-1]) # Check it worked!
 
 Let's take the code above and modify it so that it is:
 
-1. A function that takes two arguments: a URL; and a destination filename.
-2. Implemented as a function that checks if a file exists already before downloading it again.
+1. A function that takes two arguments: a URL and a destination filename.
+2. A function that checks if a file exists already before downloading it again.
 
 You will find that the `os` module helps here because of the `path` function. And you will [need to Google](https://lmgtfy.app/?q=check+if+file+exists+python) how to test if a file exists. I would normally select a StackOverflow link in the results list over anything else because there will normally be an _explanation_ included of why a particular answer is a 'good one'. I also look at which answers got the most votes (not always the same as the one that was the 'accepted answer'). In this particular case, I also found [this answer](https://careerkarma.com/blog/python-check-if-file-exists/) useful.
 
@@ -350,8 +278,8 @@ I would start by setting my inputs:
 
 ```{python}
 import os
-url = "https://raw.githubusercontent.com/jreades/fsds/master/data/src/Wikipedia-Cities-simple.csv"
-out = os.path.join('data','Wikipedia-Cities.csv') # Print `out` if you aren't sure what this has done!
+url = "https://orca.casa.ucl.ac.uk/~jreades/data/Listings.csv"
+out = os.path.join('data','Listings.csv') # Print `out` if you aren't sure what this has done!
 ```
 
 ### Sketching the Function
@@ -455,7 +383,7 @@ def get_url(src, dest):
 src = get_url(url, out)
 ```
 
-## Decorating!
+# Decorating!
 
 Let's now look into simplifying this code using a dectorator! Our function has become a bit unwieldy and we want to look at how we can simplify that.
 
@@ -507,7 +435,7 @@ def get_url(src, dest):
 src = get_url(url, out)
 ```
 
-I'm not going to pretend that's the *best* use of a decorator, but it *does* neatly separate the downloading function from the caching function. In fact, there is already a [cache decorator](https://pvsravanth.medium.com/speeding-up-your-python-code-with-the-cache-decorator-from-functools-bce4731eed69) and some of these have unlimited capacity; however, they are intended to run in a 'live' context, so you'd still need to download the file again any time you start a new notebook or restart Docker. This caching function saves the actual data locally to `dest`.
+I'm not going to pretend that's the *best* use of a decorator, but it *does* neatly separate the downloading function from the caching function. In fact, there is already a [cache decorator](https://pvsravanth.medium.com/speeding-up-your-python-code-with-the-cache-decorator-from-functools-bce4731eed69) and some of these have unlimited capacity; however, they are intended to run in a 'live' context, so you'd still need to download the file again any time you start a new notebook or restart Podman. *This* caching function saves the actual data locally to `dest`.
 
 ::: {.callout-warning}
 
@@ -517,162 +445,93 @@ It really would be a good idea to put in the effort to make sense of how this fu
 
 :::
 
-## Parse the CSV File
+# Switching to Object-Oriented Code
 
-::: {.callout-tip collapse="true"}
+While the `os` package is still widely used, not long ago the people who contributed to Python decided that it would be better to be consistent and that paths (file and directory locations) on computers should use an object-oriented approach too. So all Python code will gradually shift to using `pathlib` instead and this is a good place to demonstrate why going object-oriented is a *choice* and not a *requirement*.
 
-#### Difficulty: Low
+## Pathlib
+
+Pathlib is intended to work around the fact that different Operating Systems represent paths on file systems in different ways. Using the `os` library there is quite a lot of 'faff' involved in managing this: whereas Unix, Linux, and the macOS (which is BSD Unix under the hood) use forward slashes in a path (e.g. `/Users/<username>/Documents/...`)^[Slight exception to this: the macOS *also* recognises `:` as a path separator], Windows usess backslashes (e.g. `C:\Users\<username>\My Documents\...`). The differences don't stop there, but that's enough to see how life can get complicated; in `os` this is managed by the bundle of functions and constants under `os.path` and you can then use `os.path.sep.join([<a list representing a path on the computer>])`.
+
+Pathlib does away with all of that. Remember that we've defined an object as a bundle of data and functions that act on the data. So the `Path` class is *both* data about a location on a computer *and* a set of functions that can manipulate that data. Let's see what that means in practice:
+
+```{python}
+from pathlib import Path
+
+here = Path('.')
+print("Using a directory: ")
+print(f"\tHere: {here}")
+print(f"\tParents: {here.parents}")
+print(f"\tURI: {here.absolute().as_uri()}")
+print(f"\tIs directory: {here.is_dir()}")
+print(f"\tIs file: {here.is_file()}")
+print(f"\tParts: {here.resolve().parts}")
+print(f"\tDirectory contents: \n\t\t{'\n\t\t'.join([str(x) for x in list(here.glob('*.qmd'))[:3]])}...")
+
+print()
+
+fn = here / 'Practical-05-Objects.qmd'
+print("Using a file:")
+print(f"\tResolved path: {fn.resolve()}")
+print(f"\tExists: {fn.exists()}")
+print(f"\tIs file: {fn.is_file()}")
+print(f"\tFile size (bytes): {fn.stat().st_size:,} bytes")
+print(f"\tOwner: {fn.owner()}")
+```
+
+Hopefully you can now see how the object-oriented approach of `pathlib` allows to write neater, more readable code than the older `os` module? We no longer have to keep passing in a list or string representing a path on a specific operating system, we can just pass around Path objects and let Python take care of turning them into concrete paths on a computer when we need to 'act' on the Path in some way (check that it exists, create it, interrogate it, etc.).
+
+::: {.callout-note}
+#### Updating...
+
+In fact, I'm still updating the practicals to make full use of `pathlib` so you may find places where the older `os` approach is still in use. If you spot one of these why not submit an [Issue]({{< var repo.base >}}issues) or even fix it in a copy of the FSDS repor and then submit a [Pull Request]({{< var repo.base >}}pulls) on GitHub to correct the code?
 
 :::
 
-Now we turn to the next task: parsing the file if it's a CSV. This implies that it *might* not be so that's something we should also consider!
-
-:::: {.qna}
-
-#### Question
+## Updating the Function
 
 ```python
-import csv
+from functools import wraps
+from pathlib import Path
+def check_cache(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        src  = Path(args[0])
+        dest = Path(args[1])
+        if dest.is_file():
+            print(f"{dest} found locally!")
+            return(dest)
+        else:
+            print(f"{dest} not found, downloading!")
+            return(f(src, dest))
+    return wrapper
 
-def read_csv(src):
+@check_cache
+def get_url(src, dest):    
+    # Get the data using the urlopen function
+    response = urlopen(src) 
+    filedata = response.read().decode('utf-8')
+     
+    # 
+    dest = Path(dest)
+     
+    # Create any missing directories in dest(ination) path
+    # -- os.path.join is the reverse of split (as you saw above)
+    # but it doesn't work with lists... so I had to google how 
+    # to use the 'splat' operator! os.makedirs creates missing 
+    # directories in a path automatically.
+    dest.parents.makedirs(exist_ok=True)
+     
+    with open(dest, 'w') as f:
+        f.write(filedata)
+         
+    print(f"Data written to {dest}!")
     
-    csvdata = []
-    with open(src, 'r') as f:
-        csvr = csv.??(f)
+    return dest
         
-        for r in csvr:
-            csvdata.append(??)
-    
-    # Return list of lists
-    return ??
-
-read_csv(src)
-#read_csv('foo.bar') # <- Notice what happens if you try to run this code
-#read_csv('Practical-04-Objects-Answers.ipynb') # Or this code!
-```
-
-#### Answer
-
-```{python}
-import csv
-
-def read_csv(src):
-
-    csvdata = []
-    with open(src, 'r') as f:
-        csvr = csv.reader(f)
-
-        for r in csvr:
-            csvdata.append(r)
-
-    # Return list of lists
-    return csvdata
-
-read_csv(src)
-#read_csv('foo.bar') # <- Notice what happens if you try to run this code
-#read_csv('Practical-04-Objects-Answers.ipynb') # Or this code!
-```
-
-::::
-
-You should get:
-
-```{python}
-#| echo: false
-#| output: asis
-print("<code>")
-print(read_csv(src))
-print("</code>")
-```
-
-## Convert the CSV into a DoL
-
-::: {.callout-warning collapse="true"}
-
-#### Difficulty: Medium.
-
-:::
-
-Now we can focus on converting the CSV data to a dictionary-of-lists! We're going to start with the *same* function name but expand what the function *does*. This kind of *iteration* is common in software development.
-
-:::: {.qna}
-
-#### Question
-
-```python
-def read_csv(src):
-    
-    csvdata = {} # An empty dictionary-of-lists
-    
-    with open(??, 'r') as f:
-        csvr = csv.reader(f)
-        
-        # Read in our column names and
-        # initialise the dictionary-of-lists
-        csvcols = next(csvr) 
-        for c in csvcols:
-            csvdata[c] = []
-        
-        # Notice this code is still the same, 
-        # we just used next(csvr) to get the 
-        # header row first!
-        for r in ??: 
-            # Although you can often assume that the order 
-            # of the keys is the same, Python doesn't 
-            # guarantee it; this way we will always make
-            # the correct assignment.
-            for idx, c in enumerate(csvcols):
-                csvdata[??].append(r[idx])
-    
-    # Return dictionary of lists
-    return csvdata
-
-read_csv(src)
-```
-
-#### Answer
-
-```{python}
-import csv
-
-def read_csv(src):
-
-    csvdata = {} # An empty dictionary-of-lists
-
-    with open(src, 'r') as f:
-        csvr = csv.reader(f)
-
-        # Read in our column names and
-        # initialise the dictionary-of-lists
-        csvcols = next(csvr)
-        for c in csvcols:
-            csvdata[c] = []
-
-        # Notice this code is still the same,
-        # we just used next(csvr) to get the
-        # header row first!
-        for r in csvr:
-            # Although you can often assume that the order
-            # of the keys is the same, Python doesn't
-            # guarantee it; this way we will always make
-            # the correct assignment.
-            for idx, c in enumerate(csvcols):
-                csvdata[c].append(r[idx])
-
-    # Return dictionary of lists
-    return csvdata
-
-read_csv(src)
-```
-
-::::
-
-You should get something that starts:
-
-```{python}
-#| echo: false
-
-print(str(read_csv(src))[:75] + "...")
+# Using the `return contents` line we make it easy to 
+# see what our function is up to.
+src = get_url(url, out)
 ```
 
 ## Adding Docstring
@@ -688,7 +547,7 @@ We've assumed that the first row of our data set is always a _header_ (i.e. list
 1. Used the docstring support offered by Python. You'll be able to use `help(...)` and get back the docstring help!
 2. Provided hints to Python about the expected input and output data types. This can help to ensure consistency and is also critical in testing / continuous integration when working with others on a codebase.
 
-```{python}
+```python
 #| echo: true
 def read_csv(src:str) -> dict:
     """
@@ -726,11 +585,11 @@ def read_csv(src:str) -> dict:
 ds = read_csv(src)
 ```
 
-```{python}
+```python
 help(read_csv)
 ```
 
-```{python}
+```python
 print("Columns are: " + ", ".join(ds.keys()))
 print(f"First two cities are: {ds['City'][:2]}")
 print(f"First two populations are: {ds['Population'][:2]}")
