@@ -111,10 +111,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <meta property="og:title" content="Practical 8: Working with Text – Foundations of Spatial Data Science">
 <meta property="og:description" content="The basics of Text Mining and NLP">
-<meta property="og:image" content="Practical-08-Textual_Data_files/figure-html/cell-18-output-1.png">
+<meta property="og:image" content="Practical-08-Textual_Data_files/figure-html/cell-17-output-1.png">
 <meta property="og:site_name" content="Foundations">
 <meta property="og:locale" content="en_GB">
-<meta property="og:image:alt" content="‘Luxury’ listings in London">
 </head>
 
 <body class="nav-fixed">
@@ -268,7 +267,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#exploratory-textual-analysis" id="toc-exploratory-textual-analysis" class="nav-link" data-scroll-target="#exploratory-textual-analysis">Exploratory Textual Analysis</a></li>
   <li><a href="#using-regular-expressions" id="toc-using-regular-expressions" class="nav-link" data-scroll-target="#using-regular-expressions">Using Regular Expressions</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/jreades/fsds/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Practical-08-Textual_Data.ipynb" download="Practical-08-Textual_Data.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li><li><a href="Practical-08-Textual_Data.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/jreades/fsds/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Practical-08-Textual_Data.ipynb" download="Practical-08-Textual_Data.ipynb"><i class="bi bi-journal-code"></i>Jupyter</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -346,7 +345,7 @@ Note
 </div>
 </div>
 <p>Standard libraries we’ve seen before.</p>
-<div id="99c46c73" class="cell" data-execution_count="1">
+<div id="cba6155a" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> os</span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -356,7 +355,7 @@ Note
 <span id="cb1-7"><a href="#cb1-7"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This next is just a small utility function that allows us to output Markdown (like this cell) instead of plain text:</p>
-<div id="6252b3dc" class="cell" data-execution_count="2">
+<div id="cffd53dc" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> display_markdown</span>
 <span id="cb2-2"><a href="#cb2-2"></a></span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="kw">def</span> as_markdown(head<span class="op">=</span><span class="st">''</span>, body<span class="op">=</span><span class="st">'Some body text'</span>):</span>
@@ -390,7 +389,7 @@ Note
 </div>
 </div>
 <p>Remember this function from last week? We use it to save downloading files that we already have stored locally. But notice I’ve made some small changes… what do these do to help the user?</p>
-<div id="bcb45f55" class="cell" data-execution_count="3">
+<div id="7d12ea2d" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="im">import</span> os</span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="im">from</span> requests <span class="im">import</span> get</span>
 <span id="cb3-3"><a href="#cb3-3"></a><span class="im">from</span> urllib.parse <span class="im">import</span> urlparse</span>
@@ -476,13 +475,13 @@ Tip
 </div>
 </div>
 <p>Load the main data set:</p>
-<div id="73aa0f12" class="cell" data-execution_count="4">
+<div id="1f65dbd0" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>ymd  <span class="op">=</span> <span class="st">'20240614'</span></span>
 <span id="cb4-2"><a href="#cb4-2"></a>city <span class="op">=</span> <span class="st">'London'</span></span>
 <span id="cb4-3"><a href="#cb4-3"></a>host <span class="op">=</span> <span class="st">'https://orca.casa.ucl.ac.uk'</span></span>
 <span id="cb4-4"><a href="#cb4-4"></a>url  <span class="op">=</span> <span class="ss">f'</span><span class="sc">{</span>host<span class="sc">}</span><span class="ss">/~jreades/data/</span><span class="sc">{</span>ymd<span class="sc">}</span><span class="ss">-</span><span class="sc">{</span>city<span class="sc">}</span><span class="ss">-listings.geoparquet'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="2cb2f3f1" class="cell" data-execution_count="5">
+<div id="6fd1209b" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>gdf <span class="op">=</span> gpd.read_parquet( cache_data(url, os.path.join(<span class="st">'data'</span>,<span class="st">'geo'</span>)), </span>
 <span id="cb5-2"><a href="#cb5-2"></a>                      columns<span class="op">=</span>[<span class="st">'geometry'</span>, <span class="st">'listing_url'</span>, <span class="st">'name'</span>, </span>
 <span id="cb5-3"><a href="#cb5-3"></a>                               <span class="st">'description'</span>, <span class="st">'amenities'</span>, <span class="st">'price'</span>])</span>
@@ -497,7 +496,7 @@ gdf has 85,127 rows and CRS is OSGB36 / British National Grid.</code></pre>
 </div>
 </div>
 <p>Load supporting Geopackages:</p>
-<div id="f819c334" class="cell" data-execution_count="6">
+<div id="881cb7c4" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>ddir  <span class="op">=</span> os.path.join(<span class="st">'data'</span>,<span class="st">'geo'</span>) <span class="co"># destination directory</span></span>
 <span id="cb7-2"><a href="#cb7-2"></a>spath <span class="op">=</span> <span class="st">'https://github.com/jreades/fsds/blob/master/data/src/'</span> <span class="co"># source path</span></span>
 <span id="cb7-3"><a href="#cb7-3"></a></span>
@@ -547,7 +546,7 @@ Tip
 </div>
 </div>
 <p>It’s helpful to have a sense of what data look like before trying to do something with them, but by default pandas truncates quite a lot of output to keep it from overwhelming the display. For text processing, however, you should probably change the amount of preview text provided by pandas using the available options. <em>Note</em>: there are lots of other options that you can tweak in pandas.</p>
-<div id="9cb7b7c6" class="cell" data-execution_count="7">
+<div id="431cc5f6" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="bu">print</span>(<span class="ss">f"Default maximum column width: </span><span class="sc">{</span>pd<span class="sc">.</span>options<span class="sc">.</span>display<span class="sc">.</span>max_colwidth<span class="sc">}</span><span class="ss">"</span>) <span class="co"># What's this currently set to?</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a>pd.options.display.max_colwidth<span class="op">=</span><span class="dv">250</span>   <span class="co"># None = no maximum column width (you probably don't want to leave it at this)</span></span>
 <span id="cb9-3"><a href="#cb9-3"></a><span class="bu">print</span>(<span class="ss">f"Now maximum column width set to: </span><span class="sc">{</span>pd<span class="sc">.</span>options<span class="sc">.</span>display<span class="sc">.</span>max_colwidth<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -575,10 +574,85 @@ Difficulty level: Moderate, because of the questions.
 </div>
 </div>
 <p>To explore the description field properly you’ll need to filter out any NA/NaN descriptions before sampling the result. <em>Hint</em>: you’ll need to think about negation (<code>~</code>) of a method output that tells you if a field <em>is NA</em>.</p>
-<section class="level4 qna-question">
-<h4 class="qna-question anchored" data-anchor-id="">Question</h4>
-<div class="cell">
+<div class="tabset-margin-container"></div><div class="panel-tabset qna-question">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Question</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Answer</a></li></ul>
+<div class="tab-content qna-question">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>gdf[???].sample(<span class="dv">5</span>, random_state<span class="op">=</span><span class="dv">42</span>)[[<span class="st">'description'</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>gdf[<span class="op">~</span>gdf.description.isna()].sample(<span class="dv">5</span>, random_state<span class="op">=</span><span class="dv">42</span>)[[<span class="st">'description'</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">21072</td>
+<td>Overlooking the infamous Thames river and the MI6 central, with a stunning rooftop patio, this apartment will make you feel perfect in London!&lt;br /&gt;With 3 bedrooms and big living room this penthouse is the place to be for families with children, ...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">36815</td>
+<td>Feel at home at our gorgeous two bedroom apartment in Holland Park, Kensington and experience the city like never before.&lt;br /&gt;&lt;br /&gt;&lt;b&gt;The space&lt;/b&gt;&lt;br /&gt;As you enter, you will see one of the best parts of the property is the refined living area...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">17631</td>
+<td>Lovely spacious room in a typical Georgian house in trendy Dalston - approximately 5 min walk from Dalston Kingsland station and the main bars &amp; restaurants. You are going to be sharing the house with my 2 lovely creative housemates. Thibault (fr...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">45994</td>
+<td>Reviews from another platform available upon request.&lt;br /&gt;&lt;br /&gt;I want to be clear that this is the home where I live most of the year. I clear out a small closet and the drawers in the bedroom side tables. For this reason, I will only consid...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4521</td>
+<td>This artsy and cozy small 1 bedroom split level flat is 4 min. from Seven Sisters tube/metro station, and close to Tottenham Hale station (ideal if you are arriving from Stansted Airport). It's in an upcoming multicultural area of London at beg...</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">21072</td>
+<td>Overlooking the infamous Thames river and the MI6 central, with a stunning rooftop patio, this apartment will make you feel perfect in London!&lt;br /&gt;With 3 bedrooms and big living room this penthouse is the place to be for families with children, ...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">36815</td>
+<td>Feel at home at our gorgeous two bedroom apartment in Holland Park, Kensington and experience the city like never before.&lt;br /&gt;&lt;br /&gt;&lt;b&gt;The space&lt;/b&gt;&lt;br /&gt;As you enter, you will see one of the best parts of the property is the refined living area...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">17631</td>
+<td>Lovely spacious room in a typical Georgian house in trendy Dalston - approximately 5 min walk from Dalston Kingsland station and the main bars &amp; restaurants. You are going to be sharing the house with my 2 lovely creative housemates. Thibault (fr...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">45994</td>
+<td>Reviews from another platform available upon request.&lt;br /&gt;&lt;br /&gt;I want to be clear that this is the home where I live most of the year. I clear out a small closet and the drawers in the bedroom side tables. For this reason, I will only consid...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4521</td>
+<td>This artsy and cozy small 1 bedroom split level flat is 4 min. from Seven Sisters tube/metro station, and close to Tottenham Hale station (ideal if you are arriving from Stansted Airport). It's in an upcoming multicultural area of London at beg...</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -593,7 +667,6 @@ Stop
 <p>What do you notice about the above? Are they simple text? Are there patterns of problems? Are there characters that represent things other than words and simple punctuation?</p>
 </div>
 </div>
-</section>
 <section id="questions" class="level3">
 <h3 class="anchored" data-anchor-id="questions">Questions</h3>
 <ul>
@@ -621,8 +694,8 @@ Difficulty level: Moderate, because of the questions.
 </div>
 </div>
 <p>This field presents a subtle issue that might not be obvious here:</p>
-<div id="fce03133" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>gdf.amenities.sample(<span class="dv">5</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d8274933" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>gdf.amenities.sample(<span class="dv">5</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="9">
 <pre><code>17638    ["Free dryer \u2013 In unit", "Hot water kettle", "Shampoo", "Luggage dropoff allowed", "Microwave", "Dining table", "Bed linens", "Hot water", "Iron", "Host greets you", "First aid kit", "Garden view", "Wine glasses", "Outdoor furniture", "Porta...
 84107    ["Bathtub", "Clothing storage: closet", "Portable heater", "Microwave", "Hot water", "Host greets you", "First aid kit", "Security cameras on property", "Washer", "Fire extinguisher", "Freezer", "Lock on bedroom door", "Refrigerator", "Room-darke...
@@ -633,8 +706,8 @@ Name: amenities, dtype: object</code></pre>
 </div>
 </div>
 <p>But look what happens now, can you see the issue a little more easily?</p>
-<div id="e89e8f95" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>gdf.amenities.iloc[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cbe92ccd" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>gdf.amenities.iloc[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
 <pre><code>'["Heating", "TV with standard cable", "Wifi", "Smoke alarm", "Dryer", "Kitchen", "Washer", "Essentials"]'</code></pre>
 </div>
@@ -663,14 +736,21 @@ Note
 </div>
 </div>
 <p>Anyway, drop all rows where <em>either</em> the description or amenities (or both) are NA:</p>
-<section class="level4 qna-question">
-<h4 class="qna-question anchored" data-anchor-id="">Question</h4>
-<div class="cell">
-<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>gdf <span class="op">=</span> gdf.dropna(???)</span>
-<span id="cb16-2"><a href="#cb16-2"></a><span class="bu">print</span>(<span class="ss">f"Now gdf has </span><span class="sc">{</span>gdf<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> rows."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="tabset-margin-container"></div><div class="panel-tabset qna-question">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Question</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Answer</a></li></ul>
+<div class="tab-content qna-question">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="sourceCode" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a>gdf <span class="op">=</span> gdf.dropna(???)</span>
+<span id="cb17-2"><a href="#cb17-2"></a><span class="bu">print</span>(<span class="ss">f"Now gdf has </span><span class="sc">{</span>gdf<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> rows."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a>gdf <span class="op">=</span> gdf.dropna(subset<span class="op">=</span>[<span class="st">'description'</span>,<span class="st">'amenities'</span>])</span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="bu">print</span>(<span class="ss">f"Now gdf has </span><span class="sc">{</span>gdf<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> rows."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>Now gdf has 84,266 rows.</code></pre>
+</div>
+</div>
 </div>
 <p>You should get that there are <code>84,266</code> rows.</p>
-</section>
 </section>
 </section>
 <section id="using-regular-expressions" class="level1">
@@ -717,32 +797,100 @@ Difficulty level: Hard, because of the regular expression and questions.
 <li>You need to be able to <em>group</em> terms. Recall, however, that in Python a ‘group’ of the form <code>r'(some text)'</code> refers to matching (<code>some text</code> will be ‘memoized’/remembered), whereas what you need here is a “non-capturing group” of the <strong>positive lookahead</strong> type. That’s a Google clue right there, but you’ve also seen this in the lecture.</li>
 </ol>
 <p>In fact, in my real-world applications you might even need more than one group/non-capturing group in a <em>nested</em> structure.</p>
-<section class="level4 qna-question">
-<h4 class="qna-question anchored" data-anchor-id="">Question</h4>
-<div class="cell">
-<div class="sourceCode" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a>gdf[</span>
-<span id="cb17-2"><a href="#cb17-2"></a>    gdf.description.<span class="bu">str</span>.contains(<span class="vs">r'???'</span>, regex<span class="op">=</span><span class="va">True</span>, flags<span class="op">=</span>re.IGNORECASE) <span class="co"># &lt;-- The regex</span></span>
-<span id="cb17-3"><a href="#cb17-3"></a>].sample(<span class="dv">3</span>, random_state<span class="op">=</span><span class="dv">42</span>)[[<span class="st">'description'</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="tabset-margin-container"></div><div class="panel-tabset qna-question">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Question</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Answer</a></li></ul>
+<div class="tab-content qna-question">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<div class="sourceCode" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a>gdf[</span>
+<span id="cb20-2"><a href="#cb20-2"></a>    gdf.description.<span class="bu">str</span>.contains(<span class="vs">r'???'</span>, regex<span class="op">=</span><span class="va">True</span>, flags<span class="op">=</span>re.IGNORECASE) <span class="co"># &lt;-- The regex</span></span>
+<span id="cb20-3"><a href="#cb20-3"></a>].sample(<span class="dv">3</span>, random_state<span class="op">=</span><span class="dv">42</span>)[[<span class="st">'description'</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a>gdf[</span>
+<span id="cb21-2"><a href="#cb21-2"></a>    gdf.description.<span class="bu">str</span>.contains(<span class="vs">r'(?:luxur(?:y|ious|iat)|prestigious|stunning)'</span>, regex<span class="op">=</span><span class="va">True</span>, flags<span class="op">=</span>re.IGNORECASE)</span>
+<span id="cb21-3"><a href="#cb21-3"></a>].sample(<span class="dv">3</span>, random_state<span class="op">=</span><span class="dv">42</span>)[[<span class="st">'description'</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">19913</td>
+<td>NEW 4 BEDROOM HOUSE WITH PRIVATE GARDEN IN WEST HAMPSTEAD, LONDON NW6&lt;br /&gt;&lt;br /&gt;Stunning high spec house overall 3 levels. &lt;br /&gt;&lt;br /&gt;Ground floor: Kitchen - Fully equipped with modern appliances. Living area - sofa, TV, dining table and chairs...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2762</td>
+<td>Beautiful home in Kingston upon Thames. Central location - short walk to the river &amp; kingston town centre &amp; kingston train station (35 mins to London). Bus ride to Hampton Court and Richmond.&lt;br /&gt;&lt;br /&gt;&lt;b&gt;The space&lt;/b&gt;&lt;br /&gt;Three bedroom home ...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">64564</td>
+<td>Stunning spacious one bedroom apartment in one of London's most prime locations. You are a mere minutes away from Holborn station and British museum is right behind the building. Covent Gargen, a shopping and entertainment hub boasting some of th...</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">19913</td>
+<td>NEW 4 BEDROOM HOUSE WITH PRIVATE GARDEN IN WEST HAMPSTEAD, LONDON NW6&lt;br /&gt;&lt;br /&gt;Stunning high spec house overall 3 levels. &lt;br /&gt;&lt;br /&gt;Ground floor: Kitchen - Fully equipped with modern appliances. Living area - sofa, TV, dining table and chairs...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2762</td>
+<td>Beautiful home in Kingston upon Thames. Central location - short walk to the river &amp; kingston town centre &amp; kingston train station (35 mins to London). Bus ride to Hampton Court and Richmond.&lt;br /&gt;&lt;br /&gt;&lt;b&gt;The space&lt;/b&gt;&lt;br /&gt;Three bedroom home ...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">64564</td>
+<td>Stunning spacious one bedroom apartment in one of London's most prime locations. You are a mere minutes away from Holborn station and British museum is right behind the building. Covent Gargen, a shopping and entertainment hub boasting some of th...</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="apply-it-to-select-data" class="level3">
 <h3 class="anchored" data-anchor-id="apply-it-to-select-data">Apply it to Select Data</h3>
 <p>Assign it to a new data frame called <code>lux</code>:</p>
-<section class="level4 qna-question">
-<h4 class="qna-question anchored" data-anchor-id="">Question</h4>
-<div class="cell">
-<div class="sourceCode" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a>lux <span class="op">=</span> gdf[gdf.description.<span class="bu">str</span>.contains(<span class="vs">r'???'</span>, regex<span class="op">=</span><span class="va">True</span>, flags<span class="op">=</span>re.IGNORECASE)].copy()</span>
-<span id="cb18-2"><a href="#cb18-2"></a>lux.to_parquet(os.path.join(<span class="st">'data'</span>,<span class="st">'clean'</span>,<span class="st">'luxury.geopackage'</span>))</span>
-<span id="cb18-3"><a href="#cb18-3"></a><span class="bu">print</span>(<span class="ss">f"Found </span><span class="sc">{</span>lux<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> records for 'luxury' flats"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="tabset-margin-container"></div><div class="panel-tabset qna-question">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">Question</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">Answer</a></li></ul>
+<div class="tab-content qna-question">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
+<div class="sourceCode" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a>lux <span class="op">=</span> gdf[gdf.description.<span class="bu">str</span>.contains(<span class="vs">r'???'</span>, regex<span class="op">=</span><span class="va">True</span>, flags<span class="op">=</span>re.IGNORECASE)].copy()</span>
+<span id="cb22-2"><a href="#cb22-2"></a>lux.to_parquet(os.path.join(<span class="st">'data'</span>,<span class="st">'clean'</span>,<span class="st">'luxury.geopackage'</span>))</span>
+<span id="cb22-3"><a href="#cb22-3"></a><span class="bu">print</span>(<span class="ss">f"Found </span><span class="sc">{</span>lux<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> records for 'luxury' flats"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a>lux <span class="op">=</span> gdf[gdf.description.<span class="bu">str</span>.contains(<span class="vs">r'(?:luxur(?:y|ious|iat)|prestigious|stunning)'</span>, regex<span class="op">=</span><span class="va">True</span>, flags<span class="op">=</span>re.IGNORECASE)].copy()</span>
+<span id="cb23-2"><a href="#cb23-2"></a>lux.to_parquet(os.path.join(<span class="st">'data'</span>,<span class="st">'clean'</span>,<span class="st">'luxury.geopackage'</span>))</span>
+<span id="cb23-3"><a href="#cb23-3"></a><span class="bu">print</span>(<span class="ss">f"Found </span><span class="sc">{</span>lux<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> records for 'luxury' flats"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>Found 10,367 records for 'luxury' flats</code></pre>
+</div>
+</div>
 </div>
 <p>You should get that there are <code>10,367</code> rows.</p>
-</section>
 </section>
 <section id="plot-the-data" class="level3">
 <h3 class="anchored" data-anchor-id="plot-the-data">Plot the Data</h3>
 <p>Now we are going to create a more complex plot that will give space to both the spatial and price distributions using <code>subplot2grid</code>.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a><span class="bu">help</span>(plt.subplot2grid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1"></a><span class="bu">help</span>(plt.subplot2grid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Notice that there are two ways to create the plot specified above. I chose route 1, but in some ways route 2 (where you specify a <code>gridspec</code> object and <em>then</em> add the axes might be a bit simpler to work out if you’re starting from scratch.</p>
 <p>The critical thing here is to understand how we’er initialising a plot that has <strong>4 rows</strong> and <strong>1 column</strong> even though it is only showing <strong>2 plots</strong>. What we’re going to do is set the <em>first</em> plot to span <strong>3 rows</strong> so that it takes up 75% of the plot area (3/4), while the <em>second</em> plot only takes up 25% (1/4). They will appear one above the other, so there’s only 1 column. Here’s how to read the key parts of <code>subplot2grid</code>:</p>
 <ul>
@@ -754,48 +902,80 @@ Difficulty level: Hard, because of the regular expression and questions.
 <li><code>colspan</code> – how many columns of the figure does <em>this</em> plot span (<em>not</em> 0-indexed because it’s not list-like).</li>
 </ul>
 <p>Every time you call <code>subplot2grid</code> you are initialising a new axis-object into which you can then draw with your geopackage or pandas plotting methods.</p>
-<section class="level4 qna-question">
-<h4 class="qna-question anchored" data-anchor-id="">Question</h4>
-<div class="cell">
-<div class="sourceCode" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a></span>
-<span id="cb20-2"><a href="#cb20-2"></a>f,ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">1</span>,figsize<span class="op">=</span>(<span class="dv">9</span>,<span class="dv">6</span>))</span>
-<span id="cb20-3"><a href="#cb20-3"></a>ax.remove()</span>
-<span id="cb20-4"><a href="#cb20-4"></a></span>
-<span id="cb20-5"><a href="#cb20-5"></a><span class="co"># The first plot </span></span>
-<span id="cb20-6"><a href="#cb20-6"></a>ax1 <span class="op">=</span> plt.subplot2grid((<span class="dv">4</span>, <span class="dv">1</span>), (???), rowspan<span class="op">=</span>???)</span>
-<span id="cb20-7"><a href="#cb20-7"></a>boros.plot(edgecolor<span class="op">=</span><span class="st">'red'</span>, facecolor<span class="op">=</span><span class="st">'none'</span>, linewidth<span class="op">=</span><span class="dv">1</span>, alpha<span class="op">=</span><span class="fl">0.75</span>, ax<span class="op">=</span>ax1)</span>
-<span id="cb20-8"><a href="#cb20-8"></a>lux.plot(markersize<span class="op">=</span><span class="dv">2</span>, column<span class="op">=</span><span class="st">'price'</span>, cmap<span class="op">=</span><span class="st">'viridis'</span>, alpha<span class="op">=</span><span class="fl">0.2</span>, scheme<span class="op">=</span><span class="st">'Fisher_Jenks_Sampled'</span>, ax<span class="op">=</span>ax1)</span>
-<span id="cb20-9"><a href="#cb20-9"></a></span>
-<span id="cb20-10"><a href="#cb20-10"></a>ax1.set_xlim([<span class="dv">500000</span>, <span class="dv">565000</span>])</span>
-<span id="cb20-11"><a href="#cb20-11"></a>ax1.set_ylim([<span class="dv">165000</span>, <span class="dv">195000</span>])<span class="op">;</span></span>
-<span id="cb20-12"><a href="#cb20-12"></a></span>
-<span id="cb20-13"><a href="#cb20-13"></a><span class="co"># The second plot</span></span>
-<span id="cb20-14"><a href="#cb20-14"></a>ax2 <span class="op">=</span> plt.subplot2grid((???), (???), rowspan<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb20-15"><a href="#cb20-15"></a>lux.price.plot.hist(bins<span class="op">=</span><span class="dv">250</span>, ax<span class="op">=</span>ax2)</span>
-<span id="cb20-16"><a href="#cb20-16"></a></span>
-<span id="cb20-17"><a href="#cb20-17"></a>plt.suptitle(<span class="st">"Listings Advertising Luxury"</span>) <span class="co"># &lt;-- How does this differ from title? Change it and see!</span></span>
-<span id="cb20-18"><a href="#cb20-18"></a>plt.tight_layout() <span class="co"># &lt;-- Try creating the plot *without* this to see what it changes</span></span>
-<span id="cb20-19"><a href="#cb20-19"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="tabset-margin-container"></div><div class="panel-tabset qna-question">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">Question</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">Answer</a></li></ul>
+<div class="tab-content qna-question">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
+<div class="sourceCode" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1"></a></span>
+<span id="cb26-2"><a href="#cb26-2"></a>f,ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">1</span>,figsize<span class="op">=</span>(<span class="dv">9</span>,<span class="dv">6</span>))</span>
+<span id="cb26-3"><a href="#cb26-3"></a>ax.remove()</span>
+<span id="cb26-4"><a href="#cb26-4"></a></span>
+<span id="cb26-5"><a href="#cb26-5"></a><span class="co"># The first plot </span></span>
+<span id="cb26-6"><a href="#cb26-6"></a>ax1 <span class="op">=</span> plt.subplot2grid((<span class="dv">4</span>, <span class="dv">1</span>), (???), rowspan<span class="op">=</span>???)</span>
+<span id="cb26-7"><a href="#cb26-7"></a>boros.plot(edgecolor<span class="op">=</span><span class="st">'red'</span>, facecolor<span class="op">=</span><span class="st">'none'</span>, linewidth<span class="op">=</span><span class="dv">1</span>, alpha<span class="op">=</span><span class="fl">0.75</span>, ax<span class="op">=</span>ax1)</span>
+<span id="cb26-8"><a href="#cb26-8"></a>lux.plot(markersize<span class="op">=</span><span class="dv">2</span>, column<span class="op">=</span><span class="st">'price'</span>, cmap<span class="op">=</span><span class="st">'viridis'</span>, alpha<span class="op">=</span><span class="fl">0.2</span>, scheme<span class="op">=</span><span class="st">'Fisher_Jenks_Sampled'</span>, ax<span class="op">=</span>ax1)</span>
+<span id="cb26-9"><a href="#cb26-9"></a></span>
+<span id="cb26-10"><a href="#cb26-10"></a>ax1.set_xlim([<span class="dv">500000</span>, <span class="dv">565000</span>])</span>
+<span id="cb26-11"><a href="#cb26-11"></a>ax1.set_ylim([<span class="dv">165000</span>, <span class="dv">195000</span>])<span class="op">;</span></span>
+<span id="cb26-12"><a href="#cb26-12"></a></span>
+<span id="cb26-13"><a href="#cb26-13"></a><span class="co"># The second plot</span></span>
+<span id="cb26-14"><a href="#cb26-14"></a>ax2 <span class="op">=</span> plt.subplot2grid((???), (???), rowspan<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb26-15"><a href="#cb26-15"></a>lux.price.plot.hist(bins<span class="op">=</span><span class="dv">250</span>, ax<span class="op">=</span>ax2)</span>
+<span id="cb26-16"><a href="#cb26-16"></a></span>
+<span id="cb26-17"><a href="#cb26-17"></a>plt.suptitle(<span class="st">"Listings Advertising Luxury"</span>) <span class="co"># &lt;-- How does this differ from title? Change it and see!</span></span>
+<span id="cb26-18"><a href="#cb26-18"></a>plt.tight_layout() <span class="co"># &lt;-- Try creating the plot *without* this to see what it changes</span></span>
+<span id="cb26-19"><a href="#cb26-19"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1"></a>f,ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">1</span>,figsize<span class="op">=</span>(<span class="dv">7</span>,<span class="dv">6</span>))</span>
+<span id="cb27-2"><a href="#cb27-2"></a>ax.remove()</span>
+<span id="cb27-3"><a href="#cb27-3"></a></span>
+<span id="cb27-4"><a href="#cb27-4"></a><span class="co"># The first plot</span></span>
+<span id="cb27-5"><a href="#cb27-5"></a>ax1 <span class="op">=</span> plt.subplot2grid((<span class="dv">4</span>, <span class="dv">1</span>), (<span class="dv">0</span>, <span class="dv">0</span>), rowspan<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb27-6"><a href="#cb27-6"></a>boros.plot(edgecolor<span class="op">=</span><span class="st">'red'</span>, facecolor<span class="op">=</span><span class="st">'none'</span>, linewidth<span class="op">=</span><span class="dv">1</span>, alpha<span class="op">=</span><span class="fl">0.75</span>, ax<span class="op">=</span>ax1)</span>
+<span id="cb27-7"><a href="#cb27-7"></a>lux.plot(markersize<span class="op">=</span><span class="dv">2</span>, column<span class="op">=</span><span class="st">'price'</span>, cmap<span class="op">=</span><span class="st">'viridis'</span>, alpha<span class="op">=</span><span class="fl">0.2</span>, scheme<span class="op">=</span><span class="st">'Fisher_Jenks_Sampled'</span>, ax<span class="op">=</span>ax1)</span>
+<span id="cb27-8"><a href="#cb27-8"></a></span>
+<span id="cb27-9"><a href="#cb27-9"></a>ax1.set_xlim([<span class="dv">500000</span>, <span class="dv">565000</span>])</span>
+<span id="cb27-10"><a href="#cb27-10"></a>ax1.set_ylim([<span class="dv">165000</span>, <span class="dv">195000</span>])<span class="op">;</span></span>
+<span id="cb27-11"><a href="#cb27-11"></a></span>
+<span id="cb27-12"><a href="#cb27-12"></a><span class="co"># The second plot</span></span>
+<span id="cb27-13"><a href="#cb27-13"></a>ax2 <span class="op">=</span> plt.subplot2grid((<span class="dv">4</span>, <span class="dv">1</span>), (<span class="dv">3</span>, <span class="dv">0</span>), rowspan<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb27-14"><a href="#cb27-14"></a>lux.price.plot.hist(bins<span class="op">=</span><span class="dv">250</span>, ax<span class="op">=</span>ax2)</span>
+<span id="cb27-15"><a href="#cb27-15"></a></span>
+<span id="cb27-16"><a href="#cb27-16"></a>plt.suptitle(<span class="st">"Listings Advertising Luxury"</span>) <span class="co"># &lt;-- How does this differ from title? Change it and see!</span></span>
+<span id="cb27-17"><a href="#cb27-17"></a>plt.tight_layout() <span class="co"># &lt;-- Try creating the plot *without* this to see what it changes</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><a href="Practical-08-Textual_Data_files/figure-html/cell-17-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="Practical-08-Textual_Data_files/figure-html/cell-17-output-1.png" width="662" height="569"></a></p>
+</div>
+</div>
 </div>
 <p>Your result should look similar to:</p>
-<div id="7de215c9" class="cell" data-execution_count="17">
+<div id="636e7ba6" class="cell" data-execution_count="17">
 <div class="cell-output cell-output-display" data-execution_count="17">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="Practical-08-Textual_Data_files/figure-html/cell-18-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="‘Luxury’ listings in London"><img src="Practical-08-Textual_Data_files/figure-html/cell-18-output-1.png" width="662" height="569" alt="‘Luxury’ listings in London" class="figure-img"></a></p>
+<p><a href="Practical-08-Textual_Data_files/figure-html/cell-18-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="‘Luxury’ listings in London"><img src="Practical-08-Textual_Data_files/figure-html/cell-18-output-1.png" width="662" height="569" alt="‘Luxury’ listings in London" class="figure-img"></a></p>
 <figcaption>‘Luxury’ listings in London</figcaption>
 </figure>
 </div>
 </div>
 </div>
-</section>
-<section class="level4 qna-question">
-<h4 class="qna-question anchored" data-anchor-id="">Question</h4>
+<div class="tabset-margin-container"></div><div class="panel-tabset qna-question">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true">Question</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false">Answer</a></li></ul>
+<div class="tab-content qna-question">
+<div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
 <ul>
 <li>What does <code>suptitle</code> do and how is it different from <code>title</code>? Could you use this as part of your plot-making process?</li>
 <li>What does <code>tight_layout</code> do?</li>
 </ul>
-</section>
+</div>
+<div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
+<ul>
+<li><code>title</code> applies to a single subplot, whereas <code>suptitle</code> applies to the entire figure.</li>
+<li><code>tight_layout</code> basically tries to adjust the margins around each figure so as to minimise the amount of whitespace.</li>
+</ul>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="budget-listings" class="level2">
@@ -823,52 +1003,138 @@ Difficulty level: Easy, because you’ve worked out the hard bits already.
 <ol type="1">
 <li>I’d try adding word boundary markers to the regex (<code>\b</code>) where appropriate…</li>
 </ol>
-<section class="level4 qna-question">
-<h4 class="qna-question anchored" data-anchor-id="">Question</h4>
-<div class="cell">
-<div class="sourceCode" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a>gdf[</span>
-<span id="cb21-2"><a href="#cb21-2"></a>    gdf.description.<span class="bu">str</span>.contains(???, regex<span class="op">=</span><span class="va">True</span>, flags<span class="op">=</span>re.IGNORECASE)</span>
-<span id="cb21-3"><a href="#cb21-3"></a>].sample(<span class="dv">5</span>, random_state<span class="op">=</span><span class="dv">42</span>)[[<span class="st">'description'</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="tabset-margin-container"></div><div class="panel-tabset qna-question">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true">Question</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false">Answer</a></li></ul>
+<div class="tab-content qna-question">
+<div id="tabset-7-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-7-1-tab">
+<div class="sourceCode" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1"></a>gdf[</span>
+<span id="cb28-2"><a href="#cb28-2"></a>    gdf.description.<span class="bu">str</span>.contains(???, regex<span class="op">=</span><span class="va">True</span>, flags<span class="op">=</span>re.IGNORECASE)</span>
+<span id="cb28-3"><a href="#cb28-3"></a>].sample(<span class="dv">5</span>, random_state<span class="op">=</span><span class="dv">42</span>)[[<span class="st">'description'</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
+<div id="tabset-7-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-2-tab">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1"></a>gdf[</span>
+<span id="cb29-2"><a href="#cb29-2"></a>    gdf.description.<span class="bu">str</span>.contains(<span class="vs">r'\b(?:affordable|budget|cheap|cosy)\b'</span>, </span>
+<span id="cb29-3"><a href="#cb29-3"></a>    regex<span class="op">=</span><span class="va">True</span>, flags<span class="op">=</span>re.IGNORECASE)</span>
+<span id="cb29-4"><a href="#cb29-4"></a>].sample(<span class="dv">5</span>, random_state<span class="op">=</span><span class="dv">42</span>)[[<span class="st">'description'</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8635</td>
+<td>This is a charming little flat in crouch end, North London. It is located 10min from crouch end "village" which is packed with coffee shops, nice restaurants, shops etc... It is on a very quiet street and easy access to central London.&lt;br /&gt;&lt;br /...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">54551</td>
+<td>This trendy and spacious 3 bed house in Bow, is ideal for people who want to experience London but without all the hustle and bustle.&lt;br /&gt;&lt;br /&gt;It is situated in a peaceful area, where the vast open space of Victoria Park is within easy reach an...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">5904</td>
+<td>The spacious house offers double bedroom with ensuit bathroom, a large kitchen and cosy living room.&lt;br /&gt;This luxurious and modern apartment is located 3 mins walking from London Bridge station; walking distance from many of Londons attractions&lt;...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">57422</td>
+<td>Kick back and relax in this calm, stylish one-bedroom, ground-floor flat in Leyton Village. There’s a contemporary kitchen and cosy living room with a sofa bed. The location puts you between Leyton and Leytonstone tube stations in a quiet street ...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">58061</td>
+<td>Beautiful 1 bedroom apartment in the heart of Peckham, only 10 minutes walk away from Peckham Rye station with direct trains to London Victoria (15mins), London Bridge (10mins) and Clapham Junction (16mins) - bringing the whole of London to your ...</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8635</td>
+<td>This is a charming little flat in crouch end, North London. It is located 10min from crouch end "village" which is packed with coffee shops, nice restaurants, shops etc... It is on a very quiet street and easy access to central London.&lt;br /&gt;&lt;br /...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">54551</td>
+<td>This trendy and spacious 3 bed house in Bow, is ideal for people who want to experience London but without all the hustle and bustle.&lt;br /&gt;&lt;br /&gt;It is situated in a peaceful area, where the vast open space of Victoria Park is within easy reach an...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">5904</td>
+<td>The spacious house offers double bedroom with ensuit bathroom, a large kitchen and cosy living room.&lt;br /&gt;This luxurious and modern apartment is located 3 mins walking from London Bridge station; walking distance from many of Londons attractions&lt;...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">57422</td>
+<td>Kick back and relax in this calm, stylish one-bedroom, ground-floor flat in Leyton Village. There’s a contemporary kitchen and cosy living room with a sofa bed. The location puts you between Leyton and Leytonstone tube stations in a quiet street ...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">58061</td>
+<td>Beautiful 1 bedroom apartment in the heart of Peckham, only 10 minutes walk away from Peckham Rye station with direct trains to London Victoria (15mins), London Bridge (10mins) and Clapham Junction (16mins) - bringing the whole of London to your ...</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="apply-it-to-select-data-1" class="level3">
 <h3 class="anchored" data-anchor-id="apply-it-to-select-data-1">Apply it to Select Data</h3>
-<section class="level4 qna-question">
-<h4 class="qna-question anchored" data-anchor-id="">Question</h4>
-<div class="cell">
-<div class="sourceCode" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a>aff <span class="op">=</span> gdf[gdf.description.<span class="bu">str</span>.contains(???, regex<span class="op">=</span><span class="va">True</span>, flags<span class="op">=</span>re.IGNORECASE)].copy()</span>
-<span id="cb22-2"><a href="#cb22-2"></a>aff.to_parquet(os.path.join(<span class="st">'data'</span>,<span class="st">'clean'</span>,<span class="st">'affordable.geopackage'</span>))</span>
-<span id="cb22-3"><a href="#cb22-3"></a><span class="bu">print</span>(<span class="ss">f"There are </span><span class="sc">{</span>aff<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> rows flagged as 'affordable'."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="tabset-margin-container"></div><div class="panel-tabset qna-question">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-8-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-1" role="tab" aria-controls="tabset-8-1" aria-selected="true">Question</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-2" role="tab" aria-controls="tabset-8-2" aria-selected="false">Answer</a></li></ul>
+<div class="tab-content qna-question">
+<div id="tabset-8-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-8-1-tab">
+<div class="sourceCode" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1"></a>aff <span class="op">=</span> gdf[gdf.description.<span class="bu">str</span>.contains(???, regex<span class="op">=</span><span class="va">True</span>, flags<span class="op">=</span>re.IGNORECASE)].copy()</span>
+<span id="cb30-2"><a href="#cb30-2"></a>aff.to_parquet(os.path.join(<span class="st">'data'</span>,<span class="st">'clean'</span>,<span class="st">'affordable.geopackage'</span>))</span>
+<span id="cb30-3"><a href="#cb30-3"></a><span class="bu">print</span>(<span class="ss">f"There are </span><span class="sc">{</span>aff<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> rows flagged as 'affordable'."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="tabset-8-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-8-2-tab">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1"></a>aff <span class="op">=</span> gdf[gdf.description.<span class="bu">str</span>.contains(<span class="vs">r'\b(?:affordable|budget|cheap|cosy)\b'</span>, </span>
+<span id="cb31-2"><a href="#cb31-2"></a>          regex<span class="op">=</span><span class="va">True</span>, flags<span class="op">=</span>re.IGNORECASE)].copy()</span>
+<span id="cb31-3"><a href="#cb31-3"></a>aff.to_parquet(os.path.join(<span class="st">'data'</span>,<span class="st">'clean'</span>,<span class="st">'affordable.geopackage'</span>))</span>
+<span id="cb31-4"><a href="#cb31-4"></a><span class="bu">print</span>(<span class="ss">f"There are </span><span class="sc">{</span>aff<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> rows flagged as 'affordable'."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>There are 8,937 rows flagged as 'affordable'.</code></pre>
+</div>
+</div>
 </div>
 <p>You should get that there are <code>8,937</code> rows.</p>
 </section>
-</section>
 <section id="plot-the-data-1" class="level3">
 <h3 class="anchored" data-anchor-id="plot-the-data-1">Plot the Data</h3>
-<div id="a53e6d38" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a>f,ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">1</span>,figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">6</span>))</span>
-<span id="cb23-2"><a href="#cb23-2"></a>ax.remove()</span>
-<span id="cb23-3"><a href="#cb23-3"></a></span>
-<span id="cb23-4"><a href="#cb23-4"></a><span class="co"># The first plot</span></span>
-<span id="cb23-5"><a href="#cb23-5"></a>ax1 <span class="op">=</span> plt.subplot2grid((<span class="dv">4</span>, <span class="dv">1</span>), (<span class="dv">0</span>, <span class="dv">0</span>), rowspan<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb23-6"><a href="#cb23-6"></a>boros.plot(edgecolor<span class="op">=</span><span class="st">'red'</span>, facecolor<span class="op">=</span><span class="st">'none'</span>, linewidth<span class="op">=</span><span class="dv">1</span>, alpha<span class="op">=</span><span class="fl">0.75</span>, ax<span class="op">=</span>ax1)</span>
-<span id="cb23-7"><a href="#cb23-7"></a>aff.plot(markersize<span class="op">=</span><span class="dv">2</span>, column<span class="op">=</span><span class="st">'price'</span>, cmap<span class="op">=</span><span class="st">'viridis'</span>, alpha<span class="op">=</span><span class="fl">0.2</span>, scheme<span class="op">=</span><span class="st">'Fisher_Jenks_Sampled'</span>, ax<span class="op">=</span>ax1)</span>
-<span id="cb23-8"><a href="#cb23-8"></a></span>
-<span id="cb23-9"><a href="#cb23-9"></a>ax1.set_xlim([<span class="dv">500000</span>, <span class="dv">565000</span>])</span>
-<span id="cb23-10"><a href="#cb23-10"></a>ax1.set_ylim([<span class="dv">165000</span>, <span class="dv">195000</span>])<span class="op">;</span></span>
-<span id="cb23-11"><a href="#cb23-11"></a></span>
-<span id="cb23-12"><a href="#cb23-12"></a><span class="co"># The second plot</span></span>
-<span id="cb23-13"><a href="#cb23-13"></a>ax2 <span class="op">=</span> plt.subplot2grid((<span class="dv">4</span>, <span class="dv">1</span>), (<span class="dv">3</span>, <span class="dv">0</span>), rowspan<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb23-14"><a href="#cb23-14"></a>aff.price.plot.hist(bins<span class="op">=</span><span class="dv">100</span>, ax<span class="op">=</span>ax2)</span>
-<span id="cb23-15"><a href="#cb23-15"></a></span>
-<span id="cb23-16"><a href="#cb23-16"></a>plt.suptitle(<span class="st">"Listings Advertising Affordability"</span>)</span>
-<span id="cb23-17"><a href="#cb23-17"></a>plt.tight_layout()</span>
-<span id="cb23-18"><a href="#cb23-18"></a><span class="co">#plt.savefig("Affordable_Listings.png", dpi=150)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="bd42243a" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1"></a>f,ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">1</span>,figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">6</span>))</span>
+<span id="cb33-2"><a href="#cb33-2"></a>ax.remove()</span>
+<span id="cb33-3"><a href="#cb33-3"></a></span>
+<span id="cb33-4"><a href="#cb33-4"></a><span class="co"># The first plot</span></span>
+<span id="cb33-5"><a href="#cb33-5"></a>ax1 <span class="op">=</span> plt.subplot2grid((<span class="dv">4</span>, <span class="dv">1</span>), (<span class="dv">0</span>, <span class="dv">0</span>), rowspan<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb33-6"><a href="#cb33-6"></a>boros.plot(edgecolor<span class="op">=</span><span class="st">'red'</span>, facecolor<span class="op">=</span><span class="st">'none'</span>, linewidth<span class="op">=</span><span class="dv">1</span>, alpha<span class="op">=</span><span class="fl">0.75</span>, ax<span class="op">=</span>ax1)</span>
+<span id="cb33-7"><a href="#cb33-7"></a>aff.plot(markersize<span class="op">=</span><span class="dv">2</span>, column<span class="op">=</span><span class="st">'price'</span>, cmap<span class="op">=</span><span class="st">'viridis'</span>, alpha<span class="op">=</span><span class="fl">0.2</span>, scheme<span class="op">=</span><span class="st">'Fisher_Jenks_Sampled'</span>, ax<span class="op">=</span>ax1)</span>
+<span id="cb33-8"><a href="#cb33-8"></a></span>
+<span id="cb33-9"><a href="#cb33-9"></a>ax1.set_xlim([<span class="dv">500000</span>, <span class="dv">565000</span>])</span>
+<span id="cb33-10"><a href="#cb33-10"></a>ax1.set_ylim([<span class="dv">165000</span>, <span class="dv">195000</span>])<span class="op">;</span></span>
+<span id="cb33-11"><a href="#cb33-11"></a></span>
+<span id="cb33-12"><a href="#cb33-12"></a><span class="co"># The second plot</span></span>
+<span id="cb33-13"><a href="#cb33-13"></a>ax2 <span class="op">=</span> plt.subplot2grid((<span class="dv">4</span>, <span class="dv">1</span>), (<span class="dv">3</span>, <span class="dv">0</span>), rowspan<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb33-14"><a href="#cb33-14"></a>aff.price.plot.hist(bins<span class="op">=</span><span class="dv">100</span>, ax<span class="op">=</span>ax2)</span>
+<span id="cb33-15"><a href="#cb33-15"></a></span>
+<span id="cb33-16"><a href="#cb33-16"></a>plt.suptitle(<span class="st">"Listings Advertising Affordability"</span>)</span>
+<span id="cb33-17"><a href="#cb33-17"></a>plt.tight_layout()</span>
+<span id="cb33-18"><a href="#cb33-18"></a><span class="co">#plt.savefig("Affordable_Listings.png", dpi=150)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="Practical-08-Textual_Data_files/figure-html/cell-22-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="Practical-08-Textual_Data_files/figure-html/cell-22-output-1.png" width="758" height="569" class="figure-img"></a></p>
+<p><a href="Practical-08-Textual_Data_files/figure-html/cell-22-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="Practical-08-Textual_Data_files/figure-html/cell-22-output-1.png" width="758" height="569" class="figure-img"></a></p>
 </figure>
 </div>
 </div>
@@ -881,7 +1147,7 @@ Difficulty level: Easy, because you’ve worked out the hard bits already.
 <li>Do you understand what <code>dpi</code> means and how <code>savefig</code> works?</li>
 <li>Copy the code from above but modify it to constrain the histogram on a more limited distribution by <em>filtering</em> out the outliers <em>before</em> drawing the plot. I would copy the cell above to one just below here so that you keep a working copy available and can undo any changes that break things.</li>
 </ul>
-<div class="sourceCode" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
 <section id="near-bluespace" class="level2">
@@ -910,56 +1176,144 @@ Difficulty level: Medium, because you’re still learning about regexes.
 </ul>
 <section id="create-the-regular-expression-2" class="level3">
 <h3 class="anchored" data-anchor-id="create-the-regular-expression-2">Create the regular Expression</h3>
-<section class="level4 qna-question">
-<h4 class="qna-question anchored" data-anchor-id="">Question</h4>
-<div class="cell">
-<div class="sourceCode" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1"></a>gdf[</span>
-<span id="cb25-2"><a href="#cb25-2"></a>    gdf.description.<span class="bu">str</span>.contains(???, regex<span class="op">=</span>???, flags<span class="op">=</span>???)</span>
-<span id="cb25-3"><a href="#cb25-3"></a>].sample(<span class="dv">5</span>, random_state<span class="op">=</span><span class="dv">42</span>)[[<span class="st">'description'</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="tabset-margin-container"></div><div class="panel-tabset qna-question">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-9-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-1" role="tab" aria-controls="tabset-9-1" aria-selected="true">Question</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-9-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-2" role="tab" aria-controls="tabset-9-2" aria-selected="false">Answer</a></li></ul>
+<div class="tab-content qna-question">
+<div id="tabset-9-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-9-1-tab">
+<div class="sourceCode" id="cb35"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1"></a>gdf[</span>
+<span id="cb35-2"><a href="#cb35-2"></a>    gdf.description.<span class="bu">str</span>.contains(???, regex<span class="op">=</span>???, flags<span class="op">=</span>???)</span>
+<span id="cb35-3"><a href="#cb35-3"></a>].sample(<span class="dv">5</span>, random_state<span class="op">=</span><span class="dv">42</span>)[[<span class="st">'description'</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
+<div id="tabset-9-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-9-2-tab">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1"></a>gdf[</span>
+<span id="cb36-2"><a href="#cb36-2"></a>    gdf.description.<span class="bu">str</span>.contains(<span class="vs">r'(?:Thames|river|water|canals?)(?:-|\s+)(?: view|\s?front)\b'</span>, </span>
+<span id="cb36-3"><a href="#cb36-3"></a>    regex<span class="op">=</span><span class="va">True</span>, flags<span class="op">=</span>re.IGNORECASE)</span>
+<span id="cb36-4"><a href="#cb36-4"></a>].sample(<span class="dv">5</span>, random_state<span class="op">=</span><span class="dv">42</span>)[[<span class="st">'description'</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">74134</td>
+<td>Brand new ultra spacious apartment just one minute walk from the Excel center and with great connections to anywhere in London.&lt;br /&gt;The area is full with cafés, supermarkets and restaurants just at your door step with lots of fun things to do li...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">49557</td>
+<td>Are you a woman?&lt;br /&gt;We offer a warm and friendly, Home from home, welcome to women travellers in our, peaceful and centrally located home.&lt;br /&gt;&lt;br /&gt; Excellent location in Zone1, with river ferry, trains, tube, and buses within a 5 minute wal...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">69318</td>
+<td>Just across the street from water front, near shadwell basin. View of Canary Wharf and the Shard on the big balcony&lt;br /&gt;&lt;br /&gt;7mins to shadwell overground and DLR. just 1 stop from Bank, Tower Bridge/Tower Hill, White Chapel (which connects to E...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">57420</td>
+<td>There’s no better way to experience the beauty of London City than by sleeping right in the heart of it. This Ensuite is within a 2-bed property. Ideally located at the river front to enjoy the mesmerising view of Canary Wharf.&lt;br /&gt;&lt;br /&gt;Within ...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">25666</td>
+<td>Welcome to Sunbury Lane in Battersea :)&lt;br /&gt;&lt;br /&gt;My house is just off the river front allowing a large, safe space from which to explore the best of South London whilst also having a bus that runs you from our road into central in just 15 minut...</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">74134</td>
+<td>Brand new ultra spacious apartment just one minute walk from the Excel center and with great connections to anywhere in London.&lt;br /&gt;The area is full with cafés, supermarkets and restaurants just at your door step with lots of fun things to do li...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">49557</td>
+<td>Are you a woman?&lt;br /&gt;We offer a warm and friendly, Home from home, welcome to women travellers in our, peaceful and centrally located home.&lt;br /&gt;&lt;br /&gt; Excellent location in Zone1, with river ferry, trains, tube, and buses within a 5 minute wal...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">69318</td>
+<td>Just across the street from water front, near shadwell basin. View of Canary Wharf and the Shard on the big balcony&lt;br /&gt;&lt;br /&gt;7mins to shadwell overground and DLR. just 1 stop from Bank, Tower Bridge/Tower Hill, White Chapel (which connects to E...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">57420</td>
+<td>There’s no better way to experience the beauty of London City than by sleeping right in the heart of it. This Ensuite is within a 2-bed property. Ideally located at the river front to enjoy the mesmerising view of Canary Wharf.&lt;br /&gt;&lt;br /&gt;Within ...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">25666</td>
+<td>Welcome to Sunbury Lane in Battersea :)&lt;br /&gt;&lt;br /&gt;My house is just off the river front allowing a large, safe space from which to explore the best of South London whilst also having a bus that runs you from our road into central in just 15 minut...</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="apply-it-to-the-select-data" class="level3">
 <h3 class="anchored" data-anchor-id="apply-it-to-the-select-data">Apply it to the Select Data</h3>
-<section class="level4 qna-question">
-<h4 class="qna-question anchored" data-anchor-id="">Question</h4>
-<div class="cell">
-<div class="sourceCode" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1"></a>bluesp <span class="op">=</span> gdf[</span>
-<span id="cb26-2"><a href="#cb26-2"></a>    (gdf.description.<span class="bu">str</span>.contains(???, regex<span class="op">=</span><span class="va">True</span>, flags<span class="op">=</span>re.IGNORECASE)) <span class="op">|</span></span>
-<span id="cb26-3"><a href="#cb26-3"></a>    (gdf.description.<span class="bu">str</span>.contains(???, regex<span class="op">=</span><span class="va">True</span>, flags<span class="op">=</span>re.IGNORECASE))</span>
-<span id="cb26-4"><a href="#cb26-4"></a>].copy()</span>
-<span id="cb26-5"><a href="#cb26-5"></a>bluesp.to_parquet(os.path.join(<span class="st">'data'</span>,<span class="st">'clean'</span>,<span class="st">'bluespace.geopackage'</span>))</span>
-<span id="cb26-6"><a href="#cb26-6"></a><span class="bu">print</span>(<span class="ss">f"Found </span><span class="sc">{</span>bluesp<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> rows."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="tabset-margin-container"></div><div class="panel-tabset qna-question">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-10-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-10-1" role="tab" aria-controls="tabset-10-1" aria-selected="true">Question</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-10-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-10-2" role="tab" aria-controls="tabset-10-2" aria-selected="false">Answer</a></li></ul>
+<div class="tab-content qna-question">
+<div id="tabset-10-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-10-1-tab">
+<div class="sourceCode" id="cb37"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1"></a>bluesp <span class="op">=</span> gdf[</span>
+<span id="cb37-2"><a href="#cb37-2"></a>    (gdf.description.<span class="bu">str</span>.contains(???, regex<span class="op">=</span><span class="va">True</span>, flags<span class="op">=</span>re.IGNORECASE)) <span class="op">|</span></span>
+<span id="cb37-3"><a href="#cb37-3"></a>    (gdf.description.<span class="bu">str</span>.contains(???, regex<span class="op">=</span><span class="va">True</span>, flags<span class="op">=</span>re.IGNORECASE))</span>
+<span id="cb37-4"><a href="#cb37-4"></a>].copy()</span>
+<span id="cb37-5"><a href="#cb37-5"></a>bluesp.to_parquet(os.path.join(<span class="st">'data'</span>,<span class="st">'clean'</span>,<span class="st">'bluespace.geopackage'</span>))</span>
+<span id="cb37-6"><a href="#cb37-6"></a><span class="bu">print</span>(<span class="ss">f"Found </span><span class="sc">{</span>bluesp<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> rows."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="tabset-10-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-10-2-tab">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1"></a>bluesp <span class="op">=</span> gdf[</span>
+<span id="cb38-2"><a href="#cb38-2"></a>    (gdf.description.<span class="bu">str</span>.contains(<span class="vs">r'(?:Thames|river|water|canals?)(?:-|\s+)(?:view|front)\b'</span>, regex<span class="op">=</span><span class="va">True</span>, flags<span class="op">=</span>re.IGNORECASE)) <span class="op">|</span></span>
+<span id="cb38-3"><a href="#cb38-3"></a>    (gdf.description.<span class="bu">str</span>.contains(<span class="vs">r'(?:walk|close|near) to (?:Thames|river|water|canal)'</span>, regex<span class="op">=</span><span class="va">True</span>, flags<span class="op">=</span>re.IGNORECASE))</span>
+<span id="cb38-4"><a href="#cb38-4"></a>].copy()</span>
+<span id="cb38-5"><a href="#cb38-5"></a>bluesp.to_parquet(os.path.join(<span class="st">'data'</span>,<span class="st">'clean'</span>,<span class="st">'bluespace.geopackage'</span>))</span>
+<span id="cb38-6"><a href="#cb38-6"></a><span class="bu">print</span>(<span class="ss">f"Found </span><span class="sc">{</span>bluesp<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">:,}</span><span class="ss"> rows."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>Found 408 rows.</code></pre>
+</div>
+</div>
 </div>
 <p>You should get that there are <code>408</code> rows.</p>
 </section>
-</section>
 <section id="plot-the-data-2" class="level3">
 <h3 class="anchored" data-anchor-id="plot-the-data-2">Plot the Data</h3>
-<div id="71054348" class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1"></a>f,ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">1</span>,figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">6</span>))</span>
-<span id="cb27-2"><a href="#cb27-2"></a>ax.remove()</span>
-<span id="cb27-3"><a href="#cb27-3"></a></span>
-<span id="cb27-4"><a href="#cb27-4"></a><span class="co"># The first plot</span></span>
-<span id="cb27-5"><a href="#cb27-5"></a>ax1 <span class="op">=</span> plt.subplot2grid((<span class="dv">4</span>, <span class="dv">1</span>), (<span class="dv">0</span>, <span class="dv">0</span>), rowspan<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb27-6"><a href="#cb27-6"></a>water.plot(edgecolor<span class="op">=</span><span class="st">'none'</span>, facecolor<span class="op">=</span>(<span class="fl">.25</span>, <span class="fl">.25</span>, <span class="fl">.7</span>, <span class="fl">.25</span>), ax<span class="op">=</span>ax1)</span>
-<span id="cb27-7"><a href="#cb27-7"></a>boros.plot(edgecolor<span class="op">=</span><span class="st">'red'</span>, facecolor<span class="op">=</span><span class="st">'none'</span>, linewidth<span class="op">=</span><span class="dv">1</span>, alpha<span class="op">=</span><span class="fl">0.75</span>, ax<span class="op">=</span>ax1)</span>
-<span id="cb27-8"><a href="#cb27-8"></a>bluesp.plot(markersize<span class="op">=</span><span class="dv">2</span>, column<span class="op">=</span><span class="st">'price'</span>, cmap<span class="op">=</span><span class="st">'viridis'</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, scheme<span class="op">=</span><span class="st">'Fisher_Jenks_Sampled'</span>, ax<span class="op">=</span>ax1)</span>
-<span id="cb27-9"><a href="#cb27-9"></a></span>
-<span id="cb27-10"><a href="#cb27-10"></a>ax1.set_xlim([<span class="dv">500000</span>, <span class="dv">565000</span>])</span>
-<span id="cb27-11"><a href="#cb27-11"></a>ax1.set_ylim([<span class="dv">165000</span>, <span class="dv">195000</span>])<span class="op">;</span></span>
-<span id="cb27-12"><a href="#cb27-12"></a></span>
-<span id="cb27-13"><a href="#cb27-13"></a><span class="co"># The second plot</span></span>
-<span id="cb27-14"><a href="#cb27-14"></a>ax2 <span class="op">=</span> plt.subplot2grid((<span class="dv">4</span>, <span class="dv">1</span>), (<span class="dv">3</span>, <span class="dv">0</span>), rowspan<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb27-15"><a href="#cb27-15"></a>bluesp.price.plot.hist(bins<span class="op">=</span><span class="dv">100</span>, ax<span class="op">=</span>ax2)</span>
-<span id="cb27-16"><a href="#cb27-16"></a></span>
-<span id="cb27-17"><a href="#cb27-17"></a>plt.suptitle(<span class="st">"Bluespace Listings"</span>)</span>
-<span id="cb27-18"><a href="#cb27-18"></a>plt.tight_layout()</span>
-<span id="cb27-19"><a href="#cb27-19"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="b7999c7e" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1"></a>f,ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">1</span>,figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">6</span>))</span>
+<span id="cb40-2"><a href="#cb40-2"></a>ax.remove()</span>
+<span id="cb40-3"><a href="#cb40-3"></a></span>
+<span id="cb40-4"><a href="#cb40-4"></a><span class="co"># The first plot</span></span>
+<span id="cb40-5"><a href="#cb40-5"></a>ax1 <span class="op">=</span> plt.subplot2grid((<span class="dv">4</span>, <span class="dv">1</span>), (<span class="dv">0</span>, <span class="dv">0</span>), rowspan<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb40-6"><a href="#cb40-6"></a>water.plot(edgecolor<span class="op">=</span><span class="st">'none'</span>, facecolor<span class="op">=</span>(<span class="fl">.25</span>, <span class="fl">.25</span>, <span class="fl">.7</span>, <span class="fl">.25</span>), ax<span class="op">=</span>ax1)</span>
+<span id="cb40-7"><a href="#cb40-7"></a>boros.plot(edgecolor<span class="op">=</span><span class="st">'red'</span>, facecolor<span class="op">=</span><span class="st">'none'</span>, linewidth<span class="op">=</span><span class="dv">1</span>, alpha<span class="op">=</span><span class="fl">0.75</span>, ax<span class="op">=</span>ax1)</span>
+<span id="cb40-8"><a href="#cb40-8"></a>bluesp.plot(markersize<span class="op">=</span><span class="dv">2</span>, column<span class="op">=</span><span class="st">'price'</span>, cmap<span class="op">=</span><span class="st">'viridis'</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, scheme<span class="op">=</span><span class="st">'Fisher_Jenks_Sampled'</span>, ax<span class="op">=</span>ax1)</span>
+<span id="cb40-9"><a href="#cb40-9"></a></span>
+<span id="cb40-10"><a href="#cb40-10"></a>ax1.set_xlim([<span class="dv">500000</span>, <span class="dv">565000</span>])</span>
+<span id="cb40-11"><a href="#cb40-11"></a>ax1.set_ylim([<span class="dv">165000</span>, <span class="dv">195000</span>])<span class="op">;</span></span>
+<span id="cb40-12"><a href="#cb40-12"></a></span>
+<span id="cb40-13"><a href="#cb40-13"></a><span class="co"># The second plot</span></span>
+<span id="cb40-14"><a href="#cb40-14"></a>ax2 <span class="op">=</span> plt.subplot2grid((<span class="dv">4</span>, <span class="dv">1</span>), (<span class="dv">3</span>, <span class="dv">0</span>), rowspan<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb40-15"><a href="#cb40-15"></a>bluesp.price.plot.hist(bins<span class="op">=</span><span class="dv">100</span>, ax<span class="op">=</span>ax2)</span>
+<span id="cb40-16"><a href="#cb40-16"></a></span>
+<span id="cb40-17"><a href="#cb40-17"></a>plt.suptitle(<span class="st">"Bluespace Listings"</span>)</span>
+<span id="cb40-18"><a href="#cb40-18"></a>plt.tight_layout()</span>
+<span id="cb40-19"><a href="#cb40-19"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="Practical-08-Textual_Data_files/figure-html/cell-26-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="Practical-08-Textual_Data_files/figure-html/cell-26-output-1.png" width="758" height="569" class="figure-img"></a></p>
+<p><a href="Practical-08-Textual_Data_files/figure-html/cell-26-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="Practical-08-Textual_Data_files/figure-html/cell-26-output-1.png" width="758" height="569" class="figure-img"></a></p>
 </figure>
 </div>
 </div>

@@ -424,7 +424,7 @@ Introducing:<br> Polars, Dask, DuckDB, and Postgres.
 </section>
 <section id="a-simple-comparison" class="slide level2">
 <h2>A Simple Comparison</h2>
-<div id="bbc1ae0e" class="cell" data-execution_count="1">
+<div id="be098aff" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb1-3"><a></a><span class="im">import</span> duckdb <span class="im">as</span> duck</span>
@@ -432,7 +432,7 @@ Introducing:<br> Polars, Dask, DuckDB, and Postgres.
 <span id="cb1-5"><a></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb1-6"><a></a>sns.load_dataset(<span class="st">'titanic'</span>).to_parquet(<span class="st">'titanic.pq'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="e39e688d" class="cell" data-execution_count="2">
+<div id="47008289" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 <style scoped="">
@@ -571,7 +571,7 @@ Introducing:<br> Polars, Dask, DuckDB, and Postgres.
 <section id="measuring-performance" class="slide level2">
 <h2>Measuring Performance</h2>
 <p>We can compare performance using profiling<sup>1</sup>:</p>
-<div id="2e30b6d2" class="cell" data-execution_count="3">
+<div id="f66cb4b6" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">import</span> timeit</span>
 <span id="cb2-2"><a></a></span>
 <span id="cb2-3"><a></a><span class="kw">def</span> load_pandas():</span>
@@ -589,31 +589,31 @@ Introducing:<br> Polars, Dask, DuckDB, and Postgres.
 <section id="the-results" class="slide level2">
 <h2>The Results</h2>
 <h4 id="pandas">Pandas</h4>
-<div id="58006e9d" class="cell" data-execution_count="4">
+<div id="f0e96e79" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>pd_execution_time <span class="op">=</span> timeit.timeit(load_pandas, number<span class="op">=</span>num_reps)</span>
 <span id="cb3-2"><a></a><span class="bu">print</span>(<span class="ss">f"Pandas execution time: </span><span class="sc">{</span>pd_execution_time<span class="sc">:.6f}</span><span class="ss"> seconds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Pandas execution time: 0.775991 seconds</code></pre>
+<pre><code>Pandas execution time: 0.784750 seconds</code></pre>
 </div>
 </div>
 <h4 id="polars">Polars</h4>
-<div id="e17a0042" class="cell" data-execution_count="5">
+<div id="a79810a9" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>pl_execution_time <span class="op">=</span> timeit.timeit(load_polars, number<span class="op">=</span>num_reps)</span>
 <span id="cb5-2"><a></a><span class="bu">print</span>(<span class="ss">f"Polars execution time: </span><span class="sc">{</span>pl_execution_time<span class="sc">:.6f}</span><span class="ss"> seconds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Polars execution time: 0.162328 seconds</code></pre>
+<pre><code>Polars execution time: 0.161258 seconds</code></pre>
 </div>
 </div>
-<p>79.08% faster than pandas.</p>
+<p>79.45% faster than pandas.</p>
 <h4 id="duckdb">DuckDB</h4>
-<div id="28f5900a" class="cell" data-execution_count="7">
+<div id="76d51981" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>db_execution_time <span class="op">=</span> timeit.timeit(load_duck, number<span class="op">=</span>num_reps)</span>
 <span id="cb7-2"><a></a><span class="bu">print</span>(<span class="ss">f"DuckDB execution time: </span><span class="sc">{</span>db_execution_time<span class="sc">:.6f}</span><span class="ss"> seconds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>DuckDB execution time: 0.097131 seconds</code></pre>
+<pre><code>DuckDB execution time: 0.100967 seconds</code></pre>
 </div>
 </div>
-<p>87.48% faster than pandas and 40.16% faster than polars.</p>
+<p>87.13% faster than pandas and 37.39% faster than polars.</p>
 </section></section>
 <section>
 <section id="summarising-data" class="title-slide slide level1 center">
