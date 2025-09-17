@@ -433,6 +433,7 @@ def get_url(src, dest):
 # Using the `return contents` line we make it easy to 
 # see what our function is up to.
 src = get_url(url, out)
+print(f"{src} is a {type(src)}.")
 ```
 
 I'm not going to pretend that's the *best* use of a decorator, but it *does* neatly separate the downloading function from the caching function. In fact, there is already a [cache decorator](https://pvsravanth.medium.com/speeding-up-your-python-code-with-the-cache-decorator-from-functools-bce4731eed69) and some of these have unlimited capacity; however, they are intended to run in a 'live' context, so you'd still need to download the file again any time you start a new notebook or restart Podman. *This* caching function saves the actual data locally to `dest`.
@@ -490,7 +491,9 @@ In fact, I'm still updating the practicals to make full use of `pathlib` so you 
 
 ## Updating the Function
 
-```python
+So let's update the function to move from `os` to `pathlib` and see how things change... 
+
+```{python}
 from functools import wraps
 from pathlib import Path
 def check_cache(f):
@@ -498,7 +501,7 @@ def check_cache(f):
     def wrapper(*args, **kwargs):
         src  = Path(args[0])
         dest = Path(args[1])
-        if dest.is_file():
+        if dest.exists() and dest.is_file():
             print(f"{dest} found locally!")
             return(dest)
         else:
@@ -512,17 +515,14 @@ def get_url(src, dest):
     response = urlopen(src) 
     filedata = response.read().decode('utf-8')
      
-    # 
-    dest = Path(dest)
-     
     # Create any missing directories in dest(ination) path
     # -- os.path.join is the reverse of split (as you saw above)
     # but it doesn't work with lists... so I had to google how 
     # to use the 'splat' operator! os.makedirs creates missing 
     # directories in a path automatically.
-    dest.parents.makedirs(exist_ok=True)
+    dest.parent.mkdir(parents=True, exist_ok=True)
      
-    with open(dest, 'w') as f:
+    with dest.open(mode='w') as f:
         f.write(filedata)
          
     print(f"Data written to {dest}!")
@@ -532,9 +532,10 @@ def get_url(src, dest):
 # Using the `return contents` line we make it easy to 
 # see what our function is up to.
 src = get_url(url, out)
+print(f"{src} is a {type(src)}.") # <- Note this change!
 ```
 
-## Adding Docstring
+# Improving the Documentation
 
 ::: {.callout-tip collapse="true"}
 
@@ -542,95 +543,116 @@ src = get_url(url, out)
 
 :::
 
-We've assumed that the first row of our data set is always a _header_ (i.e. list of column names). If it's not then this code is going to have problems. A _robust_ function would allow us to specify column names, skip rows, etc. when we create the data structure, but let's not get caught up in that level of detail. Notice that I've also, for the first time:
+To help people make use of the newly-improved function, we could useful add two types of information to the function:
 
-1. Used the docstring support offered by Python. You'll be able to use `help(...)` and get back the docstring help!
-2. Provided hints to Python about the expected input and output data types. This can help to ensure consistency and is also critical in testing / continuous integration when working with others on a codebase.
+1. Use the 'docstring' support offered by Python so that `help(...)` gives useful output.
+2. Provided hints to Python about the expected input and output data types.
 
-```python
+```{python}
 #| echo: true
-def read_csv(src:str) -> dict:
+from functools import wraps
+from pathlib import Path
+def check_cache(f) -> Path:
     """
-    Converts a CSV file to a dictionary-of-lists (dol),
-    using the first row to create column names.
+    Checks if a file exists locally before forwarding to a 'getter'
+    function if it's not found.
     
-    param src: a local CSV file
-    returns: a dictionary-of-lists
+    :param src: any remote file path
+    :type src: str
+    :param dst: any local file path
+    :type dst: str
+    :returns: the local file path
+    :rtype: pathlib.Path
     """
-    csvdata = {} # An empty dictionary-of-lists
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        src  = Path(args[0])
+        dest = Path(args[1])
+        if dest.exists() and dest.is_file():
+            print(f"{dest} found locally!")
+            return(dest)
+        else:
+            print(f"{dest} not found, downloading!")
+            return(f(src, dest))
+    return wrapper
+
+@check_cache
+def get_url(src:Path, dst:Path) -> Path:
+    """
+    Reads a remote file (src) and writes it to a local file (dst),
+    returning a Path object that is the location of the saved data.
     
-    with open(src, 'r') as f:
-        csvr = csv.reader(f)
-        
-        # Read in our column names and
-        # initialise the dictionary-of-lists
-        csvcols = next(csvr) 
-        for c in csvcols:
-            csvdata[c] = []
-        
-        # Notice this code is still the same, 
-        # we just used next(csvr) to get the 
-        # header row first!
-        for r in csvr: 
-            # Although you can often assume that the order 
-            # of the keys is the same, Python doesn't 
-            # guarantee it; this way we will always make
-            # the correct assignment.
-            for idx, c in enumerate(csvcols):
-                csvdata[c].append(r[idx])
+    :param src: any remote file path
+    :type src: pathlib.Path
+    :param dst: any local file path
+    :type dst: pathlib.Path
+    :returns: the local file path
+    :rtype: pathlib.Path
+    """
+
+    # Get the data using the urlopen function
+    response = urlopen(src) 
+    filedata = response.read().decode('utf-8')
+     
+    # Create any missing directories in dest(ination) path
+    # -- os.path.join is the reverse of split (as you saw above)
+    # but it doesn't work with lists... so I had to google how 
+    # to use the 'splat' operator! os.makedirs creates missing 
+    # directories in a path automatically.
+    dst.parent.mkdir(parents=True, exist_ok=True)
+     
+    with dst.open(mode='w') as f:
+        f.write(filedata)
+         
+    print(f"Data written to {dst}!")
     
-    # Return dictionary of lists
-    return csvdata
-
-ds = read_csv(src)
+    return dst
 ```
 
-```python
-help(read_csv)
+```{python}
+help(check_cache)
+help(get_url)
 ```
 
-```python
-print("Columns are: " + ", ".join(ds.keys()))
-print(f"First two cities are: {ds['City'][:2]}")
-print(f"First two populations are: {ds['Population'][:2]}")
-print(f"First two latitudes are: {ds['Latitude'][:2]}")
-```
+# Packaging It Up
 
-## Creating a Package
+::: {.callout-note collapse="true"}
+#### Optional Content
+
+This content is optional but will help you to understand how to move functions out of the core namespace and into groups of related tools.
+
+:::
 
 We're not going to tackle this now, but it's important that you understand how what we've done connects to what we're *about* to do, and the concept of a package is the bridge. We've already covered this in the pre-recorded lectures, but if you want to actually *try* to create your own package, the simplest way to do this is to:
 
-1. Copy the `read_csv` into a new file called, for instance, `utils.py`.
-2. Make sure you delete this function from the current 'namespace' (`del(read_csv)`) by which I mean that the `read_csv` function no longer exists (running `help(read_csv)` should give you an error!).
-3. Try importing the function from the file: `from utils import read_csv` and run the `help(read_csv)` code again.
+1. Copy the two functions above (`check_cache` and `get_url`) into a new file called, for instance, `utils.py`.
+2. Make sure you delete this function from the current 'namespace' (`del(get_url)`) by which I mean that the running `help(get_url)` should give you an error!.
+3. Try importing the function from the file: `from utils import get_url` and run the `help(get_url)` code again.
 
 Assuming that you've done everything correctly, we've now brought in code from another file without having to write it into our main Python script file. In Python, many of the most complex libraries are spread across the equivalent of *many* `utils.py` files, but on top of *that* when we import and run them they are also creating objects from classes defined in those files. 
 
-What we now want to do is use a fairly simple example using different 'shapes' (pyramids, cubes, etc.) that allow us to explore how classes work through inheritance from parents and can extend of overwrite the functionality provided by the parent class. We'll need this understanding in order to grasp how Pandas and GeoPandas work specifically, but also how Python works more generally.
-
 # Classes and Inheritance
 
-So, in the immortal words of Monty Python... 
+::: {.callout-note collapse="true"}
+#### Optional Content
 
-![And now for something completely different](./img/completely_different.png)
+This content is optional but will help you to understand how object-oriented programming works and how you can develop your own classes.
+
+:::
+
+::: {.callout-caution collapse="true"}
+
+#### Difficulty: &#129327;.
+
+:::
+
+In Python, many of the most complex libraries are spread across the equivalent of *many* `utils.py` files, but on top of *that* when we import and run them they are also creating objects from classes defined in those files.  What we now want to do is use a fairly simple example using a basic representation of Airbhb listings that allow us to explore how classes work through inheritance from parents and can extend of overwrite the functionality provided by the parent class. We'll need this understanding in order to grasp how Pandas and GeoPandas work specifically, but also how Python works more generally.
 
 ::: {.callout-note}
 
 #### &#128279; Connections
 
-This will draw on what you've learned in the lectures about <a href="">Methods</a>, <a href="">Classes</a>, and <a href="">Design</a>. You will also find the Code Camp [Classes](https://jreades.github.io/code-camp/lessons/Classes.html) session useful.
-
-:::
-
-To repeat myself:
-
-> In Python, many of the most complex libraries are spread across the equivalent of *many* `utils.py` files, but on top of *that* when we import and run them they are also creating objects from classes defined in those files. 
->
-> What we now want to do is use a fairly simple example using different 'shapes' (pyramids, cubes, etc.) that allow us to explore how classes work through inheritance from parents and can extend of overwrite the functionality provided by the parent class. We'll need this understanding in order to grasp how Pandas and GeoPandas work specifically, but also how Python works more generally.
-
-::: {.callout-caution collapse="true"}
-
-#### Difficulty: &#129327;.
+This will draw on what you've learned in the lectures about [Methods]({{< var module.web >}}sessions/week5.html#pre-recorded-lectures), [Classes]({{< var module.web >}}sessions/week5.html#pre-recorded-lectures), and [Design]({{< var module.web >}}sessions/week5.html#pre-recorded-lectures). You will also find the Code Camp [Classes]({{< var module.camp >}}lessons/Classes.html) session useful.
 
 :::
 
