@@ -18,7 +18,7 @@ filters:
 
 This session is a tour-de-`pandas`; since this is Python's equivalent of the `tidyverse` meets `data.tables` it is fundamental to the data science ecosystem and is probably one of the most-widely used libraries in the language as a whole. I get [more than 286,000 questions](https://stackoverflow.com/questions/tagged/pandas) tagged with pandas on StackOverflow. 
 
-This week we are also going to start looking at the **[InsideAirbnb](http://insideairbnb.com/)** data which forms the core of the work that we do over the rest of the term. The focus of *this* notebook is simple numeric data: no mapping or text data... yet... and direct manipulation of data types, derivation of summary statistics, and simple plotting.
+This week we are also going to start looking more closely at the **[InsideAirbnb](http://insideairbnb.com/)** data which forms the core of the work that we do over the rest of the term. The focus of *this* notebook is simple numeric data: no mapping or text data... yet... and direct manipulation of data types, derivation of summary statistics, and simple plotting.
 
 We hope that you will be able to draw on the past few practical sessions to develop a more intuitive understanding of how to interact with pandas since it supports both a 'dictionary-of-lists' style of interaction *and* a methods-based style of interaction with the 'Data Frame'.
 
@@ -26,7 +26,7 @@ We hope that you will be able to draw on the past few practical sessions to deve
 
 ### Important
 
-Conceptually, this practical links together _all_ of the preceding ones; you will find data structures, classes and methods, reading CSV files from a remote location, `numpy`, and more than you ever wanted to know about data types in Python. Making these connections will make the remainder of term much, much easier, so it might be worth **revising this practical** over Reading Week so make sure it all makes sense!
+Conceptually, this practical links together _all_ of the preceding ones; you will find data structures, classes and methods, reading CSV files from a remote location, `numpy`, and more than you ever wanted to know about data types in Python. Making these connections will make the remainder of term much, much easier, so it might be worth **revising this practical** over Reading Week so make sure it all makes sense! That may include rewatching the lectures on [Data]({{< var module.web >}}sessions/week6.html#pre-recorded-lectures) and [Pandas]({{< var module.web >}}sessions/week6.html#pre-recorded-lectures)
 
 :::
 
@@ -44,50 +44,13 @@ You should use _all_ of these together to really understand where the data came 
 
 So although they don't need to be done now, you probably want to add both those links to your reading list!
 
-# Preamble
+# Pandas, Conceptually
 
 ::: {.callout-note}
 
 #### &#128279; Connections
 
 This is why we spent time talking about [Packages]({{< var module.web >}}sessions/week3.html#pre-recorded-lectures), [Methods]({{< var module.web >}}sessions/week4.html#pre-recorded-lectures) [Classes]({{< var module.web >}}sessions/week4.html#pre-recorded-lectures)... because now we're going to be making _intensive_ use of them.
-
-:::
-
-It's always sensible to import packages these at the top of the notebook:
-
-1. Because it lets everyone know what they need to have installed to run your code.
-2. It's easy to run this and then skip further down the notebook if you have already done *some* of the work and saved an intermediate output.
-
-```{python}
-from pathlib import Path
-import numpy as np
-import pandas as pd
-```
-
-Beyond what we provide below there are [numerous](http://lmgtfy.com/?q=introduction+to+pandas+python) useful introductions; [one of our favourites](http://www.gregreda.com/2013/10/26/intro-to-pandas-data-structures/) is from Greg Reda, and there are some [good videos](https://youtu.be/TSsSWuhBpmY) on [our YouTube channel](https://www.youtube.com/playlist?list=PLJ5Y5hxm-0W7rOOYBHf6KC6QNnWOi09kh). And of course, there’s [TONS of stuff](http://stackoverflow.com/questions/tagged/pandas) on StackOverflow. If you want an actual physical book, you might try [McKinney (2017)](http://shop.oreilly.com/product/0636920050896.do).
-
-However, one thing you will really want to bookmark is [the official documentation](http://pandas.pydata.org/pandas-docs/stable/) since you will undoubtedly need to refer to it fairly regularly. _Note_: this link is to the most recent release. Over time there will be updates published and you _may_ find that you no longer have the most up-to-date version. If you find that you are now using an older version of pandas and the methods have changed then you'll need to track down the _specific_ version of the documentation that you need from the [home page](http://pandas.pydata.org).
-
-You can always check what version you have installed like this:
-
-```{python}
-print(pd.__version__)
-```
-
-::: {.callout-tip}
-
-The `<package_name>.__version__` approach isn't guaranteed to work with _every_ package, but it will work with most of them. Remember that variables and methods starting and ending with '`__`' are **private** and any interaction with them should be approached very, very carefully.
-
-:::
-
-# Reading and Writing Data
-
-::: {.callout-note}
-
-#### &#128279; Connections
-
-You will _really_ need to get to grips with Pandas through the lectures on [Data]({{< var module.web >}}sessions/week6.html#pre-recorded-lectures) and [Pandas]({{< var module.web >}}sessions/week6.html#pre-recorded-lectures).
 
 :::
 
@@ -106,12 +69,43 @@ myDataFrame = {
 And pandas gives us two ways to access that data:
 
 1. Using a method syntax: `myDataFrame.column_name_1`
-2. Using a dictionary syntax: `myDataFrame['column_name_1']`
+2. Using a dictionary syntax: `myDataFrame['column_name_1']`^[This is also how `[polars](https://pola.rs/)` does things]
 
 Depending on which syntax you prefer, you can use these interchangeably. The only times you *have* to choose one over the other are: 
 
 - Assignment (e.g. `myDataFrame['column_name_1'] = ...`); 
 - Columns with spaces in their names (e.g. `myDataFrame['Column Name 1')`).
+
+There are [numerous](http://lmgtfy.com/?q=introduction+to+pandas+python) useful introductions; [one of our favourites](http://www.gregreda.com/2013/10/26/intro-to-pandas-data-structures/) is from Greg Reda, and there are some [good videos](https://youtu.be/TSsSWuhBpmY) on [our YouTube channel](https://www.youtube.com/playlist?list=PLJ5Y5hxm-0W7rOOYBHf6KC6QNnWOi09kh). And of course, there’s [TONS of stuff](http://stackoverflow.com/questions/tagged/pandas) on StackOverflow. If you want an actual physical book, you might try [McKinney (2017)](http://shop.oreilly.com/product/0636920050896.do).
+
+# Reading Data
+
+It's always sensible to import the packages you need at the top of the notebook:
+
+1. Because it lets everyone know what they need to have installed to run your code.
+2. It's easy to run this and then skip further down the notebook if you have already done *some* of the work and saved an intermediate output.
+
+So in this practical we need: 
+
+```{python}
+from pathlib import Path
+import numpy as np
+import pandas as pd
+```
+
+One thing you will really want to bookmark is [the official documentation](http://pandas.pydata.org/pandas-docs/stable/) since you will undoubtedly need to refer to it fairly regularly. _Note_: this link is to the most recent release. Over time there will be updates published and you _may_ find that you no longer have the most up-to-date version. If you find that you are now using an older version of pandas and the methods have changed then you'll need to track down the _specific_ version of the documentation that you need from the [home page](http://pandas.pydata.org).
+
+You can always check what version you have installed like this:
+
+```{python}
+print(pd.__version__)
+```
+
+::: {.callout-tip}
+
+The `<package_name>.__version__` approach isn't guaranteed to work with _every_ package, but it will work with most of them. Remember that variables and methods starting and ending with '`__`' are **private** and any interaction with them should be approached very, very carefully.
+
+:::
 
 ## Reading Remote Data
 
@@ -121,9 +115,19 @@ Depending on which syntax you prefer, you can use these interchangeably. The onl
 
 :::
 
-You will need to do several things here to read the remote, compressed CSV file specified by `url` into a data frame called `df`. Setting `low_memory=False` ensures that pandas will try to load the entire data set _before_ guessing the data format! Obviously, with very large files this is probably a bad idea and it's possible to force a particular column type while readng in the data as well. For larger data sets there are platforms like [Dask](https://dask.org/) (see, eg, [this](https://towardsdatascience.com/why-and-how-to-use-dask-with-big-data-746e34dac7c3)), and beyond that are [other options](https://towardsdatascience.com/scaling-pandas-comparing-dask-ray-modin-vaex-and-rapids-c74c85a4e59c).
+You will need to do several things here to read the remote, compressed CSV file specified by `url` into a data frame called `df`. Setting `low_memory=False` ensures that pandas will try to load the entire data set _before_ guessing the data type for each column! Obviously, with very large files this is probably a bad idea and it's possible to force a particular column type while readng in the data as well. 
+
+> For larger data sets there is [Polars](https://pola.rs/), [DuckDB](https://duckdb.org/), and platforms like [Dask](https://dask.org/) (see, eg, [this](https://towardsdatascience.com/why-and-how-to-use-dask-with-big-data-746e34dac7c3)) and [beyond](https://towardsdatascience.com/scaling-pandas-comparing-dask-ray-modin-vaex-and-rapids-c74c85a4e59c).
+
+### Parameterising Files
+
+Anyway, here's where to find the data:
 
 {{< include _data_definition_csv.qmd >}}
+
+### Reading CSV with Pandas
+
+Now, what goes into the `read_csv` function below?
 
 :::: {.qna}
 
@@ -169,7 +173,7 @@ except NameError as e:
 
 You should get a data frame containing `{python} f"{df.shape[1]:,}"` columns and `{python} f"{df.shape[0]:,}"` rows of data.
 
-## Inspecting the Data Frame
+# Inspecting the Data Frame
 
 ::: {.callout-tip collapse="true"}
 
@@ -204,20 +208,24 @@ mem_usage = df.memory_usage(index=True, deep=True)
 
 Describing a data frame provides general information about *numeric* columns, such as the median, IQR, or number of discrete values. 
 
-So to show the 5th and 95th percentiles you need to pass an argument to `describe` to override the default report from pandas. Notice here how we can subselect columns by name using `df[ [<names of columns>] ]`!
+So to show the 5th and 95th percentiles you need to pass an argument to `describe` to override the default report from pandas. Notice here how we can **subselect columns** using a list: `df[ [<names of selected columns>] ]`!
 
 :::: {.qna}
 
 #### Question
 
 ```python
-df[['latitude', 'longitude', 'accommodates', 'bathrooms', 'bedrooms', 'beds']].describe(percentiles=[??])
+df[
+    ['latitude', 'longitude', 'accommodates', 'bathrooms', 'bedrooms', 'beds']
+].describe(percentiles=[??])
 ```
 
 #### Answer
 
 ```{python}
-df[['latitude', 'longitude', 'accommodates', 'bathrooms', 'bedrooms', 'beds']].describe(percentiles=[.05,0.95]) # 0.5 is always shown
+df[
+    ['latitude', 'longitude', 'accommodates', 'bathrooms', 'bedrooms', 'beds']
+].describe(percentiles=[.05,0.95]) # 0.5 is always shown
 ```
 
 ::::
@@ -238,7 +246,7 @@ You should get that the data frame has a mix of `float64`, `int`, and `object` (
 
 ### Memory Usage
 
-If you really need to get into the 'weeds' and profile your data frame because you are crashing Python and seeing messages about 'core dumped', or seeing appallingly poor performance, then `memory_usage` is the way to go:
+If you really need to get into the 'weeds' and profile your data frame because you are crashing Python and seeing messages about 'core dumped', or experiencing appallingly poor performance (allowing for the amount of data you've just loaded!), then `memory_usage` is the way to go:
 
 ```python
 df.memory_usage(index=True, deep=True)
@@ -265,7 +273,85 @@ print(df.columns.to_list())
 
 You should get a list showing every single column. If you get `Index(['id', 'listing_url',...], dtype='object')` then you have printed the column _index_ object and you to need to tell the object to convert its output **to a list** (*hint*: Google).
 
-## Saving the File Locally
+# Managing Your Data
+
+When starting out it's common to think in terms of there being one input (the raw data) and one output (the results) to an analysis. In practice, you typically will have many intermediate outputs used as 'milestones' in the overall analysis: 
+
+- You might have a 'canonical' data file that has dealt with formatting issues and converted the columns to appropriate data types.
+- You might have a 'clean' data file that has dealt with observations that seem to be incomplete or otherwise improperly formatted.
+- You might generate subsets by region or area.
+- You might produce an 'analytical' or 'final' data set appropriate to a specific analysis.
+
+The purpose of the intermediate outputs is to accelerate each cycle in your development work: if you are re-running the *entire* analytics pipeline *every* time you make a small change at the tail-end of your processing pipeline then you will be drinking a lot of tea because most of your time will be spent watching the computer churn away at the data. It's also common to receive regular updates of data sets (e.g. InsideAirbnb data is updated rouhgly every six months, while Land Registry's Price Paid Data for the UK is updated monthly) and you'll need to know which release you're working with (i.e. have I already processed the September data???).
+
+So we try to get ahead of all this by anticipating that files will be 'versioned'. I do not mean that you'll put files in Git, but that you'll need a way to track 'provenance' and 'stage of analysis' in where and how you save your data. But we also don't want to mindlessly delete the original, 'raw' data: I always prefer to keep the original data set handy since I almost always discover that there are fields I didn't realise I needed when I started my work. 
+
+So my approach to coding is usually:
+
+1. Download the raw file and save it locally in a `data/raw` directory.
+2. Load the first `nrows` of data so that I can quickly:
+   - Check that the specification matches the data and select columns/rows accordingly.
+   - Identify obviously invalid rows/columns and investigate further.
+   - Check the code to fix data types and (where relevant) values works.
+   - Write this new, smaller file ($m` << m$ and $n` << n$) out to a `data/clean` or `data/canonical` directory (depending on whether formatting the columns is so complex or takes so long on a large data set that dealing with data types needs to be separated out from actual cleaning).
+   - Test out some initial ideas for further analysis.
+3. Re-run the code (remove the `nrows` limit) using the full data set.
+
+So you might end up with something a bit like this (or this could be overkill):
+
+<pre>
+|
+|--project/
+|  |--code/
+|     |--extract/
+|     |--canonicalise/
+|     |--clean/
+|     |--analyse/
+|  |--data/
+|     |--raw/
+|        |--2025/
+|        |--2024/
+|     |--clean/
+|        |--2025/
+|        |--2024/
+|  |--docs/
+|     |--refs/
+|     |--code/
+|     |--data/
+|  |--conf 
+</pre>
+
+There is even a coding library called `[cookiecutter](https://www.cookiecutter.io/)` that tries to help research groups and companies standardise how they manage their code and data. 
+
+::: {.callout-warning collapse="true"}
+
+#### Difficulty: Moderate
+
+Although the code here is simple, the logic is not.
+
+::: 
+
+## File Names
+
+You should always be looking for ways to _avoid_ hard-coding values that might change over time, especially those linked to the date of the data file.
+
+In this case you might try to work out how to make it easy to update the code to download the latest file. For instance, if the file looks like `20250910-listings.csv.gz` then I might well specify the `url` as `{date}-listings.csv.gz` or `{year}{month}{day}-listings.csv.gz` and set up the variables that I need beforehand, possibly in a separate 'configuration' file that I read in at the start.
+
+Using parameters makes it easier to write robust code that doesn't have unwanted side-effects. Here's a common one: you write code to download and process a file named `20251111-data.csv.gz`. After doing all the steps in Tasks 2 and 3 below you save it to `clean-data.csv.gz`. 
+
+::: {.qna}
+
+#### Question
+
+What happens when your boss asks you to process `20251211-data.csv.gz`?
+
+#### Answer
+
+You are going to lose every single output from the `20251111` data that depends on `clean-data.csv.gz` because they are *all* going to now be generated from the `20221211` data set instead. Worse, you will almost certainly have *no* way of knowing which output came from which data set.
+
+:::
+
+## File Saving
 
 ::: {.callout-tip collapse="true"}
 
@@ -290,59 +376,6 @@ if not path.exists():
     print("Done.")
 ```
 
-# Managing Your Data
-
-When starting out it's common to think in terms of there being one input (the raw data) and one output (the results) to an analysis. In practice, you will have many intermediate outputs used as 'milestones' in the overall analysis: 
-
-- You might have a 'canonical' data file that has dealt with formatting issues and converted the columns to appropriate data types.
-- You might have a 'clean' data file that has dealt with observations that seem to be incomplete or otherwise improperly formatted.
-- You might generate subsets by region or area.
-- You might produce an 'analytical' or 'final' data set appropriate to a specific analysis.
-
-**Most importantly**, if you are going to run the same analysis multiple times using data from different time periods (e.g. Land Registry's Price Paid Data is updated every month) then you will *multiple* versions of each of each of the above.
-
-But, *in addition*, you might also be working with such a large data set that processing the *entire* thing every time you want to do some development work is impractical: do you want to load 1 billion rows only to find out that you needed 1,000 of them or that one of your columns is incorrectly formatted?
-
-So although you _could_ do the next few steps as part of loading the _raw_ data, I always prefer to keep the original data set handy since I almost always discover that there are fields I didn't realise I needed when I started my work. 
-
-So my approach to coding is usually:
-
-1. Download the raw file and save it locally in a `data/raw` directory.
-2. Load the first `nrows` of data so that I can quickly:
-   - Check that the specification matches the data and select columns/rows accordingly.
-   - Identify obviously invalid rows/columns and investigate further.
-   - Check the code to fix data types and (where relevant) values works.
-   - Write this new, smaller file ($m` << m$ and $n` << n$) out to a `data/clean` or `data/canonical` directory (depending on whether formatting the columns is so complex or takes so long on a large data set that it needs to be separated out from actual cleaning).
-   - Test out some initial ideas for further analysis.
-3. Re-run the code (remove the `nrows` limit) using the full data set.
-
-::: {.callout-warning collapse="true"}
-
-#### Difficulty: Moderate
-
-Although the code here is simple, the logic is not.
-
-::: 
-
-## File Names
-
-You should always be looking for ways to _avoid_ hard-coding values that might change over time, especially those linked to the date of the data file.
-
-In this case you might try to work out how to make it easy to update the code to download the latest file. For instance, if the file looks like `2022-09-10-listings.csv.gz` then I might well specify the `url` as `{date}-listings.csv.gz` or `{year}-{month}-{day}-listings.csv.gz` and set up the variables that I need beforehand or in a separate file.
-
-Using parameters makes it easier to write robust code that doesn't have unwanted side-effects. Here's a common one: you write code to download and process a file named `20221111-data.csv.gz`. After doing all the steps in Tasks 2 and 3 below you save it to `clean-data.csv.gz`. 
-
-::: {.qna}
-
-#### Question
-
-What happens when your boss asks you to process `20221211-data.csv.gz`?
-
-#### Answer
-
-You are going to lose every single output from the 2022-11-11 data that depends on `clean-data.csv.gz` because they are *all* going to now be generated from the 2022-12-11 data set instead. Worse, you will almost certainly have *no* way of knowing which output came from which data set (because you probably stopped tracking dates very early in your application).
-
-:::
 
 ## File Loading
 
@@ -471,6 +504,76 @@ del(df)
 ```
 
 So we use `del(df)` to ensure that we aren't accidentally using the 'old' data frame. But another good reason to delete data you're no longer using is to free up memory.
+
+# Using Indexes
+
+When we use the `[[...]]` syntax we're taking a short-cut through the data by column (keeping all rows). The *full* syntax is `df[<row_selection>,<col_selection>]`. Only when we *don't* specify both does it then default to `df[<col_selection>]`. 
+
+To make the most of pandas you will need to get to grips with the logic than underpins this syntax. This is embedded in the idea of there being row and column indexes. These are *like* the columns `A`..`ZZ` and the rows 1..n in Excel. As you'll have seen in [the video](), these aren't considered *data*, they are ways to *access the data*. Unlike Excel, while every data frame must *have* an index, in pandas you can 'promote' or 'demote' any column to be used *as* an index. 
+
+The default row index is just the row number — this will be created for you if you don't specify something else when you create the data frame. The default column index is created from a file's column names (works for many types of data) but you can change these at any time.
+
+Let's start over from the saved data:
+
+```{python}
+df = pd.read_csv(path, 
+                low_memory=False, usecols=cols)
+```
+
+## Label and Numeric Indexing
+
+Perhaps this will (eventually) help to make it more clear:
+
+```{python}
+df.loc[
+    [4552, 4554, 4556, 4557],
+    ['latitude','longitude','property_type','room_type','price']
+]
+```
+
+And compare *that* with:
+
+```{python}
+df.iloc[
+    4552:4557,
+    14:19
+]
+```
+
+This code *seems* similar, but what are `iloc` and `loc`? The way I remember it is that `iloc` means *integer* location (as you would with *list indexing*), while `loc` means *label* location (as you would with *dictionary keys* or labels). I guess that should therefore be `lloc`, but you get the idea).
+
+## Numeric Indexes
+
+In this case, the **index** (the numbers down the left-hand side in bold) is numeric, so we can treat it as a *label* (which allows us to use `df.loc`) *or* a list-type index (which allows us to use `df.iloc`). So with `loc` we refer to the columns by *label*, whereas with `iloc` we refer to them by *location*; as well, `loc` allows us to access rows and columns non-sequentially/randomly by label, while `iloc` allows us to access them as a numeric range.
+
+## Non-numeric Indexes
+
+Notice how this works differently if we specify a **non-numeric index**:
+
+```{python}
+df.set_index('listing_url')[
+    ['latitude','longitude','property_type','room_type','price']
+].sample(3)
+```
+
+Notice change in indexing because 'listing_url' is no longer a column, it's the index now!
+
+```{python}
+df.set_index('listing_url').iloc[0:3,13:18] 
+```
+
+::: {.callout-caution}
+
+It's vital that you understand how this code _works_. By which I mean _why_ it does something at all, not exactly how to use `loc` and `iloc` (though that is also useful).
+
+`df.set_index(...)` changes the index from the default row number to another field in the data frame. This operation _returns_ a new data frame with `listing_url` as its index. Because set index returned a data frame, we can simply add _another_ method call (`iloc` or `loc`) on to the end of that line and _it_ returns a new data frame in turn! 
+    
+The fact that each operation returns a new data frame (or data series) is why you can even do this:
+```{python}  
+    df.set_index('listing_url').iloc[0:3].latitude.mean()
+```
+
+:::
 
 # Exploring Your Data
 
@@ -685,69 +788,6 @@ df.drop(probs[probs > cutoff].index, inplace=True)
 ```{python}
 print(f"Have reduced data frame to: {df.shape[0]:,} rows and {df.shape[1]:,} columns")
 ```
-
-# Using Indexes
-
-To recap, when we use the `[[...]]` syntax we're taking a short-cut through the data by column (keeping all rows). The *full* syntax is `df[<row_selection>,<col_selection>]`. Only when we *don't* specify both does it then default to `df[<col_selection>]`. 
-
-To make the most of pandas you will need to get to grips with the logic than underpins this syntax. This is embedded in the idea of there being row and column indexes. These are *like* the columns `A`..`ZZ` and the rows 1..n in Excel. As you'll have seen in [the video](), these aren't considered *data*, they are ways to *access the data*. Unlike Excel, while every data frame must *have* an index, in pandas you can 'promote' or 'demote' any column to be used *as* an index. 
-
-The default row index is just the row number — this will be created for you if you don't specify something else when you create the data frame. The default column index is created from a file's column names (works for many types of data) but you can change these at any time.
-
-## Label and Numeric Indexing
-
-Perhaps this will (eventually) help to make it more clear:
-
-```{python}
-df.loc[
-    [4552, 4554, 4556, 4557],
-    ['latitude','longitude','property_type','room_type','price']
-]
-```
-
-And compare *that* with:
-
-```{python}
-df.iloc[
-    4552:4557,
-    14:19
-]
-```
-
-This code *seems* similar, but what are `iloc` and `loc`? The way I remember it is that `iloc` means *integer* location (as you would with *list indexing*), while `loc` means *label* location (as you would with *dictionary keys* or labels). I guess that should therefore be `lloc`, but you get the idea).
-
-## Numeric Indexes
-
-In this case, the **index** (the numbers down the left-hand side in bold) is numeric, so we can treat it as a *label* (which allows us to use `df.loc`) *or* a list-type index (which allows us to use `df.iloc`). So with `loc` we refer to the columns by *label*, whereas with `iloc` we refer to them by *location*; as well, `loc` allows us to access rows and columns non-sequentially/randomly by label, while `iloc` allows us to access them as a numeric range.
-
-## Non-numeric Indexes
-
-Notice how this works differently if we specify a **non-numeric index**:
-
-```{python}
-df.set_index('listing_url')[
-    ['latitude','longitude','property_type','room_type','price']
-].sample(3)
-```
-
-Notice change in indexing because 'listing_url' is no longer a column, it's the index now!
-
-```{python}
-df.set_index('listing_url').iloc[0:3,13:18] 
-```
-
-::: {.callout-caution}
-
-It's vital that you understand how this code _works_. By which I mean _why_ it does something at all, not exactly how to use `loc` and `iloc` (though that is also useful).
-
-`df.set_index(...)` changes the index from the default row number to another field in the data frame. This operation _returns_ a new data frame with `listing_url` as its index. Because set index returned a data frame, we can simply add _another_ method call (`iloc` or `loc`) on to the end of that line and _it_ returns a new data frame in turn! 
-    
-The fact that each operation returns a new data frame (or data series) is why you can even do this:
-```{python}  
-    df.set_index('listing_url').iloc[0:3].latitude.mean()
-```
-
-:::
 
 # Fixing Data Types
 
