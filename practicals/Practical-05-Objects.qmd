@@ -1,6 +1,7 @@
 ---
 title: "Practical 5: Objects"
 subtitle: "From Functions to Classes"
+embed-resources: True
 filters:
   - qna
   - quarto
@@ -639,6 +640,10 @@ This content is optional but will help you to understand how object-oriented pro
 
 :::
 
+Before you get stuck into this section, bear in mind that we're *not* saying you should use Object-Oriented approaches to every programming problem you encounter. OO carries quite a high cognitive and computation overhead compared to just packaging up useful functions that return outputs you manipulate directly. 
+
+What we're doing is trying to show *how* classes are built and how they work using a conceptual framework that builds on data you're already broadly familiar with. You can find a [decent overview of programming 'styles'](https://medium.com/i-am-a-dummy-enlighten-me/programming-styles-types-benefits-and-drawbacks-d25d72ce3db9) easily enough online but really understanding when each is appropriate is a much bigger proposition. You will tend to find OO used with *applications* in which different bits need to pass information back and forth in structured ways (e.g. who is the user and what privileges do they have? what data can go into this chart? etc.)
+
 ::: {.callout-caution collapse="true"}
 
 #### Difficulty: &#129327;.
@@ -682,17 +687,21 @@ except:
 
 ```{python}
 from bitarray import bitarray
-# Base class shape
-class listing(object): # Inherit from base class 
-    def __init__(self, name:str, price:float, bedrooms:int, availability:bitarray=bitarray(14)):
-        self.listing_type = self.__class__.__name__.capitalize()
-        self.listing_name = name
-        self.listing_price = price
-        self.listing_bedrooms = bedrooms
-        self.listing_availability = availability
+
+# This automatically generates methods and
+# other useful features for child classes
+from dataclasses import dataclass, field
+
+@dataclass
+class Listing(object): # Inherit from base class 
+
+    listing_name: str = field(default_factory=str)
+    listing_price: float = field(default_factory=float)
+    listing_bedrooms: int = field(default_factory=int)
+    listing_availability: bitarray = field(default_factory=bitarray)
     
     def name(self) -> str:
-        raise Exception("Unimplemented method error.")
+        return self.listing_name
 
     def price(self) -> float:
         return self.listing_price
@@ -704,13 +713,13 @@ class listing(object): # Inherit from base class
         return bitarray(self.listing_availability & requested).any()
 
     def type(self):
-        return(self.listing_type)
+        return self.__class__.__name__
 ```
 
-We can now create a new listing object (an *instance* of the shape class) but we can't do much that is useful with it:
+We can now create a new listing object (an *instance* of the Listing class) but we can't do much that is useful with it:
 
 ```{python}
-l = listing('A listing', 25.00, 3, bitarray(14))
+l = Listing('A listing', 25.00, 3, bitarray(14))
 
 try: 
     print(f"I am a {l.type()}")
@@ -735,14 +744,17 @@ Can you work out the missing elements that will allow you to create a flat class
 
 ```python
 # Flat class
-class flat(listing): # Inherit from listing 
-    def __init__(self, name:str, price:float, bedrooms:int, floor:int, availability:bitarray=bitarray(10)):
-        super().__init__(name, price, bedrooms, availability)
-        self.listing_floor = floor
+class Flat(Listing): # Inherit from listing 
+
+    listing_floor = -99
+
+    def __init__(self, name:str, price:float, bedrooms:int, floor:int, availability:bitarray=bitarray(14)):
+        ??.__init__(name, price, bedrooms, availability)
+        self.listing_floor = ??
 
 # If you've done everything correctly then
 # you will no longer get an error here...
-f = flat('Room With a View', 73.00, 0, )
+f = Flat('Room With a View', 73.00, 0, )
 
 try: 
     print(f"I am a {f.type()}")
@@ -755,7 +767,10 @@ except Exception as e:
 
 ```{python}
 # Flat class
-class flat(listing): # Inherit from listing 
+class Flat(Listing): # Inherit from listing 
+
+    listing_floor = -99
+
     def __init__(self, name:str, price:float, bedrooms:int, floor:int, availability:bitarray=bitarray(14)):
         super().__init__(name, price, bedrooms, availability)
         self.listing_floor = floor
@@ -768,7 +783,7 @@ class flat(listing): # Inherit from listing
 
 # If you've done everything correctly then
 # you will no longer get an error here...
-f = flat('Room With a View', 73.00, 0, 5, bitarray('11000001100000'))
+f = Flat('Room With a View', 73.00, 0, 5, bitarray('11000001100000'))
 
 try: 
     print(f"I am a {f.type()}")
@@ -790,7 +805,7 @@ print(f" - My name is `{f.name()}`")
 If you were to create a *second* flat listing you can see how things change automatically based on the attributes:
 
 ```python
-f2 = flat('Room With a Better View', 123.00, 2, 6, bitarray('10000001000000'))
+f2 = Flat('Room With a Better View', 123.00, 2, 6, bitarray('10000001000000'))
 print(f"I am a `{f2.type()}`")
 print(f"My name is `{f2.name()}`")
 ```
@@ -798,7 +813,7 @@ print(f"My name is `{f2.name()}`")
 ```{python}
 #| echo: false
 #| output: asis
-f2 = flat('Room With a Better View', 123.00, 2, 6, bitarray('10000001000000'))
+f2 = Flat('Room With a Better View', 123.00, 2, 6, bitarray('10000001000000'))
 print(f" - I am a `{f2.type()}`")
 print(f" - My name is `{f2.name()}`")
 ```
@@ -818,7 +833,7 @@ Can you work out the missing elements that will allow you to create a houseboat 
 
 ```python
 # Houseboat class
-class houseboat(listing): # Inherit from shape
+class Houseboat(Listing): # Inherit from shape
     def __init__(self, ...):
         # Something...
 
@@ -827,7 +842,7 @@ class houseboat(listing): # Inherit from shape
 
 # If you've done everything correctly then
 # you will no longer get an error here...
-h = houseboat(15)
+h = Houseboat(15)
 
 try: 
     print(f"I am a {h.type()}")
@@ -844,7 +859,7 @@ except Exception as e:
 
 ```{python}
 # Houseboat class
-class houseboat(listing): # Inherit from shape
+class Houseboat(Listing): # Inherit from shape
     def __init__(self, name:str, price:float, bedrooms:int, availability:bitarray=bitarray(14), onwater:bool=True):
         super().__init__(name, price, bedrooms, availability)
         self.listing_onwater = onwater
@@ -860,7 +875,7 @@ class houseboat(listing): # Inherit from shape
 
 # If you've done everything correctly then
 # you will no longer get an error here...
-h = houseboat('Bargemaster', 5.25, 1)
+h = Houseboat('Bargemaster', 5.25, 1)
 
 try: 
     print(f"I am a {h.type()}")
@@ -905,10 +920,10 @@ Let's finish with a demonstration of how we can use these classes in some kind o
 #### Question
 
 ```python
-f1 = flat('Room With a View', 73.00, 0, 5, bitarray('11000001100000'))
-f2 = flat('Room With a Better View', 123.00, 2, 6, bitarray('10000001000000'))
-h1 = houseboat('Bargemaster', 5.25, 1)
-h2 = houseboat('Sinking', 15.25, 1, bitarray('11111110000000'))
+f1 = Flat('Room With a View', 73.00, 0, 5, bitarray('11000001100000'))
+f2 = Flat('Room With a Better View', 123.00, 2, 6, bitarray('10000001000000'))
+h1 = Houseboat('Bargemaster', 5.25, 1)
+h2 = Houseboat('Sinking', 15.25, 1, bitarray('11111110000000'))
 
 listings = [f1, f2, h1, h2]
 
@@ -925,10 +940,10 @@ for a in available:
 #### Answer
 
 ```{python}
-f1 = flat('Room With a View', 73.00, 0, 5, bitarray('11000001100000'))
-f2 = flat('Room With a Better View', 123.00, 2, 6, bitarray('10000001000000'))
-h1 = houseboat('Bargemaster', 5.25, 1)
-h2 = houseboat('Sinking', 15.25, 1, bitarray('11111110000000'))
+f1 = Flat('Room With a View', 73.00, 0, 5, bitarray('11000001100000'))
+f2 = Flat('Room With a Better View', 123.00, 2, 6, bitarray('10000001000000'))
+h1 = Houseboat('Bargemaster', 5.25, 1)
+h2 = Houseboat('Sinking', 15.25, 1, bitarray('11111110000000'))
 
 listings = [f1, f2, h1, h2]
 

@@ -1,16 +1,18 @@
 ```{python}
 from pathlib import Path
 from requests import get
-from urllib.parse import urlparse
 from functools import wraps
 
 def check_cache(f):
     @wraps(f)
     def wrapper(src:str, dst:str, min_size=100) -> Path:
-        url = Path(urlparse(src)) # We assume that this is some kind of valid URL 
-        fn  = Path(url.path).name # Extract the filename
+        if src.find('?') == -1:
+            url = Path(src)
+        else:
+            url = Path(src[:src.find('?')])
+        fn  = url.name  # Extract the filename
         dsn = Path(f"{dst}/{fn}") # Destination filename
-        if dsn.isfile() and dsn.stat().st_size > min_size:
+        if dsn.is_file() and dsn.stat().st_size > min_size:
             print(f"+ {dsn} found locally!")
             return(dsn)
         else:
@@ -19,7 +21,7 @@ def check_cache(f):
     return wrapper
 
 @check_cache
-def cache_data(src:Path, dst:Path) -> Path:
+def cache_data(src:Path, dst:Path) -> str:
     """Downloads a remote file.
     
     The function sits between the 'read' step of a pandas or geopandas
@@ -56,5 +58,5 @@ def cache_data(src:Path, dst:Path) -> Path:
         
     print(' + Done downloading...')
 
-    return dst
+    return dst.resolve()
 ```

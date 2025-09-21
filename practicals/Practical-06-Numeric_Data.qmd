@@ -1,12 +1,10 @@
 ---
 title: "Practical 6: Numeric Data"
 subtitle: "Easing into EDA with Pandas"
-format: html
+embed-resources: True
 filters:
   - qna
   - quarto
-# html:
-#   - embed-resources: true
 ---
 
 <style type="text/css">
@@ -337,7 +335,7 @@ You should always be looking for ways to _avoid_ hard-coding values that might c
 
 In this case you might try to work out how to make it easy to update the code to download the latest file. For instance, if the file looks like `20250910-listings.csv.gz` then I might well specify the `url` as `{date}-listings.csv.gz` or `{year}{month}{day}-listings.csv.gz` and set up the variables that I need beforehand, possibly in a separate 'configuration' file that I read in at the start.
 
-Using parameters makes it easier to write robust code that doesn't have unwanted side-effects. Here's a common one: you write code to download and process a file named `20251111-data.csv.gz`. After doing all the steps in Tasks 2 and 3 below you save it to `clean-data.csv.gz`. 
+Using parameters makes it easier to write robust code that doesn't have unwanted side-effects. Here's a common one: you write code to download and process a file named `20251111-data.csv.gz`. You save the outputs to `clean-data.csv.gz`. 
 
 ::: {.qna}
 
@@ -362,12 +360,12 @@ You are going to lose every single output from the `20251111` data that depends 
 Now save the file somewhere local so that you don't have to keep downloading 40MB of compressed data every time you want to start the practical. We'll be using this data for the rest of term, so you might as well save yourself some time and bandwidth! We'll talk more about data processing pipelines over the course of the term, but I'd suggest putting this data set into a `data/raw` folder because then you can have directories like `data/clean` and `data/analytical` as you move through the process of cleaning and prepping your data for analysis.
 
 ```{python}
-path = Path(f"data/raw/{url.split('/')[-1]}") # What does this do?
+path = Path(f'data/raw/{Path(url).name}') # What does this do?
 print(f"Writing to: {path}")
 ```
 
 ```{python}
-if not path.parent.exists():      # And what does *this* do?
+if not path.parent.exists(): # And what does *this* do?
     print(f"Creating {path.parent}")
     path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -446,14 +444,17 @@ from conf import *
 Now let's tackle the column problem... In order to avoid having to load lots of data that we aren't sure we need yet, we can restrict the columns that we load. We got `cols` below by copying the output of (`df.columns.to_list()` and then removing the fields that we thought we _weren't_ interested in.
 
 ```{python}
-cols = ['id', 'listing_url', 'last_scraped', 'name', 'description', 'host_id', 
-        'host_name', 'host_since', 'host_location', 'host_about', 'host_is_superhost', 
-        'host_listings_count', 'host_total_listings_count', 'host_verifications', 
-        'latitude', 'longitude', 'property_type', 'room_type', 'accommodates', 
-        'bathrooms', 'bathrooms_text', 'bedrooms', 'beds', 'amenities', 'price', 
-        'minimum_nights', 'maximum_nights', 'availability_365', 'number_of_reviews', 
-        'first_review', 'last_review', 'review_scores_rating', 'license', 
-        'reviews_per_month']
+cols = ['id', 'listing_url', 'last_scraped', 'name', 
+    'description', 'host_id', 'host_name', 'host_since', 
+    'host_location', 'host_about', 'host_is_superhost', 
+    'host_listings_count', 'host_total_listings_count', 
+    'host_verifications', 'latitude', 'longitude', 
+    'property_type', 'room_type', 'accommodates', 
+    'bathrooms', 'bathrooms_text', 'bedrooms', 'beds', 
+    'amenities', 'price', 'minimum_nights', 'maximum_nights', 
+    'availability_365', 'number_of_reviews', 
+    'first_review', 'last_review', 'review_scores_rating', 
+    'license', 'reviews_per_month']
 print(f"Cols contains {len(cols)} columns.")
 ```
 
@@ -495,9 +496,12 @@ print(f"Data frame is {df.shape[0]:,} x {df.shape[1]}")
 
 ## Releasing Memory
 
-A particular risk when working with Jupyter notebooks is that you either: a) have run code in an order *other* than the order shown in the notebook; or b) have made edits to code but *not* re-run the changed code. So you're still working from code that is no longer visible! 
+Two risks when working with Jupyter notebooks are: 
 
-When that happens you can get *very* confusing issues because what you *see* doesn't square with what the computer has *executed*. To resolve this without having to re-run the entire notebook (though that can *also* be a good choice!) you might want to 'delete' the current object and re-load or re-run the relevant data or code. 
+1. You have run code in an order *other* than the order shown in the notebook; or 
+2. You have made edits to code but *not* re-run the changed code. 
+
+So you're still working from code that is no longer visible or where the a step (or five) has been missed/changed since you ran it! When that happens you can get *very* confusing issues because what you *see* doesn't square with what the computer has *executed*. To resolve this without having to re-run the entire notebook (though that can *also* be a good choice!) you might want to 'delete' the current object and re-load or re-run the relevant data or code. 
 
 ```{python}
 del(df)
@@ -507,60 +511,63 @@ So we use `del(df)` to ensure that we aren't accidentally using the 'old' data f
 
 # Using Indexes
 
+So let's start over from the saved data:
+
+```{python}
+df = pd.read_csv(path, low_memory=False, usecols=cols)
+```
+
 When we use the `[[...]]` syntax we're taking a short-cut through the data by column (keeping all rows). The *full* syntax is `df[<row_selection>,<col_selection>]`. Only when we *don't* specify both does it then default to `df[<col_selection>]`. 
 
-To make the most of pandas you will need to get to grips with the logic than underpins this syntax. This is embedded in the idea of there being row and column indexes. These are *like* the columns `A`..`ZZ` and the rows 1..n in Excel. As you'll have seen in [the video](), these aren't considered *data*, they are ways to *access the data*. Unlike Excel, while every data frame must *have* an index, in pandas you can 'promote' or 'demote' any column to be used *as* an index. 
+To make the most of pandas you will need to get to grips with the logic than underpins this syntax. This is embedded in the idea of there being row and column indexes. These are *like* the columns `A`..`ZZ` and the rows `1`..$n$ in Excel. As you'll have seen in [the video]({{< var module.web >}}sessions/week6.html#pre-recorded-lectures), these aren't considered *data*, they are ways to *access the data*. Unlike Excel, while every data frame must *have* an index, in pandas you can 'promote' or 'demote' any column to be used *as* an index. 
 
-The default row index is just the row number — this will be created for you if you don't specify something else when you create the data frame. The default column index is created from a file's column names (works for many types of data) but you can change these at any time.
+The **default row index** is just the row number and this will be created for you if you don't specify something else when you create the data frame. The **default column index** is created from a file's column names (works for many types of data) but you can also change these at any time.
 
-Let's start over from the saved data:
+## Numeric Indexing
 
-```{python}
-df = pd.read_csv(path, 
-                low_memory=False, usecols=cols)
-```
+You can always access rows and columns by their **integer location** as if it is a 2D list and you want to access the 3rd to 5th columns and the 9th to 425th rows. So if you remember that `iloc` means you're using the index location that will help you to work out what's going on.
 
-## Label and Numeric Indexing
-
-Perhaps this will (eventually) help to make it more clear:
-
-```{python}
-df.loc[
-    [4552, 4554, 4556, 4557],
-    ['latitude','longitude','property_type','room_type','price']
-]
-```
-
-And compare *that* with:
+So can you read this:
 
 ```{python}
 df.iloc[
-    4552:4557,
-    14:19
+    4552:4557, # <- rows
+    14:19      # <- columns
 ]
 ```
 
-This code *seems* similar, but what are `iloc` and `loc`? The way I remember it is that `iloc` means *integer* location (as you would with *list indexing*), while `loc` means *label* location (as you would with *dictionary keys* or labels). I guess that should therefore be `lloc`, but you get the idea).
+We're accessing the 4552nd through 4556th rows, and the 14th through 18th columns.
 
-## Numeric Indexes
+## Label Indexing
 
-In this case, the **index** (the numbers down the left-hand side in bold) is numeric, so we can treat it as a *label* (which allows us to use `df.loc`) *or* a list-type index (which allows us to use `df.iloc`). So with `loc` we refer to the columns by *label*, whereas with `iloc` we refer to them by *location*; as well, `loc` allows us to access rows and columns non-sequentially/randomly by label, while `iloc` allows us to access them as a numeric range.
+Where it can get confusing is when you see this:
+
+```{python}
+df.loc[
+    4552:4557,
+    ['latitude','longitude','property_type','room_type','price']
+]
+```
+
+This code *seems* similar, but why does this use `loc` and not `iloc`, and why doesn't it actually return the same data??? In this case, the **index** (the numbers down the left-hand side in bold) is numeric, so we can treat it as either a *label* (which allows us to use `df.loc`) *or* a list-type index (which allows us to use `df.iloc`). So with `loc` the value `4557` is treated as a 'key' so it's retrieved, whereas with `.iloc` it's treated like a list index accessed with `range` and so *isn't* returned. It's a bit weird, but hopefully makes *some* sense now.
 
 ## Non-numeric Indexes
 
-Notice how this works differently if we specify a **non-numeric index**:
-
-```{python}
-df.set_index('listing_url')[
-    ['latitude','longitude','property_type','room_type','price']
-].sample(3)
-```
-
-Notice change in indexing because 'listing_url' is no longer a column, it's the index now!
+Notice the change in indexing because 'listing_url' is no longer a column, it's the index now!
 
 ```{python}
 df.set_index('listing_url').iloc[0:3,13:18] 
 ```
+
+Notice how this works differently if we specify a **non-numeric index**:
+
+```{python}
+df.set_index('listing_url').loc[
+    :, # <- Special syntax that means 'all rows' (or all columns)
+    ['latitude','longitude','property_type','room_type','accommodates']
+].head(3)
+```
+
 
 ::: {.callout-caution}
 
@@ -577,11 +584,10 @@ The fact that each operation returns a new data frame (or data series) is why yo
 
 # Exploring Your Data
 
-Let's start over from the saved data:
+Let's start over *again* from the saved data:
 
 ```{python}
-df = pd.read_csv(path, 
-                low_memory=False, usecols=cols)
+df = pd.read_csv(path, low_memory=False, usecols=cols)
 ```
 
 ## Selecting Rows 
@@ -590,7 +596,7 @@ df = pd.read_csv(path,
 
 #### &#128279; Connections
 
-You will want to refer to the [Randomness](https://jreades.github.io/fsds/sessions/week5.html#lectures) lecture to understand how we can select the _same_ random sample each time and to the session on [Logic](https://jreades.github.io/fsds/sessions/week5.html#lectures) lecture to cover `NaN`s and `NA`s.
+You will want to refer to the [Randomness]({{< var module.web >}}sessions/week5.html#pre-recorded-lectures) lecture to understand how we can select the _same_ random sample each time and to the session on [Logic]({{< var module.web >}}sessions/week5.html#pre-recorded-lectures) lecture to cover `NaN`s and `NA`s.
 
 :::
 
@@ -624,41 +630,6 @@ df.sample(3, random_state=42)
 
 ::::
 
-## Selecting Columns 
-
-If you look very closely, you'll see that pandas isn't showing you the _full_ range of columns since there are `{python} f"{df.shape[1]:,}"`! If you'd like to only look at specific columns then you can specify them after the sample method call using what looks like a nested list: `[[<column names as strings>]]`. 
-
-I'd like you to sample 3 random rows, selecting the 'latitude', 'longitude', 'license', 'property_type', 'room_type' and 'price' columns only.
-
-:::: {.qna}
-
-#### Question
-
-```python
-df.sample(??)[??]
-```
-
-Your answer should look like this:
-
-```{python}
-#| echo: false
-df.sample(3)[
-    ['latitude', 'longitude', 'license', 'property_type', 'room_type', 'price']
-]
-```
-
-#### Answer
-
-Notice that we can make things a little easier to read using the whitespace:
-
-```{python}
-df.sample(3)[
-    ['latitude', 'longitude', 'license', 'property_type', 'room_type', 'price']
-]
-```
-
-::::
-
 ## Dealing with NaNs and Nulls
 
 ::: {.callout-caution collapse="true"}
@@ -671,10 +642,6 @@ There is a _lot_ going on here and you should be paying close attention.
 
 If you really dig into the data you will see that a number of data types that aren't 'appropriate' for their contents: the id columns are floats; the dates aren't dates; there's a boolean that's not a boolean... It would be nice to fix these! 
 
-```python
-# Add some columns here...
-```
-
 ::: {.callout-note}
 
 I had intended to ask you to fix these by combining code from previous weeks with information provided in the lecture, but it turns out that the InsideAirbnb data set is *dirty*. There are a lot of `NaN` values and some of these are *deeply* problematic for some of the column types in pandas. There are also a number of challenges with other columns so, instead, I've opted to show you how I would clean this data as a *first pass* to get it into a format where it's tractable for further cleaning.
@@ -686,21 +653,21 @@ I had intended to ask you to fix these by combining code from previous weeks wit
 The reason I'm not asking you to do this part yourselves is that it took me nearly an hour just to work out why I couldn't convert some of the columns to the right data types; then I started finding rows like these:
 
 ```{python}
-df[df.price.isna()]
+df[df.price.isna()][['id','name','price','room_type']].head(4)
 ```
 
 ```{python}
-df[df.room_type.isna()]
+df[df.room_type.isna()][['id','name','price','room_type']].head(4)
 ```
 
 ```{python}
-df[~(df.price.str.startswith('$', na=False))]
+df[~(df.price.str.startswith('$', na=False))][['id','name','price','room_type']].head(4)
 ```
 
-If I had to guess, I'd say that it's some kind of partial extract/write process because there _are_ elements in some of the problem row(s) that look right but they are in the wrong columns. So we can _probably_ drop some of these rows, but one thing to do is look at the frequency of NaNs across the data frame _first_. So we need to look for NaNs and Nulls, but it's quite obvious that a `NaN` in the listing id is a basic problem and we should [drop these](https://chrisalbon.com/python/data_wrangling/pandas_dropping_column_and_rows/).
+If I had to guess, I'd say that it's the result some kind of partial extract/write process because there _are_ elements in some of the problem row(s) that look right but they are in the wrong columns. So we can _probably_ drop some of these rows, but one thing to do is look at the frequency of NaNs across the data frame _first_. So we need to look for NaNs and Nulls, but it's quite obvious that a `NaN` in the listing id is a basic problem and we should [drop these](https://chrisalbon.com/python/data_wrangling/pandas_dropping_column_and_rows/).
 
 ```{python}
-df[df.id.isna()][['id','listing_url','name','description','host_id','host_name','price']]
+df[df.id.isna()][['id','name','price','room_type']]
 ```
 
 As always, if you don't know that's going on, break it down:
@@ -714,7 +681,9 @@ So this shows that only one row in the 10,000 row sub-sample has a NaN for its i
 If you're not sure what the next line does, try breaking it down by running the inner bits before you run the `drop` command; and also try looking online for examples of how to use `df.drop` (e.g. just up above):
 
 ```{python}
+print(f"Data frame contains {df.shape[0]:,} rows.")
 df.drop(df[df.id.isna()].index.array, axis=0, inplace=True)
+print(f"Data frame contains {df.shape[0]:,} rows.")
 ```
 
 With that really troublesome data out of the way, you can now turn to [counting NaNs or Nulls](https://www.delftstack.com/howto/python-pandas/how-to-count-the-nan-values-in-a-column-in-pandas-dataframe/#df.isnull.sum-method-to-count-nan-occurrences) in the remaining data with a view to identifying other rows that can probably be dropped.
@@ -735,10 +704,15 @@ df.isnull().sum(axis=0).sort_values(ascending=False)
 df.isnull().sum(axis=0).sort_values(ascending=False)[:12]
 ```
 
-The most obvious ones here are: bathrooms, license, and host_about.
+```{python}
+#| echo: False
+vals = ', '.join(df.isnull().sum(axis=0).sort_values(ascending=False)[:12].index.to_list()[:4])
+```
+
+The most obvious ones here are: `{python} vals`.
 
 ```{python}
-df.drop(columns=['bathrooms','license','host_about'], inplace=True)
+df.drop(columns=['license','host_about'], inplace=True)
 ```
 
 Because we have dropped everything `inplace` the code simply runs and doesn't return anything.
@@ -750,18 +724,12 @@ We now know that there _are_ still quite a few problems, but we do still need a 
 Notice here that the change from `axis=0` to `axis=1` changes the 'direction' of the `sum` from columns to rows. And we are getting back a data series because the summing operation reduces it to just one column.
 
 ```{python}
-df.isnull().sum(axis=1).sort_values(ascending=False).head(20)
+df.isnull().sum(axis=1).sort_values(ascending=False).head(10)
 ```
 
-So that is Series showing how many NaN values there are by index value. You should see two columns of numbers: the first is the row id, the second is the number of Nulls in that row.
+So that `Series` shows how many `NaN` values there are by index value (i.e. the row number). The first column is the row id, the second is the number of NaNs in that row.
 
 If we save the results to a variable called `probs` (i.e. problems) then we can decide what to do next.
-
-::: {.callout-warning}
-
-There's a chance that Python will complain why you try to run the third line of code. This is particularly likely if you are using Anaconda Python directly (i.e. not Podman/Docker). In that case you need to add the code listed at the start of Task 5.
-
-:::
 
 ```{python}
 
@@ -771,29 +739,28 @@ probs.plot.hist(bins=30) # Oooooooh, check out what we can do with a series!
 
 ```
 
-Looking at this histogram, these look like two groups in the data so I would start there. I would take values greater than 3–5 as being ones that are most likely be problematic. We can use the index from `probs` to select out the rows we want to inspect from the main data frame.
+Looking at this histogram, I would think about dropping rows missing more than about 5 values on the basis that they are the ones that are most likely be problematic. We can use the index from `probs` to select out the rows we want to inspect from the main data frame.
 
 Here's another bit of code that bears unpacking:
 
 ```{python}
+print(f"df contains {df.shape[0]:,} rows.")
 cutoff = 5
 df.drop(probs[probs > cutoff].index, inplace=True)
+print(f"df contains {df.shape[0]:,} rows.")
 ```
 
 1. `probs > `{python} cutoff``: this selects only those rows in the 'probs' series whose value is greater than `{python} cutoff`
 2. `probs[...].index` returns the index values from the Series, which we will then pass to the `drop` command.
 3. `df.drop(..., inplace=True)` will then drop the rows selected by `probs[probs>`{python} cutoff`].index`.
 
-
-```{python}
-print(f"Have reduced data frame to: {df.shape[0]:,} rows and {df.shape[1]:,} columns")
-```
-
 # Fixing Data Types
 
-If you want to challenge yourself, then I'd suggest trying to work out how to adapt what we saw in previous weeks using the data type dictionary to map column names to column types; however, a more straightforward way to do this is to create different for loops for each:
+When we fix the data types we are undertaking a kind of data 'profiling': working out what kind of data we are working with and how it should be represented at the level of observations and columns. There are *huge* benefits to computer memory and diskspace usage to profiling and, consequently, huge gains to be made in the speed of data analysis. 
 
-##  Profiling (Optional)
+If you want to challenge yourself, then I'd suggest trying to work out how to adapt what we saw in previous weeks using the data type dictionary to map column names to column types; however, a more straightforward way to do this is to create different for loops for each.
+
+##  Profiling (Not Supported)
 
 ::: {.callout-tip collapse="true"}
 
@@ -803,40 +770,10 @@ If you want to challenge yourself, then I'd suggest trying to work out how to ad
 
 The Pandas Profiling tool (rebranded a year or so back as [ydata-profiling](https://github.com/ydataai/ydata-profiling)) offers an alternative way of understanding what's going on in your data. The output [looks rather nice](https://docs.profiling.ydata.ai/) and you might be tempted to ask why we didn't use this straight away on the full data set -- well, if you really want to know, see what happens when you profile all 70,000-odd rows and 70-odd columns in the raw data frame... in effect: while it's 'nice to have', the likelihood of crashing your computer increases significantly and it's a bit of a tangent, so that's why it's no longer included in the Podman image.
 
-If you *do* want to explore this then you'll need to install the library, and **this is a good chance to look at a quite sophisiticated way to install software on another machine**:
+If you *do* want to explore this then you'll need to install the library, and **this is a good chance to look at how to install software on another machine**:
 
 ```python
 from ydata_profiling import ProfileReport
-```
-
-### Specify the Profiling Columns
-
-Looking back over earlier code see if you can work out how to profile `latitude`, `longitude`,and `review_scores_rating` together.
-
-:::: {.qna}
-
-#### Question
-
-```python
-profile = ProfileReport(??, title="Pandas Profiling Report")
-```
-
-#### Answer
-
-```python
-profile = ProfileReport(df[['latitude','longitude','review_scores_rating']], title="Pandas Profiling Report")
-```
-
-::::
-
-### Profiling Targets
-
-You can write the profile either directly into the Jupyter notebook (this file) or into a separate HTML (i.e. Web) page.
-
-```python
-profile.to_notebook_iframe()
-# You can also write this profile to a web page:
-# profile.to_file("your_report.html")
 ```
 
 ## Managing Memory
@@ -847,16 +784,18 @@ profile.to_notebook_iframe()
 
 :::
 
-As to _why_ you'd want to fix your data types, there are two reasons: 1) to ensure that you can make the *most* of your data; 2) to ensure that it takes up as little space as possible in memory. Some simple examples:
+So as to _why_ you'd want to fix your data types, there are two reasons: 1) to ensure that you can make the *most* of your data; 2) to ensure that it takes up as little space as possible in memory. Some simple examples:
 
-- A column containing only `'True'` (4 bytes) and `'False'` (5 bytes) will take up much more space than a column containing only `True` and `False` (1 bit each).
+- A column containing only the strings `'True'` (4 bytes) and `'False'` (5 bytes) will take up vastly more space than a column containing only `True` and `False` (1 **bit** each).
 - A column containing only `'Red'`, `'Green'`, and `'Blue'` (3, 5, and 4 bytes each respectively) will take up much more space that a column where we use the numbers `1, 2, 3` to represent these values and have a map that tells us `1==Red`, `2==Blue`, and `3==Green`.
 
-Let's test this idea out:
+Let's test this idea out before looking more closely at how to convert each type of data:
 
 ```{python}
-rtm = df.room_type.memory_usage(deep=True) # Room Type Memory
-ctm = df.room_type.astype('category').memory_usage(deep=True) # Categorical Type Memory
+# String type memory usage
+rtm = df.room_type.memory_usage(deep=True) 
+# Categorical type memory usage
+ctm = df.room_type.astype('category').memory_usage(deep=True) 
 
 print(f"The raw memory usage of `room_type` is {rtm/1024:,.0f} Kb.")
 print(f"The categorical memory usage of `room_type` is {ctm/1024:,.0f} Kb.")
@@ -864,8 +803,10 @@ print(f"That's {(ctm/rtm)*100:.0f}% of the original!")
 ```
 
 ```{python}
-shm = df.host_is_superhost.memory_usage(deep=True) # Super Host Memory
-bhm = df.host_is_superhost.replace({'f':False, 't':True}).astype('bool').memory_usage(deep=True) # Boolean Host Memory
+# String type memory usage
+shm = df.host_is_superhost.memory_usage(deep=True) 
+# Boolean type memory usage
+bhm = df.host_is_superhost.replace({'f':False, 't':True}).astype('bool').memory_usage(deep=True) 
 
 print(f"The raw memory usage of `host_is_superhost` is {shm/1024:,.0f} Kb.")
 print(f"The boolean memory usage of `host_is_superhost` is {bhm/1024:,.0f} Kb.")
@@ -887,7 +828,7 @@ bools = ['host_is_superhost']
 df.sample(5, random_state=43)[bools]
 ```
 
-Here we have to `map` 't' to True and 'f' to False _before_ converting the column to a boolean type. If you simply tried to replace them with the strings 'True' and 'False', then the conversion would run into the same problem as Week 3: any string that is not `None` will convert a True boolean.
+Here we have to `map` 't' to True and 'f' to False _before_ converting the column to a boolean type. If you simply tried to replace them with the strings 'True' and 'False', then any string that is not `None` would convert to a `True` boolean.
 
 ```{python}
 # This approach requires us to map 't' 
@@ -1007,7 +948,7 @@ df.sample(5, random_state=42)[cats]
 
 :::
 
-We'll have to put some more work into deal with the description and other more free-from text fields later in the term, but for now let's just deal with a straightforward one: price!
+We'll have to put some more work into dealing with the description and other 'free-from' text fields later in the term, but for now let's just deal with a straightforward one: price!
 
 ```{python}
 money = ['price']
@@ -1058,8 +999,10 @@ for m in money:
 df.sample(5, random_state=42)[money]
 ```
 
+And here's a final thing to note that looks... a little odd:
+
 ```{python}
-df.sort_values(by='price', ascending=False).head(3)[['id','name','price','minimum_nights']]
+df.sort_values(by='price', ascending=False).head(5)[['id','name','price','minimum_nights']]
 ```
 
 ## Dealing with Integers
@@ -1070,7 +1013,7 @@ df.sort_values(by='price', ascending=False).head(3)[['id','name','price','minimu
 
 :::
 
-This is the issue that made me abandon the idea of making you clean the data yourselves. Although _floats_ have no issues with `np.nan` in the Series, by default there are no numpy integer arrays that can cope with NaNs. This was such a major issue for Pandas that they've actually created their _own_ data type that does support NaN values in integer columns. There are a lot of integer columns, but only one of them seems to be a problem.
+This is the issue that made me abandon the idea of making you clean the data yourselves. Although _floats_ have no issues with `np.nan` in the Series, by default there are no numpy integer arrays that can cope with NaNs. This was such a major issue for Pandas that they've actually created their _own_ data type that *does* support NaN values in integer columns. There are a lot of integer columns, but only one of them seems to be a problem.
 
 ```{python}
 ints  = ['id','host_id','host_listings_count','host_total_listings_count','accommodates',
@@ -1109,21 +1052,24 @@ df.info()
 Also at this point I would save a copy of the cleaned data, though I would only consider this data _partially_ cleaned since we've not made it any further than just ensuring that each column is in an appropriate format and that some particularly problematic rows have been dropped!
 
 ```{python}
-out = Path(f'data/clean/{path.name}')
+csv_out = Path(f'data/clean/{path.name}')
+pq_out  = Path(f'data/clean/{path.name.replace('.csv.gz','.parquet')}')
 
-if not out.parent.exists():
-    print(f"Creating {out.parent}")
+if not csv_out.parent.exists():
+    print(f"Creating {csv_out.parent}")
     out.parent.mkdir(parents=True, exist_ok=True)
     
-df.to_csv(out, index=False)
+df.to_csv(csv_out, index=False)
+df.to_parquet(pq_out, index=False)
+print(f"Saved {df.shape[0]:,} rows of {df.shape[1]:,} columns to {csv_out.resolve()}")
 print("Done.")
 ```
 
-Feather is an alternative format (gradually being replaced by parquet, which is more widely supported) for data interchange between R and Python: it's fast, it preserves data types, it's compressed, and it will avoid the kinds of the problems that come up when you move to/from CSV as a default.
+We'll shortly begin to look at the `parquet` file format because it's fast, it preserves data types, it's compressed, and it will avoid the kinds of the problems that come up when you move to/from CSV as a default; however, for now let's keep working with what we understand.
 
 # Selection using Criteria
 
-So far we've been taking primarily a row and column view of the data, now we want to think about selecting ranges from within the data set...
+So far we've been taking primarily a row and column view of the data, now we want to think more formally about selecting ranges from within the data set...
 
 ## Selecting using Data Types
 
@@ -1159,15 +1105,7 @@ df.select_dtypes(include=['float64','int64'])
 
 :::
 
-What if we wanted to find whole homes listings for more than $100/night? 
-
-To do this we use a combination of the selection approaches above in combination with conditionals, but first we need to see what sort of properties there are in the data set! `groupby` is a really useful function that we'll come back to later in the term, but for now notice that it helps us to group the analysis by `room_type` so that subsequently asking for the `property_type` value counts allows the same `property_type` to appear in more than once place if it's associated with more than one `room_type`.
-
-```{python}
-df.groupby('room_type', observed=True)['property_type'].value_counts()
-```
-
-Now try to select only the `Entire home/apt` room type:
+Conditional selection is usally done as a combination of the selection approaches above in combination with conditionals. So to try to select only the `Entire home/apt` room type we are testing for cases where the `room_type` equals our target term (`Entire home/apt`):
 
 :::: {.qna}
 
@@ -1199,7 +1137,7 @@ df[df.room_type=='Entire home/apt']['property_type'].value_counts().head(10)
 
 ::: 
 
-OK, now let's look for the Entire home/apt listings that are more expected than average... to do *that* let's get a sense of where the mean and median value fall:
+OK, now let's look for the Entire home/apt listings that cost more than the average price of all listings... to do *that* let's get a sense of where the mean and median value fall:
 
 :::: {.qna}
 
@@ -1208,6 +1146,15 @@ OK, now let's look for the Entire home/apt listings that are more expected than 
 ```python
 print(f"The mean price is ${df.price.??():0.2f}")
 print(f"The median price is ${df.price.??():0.2f}")
+```
+
+You should get:
+
+```{python}
+#| echo: False
+#| output: asis
+print(f"- The mean price is ${df.price.mean():0.2f}")
+print(f"- The median price is ${df.price.median():0.2f}")
 ```
 
 #### Answer
@@ -1225,7 +1172,7 @@ You might want to have a [look at the documentation](http://pandas.pydata.org/pa
 
 ### Filtering: it's 'logical'
 
-So we want to take `Entire home/apt` and filter the data set _together with_ the price per night from the `price` column.  For that, let's use the mean price/night of $`{python} f"{df.price.mean():0.2f}"` (_note_: this is totally arbitrary)?
+So we want to take `Entire home/apt` and filter the data set _together with_ the price per night from the `price` column.  For that, let's use the mean price/night of $`{python} f"{df.price.mean():0.2f}"`. _Note_: this is totally arbitrary.
 
 :::: {.qna}
 
@@ -1234,8 +1181,20 @@ So we want to take `Entire home/apt` and filter the data set _together with_ the
 So here we want to filter on two values in the data set using `&`:
 
 ```python
-pricey = df[(??) & (df.price>df.price.??)]
+pricey = df[
+    (??) & 
+    (df.price>df.price.??)
+]
 print(f"Selected {pricey.shape[0]:,} rows")
+```
+
+```{python}
+#| echo: False
+#| output: asis
+pricey = df[
+    (df.room_type=='Entire home/apt') & 
+    (df.price>df.price.mean())]
+print(f"You should get {pricey.shape[0]:,} rows.")
 ```
 
 #### Answer
@@ -1243,7 +1202,9 @@ print(f"Selected {pricey.shape[0]:,} rows")
 So here we want to filter on two values in the data set using `&`:
 
 ```{python}
-pricey = df[(df.room_type=='Entire home/apt') & (df.price>df.price.mean())]
+pricey = df[
+    (df.room_type=='Entire home/apt') & 
+    (df.price>df.price.mean())]
 print(f"Selected {pricey.shape[0]:,} rows")
 ```
 
@@ -1251,7 +1212,7 @@ print(f"Selected {pricey.shape[0]:,} rows")
 
 In the code above we see two things:
 
-1. The use of the bitwise `&` (it's *not* the same as `and`).
+1. The use of the bitwise `&` (it's *not* the same as `and` and you should recall our work with the `bitarray` earlier in the term).
 2. The fact that you need parentheses around the selection in order to make the the `&` work.
 
 
@@ -1319,7 +1280,7 @@ What do you make of this result?
 
 #### Answer
 
-Try following some of the `listing_url`s. My best *guess* is that some people are having trouble *un*-listing their properties or are somehow trying to pause bookings by pricing their property at an unrealistical level.
+Try following some of the `listing_url`s (if they still work). My best *guess* is that some people are having trouble *un*-listing their properties or are somehow trying to pause bookings by pricing their property at an unrealistical level.
 
 ::::
 
@@ -1370,11 +1331,11 @@ print(f"Maximum price: {dfr.price.max():>6.2f}")
 That example contains a few things to which you need to pay attention:
 
 1. *Again* you can see that, with mutiple selections, we had to put parentheses around each one -- this forces Python to...
-2. Process the `&` (bit-wise AND) that asks pandas to "Find all the rows where condition 1 _and_ condition 2 are both `True`". So it calculates the `True`/`False` for the left side and the `True`/`False` for the right side of the `&`, and then combines them.
+2. Process the `&` (bit-wise AND) that asks pandas to "Find all the rows where condition 1 _AND_ condition 2 are both `True`". So it calculates the `True`/`False` for the left side and the `True`/`False` for the right side of the `&`, and then combines them.
 
-# Enhancing our Understanding
+I find this parentheses business annoying and frequently get an error when I forget to add them, but I'm guessing it's tied to operator precedence and how the various operations are interpreted by Python.
 
-## Deriving a New Variable
+# Deriving New Variables
 
 ::: {.callout-caution collapse="true"}
 
@@ -1446,15 +1407,15 @@ df.lnprice.describe().apply(lambda x: f"{x:5.5f}")
 *Note* the issue with `divide by zero` here: you would need to resolve this by either dropping properties priced at `0`, *or* adding `1` to the price (i.e. `np.log(df.price+1)`). There are arguments for and against both approaches.
 
 ```{python}
-df['lnprice'] = np.log(df.price)
+df['lnprice'] = np.log(df.price + 1)
 df.lnprice.describe().apply(lambda x: f"{x:5.5f}")
 ```
 
 ::::
 
-## Quick (and Dirty) Plotting
+# Quick (and Dirty) Plotting
 
-One of the first things we should do when exploring a new dataset is plot (aka graph) the data. We've left plotting until a little later in this practical so that we could see some other basic attributes of how pandas stores data. We'll look at plotting and exploratory data analyses in much more detail next week, including using packages other than pandas. 
+Although we've spent a lot of time grappling with pandas code and cleaning/filtering/selecting data, one of the first things we should really do when exploring a new dataset is plot (aka graph) the data. We've left plotting until late in this practical so that we could see some other basic attributes of how pandas stores data. We'll look at plotting and exploratory data analyses in much more detail across the following weeks, including using packages other than pandas. 
 
 For now, let's look at the basic plotting functionality pandas provides - in conjunctions with the online documentation for both [DataFrames](https://pandas.pydata.org/pandas-docs/stable/reference/index.html) and [Series](https://pandas.pydata.org/pandas-docs/stable/reference/index.html). There are also examples of all [the different types of plots pandas can produce](https://pandas.pydata.org/pandas-docs/stable/user_guide/visualization.html).
 

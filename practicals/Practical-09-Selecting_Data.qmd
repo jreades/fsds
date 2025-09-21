@@ -1,7 +1,7 @@
 ---
 title: "Practical 9: Selecting Data"
 subtitle: "Selecting & Linking Data"
-format: html
+embed-resources: True
 filters:
   - qna
   - quarto
@@ -12,7 +12,7 @@ filters:
 
 #### Important
 
-This practical focusses on data linkage! You will have seen quite a bit of this of these across the preceding three to four weeks, but they were picked up in an _ad-hoc_ way, here we try to systematise things a bit.
+This practical focusses on data linkage! You will have seen quite a bit of this of these across the preceding three to four weeks, but they were picked up in an _ad-hoc_ way, here we try to systematise things a bit. We're also going to look at alternatives to loading the entire data set into memory in Python: using the DuckDB driver we can perform a lot of operations 'outside' of Python's memory and processing limits while still benefiting from reproducibility (the commands are stored in the Python script) and access (we can bring the filtered, linked data into Python when we need to do so).
 
 :::
 
@@ -29,28 +29,25 @@ We're going to look at how data can be joined (linked) to other data using a ran
 {{< include _data_definition_sp.qmd >}}
 
 ```{python}
-import os
-import numpy as np
 import pandas as pd
 import geopandas as gpd
-import seaborn as sns
-
-import matplotlib.cm as cm
 import matplotlib.pyplot as plt
+
+from pathlib import Path
 ```
 
 {{< include _cache_function.qmd >}}
 
 ```{python}
-ddir = os.path.join('data','geo') # destination directory
-pqt  = cache_data(url, ddir)
+ddir     = Path('data/geo')
+pqt      = url.replace('.geo','.')
 ```
 
-# Selecting Data
+# Selecting Data in Pandas
 
-## In Pandas
+In this section we are loading a parquet file using pandas and taking advantage of Python's 'chaining' functionality (`<object>.<method>().<method>()...`) to return the first few rows of a data frame using `head`. The thing to notice is that we're not even bothering to save the result of this command into a variable (thus the lack of a `df =` in the code). We're doing this here *solely* so that you can compare pandas and DuckDB performance and syntax across each of the following steps.
 
-### A first query (Recap)
+## A simple query
 
 ```{python}
 %%time 
@@ -58,18 +55,18 @@ pqt  = cache_data(url, ddir)
 pd.read_parquet(f'{pqt}').head(3) 
 ```
 
-This should (I hope) be trivial to read now: we are loading a parquet file using pandas and taking advantage of Python's 'chaining' functionality (`<object>.<method>().<method>()...`) to return the first three rows using `head`. It is worth noticing that we're not even bothering to save the result of this command to a data frame (thus the lack of a `df =` in the code) and We're doing this here solely so that you can compare pandas and SQL/DuckDB syntax across each of the following steps.
+This should (I hope) be trivial to read now and (I hope) you have what seems like pretty good performance in the range of 150-175 milliseconds.
 
-### Choosing some columns (Recap)
+## Selecting columns
 
 To load a columnar subset of the data we have two options:
 
 1. Load all the data and *then* subset (which always happens with CSV files but is optional with other formats)
 2. Load only the columns we care about (which is possible with parquet files)
 
-And in code these are:
+And in code these are implemented as:
 
-#### Load *then* filter
+### Load *then* filter
 
 ```{python}
 %%time
@@ -77,7 +74,9 @@ And in code these are:
 pd.read_parquet(f'{pqt}')[['listing_url', 'price', 'number_of_reviews', 'property_type', 'host_name']].head(5)
 ```
 
-#### Filter *then* load
+Not bad, not bad...
+
+### Filter *then* load
 
 ```{python}
 %%time
@@ -85,9 +84,11 @@ pd.read_parquet(f'{pqt}')[['listing_url', 'price', 'number_of_reviews', 'propert
 pd.read_parquet(f'{pqt}', columns=['listing_url', 'price', 'number_of_reviews', 'property_type', 'host_name']).head(5)
 ```
 
-Notice the difference in the time needed to complete the operation!!!
+Whoa! Notice the difference in the time needed to complete the operation!!! We just cut the time by upwards of 80%!
 
-### Adding a constraint (Recap)
+## Adding a constraint
+
+So that is performance for loading data, now let's see what happens when we start subsetting the data by *row* as well as by *column*.
 
 ```{python}
 %%time 
@@ -109,11 +110,11 @@ df[
 
 Notice here that we are using three conditions to filter the data *as well as* a column filter on loading to minimise the amount of data loaded into memory. Applying the filters simultaneously will also make it easy to see what you've done (you aren't applying each one separately) and to adjust the overall cleaning process. 
 
-This filter is fairly straightforward, but things get more complicated when you want to aggregate the return...
+This filter is fairly straightforward and performance should have been only slightly slower than doing the column subset in the first place, but things get a bit more complicated when you want to aggregate the return...
 
-### Aggregating the return
+## Aggregating the return
 
-There is a *lot* to unpack here, and notice that it takes three steps to achieve our goal of selecting, grouping, aggregating, sorting, and printing out the ten most frequent combinations of room and property type.
+There is a *lot* to unpack here, and notice that it takes three steps to achieve our goal of selecting, grouping, aggregating, sorting, and printing out the ten most frequent combinations of room and property type, although we *could* reduce it to two if we really wanted to do so (at the cost of some legibility).
 
 ```{python}
 %%time 
@@ -131,7 +132,7 @@ df.groupby(
         median_price = ("price", "median"),
 ).reset_index().sort_values(
         by=['freq','room_type','property_type'], ascending=[False,True,True]
-    ).head(10)
+    ).head(5)
 ```
 
 Hopefully the first two steps are fairly clear, so let's focus on the final one:
@@ -157,7 +158,7 @@ df.groupby(
     )
 ```
 
-The other thing to note here is the `observed=True`. This is a nice bit of additional functionality that, if you set it to `False` will return a number for all possible combinations, inserting a zero if that combintaion is *not* observed in the data.
+The other thing to note here is the `observed=True`. This is a nice bit of additional functionality that, if you set it to `False` will return a number for all possible combinations, inserting a zero if that combintaion is *not* observed in the data. That's useful if *non*-observations (i.e. there was no data for this group) is relevant to your data presentation or subsequent modelling/statistical tests^[One could imagine, for instance, that you want to present the data in a table in which case you want the zero because there needs to be a value for each cell in the table.]. 
 
 #### Agg
 
@@ -174,21 +175,19 @@ Pandas offers a *lot* of different ways to do this, but the above approach is pe
 
 #### 'Degroup'
 
-In order to work with the aggregated data you will *almost* always want to convert your `GroupedDataFrame` back to a regular `DataFrame` and that means resetting the index `reset_index()` -- this is just one of those things to learn about grouped data in Pandas.
+In order to do anything further with the aggregated data you will *almost* always want to convert your `GroupedDataFrame` back to a regular `DataFrame` and that means resetting the index `reset_index()` -- this is just one of those things to learn about grouped data in Pandas.
 
 #### Sort
 
-Finally, to sort the *data* (which is usually what you want) you need to `sort_values`, where `by` specifies the fields you want to sort on and `ascending` is a matching (optional) list that specifies the sort order for each sort column. If you just want to sort everything in ascending order then you don't need to specify the `ascending` values, and if you wanted to sort *everything* in descending order then it's just `ascending=False`.
+Finally, to sort the *data* you need to `sort_values`, where `by` specifies the fields you want to sort on and `ascending` is a matching (optional) list that specifies the sort order for each sort column. If you just want to sort everything in ascending order then you don't need to specify the `ascending` values, and if you wanted to sort *everything* in descending order then it's just `ascending=False`.
 
-## In SQL
+# Selecting Data in DuckDB
 
 That last example may have left you despairing of every being able to select/filter/aggregate/derive your data, but there *is* another way that is often far simpler *if* you are: a) willing to learn a different language, and b) willing to work with data in different formats. And that's all thanks to Parquet and DuckDB.
 
-### Parquet and DuckDB
+The combination of parquet files and in-memory databases (DuckDB is just *one* of these) has fundamentally reshaped my workflow. Parquet and Apache Arrow are [closely related](https://stackoverflow.com/a/56481636) but, in short, when you want to save large data sets in an easy-to-access and fast-to-query format then Parquet should be your default choice. DuckDB gives you a way to treat Parquet files *as* database **tables** and run queries against it (or them!) using standard SQL. You can [install DuckDB](https://duckdb.org/#quickinstall) on the command-line, but you can also query it from within Python using the appropriate module.
 
-One of the recent technical *revolutions* that has fundamentally reshaped my workflow is the combination of parquet files and in-memory databases. Parquet and Apache Arrow are [closely related](https://stackoverflow.com/a/56481636) but, in short, when you want to save large data sets in an easy-to-access format then Parquet should be your default choice. DuckDB gives you a way to treat Parquet files *as* a database **table** and run queries against it using standard SQL. You can [install DuckDB](https://duckdb.org/#quickinstall) on the command-line, but you can also query it from within Python using the appropriate module.
-
-### A first query
+## A first query
 
 Let's see a quick demonstration:
 
@@ -206,15 +205,13 @@ LIMIT 3;
 db.sql(query).to_df()
 ```
 
-And now let's unpack this:
+The timing code should *already* show a [significant improvement over pandas-only code](#a-simple-query) (on my laptop it is 90ms vs. 160ms), and now let's unpack what's happening:
 
 1. We import the `duckdb` library as `db`.
 2. We set up a SQL `query` using a multi-line f-string
 3. We use DuckDb to execute the query and return a pandas dataframe (`df`)
 
 What's particularly elegant here (and quite different from trying to talk to a Postres or MySQL database) is that there's no connect-execute-collect pattern; we just build the query and execute it!
-
-### Deciphering SQL
 
 ::: {.callout-note}
 
@@ -234,13 +231,13 @@ LIMIT 3
 
 Line-by-line this means:
 
-1. Select all columns (`SELECT <* == everything>`)
-2. From the parquet file (`FROM <table location>`)
+1. Select all columns (`*` == everything>`)
+2. From the parquet file (`<table location>`)
 3. Limit the return to 3 rows (`LIMIT <row count>`)
 
 Let's look at some variations...
 
-### Choosing some columns
+## Selecting columns
 
 ```{python}
 %%time 
@@ -254,6 +251,8 @@ LIMIT 5;
 db.sql(query).to_df()
 ```
 
+Even though it looked like pandas performed *massively* better when we updated our query to [filter then load](#filter-then-load), DuckDB is **even faster**! I get that DuckDB takes about 25% the time that pandas does.
+
 ```{.sql code-line-numbers="true"}
 SELECT listing_url, price, number_of_reviews, last_review, host_name 
 FROM read_parquet('{pqt}') 
@@ -266,7 +265,7 @@ It should be fairly easy to see how the query has changed from last time, but li
 2. From the parquet file (`FROM <table location>`)
 3. Limit the return to 5 rows (`LIMIT <row count>`)
 
-### Adding a constraint
+## Adding a constraint
 
 ```{python}
 %%time
@@ -283,19 +282,21 @@ LIMIT 5;
 db.sql(query).to_df()
 ```
 
-In this query we've added *three* constraints using a `WHERE`, which is asking DuckDB to find all of the rows *where* the following things are true:
+Performance should still be noteable [improvement over pandas](#adding-a-constraint), though in my simple tests it's 'only' about 30% faster. IF we wanted to be more rigorous about this we'd want to [repeat the same operation many times](https://www.browserstack.com/guide/python-performance-testing) (e.g. hundreds or thousands of time) to account for the fact that during any given query the computer might be doing other things that impact performance. 
+
+Anyway, in this query we've added *three* constraints using a `WHERE`, which is asking DuckDB to find all of the rows *where* the following things are true:
 
 4. The `price` must be less than ($)250/night
 5. The `number_of_reviews` must be more than 0
 6. The `property_type` must be `Entire home/apt`
 
-### Aggregating the return
+## Aggregating the return
 
-So far, we've seen a few ways (and hopefully enough to get you started) to *select* data, but databases also 'excel' at aggregating data in various ways. We aren't going to get into things like windowing functions or stored procedures here, but even simple aggregates done in DuckDB can vastly improve on the performance of pandas.
+That's hopefully enough to get you started on *selecting* data, but databases  'excel' at aggregating data in various ways. We aren't going to get into things like windowing functions or stored procedures here, but even simple aggregates done in DuckDB can vastly improve on the performance of pandas.
 
 ::: {.callout-tip}
 
-When you aggregate data you need to retrieve *every* column in the `SELECT` portion that you `GROUP BY` in the `WHERE` portion of the query. This will make sense when you see the examples below... (and should also make sense based on the Pandas equivalent above)
+When you aggregate data you need to retrieve *every* column in the `SELECT` portion that you `GROUP BY` in the `WHERE` portion of the query. This will make sense when you see the examples below... and should also make sense based on the Pandas equivalent above!
 
 :::
 
@@ -303,22 +304,24 @@ When you aggregate data you need to retrieve *every* column in the `SELECT` port
 %%time
 
 query = f'''
-SELECT property_type, room_type, COUNT(*) AS frequency, MEDIAN(price) 
+SELECT property_type, room_type, 
+    COUNT(*) AS frequency, MEDIAN(price) AS median_price
 FROM read_parquet('{pqt}') 
 WHERE price < 1000 
 AND number_of_reviews > 0
 GROUP BY room_type, property_type
 ORDER BY frequency DESC, room_type, property_type
-LIMIT 10;
+LIMIT 5;
 '''
 
 db.sql(query).to_df()
 ```
 
-There are quite a few changes to the query here so it's worth reviewing them in more detail:
+Performance is [comparable to pandas](#aggregating-the-return) in my very basic test, but I find the operation more clearly expressed in SQL than pandas. There are quite a few changes to the query here so it's worth reviewing them in more detail:
 
 ```{.sql code-line-numbers="true"}
-SELECT property_type, room_type, COUNT(*) AS frequency, MEDIAN(price) 
+SELECT property_type, room_type, 
+    COUNT(*) AS freq, MEDIAN(price) AS median_price
 FROM read_parquet('{pqt}') 
 WHERE price < 1000 
 AND number_of_reviews > 0
@@ -330,11 +333,11 @@ LIMIT 10;
 Key things to note:
 
 1. We have two new aggregate *functions*:
-   - `COUNT(*)` returns a count of the number of rows in each group specified in the `GROUP BY` clause.
-   - `MEDIAN(price)` returns, unsurprisingly, the median value of the `price` column for each group specified in the `GROUP BY` clause.
+   - `COUNT(*)` returns a count of the number of rows in each group specified in the `GROUP BY` clause. We don't need to specify a column here because `*` means 'all rows'.
+   - `MEDIAN(price)` returns, unsurprisingly, the median value of the `price` column for *each* group specified in the `GROUP BY` clause.
    - *Note* also the `AS frequency` which 'renames' the column returned by the query; it's the same concept as the `import x as y` in Python.
-5. `GROUP BY` is where the aggregation happens, and here we're asking DuckDB to take all of the rows selected (`WHERE price < 1000 AND number_of_reviews > 0`) and group them using the `room_type` and `property_type` fields.
-6. `ORDER BY` orders the returned records by the columns we specify, and they can be either `ASC`ending (the default) or `DESC`ending (descending).
+2. `GROUP BY` is where the aggregation happens, and here we're asking DuckDB to take all of the rows selected (`WHERE price < 1000 AND number_of_reviews > 0`) and group them using the `room_type` and `property_type` fields.
+3. `ORDER BY` orders the returned records by the columns we specify, and they can be either `ASC`ending (the default) or `DESC`ending (descending).
 
 What you should also be noting here is that:
 
@@ -345,44 +348,133 @@ In terms of both speed and intelligibility, there can be quite substantial advan
 
 So the trick here is to recognise when you are facing a problem that: a) will benefit from being expressed/tackled in a different language; and b) won't create undue overhead on your technology 'stack'. In working with environmental and built environment data I was able to cut the processing time by 80% when I moved the bulk of the data linkage work from Pandas into Parquet+DuckDB. *But*, by the same token, what's the point of using Postgres and managing a spatial database to perform a single step in a much longer workflow *unless* the performance considerations are so massive they outweigh any other issue. 
 
-# Non-Spatial Joins {#sec-nonspatial}
+# Thinking About Joins
 
-We're going to look at joining data by attributes *first* and then look at spatial joins so that you get a sense of how they behave and differ.
+We're going to look at joining data by attributes *first* and then look at spatial joins *after* so that you get a sense of how they behave and differ. However, even where you *do* have a spatial problem, it can be worth it to manage it as a non-spatial problem to improve the overall performance of your code. 
 
-For non-spatial joins we only need two data sets relating to MSOAs:
+For instance, say you have data from LSOAs and want to be able to aggregate it up to MSOA-level to perform various analyses. 
+
+:::: {.columns}
+
+::: {.column width="35%"}
+
+#### LSOA Table
+
+| LSOA Code | Polygon     |
+|----------:|------------:|
+| LSOA1     | WKT(...)    |
+| LSOA2     | WKT(...)    |
+| LSOA3     | WKT(...)    |
+:::
+
+::: {.column width="5%"}
+
+:::
+
+::: {.column width="35%"}
+
+#### MSOA Table
+
+| MSOA Code | Polygon     |
+|----------:|------------:|
+| MSOA1     | WKT(...)    |
+| MSOA2     | WKT(...)    |
+| MSOA3     | WKT(...)    |
+:::
+
+::::
+
+The *obvious* way to do this is as a spatial join *something* like this: 
+
+```{.sql code-line-numbers="true"}
+SELECT m."MSOA Code", SUM(<attribute 1>) AS feature_sum, COUNT(<attribute 2>) AS feature_count  
+FROM <lsoa data table> AS l, <msoa data table> AS m  
+WHERE ST_Within(l.<lsoa geom>, m.<msoa geom>)
+GROUP BY m."MSOA Code";
+```
+
+We'll get to what's happening with `AS l` and `AS lkp` in a bit more detail below, but the term for this is *aliasing* and its saves us having to repeatedly type `<lsoa data table>` by allowing us to use the alias `l`. But you would run this same query *every* time you wanted to aggregate something. 
+
+**This is *not* the right way to tackle this problem** even though you can write the query to give you the correct answer. Spatial queries ([as I said in the pre-recorded lectures]({{< var module.web >}}sessions/week9.html#pre-recorded-lectures)) are *hard*, so if you can 'cache' the result in a *non*-spatial format it will save a lot time in the future. 
+
+The answer is to run the spatial query *once* in order to create a 'lookup table' which uses the LSOA and MSOA *codes* (and you can even add Boroughs, Regions, OAs, and so on later if you like!) to tell you if a LSOA falls inside a borough or MSOA. So you perform the hard spatial query *just once* to create the lookup table, and thereafter you are using a fast non-spatial query.
+
+In this case your lookup table will look like this...
+
+#### Lookup Table
+
+| LSOA Code | MSOA Code | Borough Code |
+|----------:|----------:|-------------:|
+| LSOA1     | MSOA1     | BORO1        |
+| LSOA2     | MSOA1     | BORO1        |
+| LSOA3     | MSOA2     | BORO1        |
+
+Now you can do any kind of *spatial aggregation* you want without having to incur the costs of running a *spatial query* using something like:
+
+```{.sql code-line-numbers="true"}
+SELECT lkp."MSOA Code", SUM(<attribute 1>) AS feature_sum, COUNT(<attribute 2>) AS feature_count  
+FROM <lsoa data table> AS l, <lookup table> AS lkp  
+WHERE l."LSOA Code" = lkp."LSOA Code" 
+GROUP BY lkp."MSOA Code";
+```
+
+You can also use this as a foundation for creating a `VIEW` or a `[MATERIALIZED VIEW](https://www.databricks.com/glossary/materialized-views)`, but that's an advanced topic for managing your data more efficiently in an operational environment rather than a research-oriented one.
+
+::: {.callout-tip}
+
+#### Spatial DuckDB
+
+DuckDB also now supports spatial queries via the [`SPATIAL` extension](https://duckdb.org/docs/extensions/spatial.html). Performance is *not* that of a tuned Postgres+PostGIS database, but the overhead of *creating* such a tuned database often exceeds the benefit for ad-hoc querying. Basically, Postgres+PostGIS is great if you're a company such as Booking.com, Airbnb, or OpenStreetMap, but it's most likely overkill for offline, read-only applications.
+
+:::
+
+## Additional Data
+
+For the rest of this notebook we need three data sets about MSOAs (which are statistical neighbourhoods that we'll treat as a proxy for 'real' neighbourhoods). The first two are *non*-spatial:
 
 ```{python}
 
 msoa_names_url = 'https://houseofcommonslibrary.github.io/msoanames/MSOA-Names-1.20.csv'
 msoa_popst_url = 'https://orca.casa.ucl.ac.uk/~jreades/data/sapemsoaquinaryagetablefinal.xlsx'
 
-msoa_df = pd.read_excel(msoa_popst_url, sheet_name="Mid-2022 MSOA 2021", header=3)
 msoa_nms = pd.read_csv( cache_data(msoa_names_url, 'data') )
 
-# For DuckDB
-if not os.path.exists('data/MSOA_population_estimates.parquet'):
-    msoa_df.to_parquet('data/MSOA_population_estimates.parquet')
+# This one can't be cached because we need to access
+# an Excel sheet name and the cache_data function isn't
+# smart enough to handle this use case.
+msoa_pq = Path('data/MSOA_population_estimates.parquet')
+if msoa_pq.exists():
+    msoa_df = pd.read_parquet(msoa_pq)
+else:
+    msoa_df = pd.read_excel(msoa_popst_url, sheet_name="Mid-2022 MSOA 2021", header=3)
+    msoa_df.to_parquet(msoa_pq)
 
 print(f"msoa_df  has {msoa_df.shape[0]:,} rows and {msoa_df.shape[1]:,} columns.")
 print(f"msoa_nms has {msoa_nms.shape[0]:,} rows and {msoa_nms.shape[1]:,} columns.")
+```
+
+We also need some geodata:
+
+```{python}
+msoa_gpkg = gpd.read_file( cache_data(f'{host}/~jreades/data/MSOA-2011.gpkg', ddir) ).to_crs('epsg:27700')
 ```
 
 ::: {.callout-tip}
 
 #### The preferred solution
 
-To keep it simple: you should assume that non-spatial joins are *always* going to be faster than spatial ones, even in a performant spatial database. Asking if one number is less than another, or if a piece of text is found in another piece of text, is *much* simpler than asking if one object falls within the boundaries of another. Spatial databases are fast and very cool, but if you can express your problem non-spatially it will be faster to solve it that way too. 
+**To keep it simple**: you should assume that non-spatial joins are *always* going to be faster than spatial ones, even in a performant spatial database. Asking if one number is less than another, or if a piece of text is found in another piece of text, is *much* simpler than asking if one object falls within the boundaries of another. Spatial databases are fast and very cool, but if you can express your problem non-spatially it will be faster to solve it that way too. 
 
 :::
 
-## In Pandas
+# Non-Spatial Joins In Pandas
 
 Pandas distinguishes between several types of what SQL would call a 'join': the process of linking two data sets. Depending on what you want to do, this will fall into one of the [merge, join, concatenate, or compare](https://pandas.pydata.org/docs/user_guide/merging.html) functions:
 
 - `concat` simply appends one data frame to another and won't be discussed further, but keep in mind that you can concatenate horizontally and vertically (across and down), and that having named indexes can cause consternation. You would find it most useful for appending columns to a data set (appending rows should be approached differently) or extending a data set for year $n$ with data from year $n+1$...
 - `merge` is what we normally want when we want to do something similar to a SQL join. You should refer back to the lecture for the differences between 'one-to-one', 'one-to-many', and 'many-to-many'. Note too that merging is a function of the pandas library and *not* a method of a data frame.
 
-### Joining by attribute
+## Joining by attribute
 
 So in our case, to join the two MSOA data sets we're going to need to match the MSOA codes which have (slightly) different names in the two datasets:
 
@@ -404,6 +496,8 @@ Can you work out why this has happened? There is a clue in the column names!
 
 There's no way to solve this problem except by changing the code to use [this URL instead](https://houseofcommonslibrary.github.io/msoanames/MSOA-Names-Latest2.csv) for the MSOA Names.
 
+## Constraining the Join
+
 We can also try to constrain the result set to one LA thanks to data in the MSOA Names database:
 
 ```{python}
@@ -419,9 +513,9 @@ rs.head(3)
 
 Without the `how=inner`, the result set would still have all of the rows but some of the columns would be nearly completely empty. 
 
-## In SQL
+# Non-Spatial Joins in DuckDB
 
-SQL-based joins use very similar keywords (since Pandas is copying SQL), but how we put together the query is quite different.
+SQL-based joins use very similar keywords (since Pandas is 'copying' SQL), but how we put together the query is quite different.
 
 ### Joining by attribute
 
@@ -466,12 +560,14 @@ Line-by-line:
 
 1. `SELECT` every column (this is the `*`, change this if you want to only pull a subset of columns)
 2. `FROM` the following tables (it doesn't really matter if the tables are on this line or the next for legibility)
-3. `<table 1 from parquet> as n` (we now refer to the data from this table using the prefix `n.`; e.g. `n.Total`)
-4. `LEFT JOIN` is the SQL way of saying to keep all of the rows in the first table (`n`, which is the first, and therefore 'left' table)
-5. `<table 2 from csv> as m` (we now refer to the data from this table using the prefix `m.`; e.g. `m.geometry`)
-6. `ON <left table matching column> = <right table matching column>` (here, the unusual thin is the double-quotes around the column name required to deal with the fact that the label contains spaces).
+3. `<table 1 from parquet> as n` (we can now refer to the data from this table using the 'alias' `n.`; e.g. `n.Total`)
+4. `LEFT JOIN` as a concept was been covered [in the lecture]({{< var module.web >}}/sessions/week9.html)
+5. `<table 2 from csv> as m` (we now refer to the data from this table using the alias `m.`; e.g. `m.geometry`)
+6. `ON <left table matching column> = <right table matching column>` (here, the unusual thing is the double-quotes around the column name required to deal with the fact that the name contains spaces).
 
 *Notice* how there are parallels between even quite different languages here: if you have spaces or special characters or whatever in your column name then you're going to need to handle that a little differently, and if you have two tables to join you have a left (aka first) one and a right (aka second) one and the order matters.
+
+## Constraining the Join
 
 Now, running the same query to get the Waltham Forest data can be done two ways:
 
@@ -519,100 +615,15 @@ db.sql(query).to_df().head(3)
 
 The second way is a little easier to read, but it *only* allows you to do **inner joins** where attributes need to match in both tables for a row to be kept. This situation is such a common 'use case' that it makes sense to have this simpler syntax, but the previous code will work for inner, left, right, and outer joins.
 
-# Spatial Joins {#sec-spatial}
+# Spatial Joins in Geopandas
 
-::: {.callout-tip}
-
-#### Spatial DuckDB
-
-DuckDB also now supports spatial queries via the [`SPATIAL` extension](https://duckdb.org/docs/extensions/spatial.html). Performance is *not* that of a tuned Postgres+PostGIS database, but the overhead of *creating* such a tuned database often exceeds the benefit for ad-hoc querying. Basically, Postgres+PostGIS is great if you're a company such as Booking.com, Airbnb, or OpenStreetMap, but it's most likely overkill for offline read-oriented applications.
-
-:::
-
-## Why obvious is not always right (Part 432)
-
-Building on what I said above in @sec-nonspatial, even where you *do* have a spatial challenge, it can be worth it to convert it to a non-spatial solution to improve the overall performance of your code. For instance, say you have data from LSOAs and want to be able to aggregate it up to MSOAs and Boroughs to perform various analyses. 
-
-:::: {.columns}
-
-::: {.column width="30%"}
-
-#### LSOA Table
-
-| LSOA Code | Polygon     |
-|----------:|------------:|
-| LSOA1     | WKT(...)    |
-| LSOA2     | WKT(...)    |
-| LSOA3     | WKT(...)    |
-:::
-
-::: {.column width="5%"}
-
-:::
-
-::: {.column width="30%"}
-
-#### MSOA Table
-
-| MSOA Code | Polygon     |
-|----------:|------------:|
-| MSOA1     | WKT(...)    |
-| MSOA2     | WKT(...)    |
-| MSOA3     | WKT(...)    |
-:::
-
-::: {.column width="5%"}
-
-:::
-
-::: {.column width="30%"}
-
-#### Borough Table
-
-| Borough Code | Polygon     |
-|----------:|------------:|
-| BORO1     | WKT(...)    |
-| BORO2     | WKT(...)    |
-| BORO3     | WKT(...)    |
-:::
-
-::::
-
-The *obvious* way to do this is as a spatial join: `select all LSOAs within an MSOA and aggregate them`. And you would then run this same query for every dimension you want to aggregate. **This is *not* the right way to tackle this problem** even though you can write the query to give you the correct answer.
-
-The *right* way when you are going to repeatedly run an expensive spatial query is to work out if you can 'cache' the result to save time in the future. In this case the answer is to create a 'lookup table' which uses the LSOA and MSOA and Borough codes to tell you if a LSOA falls inside a borough or MSOA. You perform the hard spatial query *just once* to create the lookup table, and thereafter you are using a fast non-spatial query.
-
-In this case your lookup table will be this...
-
-#### Lookup Table
-
-| LSOA Code | MSOA Code | Borough Code |
-|----------:|----------:|-------------:|
-| LSOA1     | MSOA1     | BORO1        |
-| LSOA2     | MSOA1     | BORO1        |
-| LSOA3     | MSOA2     | BORO1        |
-
-Now you can do any kind of *spatial aggregation* you want without having to incur the costs of running a *spatial query* using something like:
-
-```{.sql code-line-numbers="true"}
-SELECT m."MSOA Code", SUM(<attribute>) as feature_sum, COUNT(<attribute 2>) as feature_count  
-FROM <lsoa data table> as l, <lookup table> as lkp  
-WHERE l."LSOA Code" = lkp."LSOA Code" 
-GROUP BY lkp."MSOA Code";
-```
-
-See, no need for a spatial query and you can run the same query easily for many features. You can also use this as a foundation for creating a `VIEW` or a `MATERIALIZED VIEW`, but that's an advanced topic for managing your data more efficiently in an operational environment rather than a research-oriented one.
-
-But first, we need some actual geodata to work with:
+Let's try to find all of the listings that fall within the borough of Waltham Forest. 
 
 ```{python}
-msoa_gpkg = gpd.read_file( cache_data(f'{host}/~jreades/data//MSOA-2011.gpkg', ddir) ).to_crs('epsg:27700')
-listings  = gpd.read_parquet( cache_data(f'{host}/~jreades/data/{ymd}-{city}-listings.geoparquet', ddir) ).to_crs('epsg:27700')
+listings = gpd.read_parquet( cache_data(url, ddir) ).to_crs('epsg:27700')
 ```
 
-## In Geopandas
-
-Let's try to find all of the listings that fall within the borough of Waltham Forest, so that implies two steps:
+This query implies two steps:
 
 1. Subset the MSOA geo-data so that it only includes the Waltham Forest MSOAs.
 2. Run a spatial query to find the listings that are within those MSOAs (we could, optionally, `union` the MSOAs to get the outline of the borough)
@@ -632,16 +643,15 @@ boro_listings.plot(column='price', cmap='viridis', legend=True, s=1.5, aspect=1,
 
 ::: {.callout-warning}
 
-If you get `ValueError: aspect must be finite and positive` when you try to make a plot (this seems fairly common with GeoPackages (`.gpkg` files) then you will need to specify `aspect=1` in the `plot(...)` command.
+If you get `ValueError: aspect must be finite and positive` when you try to make a plot (this seems fairly common with `.gpkg` files) then you will need to specify `aspect=1` in the `plot(...)` command.
 
 :::
 
-## In SQL
+# Spatial Joins in SQL
 
-After quite a bit of faff my conclusion is that, while you *can* do spatial queries in DuckDB it is a lot of work and *probably* not worth the effort *at this time*. The 'issue' is that spatial support (as well as Excel supprt) is provided via the `GDAL` framework and this takes quite a different approach. After working it out, spatial queries do work *fairly* well if you do them *entirely* within DuckDB (reading, merging, and writing the data) and then load the results in a separate step using GeoPandas; however, you *cannot* get a GeoDataFrame back via `db.query(<query>).to_df()` since that only returns a Pandas data frame and the geometry column is unreadable. In addition, geoparquet support seems limited while GeoPackage performance is *poor*, so you're basically losing all the advantages of a parquet-based workflow.
+After quite a bit of faff my conclusion is that, while you *can* do spatial queries in DuckDB it is a lot of work and *probably* not worth the effort *at this time*. The 'issue' is that spatial support is provided via the `GDAL` framework and this takes quite a different approach. After working it out, spatial queries do work *fairly* well if you do them *entirely* within DuckDB (reading, merging, and writing the data) and then load the results in a separate step using GeoPandas; however, you *cannot* get a GeoDataFrame back via `db.query(<query>).to_df()` since that *only* returns a Pandas data frame and the geometry column is unreadable. In addition, geoparquet support seems limited while GeoPackage performance is *poor*, so you're basically losing all the advantages of a parquet-based workflow.
 
-So the examples below are provided for reference only and, on the whole, right now I'd recommend using GeoPandas and geoparquet files directly.
-
+So the example is provided for reference only when you need to work with a geospatial data format and, on the whole, right now I'd recommend using GeoPandas and geoparquet files directly. In fact, if you read closely you'll realise that this isn't even a spatial join, it's just outputting spatially-referenced data!
 
 ```{python}
 %%time
@@ -669,11 +679,11 @@ rs.plot(aspect=1)
 
 # Worked Example
 
-With that background material, let's now work through a practical example.
+Let's now try work through a practical example that combines everything we've just learned.
 
 ## Load Geodata
 
-A lot of useful geo-data can be accessed from the [GeoPortal](https://geoportal.statistics.gov.uk/). And see also [my discussion](https://jreades.github.io/fsds/sessions/week8.html) on [lookup tables](https://geoportal.statistics.gov.uk/datasets/postcode-to-output-area-to-lower-layer-super-output-area-to-middle-layer-super-output-area-to-local-authority-district-november-2018-lookup-in-the-uk-2/about).
+A lot of additional geo-data can be accessed from the [GeoPortal](https://geoportal.statistics.gov.uk/). And see also [my discussion](https://jreades.github.io/fsds/sessions/week8.html) on [lookup tables](https://geoportal.statistics.gov.uk/datasets/postcode-to-output-area-to-lower-layer-super-output-area-to-middle-layer-super-output-area-to-local-authority-district-november-2018-lookup-in-the-uk-2/about). For demonstration purposes we're going to work the same set of files 'as usual':
 
 ```{python}
 spath = 'https://github.com/jreades/fsds/blob/master/data/src/' # source path
@@ -689,13 +699,13 @@ msoas = gpd.read_file( cache_data(f'{host}/~jreades/data/MSOA-2011.gpkg', ddir) 
 
 #### &#128279; Connections
 
-One thing to remember here is that computers are _exact_. So if you say that the selection should only be of MSOAs _within_ London then you actually need to think about whether a shared border qualifies as 'within'. Watch [the lectures](https://jreades.github.io/fsds/sessions/week10.html#lectures) again if you're unsure, but that's why here we take this slightly clunk approach of buffering the London boundary _before_ doing the selection.
+One thing to remember here is that computers are _exact_. So if you say that the selection should only be of MSOAs _within_ London then you actually need to think about whether a shared border qualifies as 'within'. Watch [the lectures]({{< var module.web >}}sessions/week9.html#pre-recorded-lectures) again if you're unsure, but that's why here we take this slightly clunky approach of buffering the London boundary _before_ doing the selection.
 
 :::
 
 ### Union
 
-As we don't have a boundary file for London, we can *generate* use using the `unary_union` operator (as we do here) or using the [dissolve()](https://geopandas.org/en/stable/docs/user_guide/aggregation_with_dissolve.html) approach. Consider the pros and cons of each approach in terms of performance, output format, and leigibility. 
+As we don't have a boundary file for London, we can *generate* use using the `unary_union` operator (as we do here) or using the [dissolve()](https://geopandas.org/en/stable/docs/user_guide/aggregation_with_dissolve.html) approach. Consider the pros and cons of each approach in terms of performance, output format, and legibility. 
 
 So here's approach 1, which is a method call returning a GeoDataFrame (which is why we can call `plot`):
 
@@ -717,11 +727,13 @@ Notice how we're also demonstrating some additional ways of plotting 'on the fly
 
 :::
 
+## Selecting London MSOAs
+
 ```{python}
 ldn = gpd.GeoDataFrame(gpd.GeoSeries(data=boros.union_all())).rename(columns={0:'geometry'}).set_geometry("geometry")
 ldn = ldn.set_crs(epsg=27700)
-ax  = ldn.plot(facecolor=(.5, .5, .9, .5))
-msoas.plot(ax=ax, facecolor='none', edgecolor=(.6, .6, .6, .6))
+ax  = ldn.plot(facecolor=(.5, .5, .9, .7))
+msoas.plot(ax=ax, facecolor='none', edgecolor=(.9, .3, .3), linewidth=0.75)
 ax.set_xlim(500000, 515000)
 ax.set_ylim(180000, 195000);
 ```
@@ -730,8 +742,8 @@ ax.set_ylim(180000, 195000);
 
 ```{python}
 ldn_msoas = gpd.sjoin(msoas, ldn, predicate='within', how='inner')
-ax = ldn.plot(facecolor=(.5, .5, .9, .5))
-ldn_msoas.plot(ax=ax, facecolor='none', edgecolor=(.8, .4, .4), linewidth=0.75)
+ax = ldn.plot(facecolor=(.5, .5, .9, .7))
+ldn_msoas.plot(ax=ax, facecolor='none', edgecolor=(.9, .3, .3), linewidth=0.75)
 ax.set_xlim(500000, 515000)
 ax.set_ylim(180000, 195000);
 ```
@@ -740,7 +752,7 @@ ax.set_ylim(180000, 195000);
 
 #### What has gone wrong???
 
-Before you move on to the solution, stop and actually *think* about what this hasn't done what you would have expected? THis is another reason that you need to pay attention to the differences between spatial and non-spatial joins.
+Before you move on to the solution, stop and actually *think* about why this hasn't worked as you might (sensibly) have expected? This is another reason that you need to pay close attention to the differences between spatial and non-spatial joins.
 
 :::
 
@@ -794,7 +806,14 @@ ldn_msoas.plot()
 
 ::::
 
-#### Important Note
+Your result should be:
+
+```{python}
+#| echo: False
+ldn_msoas.plot()
+```
+
+### Important Note
 
 If your plot above looks like the output from `pandas` and not `geopandas` then the list of columns and the documentation for `set_geometry` might help you to understand what is going wrong:
 
@@ -853,12 +872,12 @@ ename the columns, but from unary_union we need to write the primitive *into* a 
 
 ::::
 
-## Append or Derive Names
+## Create Borough and Regional Mappings
 
 We don't actually make use of these in this session, but *both* operations could be relevant to your final reports:
 
 1. The Borough-to-Subregion mapping could help you to group your data into larger sets so that your resulst become more reobust. it also connects us to long-run patterns of socio-economic development in London.
-2. The MSOA Names data set (which you used above) gives you something that you could use to label one or more 'neighbourhoods' on a map with names that are *relevant*. So rather than talking about "As you can see, Sutton 003, is...", you can write "The Wrythe neighbourhood [or area] of Sutton is significantly different from the surrounding areas..."
+2. The MSOA Names data set (which you used above) gives you something that you could use to label one or more 'neighbourhoods' on a map with names that are *relevant*. So rather than talking about "As you can see, Sutton 003, is...", you can write "The Wrythe area of Sutton is significantly different from the surrounding areas..."
 
 They also usefully test your understanding of regular expressions and a few other aspects covered in previous weeks.
 
@@ -934,17 +953,10 @@ ldn_msoas['Subregion'] = ldn_msoas.Borough.map(mapping)
 ### And Save
 
 ```{python}
-ldn_msoas.to_parquet(os.path.join('data','geo','London_MSOA_Names.geoparquet'))
+ldn_msoas.to_parquet(ddir / 'London_MSOA_Names.geoparquet')
 ```
 
-## Load InsideAirbnb Data
-
-```{python}
-listings = gpd.read_parquet( cache_data(f'{host}/~jreades/data/{ymd}-{city}-listings.geoparquet', ddir) ).to_crs(epsg=27700)
-print(f"Data frame is {listings.shape[0]:,} x {listings.shape[1]}")
-```
-
-### Spatial Join
+## Spatial Join
 
 Associate LA (Local Authority) names to the listings using a spatial join, but **notice** the `how` here:
 
@@ -986,7 +998,7 @@ else:
 
 ### Find Problematic Listings {#sec-problems}
 
-If you were told that you need to run the next sectin of code then see if you can work out what happened...
+If you were told that you need to run the next section of code then see if you can work out what happened...
 
 ```python
 try:
@@ -1020,7 +1032,7 @@ boros.plot(ax=ax, edgecolor='r', facecolor='None', alpha=0.5);
 ```
 
 ```python
-gdf_la.to_parquet(os.path.join('data','geo','Listings_with_LA.geoparquet'))
+gdf_la.to_parquet(ddir / 'Listings_with_LA.geoparquet')
 ```
 
 :::: {.qna}
@@ -1102,7 +1114,7 @@ msoa_gdf.plot(column='median_price', legend=True, figsize=(6,8));
 Just so that we can pick up here without having to re-run all the preceding cells.
 
 ```{python}
-msoa_gdf.to_parquet(os.path.join('data','geo',f'{LA}-MSOA_data.geoparquet'))
+msoa_gdf.to_parquet(ddir / f'{LA}-MSOA_data.geoparquet')
 ```
 
 :::: {.qna}
@@ -1125,6 +1137,6 @@ msoa_gdf.to_parquet(os.path.join('data','geo',f'{LA}-MSOA_data.geoparquet'))
 
 - Do you understand why it may be necessary to `set_geometry` in some cases?
 
-> Joins are DataFrame functionality and so are unaware of GeoDataFrames (so the return type devolves to a DataFrame), whereas merges seem to preserve the child class type and mean that a GeoDataFrame is returned even thought this is *also* a Pandas utility function.
+> Joins are DataFrame functionality and so are unaware of GeoDataFrames (so the return type 'devolves' to a DataFrame), whereas merges seem to preserve the child class type and mean that a GeoDataFrame is returned even though this is *also* a Pandas utility function.
 
 ::::

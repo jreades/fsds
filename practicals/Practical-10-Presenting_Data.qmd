@@ -1,7 +1,7 @@
 ---
 title: "Practical 10: Presenting Data"
 subtitle: "Visualisation and Tables"
-format: html
+embed-resources: True
 filters:
   - qna
   - quarto
@@ -11,7 +11,7 @@ filters:
 
 #### Important
 
-This practical focusses on the final topic we want to cover in *Foundations*: visualisation! You will have seen quite a bit of this across the preceding three to four weeks, but it was done in an _ad-hoc_ way, here we try to systematise things a bit.
+This practical focusses on the final topic we want to cover in *Foundations*: visualisation! You will have seen and learned quite a bit of this across the preceding weeks, but it was done in an _ad-hoc_ way, here we try to systematise things a bit.
 
 :::
 
@@ -27,7 +27,6 @@ Here we're trying to tidy up the loose ends. You've already worked with basic da
 
 ```{python}
 import os
-import numpy as np
 import pandas as pd
 import geopandas as gpd
 import seaborn as sns
@@ -81,9 +80,9 @@ for fname in flist:
 print(f"Found {len(set(names))} fonts.")
 
 def make_html(fontname):
-    return "<p>{font}: <span style='font-family:{font}; font-size: 18px;'>{font}</p>".format(font=fontname)
+    return f"<p><span style='font-family: {fontname}; font-size: 18px;'>{fontname}</p>"
 
-code = "\n".join([make_html(font) for font in sorted(set(names))])
+code = "\n".join([make_html(font) for font in sorted(set(names)) if not font.startswith('.')])
 
 HTML("<div style='column-count: 2;'>{}</div>".format(code))
 ```
@@ -255,8 +254,9 @@ axes[0].set_title('Median Price', size=20, **afont)
 axes[1].set_title('Count', size=20, **afont)
 
 # And add a short piece of text below the borough
-plt.figtext(x=0.025, y=0.92, linespacing=1.4, va='top', size=12, 
-            s=f"Total listings: {listing_gdf['listing_count'].sum():,.0f}\nMedian price: ${median_gdf['median_price'].median():,.2f}", **bfont);
+plt.figtext(x=0.88, y=0.957, linespacing=1.4, va='top', ha='right', size=12, 
+            s=f"Total listings: {listing_gdf['listing_count'].sum():,.0f}  Median price: ${median_gdf['median_price'].median():,.2f}", **bfont);
+f
 ```
 
 # Create an Atlas

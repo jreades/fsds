@@ -1,24 +1,20 @@
 ---
 title: "Practical 8: Working with Text"
 subtitle: "The basics of Text Mining and NLP"
-format: html
+embed-resources: True
 filters:
   - qna
   - quarto
 ---
 
-A lot of the content here is provided to help you *understand* what text-cleaning does and how it generates tokens that can be processed by the various analytical approaches commonly-used in NLP. The best way to think about this is as a practical in two parts, with a bonus 'Part 2' that you should not expect to complete unless you probably shouldn't be taking CASA0013 in the first place:
-
-1. Tasks 1–3: these are largely focussed on the basics: exploring text and using regular expressions to find and select text.
-2. Tasks 4–5: this might seem like a *bit* of a detour, but it's intended to show you in a more tangible way how 'normalisation' works when we're working with text. 
-
-The later parts in [Part 2](./Practical-08-Textual_Data-Pt2.qmd) are largely complete and ready to run; however, that *doesn't* mean you should just skip over them and think you've grasped what's happening and it will be easy to apply in your own analyses. I would *not* pay as much attention to LDA topic mining since I don't think it's results are that good, but I've included it here as it's still commonly-used in the Digital Humanities and by Marketing folks. Word2Vec is much more powerful and forms the basis of the kinds of advances seen in ChatGPT and other LLMs.
+Working with text is unquestionably _hard_. In fact, _conceptually_ this is probaly the most challenging practical of the term! But data scientists are _always_ dealing with text because so much of the data that we collect (even more so thanks to the web) is not only text-based (URLs are text!) but, increasingly, unstructured (social media posts, tags, etc.). So while getting to grips with text is a challenge, it also uniquely positions you with respect to the skills and knowledge that other graduates are offering to employers.
 
 ::: {.callout-note}
 
 #### &#128279; Connections
 
-Working with text is unquestionably _hard_. In fact, _conceptually_ this is probaly the most challenging practical of the term! But data scientists are _always_ dealing with text because so much of the data that we collect (even more so thanks to the web) is not only text-based (URLs are text!) but, increasingly, unstructured (social media posts, tags, etc.). So while getting to grips with text is a challenge, it also uniquely positions you with respect to the skills and knowledge that other graduates are offering to employers.
+If you plan to work with data post-graduation then you will _need_ to become comfortable with Regular Expressions (aka. regexes). These are the focus of the [Patterns in Text](https://jreades.github.io/fsds/sessions/week7.html#lectures) lecture but they barely even scratch the surface of what regexes can do. They are _hard_, but they are powerful. 
+
 :::
 
 # Setup
@@ -49,6 +45,8 @@ import geopandas as gpd
 import re
 import math
 import matplotlib.pyplot as plt
+
+from pathlib import Path
 ```
 
 This next is just a small utility function that allows us to output Markdown (like this cell) instead of plain text:
@@ -71,84 +69,13 @@ as_markdown('Result!', "Here's my output...")
 
 #### &#128279; Connections
 
-Because I generally want each practical to stand on its own (unless I'm trying to make a _point_), I've not moved this to a separate Python file (e.g. `utils.py`, but in line with what we covered back in the lectures on [Functions and Packages](https://jreades.github.io/fsds/sessions/week3.html#lectures), this sort of thing is a good candidate for being split out to a separate file to simplify re-use.
+Because I generally want each practical to stand on its own (unless I'm trying to make a _point_), I've not moved this to a separate Python file (e.g. `utils.py`, but in line with what we covered back in the lectures on [Functions and Packages]{{< var module.web >}}sessions/week3.html#lectures), this sort of thing is a good candidate for being split out to a separate file to simplify re-use.
 
 :::
 
 Remember this function from last week? We use it to save downloading files that we already have stored locally. But notice I've made some small changes... what do these do to help the user?
 
-```{python}
-import os
-from requests import get
-from urllib.parse import urlparse
-
-def cache_data(src:str, dest:str) -> str:
-    """Downloads and caches a remote file locally.
-    
-    The function sits between the 'read' step of a pandas or geopandas
-    data frame and downloading the file from a remote location. The idea
-    is that it will save it locally so that you don't need to remember to
-    do so yourself. Subsequent re-reads of the file will return instantly
-    rather than downloading the entire file for a second or n-th itme.
-    
-    Parameters
-    ----------
-    src : str
-        The remote *source* for the file, any valid URL should work.
-    dest : str
-        The *destination* location to save the downloaded file.
-        
-    Returns
-    -------
-    str
-        A string representing the local location of the file.
-    """
-    
-    url = urlparse(src) # We assume that this is some kind of valid URL 
-    fn  = os.path.split(url.path)[-1] # Extract the filename
-    dfn = os.path.join(dest,fn) # Destination filename
-    
-    # Check if dest+filename does *not* exist -- 
-    # that would mean we have to download it! We
-    # also check for *very* small files that are 
-    # likely to represent an incomplete download.
-    if not os.path.isfile(dfn) or os.stat(dfn).st_size < 250:
-        
-        print(f"{dfn} not found, downloading!")
-
-        # Convert the path back into a list (without)
-        # the filename -- we need to check that directories
-        # exist first.
-        path = os.path.split(dest)
-        
-        # Create any missing directories in dest(ination) path
-        # -- os.path.join is the reverse of split (as you saw above)
-        # but it doesn't work with lists... so I had to google how
-        # to use the 'splat' operator! os.makedirs creates missing
-        # directories in a path automatically.
-        if len(path) >= 1 and path[0] != '':
-            os.makedirs(os.path.join(*path), exist_ok=True)
-            
-        # Download and write the file
-        with open(dfn, "wb") as file:
-            response = get(src)
-            file.write(response.content)
-            
-        print("\tDone downloading...")
-
-        # What's this doing???
-        f_size = os.stat(dfn).st_size
-        print(f"\tSize is {f_size/1024**2:,.0f} MB ({f_size:,} bytes)")
-
-    else:
-        print(f"Found {dfn} locally!")
-
-        # And why is it here as well???
-        f_size = os.stat(dfn).st_size
-        print(f"\tSize is {f_size/1024**2:,.0f} MB ({f_size:,} bytes)")
-        
-    return dfn
-```
+{{< include _cache_function.qmd >}}
 
 ::: {.callout-tip}
 
@@ -161,11 +88,9 @@ Load the main data set:
 {{< include _data_definition_sp.qmd >}}
 
 ```{python}
-gdf = gpd.read_parquet( cache_data(url, os.path.join('data','geo')), 
-                      columns=['geometry', 'listing_url', 'name', 
-                               'description', 'amenities', 'price'])
-
-gdf = gdf.to_crs('epsg:27700')
+gdf = gpd.read_parquet( cache_data(url, Path('data/geo')), 
+          columns=['geometry', 'listing_url', 'name', 
+                   'description', 'amenities', 'price']).to_crs('epsg:27700')
 
 print(f"gdf has {gdf.shape[0]:,} rows and CRS is {gdf.crs.name}.")
 ```
@@ -173,7 +98,7 @@ print(f"gdf has {gdf.shape[0]:,} rows and CRS is {gdf.crs.name}.")
 Load supporting Geopackages:
 
 ```{python}
-ddir  = os.path.join('data','geo') # destination directory
+ddir  = Path('data/geo') # destination directory
 spath = 'https://github.com/jreades/fsds/blob/master/data/src/' # source path
 
 boros = gpd.read_file( cache_data(spath+'Boroughs.gpkg?raw=true', ddir) )
@@ -183,23 +108,11 @@ green = gpd.read_file( cache_data(spath+'Greenspace.gpkg?raw=true', ddir) )
 print('Done.')
 ```
 
-# Exploratory Textual Analysis
+# Cleaning Text
 
-::: {.callout-note}
+In a full text-mining application I would spend a lot more time on this stage: sampling, looking at descriptions in full, performing some initial analyses and then coming back with a deeper understanding of the data to make further changes to the analysis.
 
-#### &#128279; Connections
-
-If you plan to work with data post-graduation then you will _need_ to become comfortable with Regular Expressions (aka. regexes). These are the focus of the [Patterns in Text](https://jreades.github.io/fsds/sessions/week7.html#lectures) lecture but they barely even scratch the surface of what regexes can do. They are _hard_, but they are powerful. 
-
-:::
-
-::: {.callout-tip}
-
-In a full text-mining application I would spend a lot more time on this stage: sampling, looking at descriptions in full, performing my analysis (the rest of the steps) and then coming back with a deeper understanding of the data to make further changes to the analysis.
-
-:::
-
-It's helpful to have a sense of what data look like before trying to do something with them, but by default pandas truncates quite a lot of output to keep it from overwhelming the display. For text processing, however, you should probably change the amount of preview text provided by pandas using the available options. *Note*: there are lots of other options that you can tweak in pandas.
+Regardless, it's helpful to have a sense of what data look like before trying to do something with them, but by default pandas truncates quite a lot of output to keep it from overwhelming the display. For text processing, however, you should probably change the amount of preview text provided by pandas using the available options. *Note*: there are lots of other options that you can tweak in pandas.
 
 ```{python}
 print(f"Default maximum column width: {pd.options.display.max_colwidth}") # What's this currently set to?
@@ -215,7 +128,7 @@ print(f"Now maximum column width set to: {pd.options.display.max_colwidth}")
 
 :::
 
-To explore the description field properly you'll need to filter out any NA/NaN descriptions before sampling the result. *Hint*: you'll need to think about negation (`~`) of a method output that tells you if a field *is NA*.
+To explore the description field properly you'll need to filter out any NA/NaN descriptions before sampling the result. *Hint*: you'll need to think about boolean NOT (`~`) applied to a field where the only test we have is *is NA*.
 
 :::: {.qna}
 
@@ -233,18 +146,21 @@ gdf[~gdf.description.isna()].sample(5, random_state=42)[['description']]
 
 ::::
 
-::: {.callout-caution}
+What do you notice about the above? Are they simple text? Are there patterns or problems? Are there characters that represent things other than words and simple punctuation?
 
-#### Stop
+:::: {.qna}
 
-What do you notice about the above? Are they simple text? Are there patterns of problems? Are there characters that represent things other than words and simple punctuation?
-
-:::
-
-### Questions
+#### Questions
 
 - What patterns can you see that might need 'dealing with' for text-mining to work?
 - What non-text characters can you see? (Things *other* than A-Z, a-z, and simple punctuation!)
+
+#### Answers
+
+- This is not simple text: there is HTML (the markup language of web pages) in there, such as `<br />` and `<img ... />`.
+- There is also quite a bit of 'markup', such as '`**`', as well as emojis, such as '`✔️`'. 
+
+::::
 
 ## The Amenities Field
 
@@ -263,27 +179,32 @@ gdf.amenities.sample(5, random_state=42)
 But look what happens now, can you see the issue a little more easily?
 
 ```{python}
-gdf.amenities.iloc[0]
+gdf.amenities.iloc[0][:25]
 ```
 
-### Questions
+:::: {.qna}
+
+#### Questions
 
 - What's the implicit format of the Amenities columns?
 - How could you represent the data contained in the column?
 
+#### Answers
+
+- It's a string! It looks like a series of values but it's actually just a long string.
+- Implicitly, we are dealing with a list.
+
+::::
+
 ## Remove NaN Values
 
-::: {.callout-note}
-
-I would be wary of doing the below in a 'proper' application without doing some careful research first, but to make our lives easier, we're going to drop rows where one of these values is NaN _now_ so it will simplify the steps below. In reality, I would spend quite a bit more time investigating which values are NaN and why before simply dropping them.
-
-:::
-
-Anyway, drop all rows where *either* the description or amenities (or both) are NA:
+I would be wary of doing what I do below in a 'proper' application without some careful research, but to make our lives easier, we're going to drop rows where one of the two key columns (Description, Amenities) for this practical is `NaN` because it will simplify the steps below. In reality, I would spend quite a bit more time investigating which values are NaN and why before simply dropping them.
 
 :::: {.qna}
 
 #### Question
+
+How do you drop all rows where *either* the description or amenities (or both) are `NaN`:
 
 ```python
 gdf = gdf.dropna(???)
@@ -305,19 +226,111 @@ print(f"Now gdf has {gdf.shape[0]:,} rows.")
 print(f"You should get that there are `{gdf.shape[0]:,}` rows.")
 ```
 
-# Using Regular Expressions
+# Regexes in Pandas
 
 ::: {.callout-note}
 
 #### &#128279; Connections
 
-We're building on the work done in [Practical 7](Practical-07-Spatial_Data.qmd), but making use now of the lecture on [Patterns in Text](https://jreades.github.io/fsds/sessions/week6.html#lectures)) to quickly sort through the listings.
+We're building on the work done in [Practical 7]({{< var module.web >}}sessions/week7.html#practical), but making use now of the lecture on [Patterns in Text]({{< var module.web >}}sessions/week6.html#pre-recorded-lectures)) to quickly sort through the listings.
 
 :::
 
-There is a _lot_ that can be done with Regular Expressions to identify relevant records in textual data and we're going to use this as a starting point for the rest of the analysis. I would normally consider the regexes here a 'first pass' at the data, but would look very carefully at the output of the TF/IDF vectorizer, Count vectorizer, and LDA to see if I could improve my regexes for further cycles of analysis... the main gain there is that regexes are _much_ faster than using the full NLP (Natural Language Processing) pipeline on the _full_ data set each time. As an alternative, you could develop the pipeline using a random subsample of the data and then process the remaining records sequentially -- in this context there is no justification for doing that, but with a larger corpus it might make sense.
+There is a _lot_ that can be done with Regular Expressions to identify relevant records in textual data and we're going to use this as a starting point for the rest of the analysis. I would normally consider the regexes below a 'first pass' at the data and would look very carefully at the output of the TF/IDF vectorizer, Count vectorizer and/or LDA to see if I could improve my regexes for further cycles of analysis... 
 
-## Luxury Listings
+The main gain here is that regexes are _much_ faster than using the full NLP (Natural Language Processing) pipeline on the _full_ data set each time. As an alternative, you could develop the pipeline using a random subsample of the data and then process the remaining records sequentially -- in this context there is no justification for doing that, but with a larger corpus it might make sense.
+
+## Using Strings in Pandas
+
+We've not done much formally with text data in Pandas, so let's have a quick look at what's possible. Most of these operations are accessed by calling on the `.str` accessor and you can read *[allllllll about it](https://pandas.pydata.org/docs/user_guide/text.html)*.
+
+### Trimming
+
+```{python}
+# From the pandas documentation
+idx = pd.Index([" jack", "jill ", " jesse ", "frank"])
+
+print(idx)
+print(idx.str.strip())
+print(idx.str.lstrip())
+print(idx.str.rstrip())
+```
+
+### Lower/Upper Case
+
+```{python}
+gdf.sample(3, random_state=42).description.str.lower()
+```
+
+```{python}
+gdf.sample(3, random_state=42).description.str.upper()
+```
+
+### Replacing
+
+```{python}
+gdf.sample(3, random_state=42).description.str.replace(r' ','_',regex=False)
+```
+
+```{python}
+gdf.sample(3, random_state=42).description.str.replace(r'\W','',regex=True)
+```
+
+### Splitting
+
+```{python}
+gdf.sample(3, random_state=42).amenities.str.split(r',')
+```
+
+```{python}
+gdf.sample(3, random_state=42).amenities.str.split(r',', expand=True)
+```
+
+### Indexing
+
+```{python}
+gdf.sample(3, random_state=42).description.str[:25]
+```
+
+### Extraction
+
+```{python}
+# For some reason this doesn't take regex=True
+gdf.sample(3, random_state=42).description.str.extract(r'stylish (?P<detail>\w+)')
+```
+
+### Putting it Together
+
+```{python}
+gdf.sample(3, random_state=42).amenities.str.upper().str.replace(r'(?:\"|\[|\])', '', regex=True).str.split(r'\s*,\s*', regex=True, expand=True)
+```
+
+Or you could also tackle it this way:
+
+```{python}
+gdf.sample(3, random_state=42).amenities.str.upper().str.replace(r'(?:\"|\[|\])', '', regex=True).str.get_dummies(sep=r',')
+```
+
+::: {.callout-warning}
+#### Check Your Data!
+
+The `get_dummies` method works better than I expected! I assumed it would struggle with the `[` and `]` at the start and end of the string; however, I *think* what's happening is that these are not allowed characters in a column name so they're simply dropped from the expansion. 
+
+What's nice about the `get_dummies` approach from an analytical standpoint is that it deals with the issue that the amenities are not all listed in the same order in every listing. So some might lead with the size of the TV, while other listings (with equally large televisions) lead with the views. Converting all of these to dummies automatically 'sorts' them so that we can ask questions like 'which listings have a TV *and* a great view?'
+
+:::
+
+## Selecting Data
+
+In the same way that we can use operators like `<` and `==` to select rows from a data frame, we also have the output of operations like `contains` available. So here's an example:
+
+```{python}
+gdf[
+    gdf.description.str.contains(r'Flat', regex=False, flags=re.IGNORECASE)
+].sample(3, random_state=42)[['description']]
+```
+
+# Selecting Luxury Listings
 
 ::: {.callout-caution collapse="true"}
 
@@ -344,7 +357,9 @@ In fact, in my real-world applications you might even need more than one group/n
 
 ```python
 gdf[
-    gdf.description.str.contains(r'???', regex=True, flags=re.IGNORECASE) # <-- The regex
+    gdf.description.str.contains(
+        r'???', 
+        regex=True, flags=re.IGNORECASE) # <-- The regex
 ].sample(3, random_state=42)[['description']]
 ```
 
@@ -352,7 +367,9 @@ gdf[
 
 ```{python}
 gdf[
-    gdf.description.str.contains(r'(?:luxur(?:y|ious|iat)|prestigious|stunning)', regex=True, flags=re.IGNORECASE)
+    gdf.description.str.contains(
+        r'(?:luxur(?:y|ious|iat)|prestigious|stunning)', 
+        regex=True, flags=re.IGNORECASE)
 ].sample(3, random_state=42)[['description']]
 ```
 
@@ -367,16 +384,24 @@ Assign it to a new data frame called `lux`:
 #### Question
 
 ```python
-lux = gdf[gdf.description.str.contains(r'???', regex=True, flags=re.IGNORECASE)].copy()
-lux.to_parquet(os.path.join('data','clean','luxury.geopackage'))
+lux = gdf[
+    gdf.description.str.contains(
+        r'???', 
+        regex=True, flags=re.IGNORECASE)
+].copy()
+lux.to_parquet(os.path.join('data','clean','luxury.geoparquet'))
 print(f"Found {lux.shape[0]:,} records for 'luxury' flats")
 ```
 
 #### Answer
 
 ```{python}
-lux = gdf[gdf.description.str.contains(r'(?:luxur(?:y|ious|iat)|prestigious|stunning)', regex=True, flags=re.IGNORECASE)].copy()
-lux.to_parquet(os.path.join('data','clean','luxury.geopackage'))
+lux = gdf[
+    gdf.description.str.contains(
+        r'(?:luxur(?:y|ious|iat)|prestigious|stunning)', 
+        regex=True, flags=re.IGNORECASE)
+].copy()
+lux.to_parquet(os.path.join('data','clean','luxury.geoparquet'))
 print(f"Found {lux.shape[0]:,} records for 'luxury' flats")
 ```
 
@@ -481,7 +506,7 @@ f
 
 :::
 
-## Budget Listings
+# Selecting Budget Listings
 
 ::: {.callout-tip collapse="true"}
 
@@ -503,7 +528,9 @@ What words can you think of that might help you to spot affordable and budget ac
 
 ```python
 gdf[
-    gdf.description.str.contains(???, regex=True, flags=re.IGNORECASE)
+    gdf.description.str.contains(
+        ???, 
+        regex=True, flags=re.IGNORECASE)
 ].sample(5, random_state=42)[['description']]
 ```
 
@@ -511,8 +538,9 @@ gdf[
 
 ```{python}
 gdf[
-    gdf.description.str.contains(r'\b(?:affordable|budget|cheap|cosy)\b', 
-    regex=True, flags=re.IGNORECASE)
+    gdf.description.str.contains(
+        r'\b(?:affordable|budget|cheap|cosy)\b', 
+        regex=True, flags=re.IGNORECASE)
 ].sample(5, random_state=42)[['description']]
 ```
 
@@ -525,17 +553,24 @@ gdf[
 #### Question
 
 ```python
-aff = gdf[gdf.description.str.contains(???, regex=True, flags=re.IGNORECASE)].copy()
-aff.to_parquet(os.path.join('data','clean','affordable.geopackage'))
+aff = gdf[
+    gdf.description.str.contains(
+        ???, 
+        regex=True, flags=re.IGNORECASE)
+].copy()
+aff.to_parquet(os.path.join('data','clean','affordable.geoparquet'))
 print(f"There are {aff.shape[0]:,} rows flagged as 'affordable'.")
 ```
 
 #### Answer
 
 ```{python}
-aff = gdf[gdf.description.str.contains(r'\b(?:affordable|budget|cheap|cosy)\b', 
-          regex=True, flags=re.IGNORECASE)].copy()
-aff.to_parquet(os.path.join('data','clean','affordable.geopackage'))
+aff = gdf[
+    gdf.description.str.contains(
+        r'\b(?:affordable|budget|cheap|cosy)\b', 
+        regex=True, flags=re.IGNORECASE)
+].copy()
+aff.to_parquet(os.path.join('data','clean','affordable.geoparquet'))
 print(f"There are {aff.shape[0]:,} rows flagged as 'affordable'.")
 ```
 
@@ -581,7 +616,7 @@ plt.tight_layout()
 
 ```
 
-## Near Bluespace
+# Selecting 'Bluespace'
 
 ::: {.callout-warning collapse="true"}
 
@@ -603,7 +638,9 @@ Now see if you can work out a regular expression to find accommodation that emph
 
 ```python
 gdf[
-    gdf.description.str.contains(???, regex=???, flags=???)
+    gdf.description.str.contains(
+        ???, 
+        regex=???, flags=???)
 ].sample(5, random_state=42)[['description']]
 ```
 
@@ -611,8 +648,9 @@ gdf[
 
 ```{python}
 gdf[
-    gdf.description.str.contains(r'(?:Thames|river|water|canals?)(?:-|\s+)(?: view|\s?front)\b', 
-    regex=True, flags=re.IGNORECASE)
+    gdf.description.str.contains(
+        r'(?:Thames|river|water|canals?)(?:-|\s+)(?: view|\s?front)\b', 
+        regex=True, flags=re.IGNORECASE)
 ].sample(5, random_state=42)[['description']]
 ```
 
@@ -629,7 +667,7 @@ bluesp = gdf[
     (gdf.description.str.contains(???, regex=True, flags=re.IGNORECASE)) |
     (gdf.description.str.contains(???, regex=True, flags=re.IGNORECASE))
 ].copy()
-bluesp.to_parquet(os.path.join('data','clean','bluespace.geopackage'))
+bluesp.to_parquet(os.path.join('data','clean','bluespace.geoparquet'))
 print(f"Found {bluesp.shape[0]:,} rows.")
 ```
 
@@ -637,10 +675,14 @@ print(f"Found {bluesp.shape[0]:,} rows.")
 
 ```{python}
 bluesp = gdf[
-    (gdf.description.str.contains(r'(?:Thames|river|water|canals?)(?:-|\s+)(?:view|front)\b', regex=True, flags=re.IGNORECASE)) |
-    (gdf.description.str.contains(r'(?:walk|close|near) to (?:Thames|river|water|canal)', regex=True, flags=re.IGNORECASE))
+    (gdf.description.str.contains(
+        r'(?:Thames|river|water|canals?)(?:-|\s+)(?:view|front)\b', 
+        regex=True, flags=re.IGNORECASE)) |
+    (gdf.description.str.contains(
+        r'(?:walk|close|near) to (?:Thames|river|water|canal)', 
+        regex=True, flags=re.IGNORECASE))
 ].copy()
-bluesp.to_parquet(os.path.join('data','clean','bluespace.geopackage'))
+bluesp.to_parquet(os.path.join('data','clean','bluespace.geoparquet'))
 print(f"Found {bluesp.shape[0]:,} rows.")
 ```
 
@@ -681,7 +723,70 @@ plt.show()
 
 - How else might you select listings with a view of the Thames or other bluespaces?
 
-## Resources
+# Real-World Examples
+
+Here are some *parts* of real-world regex code that I'm using to extract the main elements of addresses in a data set that I'm working on. There are four *more* regular expressions that I then compile into one monster regex, but see if you can make sense of what kinds of text they will match.
+
+```{python}
+alocation = re.compile(r'''
+  \b(?P<flat>
+      (?:The)?
+      (?:
+          (?:Basement|Lower|Ground|Upper|First|Second|Third|Fourth|Fifth|And)
+          \b\s*
+      )+
+      (?:Floors?)?
+  )\b\s*
+''', re.X | re.IGNORECASE)
+
+# Regex to match ranges in addresses
+# This regex matches ranges like '1-5', '2 to 4', '3–7', '10/12', etc.
+is_range = re.compile(r'''
+    \b(
+        (?:
+            \d+[A-Ha-h]|  # Note that the order of the conditions
+            [A-Ha-h]\d+|  # here matters. If you put \d+ *first*
+            \d+|          # then '2b' will never match because '2'
+            [A-Ha-h]      # will always be pulled out before.
+        )
+        \s*
+        (?:-|–|—|[Tt]o|/)
+        \s*
+        (?:
+            \d+[A-Ha-h]|
+            [A-Ha-h]\d+|
+            \d+|
+            [A-Ha-h]
+        )
+    )\b
+''', re.X)
+```
+
+One way to do that is write some simple 'test cases' and see what happens! Notice that, in the `alocation` regex we have a "named capture group". See if you can *add* this to the `is_range` regular expression... you might want to duplicate the code block above so that you have a 'clean' copy to revert to if you break the regular expressions and aren't sure why.
+
+```{python}
+
+cases = [
+    'Lower Ground Floor Flat', 'Flat 2b', 
+    '#34', 'Basement and Ground Floor',
+    '1b-3c Hoxton Square']
+
+for c in cases:
+    print(f"Case: {c}")
+    m1 = alocation.search(c)
+    m2 = is_range.search(c)
+    if m1:
+        print("\tGot a match on alocation.")
+        print(f"\tMatch was: '{m1.group('flat')}'")
+    if m2:
+        print("\tGot a match on is_range")
+        print(f"\tMatch was: '{m2.group(1)}'")
+    if not(m1 or m2):
+        print("\tNo match.")  
+    print()
+```
+
+# Resources
 
 There is a lot more information out there, including a [whole book](https://www.nltk.org/book/) and your standard [O'Reilly text](http://www.datascienceassn.org/sites/default/files/Natural%20Language%20Processing%20with%20Python.pdf).
 
