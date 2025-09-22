@@ -31,3 +31,5 @@ for root, dirs, files in os.walk(render_dir):
 
         else:
             print("- retained")
+
+print("Don't publish the answers. Just copy the answers to a shared folder.")

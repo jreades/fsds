@@ -62,6 +62,16 @@ Updates were rejected because the remote contains work that you do not have loca
 
 Since you can't push, what do you do?
 
+## First Things First
+
+Check the status of the repository:
+
+```
+git status
+```
+
+This will tell you both the status of your local repository and how it compares to the remote one, helping you to work out where the likely problems are. Before doing anything else you should run this command and keep the output handy (either open a new Terminal for subsequent steps, or copy the output into a Markdown editor).
+
 ## Option 1: Hope for the Best
 
 If you're *lucky* then some conflicts can be resolved simply with a `git pull`. This works when there are remote changes that have zero impact on your local changes. Pulling the remote changes will update your local copy and then you can just turn around and `push` your local changes back to the remote (usually: GitHub).
@@ -125,7 +135,19 @@ Change #2
 
 Commit your changes and push the merged results back to the remote repository.
 
-## Option 3: Open a Pull Request
+## Option 3: Stash
+
+Another option is to 'stash' your local changes and then try to reapply them when you've got the latest version from the repository. The sequence is:
+
+- Stash your work (`git stash` deals with files you're already tracking in Git; `git stash -u` includes *untracked* files).
+- Pull the version with the conflict (`git pull` if you're dealing with the `HEAD` on the remote repository)
+- Re-apply your stashed changes (Read the documentation carefully since there are several options here).
+- Commit.
+- Push.
+
+[Altassian](https://www.atlassian.com/git/tutorials/saving-changes/git-stash) has a nice overview of how this works.
+
+## Option 4: Open a Pull Request
 
 To resolve, create a new branch:
 
