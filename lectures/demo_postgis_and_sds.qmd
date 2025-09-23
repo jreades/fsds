@@ -10,6 +10,7 @@ user: postgres
 password: test
 db: test
 pod: myapp
+pgimage: "quay.io/taolu/postgis:14-3.5-alpine"
 ---
 
 ## Find a PostGIS Image
@@ -52,7 +53,7 @@ podman run --rm -d --name postgres --pod {{< meta pod >}} \
 -v "${PWD}"/data/postgres:/var/lib/postgresql/data \
 -v /tmp:/tmp \
 -v "${PWD}"/data/postgres/pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf \
-quay.io/taolu/postgis:14-3.5-alpine
+{{< meta pgimage >}}
 ```
 
 ::: {.notes}
