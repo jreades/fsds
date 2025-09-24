@@ -9,7 +9,7 @@
 <meta name="author" content="Hamish Gibbs">
 <meta name="author" content="Francesco Terenzi">
 <meta name="author" content="Chukun Gao">
-<meta name="dcterms.date" content="2025-09-12">
+<meta name="dcterms.date" content="2025-09-22">
 
 <title>Dealing with Conflict – Foundations of Spatial Data Science</title>
 <style>
@@ -322,9 +322,11 @@ ul.task-list li input[type="checkbox"] {
    
   <ul class="collapse">
   <li><a href="#spotting-a-conflict" id="toc-spotting-a-conflict" class="nav-link active" data-scroll-target="#spotting-a-conflict">Spotting a Conflict</a></li>
+  <li><a href="#first-things-first" id="toc-first-things-first" class="nav-link" data-scroll-target="#first-things-first">First Things First</a></li>
   <li><a href="#option-1-hope-for-the-best" id="toc-option-1-hope-for-the-best" class="nav-link" data-scroll-target="#option-1-hope-for-the-best">Option 1: Hope for the Best</a></li>
   <li><a href="#option-2-resolve-conflicts-locally" id="toc-option-2-resolve-conflicts-locally" class="nav-link" data-scroll-target="#option-2-resolve-conflicts-locally">Option 2: Resolve Conflicts Locally</a></li>
-  <li><a href="#option-3-open-a-pull-request" id="toc-option-3-open-a-pull-request" class="nav-link" data-scroll-target="#option-3-open-a-pull-request">Option 3: Open a Pull Request</a></li>
+  <li><a href="#option-3-stash" id="toc-option-3-stash" class="nav-link" data-scroll-target="#option-3-stash">Option 3: Stash</a></li>
+  <li><a href="#option-4-open-a-pull-request" id="toc-option-4-open-a-pull-request" class="nav-link" data-scroll-target="#option-4-open-a-pull-request">Option 4: Open a Pull Request</a></li>
   </ul>
 <div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/jreades/fsds/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -373,7 +375,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">September 12, 2025</p>
+      <p class="date">September 22, 2025</p>
     </div>
   </div>
   
@@ -429,6 +431,12 @@ git push</code></pre>
 Updates were rejected because the remote contains work that you do not have locally.  </code></pre>
 <p>Since you can’t push, what do you do?</p>
 </section>
+<section id="first-things-first" class="level2">
+<h2 class="anchored" data-anchor-id="first-things-first">First Things First</h2>
+<p>Check the status of the repository:</p>
+<pre><code>git status</code></pre>
+<p>This will tell you both the status of your local repository and how it compares to the remote one, helping you to work out where the likely problems are. Before doing anything else you should run this command and keep the output handy (either open a new Terminal for subsequent steps, or copy the output into a Markdown editor).</p>
+</section>
 <section id="option-1-hope-for-the-best" class="level2">
 <h2 class="anchored" data-anchor-id="option-1-hope-for-the-best">Option 1: Hope for the Best</h2>
 <p>If you’re <em>lucky</em> then some conflicts can be resolved simply with a <code>git pull</code>. This works when there are remote changes that have zero impact on your local changes. Pulling the remote changes will update your local copy and then you can just turn around and <code>push</code> your local changes back to the remote (usually: GitHub).</p>
@@ -477,8 +485,20 @@ Change #2</code></pre>
 <p>Commit your changes and push the merged results back to the remote repository.</p>
 </section>
 </section>
-<section id="option-3-open-a-pull-request" class="level2">
-<h2 class="anchored" data-anchor-id="option-3-open-a-pull-request">Option 3: Open a Pull Request</h2>
+<section id="option-3-stash" class="level2">
+<h2 class="anchored" data-anchor-id="option-3-stash">Option 3: Stash</h2>
+<p>Another option is to ‘stash’ your local changes and then try to reapply them when you’ve got the latest version from the repository. The sequence is:</p>
+<ul>
+<li>Stash your work (<code>git stash</code> deals with files you’re already tracking in Git; <code>git stash -u</code> includes <em>untracked</em> files).</li>
+<li>Pull the version with the conflict (<code>git pull</code> if you’re dealing with the <code>HEAD</code> on the remote repository)</li>
+<li>Re-apply your stashed changes (Read the documentation carefully since there are several options here).</li>
+<li>Commit.</li>
+<li>Push.</li>
+</ul>
+<p><a href="https://www.atlassian.com/git/tutorials/saving-changes/git-stash">Altassian</a> has a nice overview of how this works.</p>
+</section>
+<section id="option-4-open-a-pull-request" class="level2">
+<h2 class="anchored" data-anchor-id="option-4-open-a-pull-request">Option 4: Open a Pull Request</h2>
 <p>To resolve, create a new branch:</p>
 <p><code>git checkout -b new-branch-name</code></p>
 <p>Check that you are in the new branch:</p>
