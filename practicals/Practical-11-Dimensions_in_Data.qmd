@@ -7,13 +7,6 @@ filters:
   - quarto
 ---
 
-<style type="text/css">
-.longform {
-    max-height: 300px;
-    overflow-y: scroll;
-}
-</style>
-
 In this session the focus is on MSOA-level Census data from 2011. We're going to explore this as a *possible* complement to the InsideAirbnb data. Although it's not ideal to use 2011 data with scraped from Airbnb this year, we: 
 
 1. Have little choice as the 2021 data is only just starting to come through from the Census and the London Data Store hasn't been updated (still!); and 
@@ -33,8 +26,9 @@ There are a _lot_ of links across sessions now, as well as some _forward links_ 
 
 Let's start with the usual bits of code to ensure plotting works, to import packages and load the data into memory.
 
+{{< include _data_definition_sp.qmd >}}
+
 ```{python}
-import os
 import re
 import numpy as np
 import pandas as pd
@@ -48,15 +42,19 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import RobustScaler
 from sklearn.preprocessing import PowerTransformer
 
-import umap
-from kneed import knee_locator
+try:
+    import umap
+except:
+    ! pip install umap-learn
+    import umap
+try:
+    from kneed import knee_locator
+except:
+    ! pip install kneed
+    from kneed import knee_locator
 ```
 
-Notice here that we've moved the function from last week's notebook to a separate file `cache.py` from which we import the `cache_data` function. This should give you some ideas about how to work from script -> function -> library effectively.
-
-```{python}
-from cache import cache_data
-```
+{{< include _cache_function.qmd >}}
 
 # Loading MSOA Census Data
 
@@ -93,16 +91,17 @@ You might like to load the cached copy of the file into Excel so that you can se
 
 ```{python}
 src_url   = 'https://data.london.gov.uk/download/msoa-atlas/39fdd8eb-e977-4d32-85a4-f65b92f29dcb/msoa-data.xls'
-dest_path = os.path.join('data','msoa')
+dest_path = Path('data/msoa')
 ```
-
-:::: {.panel-tabset}
 
 You will want to manually download the data to have a look *in* Excel while you sort out the answer below. We're mainly doing this so that you use and make sense of documentation for handling more complex data structures in Excel.
 
+:::: {.qna}
+
 #### Question
 
-```python
+```{python}
+#| eval: false
 excel_atlas = pd.read_excel(
     cache_data(src_url, dest_path), 
     ???, # Which sheet is the data in?
@@ -123,14 +122,20 @@ excel_atlas = pd.read_excel(
 Notice the format of the output and notice that all of the empty cells in the Excel sheet have come through as `Unnamed: <col_no>_level_<level_no>`:
 
 ```{python}
+#| eval: false
 excel_atlas.head(1)
 ```
 
-```python
+```{python}
+#| eval: false
 print(f"Shape of the MSOA Atlas data frame is: {excel_atlas.shape[0]:,} x {excel_atlas.shape[1]:,}")
 ```
 
-You should get: <code>`{python} f"Shape of the MSOA Atlas data frame is: {excel_atlas.shape[0]:,} x {excel_atlas.shape[1]:,}"`</code>, but how on earth are you going to access the data?
+```{python}
+#| echo: false
+#| output: asis
+print(f"You should get: `Shape of the MSOA Atlas data frame is: {excel_atlas.shape[0]:,} x {excel_atlas.shape[1]:,}`, but how on earth are you going to access the data?")
+```
 
 ## Accessing MultiIndexes
 
@@ -159,7 +164,8 @@ We'll be looking at **Grouping Data** in much more detail in [next week](https:/
 
 Of course, one way to get at the data is to use `.iloc[...]` since that refers to columns by *position* and ignores the complexity of the index. Try printing out the the first five rows of the first column using `iloc`:
 
-```python
+```{python}
+#| eval: false
 excel_atlas.iloc[???]
 ```
 
@@ -167,6 +173,7 @@ You should get:
 
 ```{python}
 #| echo: false
+#| output: asis
 excel_atlas.iloc[0:5,0]
 ```
 
@@ -175,18 +182,20 @@ excel_atlas.iloc[0:5,0]
 But to do it by name is a little trickier:
 
 ```{python}
+#| eval: false
 excel_atlas.columns.tolist()[:5]
 ```
 
 Notice how asking for the first five columns has given us a list of... what exactly?
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
 So to get the **same output** by column *name* what do you need to copy from above:
 
-```python
+```{python}
+#| eval: false
 excel_atlas.loc[0:5, ???]
 ```
 
@@ -205,6 +214,7 @@ The answer is *really* awkward, so we're going to look for a better way...
 Despite this, *one* way that MultiIndexes can be useful is for accessing column-slices from a 'wide' dataframe. We can, for instance, select all of the Age Structure columns in one go and it will be *simpler* than what we did above.
 
 ```{python}
+#| eval: false
 excel_atlas.loc[0:5, ('Age Structure (2011 Census)')]
 ```
 
@@ -213,28 +223,33 @@ excel_atlas.loc[0:5, ('Age Structure (2011 Census)')]
 This works because the MultiIndex tracks the columns using *levels*, with level 0 at the 'top' and level 2 (in our case) at the bottom. These are the unique *values* for the top level ('row 0'):
 
 ```{python}
+#| eval: false
 excel_atlas.columns.levels[0]
 ```
 
 These are the *values* for those levels across the actual columns in the data frame, notice the repeated 'Age Structure (2011 Census)':
 
 ```{python}
+#| eval: false
 excel_atlas.columns.get_level_values(0)[:10]
 ```
 
 And here are the *values* for the second level of the index ('row 1' in the Excel file):
 
 ```{python}
+#| eval: false
 excel_atlas.columns.get_level_values(1)[:10]
 ```
 
 By extension, if we drop a level 0 index then *all* of the columns that it supports at levels 1 and 2 are _also_ dropped: so when we drop `Mid-year Estimate totals` from level 0 then all 11 of the 'Mid-year Estimate totals (2002...2012)' columns are dropped in one go.
 
 ```{python}
+#| eval: false
 excel_atlas[['Mid-year Estimate totals']].head(3)
 ```
 
 ```{python}
+#| eval: false
 test = excel_atlas.drop(columns=['Mid-year Estimate totals'], axis=1, level=0)
 
 print(f"Excel source had {excel_atlas.shape[1]} columns.")
@@ -242,6 +257,7 @@ print(f"Test now has {test.shape[1]} columns.")
 ```
 
 ```{python}
+#| eval: false
 # Tidy up if the variable exists
 if 'test' in locals():
     del(test)
@@ -279,6 +295,7 @@ print(f"Shape of the MSOA Atlas data frame is now: {tidy.shape[0]} x {tidy.shape
 This should drop you down to `{python} f"{tidy.shape[0]} x {tidy.shape[1]}"`. Notice below that the multi-level _index_ has not changed but the multi-level _values_ remaining have!
 
 ```{python}
+#| eval: false
 print(f"There are {len(tidy.columns.levels[0].unique())} categories.") # The categories
 print(f"But only {len(tidy.columns.get_level_values(0).unique())} values.") # The actual values
 ```
@@ -289,20 +306,22 @@ Now we need to drop all of the percentages from the data set. These can be found
 
 I'd suggest looking for: "(%)", "%", and "Percentages". You may need to check both start and end of the string. You could also use a regular expression here instead of multiple tests. Either way *works*, but have a think about the tradeoffs between intelligibility, speed, and what *you* understand...
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
 Selection using multiple logical tests:
 
-```python
+```{python}
+#| eval: false
 to_drop = [x for x in tidy.columns.get_level_values(1) if (???)]
 print(to_drop)
 ```
 
 Selection using a regular expression:
 
-```python
+```{python}
+#| eval: false
 print([x for x in tidy.columns.get_level_values(1) if re.search(???, x)])
 ```
 
@@ -320,16 +339,15 @@ print([x for x in tidy.columns.get_level_values(1) if re.search("(?:%|Percentage
 
 ::::
 
-With both you should get: 
-
-::: {.longform}
+Either way you should get a set of columns that 'look' like duplicates because we're unpacking the top level of the hierarchical index: (only the first 10 are shown here): 
 
 ```{python}
 #| echo: false
-[x for x in tidy.columns.get_level_values(1) if re.search("(?:%|Percentages)", x)]
+#| output: asis
+rs = [x for x in tidy.columns.get_level_values(1) if re.search("(?:%|Percentages)", x)]
+for i in range(10):
+    print(f"- {i+1}: {rs[i]}")
 ```
-
-:::
 
 ::: {.callout-note}
 
@@ -343,11 +361,12 @@ See how regular expressions keep coming [baaaaaaaaack](https://jreades.github.io
 
 You now need to drop these columns using the `level` keyword as part of your drop command. You have plenty of examples of how to drop values in place, but I'd suggest _first_ getting the command correct (maybe duplicate the cell below and change the code so that the result is saved to a dataframe called `test` before overwriting `tidy`?) and _then_ saving the change.
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
-```python
+```{python}
+#| eval: false
 tidy = tidy.drop(to_drop, axis=1, level=???)
 print(f"Shape of the MSOA Atlas data frame is now: {tidy.shape[0]} x {tidy.shape[1]}")
 ```
@@ -368,6 +387,7 @@ The data frame should now be <code>`{python} f"{tidy.shape[0]}"` x `{python} f"{
 Although this ia big improvement, you'll have trouble saving or linking this data to other inputs. The problem is that Level 2 of the multi-index is mainly composed of 'Unnamed' values and so we need to merge it with Level 1 to simplify our data frame, and then merge _that_ with level 0...
 
 ```{python}
+#| eval: false
 tidy.columns.values[:3]
 ```
 
@@ -407,13 +427,13 @@ for c in tidy.columns.values:
     new_cols.append(clabel)
 ```
 
-::: {.longform}
+The new columns should be: 
 
 ```{python}
-new_cols
+#| echo: false
+#| output: asis
+print(f"{', '.join(new_cols)}")
 ```
-
-:::
 
 ::: {.callout-caution}
 
@@ -424,18 +444,28 @@ Make sure you understand what is happening here before just moving on to the nex
 :::
 
 ```{python}
+#| eval: false
 tidy.columns = new_cols  # <- Blow away complex index, replace with simple
 tidy.head()
+```
+
+```{python}
+#| echo: false
+#| output: asis
+tidy.columns = new_cols  # <- Blow away complex index, replace with simple
+tidy.drop(index=tidy[tidy['MSOA Code'].isna()].index, inplace=True)
 ```
 
 You might want to have a look at _what_ the code below drops first before just running it... remember that you can pull apart any complex code into pieces:
 
 ```{python}
+#| eval: false
 tidy['MSOA Code'].isna()
 tidy[tidy['MSOA Code'].isna()].index
 ```
 
 ```{python}
+#| eval: false
 tidy.drop(index=tidy[tidy['MSOA Code'].isna()].index, inplace=True)
 ```
 
@@ -461,11 +491,12 @@ We want to add the borough name and a 'subregion' name. We already have the boro
 
 We first need to extract the borough names from one of the existing fields in the data frame... a *regex* that does *replacement* would be fastest and easiest: focus on what you *don't* need from the MSOA Name **string** and **replacing** that using a **regex**...
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
-```python
+```{python}
+#| eval: false
 tidy['Borough'] = tidy['MSOA Name'].???
 tidy.Borough.unique()
 ```
@@ -482,6 +513,7 @@ tidy.Borough.unique()
 You should get:
 ```{python}
 #| echo: false
+#| output: asis
 tidy.Borough.unique()
 ```
 
@@ -503,11 +535,12 @@ for b in ['Richmond upon Thames','Hounslow','Ealing','Hillingdon','Brent','Harro
     mapping[b]='Outer West and North West'
 ```
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
-```python
+```{python}
+#| eval: false
 tidy['Subregion'] = tidy.Borough.apply(???)
 ```
 
@@ -524,9 +557,10 @@ tidy['Subregion'] = tidy.Borough.apply(lambda x: mapping[x])
 There's a little snipped of useful code to work out here: we need to check if the `clean` directory exists in the `data` directory; if we don't then the `tidy.to_parquet()` call will fail.
 
 ```{python}
-if not os.path.exists(os.path.join('data','clean')):
-    os.makedirs(os.path.join('data','clean'))
-tidy.to_parquet(os.path.join('data','clean','MSOA_Atlas.parquet'))
+msoas = Path('data/clean/MSOA_Atlas.parquet')
+if not msoas.parent.exists():
+    msoas.parent.mkdir()
+tidy.to_parquet(msoas.resolve())
 print("Done.")
 ```
 
@@ -557,7 +591,7 @@ First, we need to download the MSOA source file, which is a zipped archive of a 
 # Oh look, we can read a Shapefile without needing to unzip it!
 msoas = gpd.read_file(
     cache_data('https://github.com/jreades/fsds/blob/master/data/src/Middle_Layer_Super_Output_Areas__December_2011__EW_BGC_V2-shp.zip?raw=true', 
-               os.path.join('data','geo')), driver='ESRI Shapefile')
+               msoas.parent), driver='ESRI Shapefile')
 ```
 
 ### Identifying Matching Columns
@@ -573,11 +607,12 @@ tidy.iloc[:3,:5]
 
 One more thing: if you've got more than one choice I'd *always* go with a code over a name because one is intended for matching and other is not...
 
-:::: {.panel-tabset}
+:::: {.qna}
 
 #### Question
 
-```python
+```{python}
+#| eval: false
 gdf = pd.merge(msoas, tidy, left_on=???, right_on=???, how='inner')
 gdf = gdf.drop(columns=['MSOA11CD','MSOA11NM','OBJECTID'])
 
@@ -601,7 +636,8 @@ You should get <code>Final data frame has shape `{python} f"{gdf.shape[0]:,} x {
 
 Let's plot the median income in 2011 column using the `plasma` colour ramp... The rest is to show you how to customise a legend.
 
-```python
+```{python}
+#| eval: false
 col = 'Median-2011'
 fig = gdf.plot(column=???, cmap='???', 
          scheme='FisherJenks', k=7, edgecolor='None', 
@@ -625,8 +661,9 @@ plt.show();
 
 ### Save
 
-```python
-gdf.to_geoparquet(os.path.join('data','geo','MSOA_Atlas.geoparquet'))
+```{python}
+#| eval: false
+gdf.to_geoparquet(msoa.parent / 'MSOA_Atlas.geoparquet'))
 ```
 
 ### Questions
@@ -655,16 +692,18 @@ We're not building a model here (that's for Term 2!) so we'll just 'pretend' tha
 
 On subsequent runs of this notebook you might just want to start here!
 
-```python
+```{python}
+#| eval: false
 # Notice this handy code: we check if the data is already
 # in memory. And notice this is just a list comprehension
 # to see what is locally loaded.
 if 'gdf' not in locals():
-    gdf = gpd.read_parquet(os.path.join('data','geo','MSOA_Atlas.geoparquet'))
+    gdf = gpd.read_parquet(msoa.parent / 'MSOA_Atlas.geoparquet')
 print(gdf.shape)
 ```
 
-```python
+```{python}
+#| eval: false
 categoricals = ['Borough','Subregion']
 for c in categoricals:
     gdf[c] = gdf[c].astype('category')
@@ -680,7 +719,8 @@ for c in categoricals:
 
 For our purposes this is a little bit overkill as you could also use pandas' `sample(frac=0.2)` and the indexes, but it's useful to see how this works. You use test/train split to get **four** data sets out: the training data gives you two (predictors + target as separate data sets) and the testing data gives you two as well (predictors + target as separate data sets). These are sized accoridng to the `test_size` specfied in the `test_train_split` parameters.
 
-```python
+```{python}
+#| eval: false
 from sklearn.model_selection import train_test_split 
 
 pdf = gdf['Median-2011'].copy() # pdf for Median *P*rice b/c we need *something*
@@ -694,7 +734,8 @@ df_train, df_test, pr_train, pr_test = train_test_split(
 
 Below you should see that the data has been split roughly on the basis of the `test_size` parameter.
 
-```python
+```{python}
+#| eval: false
 print(f"Original data size: {gdf.shape[0]:,} x {gdf.shape[1]}")
 print(f"  Training data size: {df_train.shape[0]:,} x {df_train.shape[1]} ({(df_train.shape[0]/gdf.shape[0])*100:.0f}%)")
 print(f"  Testing data size:  {df_test.shape[0]:,} x {df_test.shape[1]} ({(df_test.shape[0]/gdf.shape[0])*100:.0f}%)")
@@ -702,7 +743,8 @@ print(f"  Testing data size:  {df_test.shape[0]:,} x {df_test.shape[1]} ({(df_te
 
 Also notice the indexes of each pair of data sets match:
 
-```python
+```{python}
+#| eval: false
 print(", ".join([str(x) for x in df_train.index[:10]]))
 print(", ".join([str(x) for x in pr_train.index[:10]]))
 ```
@@ -715,11 +757,13 @@ print(", ".join([str(x) for x in pr_train.index[:10]]))
 
 :::
 
-```python
+```{python}
+#| eval: false
 boros = gpd.read_file(os.path.join('data','geo','Boroughs.gpkg'))
 ```
 
-```python
+```{python}
+#| eval: false
 f,axes = plt.subplots(1,2, figsize=(12,5))
 df_train.plot(ax=???)
 df_test.plot(ax=???)
@@ -745,7 +789,8 @@ The developers of [SciKit-Learn](https://scikit-learn.org/) define [normalisatio
 
 Let's see what effect this has on the data!
 
-```python
+```{python}
+#| eval: false
 # Sets some handy 'keywords' to tweak the Seaborn plot
 kwds = dict(s=7,alpha=0.95,edgecolor="none")
 
@@ -764,14 +809,16 @@ ho = ['Inner East','Inner West','Outer West and North West','Outer South','Outer
 
 One thing you'll need to explain is why I keep writing `df[cols+['Subregion']` and why I don't just add it to the `cols` variable at the start? Don't try to answer this now, get through the rest of Tasks 3 and 4 and see what you think.
 
-```python
+```{python}
+#| eval: false
 cols = ['Tenure-Owned outright', 'Tenure-Owned with a mortgage or loan',
         'Tenure-Social rented', 'Tenure-Private rented']
 ```
 
 *Answer*: one part of the answer is that it makes it easy to change the columns we select without having to remember to keep `Subregion`, but the more important reason is that it allows us to re-use *this* 'definition' of `cols` elsewhere throughout the rest of this practical without needing to remember to *remove* `Subregion`.
 
-```python
+```{python}
+#| eval: false
 tr_raw  = df_train[cols+['Subregion']].copy() # train raw
 tst_raw = df_test[cols+['Subregion']].copy()  # test raw
 ```
@@ -786,7 +833,8 @@ tst_raw = df_test[cols+['Subregion']].copy()  # test raw
 
 Fit the training data:
 
-```python
+```{python}
+#| eval: false
 from sklearn.preprocessing import MinMaxScaler
 
 # Notice what this is doing! See if you can explain it clearly.
@@ -803,7 +851,8 @@ scalers = [???.fit(???[x].values.reshape(-1,1)) for x in cols]
 
 Train:
 
-```python
+```{python}
+#| eval: false
 tr_normed = tr_raw.copy()
 
 for i, sc in enumerate(scalers):
@@ -813,7 +862,8 @@ for i, sc in enumerate(scalers):
 
 Test:
 
-```python
+```{python}
+#| eval: false
 tst_normed = tst_raw.copy()
 
 for i, sc in enumerate(scalers):
@@ -827,7 +877,8 @@ for i, sc in enumerate(scalers):
 
 Check out the properties of `tst_normed` below. If you've understood what the `MinMaxScaler` is doing then you should be able to spot something unexpected in the transformed *test* outputs. If you've *really* understood this, you'll see why this result is problematic for *models*. *Hint*: one way to think of it is an issue of **extrapolation**.
 
-```python
+```{python}
+#| eval: false
 for c in cols:
     print(f"  Minimum: {tst_normed[c].min():.4f}")
     ???
@@ -841,18 +892,21 @@ for c in cols:
 
 :::
 
-```python
+```{python}
+#| eval: false
 tr_raw.columns     = [re.sub('(-|/)',"\n",x) for x in tr_raw.columns.values]
 tst_raw.columns    = [re.sub('(-|/)',"\n",x) for x in tst_raw.columns.values]
 tr_normed.columns  = [re.sub('(-|/)',"\n",x) for x in tr_normed.columns.values]
 tst_normed.columns = [re.sub('(-|/)',"\n",x) for x in tst_normed.columns.values]
 ```
 
-```python
+```{python}
+#| eval: false
 sns.pairplot(data=tr_raw, hue='Subregion', diag_kind='kde', corner=True, plot_kws=kwds, hue_order=ho);
 ```
 
-```python
+```{python}
+#| eval: false
 sns.pairplot(data=tr_normed, hue='Subregion', diag_kind='kde', corner=True, plot_kws=kwds, hue_order=ho);
 ```
 
@@ -868,7 +922,8 @@ sns.pairplot(data=tr_normed, hue='Subregion', diag_kind='kde', corner=True, plot
 
 Standardisation is typically focussed on rescaling data to have a mean (or median) of 0 and standard deviation or IQR of 1. That these approaches are conceptually tied to the idea of symmetric, unimodal data such as that encountered in the standard normal distribution. Rather confusingly, many data scientists will use standardisation and normalisation largely interchangeably!
 
-```python
+```{python}
+#| eval: false
 col = 'Vehicles-No cars or vans in hh'
 tr  = df_train[[col]].copy()
 tst = df_test[[col]].copy()
@@ -882,7 +937,8 @@ tst = df_test[[col]].copy()
 
 :::
 
-```python
+```{python}
+#| eval: false
 stsc = StandardScaler().fit(tr[col].values.reshape(-1,1))
 
 tr[f"Z. {col}"]  = stsc.transform(???)
@@ -897,7 +953,8 @@ tst[f"Z. {col}"] = stsc.transform(???)
 
 :::
 
-```python
+```{python}
+#| eval: false
 rs = ???(quantile_range=(25.0, 75.0)).fit(???)
 
 tr[f"IQR. {col}"] = rs.transform(???)
@@ -917,21 +974,25 @@ tst[f"IQR. {col}"] = rs.transform(???)
 
 :::
 
-```python
+```{python}
+#| eval: false
 sns.jointplot(data=tr, x=f"{col}", y=f"Z. {col}", kind='kde'); # hex probably not the best choice
 ```
 
-```python
+```{python}
+#| eval: false
 sns.jointplot(data=tr, x=f"{col}", y=f"IQR. {col}", kind='kde'); # hex probably not the best choice
 ```
 
-```python
+```{python}
+#| eval: false
 sns.jointplot(data=tr, x=f"Z. {col}", y=f"IQR. {col}", kind='hex'); # hex probably not the best choice
 ```
 
 Perhaps a little more useful...
 
-```python
+```{python}
+#| eval: false
 ax = sns.kdeplot(tr[f"Z. {col}"])
 sns.kdeplot(tr[f"IQR. {col}"], color='r', ax=ax)
 plt.legend(loc='upper right', labels=['Standard', 'Robust']) # title='Foo'
@@ -981,7 +1042,8 @@ But... what if our data are non-normal? Well, Just because data are non-normal d
 
 Below is a function to create that theoretical normal distribution. See if you can understand what's going and add comments to the code to explain what each line does. 
 
-```python
+```{python}
+#| eval: false
 def normal_from_dist(series): 
     mu = ???          # mean of our data
     sd = ???          # standard deviation of our data
@@ -998,7 +1060,8 @@ Looking at the output, which of the variables has a roughly normal distribution?
 
 *Also*, how would you determine the _meaning_ of some of the departures from the normal distribution?
 
-```python
+```{python}
+#| eval: false
 selection = [x for x in df_train.columns.values if x.startswith('Composition')]
 
 for c in selection:
@@ -1030,7 +1093,8 @@ Let's perform the transform then compare to the un-transformed data. Comment the
 
 ### Apply and Plot
 
-```python
+```{python}
+#| eval: false
 cols = ['Median-2012','Total Mean hh Income']
 
 for m in cols:
@@ -1074,7 +1138,8 @@ Hopefully, you can see that the transformed data do indeed look 'more normal'; t
 
 :::
 
-```python
+```{python}
+#| eval: false
 cols = ['Median-2012','Total Mean hh Income']
 pt = ???(method='yeo-johnson')
 
@@ -1108,12 +1173,14 @@ Now we're going to ask the question: how can we represent our data using a small
 
 Use this is your data gets messy...
 
-```python
+```{python}
+#| eval: false
 gdf = gpd.read_parquet(os.path.join('data','geo','MSOA_Atlas.geoparquet')).set_index('MSOA Code')
 print(gdf.shape)
 ```
 
-```python
+```{python}
+#| eval: false
 categoricals = ['Borough','Subregion']
 for c in categoricals:
     gdf[c] = gdf[c].astype('category')
@@ -1129,13 +1196,15 @@ for c in categoricals:
 
 Sadly, there's no transformer to work this out for you automatically, but let's start by converting the raw population and household figures to shares so that our later dimensionality reduction steps aren't impacted by the size of the MSOA.
 
-```python
+```{python}
+#| eval: false
 gdf[['Age-All Ages','Households-All Households']].head(5)
 ```
 
 ### Specify Totals Columns
 
-```python
+```{python}
+#| eval: false
 total_pop = gdf['Age-All Ages']
 total_hh  = gdf['Households-All Households']
 total_vec = gdf['Vehicles-Sum of all cars or vans in the area']
@@ -1143,21 +1212,24 @@ total_vec = gdf['Vehicles-Sum of all cars or vans in the area']
 
 ### Specify Columns for Pop or HH Normalisation
 
-```python
+```{python}
+#| eval: false
 pop_cols  = ['Age-', 'Composition-', 'Qualifications-', 'Economic Activity-', 'White', 'Mixed/multiple',
              'Asian/Asian British', 'Black/African', 'BAME', 'Other ethnic',
              'Country of Birth-']
 hh_cols   = [???, ???, ???, 'Detached', 'Semi-detached', 'Terraced', 'Flat, ']
 ```
 
-```python
+```{python}
+#| eval: false
 popre = re.compile(r'^(?:' + "|".join(pop_cols) + r')')
 hhre  = re.compile(r'^(?:' + "|".join(???) + r')')
 ```
 
 ### Apply to Columns
 
-```python
+```{python}
+#| eval: false
 tr_gdf = gdf.copy()
 tr_gdf['Mean hh size'] = tr_gdf['Age-All Ages']/tr_gdf['Households-All Households']
 
@@ -1193,7 +1265,8 @@ So in practice, it's probably a good idea to drop categorical data if you're pla
 
 ### Drop Totals Columns
 
-```python
+```{python}
+#| eval: false
 pcadf = tr_gdf.drop(columns=['Age-All Ages', 'Households-All Households',
                              'Vehicles-Sum of all cars or vans in the area'])
 pcadf = pcadf.set_index('MSOA Code')
@@ -1201,16 +1274,19 @@ pcadf = pcadf.set_index('MSOA Code')
 
 ### Drop Non-Numeric Columns
 
-```python
+```{python}
+#| eval: false
 pcadf.select_dtypes(['category','object']).columns
 ```
 
-```python
+```{python}
+#| eval: false
 pcadf.drop(columns=pcadf.select_dtypes(['category','object']).columns.to_list(), inplace=True)
 pcadf.drop(columns=['BNG_E','BNG_N','geometry', 'LONG', 'LAT','Shape__Are', 'Shape__Len'], inplace=True)
 ```
 
-```python
+```{python}
+#| eval: false
 pcadf.columns
 ```
 
@@ -1228,7 +1304,8 @@ In order to ensure that our results aren't dominated by a single scale (e.g. Hou
 
 Set up the Robust Rescaler for inter-decile standardisation: 10th and 90th quantiles.
 
-```python
+```{python}
+#| eval: false
 rs = ???
 
 for c in pcadf.columns.values:
@@ -1237,7 +1314,8 @@ for c in pcadf.columns.values:
 
 ### PCA Reduce
 
-```python
+```{python}
+#| eval: false
 from sklearn.decomposition import PCA 
 
 pca = PCA(n_components=50, whiten=True) 
@@ -1250,14 +1328,16 @@ singular_values = pca.singular_values_
 
 ### Examine Explained Variance
 
-```python
+```{python}
+#| eval: false
 x = np.arange(1,???)
 plt.plot(x, explained_variance)
 plt.ylabel('Share of Variance Explained')
 plt.show()
 ```
 
-```python
+```{python}
+#| eval: false
 for i in range(0, 20):
     print(f"Component {i:>2} accounts for {explained_variance[i]*100:>2.2f}% of variance")
 ```
@@ -1273,7 +1353,8 @@ There are a number of ways that we could set a threshold for dimensionality redu
 
 In order to _do_ anything with these components we need to somehow reattach them to the MSOAs. So that entails taking the transformed results (`X_train` and `X_test`) 
 
-```python
+```{python}
+#| eval: false
 kn = knee_locator.KneeLocator(x, explained_variance, 
                               curve='convex', direction='decreasing', 
                               interp_method='interp1d')
@@ -1281,7 +1362,8 @@ print(f"Knee detected at: {kn.knee}")
 kn.plot_knee()
 ```
 
-```python
+```{python}
+#| eval: false
 keep_n_components = 7
 
 # If we weren't changing the number of components we
@@ -1317,13 +1399,15 @@ print(f"Row 0 of X-train contains {len(X_train[0])} elements.")
 
 You could actually do this more quickly (but less clearly) using `X_train.T` to transpose the matrix!
 
-```python
+```{python}
+#| eval: false
 for i in range(0,keep_n_components):
     s = pd.Series(X_train[:,???], index=pcadf.???)
     pcadf[f"Component {i+1}"] = s
 ```
 
-```python
+```{python}
+#| eval: false
 pcadf.sample(3).iloc[:,-10:-4]
 ```
 
@@ -1335,28 +1419,33 @@ pcadf.sample(3).iloc[:,-10:-4]
 
 :::
 
-```python
+```{python}
+#| eval: false
 msoas = gpd.read_file(os.path.join('data','geo','Middle_Layer_Super_Output_Areas__December_2011__EW_BGC_V2-shp.zip'), driver='ESRI Shapefile')
 msoas = msoas.set_index('MSOA11CD')
 print(msoas.columns)
 ```
 
-```python
+```{python}
+#| eval: false
 msoas.head(1)
 ```
 
-```python
+```{python}
+#| eval: false
 pcadf.head(1)
 ```
 
-```python
+```{python}
+#| eval: false
 gpcadf = pd.merge(msoas.set_index(['MSOA11CD'], drop=True), pcadf, left_index=True, right_index=True, how='inner')
 print(f"Geo-PCA df has shape {gpcadf.shape[0]} x {gpcadf.shape[1]}")
 ```
 
 You should get `PCA df has shape 983 x 89`.
 
-```python
+```{python}
+#| eval: false
 gpcadf['Borough'] = gpcadf.MSOA11NM.apply(???)
 ```
 
@@ -1370,7 +1459,8 @@ gpcadf['Borough'] = gpcadf.MSOA11NM.apply(???)
 
 How would you automate this so that the loop creates one plot for each of the first 3 components? How do you interpret these?
 
-```python
+```{python}
+#| eval: false
 for comp in [f"Component {x}" for x in range(1,3)]:
     ax = gpcadf.plot(column=???, cmap='plasma', 
          scheme='FisherJenks', k=7, edgecolor='None', legend=True, figsize=(9,7));
@@ -1394,7 +1484,8 @@ UMAP is a non-linear dimensionality reduction technique. Technically, it's calle
 
 :::
 
-```python
+```{python}
+#| eval: false
 from umap import UMAP
 
 # You might want to experiment with all
@@ -1423,7 +1514,8 @@ print(X_embedded.shape)
 
 Can probably also be solved using `X_embedded.T`.
 
-```python
+```{python}
+#| eval: false
 for ix in range(0,X_embedded.shape[1]):
     print(ix)
     s = pd.Series(X_embedded[:,???], index=pcadf.???)
@@ -1438,13 +1530,15 @@ for ix in range(0,X_embedded.shape[1]):
 
 :::
 
-```python
+```{python}
+#| eval: false
 rddf = gpcadf.copy() # Reduced Dimension Data Frame
 ```
 
 ### Simple Scatter
 
-```python
+```{python}
+#| eval: false
 f,ax = plt.subplots(1,1,figsize=(8,6))
 sns.scatterplot(x=rddf[???], y=rddf[???], hue=rddf['Borough'], legend=False, ax=ax)
 ```
@@ -1453,18 +1547,21 @@ sns.scatterplot(x=rddf[???], y=rddf[???], hue=rddf['Borough'], legend=False, ax=
 
 That is *suggestive* of there being struccture in the data, but with 983 data points and 33 colours it's hard to make sense of what the structure *might* imply. Let's try this again using the Subregion instead and taking advantage of the Seaborn visualisation library's `jointplot` (joint distribution plot):
 
-```python
+```{python}
+#| eval: false
 rddf['Subregion'] = rddf.Borough.apply(lambda x: mapping[x])
 ```
 
-```python
+```{python}
+#| eval: false
 # Sets some handy 'keywords' to tweak the Seaborn plot
 kwds = dict(s=7,alpha=0.95,edgecolor="none")
 # Set the *hue order* so that all plots have some colouring by Subregion
 ho = ['Inner East','Inner West','Outer West and North West','Outer South','Outer East and North East']
 ```
 
-```python
+```{python}
+#| eval: false
 g = sns.jointplot(data=rddf, x=???, y=???, height=8, 
                   hue=???, hue_order=ho, joint_kws=kwds)
 g.ax_joint.legend(loc='upper right', prop={'size': 8});
@@ -1478,7 +1575,8 @@ What do you make of this?
 
 Maybe let's give this one last go splitting the plot out by subregion so that we can see how these vary:
 
-```python
+```{python}
+#| eval: false
 for r in rddf.Subregion.unique():
     g = sns.jointplot(data=rddf[rddf.Subregion==r], x='Dimension 1', y='Dimension 2', 
                   hue='Borough', joint_kws=kwds)
@@ -1500,7 +1598,8 @@ Next week we'll also add the listings data back in as part of the picture!
 
 :::
 
-```python
+```{python}
+#| eval: false
 for comp in [f"Dimension {x}" for x in range(1,3)]:
     f, ax = plt.subplots(1,1,figsize=(12,8))
     rddf.plot(???);
@@ -1514,7 +1613,8 @@ Your first dimension map should look something like this:
 
 ## And Save
 
-```python
+```{python}
+#| eval: false
 rddf.to_parquet(os.path.join('data','clean','Reduced_Dimension_Data.geoparquet'))
 ```
 

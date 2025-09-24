@@ -70,15 +70,24 @@ NLP-specific libraries that we will use for tokenisation, lemmatisation, and fre
 
 ```{python}
 import nltk
-from nltk.corpus import wordnet as wn
-from nltk.stem.wordnet import WordNetLemmatizer
 
 try:
+    from nltk.corpus import wordnet as wn
+    from nltk.stem.wordnet import WordNetLemmatizer
     from nltk.corpus import stopwords
+    stopwords.words('english')
+    lemmatizer = WordNetLemmatizer()
+    tokenizer = ToktokTokenizer()
 except:
-    ! python -c 'import nltk; nltk.download("stopwords"); nltk.download("punkt_tab"); nltk.download("averaged_perceptron_tagger_eng");'
+    nltk.download("stopwords")
+    nltk.download("punkt_tab")
+    nltk.download("averaged_perceptron_tagger_eng")
     from nltk.corpus import stopwords
+    from nltk.corpus import wordnet as wn
+    from nltk.stem.wordnet import WordNetLemmatizer
+    stopwords.words('english')
 
+from nltk.corpus import stopwords
 stopword_list = set(stopwords.words('english'))
 
 from nltk.tokenize import word_tokenize, sent_tokenize
@@ -96,6 +105,10 @@ tokenizer = ToktokTokenizer()
 Remaining libraries that we'll use for processing and display text data. Most of this relates to dealing with the various ways that text data cleaning is *hard* because of the myriad formats it comes in.
 
 ```{python}
+try: 
+    from wordcloud import WordCloud
+except:
+    ! pip install wordcloud
 import string
 import unicodedata
 from wordcloud import WordCloud, STOPWORDS
@@ -407,6 +420,10 @@ This custom module is not perfect, but it gets the job done... mostly and has so
 try: 
     from textual import *
 except:
+    try:
+        from unidecode import unidecode
+    except:
+        ! pip install unidecode
     import urllib.request
     host  = 'https://orca.casa.ucl.ac.uk'
     turl  = f'{host}/~jreades/__textual__.py'

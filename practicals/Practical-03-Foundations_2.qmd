@@ -55,7 +55,9 @@ To complete these tasks, all of the methods that you need are listed above, so t
 The next line creates a list of (made up) Airbnb property names where each element is a string:
 
 ```{python}
-listings = ["Sunny 1-Bed", "Fantastic Dbl", "Home-Away-From-Home", "Sunny Single", "Whole House", "Trendy Terrace"]
+listings = ["Sunny 1-Bed", "Fantastic Dbl",
+    "Home-Away-From-Home", "Sunny Single", 
+    "Whole House", "Trendy Terrace"]
 ```
 
 ### List Arithmetic
@@ -66,7 +68,8 @@ Replace the `??` so that it prints <code>`{python} listings[2+1]`</code>.
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 print(listings[?? + 1])
 ```
 
@@ -86,7 +89,8 @@ Now use a **negative** index to print <code>`{python} listings[-2]`</code>:
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 print(listings[??])
 ```
 
@@ -106,8 +110,9 @@ Replace the `??` so that it prints the _index_ for <code>`{python} listings[1]`<
 
 #### Question
 
-```python
-print("The position of '`{python} listings[1]`' in the list is: " + str( ?? ))
+```{python}
+#| eval: False
+print("The position of 'Fantastic Dbl' in the list is: " + str( ?? ))
 ```
 
 #### Answer
@@ -149,7 +154,7 @@ Given what you know about `listings` and `prices`, how do you print:
 #| echo: false
 #| output: asis
 listing="Home-Away-From-Home"
-print(f'> "The nightly price for {listing} is £{prices[listings.index(listing)]}."')
+print(f'> `"The nightly price for {listing} is £{prices[listings.index(listing)]}."`')
 ```
 
 But you have to do this _without_ doing any of the following:
@@ -159,11 +164,12 @@ But you have to do this _without_ doing any of the following:
 
 To put it another way, **neither** of these solutions is the answer:
 
-```python
-print("The nightly price for `{python} f'{listing}'` is £" + str(prices[2]) + ".")
+```{python}
+#| eval: False
+print("The nightly price for `Home-Away-From-Home` is £" + str(prices[2]) + ".")
 # ...OR...
 listing=2
-print("The nightly price for `{python} f'{listing}'` is £" + str(prices[listing[2]]) + ".")
+print("The nightly price for `Home-Away-From-Home` is £" + str(prices[listings[listing]]) + ".")
 ```
 
 ::: {.callout-tip}
@@ -176,7 +182,8 @@ You will need to combine some of the ideas above and also think about the fact t
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 listing="Home-Away-From-Home" # Use this to get the solution...
 
 # This way is perfectly fine
@@ -212,7 +219,8 @@ You'll know that you got the 'right' answer to the question above if you can cop
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 listing = 'Sunny Single'
 print(??)
 ```
@@ -228,7 +236,7 @@ print(f"The nightly price of {listing} is £{prices[listings.index(listing)]}")
 
 ### Loops 
 
-Now use a `for` loop over the cities to print out the average temperature in each city:
+Now use a `for` loop over the listings to print out the price of each. But first, some information about formatting number in Python... 
 
 ::: {.callout-tip}
 #### Formatting Numbers
@@ -252,7 +260,8 @@ That should then help you with the output of the following block of code!
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 for l in listings:
     ??
 ```
@@ -261,8 +270,11 @@ The output should be:
 
 ```{python}
 #| echo: false
+#| output: asis
+print("```default")
 for l in listings:
     print(f"The nightly price of {l} is £{prices[listings.index(l)]:0.2f}")
+print("```")
 ```
 
 #### Answer
@@ -314,7 +326,8 @@ Add a record to the dictionary for "Whole House" following the same format.
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 ??
 ```
 
@@ -334,7 +347,8 @@ In *one* line of code, print out the price for 'Whole House':
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 ??
 ```
 
@@ -352,6 +366,7 @@ print(f"The nightly price for Whole House is {listings['Whole House'][2]}")
 Check you understand the difference between the following two blocks of code by running them.
 
 ```{python}
+#| eval: False
 try:
     print(listings['Trendy Terrace'])
 except KeyError as e:
@@ -360,6 +375,7 @@ except KeyError as e:
 ```
 
 ```{python}
+#| eval: False
 try:
     print(listings.get('Trendy Terrace','Not Found'))
 except KeyError as e:
@@ -381,13 +397,14 @@ In this section you'll need to look up (i.e. Google) and make use of a few new f
 
 ### Iterating over a Dict 
 
-Adapting the code below, print out the city name and airport code for every city in our Atlas.
+Adapting the code below, print out the listing name and price.
 
 :::: {.qna}
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 for l in listings.keys():
     print(??)
 ```
@@ -395,8 +412,11 @@ for l in listings.keys():
 The output should look something like this:
 ```{python}
 #| echo: False
+#| output: asis
+print("```default")
 for l in listings.keys():
-    print(f"{l} -> {listings[l][2]}")
+    print(f"{l} -> {listings[l][2]}</code>")
+print("```")
 ```
 
 #### Answer
@@ -440,15 +460,21 @@ listings = {
 
 So to print out the below for each listing it's...
 
-```python
+```{python}
+#| eval: False
 for l in listings.keys():
     print(??)
 ```
 
+Your output should be:
+
 ```{python}
 #| echo: False
+#| output: asis
+print("```default")
 for l in listings.keys():
     print(f"{l} -> {listings[l]['price']}")
+print("```")
 ```
 
 #### Answer
@@ -468,7 +494,8 @@ And how would it need to change to print out the name and latitude of every list
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 for l in listings.keys():
     print(??)
 ```
@@ -477,8 +504,11 @@ The output should be something like this:
 
 ```{python}
 #| echo: false
+#| output: asis
+print("```default")
 for l in listings.keys():
     print(f"{l} is at latitude {listings[l]['lat']}")
+print("```")
 ```
 
 #### Answer
@@ -520,7 +550,8 @@ listings_alt = [
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 for l in listings_alt:
     print(??)
 ```
@@ -529,8 +560,11 @@ The output should be something like this:
 
 ```{python}
 #| echo: False
+#| output: asis
+print("```default")
 for l in listings_alt:
     print(f"{l['name']} is at latitude {l['position'][0]}")
+print("```")
 ```
 
 #### Answer
@@ -545,13 +579,7 @@ for l in listings_alt:
 
 ### Think Data! 
 
-What are some of the main differences that you can think of between `cities` and `cities_alt` _as_ data? There is no right answer.
-
-::: {.callout-tip}
-
-I just want you to think about these *as data*! If you were trying to use `cities` and `cities_alt` as data what differences would you find when accessing one or more 'records'?
-
-:::
+What are some of the main differences that you can think of between these data structures? There is no right answer.
 
 - Point 1 here.
 - Point 2 here.

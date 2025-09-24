@@ -55,15 +55,17 @@ myData = {
 }
 ```
 
-To print out a list of every city in the data set:
+To print out a list of every listing in the data set:
 
 ```{python}
+#| eval: False
 print(", ".join(myData['Name']))
 ```
 
 To find out if `Out in Dalston` is included in the list of data:
 
 ```{python}
+#| eval: False
 if 'Out in Dalston' in myData['Name']:
     print("Found 'Out in Dalston' in the data set!")
 else:
@@ -82,7 +84,8 @@ Let's start by calculating the sample mean (use Google: `Python numpy mean...`):
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 import numpy as ??
 # Use numpy function to calculate mean
 mean = ??.??(myData['Bedrooms'])
@@ -114,7 +117,8 @@ Now let's do the standard deviation:
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 import numpy as np
 # Use a numpy function to calculate the standard deviation
 std  = np.??(??)
@@ -149,6 +153,7 @@ In Python you will see code like this a lot: `[x for x in list]`. This syntax is
 Here's a quick example just to show you what's going on:
 
 ```{python}
+#| eval: False
 demo = range(0,10) # <- a *range* of numbers between 0 and 9 (stop at 10)
 print([x**2 for x in demo]) # square every element of demo
 ```
@@ -169,7 +174,8 @@ $$
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 rs = [(x - ??)/?? for x in myData['Bedrooms']] # rs == result set
 print([f"{x:.3f}" for x in rs])
 ```
@@ -194,6 +200,7 @@ print([f"{x:.3f}" for x in rs])
 And now let's add it to the data set:
 
 ```{python}
+#| eval: False
 myData['Std. Bedrooms'] = rs
 print(myData['Std. Bedrooms'])
 ```
@@ -201,6 +208,7 @@ print(myData['Std. Bedrooms'])
 And just to show how everything is in a single data structure:
 
 ```{python}
+#| eval: False
 for c in myData['Name']:
     idx = myData['Name'].index(c)
     print(f"Listing {c} has {myData['Bedrooms'][idx]:,} bedrooms and standardised score of {myData['Std. Bedrooms'][idx]:.3f}")
@@ -228,7 +236,7 @@ First, let's be sensibly lazy--we've already written code to read a file from th
 
 ```{python}
 #| echo: false
-
+#| output: asis
 from urllib.request import URLError
 from urllib.request import urlopen
 
@@ -244,7 +252,8 @@ except URLError as e:
     urlData = [ x.split(',') for x in data.splitlines() ]
 ```
 
-```python
+```{python}
+#| eval: False
 from urllib.request import URLError
 from urllib.request import urlopen
 
@@ -296,7 +305,8 @@ Then I would sketch out how my function will work using comments. And the simple
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 from urllib.request import urlopen
 
 def get_url(src, dest):
@@ -345,6 +355,7 @@ If you really explore what's going on in the function rather than just running i
 I would then flesh out the code so that it downloads the file if it isn't found and then, either way, returns the *local* file path for our CSV reader to extract:
 
 ```{python}
+#| eval: False
 def get_url(src, dest):
     
     # Check if dest does *not* exist -- that
@@ -457,6 +468,7 @@ Pathlib is intended to work around the fact that different Operating Systems rep
 Pathlib does away with all of that. Remember that we've defined an object as a bundle of data and functions that act on the data. So the `Path` class is *both* data about a location on a computer *and* a set of functions that can manipulate that data. Let's see what that means in practice:
 
 ```{python}
+#| eval: False
 from pathlib import Path
 
 here = Path('.')
@@ -471,13 +483,16 @@ print(f"\tDirectory contents: \n\t\t{'\n\t\t'.join([str(x) for x in list(here.gl
 
 print()
 
-fn = here / 'Practical-05-Objects.qmd'
-print("Using a file:")
-print(f"\tResolved path: {fn.resolve()}")
-print(f"\tExists: {fn.exists()}")
-print(f"\tIs file: {fn.is_file()}")
-print(f"\tFile size (bytes): {fn.stat().st_size:,} bytes")
-print(f"\tOwner: {fn.owner()}")
+try:
+    fn = here / 'Practical-05-Objects.qmd' # Try changing the ending to html after running
+    print("Using a file:")
+    print(f"\tResolved path: {fn.resolve()}")
+    print(f"\tExists: {fn.exists()}")
+    print(f"\tIs file: {fn.is_file()}")
+    print(f"\tFile size (bytes): {fn.stat().st_size:,} bytes")
+    print(f"\tOwner: {fn.owner()}")
+except FileNotFoundError:
+    print("File not found!")
 ```
 
 Hopefully you can now see how the object-oriented approach of `pathlib` allows to write neater, more readable code than the older `os` module? We no longer have to keep passing in a list or string representing a path on a specific operating system, we can just pass around Path objects and let Python take care of turning them into concrete paths on a computer when we need to 'act' on the Path in some way (check that it exists, create it, interrogate it, etc.).
@@ -494,6 +509,7 @@ In fact, I'm still updating the practicals to make full use of `pathlib` so you 
 So let's update the function to move from `os` to `pathlib` and see how things change... 
 
 ```{python}
+#| eval: False
 from functools import wraps
 from pathlib import Path
 def check_cache(f):
@@ -549,7 +565,7 @@ To help people make use of the newly-improved function, we could useful add two 
 2. Provided hints to Python about the expected input and output data types.
 
 ```{python}
-#| echo: true
+#| eval: False
 from functools import wraps
 from pathlib import Path
 def check_cache(f) -> Path:
@@ -610,6 +626,7 @@ def get_url(src:Path, dst:Path) -> Path:
 ```
 
 ```{python}
+#| eval: False
 help(check_cache)
 help(get_url)
 ```
@@ -676,8 +693,19 @@ This class appears to do very little, but there are two things to notice:
 2. It provides methods (which only raise exceptions) that will allow all listings to be used interchangeably in the right context (e.g. determining availability).
 
 ```{python}
+#| eval: False
 # We first need to install a library for managing
 # availability in a highly optimised way.
+try:
+    from bitarray import bitarray
+except:
+    ! pip install bitarray
+    from bitarray import bitarray
+```
+
+```{python}
+#| echo: false
+#| output: false
 try:
     from bitarray import bitarray
 except:
@@ -719,6 +747,7 @@ class Listing(object): # Inherit from base class
 We can now create a new listing object (an *instance* of the Listing class) but we can't do much that is useful with it:
 
 ```{python}
+#| eval: False
 l = Listing('A listing', 25.00, 3, bitarray(14))
 
 try: 
@@ -742,7 +771,8 @@ Implements a flat:
 
 Can you work out the missing elements that will allow you to create a flat class? We'll want to know the floor and whether we're dealing with a Flat or a Studio by looking at the name of the listing.
 
-```python
+```{python}
+#| eval: False
 # Flat class
 class Flat(Listing): # Inherit from listing 
 
@@ -804,7 +834,8 @@ print(f" - My name is `{f.name()}`")
 
 If you were to create a *second* flat listing you can see how things change automatically based on the attributes:
 
-```python
+```{python}
+#| eval: False
 f2 = Flat('Room With a Better View', 123.00, 2, 6, bitarray('10000001000000'))
 print(f"I am a `{f2.type()}`")
 print(f"My name is `{f2.name()}`")
@@ -831,7 +862,8 @@ Implements a houseboat listing:
 
 Can you work out the missing elements that will allow you to create a houseboat class?
 
-```python
+```{python}
+#| eval: False
 # Houseboat class
 class Houseboat(Listing): # Inherit from shape
     def __init__(self, ...):
@@ -895,6 +927,7 @@ except Exception as e:
 The last thing we want to do is look at how (and why) we've recorded availability. Let's pretend that this can only be measured 2 weeks in advance (i.e. 14 days). Let's look at how the `bitarray` can help us here:
 
 ```{python}
+#| eval: False
 b1 = bitarray(14)
 b2 = bitarray('11111111111111')
 b3 = bitarray('01010101010101')
@@ -919,7 +952,8 @@ Let's finish with a demonstration of how we can use these classes in some kind o
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 f1 = Flat('Room With a View', 73.00, 0, 5, bitarray('11000001100000'))
 f2 = Flat('Room With a Better View', 123.00, 2, 6, bitarray('10000001000000'))
 h1 = Houseboat('Bargemaster', 5.25, 1)
@@ -962,8 +996,8 @@ for a in available:
 ```{python}
 #| echo: false
 #| output: asis
-av = '</code> and <code>'.join([x.name() for x in available])
-print(f"You should get that <code>{ av }</code> are available.")
+av = '` and `'.join([x.name() for x in available])
+print(f"You should get that `{ av }` are available.")
 ```
 
 

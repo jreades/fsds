@@ -34,6 +34,18 @@ import geopandas as gpd
 import matplotlib.pyplot as plt
 
 from pathlib import Path
+from functools import wraps
+from time import time
+
+# A timing decorator courtesy of: 
+# https://www.geeksforgeeks.org/python/timing-functions-with-decorators-python/
+def timing(func):
+    def wrap_func(*args, **kwargs):
+        t1 = time()
+        result = func(*args, **kwargs)
+        t2 = time()
+        return (t2-t1)
+    return wrap_func
 ```
 
 {{< include _cache_function.qmd >}}
@@ -50,12 +62,29 @@ In this section we are loading a parquet file using pandas and taking advantage 
 ## A simple query
 
 ```{python}
-%%time 
+#| eval: false
+@timing
+def load(n:int):
+    for i in range(n):
+        pd.read_parquet(f'{pqt}').head(3)
 
-pd.read_parquet(f'{pqt}').head(3) 
+reps = 10
+secs = load(reps)
+print(f"Average time per call: {secs/reps:.5f}")
 ```
 
-This should (I hope) be trivial to read now and (I hope) you have what seems like pretty good performance in the range of 150-175 milliseconds.
+```{python}
+#| echo: false
+#| output: asis
+@timing
+def load(n:int):
+    for i in range(n):
+        pd.read_parquet(f'{pqt}').head(3)
+
+reps = 10
+ssecs = load(reps)
+print(f"I get an average time per call of about: {ssecs/reps:.5f}")
+```
 
 ## Selecting columns
 
@@ -69,9 +98,27 @@ And in code these are implemented as:
 ### Load *then* filter
 
 ```{python}
-%%time
+#| eval: false
+@timing
+def load(n:int):
+    for i in range(n):
+        pd.read_parquet(f'{pqt}')[['listing_url', 'price', 'number_of_reviews', 'property_type', 'host_name']].head(5)
 
-pd.read_parquet(f'{pqt}')[['listing_url', 'price', 'number_of_reviews', 'property_type', 'host_name']].head(5)
+reps = 10
+secs = load(reps)
+print(f"Average time per call of about: {secs/reps:.5f}")
+```
+
+```{python}
+#| echo: false
+#| output: asis
+@timing
+def load(n:int):
+    for i in range(n):
+        pd.read_parquet(f'{pqt}')[['listing_url', 'price', 'number_of_reviews', 'property_type', 'host_name']].head(5)
+
+csecs = load(reps)
+print(f"I get an average time per call of about: {csecs/reps:.5f}")
 ```
 
 Not bad, not bad...
@@ -79,27 +126,67 @@ Not bad, not bad...
 ### Filter *then* load
 
 ```{python}
-%%time
+#| eval: false
+@timing
+def load(n:int):
+    for i in range(n):
+        pd.read_parquet(f'{pqt}', columns=['listing_url', 'price', 'number_of_reviews', 'property_type', 'host_name']).head(5)
 
-pd.read_parquet(f'{pqt}', columns=['listing_url', 'price', 'number_of_reviews', 'property_type', 'host_name']).head(5)
+reps = 10
+secs = load(reps)
+print(f"Average time per call of about: {secs/reps:.5f}")
 ```
 
-Whoa! Notice the difference in the time needed to complete the operation!!! We just cut the time by upwards of 80%!
+```{python}
+#| echo: false
+#| output: asis
+@timing
+def load(n:int):
+    for i in range(n):
+        pd.read_parquet(f'{pqt}', columns=['listing_url', 'price', 'number_of_reviews', 'property_type', 'host_name']).head(5)
+
+fsecs = load(reps)
+print(f"I get an average time per call of about: {fsecs/reps:.5f}")
+
+improvement = f"{fsecs/csecs:0.2f}"
+```
+
+Whoa! Notice the difference in the time needed to complete the operation! We just accelerated this step by `{python} improvement` times.!
 
 ## Adding a constraint
 
 So that is performance for loading data, now let's see what happens when we start subsetting the data by *row* as well as by *column*.
 
 ```{python}
-%%time 
+#| eval: false
+@timing
+def load(n:int):
+    for i in range(n):
+        df = pd.read_parquet(f'{pqt}', columns=['listing_url', 'price', 'number_of_reviews', 'property_type', 'host_name'])
+        df[(df.price < 250) & (df.number_of_reviews > 0) & (df.property_type=='Entire home/apt')].head(5)
 
-df = pd.read_parquet(f'{pqt}', columns=['listing_url', 'price', 'number_of_reviews', 'property_type', 'host_name'])
-df[(df.price < 250) & (df.number_of_reviews > 0) & (df.property_type=='Entire home/apt')].head(5)
+reps = 10
+secs = load(reps)
+print(f"Average time per call of about: {secs/reps:.5f}")
+```
+
+```{python}
+#| echo: false
+#| output: asis
+@timing
+def load(n:int):
+    for i in range(n):
+        df = pd.read_parquet(f'{pqt}', columns=['listing_url', 'price', 'number_of_reviews', 'property_type', 'host_name'])
+        df[(df.price < 250) & (df.number_of_reviews > 0) & (df.property_type=='Entire home/apt')].head(5)
+
+secs = load(reps)
+print(f"I get an average time per call of about: {secs/reps:.5f}")
 ```
 
 For improved legibility you can also write this as:
 
-```python
+```{python}
+#| eval: False
 df = pd.read_parquet(f'{pqt}', columns=['listing_url', 'price', 'number_of_reviews', 'last_review', 'host_name'])
 df[
     (df.price < 250) & 
@@ -117,22 +204,54 @@ This filter is fairly straightforward and performance should have been only slig
 There is a *lot* to unpack here, and notice that it takes three steps to achieve our goal of selecting, grouping, aggregating, sorting, and printing out the ten most frequent combinations of room and property type, although we *could* reduce it to two if we really wanted to do so (at the cost of some legibility).
 
 ```{python}
-%%time 
+#| echo: false
+#| output: asis
+@timing
+def load(n:int):
+    for i in range(n):
+        df = pd.read_parquet(f'{pqt}', columns=['property_type','room_type','number_of_reviews','price'])
+        df = df[
+            (df.price < 1050) & 
+            (df.number_of_reviews > 0)
+        ]
+        df.groupby(
+            by=['room_type','property_type'],
+            observed=True
+        ).agg(
+            freq = ("property_type", "count"),
+            median_price = ("price", "median"),
+        ).reset_index().sort_values(
+            by=['freq','room_type','property_type'], ascending=[False,True,True]
+        ).head(5)
 
-df = pd.read_parquet(f'{pqt}', columns=['property_type','room_type','number_of_reviews','price'])
-df = df[
-    (df.price < 1050) & 
-    (df.number_of_reviews > 0)
-]
-df.groupby(
-        by=['room_type','property_type'],
-        observed=True
-    ).agg(
-        freq = ("property_type", "count"),
-        median_price = ("price", "median"),
-).reset_index().sort_values(
-        by=['freq','room_type','property_type'], ascending=[False,True,True]
-    ).head(5)
+reps = 10
+secs = load(reps)
+print(f"Average time per call of about: {secs/reps:.5f}")
+```
+
+```{python}
+#| echo: false
+#| output: asis
+@timing
+def load(n:int):
+    for i in range(n):
+        df = pd.read_parquet(f'{pqt}', columns=['property_type','room_type','number_of_reviews','price'])
+        df = df[
+            (df.price < 1050) & 
+            (df.number_of_reviews > 0)
+        ]
+        df.groupby(
+            by=['room_type','property_type'],
+            observed=True
+        ).agg(
+            freq = ("property_type", "count"),
+            median_price = ("price", "median"),
+        ).reset_index().sort_values(
+            by=['freq','room_type','property_type'], ascending=[False,True,True]
+        ).head(5)
+
+secs = load(reps)
+print(f"I get an average time per call of about: {secs/reps:.5f}")
 ```
 
 Hopefully the first two steps are fairly clear, so let's focus on the final one:
@@ -141,7 +260,8 @@ Hopefully the first two steps are fairly clear, so let's focus on the final one:
 
 This is a *reasonably* intelligible step in which we group the data loaded by room and property:
 
-```python
+```{python}
+#| eval: False
 dfg = df.groupby(
         by=['room_type','property_type'],
         observed=True
@@ -151,7 +271,8 @@ dfg
 
 The *order* here matters: `groupby(by=[<A>,<B>])` does not return the same result as `groupby(by=[<B>,<A>])`. Try it:
 
-```python
+```{python}
+#| eval: False
 df.groupby(
         by=['property_type','room_type'],
         observed=True
@@ -164,7 +285,8 @@ The other thing to note here is the `observed=True`. This is a nice bit of addit
 
 The `agg` step aggregates the data specified in the functions:
 
-```python
+```{python}
+#| eval: False
 dfg.agg(
         freq = ("property_type", "count"),
         median_price = ("price", "median"),
@@ -187,14 +309,16 @@ That last example may have left you despairing of every being able to select/fil
 
 The combination of parquet files and in-memory databases (DuckDB is just *one* of these) has fundamentally reshaped my workflow. Parquet and Apache Arrow are [closely related](https://stackoverflow.com/a/56481636) but, in short, when you want to save large data sets in an easy-to-access and fast-to-query format then Parquet should be your default choice. DuckDB gives you a way to treat Parquet files *as* database **tables** and run queries against it (or them!) using standard SQL. You can [install DuckDB](https://duckdb.org/#quickinstall) on the command-line, but you can also query it from within Python using the appropriate module.
 
+```{python}
+import duckdb as db
+```
+
 ## A first query
 
 Let's see a quick demonstration:
 
 ```{python}
-%%time 
-
-import duckdb as db
+#| eval: false
 
 query = f'''
 SELECT *
@@ -202,10 +326,39 @@ FROM read_parquet('{pqt}')
 LIMIT 3;
 '''
 
-db.sql(query).to_df()
+@timing
+def load(n:int):
+    for i in range(n):
+        db.sql(query)
+
+reps = 25
+secs = load(reps)
+print(f"Average time per call of about: {secs/reps:.5f}")
 ```
 
-The timing code should *already* show a [significant improvement over pandas-only code](#a-simple-query) (on my laptop it is 90ms vs. 160ms), and now let's unpack what's happening:
+```{python}
+#| echo: false
+#| output: asis
+
+query = f'''
+SELECT *
+FROM read_parquet('{pqt}') 
+LIMIT 3;
+'''
+
+@timing
+def load(n:int):
+    for i in range(n):
+        db.sql(query)
+
+reps = 25
+secs = load(reps)
+print(f"I get an average time per call of about: {secs/reps:.5f}")
+
+improvement = f"{ssecs/secs:.2f}"
+```
+
+The timing code should *already* show a [significant improvement over pandas-only code](#a-simple-query): on my laptop it is `{python} improvement` times faster. Now let's unpack what's happening:
 
 1. We import the `duckdb` library as `db`.
 2. We set up a SQL `query` using a multi-line f-string
@@ -240,7 +393,7 @@ Let's look at some variations...
 ## Selecting columns
 
 ```{python}
-%%time 
+#| eval: false
 
 query = f'''
 SELECT listing_url, price, number_of_reviews, last_review, host_name 
@@ -248,10 +401,39 @@ FROM read_parquet('{pqt}')
 LIMIT 5;
 '''
 
-db.sql(query).to_df()
+@timing
+def load(n:int):
+    for i in range(n):
+        db.sql(query)
+
+reps = 25
+secs = load(reps)
+print(f"Average time per call of about: {secs/reps:.5f}")
 ```
 
-Even though it looked like pandas performed *massively* better when we updated our query to [filter then load](#filter-then-load), DuckDB is **even faster**! I get that DuckDB takes about 25% the time that pandas does.
+```{python}
+#| echo: false
+#| output: asis
+
+query = f'''
+SELECT listing_url, price, number_of_reviews, last_review, host_name 
+FROM read_parquet('{pqt}') 
+LIMIT 5;
+'''
+
+@timing
+def load(n:int):
+    for i in range(n):
+        db.sql(query)
+
+reps = 25
+secs = load(reps)
+print(f"I get an average time per call of about: {secs/reps:.5f}")
+
+improvement = f"{fsecs/secs:.2f}"
+```
+
+Even though it looked like pandas performed *massively* better when we updated our query to [filter then load](#filter-then-load), DuckDB is **even faster**! I get that DuckDB is `{python} improvement` faster than pandas.
 
 ```{.sql code-line-numbers="true"}
 SELECT listing_url, price, number_of_reviews, last_review, host_name 
@@ -268,8 +450,7 @@ It should be fairly easy to see how the query has changed from last time, but li
 ## Adding a constraint
 
 ```{python}
-%%time
-
+#| eval: false
 query = f'''
 SELECT listing_url, price, number_of_reviews, last_review, host_name 
 FROM read_parquet('{pqt}') 
@@ -279,7 +460,36 @@ AND property_type='Entire home/apt'
 LIMIT 5;
 '''
 
-db.sql(query).to_df()
+@timing
+def load(n:int):
+    for i in range(n):
+        db.sql(query)
+
+reps = 25
+secs = load(reps)
+print(f"Average time per call of about: {secs/reps:.5f}")
+```
+
+```{python}
+#| echo: false
+#| output: asis
+query = f'''
+SELECT listing_url, price, number_of_reviews, last_review, host_name
+FROM read_parquet('{pqt}')
+WHERE price < 250
+AND number_of_reviews > 0
+AND property_type='Entire home/apt'
+LIMIT 5;
+'''
+
+@timing
+def load(n:int):
+    for i in range(n):
+        db.sql(query)
+
+reps = 25
+secs = load(reps)
+print(f"I get an average time per call of about: {secs/reps:.5f}")
 ```
 
 Performance should still be noteable [improvement over pandas](#adding-a-constraint), though in my simple tests it's 'only' about 30% faster. IF we wanted to be more rigorous about this we'd want to [repeat the same operation many times](https://www.browserstack.com/guide/python-performance-testing) (e.g. hundreds or thousands of time) to account for the fact that during any given query the computer might be doing other things that impact performance. 
@@ -301,7 +511,7 @@ When you aggregate data you need to retrieve *every* column in the `SELECT` port
 :::
 
 ```{python}
-%%time
+#| eval: false
 
 query = f'''
 SELECT property_type, room_type, 
@@ -314,7 +524,39 @@ ORDER BY frequency DESC, room_type, property_type
 LIMIT 5;
 '''
 
-db.sql(query).to_df()
+@timing
+def load(n:int):
+    for i in range(n):
+        db.sql(query)
+
+reps = 25
+secs = load(reps)
+print(f"Average time per call of about: {secs/reps:.5f}")
+```
+
+```{python}
+#| echo: false
+#| output: asis
+
+query = f'''
+SELECT property_type, room_type, 
+    COUNT(*) AS frequency, MEDIAN(price) AS median_price
+FROM read_parquet('{pqt}') 
+WHERE price < 1000 
+AND number_of_reviews > 0
+GROUP BY room_type, property_type
+ORDER BY frequency DESC, room_type, property_type
+LIMIT 5;
+'''
+
+@timing
+def load(n:int):
+    for i in range(n):
+        db.sql(query)
+
+reps = 25
+secs = load(reps)
+print(f"I get an average time per call of about: {secs/reps:.5f}")
 ```
 
 Performance is [comparable to pandas](#aggregating-the-return) in my very basic test, but I find the operation more clearly expressed in SQL than pandas. There are quite a few changes to the query here so it's worth reviewing them in more detail:
@@ -659,6 +901,7 @@ So the example is provided for reference only when you need to work with a geosp
 boro = 'Waltham Forest'
 
 query = f'''
+INSTALL SPATIAL;
 LOAD SPATIAL;
 COPY(
   SELECT m.MSOA11CD, n.msoa11nm, n.Laname, m.geom 
@@ -705,7 +948,7 @@ One thing to remember here is that computers are _exact_. So if you say that the
 
 ### Union
 
-As we don't have a boundary file for London, we can *generate* use using the `unary_union` operator (as we do here) or using the [dissolve()](https://geopandas.org/en/stable/docs/user_guide/aggregation_with_dissolve.html) approach. Consider the pros and cons of each approach in terms of performance, output format, and legibility. 
+As we don't have a boundary file for London, we can *generate* use using the `union` operator (as we do here) or using the [dissolve()](https://geopandas.org/en/stable/docs/user_guide/aggregation_with_dissolve.html) approach. Consider the pros and cons of each approach in terms of performance, output format, and legibility. 
 
 So here's approach 1, which is a method call returning a GeoDataFrame (which is why we can call `plot`):
 
@@ -716,7 +959,7 @@ boros.dissolve().plot();
 And here's approach 2, which is an *attribute* and returns a raw polygon (so no reason to call `plot`, but it's come back without the rest of the data frame!):
 
 ```{python}
-boros.unary_union
+boros.union_all()
 ```
 
 ::: {.callout-note}
@@ -764,7 +1007,8 @@ In order to ensure that we get all the MSOAs _within_ London we need to buffer t
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 ldn['buffered'] = ldn.geometry.???(???)
 ldn = ldn.set_geometry('buffered').set_crs(epsg=27700)
 ax  = ldn.plot(facecolor=(.5, .5, .9, .5))
@@ -792,7 +1036,8 @@ By default we want do an _inner_ join because we want to drop everything that do
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 ldn_msoas = gpd.sjoin(msoas, ldn, predicate='???', how='inner')
 ldn_msoas.plot()
 ```
@@ -825,7 +1070,8 @@ It's important to recognise that `join` and `sjoin` are *not* the same even thou
 
 The easiest way to do this is to simply rename the geometry we *want* and then set is as the active geometry. Here's the code to use if you have a `geometry_left` column and aren't able to show a map:
 
-```python
+```{python}
+#| eval: False
 ldn_msoas = ldn_msoas.rename(columns={'geometry_left':'geometry'}).set_geometry('geometry')
 ldn_msoas.drop(columns='geometry_right', inplace=True)
 ```
@@ -889,7 +1135,8 @@ You've done this before: notice that the MSOA Name _contains_ the Borough name *
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 ldn_msoas['Borough'] = ldn_msoas.MSOA11NM.str.replace(r'???','',regex=True)
 
 # Just check results look plausible; you should have:
@@ -938,7 +1185,8 @@ print(len(mapping.keys()))
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 ldn_msoas['Subregion'] = ldn_msoas.Borough.map(???)
 ```
 
@@ -964,7 +1212,8 @@ Associate LA (Local Authority) names to the listings using a spatial join, but *
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 gdf_la = gpd.sjoin(listings, ???, predicate='???', how='left')
 print(gdf_la.columns.to_list())
 ```
@@ -1000,7 +1249,8 @@ else:
 
 If you were told that you need to run the next section of code then see if you can work out what happened...
 
-```python
+```{python}
+#| eval: False
 try:
     print(gdf_la[gdf_la.NAME.isna()].sample(2)[['name', 'NAME']])
     ax = gdf_la[gdf_la.NAME.isna()].plot(figsize=(9,6), markersize=5, alpha=0.5)
@@ -1011,14 +1261,16 @@ except ValueError as e:
 
 In short: in some cases there may be records that fall outside of London because of Airbnb's shuffling approach:
 
-```python
+```{python}
+#| eval: False
 gdf_la.drop(index=gdf_la[gdf_la.NAME.isna()].index, axis=1, inplace=True)
 print(f"Data frame is {gdf_la.shape[0]:,} x {gdf_la.shape[1]}")
 ```
 
 ### Check and Save
 
-```python
+```{python}
+#| eval: False
 ax = gdf_la.plot(column='NAME', markersize=0.5, alpha=0.5, figsize=(9,7))
 boros.plot(ax=ax, edgecolor='r', facecolor='None', alpha=0.5);
 ```
@@ -1029,9 +1281,11 @@ You should get the following:
 #| echo: false
 ax = gdf_la.plot(column='NAME', markersize=0.5, alpha=0.5, figsize=(9,7))
 boros.plot(ax=ax, edgecolor='r', facecolor='None', alpha=0.5);
+gdf_la.to_parquet(ddir / 'Listings_with_LA.geoparquet')
 ```
 
-```python
+```{python}
+#| eval: False
 gdf_la.to_parquet(ddir / 'Listings_with_LA.geoparquet')
 ```
 
@@ -1098,7 +1352,8 @@ msoa_gdf = grdf_msoa.set_index('MSOA11NM').join(
 msoa_gdf.head(3)
 ```
 
-```python
+```{python}
+#| eval: False
 msoa_gdf.plot(column='median_price', legend=True, figsize=(8,8));
 ```
 

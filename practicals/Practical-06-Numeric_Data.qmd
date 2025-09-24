@@ -7,13 +7,6 @@ filters:
   - quarto
 ---
 
-<style type="text/css">
-.longform {
-    max-height: 300px;
-    overflow-y: scroll;
-}
-</style>
-
 This session is a tour-de-`pandas`; since this is Python's equivalent of the `tidyverse` meets `data.tables` it is fundamental to the data science ecosystem and is probably one of the most-widely used libraries in the language as a whole. I get [more than 286,000 questions](https://stackoverflow.com/questions/tagged/pandas) tagged with pandas on StackOverflow. 
 
 This week we are also going to start looking more closely at the **[InsideAirbnb](http://insideairbnb.com/)** data which forms the core of the work that we do over the rest of the term. The focus of *this* notebook is simple numeric data: no mapping or text data... yet... and direct manipulation of data types, derivation of summary statistics, and simple plotting.
@@ -56,7 +49,7 @@ Pandas can do a *lot*, and you might be feeling a little intimidated by this, bu
 
 But at its heart, a pandas `Data Frame` (`df` for short) is a collection of `Data Series` objects (i.e. columns) with an index. Each Series is like one of our column-lists from the last notebook. And the `df` is like the dictionary that held the data together. So you've seen this before and you already _know_ what's going on... or at least you now have an _analogy_ that you can use to make sense of pandas:
 
-```python
+```default
 myDataFrame = {
     '<column_name_1>': <Series_1>,
     '<column_name_2>': <Series_2>,
@@ -131,7 +124,8 @@ Now, what goes into the `read_csv` function below?
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 # your code here
 df = pd.read_csv(??, compression='gzip', low_memory=False)
 print(f"Data frame is {df.shape[0]:,} x {df.shape[1]}")
@@ -201,6 +195,7 @@ The median!
 
 ```{python}
 #| echo: false
+#| output: asis
 mem_usage = df.memory_usage(index=True, deep=True)
 ```
 
@@ -212,7 +207,8 @@ So to show the 5th and 95th percentiles you need to pass an argument to `describ
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 df[
     ['latitude', 'longitude', 'accommodates', 'bathrooms', 'bedrooms', 'beds']
 ].describe(percentiles=[??])
@@ -246,18 +242,16 @@ You should get that the data frame has a mix of `float64`, `int`, and `object` (
 
 If you really need to get into the 'weeds' and profile your data frame because you are crashing Python and seeing messages about 'core dumped', or experiencing appallingly poor performance (allowing for the amount of data you've just loaded!), then `memory_usage` is the way to go:
 
-```python
+```{python}
+#| eval: False
 df.memory_usage(index=True, deep=True)
 ```
 
-::: {.longform}
-
 ```{python}
 #| echo: false
+#| output: asis
 mem_usage
 ```
-
-:::
 
 You should see that the data frame uses `{python} f"{mem_usage.sum():,}"` bytes of memory, but the *really* important thing to note here is the difference between `string` and other types of data: keeping data as raw strings (instead of converting to categories, for instance) uses up a *lot* more memory and this can have a huge impact on the performance of your code.
 
@@ -297,7 +291,7 @@ So my approach to coding is usually:
 
 So you might end up with something a bit like this (or this could be overkill):
 
-<pre>
+```default
 |
 |--project/
 |  |--code/
@@ -317,9 +311,9 @@ So you might end up with something a bit like this (or this could be overkill):
 |     |--code/
 |     |--data/
 |  |--conf 
-</pre>
+```
 
-There is even a coding library called `[cookiecutter](https://www.cookiecutter.io/)` that tries to help research groups and companies standardise how they manage their code and data. 
+There is even a coding library called [cookiecutter](https://www.cookiecutter.io/) that tries to help research groups and companies standardise how they manage their code and data. 
 
 ::: {.callout-warning collapse="true"}
 
@@ -393,7 +387,8 @@ Let's tackle the *rows* problem first:
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 testing = True
 
 if testing:
@@ -429,13 +424,15 @@ To make this more robust and useful we could use this `testing` variable *throug
 
 Something like:
 
-```python
+```{python}
+#| eval: False
 testing = False
 ```
 
 And:
 
-```python
+```{python}
+#| eval: False
 from conf import *
 ```
 
@@ -464,7 +461,8 @@ So let's extend our previous answer
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 testing = True
 
 if testing:
@@ -618,7 +616,8 @@ See if you can work out from the documentation (Google search time!) how to get 
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 df.sample(3, ??)
 ```
 
@@ -691,7 +690,8 @@ With that really troublesome data out of the way, you can now turn to [counting 
 ### Counting Nulls by Column
 
 As a starting point I would look to drop the columns that contain only NaNs. Remember that we've dropped a row from the data frame so our maximum is now $n-1$)! Notice how this next command works:
-```python
+```{python}
+#| eval: False
 # returns a data frame with all values set to True/False according to Null status
 df.isnull() 
 # counts these values by column (we'll see another option in a moment)
@@ -772,7 +772,8 @@ The Pandas Profiling tool (rebranded a year or so back as [ydata-profiling](http
 
 If you *do* want to explore this then you'll need to install the library, and **this is a good chance to look at how to install software on another machine**:
 
-```python
+```{python}
+#| eval: False
 from ydata_profiling import ProfileReport
 ```
 
@@ -979,7 +980,8 @@ For now don't worry about what `regex=False` means. It will all make sense when 
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 for m in money:
     print(f"Converting {m}")
     df[m] = df[m].str.replace('$','', regex=False).str.replace(??).astype('float')
@@ -1043,7 +1045,8 @@ df.beds.isna().value_counts()
 
 Ordinarily, at this point I would then output information to confirm that all of the opeations I _think_ I've undertaken were correctly applied.
 
-```python
+```{python}
+#| eval: False
 df.info()
 ```
 
@@ -1057,7 +1060,7 @@ pq_out  = Path(f'data/clean/{path.name.replace('.csv.gz','.parquet')}')
 
 if not csv_out.parent.exists():
     print(f"Creating {csv_out.parent}")
-    out.parent.mkdir(parents=True, exist_ok=True)
+    csv_out.parent.mkdir(parents=True, exist_ok=True)
     
 df.to_csv(csv_out, index=False)
 df.to_parquet(pq_out, index=False)
@@ -1085,7 +1088,8 @@ If we wanted to filter in/out certain columns pandas can do that! Let's try for 
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 df.select_dtypes(include=[??])
 ```
 
@@ -1111,14 +1115,16 @@ Conditional selection is usally done as a combination of the selection approache
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 df[df.??=='??']['property_type'].value_counts().head(10)
 ```
 
 Your output should be:
 ```{python}
 #| echo: false
-df[df.room_type=='Entire home/apt']['property_type'].value_counts().head(10)
+#| output: asis
+df[df.room_type=='Entire home/apt']['property_type'].value_counts().head(7)
 ```
 
 #### Answer
@@ -1143,7 +1149,8 @@ OK, now let's look for the Entire home/apt listings that cost more than the aver
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 print(f"The mean price is ${df.price.??():0.2f}")
 print(f"The median price is ${df.price.??():0.2f}")
 ```
@@ -1180,7 +1187,8 @@ So we want to take `Entire home/apt` and filter the data set _together with_ the
 
 So here we want to filter on two values in the data set using `&`:
 
-```python
+```{python}
+#| eval: False
 pricey = df[
     (??) & 
     (df.price>df.price.??)
@@ -1232,13 +1240,15 @@ Let's find the cheapest and most expensive listings using `min` and `max` method
 
 Least expensive: 
 
-```python
+```{python}
+#| eval: False
 df[df.price==df.price.??()][['price','id','listing_url','room_type','description']]
 ```
 
 Most expensive: 
 
-```python
+```{python}
+#| eval: False
 df[df.price==df.price.??()][['price','id','listing_url','room_type','description']]
 ```
 
@@ -1298,7 +1308,8 @@ Perhaps we aren't just looking for extremes... how about all of the properties f
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 dfr = df[ 
             (df.price > df.price.quantile(??)) & 
             (df.price < df.price.quantile(??)) ]
@@ -1353,7 +1364,8 @@ The z-score is given by $z = (x - \bar{x})/\sigma$.
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 df['z'] = (df.?? - df.??.??()) / df.??.??()
 df.z.describe().apply(lambda x: f"{x:5.5f}")
 ```
@@ -1375,7 +1387,8 @@ The IQR-standardised score is given by $i = (x - Q_{1})/(Q_{3} - Q_{1})$
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 df['iqs'] = (df.price - ??)/(??-??)
 df.iqs.describe().apply(lambda x: f"{x:5.5f}")
 ```
@@ -1397,7 +1410,8 @@ The natural log of the price is gven by $ln(x)$
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 df['lnprice'] = np.log(??)
 df.lnprice.describe().apply(lambda x: f"{x:5.5f}")
 ```
@@ -1425,7 +1439,8 @@ For now, let's look at the basic plotting functionality pandas provides - in con
 
 MacOS users who are *not* using Podman will need to do certain things in a specific order at the start of any notebook in order to show maps or graphs. Please make a copy of the following code for any notebook that you create and make it the *first* code that you run in the notebook...
 
-```python
+```{python}
+#| eval: False
 # Needed on a Mac
 import matplotlib as mpl
 mpl.use('TkAgg')
@@ -1446,6 +1461,7 @@ import matplotlib.pyplot as plt
 First, let's see some of the ways we could visualise the distribution of the `Series` in the dataset:
 
 ```{python}
+#| eval: False
 df.price.plot.hist() # histogram
 ```
 
@@ -1454,6 +1470,7 @@ If the code worked properly you should have just created a standard [histogram](
 You can filter the data *and* pass in some simple options to improve the plotting:
 
 ```{python}
+#| eval: False
 # Notice the ';' here to suppress `<AxesSubplot...>`
 # That information doesn't *always* appear, but whenever
 # you have unwanted textual output above your plot just
@@ -1477,7 +1494,8 @@ Similarly, we can produce a [Kernel Density Estimate plot](https://pandas.pydata
 
 Look for information about using `xlim`:
 
-```python
+```{python}
+#| eval: False
 df.price.plot.kde(xlim=(??)); #kernel density estimate plot
 ```
 
@@ -1499,13 +1517,14 @@ Generally, Jupyter is clever enough to overlay plots one on top of the other if 
 
 ::: {.callout-warning}
 
-#### Bug Alert {{< fa bug >}}
+#### Bug Alert
 
 The more we use pandas to sort and filter data the more you will start to see a `SettingWithCopyWarning`. This happens because of an interaction between how Pandas works and how Python works: when you are working with a very large data set you don't want to make a 'deep copy' of the data structure every time you make a change to the data. Instead, you get a 'view' into the data using a reference, which is a just a lightweight shortcut. So what happens when you try to modify that lightweight copy? Well, if you want to drop rows or columns then you either want to make a `copy()` at that point, or you will have to accept the warning *and* the computational risks that go with it.
 
 :::
 
 ```{python}
+#| eval: False
 # Calling copy() ensures the index is updated
 # and note that all subsequent plots will have
 # these £0 rows removed!
@@ -1526,6 +1545,7 @@ df.lnprice.plot.kde();
 A standard [boxplot](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.plot.box.html):
 
 ```{python}
+#| eval: False
 df.lnprice.plot.box(figsize=(4, 8));
 ```
 
@@ -1540,6 +1560,7 @@ df.lnprice.plot.box(figsize=(4, 8));
 We can also plot two variables in a [scatter plot](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.plot.scatter.html#pandas.DataFrame.plot.scatter) by applying a plot method to the `DataFrame` (not an individual `Series`):
 
 ```{python}
+#| eval: False
 df.plot.scatter(x='longitude', y='latitude', c='price', s=2, cmap='viridis', figsize=(15,10))
 ```
 
@@ -1548,12 +1569,14 @@ Note how the code above has the form `DataFrame.plot.<plot type>`, not `DataFram
 Looking at the plot produced, it's hard to see where the high values are, so we might want to think about ways that we could make it easier to spot the big numbers... We could, for instance, also vary the size of the point in a plot by some variable, but why does the following not really work?
 
 ```{python}
+#| eval: False
 df.plot.scatter(x='longitude', y='latitude', c='price', s=(df.price/df.price.min()), cmap='viridis', figsize=(15,10))
 ```
 
 And we can plot subsets of our data without creating a new object. See if you can work out what the following code is doing that is different from the last plot:
 
 ```{python}
+#| eval: False
 df[df.price > df.price.quantile(0.90)].plot.scatter(x='longitude', y='latitude', c='price', cmap='viridis', s=8)
 ```
 
@@ -1568,6 +1591,7 @@ df[df.price > df.price.quantile(0.90)].plot.scatter(x='longitude', y='latitude',
 And pandas allows us to create 'less standard' plots, like a [hex bin plot](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.plot.hexbin.html#pandas.DataFrame.plot.hexbin):
 
 ```{python}
+#| eval: False
 df.plot.hexbin(x='longitude', y='latitude', gridsize=50, figsize=(10,7))
 ```
 
@@ -1583,4 +1607,3 @@ Supported by the [Royal Geographical Society](https://www.rgs.org/HomePage.htm) 
 
 #### Potential Dependencies:
 This notebook may depend on the following libraries: pandas, matplotlib
-

@@ -77,21 +77,11 @@ So, we are going to [download a file from GitHub](https://orca.casa.ucl.ac.uk/~j
 
 Because we're accessing data from a 'URL' we need to use the `urlopen` [function](https://docs.python.org/3.0/library/urllib.request.html?highlight=urlopen#urllib.request.urlopen) from the `urllib.request` [package](https://docs.python.org/3.0/library/urllib.request.html). If you're wondering how we know to use this function and package, you might google something like: _read remote csv file python 3_ which in turn might get you to a StackOverflow question and answer like [this](https://stackoverflow.com/questions/36965864/opening-a-url-with-urllib-in-python-3). 
 
-<style type="text/css">
-.longform {
-    max-height: 500px;
-    overflow-y: scroll;
-}
-</style>
-
-::: {.longform}
-
 ```{python}
+#| eval: False
 from urllib.request import urlopen
 help(urlopen)
 ```
-
-:::
 
 As you can see, there is _lot_ of information here about how things work. A _lot_ of it won't make much sense at the moment. That's ok. _Some_ of this doesn't make much sense to me, but that's because this is the _full_ documentation from Python so it's trying to cover _all_ the bases. You don't need to read every line of this, what you are looking is information about things like the 'signature' (what parameters the function accepts) and its output. Of course, you can also _just Google it_!
 
@@ -123,6 +113,9 @@ Before you start working on the code, why not open the data file [directly in yo
 from urllib.request import URLError
 from urllib.request import urlopen
 
+data = str()
+urlData = str()
+
 try:
     url = 'https://orca.casa.ucl.ac.uk/~jreades/data/Listings.csv'
     response = urlopen(url)
@@ -137,7 +130,8 @@ except URLError as e:
     urlData = data
 ```
 
-```python
+```{python}
+#| eval: False
 from urllib.request import URLError
 from urllib.request import urlopen
 
@@ -179,6 +173,7 @@ Notice that the `raw` data has the format `b'...'` with all of the data seemingl
 Remember that you can treat strings *as lists*, so when we `print` below we cut off the output using the `list[:<Some Number>]` syntax.
 
 ```{python}
+#| eval: False
 print(f"There are {len(data)} characters in the data variable.")
 print(f"The first 125 characters are: '{data[:125]}'") # Notice that '\n' count here!
 ```
@@ -189,7 +184,8 @@ So this is definitely text, but it doesn't (yet) look entirely like the data *we
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 rows = ??.splitlines()
 print(f"'rows' variable is of type: {rows.__class__.__name__}'.")
 ```
@@ -209,7 +205,8 @@ Note now, how the _data_ variable has type `list`. So to view the data as we see
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 print(f"There are {??} rows of data.")
 print("\n".join(??[0:2])) # New syntax alert! notice we can *join* list elements
 ```
@@ -238,18 +235,21 @@ We now need to work on turning the response into useful data. We got partway the
 There's a handy function associated with strings called `split`:
 
 ```{python}
+#| eval: False
 print('abcdefgh'.split('d'))
 ```
 
 You can also investigate further how the split function works using:
 
 ```{python}
+#| eval: False
 help('abcdefgh'.split)
 ```
 
 So this seems like a good solution to turn our text into *data*:
 
 ```{python}
+#| eval: False
 test = rows[-1].split(',')
 print(test)
 print(f"The price of {test[0]} is {test[-1]}")
@@ -273,7 +273,8 @@ This is where using code that someone _else_ who is much more interested (and kn
 
 **Note:** For now just focus on problem \#2.
 
-```python
+```{python}
+#| eval: False
 from urllib.request import urlopen
 import csv
 
@@ -302,13 +303,17 @@ If it worked, then you should have this output:
 
 ```{python}
 #| echo: false
+#| output: asis
+print("```default")
 print("urlData has " + str(len(urlData)) + " rows and " + str(len(urlData[0])) + " columns.")
 print(str(urlData[-1]))
+print("```")
 ```
 
 To you that might look a lot _worse_ that the data that you originally had, but to a computer that list-of-lists is something it can work with; check it out:
 
 ```{python}
+#| eval: False
 for u in urlData[1:4]:
     print(f"The price of '{u[0]}' is '{u[-1]}'") 
 ```
@@ -327,7 +332,8 @@ The advantage of using the `csv` library over plain old `string.split` is that t
 
 Let's try this with a 'bigger' data set... In an ideal world, the 'power' of code is that once we've solved the problem *once*, we've solved it more generally as well. So let's try with the 'scaled-up' data set and see what happens!
 
-```python
+```{python}
+#| eval: False
 from urllib.request import urlopen
 import csv
 
@@ -344,7 +350,7 @@ for row in csvfile:
 
 print(f"urlData has {len(urlData)} rows and {len(urlData[0])} columns.")
 
-for u in urlData[70:]:  # For each row in the list
+for u in urlData[:20]:  # For each row in the list
     print(f"The listing for '{u[0]}' has a price of {u[-1]}") 
 ```
 
@@ -356,6 +362,7 @@ I have assumed that, just because the files have similar names, they must also h
 
 ```{python}
 #| echo: False
+#| output: asis
 from urllib.request import urlopen
 import csv
 
@@ -370,7 +377,10 @@ urlData = [] # Somewhere to store the data
 for row in csvfile:              
     urlData.append( row )
 
-print(f"The URL's data labels are: {', '.join(urlData[0])}")
+print(f"The URL's data labels are: ")
+print('```default')
+print(f"{', '.join(urlData[0])}")
+print('```')
 ```
 
 :::
@@ -429,9 +439,11 @@ Well, here are the first four rows of data from the CSV file:
 
 ```{python}
 #| echo: False
-import pandas as pd
-df = pd.read_csv('https://orca.casa.ucl.ac.uk/~jreades/data/Listings-lg.csv')
-df.head()
+#| output: asis
+print('```default')
+for r in urlData[0:6]:
+    print(", ".join(r))
+print('```')
 ```
 
 Here's how it would look as a dictionary of lists organised by _column_, and _not_ by row, though note that (for now) I've changed the `NaN` (Not a Number) values to something that will be easier to work with:
@@ -465,6 +477,7 @@ Now let's look at what you can do with this data structure. I'd encourage you to
 We can find the latitude of 'Prime city studio apartment' by putting together what we know about searching for a value in a list with what we know about dictionaries:
 
 ```{python}
+#| eval: False
 loc = 'Prime city studio apartment'
 lat = myData['Latitude'][ myData['Name'].index(loc) ]
 print(f"{loc}'s latitude is {lat}")
@@ -476,7 +489,8 @@ So to print the location of '2 bedroom 8th floor serviced apartment.':
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 loc = "2 bedroom 8th floor serviced apartment."
 print(f"The listing for {loc} can be found at " + 
       f"{abs(myData[??][ ?? ])}ºW, {myData['Latitude'][ ?? ]}ºN")
@@ -500,7 +514,8 @@ To find the easternmost listing we need to adapt what we've done above and think
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 listing = myData['Name'][ myData['Longitude'].index( ??(myData[??]) ) ]
 print(f"The easternmost listing is: {listing}")
 ```
@@ -515,13 +530,14 @@ print(f"The easternmost listing is: {listing}")
 ```
 
 ::::
-To fFind the `mean` number of bedrooms we can use a package called numpy. `numpy` (Numerical Python) is used _so_ much that most people simply refer to it as `np`. This is a _huge_ package in terms of features, but right now we're interested only in the simple arithmatic `mean`.
+To find the `mean` number of bedrooms we can use a package called numpy. `numpy` (Numerical Python) is used _so_ much that most people simply refer to it as `np`. This is a _huge_ package in terms of features, but right now we're interested only in the simple arithmatic `mean`.
 
 ::: {.qna}
 
 #### Question
 
-```python 
+```{python}
+#| eval: False 
 import numpy as np
 mean = np.??(myData['Bedrooms'])
 print(f"The mean number of bedrooms is: {mean}")
@@ -548,40 +564,45 @@ print(f"The mean number of bedrooms is: {mean}")
 
 We'll go through each one in turn, but they nearly all work in the same way and the really key thing is that you'll notice that we no longer have any loops (which are slow) just `index` or `np.<function>` (which is _very_ fast). 
 
-## The Location of a Listing
+## The Location of Lerwick
 
-Lerwick is a small town in [the Shetlands](https://www.shetland.org/), way up to the North of mainland U.K. and somewhere I've wanted to go ever since I got back from [Orkney](https://www.orkney.com/)--but then I spent my honeymoon in the far North of [Iceland](https://www.westfjords.is/), so perhaps I just don't like being around lots of people... 🙃
+Let's take a detour... Lerwick is a small town in [the Shetlands](https://www.shetland.org/), way up to the North of mainland U.K. and somewhere I've wanted to go ever since I got back from [Orkney](https://www.orkney.com/)--but then I spent my honeymoon in the far North of [Iceland](https://www.westfjords.is/), so perhaps I just don't like being around lots of people... 🙃
 
 Anyway, this one _might_ be a tiny bit easier conceptually than the other problems, except that I've deliberately used a slightly different way of showing the output that might be confusing:
 
-Print the location of Lerwick:
+To print the location of Lerwick:
 
-```python
+```default
+#| eval: False
+# This won't actually run, it's an example
 city = "Lerwick"
 print(f"The town of {city} can be found at " + 
-      f"{abs(myData['Longitude'][myData['Name'].index(city)])}ºW, {myData['Latitude'][myData['Name'].index(city)]}ºN")
+    f"{abs(myData['Longitude'][myData['Name'].index(city)])}ºW, " +
+    f"{myData['Latitude'][myData['Name'].index(city)]}ºN")
 ```
 
 The first thing to do is to pull apart the `print` statement: you can see that this is actually just two 'f-strings' joined by a `+`--having that at the end of the line tells Python that it should carry on to the next line. That's a handy way to make your code a little easier to read. If you're creating a list and it's getting a little long, then you can also continue a line using a `,` as well!
 
-#### 1. The first f-string
+### 1. The first f-string
    
 The first string will help you to make sense of the second: f-strings allow you to 'interpolate' a variable into a string directly rather than having to have lots of `str(x) + " some text " + str(y)`. You can write `f"{x} some text {y}"` and Python will automatically convert the variables `x` and `y` to strings and replace `{x}` with the _value of `x`_ and `{y}` with the _value of `y`_. 
 
 So here `f"The town of {city} can be found at "` becomes `f"The town of Lerwick can be found at "` because `{city}` is replaced by the value of the variable `city`. This makes for code that is easier for humans to read and so I'd consider that a good thing.
 
-#### 2. The second f-string
+### 2. The second f-string
 This one is hard because there's just a _lot_ of code there. But, again, if we start with what we recognise that it gets just a little bit more manageable... Also, it stands to reason that the only difference between the two outputs is that one asks for the 'Longitude' and the other for the 'Latitude'. So if you can make sense of one you have _automatically_ made sense of the other and don't need to work it all out.
 
 Let's start with a part that you might recognise:
 
 ```{python}
+#| eval: False
 myData['Name'].index(listing)
 ```
 
 You've _got_ this. This is just asking Python to work out the index of Lerwick (because `city = 'Lerwick'`). So it's a number. 5 in this case. And we can then think, 'OK so what does this return:
 
 ```{python}
+#| eval: False
 myData['Longitude'][4]
 ```
 
@@ -593,6 +614,7 @@ o3 = myData['Longitude'][4]
 And the answer is `-1.145`. That's the Longitude of Lerwick! There's just _one_ last thing: notice that we're talking about degrees West here. So the answer isn't a negative (because negative West degrees would be _East_!), it's the _absolute_ value. And that is the final piece of the puzzle: `abs(...)` gives us the absolute value of a number!
 
 ```{python}
+#| eval: False
 help(abs)
 ```
 
@@ -601,6 +623,7 @@ help(abs)
 The code we've just seen can look pretty daunting, so let's break it down into two parts. What would you get if you ran just this code?
 
 ```{python}
+#| eval: False
 myData['Longitude'][2]
 ```
 
@@ -609,6 +632,7 @@ Remember that this is a dictionary-of-lists (DoL). So, Python first looks for a 
 Now, to the second part:
 
 ```{python}
+#| eval: False
 myData['Name'].index('2 bedroom 8th floor serviced apartment.')
 ```
 
@@ -621,6 +645,7 @@ Does that make sense? If it does then you should be having a kind of an &#129327
 Where this approach really comes into its own is on problems that involve maths. To figure out the easternmost city in this list we need to find the _maximum_ Longitude and then use _that_ value to look up the city name. So let's do the same process of pulling this apart into two steps. Let start with the easier bit:
 
 ```{python}
+#| eval: False
 myData['Name'][0]
 ```
 
@@ -632,18 +657,21 @@ That would give us the name of a city, but we don't just want the first city in 
 So Step 1 would be:
 
 ```{python}
+#| eval: False
 max_lon = max(myData['Longitude'])
 ```
 
 Because the `max(...)` helps us to find the maximum longitude in the Longitude list. Now that we have that we can proceed to Step 2:
 
 ```{python}
+#| eval: False
 myData['Longitude'].index(max_lon)
 ```
 
 So now we ask Python to find the position of `max_lon` in the list. But rather than doing this in two steps we can combine into one if we write it down to make it easier to read:
 
 ```{python}
+#| eval: False
 myData['Longitude'].index(
     max(myData['Longitude'])
 )
@@ -658,6 +686,7 @@ There's the same `.index` which tells us that Python is going to look for someth
 I _am_ a geek, but that's pretty cool, right? In one line of code we managed to quickly find out where the data we needed was even though it involved three discrete steps. Think about how much work you'd have to do if you were still thinking in _rows_, not _columns_!
 
 ```{python}
+#| eval: False
 loc = myData['Name'][
     myData['Longitude'].index(
         max(myData['Longitude'])
@@ -671,6 +700,7 @@ print(f"The easternmost listing is {loc}.")
 So here we're going to 'cheat' a little bit: rather than writing our own function, we're going to import a package and use someone _else's_ function. The `numpy` package contains a _lot_ of useful functions that we can call on (if you don't believe me, add "`dir(np)`" on a new line after the `import` statement), and one of them calculates the average of a list or array of data.
 
 ```{python}
+#| eval: False
 import numpy as np
 print(f"The mean number of bedrooms is {np.mean(myData['Bedrooms'])}")
 ```
@@ -709,7 +739,8 @@ You don't want to use `<list>.sort()` because that will sort your data *in place
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 # Print out the name of the 3rd most bedrooms
 loc = ??
 
@@ -719,12 +750,12 @@ print("The third most bedrooms are in: " + str(loc))
 ```{python}
 #| echo: false
 #| output: asis
-print(f"The answer is {loc}.")
+print(f"The answer is `{loc}`.")
 ```
 
 #### Answer
 
-```python
+```{python}
 # Print out the name of the 3rd most bedrooms
 loc = myData['Name'][
     myData['Bedrooms'].index(

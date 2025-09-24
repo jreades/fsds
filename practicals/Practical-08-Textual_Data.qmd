@@ -134,7 +134,8 @@ To explore the description field properly you'll need to filter out any NA/NaN d
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 gdf[???].sample(5, random_state=42)[['description']]
 ```
 
@@ -206,7 +207,8 @@ I would be wary of doing what I do below in a 'proper' application without some 
 
 How do you drop all rows where *either* the description or amenities (or both) are `NaN`:
 
-```python
+```{python}
+#| eval: False
 gdf = gdf.dropna(???)
 print(f"Now gdf has {gdf.shape[0]:,} rows.")
 ```
@@ -295,6 +297,7 @@ gdf.sample(3, random_state=42).description.str[:25]
 ### Extraction
 
 ```{python}
+#| eval: false
 # For some reason this doesn't take regex=True
 gdf.sample(3, random_state=42).description.str.extract(r'stylish (?P<detail>\w+)')
 ```
@@ -302,12 +305,14 @@ gdf.sample(3, random_state=42).description.str.extract(r'stylish (?P<detail>\w+)
 ### Putting it Together
 
 ```{python}
+#| eval: false
 gdf.sample(3, random_state=42).amenities.str.upper().str.replace(r'(?:\"|\[|\])', '', regex=True).str.split(r'\s*,\s*', regex=True, expand=True)
 ```
 
 Or you could also tackle it this way:
 
 ```{python}
+#| eval: false
 gdf.sample(3, random_state=42).amenities.str.upper().str.replace(r'(?:\"|\[|\])', '', regex=True).str.get_dummies(sep=r',')
 ```
 
@@ -355,7 +360,8 @@ In fact, in my real-world applications you might even need more than one group/n
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 gdf[
     gdf.description.str.contains(
         r'???', 
@@ -383,7 +389,8 @@ Assign it to a new data frame called `lux`:
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 lux = gdf[
     gdf.description.str.contains(
         r'???', 
@@ -417,7 +424,8 @@ print(f"You should get that there are `{lux.shape[0]:,}` rows.")
 
 Now we are going to create a more complex plot that will give space to both the spatial and price distributions using `subplot2grid`.
 
-```python
+```{python}
+#| eval: False
 help(plt.subplot2grid)
 ```
 
@@ -438,7 +446,8 @@ Every time you call `subplot2grid` you are initialising a new axis-object into w
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 
 f,ax = plt.subplots(1,1,figsize=(9,6))
 ax.remove()
@@ -488,7 +497,7 @@ Your result should look similar to:
 
 ```{python}
 #| echo: false
-#| fig-cap: "'Luxury' listings in London"
+#| output: asis
 f
 ```
 
@@ -526,7 +535,8 @@ What words can you think of that might help you to spot affordable and budget ac
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 gdf[
     gdf.description.str.contains(
         ???, 
@@ -552,7 +562,8 @@ gdf[
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 aff = gdf[
     gdf.description.str.contains(
         ???, 
@@ -585,6 +596,7 @@ print(f"You should get that there are `{aff.shape[0]:,}` rows.")
 ### Plot the Data
 
 ```{python}
+#| eval: false
 f,ax = plt.subplots(1,1,figsize=(8,6))
 ax.remove()
 
@@ -605,13 +617,39 @@ plt.tight_layout()
 #plt.savefig("Affordable_Listings.png", dpi=150)
 ```
 
+Your map should look something like this:
+
+```{python}
+#| echo: false
+#| output: asis
+f,ax = plt.subplots(1,1,figsize=(8,6))
+ax.remove()
+
+# The first plot
+ax1 = plt.subplot2grid((4, 1), (0, 0), rowspan=3)
+boros.plot(edgecolor='red', facecolor='none', linewidth=1, alpha=0.75, ax=ax1)
+aff.plot(markersize=2, column='price', cmap='viridis', alpha=0.2, scheme='Fisher_Jenks_Sampled', ax=ax1)
+
+ax1.set_xlim([500000, 565000])
+ax1.set_ylim([165000, 195000]);
+
+# The second plot
+ax2 = plt.subplot2grid((4, 1), (3, 0), rowspan=1)
+aff.price.plot.hist(bins=100, ax=ax2)
+
+plt.suptitle("Listings Advertising Affordability")
+plt.tight_layout()
+f
+```
+
 ### Questions
 
 - Do you think that this is a *good* way to select affordable options?
 - Do you understand what `dpi` means and how `savefig` works?
 - Copy the code from above but modify it to constrain the histogram on a more limited distribution by *filtering* out the outliers *before* drawing the plot. I would copy the cell above to one just below here so that you keep a working copy available and can undo any changes that break things.
 
-```python
+```{python}
+#| eval: False
 
 
 ```
@@ -636,7 +674,8 @@ Now see if you can work out a regular expression to find accommodation that emph
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 gdf[
     gdf.description.str.contains(
         ???, 
@@ -662,7 +701,8 @@ gdf[
 
 #### Question
 
-```python
+```{python}
+#| eval: False
 bluesp = gdf[
     (gdf.description.str.contains(???, regex=True, flags=re.IGNORECASE)) |
     (gdf.description.str.contains(???, regex=True, flags=re.IGNORECASE))
@@ -765,6 +805,7 @@ is_range = re.compile(r'''
 One way to do that is write some simple 'test cases' and see what happens! Notice that, in the `alocation` regex we have a "named capture group". See if you can *add* this to the `is_range` regular expression... you might want to duplicate the code block above so that you have a 'clean' copy to revert to if you break the regular expressions and aren't sure why.
 
 ```{python}
+#| eval: false
 
 cases = [
     'Lower Ground Floor Flat', 'Flat 2b', 
