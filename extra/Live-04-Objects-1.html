@@ -1,0 +1,1815 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.24">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Intro – Foundations of Spatial Data Science</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="..//img/favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-c65962dbb5d575cbb06919ca07087d11.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-c65962dbb5d575cbb06919ca07087d11.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-c65962dbb5d575cbb06919ca07087d11.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-fe853ba5246912d06385e22c6c0bf4b5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-fe853ba5246912d06385e22c6c0bf4b5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-fe853ba5246912d06385e22c6c0bf4b5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<meta property="og:title" content="Intro – Foundations of Spatial Data Science">
+<meta property="og:description" content="">
+<meta property="og:image" content="img/logo/full_sm.png">
+<meta property="og:site_name" content="Foundations">
+<meta property="og:locale" content="en_GB">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../img/logo/logo_only_sm.png" alt="" class="navbar-logo light-content">
+    <img src="../img/logo/logo_only_sm.png" alt="" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Foundations of Spatial Data Science</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../setup/index.html"> 
+<span class="menu-text">Setup</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-week-by-week" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Week-by-Week</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-week-by-week">    
+        <li>
+    <a class="dropdown-item" href="../sessions/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Part 1: Foundations</li>
+        <li>
+    <a class="dropdown-item" href="../sessions/week1.html">
+ <span class="dropdown-text">1. Setting Up</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week2.html">
+ <span class="dropdown-text">2. Foundations (Pt.1)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week3.html">
+ <span class="dropdown-text">3. Foundations (Pt.2)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week4.html">
+ <span class="dropdown-text">4. Efficient Code</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week5.html">
+ <span class="dropdown-text">5. Objects</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/reading_week.html">
+ <span class="dropdown-text">Reading Week</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Part 2: Process</li>
+        <li>
+    <a class="dropdown-item" href="../sessions/week6.html">
+ <span class="dropdown-text">6. Numeric Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week7.html">
+ <span class="dropdown-text">7. Spatial Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week8.html">
+ <span class="dropdown-text">8. Textual Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week9.html">
+ <span class="dropdown-text">9. Selecting Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week10.html">
+ <span class="dropdown-text">10. Presenting Data</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Part 3: Bonus</li>
+        <li>
+    <a class="dropdown-item" href="../sessions/week11.html">
+ <span class="dropdown-text">11. Dimensions in Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week12.html">
+ <span class="dropdown-text">12. Grouping Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../references.html">
+ <span class="dropdown-text">Bibliography</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-assessments" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Assessments</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-assessments">    
+        <li>
+    <a class="dropdown-item" href="../assessments/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Elements</li>
+        <li>
+    <a class="dropdown-item" href="../assessments/exam.html">
+ <span class="dropdown-text">Timed Open Book Exam</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../assessments/group.html">
+ <span class="dropdown-text">Group Work</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../assessments/peer.html">
+ <span class="dropdown-text">Group Self-Evaluation</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../help.html"> 
+<span class="menu-text">Getting Help</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="2">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#task-1-creating-a-class-hierarchy" id="toc-task-1-creating-a-class-hierarchy" class="nav-link active" data-scroll-target="#task-1-creating-a-class-hierarchy">Task 1: Creating a Class Hierarchy</a>
+  <ul class="collapse">
+  <li><a href="#task-1.2-demonstrate" id="toc-task-1.2-demonstrate" class="nav-link" data-scroll-target="#task-1.2-demonstrate">Task 1.2: Demonstrate</a></li>
+  </ul></li>
+  <li><a href="#task-2-cube" id="toc-task-2-cube" class="nav-link" data-scroll-target="#task-2-cube">Task 2: Cube</a>
+  <ul class="collapse">
+  <li><a href="#task-2.1-cube-class" id="toc-task-2.1-cube-class" class="nav-link" data-scroll-target="#task-2.1-cube-class">Task 2.1: Cube Class</a></li>
+  <li><a href="#task-2.2-demonstrate" id="toc-task-2.2-demonstrate" class="nav-link" data-scroll-target="#task-2.2-demonstrate">Task 2.2: Demonstrate</a></li>
+  </ul></li>
+  <li><a href="#task-3-sphere" id="toc-task-3-sphere" class="nav-link" data-scroll-target="#task-3-sphere">Task 3: Sphere</a>
+  <ul class="collapse">
+  <li><a href="#task-3.1-sphere-class" id="toc-task-3.1-sphere-class" class="nav-link" data-scroll-target="#task-3.1-sphere-class">Task 3.1: Sphere Class</a></li>
+  <li><a href="#task-3.2-demonstrate-how-this-works" id="toc-task-3.2-demonstrate-how-this-works" class="nav-link" data-scroll-target="#task-3.2-demonstrate-how-this-works">Task 3.2: Demonstrate how this works</a></li>
+  </ul></li>
+  <li><a href="#task-4-pyramids" id="toc-task-4-pyramids" class="nav-link" data-scroll-target="#task-4-pyramids">Task 4: Pyramids</a>
+  <ul class="collapse">
+  <li><a href="#task-4.1-regular-pyramids" id="toc-task-4.1-regular-pyramids" class="nav-link" data-scroll-target="#task-4.1-regular-pyramids">Task 4.1: Regular Pyramids</a></li>
+  <li><a href="#task-4.2-demonstrate" id="toc-task-4.2-demonstrate" class="nav-link" data-scroll-target="#task-4.2-demonstrate">Task 4.2: Demonstrate</a></li>
+  <li><a href="#task-4.3-triangular-pyramid" id="toc-task-4.3-triangular-pyramid" class="nav-link" data-scroll-target="#task-4.3-triangular-pyramid">Task 4.3: Triangular Pyramid</a></li>
+  <li><a href="#task-4.4-demonstrate" id="toc-task-4.4-demonstrate" class="nav-link" data-scroll-target="#task-4.4-demonstrate">Task 4.4: Demonstrate</a></li>
+  </ul></li>
+  <li><a href="#task-5-packaging" id="toc-task-5-packaging" class="nav-link" data-scroll-target="#task-5-packaging">Task 5: Packaging</a>
+  <ul class="collapse">
+  <li><a href="#task-5.1-shell-commands" id="toc-task-5.1-shell-commands" class="nav-link" data-scroll-target="#task-5.1-shell-commands">Task 5.1: Shell Commands</a></li>
+  <li><a href="#task-5.2-creating-an-init-file" id="toc-task-5.2-creating-an-init-file" class="nav-link" data-scroll-target="#task-5.2-creating-an-init-file">Task 5.2: Creating an init file</a></li>
+  <li><a href="#task-5.3-importing-the-classes" id="toc-task-5.3-importing-the-classes" class="nav-link" data-scroll-target="#task-5.3-importing-the-classes">Task 5.3: Importing the Classes</a></li>
+  </ul></li>
+  <li><a href="#task-6.-adding-documentation" id="toc-task-6.-adding-documentation" class="nav-link" data-scroll-target="#task-6.-adding-documentation">Task 6.: Adding Documentation</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/jreades/fsds/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Intro</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div style="float:left">
+<pre><code>&lt;h1 style="width:450px"&gt;Live Coding 4: Object-Oriented Programming 1&lt;/h1&gt;
+&lt;h2 style="width:450px"&gt;Getting to grips with Classes &amp;amp; Objects&lt;/h2&gt;</code></pre>
+</div>
+<div style="float:right">
+<img width="100" src="https://github.com/jreades/i2p/raw/master/img/casa_logo.jpg">
+</div>
+<p>You will be encountering classes and dealing with inheritance from next week and this is fundamental to <em>how Python works</em>. In Python, everything is an object and that means that everything – absolutely everything – is part of the Python class hierarchy, at the bottom of which sits the base <code>object</code> class.</p>
+<p>For our purposes, the place you’re going to encounter this <em>every day</em> is that Pandas is our main data analysis tool, but when we deal with geography we’ll be using GeoPandas, which inherits from Pandas and adds (we say “extends”) functionality for processing geo-data.</p>
+<p>There’s even a Moving Pandas for trajectory analysis. These <em>all</em> work on the basis of inheritance.</p>
+<section id="task-1-creating-a-class-hierarchy" class="level2">
+<h2 class="anchored" data-anchor-id="task-1-creating-a-class-hierarchy">Task 1: Creating a Class Hierarchy</h2>
+<p>We want to create a set of ideal shape classes with methods allowing us to derive various properties of that shape:</p>
+<ul>
+<li>Diameter: which we’ll define as the longest line that can be drawn across the inside of the shape.</li>
+<li>Volume: the total volume of the shape.</li>
+<li>Surface Area: the total outside area of the shape.</li>
+</ul>
+<p>We will create all of these shape classes in the notebook so that we know they work and then will move them to an external package file so that they can be imported and re-used easily in other notebooks.</p>
+<p>We’re also going to make use of a few features of Python:</p>
+<ul>
+<li>You can access the class name of an instance using: <code>self.__class__.__name__</code>. And here’s one key point: <code>self</code> refers to the instance, not to the class… we’ll see why this matters.</li>
+<li>You can raise your own exceptions easily if you don’t want to implement a particular method yet.</li>
+<li>You can have an ‘abstract’ base class that does nothing except provide a template for the ‘real’ classes so that they can be used interchangeably.</li>
+</ul>
+<div id="ada33430" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="bu">print</span>(<span class="st">"Hello world"</span>.<span class="va">__class__</span>.<span class="va">__name__</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>str</code></pre>
+</div>
+</div>
+<section id="task-1.1-abstract-base-class" class="level4">
+<h4 class="anchored" data-anchor-id="task-1.1-abstract-base-class">Task 1.1: Abstract Base Class</h4>
+<p>This class appears to do very little, but there are two things to notice:</p>
+<ol type="1">
+<li>It provides a constructor (<code>__init__</code>) that sets the <code>shape_type</code> to the name of the class automatically (so a <code>square</code> object has <code>shape_type='Square'</code>) and it stores the critical dimension of the shape in <code>self.dim</code>.</li>
+<li>It provides methods (which only raise exceptions) that will allow one shape to be used in the place of any other shape that inherits from <code>shape</code>.</li>
+</ol>
+<div id="6cc9f869" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">from</span> math <span class="im">import</span> pi</span>
+<span id="cb4-2"><a href="#cb4-2"></a></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="co"># Base class shape</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="kw">class</span> shape(<span class="bu">object</span>): <span class="co"># Inherit from base class </span></span>
+<span id="cb4-5"><a href="#cb4-5"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dimension:<span class="bu">float</span><span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb4-6"><a href="#cb4-6"></a>        <span class="va">self</span>.shape_type <span class="op">=</span> <span class="va">self</span>.<span class="va">__class__</span>.<span class="va">__name__</span>.capitalize()</span>
+<span id="cb4-7"><a href="#cb4-7"></a>        <span class="va">self</span>.dim <span class="op">=</span> dimension</span>
+<span id="cb4-8"><a href="#cb4-8"></a>        <span class="bu">print</span>(<span class="st">"I'm a shape!"</span>)</span>
+<span id="cb4-9"><a href="#cb4-9"></a>        <span class="cf">return</span></span>
+<span id="cb4-10"><a href="#cb4-10"></a>    </span>
+<span id="cb4-11"><a href="#cb4-11"></a>    <span class="kw">def</span> diameter(<span class="va">self</span>):</span>
+<span id="cb4-12"><a href="#cb4-12"></a>        <span class="cf">raise</span> <span class="pp">Exception</span>(<span class="st">"Unimplmented method error."</span>)</span>
+<span id="cb4-13"><a href="#cb4-13"></a>    </span>
+<span id="cb4-14"><a href="#cb4-14"></a>    <span class="kw">def</span> volume(<span class="va">self</span>):</span>
+<span id="cb4-15"><a href="#cb4-15"></a>        <span class="cf">raise</span> <span class="pp">Exception</span>(<span class="st">"Unimplmented method error."</span>)</span>
+<span id="cb4-16"><a href="#cb4-16"></a>    </span>
+<span id="cb4-17"><a href="#cb4-17"></a>    <span class="kw">def</span> surface(<span class="va">self</span>):</span>
+<span id="cb4-18"><a href="#cb4-18"></a>        <span class="cf">raise</span> <span class="pp">Exception</span>(<span class="st">"Unimplmented method error."</span>)</span>
+<span id="cb4-19"><a href="#cb4-19"></a>        </span>
+<span id="cb4-20"><a href="#cb4-20"></a>    <span class="kw">def</span> <span class="bu">type</span>(<span class="va">self</span>):</span>
+<span id="cb4-21"><a href="#cb4-21"></a>        <span class="cf">return</span>(<span class="va">self</span>.shape_type)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="task-1.2-demonstrate" class="level3">
+<h3 class="anchored" data-anchor-id="task-1.2-demonstrate">Task 1.2: Demonstrate</h3>
+<p>Briefly discuss what’s going on, paying particular attention to:</p>
+<ol type="1">
+<li><code>class shape(object)</code> – this means that <code>shape</code> extends the <code>object</code> base class.</li>
+<li><code>def __init__</code> – what is <code>self</code> (reference to the <em>instance</em>) and what does <code>dimension:float=None</code> mean?</li>
+<li>Create a new <code>shape</code> object:</li>
+</ol>
+<ul>
+<li>What happens when you run <code>s = shape()</code>?</li>
+<li>What happens when you try to call <code>s.diameter()</code>?</li>
+<li>What happens when you try to call <code>s.type()</code>?</li>
+</ul>
+</section>
+</section>
+<section id="task-2-cube" class="level2">
+<h2 class="anchored" data-anchor-id="task-2-cube">Task 2: Cube</h2>
+<p>Implements a cube:</p>
+<ol type="1">
+<li>The diameter of the cube is given by the Pythagorean formula for the length of the hypotenuse in 3D between opposing corners: <span class="math inline">\(\sqrt{d^{2} + d^{2} + d^{2}}\)</span> which we can reduce to <span class="math inline">\(\sqrt{3 d^{2}}\)</span>.</li>
+<li>A cube’s volume is given by <span class="math inline">\(d^{3}\)</span>.</li>
+<li>A cube’s surface area will be the sum of its six faces: <span class="math inline">\(6d^{2}\)</span>.</li>
+</ol>
+<section id="task-2.1-cube-class" class="level3">
+<h3 class="anchored" data-anchor-id="task-2.1-cube-class">Task 2.1: Cube Class</h3>
+<div id="afefdab8" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># Cube class</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="kw">class</span> cube(shape): <span class="co"># Inherit from shape </span></span>
+<span id="cb5-3"><a href="#cb5-3"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim:<span class="bu">float</span>):</span>
+<span id="cb5-4"><a href="#cb5-4"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(dim)</span>
+<span id="cb5-5"><a href="#cb5-5"></a>        <span class="bu">print</span>(<span class="st">"I'm a cube!"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6"></a>        <span class="cf">return</span></span>
+<span id="cb5-7"><a href="#cb5-7"></a>    </span>
+<span id="cb5-8"><a href="#cb5-8"></a>    <span class="kw">def</span> diameter(<span class="va">self</span>):</span>
+<span id="cb5-9"><a href="#cb5-9"></a>        <span class="cf">return</span> (<span class="dv">3</span> <span class="op">*</span> <span class="va">self</span>.dim<span class="op">**</span><span class="dv">2</span>)<span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)</span>
+<span id="cb5-10"><a href="#cb5-10"></a>    </span>
+<span id="cb5-11"><a href="#cb5-11"></a>    <span class="kw">def</span> volume(<span class="va">self</span>):</span>
+<span id="cb5-12"><a href="#cb5-12"></a>        <span class="cf">return</span> <span class="va">self</span>.dim<span class="op">**</span><span class="dv">3</span></span>
+<span id="cb5-13"><a href="#cb5-13"></a>    </span>
+<span id="cb5-14"><a href="#cb5-14"></a>    <span class="kw">def</span> surface(<span class="va">self</span>):</span>
+<span id="cb5-15"><a href="#cb5-15"></a>        <span class="cf">return</span> <span class="dv">6</span><span class="op">*</span>(<span class="va">self</span>.dim<span class="op">**</span><span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="task-2.2-demonstrate" class="level3">
+<h3 class="anchored" data-anchor-id="task-2.2-demonstrate">Task 2.2: Demonstrate</h3>
+<ol type="1">
+<li>Create a <code>cube</code> and do the <em>same</em> things we did with <code>shape</code> (show that it’s been overridden).</li>
+<li>Look at the print statements created from the <code>__init__</code> and discuss.</li>
+<li>Show how the <code>type</code> method works for Cubes even though we never specified it.</li>
+</ol>
+</section>
+</section>
+<section id="task-3-sphere" class="level2">
+<h2 class="anchored" data-anchor-id="task-3-sphere">Task 3: Sphere</h2>
+<p>Implements a sphere:</p>
+<ol type="1">
+<li>The diameter is twice the critical dimension (radius): <span class="math inline">\(2d\)</span>.</li>
+<li>The volume is <span class="math inline">\(\frac{4}{3} \pi r^{3}\)</span>.</li>
+<li>The surface area will be <span class="math inline">\(4 \pi r^{2}\)</span>.</li>
+</ol>
+<p>If we were writing something more general, we’d probably have spheres as a special case of an ellipsoid!</p>
+<section id="task-3.1-sphere-class" class="level3">
+<h3 class="anchored" data-anchor-id="task-3.1-sphere-class">Task 3.1: Sphere Class</h3>
+<div id="3174a64c" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># Sphere class</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="kw">class</span> sphere(shape): <span class="co"># Inherit from shape </span></span>
+<span id="cb6-3"><a href="#cb6-3"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim:<span class="bu">float</span>):</span>
+<span id="cb6-4"><a href="#cb6-4"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(dim)</span>
+<span id="cb6-5"><a href="#cb6-5"></a>        <span class="cf">return</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a>    </span>
+<span id="cb6-7"><a href="#cb6-7"></a>    <span class="kw">def</span> diameter(<span class="va">self</span>):</span>
+<span id="cb6-8"><a href="#cb6-8"></a>        <span class="cf">return</span> <span class="va">self</span>.dim<span class="op">*</span><span class="dv">2</span></span>
+<span id="cb6-9"><a href="#cb6-9"></a>    </span>
+<span id="cb6-10"><a href="#cb6-10"></a>    <span class="kw">def</span> volume(<span class="va">self</span>):</span>
+<span id="cb6-11"><a href="#cb6-11"></a>        <span class="cf">return</span> (<span class="dv">4</span><span class="op">/</span><span class="dv">3</span>) <span class="op">*</span> pi <span class="op">*</span> <span class="va">self</span>.dim<span class="op">**</span><span class="dv">3</span></span>
+<span id="cb6-12"><a href="#cb6-12"></a>    </span>
+<span id="cb6-13"><a href="#cb6-13"></a>    <span class="kw">def</span> surface(<span class="va">self</span>):</span>
+<span id="cb6-14"><a href="#cb6-14"></a>        <span class="cf">return</span> <span class="dv">4</span> <span class="op">*</span> pi <span class="op">*</span> (<span class="va">self</span>.dim<span class="op">**</span><span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="task-3.2-demonstrate-how-this-works" class="level3">
+<h3 class="anchored" data-anchor-id="task-3.2-demonstrate-how-this-works">Task 3.2: Demonstrate how this works</h3>
+<ol type="1">
+<li>Create one Cube and one Sphere with the <em>same</em> parameter (dimension)</li>
+<li>Show how they return different values for diameter, volume, surface</li>
+<li>Show that both have a type function that works without being defined.</li>
+</ol>
+</section>
+</section>
+<section id="task-4-pyramids" class="level2">
+<h2 class="anchored" data-anchor-id="task-4-pyramids">Task 4: Pyramids</h2>
+<p>We’re taking this to be a regular pyramid where all sides are equal:</p>
+<ol type="1">
+<li>The diameter is a line drawn across the base between opposing corners of the base so it’s just <span class="math inline">\(\sqrt{d^{2} + d^{2}}\)</span>.</li>
+<li>The volume is given by <span class="math inline">\(V&nbsp;=&nbsp;b&nbsp;*&nbsp;h&nbsp;/&nbsp;3\)</span> (where <span class="math inline">\(b\)</span> is the area of the base, which in this case becomes <span class="math inline">\(d^{2} * h/3\)</span>).</li>
+<li>The surface area will be the base + 4 equilateral triangles: <span class="math inline">\(d^{2} + 4 (d^{2}\sqrt{3}/4)\)</span> which we can reduce to <span class="math inline">\(d^{2} + d^{2}\sqrt{3}\)</span></li>
+</ol>
+<p>But this requires a <em>height</em> method that is specific to pyramids:</p>
+<ol start="4" type="1">
+<li>The height is taken from the centre of the pyramid (which will be half the length of the hypotenuse for two edges): <span class="math inline">\(l = \sqrt{d{^2} + d^{2}}\)</span> and the long side (<span class="math inline">\(d\)</span> again) which gives us <span class="math inline">\(\sqrt{l/2 + d^{2}}\)</span>.</li>
+</ol>
+<p>Note that this has a class variable called <code>has_mummies</code> since Egyptian regular pyramids are plagued by them!</p>
+<section id="task-4.1-regular-pyramids" class="level3">
+<h3 class="anchored" data-anchor-id="task-4.1-regular-pyramids">Task 4.1: Regular Pyramids</h3>
+<div id="e2415c94" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Pyramid class</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="kw">class</span> pyramid(shape): <span class="co"># Inherit from shape</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a>    </span>
+<span id="cb7-4"><a href="#cb7-4"></a>    has_mummies <span class="op">=</span> <span class="va">True</span> <span class="co"># This is for *all* regular pyramids</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a>    </span>
+<span id="cb7-6"><a href="#cb7-6"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim:<span class="bu">float</span>):</span>
+<span id="cb7-7"><a href="#cb7-7"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(dim)</span>
+<span id="cb7-8"><a href="#cb7-8"></a>        <span class="va">self</span>.shape_type <span class="op">=</span> <span class="st">'Regular Pyramid'</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a>        <span class="cf">return</span></span>
+<span id="cb7-10"><a href="#cb7-10"></a>    </span>
+<span id="cb7-11"><a href="#cb7-11"></a>    <span class="kw">def</span> diameter(<span class="va">self</span>):</span>
+<span id="cb7-12"><a href="#cb7-12"></a>        <span class="cf">return</span> (<span class="va">self</span>.dim<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="va">self</span>.dim<span class="op">**</span><span class="dv">2</span>)<span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)</span>
+<span id="cb7-13"><a href="#cb7-13"></a>    </span>
+<span id="cb7-14"><a href="#cb7-14"></a>    <span class="kw">def</span> height(<span class="va">self</span>):</span>
+<span id="cb7-15"><a href="#cb7-15"></a>        <span class="cf">return</span> (<span class="va">self</span>.diameter()<span class="op">/</span><span class="dv">2</span> <span class="op">+</span> <span class="va">self</span>.dim<span class="op">**</span><span class="dv">2</span>)<span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)</span>
+<span id="cb7-16"><a href="#cb7-16"></a>    </span>
+<span id="cb7-17"><a href="#cb7-17"></a>    <span class="kw">def</span> volume(<span class="va">self</span>):</span>
+<span id="cb7-18"><a href="#cb7-18"></a>        <span class="cf">return</span> <span class="va">self</span>.dim<span class="op">**</span><span class="dv">2</span> <span class="op">*</span> <span class="va">self</span>.height() <span class="op">/</span> <span class="dv">3</span></span>
+<span id="cb7-19"><a href="#cb7-19"></a>    </span>
+<span id="cb7-20"><a href="#cb7-20"></a>    <span class="kw">def</span> surface(<span class="va">self</span>):</span>
+<span id="cb7-21"><a href="#cb7-21"></a>        <span class="cf">return</span> <span class="va">self</span>.dim<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="va">self</span>.dim<span class="op">**</span><span class="dv">2</span> <span class="op">*</span> <span class="dv">3</span><span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="task-4.2-demonstrate" class="level3">
+<h3 class="anchored" data-anchor-id="task-4.2-demonstrate">Task 4.2: Demonstrate</h3>
+<p>Show how we added a new method for regular pyramids:</p>
+<ul>
+<li>Doesn’t work for any other class</li>
+<li>But all the rest of the methods do</li>
+</ul>
+<p>Discuss: what are the pros and cons of this new method?</p>
+<p>Answer: in general, we try to extend and never to break functionality of other classes in the hierarchy. So you wouldn’t create a shape sub-class that broke the diameter or surface methods by returning something like “I don’t have this dimension” as a text string, but you <em>could</em> throw an error or return a Null value. It depends on what makes sense.</p>
+</section>
+<section id="task-4.3-triangular-pyramid" class="level3">
+<h3 class="anchored" data-anchor-id="task-4.3-triangular-pyramid">Task 4.3: Triangular Pyramid</h3>
+<p>We want triangular pyramid to inherit from regular pyramid, and all sides are equal so it’s an <em>equilateral</em> triangular pyramid. However, this is kind of a judgement call since there’s very little shared between the two types of pyramid and it’s arguable whether this one is actually simpler and should therefore be the parent class…</p>
+<p>Anyway, the calculations are:</p>
+<ol type="1">
+<li>The diameter (longest line through the shape) will just be the edge: <span class="math inline">\(d\)</span>.</li>
+<li>The volume <span class="math inline">\(V = b * h / 3\)</span> where <span class="math inline">\(b\)</span> is the area of an equilateral triangle.</li>
+<li>The surface area will be <span class="math inline">\(4b\)</span> where <span class="math inline">\(b\)</span> is the area of an equilateral triangle.</li>
+</ol>
+<p>So we now need two new formulas:</p>
+<ol start="5" type="1">
+<li>The height of the pyramid using (<a href="https://www.youtube.com/watch?v=ivF3ndmkMsE">Pythagoras again</a>): <span class="math inline">\(h = \sqrt{6}d/3\)</span>.</li>
+<li>The area of an equilateral triangle: <span class="math inline">\(\frac{\sqrt{3}}{4} d^{2}\)</span></li>
+</ol>
+<div id="acb81e22" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># Triangular Pyramid class</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="kw">class</span> t_pyramid(pyramid): <span class="co"># Inherit from regular pyramid</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a>    </span>
+<span id="cb8-4"><a href="#cb8-4"></a>    has_mummies <span class="op">=</span> <span class="va">False</span> <span class="co"># This is for all triangular pyramids</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a>    </span>
+<span id="cb8-6"><a href="#cb8-6"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim:<span class="bu">float</span>):</span>
+<span id="cb8-7"><a href="#cb8-7"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(dim)</span>
+<span id="cb8-8"><a href="#cb8-8"></a>        <span class="va">self</span>.shape_type <span class="op">=</span> <span class="st">'Triangular Pyramid'</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a>        <span class="cf">return</span></span>
+<span id="cb8-10"><a href="#cb8-10"></a>    </span>
+<span id="cb8-11"><a href="#cb8-11"></a>    <span class="kw">def</span> diameter(<span class="va">self</span>):</span>
+<span id="cb8-12"><a href="#cb8-12"></a>        <span class="cf">return</span> <span class="va">self</span>.dim</span>
+<span id="cb8-13"><a href="#cb8-13"></a>    </span>
+<span id="cb8-14"><a href="#cb8-14"></a>    <span class="kw">def</span> height(<span class="va">self</span>):</span>
+<span id="cb8-15"><a href="#cb8-15"></a>        <span class="co"># h = sqrt(6)/3 * d</span></span>
+<span id="cb8-16"><a href="#cb8-16"></a>        <span class="cf">return</span> <span class="dv">6</span><span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)<span class="op">/</span><span class="dv">3</span> <span class="op">*</span> <span class="va">self</span>.dim</span>
+<span id="cb8-17"><a href="#cb8-17"></a>    </span>
+<span id="cb8-18"><a href="#cb8-18"></a>    <span class="kw">def</span> base(<span class="va">self</span>):</span>
+<span id="cb8-19"><a href="#cb8-19"></a>        <span class="cf">return</span> <span class="dv">3</span><span class="op">**</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)<span class="op">/</span><span class="dv">4</span> <span class="op">*</span> <span class="va">self</span>.dim<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb8-20"><a href="#cb8-20"></a>    </span>
+<span id="cb8-21"><a href="#cb8-21"></a>    <span class="kw">def</span> volume(<span class="va">self</span>):</span>
+<span id="cb8-22"><a href="#cb8-22"></a>        <span class="cf">return</span> (<span class="dv">1</span><span class="op">/</span><span class="dv">3</span>) <span class="op">*</span> <span class="va">self</span>.base() <span class="op">*</span> <span class="va">self</span>.height()</span>
+<span id="cb8-23"><a href="#cb8-23"></a>    </span>
+<span id="cb8-24"><a href="#cb8-24"></a>    <span class="kw">def</span> surface(<span class="va">self</span>):</span>
+<span id="cb8-25"><a href="#cb8-25"></a>        <span class="cf">return</span> <span class="dv">4</span> <span class="op">*</span> <span class="va">self</span>.base()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="task-4.4-demonstrate" class="level3">
+<h3 class="anchored" data-anchor-id="task-4.4-demonstrate">Task 4.4: Demonstrate</h3>
+<ul>
+<li>Compare regular and triangular pyramids: notice that the <code>has_mummies</code> class variable has changed its default value.</li>
+<li>Notice too that you can override/change a class variable <em>or</em> an instance variable at run-time. There is a very important difference between doing something like <code>self.has_mummies = has_mummies</code> and <code>t_pyramid.has_mummies = True</code>.</li>
+</ul>
+<p>Here’s an example of everything run together:</p>
+<div id="c7741c44" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># How would you test these changes?</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a>s <span class="op">=</span> sphere(<span class="dv">10</span>)</span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="bu">print</span>(s.<span class="bu">type</span>())</span>
+<span id="cb9-4"><a href="#cb9-4"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Volume is: </span><span class="sc">{</span>s<span class="sc">.</span>volume()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Diameter is: </span><span class="sc">{</span>s<span class="sc">.</span>diameter()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb9-6"><a href="#cb9-6"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Surface Area is: </span><span class="sc">{</span>s<span class="sc">.</span>surface()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb9-7"><a href="#cb9-7"></a><span class="bu">print</span>(<span class="st">""</span>)</span>
+<span id="cb9-8"><a href="#cb9-8"></a></span>
+<span id="cb9-9"><a href="#cb9-9"></a>c <span class="op">=</span> cube(<span class="dv">10</span>)</span>
+<span id="cb9-10"><a href="#cb9-10"></a><span class="bu">print</span>(c.<span class="bu">type</span>())</span>
+<span id="cb9-11"><a href="#cb9-11"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Volume is: </span><span class="sc">{</span>c<span class="sc">.</span>volume()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb9-12"><a href="#cb9-12"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Diameter is: </span><span class="sc">{</span>c<span class="sc">.</span>diameter()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb9-13"><a href="#cb9-13"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Surface Area is: </span><span class="sc">{</span>c<span class="sc">.</span>surface()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb9-14"><a href="#cb9-14"></a><span class="bu">print</span>(<span class="st">""</span>)</span>
+<span id="cb9-15"><a href="#cb9-15"></a></span>
+<span id="cb9-16"><a href="#cb9-16"></a>p <span class="op">=</span> pyramid(<span class="dv">10</span>)</span>
+<span id="cb9-17"><a href="#cb9-17"></a><span class="bu">print</span>(p.<span class="bu">type</span>())</span>
+<span id="cb9-18"><a href="#cb9-18"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Volume is: </span><span class="sc">{</span>p<span class="sc">.</span>volume()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb9-19"><a href="#cb9-19"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Diameter is: </span><span class="sc">{</span>p<span class="sc">.</span>diameter()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb9-20"><a href="#cb9-20"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Surface Area is: </span><span class="sc">{</span>p<span class="sc">.</span>surface()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb9-21"><a href="#cb9-21"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Height is: </span><span class="sc">{</span>p<span class="sc">.</span>height()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb9-22"><a href="#cb9-22"></a><span class="cf">if</span> p.has_mummies <span class="kw">is</span> <span class="va">True</span>:</span>
+<span id="cb9-23"><a href="#cb9-23"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\t</span><span class="st">Mummies? Aaaaaaaaagh!"</span>)</span>
+<span id="cb9-24"><a href="#cb9-24"></a><span class="cf">else</span>:</span>
+<span id="cb9-25"><a href="#cb9-25"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\t</span><span class="st">Phew, no mummies!"</span>)</span>
+<span id="cb9-26"><a href="#cb9-26"></a><span class="bu">print</span>(<span class="st">""</span>)</span>
+<span id="cb9-27"><a href="#cb9-27"></a></span>
+<span id="cb9-28"><a href="#cb9-28"></a>p2 <span class="op">=</span> t_pyramid(<span class="dv">10</span>)</span>
+<span id="cb9-29"><a href="#cb9-29"></a><span class="bu">print</span>(p2.<span class="bu">type</span>())</span>
+<span id="cb9-30"><a href="#cb9-30"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Volume is: </span><span class="sc">{</span>p2<span class="sc">.</span>volume()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb9-31"><a href="#cb9-31"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Diameter is: </span><span class="sc">{</span>p2<span class="sc">.</span>diameter()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb9-32"><a href="#cb9-32"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Surface Area is: </span><span class="sc">{</span>p2<span class="sc">.</span>surface()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb9-33"><a href="#cb9-33"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="ss">Height is: </span><span class="sc">{</span>p2<span class="sc">.</span>height()<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb9-34"><a href="#cb9-34"></a><span class="cf">if</span> p2.has_mummies <span class="kw">is</span> <span class="va">True</span>:</span>
+<span id="cb9-35"><a href="#cb9-35"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\t</span><span class="st">Mummies?&nbsp;Aaaaaaaaagh!"</span>)</span>
+<span id="cb9-36"><a href="#cb9-36"></a><span class="cf">else</span>:</span>
+<span id="cb9-37"><a href="#cb9-37"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\t</span><span class="st">Phew,&nbsp;no&nbsp;mummies!"</span>)</span>
+<span id="cb9-38"><a href="#cb9-38"></a><span class="bu">print</span>(<span class="st">""</span>)</span>
+<span id="cb9-39"><a href="#cb9-39"></a></span>
+<span id="cb9-40"><a href="#cb9-40"></a><span class="co">#&nbsp;Useful&nbsp;demonstration&nbsp;of&nbsp;how&nbsp;to&nbsp;find&nbsp;out&nbsp;if&nbsp;a&nbsp;method&nbsp;or&nbsp;attribute&nbsp;is</span></span>
+<span id="cb9-41"><a href="#cb9-41"></a><span class="co">#&nbsp;associated&nbsp;with&nbsp;a&nbsp;particular&nbsp;object</span></span>
+<span id="cb9-42"><a href="#cb9-42"></a><span class="cf">if</span> <span class="bu">hasattr</span>(p2,<span class="st">'base_area'</span>):</span>
+<span id="cb9-43"><a href="#cb9-43"></a>    <span class="bu">print</span>(<span class="ss">f"Shape&nbsp;of&nbsp;type '</span><span class="sc">{</span>p2<span class="sc">.</span><span class="bu">type</span>()<span class="sc">}</span><span class="ss">'&nbsp;has&nbsp;attribute&nbsp;or&nbsp;method&nbsp;'base_area'"</span>)</span>
+<span id="cb9-44"><a href="#cb9-44"></a><span class="cf">else</span>:</span>
+<span id="cb9-45"><a href="#cb9-45"></a>    <span class="bu">print</span>(<span class="ss">f"Shape&nbsp;of&nbsp;type&nbsp;'</span><span class="sc">{</span>p2<span class="sc">.</span><span class="bu">type</span>()<span class="sc">}</span><span class="ss">'&nbsp;does&nbsp;*not*&nbsp;have&nbsp;attribute&nbsp;or&nbsp;method&nbsp;'base_area'"</span>)</span>
+<span id="cb9-46"><a href="#cb9-46"></a><span class="bu">print</span>(<span class="st">""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>I'm a shape!
+Sphere
+    Volume is: 4188.79
+    Diameter is: 20.00
+    Surface Area is: 1256.64
+
+I'm a shape!
+I'm a cube!
+Cube
+    Volume is: 1000.00
+    Diameter is: 17.32
+    Surface Area is: 600.00
+
+I'm a shape!
+Regular Pyramid
+    Volume is: 344.92
+    Diameter is: 14.14
+    Surface Area is: 273.21
+    Height is: 10.35
+    Mummies? Aaaaaaaaagh!
+
+I'm a shape!
+Triangular Pyramid
+    Volume is: 117.85
+    Diameter is: 10.00
+    Surface Area is: 173.21
+    Height is:  8.16
+    Phew,&nbsp;no&nbsp;mummies!
+
+Shape&nbsp;of&nbsp;type&nbsp;'Triangular Pyramid'&nbsp;does&nbsp;*not*&nbsp;have&nbsp;attribute&nbsp;or&nbsp;method&nbsp;'base_area'
+</code></pre>
+</div>
+</div>
+<div id="61268a56" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="bu">print</span>(p2.<span class="va">__class__</span>)</span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="bu">print</span>(p2.<span class="va">__class__</span>.__mro__)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class '__main__.t_pyramid'&gt;
+(&lt;class '__main__.t_pyramid'&gt;, &lt;class '__main__.pyramid'&gt;, &lt;class '__main__.shape'&gt;, &lt;class 'object'&gt;)</code></pre>
+</div>
+</div>
+<p>This shows the class name and then the full hierarchy, so you know in which order Python will search for a method before throwing an error. Some, such as print, exist at the very basic level of the <code>object</code>.</p>
+</section>
+</section>
+<section id="task-5-packaging" class="level2">
+<h2 class="anchored" data-anchor-id="task-5-packaging">Task 5: Packaging</h2>
+<p>Now that we’ve created our classes, we want to move them to a separate file that can be imported and re-used by code elsewhere. We need to turn this into a <em>package</em>. Formally packaging things up for distribution requires a lot more work(see <a href="https://python-packaging-tutorial.readthedocs.io/en/latest/setup_py.html">this</a> and <a href="https://packaging.python.org/tutorials/packaging-projects/">this</a>). But for something that we’re only going to use ourselves it’s <em>basically</em> as simple as:</p>
+<ol type="1">
+<li>Create a directory that will become the package name (<em>e.g.</em> <code>shapes</code>).</li>
+<li>Write the code in a file called <code>__init.py__</code> inside that new directory (<em>i.e.</em> <code>./shapes/__init__.py</code>).</li>
+</ol>
+<p>We could do this by hand by copy-pasting each cell above into a new file, but because we prefer to be lazy let’s try automating it…</p>
+<section id="task-5.1-shell-commands" class="level3">
+<h3 class="anchored" data-anchor-id="task-5.1-shell-commands">Task 5.1: Shell Commands</h3>
+<p>First, we need to create the <code>shapes</code> directory. To do this, although you <em>can</em> use Python code to create and delete files and folders, it’s helpful to know that you can actually execute shell commands directly from a notebook. Oviously, the degree to which this works depends on which Operating System you’re using!</p>
+<p>For instance, here’s our trusty <em>list</em> command:</p>
+<div id="ce0b94ab" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="op">!</span>ls</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>css                                   Live-06-Spatial_Data.bak
+img                                   Live-07-Textual_Data.bak
+Live-02-Foundations_1.html            Live-08-Dimensions_in_Data.bak
+Live-02-Foundations_1.qmd             Live-08-Dimensions_in_Shakespeare.bak
+Live-03-Foundations_2_Intro.html      Live-09-Grouping_Data.bak
+Live-03-Foundations_2_Intro.qmd       Live-10-Visualising_Data.bak
+Live-03-Foundations_2.html            Note_Hint_Danger.bak
+Live-03-Foundations_2.qmd             shapes
+Live-04-Objects-1.qmd                 textual
+Live-04-Objects-1.quarto_ipynb        world.geojson
+Live-04-Objects-2.bak                 XX-Function_Development.ipynb
+Live-05-Numeric_Data.bak</code></pre>
+</div>
+</div>
+<p>So we can simply ask <code>mkdir</code> (make directory) to do this for us. The <code>-p</code> means that it creates directory hierarhices if they’re missing and doesn’t complain if a directory already exists.</p>
+<div id="207b6a4b" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a><span class="op">!</span>mkdir <span class="op">-</span>p shapes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="task-5.2-creating-an-init-file" class="level3">
+<h3 class="anchored" data-anchor-id="task-5.2-creating-an-init-file">Task 5.2: Creating an init file</h3>
+<p>The easiest and most intelligible way to create the shapes package is to copy and paste each of the class definitions above into a new file called <code>__init__.py</code> manually.</p>
+<p><strong>I would demonstrate this approach; however…</strong></p>
+<section id="aside-notebook-convert" class="level4">
+<h4 class="anchored" data-anchor-id="aside-notebook-convert">Aside: Notebook Convert</h4>
+<p>It turns out that <code>jupyter</code> also offers a <code>nbconvert</code> (Notebook Convert) utility that helps you to convert notebooks to other formats including HTML, LaTeX, PDF, Markdown, Executable Python and so on! We’re going to take advantage of the fact that <code>__init__.py</code> is just plain old python following a particular naming and placement scheme…</p>
+<div id="d30f8d17" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="op">!</span>jupyter nbconvert <span class="op">--</span>ClearOutputPreprocessor.enabled<span class="op">=</span><span class="va">True</span> <span class="op">\</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a>    <span class="op">--</span>to python <span class="op">--</span>output<span class="op">=</span>shapes<span class="op">/</span><span class="fu">__init__</span>.py <span class="op">\</span></span>
+<span id="cb16-3"><a href="#cb16-3"></a>    Live<span class="op">-</span><span class="dv">0</span><span class="er">4</span><span class="op">-</span>Objects<span class="op">-</span><span class="fl">1.</span><span class="er">ipynb</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[NbConvertApp] WARNING | pattern 'Live-04-Objects-1.ipynb' matched no files
+This application is used to convert notebook files (*.ipynb)
+        to various other formats.
+
+        WARNING: THE COMMANDLINE INTERFACE MAY CHANGE IN FUTURE RELEASES.
+
+Options
+=======
+The options below are convenience aliases to configurable class-options,
+as listed in the "Equivalent to" description-line of the aliases.
+To see all configurable class-options for some &lt;cmd&gt;, use:
+    &lt;cmd&gt; --help-all
+
+--debug
+    set log level to logging.DEBUG (maximize logging output)
+    Equivalent to: [--Application.log_level=10]
+--show-config
+    Show the application's configuration (human-readable format)
+    Equivalent to: [--Application.show_config=True]
+--show-config-json
+    Show the application's configuration (json format)
+    Equivalent to: [--Application.show_config_json=True]
+--generate-config
+    generate default config file
+    Equivalent to: [--JupyterApp.generate_config=True]
+-y
+    Answer yes to any questions instead of prompting.
+    Equivalent to: [--JupyterApp.answer_yes=True]
+--execute
+    Execute the notebook prior to export.
+    Equivalent to: [--ExecutePreprocessor.enabled=True]
+--allow-errors
+    Continue notebook execution even if one of the cells throws an error and include the error message in the cell output (the default behaviour is to abort conversion). This flag is only relevant if '--execute' was specified, too.
+    Equivalent to: [--ExecutePreprocessor.allow_errors=True]
+--stdin
+    read a single notebook file from stdin. Write the resulting notebook with default basename 'notebook.*'
+    Equivalent to: [--NbConvertApp.from_stdin=True]
+--stdout
+    Write notebook output to stdout instead of files.
+    Equivalent to: [--NbConvertApp.writer_class=StdoutWriter]
+--inplace
+    Run nbconvert in place, overwriting the existing notebook (only
+            relevant when converting to notebook format)
+    Equivalent to: [--NbConvertApp.use_output_suffix=False --NbConvertApp.export_format=notebook --FilesWriter.build_directory=]
+--clear-output
+    Clear output of current file and save in place,
+            overwriting the existing notebook.
+    Equivalent to: [--NbConvertApp.use_output_suffix=False --NbConvertApp.export_format=notebook --FilesWriter.build_directory= --ClearOutputPreprocessor.enabled=True]
+--coalesce-streams
+    Coalesce consecutive stdout and stderr outputs into one stream (within each cell).
+    Equivalent to: [--NbConvertApp.use_output_suffix=False --NbConvertApp.export_format=notebook --FilesWriter.build_directory= --CoalesceStreamsPreprocessor.enabled=True]
+--no-prompt
+    Exclude input and output prompts from converted document.
+    Equivalent to: [--TemplateExporter.exclude_input_prompt=True --TemplateExporter.exclude_output_prompt=True]
+--no-input
+    Exclude input cells and output prompts from converted document.
+            This mode is ideal for generating code-free reports.
+    Equivalent to: [--TemplateExporter.exclude_output_prompt=True --TemplateExporter.exclude_input=True --TemplateExporter.exclude_input_prompt=True]
+--allow-chromium-download
+    Whether to allow downloading chromium if no suitable version is found on the system.
+    Equivalent to: [--WebPDFExporter.allow_chromium_download=True]
+--disable-chromium-sandbox
+    Disable chromium security sandbox when converting to PDF..
+    Equivalent to: [--WebPDFExporter.disable_sandbox=True]
+--show-input
+    Shows code input. This flag is only useful for dejavu users.
+    Equivalent to: [--TemplateExporter.exclude_input=False]
+--embed-images
+    Embed the images as base64 dataurls in the output. This flag is only useful for the HTML/WebPDF/Slides exports.
+    Equivalent to: [--HTMLExporter.embed_images=True]
+--sanitize-html
+    Whether the HTML in Markdown cells and cell outputs should be sanitized..
+    Equivalent to: [--HTMLExporter.sanitize_html=True]
+--log-level=&lt;Enum&gt;
+    Set the log level by value or name.
+    Choices: any of [0, 10, 20, 30, 40, 50, 'DEBUG', 'INFO', 'WARN', 'ERROR', 'CRITICAL']
+    Default: 30
+    Equivalent to: [--Application.log_level]
+--config=&lt;Unicode&gt;
+    Full path of a config file.
+    Default: ''
+    Equivalent to: [--JupyterApp.config_file]
+--to=&lt;Unicode&gt;
+    The export format to be used, either one of the built-in formats
+            ['asciidoc', 'custom', 'html', 'latex', 'markdown', 'notebook', 'pdf', 'python', 'qtpdf', 'qtpng', 'rst', 'script', 'slides', 'webpdf']
+            or a dotted object name that represents the import path for an
+            ``Exporter`` class
+    Default: ''
+    Equivalent to: [--NbConvertApp.export_format]
+--template=&lt;Unicode&gt;
+    Name of the template to use
+    Default: ''
+    Equivalent to: [--TemplateExporter.template_name]
+--template-file=&lt;Unicode&gt;
+    Name of the template file to use
+    Default: None
+    Equivalent to: [--TemplateExporter.template_file]
+--theme=&lt;Unicode&gt;
+    Template specific theme(e.g. the name of a JupyterLab CSS theme distributed
+    as prebuilt extension for the lab template)
+    Default: 'light'
+    Equivalent to: [--HTMLExporter.theme]
+--sanitize_html=&lt;Bool&gt;
+    Whether the HTML in Markdown cells and cell outputs should be sanitized.This
+    should be set to True by nbviewer or similar tools.
+    Default: False
+    Equivalent to: [--HTMLExporter.sanitize_html]
+--writer=&lt;DottedObjectName&gt;
+    Writer class used to write the
+                                        results of the conversion
+    Default: 'FilesWriter'
+    Equivalent to: [--NbConvertApp.writer_class]
+--post=&lt;DottedOrNone&gt;
+    PostProcessor class used to write the
+                                        results of the conversion
+    Default: ''
+    Equivalent to: [--NbConvertApp.postprocessor_class]
+--output=&lt;Unicode&gt;
+    Overwrite base name use for output files.
+                Supports pattern replacements '{notebook_name}'.
+    Default: '{notebook_name}'
+    Equivalent to: [--NbConvertApp.output_base]
+--output-dir=&lt;Unicode&gt;
+    Directory to write output(s) to. Defaults
+                                  to output to the directory of each notebook. To recover
+                                  previous default behaviour (outputting to the current
+                                  working directory) use . as the flag value.
+    Default: ''
+    Equivalent to: [--FilesWriter.build_directory]
+--reveal-prefix=&lt;Unicode&gt;
+    The URL prefix for reveal.js (version 3.x).
+            This defaults to the reveal CDN, but can be any url pointing to a copy
+            of reveal.js.
+            For speaker notes to work, this must be a relative path to a local
+            copy of reveal.js: e.g., "reveal.js".
+            If a relative path is given, it must be a subdirectory of the
+            current directory (from which the server is run).
+            See the usage documentation
+            (https://nbconvert.readthedocs.io/en/latest/usage.html#reveal-js-html-slideshow)
+            for more details.
+    Default: ''
+    Equivalent to: [--SlidesExporter.reveal_url_prefix]
+--nbformat=&lt;Enum&gt;
+    The nbformat version to write.
+            Use this to downgrade notebooks.
+    Choices: any of [1, 2, 3, 4]
+    Default: 4
+    Equivalent to: [--NotebookExporter.nbformat_version]
+
+Examples
+--------
+
+    The simplest way to use nbconvert is
+
+            &gt; jupyter nbconvert mynotebook.ipynb --to html
+
+            Options include ['asciidoc', 'custom', 'html', 'latex', 'markdown', 'notebook', 'pdf', 'python', 'qtpdf', 'qtpng', 'rst', 'script', 'slides', 'webpdf'].
+
+            &gt; jupyter nbconvert --to latex mynotebook.ipynb
+
+            Both HTML and LaTeX support multiple output templates. LaTeX includes
+            'base', 'article' and 'report'.  HTML includes 'basic', 'lab' and
+            'classic'. You can specify the flavor of the format used.
+
+            &gt; jupyter nbconvert --to html --template lab mynotebook.ipynb
+
+            You can also pipe the output to stdout, rather than a file
+
+            &gt; jupyter nbconvert mynotebook.ipynb --stdout
+
+            PDF is generated via latex
+
+            &gt; jupyter nbconvert mynotebook.ipynb --to pdf
+
+            You can get (and serve) a Reveal.js-powered slideshow
+
+            &gt; jupyter nbconvert myslides.ipynb --to slides --post serve
+
+            Multiple notebooks can be given at the command line in a couple of
+            different ways:
+
+            &gt; jupyter nbconvert notebook*.ipynb
+            &gt; jupyter nbconvert notebook1.ipynb notebook2.ipynb
+
+            or you can specify the notebooks list in a config file, containing::
+
+                c.NbConvertApp.notebooks = ["my_notebook.ipynb"]
+
+            &gt; jupyter nbconvert --config mycfg.py
+
+To see all available configurables, use `--help-all`.
+</code></pre>
+</div>
+</div>
+</section>
+<section id="tidying-up-the-output" class="level4">
+<h4 class="anchored" data-anchor-id="tidying-up-the-output">Tidying Up the Output</h4>
+<p>Using the file browser provided by Jupyter Lab (on the left), open up the new <code>__init__.py</code> file created in the <code>shapes</code> directory. You will want (at the very least) to search for ‘Task 2’ and delete everything in the file after that point.</p>
+<div style="border: dotted 1px rgb(156,121,26); padding: 10px; margin: 5px; background-color: rgb(255,236,184)">
+<i><b>Really Important</b></i>: if you do <i>not</i> delete everything from <tt>Task 2: Packaging</tt> onwards then every time you try to (re)load the shapes you will also output another copy of this notebook because <i>this</i> code is also outputted by <tt>nbconvert</tt>. In fact, you might find it easier to search for the line “How would you test these changes?” and delete everything from <i>there</i> onwards in the file.
+</div>
+</section>
+</section>
+<section id="task-5.3-importing-the-classes" class="level3">
+<h3 class="anchored" data-anchor-id="task-5.3-importing-the-classes">Task 5.3: Importing the Classes</h3>
+<section id="task-5.3.1-autoreload-cell-magic" class="level4">
+<h4 class="anchored" data-anchor-id="task-5.3.1-autoreload-cell-magic">Task 5.3.1: Autoreload Cell Magic</h4>
+<p>When writing a <em>new</em> package from a notebook, you need to ensure that Python knows to reload the package <em>every time</em> you run the code. Otherwise, Python will keep running the version of the package that you loaded when you first ran <code>import &lt;package name&gt;</code>!</p>
+<p>This the first time you’ll have seen this special type of code block: <code>%</code> at the start of a line in a codeblock indicates that a ‘<a href="https://ipython.readthedocs.io/en/stable/interactive/magics.html">magic command</a>’ is being issued. <code>autoreload</code> is one such magic command. There is also the <code>!</code> at the start of a line which indicates a shell command to be executed (e.g.&nbsp;<code>!ls</code>).</p>
+<p>There are other magics we will use later like <code>%%time</code> which track the running time of an operation.</p>
+<div id="0a75d7c9" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="op">%</span>load_ext autoreload</span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="op">%</span>autoreload <span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="task-5.3.2-import" class="level4">
+<h4 class="anchored" data-anchor-id="task-5.3.2-import">Task 5.3.2: Import</h4>
+<div id="a8dedc45" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a><span class="im">import</span> shapes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>str
+I'm a shape!
+Sphere
+    Volume is: 4188.79
+    Diameter is: 20.00
+    Surface Area is: 1256.64
+
+I'm a shape!
+I'm a cube!
+Cube
+    Volume is: 1000.00
+    Diameter is: 17.32
+    Surface Area is: 600.00
+
+I'm a shape!
+Regular Pyramid
+    Volume is: 344.92
+    Diameter is: 14.14
+    Surface Area is: 273.21
+    Height is: 10.35
+    Mummies? Aaaaaaaaagh!
+
+I'm a shape!
+Triangular Pyramid
+    Volume is: 117.85
+    Diameter is: 10.00
+    Surface Area is: 173.21
+    Height is:  8.16
+    Phew,&nbsp;no&nbsp;mummies!
+
+Shape&nbsp;of&nbsp;type&nbsp;'Triangular Pyramid'&nbsp;does&nbsp;*not*&nbsp;have&nbsp;attribute&nbsp;or&nbsp;method&nbsp;'base_area'
+
+&lt;class 'shapes.t_pyramid'&gt;
+(&lt;class 'shapes.t_pyramid'&gt;, &lt;class 'shapes.pyramid'&gt;, &lt;class 'shapes.shape'&gt;, &lt;class 'object'&gt;)
+css                                   Live-06-Spatial_Data.bak
+img                                   Live-07-Textual_Data.bak
+Live-02-Foundations_1.html            Live-08-Dimensions_in_Data.bak
+Live-02-Foundations_1.qmd             Live-08-Dimensions_in_Shakespeare.bak
+Live-03-Foundations_2_Intro.html      Live-09-Grouping_Data.bak
+Live-03-Foundations_2_Intro.qmd       Live-10-Visualising_Data.bak
+Live-03-Foundations_2.html            Note_Hint_Danger.bak
+Live-03-Foundations_2.qmd             shapes
+Live-04-Objects-1.qmd                 textual
+Live-04-Objects-1.quarto_ipynb        world.geojson
+Live-04-Objects-2.bak                 XX-Function_Development.ipynb
+Live-05-Numeric_Data.bak
+[NbConvertApp] WARNING | pattern 'Live-04-Objects-1.ipynb' matched no files
+This application is used to convert notebook files (*.ipynb)
+        to various other formats.
+
+        WARNING: THE COMMANDLINE INTERFACE MAY CHANGE IN FUTURE RELEASES.
+
+Options
+=======
+The options below are convenience aliases to configurable class-options,
+as listed in the "Equivalent to" description-line of the aliases.
+To see all configurable class-options for some &lt;cmd&gt;, use:
+    &lt;cmd&gt; --help-all
+
+--debug
+    set log level to logging.DEBUG (maximize logging output)
+    Equivalent to: [--Application.log_level=10]
+--show-config
+    Show the application's configuration (human-readable format)
+    Equivalent to: [--Application.show_config=True]
+--show-config-json
+    Show the application's configuration (json format)
+    Equivalent to: [--Application.show_config_json=True]
+--generate-config
+    generate default config file
+    Equivalent to: [--JupyterApp.generate_config=True]
+-y
+    Answer yes to any questions instead of prompting.
+    Equivalent to: [--JupyterApp.answer_yes=True]
+--execute
+    Execute the notebook prior to export.
+    Equivalent to: [--ExecutePreprocessor.enabled=True]
+--allow-errors
+    Continue notebook execution even if one of the cells throws an error and include the error message in the cell output (the default behaviour is to abort conversion). This flag is only relevant if '--execute' was specified, too.
+    Equivalent to: [--ExecutePreprocessor.allow_errors=True]
+--stdin
+    read a single notebook file from stdin. Write the resulting notebook with default basename 'notebook.*'
+    Equivalent to: [--NbConvertApp.from_stdin=True]
+--stdout
+    Write notebook output to stdout instead of files.
+    Equivalent to: [--NbConvertApp.writer_class=StdoutWriter]
+--inplace
+    Run nbconvert in place, overwriting the existing notebook (only
+            relevant when converting to notebook format)
+    Equivalent to: [--NbConvertApp.use_output_suffix=False --NbConvertApp.export_format=notebook --FilesWriter.build_directory=]
+--clear-output
+    Clear output of current file and save in place,
+            overwriting the existing notebook.
+    Equivalent to: [--NbConvertApp.use_output_suffix=False --NbConvertApp.export_format=notebook --FilesWriter.build_directory= --ClearOutputPreprocessor.enabled=True]
+--coalesce-streams
+    Coalesce consecutive stdout and stderr outputs into one stream (within each cell).
+    Equivalent to: [--NbConvertApp.use_output_suffix=False --NbConvertApp.export_format=notebook --FilesWriter.build_directory= --CoalesceStreamsPreprocessor.enabled=True]
+--no-prompt
+    Exclude input and output prompts from converted document.
+    Equivalent to: [--TemplateExporter.exclude_input_prompt=True --TemplateExporter.exclude_output_prompt=True]
+--no-input
+    Exclude input cells and output prompts from converted document.
+            This mode is ideal for generating code-free reports.
+    Equivalent to: [--TemplateExporter.exclude_output_prompt=True --TemplateExporter.exclude_input=True --TemplateExporter.exclude_input_prompt=True]
+--allow-chromium-download
+    Whether to allow downloading chromium if no suitable version is found on the system.
+    Equivalent to: [--WebPDFExporter.allow_chromium_download=True]
+--disable-chromium-sandbox
+    Disable chromium security sandbox when converting to PDF..
+    Equivalent to: [--WebPDFExporter.disable_sandbox=True]
+--show-input
+    Shows code input. This flag is only useful for dejavu users.
+    Equivalent to: [--TemplateExporter.exclude_input=False]
+--embed-images
+    Embed the images as base64 dataurls in the output. This flag is only useful for the HTML/WebPDF/Slides exports.
+    Equivalent to: [--HTMLExporter.embed_images=True]
+--sanitize-html
+    Whether the HTML in Markdown cells and cell outputs should be sanitized..
+    Equivalent to: [--HTMLExporter.sanitize_html=True]
+--log-level=&lt;Enum&gt;
+    Set the log level by value or name.
+    Choices: any of [0, 10, 20, 30, 40, 50, 'DEBUG', 'INFO', 'WARN', 'ERROR', 'CRITICAL']
+    Default: 30
+    Equivalent to: [--Application.log_level]
+--config=&lt;Unicode&gt;
+    Full path of a config file.
+    Default: ''
+    Equivalent to: [--JupyterApp.config_file]
+--to=&lt;Unicode&gt;
+    The export format to be used, either one of the built-in formats
+            ['asciidoc', 'custom', 'html', 'latex', 'markdown', 'notebook', 'pdf', 'python', 'qtpdf', 'qtpng', 'rst', 'script', 'slides', 'webpdf']
+            or a dotted object name that represents the import path for an
+            ``Exporter`` class
+    Default: ''
+    Equivalent to: [--NbConvertApp.export_format]
+--template=&lt;Unicode&gt;
+    Name of the template to use
+    Default: ''
+    Equivalent to: [--TemplateExporter.template_name]
+--template-file=&lt;Unicode&gt;
+    Name of the template file to use
+    Default: None
+    Equivalent to: [--TemplateExporter.template_file]
+--theme=&lt;Unicode&gt;
+    Template specific theme(e.g. the name of a JupyterLab CSS theme distributed
+    as prebuilt extension for the lab template)
+    Default: 'light'
+    Equivalent to: [--HTMLExporter.theme]
+--sanitize_html=&lt;Bool&gt;
+    Whether the HTML in Markdown cells and cell outputs should be sanitized.This
+    should be set to True by nbviewer or similar tools.
+    Default: False
+    Equivalent to: [--HTMLExporter.sanitize_html]
+--writer=&lt;DottedObjectName&gt;
+    Writer class used to write the
+                                        results of the conversion
+    Default: 'FilesWriter'
+    Equivalent to: [--NbConvertApp.writer_class]
+--post=&lt;DottedOrNone&gt;
+    PostProcessor class used to write the
+                                        results of the conversion
+    Default: ''
+    Equivalent to: [--NbConvertApp.postprocessor_class]
+--output=&lt;Unicode&gt;
+    Overwrite base name use for output files.
+                Supports pattern replacements '{notebook_name}'.
+    Default: '{notebook_name}'
+    Equivalent to: [--NbConvertApp.output_base]
+--output-dir=&lt;Unicode&gt;
+    Directory to write output(s) to. Defaults
+                                  to output to the directory of each notebook. To recover
+                                  previous default behaviour (outputting to the current
+                                  working directory) use . as the flag value.
+    Default: ''
+    Equivalent to: [--FilesWriter.build_directory]
+--reveal-prefix=&lt;Unicode&gt;
+    The URL prefix for reveal.js (version 3.x).
+            This defaults to the reveal CDN, but can be any url pointing to a copy
+            of reveal.js.
+            For speaker notes to work, this must be a relative path to a local
+            copy of reveal.js: e.g., "reveal.js".
+            If a relative path is given, it must be a subdirectory of the
+            current directory (from which the server is run).
+            See the usage documentation
+            (https://nbconvert.readthedocs.io/en/latest/usage.html#reveal-js-html-slideshow)
+            for more details.
+    Default: ''
+    Equivalent to: [--SlidesExporter.reveal_url_prefix]
+--nbformat=&lt;Enum&gt;
+    The nbformat version to write.
+            Use this to downgrade notebooks.
+    Choices: any of [1, 2, 3, 4]
+    Default: 4
+    Equivalent to: [--NotebookExporter.nbformat_version]
+
+Examples
+--------
+
+    The simplest way to use nbconvert is
+
+            &gt; jupyter nbconvert mynotebook.ipynb --to html
+
+            Options include ['asciidoc', 'custom', 'html', 'latex', 'markdown', 'notebook', 'pdf', 'python', 'qtpdf', 'qtpng', 'rst', 'script', 'slides', 'webpdf'].
+
+            &gt; jupyter nbconvert --to latex mynotebook.ipynb
+
+            Both HTML and LaTeX support multiple output templates. LaTeX includes
+            'base', 'article' and 'report'.  HTML includes 'basic', 'lab' and
+            'classic'. You can specify the flavor of the format used.
+
+            &gt; jupyter nbconvert --to html --template lab mynotebook.ipynb
+
+            You can also pipe the output to stdout, rather than a file
+
+            &gt; jupyter nbconvert mynotebook.ipynb --stdout
+
+            PDF is generated via latex
+
+            &gt; jupyter nbconvert mynotebook.ipynb --to pdf
+
+            You can get (and serve) a Reveal.js-powered slideshow
+
+            &gt; jupyter nbconvert myslides.ipynb --to slides --post serve
+
+            Multiple notebooks can be given at the command line in a couple of
+            different ways:
+
+            &gt; jupyter nbconvert notebook*.ipynb
+            &gt; jupyter nbconvert notebook1.ipynb notebook2.ipynb
+
+            or you can specify the notebooks list in a config file, containing::
+
+                c.NbConvertApp.notebooks = ["my_notebook.ipynb"]
+
+            &gt; jupyter nbconvert --config mycfg.py
+
+To see all available configurables, use `--help-all`.
+
+The autoreload extension is already loaded. To reload it, use:
+  %reload_ext autoreload
+I'm a shape!
+I'm a cube!
+&lt;shapes.cube object at 0x15c78b5f0&gt;
+1000
+17.320508075688775
+600
+I'm a shape!
+150
+122.47448713915888
+397747.5644174329
+38971.143170299736
+Help on class shape in module shapes:
+
+class shape(builtins.object)
+ |  shape(dimension: float = None)
+ |
+ |  # Base class shape
+ |
+ |  Methods defined here:
+ |
+ |  __init__(self, dimension: float = None)
+ |      Initialize self.  See help(type(self)) for accurate signature.
+ |
+ |  diameter(self)
+ |
+ |  surface(self)
+ |
+ |  type(self)
+ |
+ |  volume(self)
+ |
+ |  ----------------------------------------------------------------------
+ |  Data descriptors defined here:
+ |
+ |  __dict__
+ |      dictionary for instance variables
+ |
+ |  __weakref__
+ |      list of weak references to the object
+
+Help on function type in module shapes:
+
+type(self)
+</code></pre>
+</div>
+</div>
+</section>
+<section id="task-5.3.3-demonstrate" class="level4">
+<h4 class="anchored" data-anchor-id="task-5.3.3-demonstrate">Task 5.3.3: Demonstrate</h4>
+<p>Notice that because we just imported <code>shapes</code> we need to call <code>shapes.cube()</code> below. We could <em>also</em> have done this as <code>from shapes import cube</code> which would allow us to call <code>cube()</code> directly.</p>
+<p>Pros and Cons: This is about namespaces. If I dump everything into the <code>main</code> namespace and I have several classes/packages that implement <em>different</em> aspects of cubes the issue is that only the <em>last</em> cube class I imported will be accessible (<code>from shapes import cube</code>), but if I import just <code>shapes</code> then I can use the namespace (<code>shapes</code>) to specify that I mean <em>exactly</em> that class. This is a <em>choice</em> based on what you want to do.</p>
+<div id="96d30b83" class="cell" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a>b <span class="op">=</span> shapes.cube(<span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>I'm a shape!
+I'm a cube!</code></pre>
+</div>
+</div>
+<p>What’s particularly interesting below is the output of <code>dir</code>: notice all of the methods we didn’t create but which are available! And notice that many of them start <code>__</code> (like <code>__init__</code> up above). That means the method is ‘private’ and shouldn’t be called directly by the programmer. But what might <code>__gt__</code> do and why might the person creating the shape classes need to do something here?</p>
+<div id="408db124" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a><span class="bu">print</span>(b)</span>
+<span id="cb23-2"><a href="#cb23-2"></a><span class="bu">print</span>(b.volume())</span>
+<span id="cb23-3"><a href="#cb23-3"></a><span class="bu">print</span>(b.diameter())</span>
+<span id="cb23-4"><a href="#cb23-4"></a><span class="bu">print</span>(b.surface())</span>
+<span id="cb23-5"><a href="#cb23-5"></a><span class="bu">dir</span>(b)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;shapes.cube object at 0x162852ba0&gt;
+1000
+17.320508075688775
+600</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<pre><code>['__class__',
+ '__delattr__',
+ '__dict__',
+ '__dir__',
+ '__doc__',
+ '__eq__',
+ '__format__',
+ '__ge__',
+ '__getattribute__',
+ '__getstate__',
+ '__gt__',
+ '__hash__',
+ '__init__',
+ '__init_subclass__',
+ '__le__',
+ '__lt__',
+ '__module__',
+ '__ne__',
+ '__new__',
+ '__reduce__',
+ '__reduce_ex__',
+ '__repr__',
+ '__setattr__',
+ '__sizeof__',
+ '__str__',
+ '__subclasshook__',
+ '__weakref__',
+ 'diameter',
+ 'dim',
+ 'shape_type',
+ 'surface',
+ 'type',
+ 'volume']</code></pre>
+</div>
+</div>
+<div id="2bd2026b" class="cell" data-execution_count="16">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1"></a>p <span class="op">=</span> shapes.t_pyramid(<span class="dv">150</span>)</span>
+<span id="cb26-2"><a href="#cb26-2"></a><span class="bu">print</span>(p.diameter())</span>
+<span id="cb26-3"><a href="#cb26-3"></a><span class="bu">print</span>(p.height())</span>
+<span id="cb26-4"><a href="#cb26-4"></a><span class="bu">print</span>(p.volume())</span>
+<span id="cb26-5"><a href="#cb26-5"></a><span class="bu">print</span>(p.surface())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>I'm a shape!
+150
+122.47448713915888
+397747.5644174329
+38971.143170299736</code></pre>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="task-6.-adding-documentation" class="level2">
+<h2 class="anchored" data-anchor-id="task-6.-adding-documentation">Task 6.: Adding Documentation</h2>
+<p>In an ideal world, this would also be the time to properly document your classes and methods. Here as some examples that you could add to the <code>__init__.py</code> package file.</p>
+<p>Underneath the line <code>class shape(object):</code>, add:</p>
+<pre><code>    """Abstract base class for all ideal shape classes.
+
+    Keyword arguments:
+    dimension -- the principle dimension of the shape (default None)
+    """</code></pre>
+<p>Underneath the line <code>def type(self):</code>, add:</p>
+<pre><code>        """
+        Returns the formatted name of the shape type. 
+        
+        This is set automatically, but can be overwritten by setting the attribute shape_type.
+        
+        :returns: the name of the class, so shapes.cube is a `Cube` shape type
+        :rtype: str
+        """</code></pre>
+<div id="8dd846a1" class="cell" data-execution_count="17">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1"></a><span class="im">import</span> shapes</span>
+<span id="cb30-2"><a href="#cb30-2"></a><span class="bu">help</span>(shapes.shape)</span>
+<span id="cb30-3"><a href="#cb30-3"></a><span class="bu">help</span>(shapes.shape.<span class="bu">type</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Help on class shape in module shapes:
+
+class shape(builtins.object)
+ |  shape(dimension: float = None)
+ |
+ |  # Base class shape
+ |
+ |  Methods defined here:
+ |
+ |  __init__(self, dimension: float = None)
+ |      Initialize self.  See help(type(self)) for accurate signature.
+ |
+ |  diameter(self)
+ |
+ |  surface(self)
+ |
+ |  type(self)
+ |
+ |  volume(self)
+ |
+ |  ----------------------------------------------------------------------
+ |  Data descriptors defined here:
+ |
+ |  __dict__
+ |      dictionary for instance variables
+ |
+ |  __weakref__
+ |      list of weak references to the object
+
+Help on function type in module shapes:
+
+type(self)
+</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 2022–2025, Jon Reades</p>
+</div>   
+    <div class="nav-footer-center">
+<p><img src="../img/logo/logo_only_sm.png" height="25"> Foundations of Spatial Data Science</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jreades/fsds/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jreades/fsds">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://bsky.app/profile/jreades.bsky.social/">
+      <i class="bi bi-twitter" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

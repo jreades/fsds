@@ -7,11 +7,11 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-1092c56c6cadf2eb47b1bc8063ab382a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-da61f9a05e9cefe097d79e8430a73dd4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.6.40">
+  <meta name="generator" content="quarto-1.8.24">
 
   <meta name="author" content="Jon Reades">
   <title>Foundations of Spatial Data Science – Exploratory Data Analysis</title>
@@ -33,8 +33,9 @@
       vertical-align: middle;
     }
     /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
     pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
     .sourceCode { overflow: visible; }
     code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -45,7 +46,7 @@
     }
     @media print {
     pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
     }
     pre.numberSource code
       { counter-reset: source-line 0; }
@@ -97,7 +98,7 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-11712cb7c673cbf1341c876f451d5cec.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-b6d6ca89e0c39dcc6c0c87d5e30c596f.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -331,7 +332,7 @@
 <section id="getting-started" class="slide level2 smaller">
 <h2>Getting Started</h2>
 <p>You can follow along by loading the Inside Airbnb sample:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
 <span id="cb1-3"><a></a>url<span class="op">=</span><span class="st">'https://bit.ly/3I0XDrq'</span></span>
 <span id="cb1-4"><a></a>df <span class="op">=</span> pd.read_csv(url)</span>
@@ -344,7 +345,7 @@
 <span id="cb1-11"><a></a>                        crs<span class="op">=</span><span class="st">'epsg:4326'</span></span>
 <span id="cb1-12"><a></a>            )</span>
 <span id="cb1-13"><a></a>      )</span>
-<span id="cb1-14"><a></a>gdf.to_file(<span class="st">'Airbnb_Sample.gpkg'</span>, driver<span class="op">=</span><span class="st">'GPKG'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-14"><a></a>gdf.to_file(<span class="st">'Airbnb_Sample.gpkg'</span>, driver<span class="op">=</span><span class="st">'GPKG'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <aside class="notes">
 <p>Note that this (re)loads the sampled Airbnb data from GitHub every time you run it. For a large data set on someone else’e server you might want to save and (re)load it locally. A simple helper function would then just check if the file already existed locally <em>before</em> trying to download the file again: that would allow you to work while offline and speed up your code substantially too!</p>
 <style type="text/css">
@@ -376,13 +377,13 @@
 </thead>
 <tbody>
 <tr class="odd">
-<td><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="bu">print</span>(<span class="ss">f"Host count is </span><span class="sc">{</span>gdf<span class="sc">.</span>host_name<span class="sc">.</span>count()<span class="sc">}</span><span class="ss">"</span>)</span>
+<td><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="bu">print</span>(<span class="ss">f"Host count is </span><span class="sc">{</span>gdf<span class="sc">.</span>host_name<span class="sc">.</span>count()<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb2-2"><a></a><span class="bu">print</span>(<span class="ss">f"Mean is </span><span class="sc">{</span>gdf<span class="sc">.</span>price<span class="sc">.</span>mean()<span class="sc">:.0f}</span><span class="ss">"</span>)</span>
 <span id="cb2-3"><a></a><span class="bu">print</span>(<span class="ss">f"Max price is </span><span class="sc">{</span>gdf<span class="sc">.</span>price<span class="sc">.</span><span class="bu">max</span>()<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb2-4"><a></a><span class="bu">print</span>(<span class="ss">f"Min price is </span><span class="sc">{</span>gdf<span class="sc">.</span>price<span class="sc">.</span><span class="bu">min</span>()<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb2-5"><a></a><span class="bu">print</span>(<span class="ss">f"Median price is </span><span class="sc">{</span>gdf<span class="sc">.</span>price<span class="sc">.</span>median()<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb2-6"><a></a><span class="bu">print</span>(<span class="ss">f"Standard dev is </span><span class="sc">{</span>gdf<span class="sc">.</span>price<span class="sc">.</span>std()<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
-<span id="cb2-7"><a></a><span class="bu">print</span>(<span class="ss">f"25th quantile is </span><span class="sc">{</span>gdf<span class="sc">.</span>price<span class="sc">.</span>quantile(q<span class="op">=</span><span class="fl">0.25</span>)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></td>
+<span id="cb2-7"><a></a><span class="bu">print</span>(<span class="ss">f"25th quantile is </span><span class="sc">{</span>gdf<span class="sc">.</span>price<span class="sc">.</span>quantile(q<span class="op">=</span><span class="fl">0.25</span>)<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></td>
 <td><pre><code>Count of non-nulls
 Mean
 Highest value
@@ -409,12 +410,12 @@ Standard deviation
 </thead>
 <tbody>
 <tr class="odd">
-<td><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="bu">print</span>(df.mean())</span>
+<td><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="bu">print</span>(df.mean())</span>
 <span id="cb4-2"><a></a><span class="bu">print</span>(df.count())</span>
 <span id="cb4-3"><a></a><span class="bu">print</span>(df.<span class="bu">max</span>())</span>
 <span id="cb4-4"><a></a><span class="co"># ...</span></span>
 <span id="cb4-5"><a></a><span class="bu">print</span>(df.corr())</span>
-<span id="cb4-6"><a></a><span class="bu">print</span>(df.describe())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></td>
+<span id="cb4-6"><a></a><span class="bu">print</span>(df.describe())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></td>
 <td><pre><code>Mean of each column
 Number of non-null values in each column
 Highest value in each column
@@ -441,9 +442,9 @@ Summarise</code></pre></td>
 <section id="measures" class="slide level2">
 <h2>Measures</h2>
 <p>So pandas provides functions for commonly-used measures:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>df<span class="sc">.</span>price<span class="sc">.</span>mean()<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>df<span class="sc">.</span>price<span class="sc">.</span>mean()<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
 <span id="cb6-2"><a></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>df<span class="sc">.</span>price<span class="sc">.</span>median()<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
-<span id="cb6-3"><a></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>df<span class="sc">.</span>price<span class="sc">.</span>quantile(<span class="fl">0.25</span>)<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-3"><a></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>df<span class="sc">.</span>price<span class="sc">.</span>quantile(<span class="fl">0.25</span>)<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Output:</p>
 <pre><code>118.4542
 80.50
@@ -453,22 +454,22 @@ Summarise</code></pre></td>
 <h2>More Complex Measures</h2>
 <p>But Pandas <em>also</em> makes it easy to derive new variables… Here’s the <em>z</em>-score:</p>
 <p><span class="math display">\[ z = \frac{x - \bar{x}}{s}\]</span></p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a>df[<span class="st">'zscore'</span>] <span class="op">=</span> (df.price <span class="op">-</span> df.price.mean())<span class="op">/</span>df.price.std()</span>
-<span id="cb8-2"><a></a>df.plot.box(column<span class="op">=</span><span class="st">'zscore'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a>df[<span class="st">'zscore'</span>] <span class="op">=</span> (df.price <span class="op">-</span> df.price.mean())<span class="op">/</span>df.price.std()</span>
+<span id="cb8-2"><a></a>df.plot.box(column<span class="op">=</span><span class="st">'zscore'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="and-even-more-complex" class="slide level2 smaller">
 <h2>And Even More Complex</h2>
 <p>And here’s the Interquartile Range Standardised score:</p>
 <p><span class="math display">\[ x_{iqrs} = \frac{x - \widetilde{x}}{Q_{75} - Q_{25}} \]</span></p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>df[<span class="st">'iqr_std'</span>] <span class="op">=</span> (df.price <span class="op">-</span> df.price.median())<span class="op">/</span> <span class="op">\</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>df[<span class="st">'iqr_std'</span>] <span class="op">=</span> (df.price <span class="op">-</span> df.price.median())<span class="op">/</span> <span class="op">\</span></span>
 <span id="cb9-2"><a></a>      (df.price.quantile(q<span class="op">=</span><span class="fl">0.75</span>)<span class="op">-</span>df.price.quantile(q<span class="op">=</span><span class="fl">0.25</span>))</span>
-<span id="cb9-3"><a></a>df.plot.box(column<span class="op">=</span><span class="st">'iqr_std'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-3"><a></a>df.plot.box(column<span class="op">=</span><span class="st">'iqr_std'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><a href="./img/Price_IQR_Standardised.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img data-src="./img/Price_IQR_Standardised.png"></a></p>
 </section>
 <section id="the-plot-thickens" class="slide level2">
 <h2>The Plot Thickens</h2>
 <p>We’ll get to more complex plotting over the course of the term, but here’s a good start for <em>exploring</em> the data! All plotting depends on <code>matplotlib</code> which is the ogre in the attic to R’s <code>ggplot</code>.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Get used to this import as it will allow you to save and manipulate the figures created in Python. It is <em>not</em> the most intuitive approach (unless you’ve used MATLAB before) but it <em>does</em> work.</p>
 </section></section>
 <section>
@@ -480,14 +481,14 @@ Summarise</code></pre></td>
 </section>
 <section id="boxplot" class="slide level2">
 <h2>Boxplot</h2>
-<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a>df.price.plot.box()</span>
-<span id="cb11-2"><a></a>plt.savefig(<span class="st">'pboxplot.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a>df.price.plot.box()</span>
+<span id="cb11-2"><a></a>plt.savefig(<span class="st">'pboxplot.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><a href="img/pboxplot.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img data-src="img/pboxplot.png"></a></p>
 </section>
 <section id="frequency" class="slide level2">
 <h2>Frequency</h2>
-<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>df.room_type.value_counts().plot.bar()</span>
-<span id="cb12-2"><a></a>plt.savefig(<span class="st">'phistplot.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>df.room_type.value_counts().plot.bar()</span>
+<span id="cb12-2"><a></a>plt.savefig(<span class="st">'phistplot.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><a href="img/phistplot.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img data-src="img/phistplot.png"></a></p>
 </section>
 <section id="a-correlation-heatmap" class="slide level2">
@@ -497,23 +498,23 @@ Summarise</code></pre></td>
 </section>
 <section id="a-map" class="slide level2">
 <h2>A ‘Map’</h2>
-<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a>df.plot.scatter(x<span class="op">=</span><span class="st">'longitude'</span>,y<span class="op">=</span><span class="st">'latitude'</span>)</span>
-<span id="cb13-2"><a></a>plt.savefig(<span class="st">'pscatterplot.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a>df.plot.scatter(x<span class="op">=</span><span class="st">'longitude'</span>,y<span class="op">=</span><span class="st">'latitude'</span>)</span>
+<span id="cb13-2"><a></a>plt.savefig(<span class="st">'pscatterplot.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><a href="img/pscatterplot.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img data-src="img/pscatterplot.png"></a></p>
 </section>
 <section id="a-fancy-map" class="slide level2">
 <h2>A Fancy ‘Map’</h2>
-<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a>df.plot.scatter(x<span class="op">=</span><span class="st">'longitude'</span>,y<span class="op">=</span><span class="st">'latitude'</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a>df.plot.scatter(x<span class="op">=</span><span class="st">'longitude'</span>,y<span class="op">=</span><span class="st">'latitude'</span>,</span>
 <span id="cb14-2"><a></a>                c<span class="op">=</span><span class="st">'price'</span>,colormap<span class="op">=</span><span class="st">'viridis'</span>,</span>
 <span id="cb14-3"><a></a>                figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">5</span>),title<span class="op">=</span><span class="st">'London'</span>,</span>
 <span id="cb14-4"><a></a>                grid<span class="op">=</span><span class="va">True</span>,s<span class="op">=</span><span class="dv">24</span>,marker<span class="op">=</span><span class="st">'x'</span>)</span>
-<span id="cb14-5"><a></a>plt.savefig(<span class="st">'pscatterplot.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-5"><a></a>plt.savefig(<span class="st">'pscatterplot.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><a href="img/pscatterplot-fancy.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img data-src="img/pscatterplot-fancy.png"></a></p>
 </section>
 <section id="an-actual-map" class="slide level2">
 <h2>An Actual ‘Map’</h2>
-<div class="sourceCode" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a>gdf.plot(column<span class="op">=</span><span class="st">'price'</span>, cmap<span class="op">=</span><span class="st">'viridis'</span>, </span>
-<span id="cb15-2"><a></a>         scheme<span class="op">=</span><span class="st">'quantiles'</span>, markersize<span class="op">=</span><span class="dv">8</span>, legend<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a>gdf.plot(column<span class="op">=</span><span class="st">'price'</span>, cmap<span class="op">=</span><span class="st">'viridis'</span>, </span>
+<span id="cb15-2"><a></a>         scheme<span class="op">=</span><span class="st">'quantiles'</span>, markersize<span class="op">=</span><span class="dv">8</span>, legend<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><a href="img/scattermap.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img data-src="img/scattermap.png"></a></p>
 </section>
 <section id="additional-resources" class="slide level2 smaller">
@@ -739,7 +740,7 @@ References
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -766,190 +767,173 @@ References
       });
     </script>
     <script id="quarto-html-after-body" type="application/javascript">
-    window.document.addEventListener("DOMContentLoaded", function (event) {
-      const toggleBodyColorMode = (bsSheetEl) => {
-        const mode = bsSheetEl.getAttribute("data-mode");
-        const bodyEl = window.document.querySelector("body");
-        if (mode === "dark") {
-          bodyEl.classList.add("quarto-dark");
-          bodyEl.classList.remove("quarto-light");
-        } else {
-          bodyEl.classList.add("quarto-light");
-          bodyEl.classList.remove("quarto-dark");
-        }
-      }
-      const toggleBodyColorPrimary = () => {
-        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-        if (bsSheetEl) {
-          toggleBodyColorMode(bsSheetEl);
-        }
-      }
-      toggleBodyColorPrimary();  
-      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
-      tabsets.forEach(function(tabset) {
-        const tabby = new Tabby('#' + tabset.id);
-      });
-      const isCodeAnnotation = (el) => {
-        for (const clz of el.classList) {
-          if (clz.startsWith('code-annotation-')) {                     
-            return true;
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
           }
+          return false;
         }
-        return false;
-      }
-      const onCopySuccess = function(e) {
-        // button target
-        const button = e.trigger;
-        // don't keep focus
-        button.blur();
-        // flash "checked"
-        button.classList.add('code-copy-button-checked');
-        var currentTitle = button.getAttribute("title");
-        button.setAttribute("title", "Copied!");
-        let tooltip;
-        if (window.bootstrap) {
-          button.setAttribute("data-bs-toggle", "tooltip");
-          button.setAttribute("data-bs-placement", "left");
-          button.setAttribute("data-bs-title", "Copied!");
-          tooltip = new bootstrap.Tooltip(button, 
-            { trigger: "manual", 
-              customClass: "code-copy-button-tooltip",
-              offset: [0, -8]});
-          tooltip.show();    
-        }
-        setTimeout(function() {
-          if (tooltip) {
-            tooltip.hide();
-            button.removeAttribute("data-bs-title");
-            button.removeAttribute("data-bs-toggle");
-            button.removeAttribute("data-bs-placement");
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
           }
-          button.setAttribute("title", currentTitle);
-          button.classList.remove('code-copy-button-checked');
-        }, 1000);
-        // clear code selection
-        e.clearSelection();
-      }
-      const getTextToCopy = function(trigger) {
-          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
           for (const childEl of codeEl.children) {
             if (isCodeAnnotation(childEl)) {
               childEl.remove();
             }
           }
           return codeEl.innerText;
-      }
-      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-        text: getTextToCopy
-      });
-      clipboard.on('success', onCopySuccess);
-      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-          text: getTextToCopy,
-          container: window.document.getElementById('quarto-embedded-source-code-modal')
-        });
-        clipboardModal.on('success', onCopySuccess);
-      }
-        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-        var mailtoRegex = new RegExp(/^mailto:/);
-          var filterRegex = new RegExp('/' + window.location.host + '/');
-        var isInternal = (href) => {
-            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
         }
-        // Inspect non-navigation links and adorn them if external
-     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-        for (var i=0; i<links.length; i++) {
-          const link = links[i];
-          if (!isInternal(link.href)) {
-            // undo the damage that might have been done by quarto-nav.js in the case of
-            // links that we want to consider external
-            if (link.dataset.originalHref !== undefined) {
-              link.href = link.dataset.originalHref;
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
             }
           }
-        }
-      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-        const config = {
-          allowHTML: true,
-          maxWidth: 500,
-          delay: 100,
-          arrow: false,
-          appendTo: function(el) {
-              return el.closest('section.slide') || el.parentElement;
-          },
-          interactive: true,
-          interactiveBorder: 10,
-          theme: 'light-border',
-          placement: 'bottom-start',
-        };
-        if (contentFn) {
-          config.content = contentFn;
-        }
-        if (onTriggerFn) {
-          config.onTrigger = onTriggerFn;
-        }
-        if (onUntriggerFn) {
-          config.onUntrigger = onUntriggerFn;
-        }
-          config['offset'] = [0,0];
-          config['maxWidth'] = 700;
-        window.tippy(el, config); 
-      }
-      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-      for (var i=0; i<noterefs.length; i++) {
-        const ref = noterefs[i];
-        tippyHover(ref, function() {
-          // use id or data attribute instead here
-          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-          try { href = new URL(href).hash; } catch {}
-          const id = href.replace(/^#\/?/, "");
-          const note = window.document.getElementById(id);
-          if (note) {
-            return note.innerHTML;
-          } else {
-            return "";
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
           }
-        });
-      }
-      const findCites = (el) => {
-        const parentEl = el.parentElement;
-        if (parentEl) {
-          const cites = parentEl.dataset.cites;
-          if (cites) {
-            return {
-              el,
-              cites: cites.split(' ')
-            };
-          } else {
-            return findCites(el.parentElement)
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
           }
-        } else {
-          return undefined;
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
         }
-      };
-      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-      for (var i=0; i<bibliorefs.length; i++) {
-        const ref = bibliorefs[i];
-        const citeInfo = findCites(ref);
-        if (citeInfo) {
-          tippyHover(citeInfo.el, function() {
-            var popup = window.document.createElement('div');
-            citeInfo.cites.forEach(function(cite) {
-              var citeDiv = window.document.createElement('div');
-              citeDiv.classList.add('hanging-indent');
-              citeDiv.classList.add('csl-entry');
-              var biblioDiv = window.document.getElementById('ref-' + cite);
-              if (biblioDiv) {
-                citeDiv.innerHTML = biblioDiv.innerHTML;
-              }
-              popup.appendChild(citeDiv);
-            });
-            return popup.innerHTML;
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
           });
         }
-      }
-    });
-    </script>
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
     <script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
     (function() {
       let previousOnload = window.onload;

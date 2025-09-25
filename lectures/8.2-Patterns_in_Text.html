@@ -7,8 +7,8 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-1092c56c6cadf2eb47b1bc8063ab382a.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.6.40">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-da61f9a05e9cefe097d79e8430a73dd4.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.24">
 
   <meta name="author" content="Jon Reades">
   <title>Foundations of Spatial Data Science – Patterns in Text</title>
@@ -30,8 +30,9 @@
       vertical-align: middle;
     }
     /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
     pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
     .sourceCode { overflow: visible; }
     code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -42,7 +43,7 @@
     }
     @media print {
     pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
     }
     pre.numberSource code
       { counter-reset: source-line 0; }
@@ -94,7 +95,7 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-11712cb7c673cbf1341c876f451d5cec.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-b6d6ca89e0c39dcc6c0c87d5e30c596f.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -237,39 +238,39 @@
 </section>
 <section id="strings-methods-are-not-enough" class="slide level2">
 <h2>Strings Methods are <em>Not</em> Enough</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="co">'123foo456'</span>.index(<span class="st">'foo'</span>) <span class="co"># 2</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="co">'123foo456'</span>.index(<span class="st">'foo'</span>) <span class="co"># 2</span></span>
 <span id="cb1-2"><a></a><span class="co">'123foo456'</span>.split(<span class="st">'foo'</span>) <span class="co"># ['123', '456']</span></span>
 <span id="cb1-3"><a></a><span class="co">' 123 foo 456 '</span>.strip()  <span class="co"># '123 foo 456'</span></span>
 <span id="cb1-4"><a></a><span class="co">'HOW NOW BROWN COW?'</span>.lower() <span class="co"># 'how now brown cow?'</span></span>
 <span id="cb1-5"><a></a><span class="co">'How now brown cow?'</span>.replace(<span class="st">'brown '</span>,<span class="st">'green-'</span>)</span>
-<span id="cb1-6"><a></a><span class="co"># 'How now green-cow?'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-6"><a></a><span class="co"># 'How now green-cow?'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>See: <code>dir(str)</code> for full list of string methods.</p>
 </section>
 <section id="regular-expressions" class="slide level2">
 <h2>Regular Expressions</h2>
 <p>Regexes are a way for talking <em>about</em> patterns observed in text, although their origins are rooted in philosophy and linguistics.</p>
 <p>Implemented in Python as:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">import</span> re</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">import</span> re</span>
 <span id="cb2-2"><a></a><span class="co"># re.search(&lt;regex&gt;, &lt;str&gt;)</span></span>
 <span id="cb2-3"><a></a>s <span class="op">=</span> <span class="st">'123foo456'</span></span>
 <span id="cb2-4"><a></a><span class="cf">if</span> re.search(<span class="st">'123'</span>,s):</span>
 <span id="cb2-5"><a></a>  <span class="bu">print</span>(<span class="st">"Found a match."</span>)</span>
 <span id="cb2-6"><a></a><span class="cf">else</span>:</span>
-<span id="cb2-7"><a></a>  <span class="bu">print</span>(<span class="st">"No match."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-7"><a></a>  <span class="bu">print</span>(<span class="st">"No match."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Prints <code>'Found a match.'</code></p>
 </section>
 <section id="capturing-matches" class="slide level2">
 <h2>Capturing Matches</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>m <span class="op">=</span> re.search(<span class="st">'123'</span>,s)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>m <span class="op">=</span> re.search(<span class="st">'123'</span>,s)</span>
 <span id="cb3-2"><a></a><span class="bu">print</span>(m.start())</span>
 <span id="cb3-3"><a></a><span class="bu">print</span>(m.end())</span>
 <span id="cb3-4"><a></a><span class="bu">print</span>(m.span())</span>
-<span id="cb3-5"><a></a><span class="bu">print</span>(m.group())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-5"><a></a><span class="bu">print</span>(m.group())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Outputs:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="dv">0</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="dv">0</span></span>
 <span id="cb4-2"><a></a><span class="dv">3</span></span>
 <span id="cb4-3"><a></a>(<span class="dv">0</span>,<span class="dv">3</span>)</span>
-<span id="cb4-4"><a></a><span class="dv">123</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-4"><a></a><span class="dv">123</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <aside class="notes">
 <p>So, we have <code>None</code> if a search fails, but if it succeeds then we have attributes of the <code>match</code> objection like start, end, span, and group (this last is going to be particularly interesting since it tells us what matched).</p>
 <style type="text/css">
@@ -286,19 +287,19 @@
 </section>
 <section id="configuring-matches" class="slide level2">
 <h2>Configuring Matches</h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>s <span class="op">=</span> <span class="st">'123foo456'</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>s <span class="op">=</span> <span class="st">'123foo456'</span></span>
 <span id="cb5-2"><a></a>m <span class="op">=</span> re.search(<span class="st">'FOO'</span>,s)</span>
 <span id="cb5-3"><a></a><span class="bu">print</span>(m)</span>
 <span id="cb5-4"><a></a>m <span class="op">=</span> re.search(<span class="st">'FOO'</span>,s,re.IGNORECASE)</span>
-<span id="cb5-5"><a></a><span class="bu">print</span>(m)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-5"><a></a><span class="bu">print</span>(m)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Outputs:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="va">None</span></span>
-<span id="cb6-2"><a></a><span class="op">&lt;</span>re.Match <span class="bu">object</span><span class="op">;</span> span<span class="op">=</span>(<span class="dv">3</span>, <span class="dv">6</span>), match<span class="op">=</span><span class="st">'foo'</span><span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="va">None</span></span>
+<span id="cb6-2"><a></a><span class="op">&lt;</span>re.Match <span class="bu">object</span><span class="op">;</span> span<span class="op">=</span>(<span class="dv">3</span>, <span class="dv">6</span>), match<span class="op">=</span><span class="st">'foo'</span><span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The third parameter allows us to: match newlines (<code>re.DOTALL</code>), ignore case (<code>re.IGNORECASE</code>), take language into account (<code>re.LOCALE</code>), match across lines (<code>re.MULTILINE</code>), and write patterns across multiple lines (<code>re.VERBOSE</code>). If you need multiple options it’s <code>re.DOTALL | re.IGNORECASE</code>. Bitwise again!</p>
 </section>
 <section id="more-than-one-match" class="slide level2 smaller">
 <h2>More Than One Match</h2>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>s <span class="op">=</span> <span class="st">'123foo456foo789'</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>s <span class="op">=</span> <span class="st">'123foo456foo789'</span></span>
 <span id="cb7-2"><a></a>lst <span class="op">=</span> re.findall(<span class="st">'foo'</span>,s)</span>
 <span id="cb7-3"><a></a><span class="bu">print</span>(lst)</span>
 <span id="cb7-4"><a></a>lst <span class="op">=</span> re.finditer(<span class="st">'foo'</span>,s)</span>
@@ -306,12 +307,12 @@
 <span id="cb7-6"><a></a>rs  <span class="op">=</span> re.sub(<span class="st">'foo'</span>,<span class="st">' '</span>,s)</span>
 <span id="cb7-7"><a></a><span class="bu">print</span>(rs)</span>
 <span id="cb7-8"><a></a>rs  <span class="op">=</span> re.split(<span class="st">' '</span>,rs)</span>
-<span id="cb7-9"><a></a><span class="bu">print</span>(rs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-9"><a></a><span class="bu">print</span>(rs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Outputs:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a>[<span class="st">'foo'</span>,<span class="st">'foo'</span>]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a>[<span class="st">'foo'</span>,<span class="st">'foo'</span>]</span>
 <span id="cb8-2"><a></a>[<span class="op">&lt;</span>re.Match <span class="bu">object</span><span class="op">;</span> span<span class="op">=</span>(<span class="dv">3</span>, <span class="dv">6</span>), match<span class="op">=</span><span class="st">'foo'</span><span class="op">&gt;</span>, <span class="op">&lt;</span>re.Match <span class="bu">object</span><span class="op">;</span> span<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">12</span>), match<span class="op">=</span><span class="st">'foo'</span><span class="op">&gt;</span>]</span>
 <span id="cb8-3"><a></a><span class="co">'123 456 789'</span></span>
-<span id="cb8-4"><a></a>[<span class="st">'123'</span>, <span class="st">'456'</span>, <span class="st">'789'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-4"><a></a>[<span class="st">'123'</span>, <span class="st">'456'</span>, <span class="st">'789'</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section>
 <section id="lets-get-meta" class="title-slide slide level1 center">
@@ -320,17 +321,17 @@
 </section>
 <section id="regular-expressions-do-much-more" class="slide level2">
 <h2>Regular Expressions Do <em>Much</em> More</h2>
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a><span class="im">import</span> re</span>
-<span id="cb9-2"><a></a>m <span class="op">=</span> re.search(<span class="vs">r'\$((\d+,){2,}\d+)'</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a><span class="im">import</span> re</span>
+<span id="cb9-2"><a></a>m <span class="op">=</span> re.search(<span class="vs">r'</span><span class="ch">\$</span><span class="kw">((</span><span class="dv">\d</span><span class="op">+</span><span class="vs">,</span><span class="kw">)</span><span class="op">{2,}</span><span class="dv">\d</span><span class="op">+</span><span class="kw">)</span><span class="vs">'</span>,</span>
 <span id="cb9-3"><a></a>        <span class="st">"'That will be $1,000,000 he said...'"</span>)</span>
-<span id="cb9-4"><a></a><span class="bu">print</span>(m.group(<span class="dv">1</span>)) <span class="co"># '1,000,000'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-4"><a></a><span class="bu">print</span>(m.group(<span class="dv">1</span>)) <span class="co"># '1,000,000'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This looks for sequences of 1-or-more digits followed by a comma… and for those sequences to repeat two or more times:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a><span class="co"># Look for a literal '$'</span></span>
-<span id="cb10-2"><a></a>re.search(<span class="vs">r'\$'</span>) </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a><span class="co"># Look for a literal '$'</span></span>
+<span id="cb10-2"><a></a>re.search(<span class="vs">r'</span><span class="ch">\$</span><span class="vs">'</span>) </span>
 <span id="cb10-3"><a></a><span class="co">#&nbsp;Group of &gt;=1 digits followed by a comma...</span></span>
-<span id="cb10-4"><a></a>re.search(<span class="vs">r'(\d+,)'</span>) </span>
+<span id="cb10-4"><a></a>re.search(<span class="vs">r'</span><span class="kw">(</span><span class="dv">\d</span><span class="op">+</span><span class="vs">,</span><span class="kw">)</span><span class="vs">'</span>) </span>
 <span id="cb10-5"><a></a><span class="co">#&nbsp;Repeated two or more times...</span></span>
-<span id="cb10-6"><a></a>re.search(<span class="vs">r'(\d+,){2,}'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-6"><a></a>re.search(<span class="vs">r'</span><span class="kw">(</span><span class="dv">\d</span><span class="op">+</span><span class="vs">,</span><span class="kw">)</span><span class="op">{2,}</span><span class="vs">'</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 <aside><div>
 <p>Also notice the <code>r'&lt;regex&gt;'</code> with an <em>r</em> in front of the string. This means ‘raw’ and is often a required modifier for regular expression patterns. Simple ones don’t need it, but from here on out you will.</p>
@@ -512,7 +513,7 @@
 </section>
 <section id="whats-this" class="slide level2 smaller">
 <h2>What’s This?</h2>
-<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a>re.match(<span class="vs">r'^[^@]+@([a-z0-9\-]+\.){1,5}[a-z0-9\-]+$'</span>, s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a>re.match(<span class="vs">r'</span><span class="dv">^</span><span class="pp">[^@]</span><span class="op">+</span><span class="vs">@</span><span class="kw">(</span><span class="pp">[a-z0-9</span><span class="ch">\-</span><span class="pp">]</span><span class="op">+</span><span class="ch">\.</span><span class="kw">)</span><span class="op">{1,5}</span><span class="pp">[a-z0-9</span><span class="ch">\-</span><span class="pp">]</span><span class="op">+</span><span class="dv">$</span><span class="vs">'</span>, s)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <aside class="notes">
 <p><code>s</code> should be replaced with any string you want to check.</p>
 <style type="text/css">
@@ -529,38 +530,38 @@
 </section>
 <section id="whats-this-1" class="slide level2 smaller">
 <h2>What’s This?</h2>
-<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>re.match(<span class="vs">r'\d</span><span class="sc">{4}</span><span class="vs">-\d</span><span class="sc">{2}</span><span class="vs">-\d</span><span class="sc">{2}</span><span class="vs">'</span>, s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>re.match(<span class="vs">r'</span><span class="dv">\d</span><span class="op">{4}</span><span class="vs">-</span><span class="dv">\d</span><span class="op">{2}</span><span class="vs">-</span><span class="dv">\d</span><span class="op">{2}</span><span class="vs">'</span>, s)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="whats-this-2" class="slide level2 smaller">
 <h2>What’s This?</h2>
-<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a>re.match(<span class="vs">r'^\s*$'</span>, s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a>re.match(<span class="vs">r'</span><span class="dv">^\s</span><span class="op">*</span><span class="dv">$</span><span class="vs">'</span>, s)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="whats-this-3" class="slide level2 smaller">
 <h2>What’s This?</h2>
-<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a>re.match(<span class="vs">r'^(http|https|ftp):[\/]</span><span class="sc">{2}</span><span class="vs">([a-zA-Z0-9\-]+\.){1,4}[a-zA-Z]{2,5}(:[0-9]+)?\/?([a-zA-Z0-9\-\._\?\'\/\\\+\&amp;\%\$#\=~]*)'</span>,s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a>re.match(<span class="vs">r'</span><span class="dv">^</span><span class="kw">(</span><span class="vs">http</span><span class="cf">|</span><span class="vs">https</span><span class="cf">|</span><span class="vs">ftp</span><span class="kw">)</span><span class="vs">:</span><span class="pp">[</span><span class="ch">\/</span><span class="pp">]</span><span class="op">{2}</span><span class="kw">(</span><span class="pp">[a-zA-Z0-9</span><span class="ch">\-</span><span class="pp">]</span><span class="op">+</span><span class="ch">\.</span><span class="kw">)</span><span class="op">{1,4}</span><span class="pp">[a-zA-Z]</span><span class="op">{2,5}</span><span class="kw">(</span><span class="vs">:</span><span class="pp">[0-9]</span><span class="op">+</span><span class="kw">)</span><span class="op">?</span><span class="ch">\/</span><span class="op">?</span><span class="kw">(</span><span class="pp">[a-zA-Z0-9</span><span class="ch">\-\.</span><span class="pp">_</span><span class="ch">\?\'\/\\\+\&amp;\%\$</span><span class="pp">#</span><span class="ch">\=</span><span class="pp">~]</span><span class="op">*</span><span class="kw">)</span><span class="vs">'</span>,s)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="whats-this-4" class="slide level2 smaller">
 <h2>What’s This?</h2>
-<div class="sourceCode" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a>re.match(<span class="vs">r'([Gg][Ii][Rr] 0[Aa]</span><span class="sc">{2}</span><span class="vs">)|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]</span><span class="sc">{2}</span><span class="vs">)'</span>,s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a>re.match(<span class="vs">r'</span><span class="kw">(</span><span class="pp">[Gg][Ii][Rr]</span><span class="vs"> 0</span><span class="pp">[Aa]</span><span class="op">{2}</span><span class="kw">)</span><span class="cf">|</span><span class="kw">(((</span><span class="pp">[A-Za-z][0-9]</span><span class="op">{1,2}</span><span class="kw">)</span><span class="cf">|</span><span class="kw">((</span><span class="pp">[A-Za-z][A-Ha-hJ-Yj-y][0-9]</span><span class="op">{1,2}</span><span class="kw">)</span><span class="cf">|</span><span class="kw">((</span><span class="pp">[A-Za-z][0-9][A-Za-z]</span><span class="kw">)</span><span class="cf">|</span><span class="kw">(</span><span class="pp">[A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]</span><span class="op">?</span><span class="kw">))))</span><span class="dv">\s</span><span class="op">?</span><span class="pp">[0-9][A-Za-z]</span><span class="op">{2}</span><span class="kw">)</span><span class="vs">'</span>,s)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="to-help" class="slide level2 smaller">
 <h2>To Help…</h2>
 <p><code>re.VERBOSE</code> to the rescue:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a></a>regex <span class="op">=</span> <span class="vs">r"""</span></span>
-<span id="cb16-2"><a></a><span class="vs">([GIR] 0[A]</span><span class="sc">{2}</span><span class="vs">)|    # Girobank </span></span>
-<span id="cb16-3"><a></a><span class="vs">(</span></span>
-<span id="cb16-4"><a></a><span class="vs">  (</span></span>
-<span id="cb16-5"><a></a><span class="vs">    ([A-Z][0-9]{1,2})| # e.g A00...Z99</span></span>
-<span id="cb16-6"><a></a><span class="vs">      (</span></span>
-<span id="cb16-7"><a></a><span class="vs">        ([A-Z][A-HJ-Y][0-9]{1,2})|  # e.g. AB54...ZX11</span></span>
-<span id="cb16-8"><a></a><span class="vs">          (([A-Z][0-9][A-Z])|  # e.g. A0B...Z9Z </span></span>
-<span id="cb16-9"><a></a><span class="vs">          ([A-Z][A-HJ-Y][0-9][A-Z]?))  # e.g. WC1 or WC1H</span></span>
-<span id="cb16-10"><a></a><span class="vs">        )</span></span>
-<span id="cb16-11"><a></a><span class="vs">      )</span></span>
-<span id="cb16-12"><a></a><span class="vs">    \s?[0-9][A-Z]</span><span class="sc">{2}</span><span class="vs"> # e.g. 5RX</span></span>
-<span id="cb16-13"><a></a><span class="vs">  )</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a></a>regex <span class="op">=</span> <span class="vs">r"""</span></span>
+<span id="cb16-2"><a></a><span class="kw">(</span><span class="pp">[GIR]</span><span class="vs"> 0</span><span class="pp">[A]</span><span class="op">{2}</span><span class="kw">)</span><span class="cf">|</span><span class="vs">    </span><span class="co"># Girobank </span></span>
+<span id="cb16-3"><a></a><span class="kw">(</span></span>
+<span id="cb16-4"><a></a><span class="vs">  </span><span class="kw">(</span></span>
+<span id="cb16-5"><a></a><span class="vs">    </span><span class="kw">(</span><span class="pp">[A-Z][0-9]</span><span class="op">{1,2}</span><span class="kw">)</span><span class="cf">|</span><span class="vs"> </span><span class="co"># e.g A00...Z99</span></span>
+<span id="cb16-6"><a></a><span class="vs">      </span><span class="kw">(</span></span>
+<span id="cb16-7"><a></a><span class="vs">        </span><span class="kw">(</span><span class="pp">[A-Z][A-HJ-Y][0-9]</span><span class="op">{1,2}</span><span class="kw">)</span><span class="cf">|</span><span class="vs">  </span><span class="co"># e.g. AB54...ZX11</span></span>
+<span id="cb16-8"><a></a><span class="vs">          </span><span class="kw">((</span><span class="pp">[A-Z][0-9][A-Z]</span><span class="kw">)</span><span class="cf">|</span><span class="vs">  </span><span class="co"># e.g. A0B...Z9Z </span></span>
+<span id="cb16-9"><a></a><span class="vs">          </span><span class="kw">(</span><span class="pp">[A-Z][A-HJ-Y][0-9][A-Z]</span><span class="op">?</span><span class="kw">))</span><span class="vs">  </span><span class="co"># e.g. WC1 or WC1H</span></span>
+<span id="cb16-10"><a></a><span class="vs">        </span><span class="kw">)</span></span>
+<span id="cb16-11"><a></a><span class="vs">      </span><span class="kw">)</span></span>
+<span id="cb16-12"><a></a><span class="vs">    </span><span class="dv">\s</span><span class="op">?</span><span class="pp">[0-9][A-Z]</span><span class="op">{2}</span><span class="vs"> </span><span class="co"># e.g. 5RX</span></span>
+<span id="cb16-13"><a></a><span class="vs">  </span><span class="kw">)</span></span>
 <span id="cb16-14"><a></a><span class="vs">"""</span></span>
-<span id="cb16-15"><a></a>re.match(regex,s,re.VERBOSE<span class="op">|</span>re.IGNORECASE) <span class="co"># Can also use: re.X|re.I</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-15"><a></a>re.match(regex,s,re.VERBOSE<span class="op">|</span>re.IGNORECASE) <span class="co"># Can also use: re.X|re.I</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <aside class="notes">
 <p>This is the <a href="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/488478/Bulk_Data_Transfer_-_additional_validation_valid_from_12_November_2015.pdf">government’s own regex</a> but is probably <em>not</em> 100% accurate.</p>
 <style type="text/css">
@@ -845,7 +846,7 @@ References
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -872,190 +873,173 @@ References
       });
     </script>
     <script id="quarto-html-after-body" type="application/javascript">
-    window.document.addEventListener("DOMContentLoaded", function (event) {
-      const toggleBodyColorMode = (bsSheetEl) => {
-        const mode = bsSheetEl.getAttribute("data-mode");
-        const bodyEl = window.document.querySelector("body");
-        if (mode === "dark") {
-          bodyEl.classList.add("quarto-dark");
-          bodyEl.classList.remove("quarto-light");
-        } else {
-          bodyEl.classList.add("quarto-light");
-          bodyEl.classList.remove("quarto-dark");
-        }
-      }
-      const toggleBodyColorPrimary = () => {
-        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-        if (bsSheetEl) {
-          toggleBodyColorMode(bsSheetEl);
-        }
-      }
-      toggleBodyColorPrimary();  
-      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
-      tabsets.forEach(function(tabset) {
-        const tabby = new Tabby('#' + tabset.id);
-      });
-      const isCodeAnnotation = (el) => {
-        for (const clz of el.classList) {
-          if (clz.startsWith('code-annotation-')) {                     
-            return true;
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
           }
+          return false;
         }
-        return false;
-      }
-      const onCopySuccess = function(e) {
-        // button target
-        const button = e.trigger;
-        // don't keep focus
-        button.blur();
-        // flash "checked"
-        button.classList.add('code-copy-button-checked');
-        var currentTitle = button.getAttribute("title");
-        button.setAttribute("title", "Copied!");
-        let tooltip;
-        if (window.bootstrap) {
-          button.setAttribute("data-bs-toggle", "tooltip");
-          button.setAttribute("data-bs-placement", "left");
-          button.setAttribute("data-bs-title", "Copied!");
-          tooltip = new bootstrap.Tooltip(button, 
-            { trigger: "manual", 
-              customClass: "code-copy-button-tooltip",
-              offset: [0, -8]});
-          tooltip.show();    
-        }
-        setTimeout(function() {
-          if (tooltip) {
-            tooltip.hide();
-            button.removeAttribute("data-bs-title");
-            button.removeAttribute("data-bs-toggle");
-            button.removeAttribute("data-bs-placement");
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
           }
-          button.setAttribute("title", currentTitle);
-          button.classList.remove('code-copy-button-checked');
-        }, 1000);
-        // clear code selection
-        e.clearSelection();
-      }
-      const getTextToCopy = function(trigger) {
-          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
           for (const childEl of codeEl.children) {
             if (isCodeAnnotation(childEl)) {
               childEl.remove();
             }
           }
           return codeEl.innerText;
-      }
-      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-        text: getTextToCopy
-      });
-      clipboard.on('success', onCopySuccess);
-      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-          text: getTextToCopy,
-          container: window.document.getElementById('quarto-embedded-source-code-modal')
-        });
-        clipboardModal.on('success', onCopySuccess);
-      }
-        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-        var mailtoRegex = new RegExp(/^mailto:/);
-          var filterRegex = new RegExp('/' + window.location.host + '/');
-        var isInternal = (href) => {
-            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
         }
-        // Inspect non-navigation links and adorn them if external
-     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-        for (var i=0; i<links.length; i++) {
-          const link = links[i];
-          if (!isInternal(link.href)) {
-            // undo the damage that might have been done by quarto-nav.js in the case of
-            // links that we want to consider external
-            if (link.dataset.originalHref !== undefined) {
-              link.href = link.dataset.originalHref;
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
             }
           }
-        }
-      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-        const config = {
-          allowHTML: true,
-          maxWidth: 500,
-          delay: 100,
-          arrow: false,
-          appendTo: function(el) {
-              return el.closest('section.slide') || el.parentElement;
-          },
-          interactive: true,
-          interactiveBorder: 10,
-          theme: 'light-border',
-          placement: 'bottom-start',
-        };
-        if (contentFn) {
-          config.content = contentFn;
-        }
-        if (onTriggerFn) {
-          config.onTrigger = onTriggerFn;
-        }
-        if (onUntriggerFn) {
-          config.onUntrigger = onUntriggerFn;
-        }
-          config['offset'] = [0,0];
-          config['maxWidth'] = 700;
-        window.tippy(el, config); 
-      }
-      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-      for (var i=0; i<noterefs.length; i++) {
-        const ref = noterefs[i];
-        tippyHover(ref, function() {
-          // use id or data attribute instead here
-          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-          try { href = new URL(href).hash; } catch {}
-          const id = href.replace(/^#\/?/, "");
-          const note = window.document.getElementById(id);
-          if (note) {
-            return note.innerHTML;
-          } else {
-            return "";
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
           }
-        });
-      }
-      const findCites = (el) => {
-        const parentEl = el.parentElement;
-        if (parentEl) {
-          const cites = parentEl.dataset.cites;
-          if (cites) {
-            return {
-              el,
-              cites: cites.split(' ')
-            };
-          } else {
-            return findCites(el.parentElement)
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
           }
-        } else {
-          return undefined;
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
         }
-      };
-      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-      for (var i=0; i<bibliorefs.length; i++) {
-        const ref = bibliorefs[i];
-        const citeInfo = findCites(ref);
-        if (citeInfo) {
-          tippyHover(citeInfo.el, function() {
-            var popup = window.document.createElement('div');
-            citeInfo.cites.forEach(function(cite) {
-              var citeDiv = window.document.createElement('div');
-              citeDiv.classList.add('hanging-indent');
-              citeDiv.classList.add('csl-entry');
-              var biblioDiv = window.document.getElementById('ref-' + cite);
-              if (biblioDiv) {
-                citeDiv.innerHTML = biblioDiv.innerHTML;
-              }
-              popup.appendChild(citeDiv);
-            });
-            return popup.innerHTML;
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
           });
         }
-      }
-    });
-    </script>
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
     
 
 </body></html>
