@@ -115,6 +115,19 @@ podman run --rm -d --name {{< var docker.name >}} -p 8888:8888 \
   --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
 ```
 
+
+:::: {.callout-warning}
+#### No `work` directory or Permission Denied?
+
+On *some* macOS machines we are seeing (or, rather, not seeing) problems with the `work` directory as *well as* 'permission denied' errors whenever you try to make changes to this directory. In this case the answer appears to be that you need to change part of the run command:
+
+- From: `-v "$(pwd):/home/jovyan/work"`
+- To: `-v "$(pwd):/home/jovyan/work:rw,U"`^[This is still something we're working to understand, you _might_ need to add `,z` as an option as well or it might be that we need to [play around with `userns` settings](https://www.reddit.com/r/podman/comments/1k54n9k/comment/mogamuu/), and it's possible the underlying issue is that podman [can't properly read from/write to directories outside of `$HOME`](https://github.com/containers/podman/issues/13775) (or that we need to [set this up at init time](https://github.com/containers/podman/discussions/13537)). We'll get back to you with a permannet solution when we have it!]
+
+This can still have a few issues with files that you add to the work directory *after* starting up podman but we'll run you through this issue (and how to deal with it) in class.
+
+::::
+
 :::
 
 ## How do I Know it Worked?
