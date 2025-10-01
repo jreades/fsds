@@ -53,19 +53,17 @@ ROT is known as the Caesar Cypher, but since the transformation is simple (`A..Z
 
 ## Python is Random
 
-```python
+```{python}
 import random
-random.randint(0,10)
-random.randint(0,10)
-random.randint(0,10)
-random.randint(0,10)
+for i in range(0,10):
+    print(random.randint(0,10))
 ```
 
 See also: `random.randrange`, `random.choice`, `random.sample`, `random.random`, `random.gauss`, etc.
 
 ## And Repeat...
 
-```python
+```{python}
 import random
 size = 10
 results = [0] * size
@@ -87,9 +85,9 @@ Will it hold for more than 10 numbers?
 
 :::
 
-## Aaaaaaaaaaand Repeat {.smaller}
+## Aaaaaaaaaaand Repeat
 
-```python
+```{python}
 import random 
 from matplotlib import pyplot as plt
 import numpy as np
@@ -102,22 +100,23 @@ while tests > 0:
     data[random.randint(0,len(data)-1)] += 1
     tests -= 1
 
-fig = plt.figure()
-plt.bar(np.arange(0,len(data)), data)
-fig.savefig('Random.png', dpi=150, transparent=True)
 ```
+
+Answer on next slide...
 
 
 ## Aaaaaaaaaaand Repeat
 
-![](./img/Random.png)
+```{python}
+fig = plt.figure()
+plt.bar(np.arange(0,len(data)), data)
+```
 
+---
+ 
+<h1 style="margin-top: 200px;">Seeds and Salts</h1>
 
-# Seeds and Salts
-
-> Computers are *pseudo*-random number generators. Seeds and salts ensure different outputs from the same inputs.
-
-I like [schroeder](https://security.stackexchange.com/a/80988)'s Stack Exchange answer that **seeds** must be secret to protect encryption, while **salts** are generally not secret but make simple attacks harder. 
+> Computers are *pseudo*-random number generators. Seeds and salts ensure different outputs from the same inputs.^[I like [schroeder](https://security.stackexchange.com/a/80988)'s Stack Exchange explanation of the difference.]
 
 ::: {.notes}
 
@@ -137,10 +136,11 @@ How does that work? Well when you are hashing data a salt combines with the inpu
 
 ![](./img/Hashing_and_Salts.png)
 
-## Hashing {.smaller}
+## Hashing
 
-Checking for changes (usally in a security context).
-```python
+Spot the difference:
+
+```{python}
 import hashlib # Can take a 'salt' (similar to a 'seed')
 
 r1 = hashlib.md5('CASA Intro to Programming'.encode())
@@ -153,35 +153,21 @@ r3 = hashlib.md5('CASA Intro to Programming'.encode())
 print(f"The hashed equivalent of r3 is: {r3.hexdigest()}")
 ```
 
-Outputs:
-```bash
-"The hashed equivalent of r1 is: acd601db5552408851070043947683ef"
-"The hashed equivalent of r2 is: 4458e89e9eb806f1ac60acfdf45d85b6"
-"The hashed equivalent of r3 is: acd601db5552408851070043947683ef"
-```
-
 ::: {.notes}
 
 This is like generating a 'fingerprint' of an application or file. In fact, it's what is going on behind the scenes when you download something to install on macOS or Windows and you're told that the installer is being 'verified' before it will run: the computer is generating a hash of the application's codebase, and sending that to the Apple Store or Windows Store or direct to the developer in order to check that the file hasn't been tampered with.
 
 :::
 
-## And Note... {.smaller}
+## And Note...
 
-```python
+```{python}
 import requests
 night = requests.get("http://www.gutenberg.org/ebooks/1514.txt.utf-8")
-print(f"The text is {night.text[30:70]}")
+print(f"The text is '{night.text[32:63].strip()}'")
 print(f"The text is {len(night.text):,} characters long")
 hash = hashlib.md5(night.text.encode())
 print(f"This can be hashed into: {hash.hexdigest()}")
-```
-
-Outputs:
-```bash
-"The text is A Midsummer Night's Dream by Shakespeare"
-"The text is 112,127 characters long"
-"This can be hashed into: cce0d35b8b2c4dafcbde3deb983fec0a"
 ```
 
 ::: {.notes}
@@ -192,15 +178,15 @@ But notice that hashes are always the same length. This property is quite useful
 
 :::
 
-## JupyterLab Password {.smaller}
+## JupyterLab Password
 
 To set a password in JupyterLab you need something like this:
 ```bash
-'sha1:5b1c205a53e14e:0ce169b9834984347d62b20b9a82f6513355f72d'
+sha1:d36ae21ea7f84801:2f60d6dba76a2b51ba884eb591cdb36e9f8f4dd2
 ```
 
 How this was generated:
-```python
+```{python}
 import uuid, hashlib
 salt = uuid.uuid4().hex[:16] # Truncate salt
 password = 'casa2021'        # Set password
@@ -213,7 +199,7 @@ print(':'.join(['sha1',salt,hashed_password]))
 ```
 
 ::: {.aside}
-Don't set your passwords [this way](https://edition.cnn.com/2019/04/22/uk/most-common-passwords-scli-gbr-intl/index.html).
+*Note*: don't set your passwords [this way](https://edition.cnn.com/2019/04/22/uk/most-common-passwords-scli-gbr-intl/index.html).
 :::
 
 ::: {.notes}
@@ -222,19 +208,19 @@ Then you can replace the `JUPYTER_PWD` parameter in the start-up string for Podm
 
 ## Encryption & Security
 
-Simple hashing algorithms are not normally secure enough for full encryption. Genuine security training takes a whole degree + years of experience.
+Simple hashing algorithms are not normally secure enough for operational use. Genuine security training takes a whole degree + years of experience.
 
-Areas to look at if you get involved in applications:
+Areas to look at for more secure computing:
 
 - Public and Private Key Encryption (esp. OpenSSL)
 - Privileges used by Applications (esp. Podman vs Docker)
 - Revocable Tokens (e.g. for APIs)
 - Injection Attacks (esp. for SQL using NULL-byte and similar)
 
-## Other Types of Seeds
+## Back to Randomness
 
 Two main libraries where seeds are set:
-```python
+```{python}
 import random
 random.seed(42)
 
@@ -252,7 +238,7 @@ Why do you often see 42 used as a seed?
 
 ## Seeds and State
 
-```python
+```{python}
 import random
 random.seed(42)
 st = random.getstate()

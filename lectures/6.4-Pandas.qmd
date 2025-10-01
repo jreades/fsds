@@ -61,11 +61,11 @@ You will want to bookmark these:
 ![](img/pandas-slice.png)
 
 
-## Using Pandas {.smaller}
+## Using Pandas
 
 Here’s code to read a (remote) CSV file:
 
-```python
+```{python}
 import pandas as pd      # import package
 # Bitly: https://raw.githubusercontent.com/jreades/fsds/master/data/2019-sample-crime.csv
 url='https://bit.ly/39SJpfp'
@@ -75,44 +75,37 @@ print(df.columns.to_list()) # column names
 print(df.columns.values)    # Also works but deprecated
 ```
 
-Output:
-
-```python
-<class 'pandas.core.frame.DataFrame'>
-['ID' 'Case Number' 'Date' 'Primary Type' 'Description'
- 'Location Description' 'Arrest' 'Domestic' 'Year' 'Latitude' 'Longitude']
-```
-
 ## Summarise a Data Frame
-
-
-```python
-df.describe() # Information about each Series
-df.info()     # Information about each Series and the df
-```
 
 `df.info` is more about data types and memory usage. `df.describe` is for summarising information about the distribution of values in every series.
 
+::::: {.columns}
+:::: {.column width="50%"}
+::: {style="font-size: 0.5em;"}
+```{python}
+df.describe() # Information about each Series
+```
+:::
+::::
+:::: {.column width="50%"}
+::: {style="font-size: 0.7em;"}
+```{python}
+df.info()     # Information about each Series and the df
+```
+:::
+::::
+:::::
 
-## Familiar? {.smaller}
+## Familiar? 
 
 This should be looking *eerily* familiar:
 
-```python
+```{python}
 print(type(df['Latitude']))          # type for column
 print(type(df['Latitude'].array))    # type for values
 print(df['Latitude'].array[:5])     # first five values
 print(f"1: {df['Latitude'].mean()}") # summarise a series/column
 print(f"2: {df.Latitude.mean()}")    # if no spaces in name
-```
-
-Produces: 
-```python
-<class 'pandas.core.series.Series'>
-<class 'numpy.ndarray'>
-[41.75130706 41.90399688 41.88032861 41.92438396 41.75579713]
-1: 41.84550008439
-2: 41.84550008439
 ```
 
 ::: {.notes}
@@ -127,14 +120,42 @@ Notice that we've got two ways of accessing a pandas Series:
 
 Pandas is also 'Jupyter-aware', meaning that output can displayed directly in Jupyter in 'fancy' ways:
 
-![](./img/phead.png)
+```python
+df.head(4)
+```
 
+::: {style="font-size: 0.45em;"}
+```{python}
+#| echo: False
+df.head(4)
+```
+:::
 
-## Familiar? {.smaller}
+## Familiar?
 
 ```python
-df.head(3)                       # First 3 rows of df
-df[['ID','Date','Year']].tail(3) # Last 3 rows of selected columns
+df.head(2)                       # First 2 rows of df
+```
+
+::: {style="font-size: 0.45em;"}
+```{python}
+#| echo: False
+df.head(2)                       # First 2 rows of df
+```
+:::
+
+```python
+
+df[['ID','Date','Year']].tail(2) # Last 2 rows of selected columns
+```
+::: {style="font-size: 0.45em;"}
+```{python}
+#| echo: False
+df[['ID','Date','Year']].tail(2) # Last 2 rows of selected columns
+```
+:::
+
+```python
 df.sample(frac=0.3)              # A random 30% sample
 df.sample(3, random_state=42)    # A random sample with a seed
 df.sample(3, random_state=42)    # Same sample!
@@ -173,12 +194,16 @@ If you need a full copy then use the `copy()` method (e.g. `df.copy()` or `df.Se
 ```python
 # Returns a series but not a column
 df.Latitude - 1 
+
 # Saves returned series as a new column
 df['lat'] = df.Latitude - 1
+
 # Returns a new data frame w/o 'lat' 
 df.drop(columns=['lat']) 
+
 # Modifies df directly
 df.drop(columns=['lat'], inplace=True) 
+
 # Try to modify a view of df (triggers warning)
 df[df['Primary Type']=='BURGLARY'].Latitude = 41.7 
 ```
@@ -189,11 +214,14 @@ df[df['Primary Type']=='BURGLARY'].Latitude = 41.7
 
 Operations on a Data Frame **return a DataFrame** and operations on a Series **return a Series**, allowing us to 'chain' steps together:
 
-```python
-df.sort_values(by=['Year','ID'], ascending=False).sample(frac=0.5).head(20).median()
+```{python}
+df.sort_values(
+    by=['Year','ID'], 
+    ascending=False
+).sample(frac=0.5).head(50)[['Latitude','Longitude']].median()
 ```
 
-## Selection {.smaller}
+## Selection
 
 ```python
 # Returns a selection (Boolean series)
@@ -237,10 +265,9 @@ A Data Series can *only* be of one type:
 | `category`      | N/A (`set`)      | Categorical columns         |
 
 
-## Changing the Type {.smaller}
+## Changing the Type
 
-
-```python
+```{python}
 print(df['Primary Type'].unique())   # Find unique values
 print(df['Primary Type'].dtype.name) # Confirm is 'object'
 df['Primary Type'] = df['Primary Type'].astype('category')
@@ -248,44 +275,27 @@ print(df['Primary Type'].dtype.name) # Confirm is 'category'
 print(df['Primary Type'].describe()) # Category column info
 ```
 
-Outputs:
-```python
-['BURGLARY' 'DECEPTIVE PRACTICE' 'BATTERY'...]
-object   # < before `as type`
-category # < after `as type`
-count       100
-unique       15
-top       THEFT
-freq         28
-Name: Primary Type, dtype: object # category==special class of object
-```
-
-
-## Datetime Data {.smaller}
-
-What do we do here?
-
-```python
-print(df.Date.dtype.name)
-# object
-df.Date.to_list()[:3]
-# ['04/20/2019 11:00:00 PM', '12/02/2019 10:35:00 AM', '10/06/2019 04:50:00 PM']
-```
+## Datetime Data
 
 This shows that `Date` is currently a string of dates+times.
 
+```{python}
+print(df.Date.dtype.name)
+print(df.Date.to_list()[:3])
+```
+
 Pandas handles date and times using a `datetime` type that also works as an index (more on these later):
-```python
+
+```{python}
 df['dt'] = pd.to_datetime(df.Date.array, 
               format="%m/%d/%Y %H:%M:%S %p")
 print(df.dt.dtype.name)
-# datetime64[ns]
-df.dt.to_list()[:3]
-# [Timestamp('2019-04-20 11:00:00'), Timestamp('2019-12-02 10:35:00'), Timestamp('2019-10-06 04:50:00')]
+print(df.dt.to_list()[:3])
 ```
 
+::: {.aside}
 These follow [the formatting conventions](https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes) of `strftime` (string format time) for conversion.
-
+:::
 
 ## Datetime Formats  {.smaller}
 
