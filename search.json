@@ -2262,35 +2262,35 @@
     "href": "lectures/6.4-Pandas.html#using-pandas",
     "title": "Pandas",
     "section": "Using Pandas",
-    "text": "Using Pandas\nHere’s code to read a (remote) CSV file:\nimport pandas as pd      # import package\n# Bitly: https://raw.githubusercontent.com/jreades/fsds/master/data/2019-sample-crime.csv\nurl='https://bit.ly/39SJpfp'\ndf = pd.read_csv(url)       # load a (remote) CSV\nprint(type(df))             # not simple data type\nprint(df.columns.to_list()) # column names\nprint(df.columns.values)    # Also works but deprecated\nOutput:\n&lt;class 'pandas.core.frame.DataFrame'&gt;\n['ID' 'Case Number' 'Date' 'Primary Type' 'Description'\n 'Location Description' 'Arrest' 'Domestic' 'Year' 'Latitude' 'Longitude']"
+    "text": "Using Pandas\nHere’s code to read a (remote) CSV file:\n\nimport pandas as pd      # import package\n# Bitly: https://raw.githubusercontent.com/jreades/fsds/master/data/2019-sample-crime.csv\nurl='https://bit.ly/39SJpfp'\ndf = pd.read_csv(url)       # load a (remote) CSV\nprint(type(df))             # not simple data type\nprint(df.columns.to_list()) # column names\nprint(df.columns.values)    # Also works but deprecated\n\n&lt;class 'pandas.core.frame.DataFrame'&gt;\n['ID', 'Case Number', 'Date', 'Primary Type', 'Description', 'Location Description', 'Arrest', 'Domestic', 'Year', 'Latitude', 'Longitude']\n['ID' 'Case Number' 'Date' 'Primary Type' 'Description'\n 'Location Description' 'Arrest' 'Domestic' 'Year' 'Latitude' 'Longitude']"
   },
   {
     "objectID": "lectures/6.4-Pandas.html#summarise-a-data-frame",
     "href": "lectures/6.4-Pandas.html#summarise-a-data-frame",
     "title": "Pandas",
     "section": "Summarise a Data Frame",
-    "text": "Summarise a Data Frame\ndf.describe() # Information about each Series\ndf.info()     # Information about each Series and the df\ndf.info is more about data types and memory usage. df.describe is for summarising information about the distribution of values in every series."
+    "text": "Summarise a Data Frame\ndf.info is more about data types and memory usage. df.describe is for summarising information about the distribution of values in every series.\n\n\n\n\ndf.describe() # Information about each Series\n\n\n\n\n\n\n\n\nID\nYear\nLatitude\nLongitude\n\n\n\n\ncount\n1.000000e+02\n100.0\n100.000000\n100.000000\n\n\nmean\n1.172479e+07\n2019.0\n41.845500\n-87.674197\n\n\nstd\n1.056492e+05\n0.0\n0.083776\n0.055893\n\n\nmin\n1.155667e+07\n2019.0\n41.666091\n-87.836650\n\n\n25%\n1.163515e+07\n2019.0\n41.773812\n-87.716710\n\n\n50%\n1.171914e+07\n2019.0\n41.866925\n-87.669222\n\n\n75%\n1.180549e+07\n2019.0\n41.902087\n-87.631061\n\n\nmax\n1.193442e+07\n2019.0\n42.019399\n-87.551446\n\n\n\n\n\n\n\n\n\n\n\ndf.info()     # Information about each Series and the df\n\n&lt;class 'pandas.core.frame.DataFrame'&gt;\nRangeIndex: 100 entries, 0 to 99\nData columns (total 11 columns):\n #   Column                Non-Null Count  Dtype  \n---  ------                --------------  -----  \n 0   ID                    100 non-null    int64  \n 1   Case Number           100 non-null    object \n 2   Date                  100 non-null    object \n 3   Primary Type          100 non-null    object \n 4   Description           100 non-null    object \n 5   Location Description  97 non-null     object \n 6   Arrest                100 non-null    bool   \n 7   Domestic              100 non-null    bool   \n 8   Year                  100 non-null    int64  \n 9   Latitude              100 non-null    float64\n 10  Longitude             100 non-null    float64\ndtypes: bool(2), float64(2), int64(2), object(5)\nmemory usage: 7.4+ KB"
   },
   {
     "objectID": "lectures/6.4-Pandas.html#familiar",
     "href": "lectures/6.4-Pandas.html#familiar",
     "title": "Pandas",
     "section": "Familiar?",
-    "text": "Familiar?\nThis should be looking eerily familiar:\nprint(type(df['Latitude']))          # type for column\nprint(type(df['Latitude'].array))    # type for values\nprint(df['Latitude'].array[:5])     # first five values\nprint(f\"1: {df['Latitude'].mean()}\") # summarise a series/column\nprint(f\"2: {df.Latitude.mean()}\")    # if no spaces in name\nProduces:\n&lt;class 'pandas.core.series.Series'&gt;\n&lt;class 'numpy.ndarray'&gt;\n[41.75130706 41.90399688 41.88032861 41.92438396 41.75579713]\n1: 41.84550008439\n2: 41.84550008439\n\nNotice that we’ve got two ways of accessing a pandas Series:\n\nThe dictionary-like way: df['Latitude']; this works for all columns, always.\nThe method-like way: df.Latitude; this works for ‘reading’ columns without spaces in their names."
+    "text": "Familiar?\nThis should be looking eerily familiar:\n\nprint(type(df['Latitude']))          # type for column\nprint(type(df['Latitude'].array))    # type for values\nprint(df['Latitude'].array[:5])     # first five values\nprint(f\"1: {df['Latitude'].mean()}\") # summarise a series/column\nprint(f\"2: {df.Latitude.mean()}\")    # if no spaces in name\n\n&lt;class 'pandas.core.series.Series'&gt;\n&lt;class 'pandas.core.arrays.numpy_.NumpyExtensionArray'&gt;\n&lt;NumpyExtensionArray&gt;\n[      41.751307057, 41.903996883000005,       41.880328606,\n       41.924383963, 41.755797128000005]\nLength: 5, dtype: float64\n1: 41.84550008439\n2: 41.84550008439\n\n\n\nNotice that we’ve got two ways of accessing a pandas Series:\n\nThe dictionary-like way: df['Latitude']; this works for all columns, always.\nThe method-like way: df.Latitude; this works for ‘reading’ columns without spaces in their names."
   },
   {
     "objectID": "lectures/6.4-Pandas.html#jupyter-formatting",
     "href": "lectures/6.4-Pandas.html#jupyter-formatting",
     "title": "Pandas",
     "section": "Jupyter Formatting",
-    "text": "Jupyter Formatting\nPandas is also ‘Jupyter-aware’, meaning that output can displayed directly in Jupyter in ‘fancy’ ways:"
+    "text": "Jupyter Formatting\nPandas is also ‘Jupyter-aware’, meaning that output can displayed directly in Jupyter in ‘fancy’ ways:\ndf.head(4)\n\n\n\n\n\n\n\n\n\n\nID\nCase Number\nDate\nPrimary Type\nDescription\nLocation Description\nArrest\nDomestic\nYear\nLatitude\nLongitude\n\n\n\n\n0\n11667185\nJC237601\n04/20/2019 11:00:00 PM\nBURGLARY\nFORCIBLE ENTRY\nCOMMERCIAL / BUSINESS OFFICE\nFalse\nFalse\n2019\n41.751307\n-87.603468\n\n\n1\n11909178\nJC532226\n12/02/2019 10:35:00 AM\nDECEPTIVE PRACTICE\nFRAUD OR CONFIDENCE GAME\nGROCERY FOOD STORE\nFalse\nFalse\n2019\n41.903997\n-87.643230\n\n\n2\n11852571\nJC462365\n10/06/2019 04:50:00 PM\nBATTERY\nAGGRAVATED DOMESTIC BATTERY - OTHER DANGEROUS ...\nCLEANING STORE\nTrue\nTrue\n2019\n41.880329\n-87.758473\n\n\n3\n11804855\nJC405161\n08/23/2019 10:00:00 PM\nTHEFT\nOVER $500\nSTREET\nFalse\nFalse\n2019\n41.924384\n-87.641442"
   },
   {
     "objectID": "lectures/6.4-Pandas.html#familiar-1",
     "href": "lectures/6.4-Pandas.html#familiar-1",
     "title": "Pandas",
     "section": "Familiar?",
-    "text": "Familiar?\ndf.head(3)                       # First 3 rows of df\ndf[['ID','Date','Year']].tail(3) # Last 3 rows of selected columns\ndf.sample(frac=0.3)              # A random 30% sample\ndf.sample(3, random_state=42)    # A random sample with a seed\ndf.sample(3, random_state=42)    # Same sample!\n\nOn one level, this is what we’ve been building towards! We’ve got head and tail which we saw in the Command Line lecture. We’ve got random sampling with seeds which we saw in the Randomness lecture. We’ve even got LoLs, which we saw way back in the Lists of Lists lecture!"
+    "text": "Familiar?\ndf.head(2)                       # First 2 rows of df\n\n\n\n\n\n\n\n\n\n\nID\nCase Number\nDate\nPrimary Type\nDescription\nLocation Description\nArrest\nDomestic\nYear\nLatitude\nLongitude\n\n\n\n\n0\n11667185\nJC237601\n04/20/2019 11:00:00 PM\nBURGLARY\nFORCIBLE ENTRY\nCOMMERCIAL / BUSINESS OFFICE\nFalse\nFalse\n2019\n41.751307\n-87.603468\n\n\n1\n11909178\nJC532226\n12/02/2019 10:35:00 AM\nDECEPTIVE PRACTICE\nFRAUD OR CONFIDENCE GAME\nGROCERY FOOD STORE\nFalse\nFalse\n2019\n41.903997\n-87.643230\n\n\n\n\n\n\n\n\n\ndf[['ID','Date','Year']].tail(2) # Last 2 rows of selected columns\n\n\n\n\n\n\n\n\n\n\nID\nDate\nYear\n\n\n\n\n98\n11760201\n07/16/2019 04:16:00 PM\n2019\n\n\n99\n11648994\n04/08/2019 11:10:00 PM\n2019\n\n\n\n\n\n\n\n\ndf.sample(frac=0.3)              # A random 30% sample\ndf.sample(3, random_state=42)    # A random sample with a seed\ndf.sample(3, random_state=42)    # Same sample!\n\nOn one level, this is what we’ve been building towards! We’ve got head and tail which we saw in the Command Line lecture. We’ve got random sampling with seeds which we saw in the Randomness lecture. We’ve even got LoLs, which we saw way back in the Lists of Lists lecture!"
   },
   {
     "objectID": "lectures/6.4-Pandas.html#data-frames-vs-series",
@@ -2311,14 +2311,14 @@
     "href": "lectures/6.4-Pandas.html#putting-these-ideas-together",
     "title": "Pandas",
     "section": "Putting These Ideas Together",
-    "text": "Putting These Ideas Together\n# Returns a series but not a column\ndf.Latitude - 1 \n# Saves returned series as a new column\ndf['lat'] = df.Latitude - 1\n# Returns a new data frame w/o 'lat' \ndf.drop(columns=['lat']) \n# Modifies df directly\ndf.drop(columns=['lat'], inplace=True) \n# Try to modify a view of df (triggers warning)\ndf[df['Primary Type']=='BURGLARY'].Latitude = 41.7"
+    "text": "Putting These Ideas Together\n# Returns a series but not a column\ndf.Latitude - 1 \n\n# Saves returned series as a new column\ndf['lat'] = df.Latitude - 1\n\n# Returns a new data frame w/o 'lat' \ndf.drop(columns=['lat']) \n\n# Modifies df directly\ndf.drop(columns=['lat'], inplace=True) \n\n# Try to modify a view of df (triggers warning)\ndf[df['Primary Type']=='BURGLARY'].Latitude = 41.7"
   },
   {
     "objectID": "lectures/6.4-Pandas.html#chaining",
     "href": "lectures/6.4-Pandas.html#chaining",
     "title": "Pandas",
     "section": "Chaining",
-    "text": "Chaining\nOperations on a Data Frame return a DataFrame and operations on a Series return a Series, allowing us to ‘chain’ steps together:\ndf.sort_values(by=['Year','ID'], ascending=False).sample(frac=0.5).head(20).median()"
+    "text": "Chaining\nOperations on a Data Frame return a DataFrame and operations on a Series return a Series, allowing us to ‘chain’ steps together:\n\ndf.sort_values(\n    by=['Year','ID'], \n    ascending=False\n).sample(frac=0.5).head(50)[['Latitude','Longitude']].median()\n\nLatitude     41.849874\nLongitude   -87.655523\ndtype: float64"
   },
   {
     "objectID": "lectures/6.4-Pandas.html#selection",
@@ -2339,14 +2339,14 @@
     "href": "lectures/6.4-Pandas.html#changing-the-type",
     "title": "Pandas",
     "section": "Changing the Type",
-    "text": "Changing the Type\nprint(df['Primary Type'].unique())   # Find unique values\nprint(df['Primary Type'].dtype.name) # Confirm is 'object'\ndf['Primary Type'] = df['Primary Type'].astype('category')\nprint(df['Primary Type'].dtype.name) # Confirm is 'category'\nprint(df['Primary Type'].describe()) # Category column info\nOutputs:\n['BURGLARY' 'DECEPTIVE PRACTICE' 'BATTERY'...]\nobject   # &lt; before `as type`\ncategory # &lt; after `as type`\ncount       100\nunique       15\ntop       THEFT\nfreq         28\nName: Primary Type, dtype: object # category==special class of object"
+    "text": "Changing the Type\n\nprint(df['Primary Type'].unique())   # Find unique values\nprint(df['Primary Type'].dtype.name) # Confirm is 'object'\ndf['Primary Type'] = df['Primary Type'].astype('category')\nprint(df['Primary Type'].dtype.name) # Confirm is 'category'\nprint(df['Primary Type'].describe()) # Category column info\n\n['BURGLARY' 'DECEPTIVE PRACTICE' 'BATTERY' 'THEFT' 'NARCOTICS'\n 'CRIMINAL DAMAGE' 'ASSAULT' 'OTHER OFFENSE' 'STALKING'\n 'MOTOR VEHICLE THEFT' 'WEAPONS VIOLATION' 'SEX OFFENSE'\n 'CRIMINAL SEXUAL ASSAULT' 'ROBBERY' 'INTERFERENCE WITH PUBLIC OFFICER']\nobject\ncategory\ncount       100\nunique       15\ntop       THEFT\nfreq         28\nName: Primary Type, dtype: object"
   },
   {
     "objectID": "lectures/6.4-Pandas.html#datetime-data",
     "href": "lectures/6.4-Pandas.html#datetime-data",
     "title": "Pandas",
     "section": "Datetime Data",
-    "text": "Datetime Data\nWhat do we do here?\nprint(df.Date.dtype.name)\n# object\ndf.Date.to_list()[:3]\n# ['04/20/2019 11:00:00 PM', '12/02/2019 10:35:00 AM', '10/06/2019 04:50:00 PM']\nThis shows that Date is currently a string of dates+times.\nPandas handles date and times using a datetime type that also works as an index (more on these later):\ndf['dt'] = pd.to_datetime(df.Date.array, \n              format=\"%m/%d/%Y %H:%M:%S %p\")\nprint(df.dt.dtype.name)\n# datetime64[ns]\ndf.dt.to_list()[:3]\n# [Timestamp('2019-04-20 11:00:00'), Timestamp('2019-12-02 10:35:00'), Timestamp('2019-10-06 04:50:00')]\nThese follow the formatting conventions of strftime (string format time) for conversion."
+    "text": "Datetime Data\nThis shows that Date is currently a string of dates+times.\n\nprint(df.Date.dtype.name)\nprint(df.Date.to_list()[:3])\n\nobject\n['04/20/2019 11:00:00 PM', '12/02/2019 10:35:00 AM', '10/06/2019 04:50:00 PM']\n\n\nPandas handles date and times using a datetime type that also works as an index (more on these later):\n\ndf['dt'] = pd.to_datetime(df.Date.array, \n              format=\"%m/%d/%Y %H:%M:%S %p\")\nprint(df.dt.dtype.name)\nprint(df.dt.to_list()[:3])\n\ndatetime64[ns]\n[Timestamp('2019-04-20 11:00:00'), Timestamp('2019-12-02 10:35:00'), Timestamp('2019-10-06 04:50:00')]\n\n\n\n\nThese follow the formatting conventions of strftime (string format time) for conversion."
   },
   {
     "objectID": "lectures/6.4-Pandas.html#datetime-formats",
@@ -2430,28 +2430,28 @@
     "href": "lectures/6.2-Randomness.html#python-is-random",
     "title": "Randomness",
     "section": "Python is Random",
-    "text": "Python is Random\nimport random\nrandom.randint(0,10)\nrandom.randint(0,10)\nrandom.randint(0,10)\nrandom.randint(0,10)\nSee also: random.randrange, random.choice, random.sample, random.random, random.gauss, etc."
+    "text": "Python is Random\n\nimport random\nfor i in range(0,10):\n    print(random.randint(0,10))\n\n1\n9\n6\n0\n0\n1\n3\n3\n8\n9\n\n\nSee also: random.randrange, random.choice, random.sample, random.random, random.gauss, etc."
   },
   {
     "objectID": "lectures/6.2-Randomness.html#and-repeat",
     "href": "lectures/6.2-Randomness.html#and-repeat",
     "title": "Randomness",
     "section": "And Repeat…",
-    "text": "And Repeat…\nimport random\nsize = 10\nresults = [0] * size\n\ntests = 100000\nwhile tests &gt; 0:\n    results[random.randint(0,len(results)-1)] += 1\n    tests -= 1\n\nfor i in range(0,len(results)):\n    print(f\"{i} -&gt; {results[i]}\")\n\nWhat will this return?\nWill it hold for more than 10 numbers?"
+    "text": "And Repeat…\n\nimport random\nsize = 10\nresults = [0] * size\n\ntests = 100000\nwhile tests &gt; 0:\n    results[random.randint(0,len(results)-1)] += 1\n    tests -= 1\n\nfor i in range(0,len(results)):\n    print(f\"{i} -&gt; {results[i]}\")\n\n0 -&gt; 9995\n1 -&gt; 10100\n2 -&gt; 10099\n3 -&gt; 9865\n4 -&gt; 9908\n5 -&gt; 9874\n6 -&gt; 10121\n7 -&gt; 10110\n8 -&gt; 9859\n9 -&gt; 10069\n\n\n\nWhat will this return?\nWill it hold for more than 10 numbers?"
   },
   {
     "objectID": "lectures/6.2-Randomness.html#aaaaaaaaaaand-repeat",
     "href": "lectures/6.2-Randomness.html#aaaaaaaaaaand-repeat",
     "title": "Randomness",
     "section": "Aaaaaaaaaaand Repeat",
-    "text": "Aaaaaaaaaaand Repeat\nimport random \nfrom matplotlib import pyplot as plt\nimport numpy as np\n\nsize = 1000\ndata = [0] * size\n\ntests = 10000000\nwhile tests &gt; 0:\n    data[random.randint(0,len(data)-1)] += 1\n    tests -= 1\n\nfig = plt.figure()\nplt.bar(np.arange(0,len(data)), data)\nfig.savefig('Random.png', dpi=150, transparent=True)"
+    "text": "Aaaaaaaaaaand Repeat\n\nimport random \nfrom matplotlib import pyplot as plt\nimport numpy as np\n\nsize = 1000\ndata = [0] * size\n\ntests = 10000000\nwhile tests &gt; 0:\n    data[random.randint(0,len(data)-1)] += 1\n    tests -= 1\n\nAnswer on next slide…"
   },
   {
     "objectID": "lectures/6.2-Randomness.html#aaaaaaaaaaand-repeat-1",
     "href": "lectures/6.2-Randomness.html#aaaaaaaaaaand-repeat-1",
     "title": "Randomness",
     "section": "Aaaaaaaaaaand Repeat",
-    "text": "Aaaaaaaaaaand Repeat"
+    "text": "Aaaaaaaaaaand Repeat\n\nfig = plt.figure()\nplt.bar(np.arange(0,len(data)), data)"
   },
   {
     "objectID": "lectures/6.2-Randomness.html#just-add-salt",
@@ -2465,28 +2465,28 @@
     "href": "lectures/6.2-Randomness.html#hashing",
     "title": "Randomness",
     "section": "Hashing",
-    "text": "Hashing\nChecking for changes (usally in a security context).\nimport hashlib # Can take a 'salt' (similar to a 'seed')\n\nr1 = hashlib.md5('CASA Intro to Programming'.encode())\nprint(f\"The hashed equivalent of r1 is: {r1.hexdigest()}\")\n\nr2 = hashlib.md5('CASA Intro to Programming '.encode())\nprint(f\"The hashed equivalent of r2 is: {r2.hexdigest()}\")\n\nr3 = hashlib.md5('CASA Intro to Programming'.encode())\nprint(f\"The hashed equivalent of r3 is: {r3.hexdigest()}\")\nOutputs:\n\"The hashed equivalent of r1 is: acd601db5552408851070043947683ef\"\n\"The hashed equivalent of r2 is: 4458e89e9eb806f1ac60acfdf45d85b6\"\n\"The hashed equivalent of r3 is: acd601db5552408851070043947683ef\"\n\nThis is like generating a ‘fingerprint’ of an application or file. In fact, it’s what is going on behind the scenes when you download something to install on macOS or Windows and you’re told that the installer is being ‘verified’ before it will run: the computer is generating a hash of the application’s codebase, and sending that to the Apple Store or Windows Store or direct to the developer in order to check that the file hasn’t been tampered with."
+    "text": "Hashing\nSpot the difference:\n\nimport hashlib # Can take a 'salt' (similar to a 'seed')\n\nr1 = hashlib.md5('CASA Intro to Programming'.encode())\nprint(f\"The hashed equivalent of r1 is: {r1.hexdigest()}\")\n\nr2 = hashlib.md5('CASA Intro to Programming '.encode())\nprint(f\"The hashed equivalent of r2 is: {r2.hexdigest()}\")\n\nr3 = hashlib.md5('CASA Intro to Programming'.encode())\nprint(f\"The hashed equivalent of r3 is: {r3.hexdigest()}\")\n\nThe hashed equivalent of r1 is: acd601db5552408851070043947683ef\nThe hashed equivalent of r2 is: 4458e89e9eb806f1ac60acfdf45d85b6\nThe hashed equivalent of r3 is: acd601db5552408851070043947683ef\n\n\n\nThis is like generating a ‘fingerprint’ of an application or file. In fact, it’s what is going on behind the scenes when you download something to install on macOS or Windows and you’re told that the installer is being ‘verified’ before it will run: the computer is generating a hash of the application’s codebase, and sending that to the Apple Store or Windows Store or direct to the developer in order to check that the file hasn’t been tampered with."
   },
   {
     "objectID": "lectures/6.2-Randomness.html#and-note",
     "href": "lectures/6.2-Randomness.html#and-note",
     "title": "Randomness",
     "section": "And Note…",
-    "text": "And Note…\nimport requests\nnight = requests.get(\"http://www.gutenberg.org/ebooks/1514.txt.utf-8\")\nprint(f\"The text is {night.text[30:70]}\")\nprint(f\"The text is {len(night.text):,} characters long\")\nhash = hashlib.md5(night.text.encode())\nprint(f\"This can be hashed into: {hash.hexdigest()}\")\nOutputs:\n\"The text is A Midsummer Night's Dream by Shakespeare\"\n\"The text is 112,127 characters long\"\n\"This can be hashed into: cce0d35b8b2c4dafcbde3deb983fec0a\"\n\nCan be applied to anything: even one byte’s difference (e.g. in a application) can lead to a different hash output.\nBut notice that hashes are always the same length. This property is quite useful for databases and verifying the integrity of applications (MD5 Checksums)."
+    "text": "And Note…\n\nimport requests\nnight = requests.get(\"http://www.gutenberg.org/ebooks/1514.txt.utf-8\")\nprint(f\"The text is '{night.text[32:63].strip()}'\")\nprint(f\"The text is {len(night.text):,} characters long\")\nhash = hashlib.md5(night.text.encode())\nprint(f\"This can be hashed into: {hash.hexdigest()}\")\n\nThe text is 'A Midsummer Night's Dream'\nThe text is 119,968 characters long\nThis can be hashed into: 2bd4cfe946d9a97d9ed07631450196af\n\n\n\nCan be applied to anything: even one byte’s difference (e.g. in a application) can lead to a different hash output.\nBut notice that hashes are always the same length. This property is quite useful for databases and verifying the integrity of applications (MD5 Checksums)."
   },
   {
     "objectID": "lectures/6.2-Randomness.html#jupyterlab-password",
     "href": "lectures/6.2-Randomness.html#jupyterlab-password",
     "title": "Randomness",
     "section": "JupyterLab Password",
-    "text": "JupyterLab Password\nTo set a password in JupyterLab you need something like this:\n'sha1:5b1c205a53e14e:0ce169b9834984347d62b20b9a82f6513355f72d'\nHow this was generated:\nimport uuid, hashlib\nsalt = uuid.uuid4().hex[:16] # Truncate salt\npassword = 'casa2021'        # Set password\n\n# Here we combine the password and salt to \n# 'add complexity' to the hash\nhashed_password = hashlib.sha1(password.encode() + \n                  salt.encode()).hexdigest()\nprint(':'.join(['sha1',salt,hashed_password]))\n\n\nThen you can replace the JUPYTER_PWD parameter in the start-up string for Podman/Docker if you want to set a password.\n\n\nDon’t set your passwords this way."
+    "text": "JupyterLab Password\nTo set a password in JupyterLab you need something like this:\nsha1:d36ae21ea7f84801:2f60d6dba76a2b51ba884eb591cdb36e9f8f4dd2\nHow this was generated:\n\nimport uuid, hashlib\nsalt = uuid.uuid4().hex[:16] # Truncate salt\npassword = 'casa2021'        # Set password\n\n# Here we combine the password and salt to \n# 'add complexity' to the hash\nhashed_password = hashlib.sha1(password.encode() + \n                  salt.encode()).hexdigest()\nprint(':'.join(['sha1',salt,hashed_password]))\n\nsha1:4b75f2c47bdb41b1:2aa2a7ad58cfc4204fae2d8c029a629df18f1513\n\n\n\n\nThen you can replace the JUPYTER_PWD parameter in the start-up string for Podman/Docker if you want to set a password.\n\n\nNote: don’t set your passwords this way."
   },
   {
     "objectID": "lectures/6.2-Randomness.html#encryption-security",
     "href": "lectures/6.2-Randomness.html#encryption-security",
     "title": "Randomness",
     "section": "Encryption & Security",
-    "text": "Encryption & Security\nSimple hashing algorithms are not normally secure enough for full encryption. Genuine security training takes a whole degree + years of experience.\nAreas to look at if you get involved in applications:\n\nPublic and Private Key Encryption (esp. OpenSSL)\nPrivileges used by Applications (esp. Podman vs Docker)\nRevocable Tokens (e.g. for APIs)\nInjection Attacks (esp. for SQL using NULL-byte and similar)"
+    "text": "Encryption & Security\nSimple hashing algorithms are not normally secure enough for operational use. Genuine security training takes a whole degree + years of experience.\nAreas to look at for more secure computing:\n\nPublic and Private Key Encryption (esp. OpenSSL)\nPrivileges used by Applications (esp. Podman vs Docker)\nRevocable Tokens (e.g. for APIs)\nInjection Attacks (esp. for SQL using NULL-byte and similar)"
   },
   {
     "objectID": "lectures/6.2-Randomness.html#other-types-of-seeds",
@@ -2500,7 +2500,7 @@
     "href": "lectures/6.2-Randomness.html#seeds-and-state",
     "title": "Randomness",
     "section": "Seeds and State",
-    "text": "Seeds and State\nimport random\nrandom.seed(42)\nst = random.getstate()\nfor r in range(0,3):\n    random.setstate(st)\n    print(f\"Repetition {r}:\")\n    ints = []\n    for i in range(0,10):\n        ints.append(random.randint(0,10))\n    print(f\"\\t{ints}\")"
+    "text": "Seeds and State\n\nimport random\nrandom.seed(42)\nst = random.getstate()\nfor r in range(0,3):\n    random.setstate(st)\n    print(f\"Repetition {r}:\")\n    ints = []\n    for i in range(0,10):\n        ints.append(random.randint(0,10))\n    print(f\"\\t{ints}\")\n\nRepetition 0:\n    [10, 1, 0, 4, 3, 3, 2, 1, 10, 8]\nRepetition 1:\n    [10, 1, 0, 4, 3, 3, 2, 1, 10, 8]\nRepetition 2:\n    [10, 1, 0, 4, 3, 3, 2, 1, 10, 8]"
   },
   {
     "objectID": "lectures/5.4-Errors.html#helpfully",
@@ -3109,7 +3109,7 @@
     "href": "lectures/2.7-On_Writing.html#additional-resources",
     "title": "On Writing & Coding",
     "section": "Additional Resources",
-    "text": "Additional Resources\n\n\n\nThe Myth of the ‘Genius Programmer’ (by Google Devs)\nProgram-Aided Language Models\nChain of Thought Prompting\nChatGPT is a blurry JPEG of the Internet 1\nWhy Meta’s latest large language model survived only three days online 2\nModern-Day Oracles or Bullshit Machines?\n\n\n\n‘How can I know what I think till I see what I say?’: How AI is changing education and writing\nWhat does it mean if students think that AI is more intelligent than they are?\nA Student’s Guide to Not Writing with ChatGPT\nA nice tutorial on distinguishing between plagiarism and paraphrasing.\nGreene, A. E. (2013). Writing science in plain English. University of Chicago Press.3\nSword, H. (2017). Air & light & time & space: How successful academics write. Harvard University Press.4\nLLMs can’t stop making up software dependencies and sabotaging everything\n\n\nProbably the best ‘lay person’s’ explanation of how LLMs work/fall apart you’ll ever read.And this one was trained on scientific articles!Not seemingly available for free, but I found a nice little summary (with typos) here.Available for free via JStor."
+    "text": "Additional Resources\n\n\n\nThe Myth of the ‘Genius Programmer’ (by Google Devs)\nProgram-Aided Language Models\nChain of Thought Prompting\nChatGPT is a blurry JPEG of the Internet 1\nWhy Meta’s latest large language model survived only three days online 2\nModern-Day Oracles or Bullshit Machines?\nWhy We’re Not Using AI in This Course, Despite Its Obvious Benefits\n\n\n\n‘How can I know what I think till I see what I say?’: How AI is changing education and writing\nWhat does it mean if students think that AI is more intelligent than they are?\nA Student’s Guide to Not Writing with ChatGPT\nA nice tutorial on distinguishing between plagiarism and paraphrasing.\nGreene, A. E. (2013). Writing science in plain English. University of Chicago Press.3\nSword, H. (2017). Air & light & time & space: How successful academics write. Harvard University Press.4\nLLMs can’t stop making up software dependencies and sabotaging everything\n\n\nProbably the best ‘lay person’s’ explanation of how LLMs work/fall apart you’ll ever read.And this one was trained on scientific articles!Not seemingly available for free, but I found a nice little summary (with typos) here.Available for free via JStor."
   },
   {
     "objectID": "lectures/2.5-The_Command_Line.html#as-in",
@@ -7289,7 +7289,7 @@
     "href": "practicals/Practical-01-Getting_Started.html#running-podman-1",
     "title": "Practical 1: Getting Started",
     "section": "Running Podman",
-    "text": "Running Podman\nBy default, the best way to start the sds2025 virtual machine (also called a ‘container’) is from the Terminal or Power Shell.\n\nOn WindowsOn macOS\n\n\nUsing the same Power Shell copy and paste the following all on one line:\npodman run --rm -d --name sds2025 -p 8888:8888 -v \"$(pwd):/home/jovyan/work\" jreades/sds:2025-amd start.sh jupyter lab --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''\n\n\n\n\n\n\nWarningWindows Commands\n\n\n\n$(pwd) is actually a command, you are asking the Power Shell to use the current working directory (pwd == print working directory) as the ‘mount point’ for the work directory. The Command Prompt doesn’t support pwd, but the Power Shell should. You can check this by simply typing pwd and hitting enter (⏎) to see if you get an error.\n\n\n\n\nUsing the same Terminal copy and past the following (change the image to jreades/sds:2025-amd if using an older Intel Mac):\npodman run --rm -d --name sds2025 -p 8888:8888 \\\n   -v \"$(pwd):/home/jovyan/work\" \\\n  jreades/sds:2025-arm start.sh jupyter lab \\\n  --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''\n\n\n\n\n\n\n\n\n\nWarningNo work directory or Permission Denied?\n\n\n\nOn some macOS machines we are seeing (or, rather, not seeing) problems with the work directory as well as ‘permission denied’ errors whenever you try to make changes to this directory. In this case the answer appears to be that you need to change part of the run command:\n\nFrom: -v \"$(pwd):/home/jovyan/work\"\nTo: -v \"$(pwd):/home/jovyan/work:rw,z,U\"\n\nThis can still have a few issues with files that you add to the work directory after starting up podman but we’ll run you through this issue (and how to deal with it) in class."
+    "text": "Running Podman\nBy default, the best way to start the sds2025 virtual machine (also called a ‘container’) is from the Terminal or Power Shell.\n\nOn WindowsOn macOS\n\n\nUsing the same Power Shell copy and paste the following all on one line:\npodman run --rm -d --name sds2025 -p 8888:8888 -v \"$(pwd):/home/jovyan/work\" jreades/sds:2025-amd start.sh jupyter lab --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''\n\n\n\n\n\n\nWarningWindows Commands\n\n\n\n$(pwd) is actually a command, you are asking the Power Shell to use the current working directory (pwd == print working directory) as the ‘mount point’ for the work directory. The Command Prompt doesn’t support pwd, but the Power Shell should. You can check this by simply typing pwd and hitting enter (⏎) to see if you get an error.\n\n\n\n\nUsing the same Terminal copy and past the following (change the image to jreades/sds:2025-amd if using an older Intel Mac):\npodman run --rm -d --name sds2025 -p 8888:8888 \\\n   -v \"$(pwd):/home/jovyan/work\" \\\n  jreades/sds:2025-arm start.sh jupyter lab \\\n  --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''\n\n\n\n\n\n\nWarningNo work directory or Permission Denied?\n\n\n\nOn some macOS machines we are seeing (or, rather, not seeing) problems with the work directory as well as ‘permission denied’ errors whenever you try to make changes to this directory. In this case the answer appears to be that you need to change part of the run command:\n\nFrom: -v \"$(pwd):/home/jovyan/work\"\nTo: -v \"$(pwd):/home/jovyan/work:rw,U\"1\n\nThis can still have a few issues with files that you add to the work directory after starting up podman but we’ll run you through this issue (and how to deal with it) in class."
   },
   {
     "objectID": "practicals/Practical-01-Getting_Started.html#how-do-i-know-it-worked",
@@ -8332,5 +8332,19 @@
       "Part 2: Process",
       "9. Selecting Data"
     ]
+  },
+  {
+    "objectID": "practicals/Practical-01-Getting_Started.html#footnotes",
+    "href": "practicals/Practical-01-Getting_Started.html#footnotes",
+    "title": "Practical 1: Getting Started",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nThis is still something we’re working to understand, you might need to add ,z as an option as well or it might be that we need to play around with userns settings, and it’s possible the underlying issue is that podman can’t properly read from/write to directories outside of $HOME (or that we need to set this up at init time). We’ll get back to you with a permannet solution when we have it!↩︎"
+  },
+  {
+    "objectID": "lectures/6.2-Randomness.html#back-to-randomness",
+    "href": "lectures/6.2-Randomness.html#back-to-randomness",
+    "title": "Randomness",
+    "section": "Back to Randomness",
+    "text": "Back to Randomness\nTwo main libraries where seeds are set:\n\nimport random\nrandom.seed(42)\n\nimport numpy as np\nnp.random.seed(42)\n\n\nTurning now from the security aspects, let’s look at other types seeds.\nWhy do you often see 42 used as a seed?"
   }
 ]
