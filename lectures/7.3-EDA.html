@@ -332,7 +332,8 @@
 <section id="getting-started" class="slide level2 smaller">
 <h2>Getting Started</h2>
 <p>You can follow along by loading the Inside Airbnb sample:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<div id="f1e576c0" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
 <span id="cb1-3"><a></a>url<span class="op">=</span><span class="st">'https://bit.ly/3I0XDrq'</span></span>
 <span id="cb1-4"><a></a>df <span class="op">=</span> pd.read_csv(url)</span>
@@ -345,7 +346,9 @@
 <span id="cb1-11"><a></a>                        crs<span class="op">=</span><span class="st">'epsg:4326'</span></span>
 <span id="cb1-12"><a></a>            )</span>
 <span id="cb1-13"><a></a>      )</span>
-<span id="cb1-14"><a></a>gdf.to_file(<span class="st">'Airbnb_Sample.gpkg'</span>, driver<span class="op">=</span><span class="st">'GPKG'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-14"><a></a><span class="co"># Should you want to save your work</span></span>
+<span id="cb1-15"><a></a><span class="co">#gdf.to_file('Airbnb_Sample.gpkg', driver='GPKG')</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <aside class="notes">
 <p>Note that this (re)loads the sampled Airbnb data from GitHub every time you run it. For a large data set on someone else’e server you might want to save and (re)load it locally. A simple helper function would then just check if the file already existed locally <em>before</em> trying to download the file again: that would allow you to work while offline and speed up your code substantially too!</p>
 <style type="text/css">
@@ -360,43 +363,29 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="what-can-we-do-series" class="slide level2 smaller">
-<h2>What Can We Do? (Series)</h2>
-<p>This is by no means all that we can do…</p>
-<table class="caption-top">
-<caption>Series-level Methods.</caption>
-<colgroup>
-<col style="width: 68%">
-<col style="width: 31%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Command</th>
-<th>Returns</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="bu">print</span>(<span class="ss">f"Host count is </span><span class="sc">{</span>gdf<span class="sc">.</span>host_name<span class="sc">.</span>count()<span class="sc">}</span><span class="ss">"</span>)</span>
+<section id="what-can-we-do-series" class="slide level2">
+<h2>What Can We Do?<sup>1</sup> (Series)</h2>
+<div id="ccdeec40" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="bu">print</span>(<span class="ss">f"Host count is </span><span class="sc">{</span>gdf<span class="sc">.</span>host_name<span class="sc">.</span>count()<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb2-2"><a></a><span class="bu">print</span>(<span class="ss">f"Mean is </span><span class="sc">{</span>gdf<span class="sc">.</span>price<span class="sc">.</span>mean()<span class="sc">:.0f}</span><span class="ss">"</span>)</span>
 <span id="cb2-3"><a></a><span class="bu">print</span>(<span class="ss">f"Max price is </span><span class="sc">{</span>gdf<span class="sc">.</span>price<span class="sc">.</span><span class="bu">max</span>()<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb2-4"><a></a><span class="bu">print</span>(<span class="ss">f"Min price is </span><span class="sc">{</span>gdf<span class="sc">.</span>price<span class="sc">.</span><span class="bu">min</span>()<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb2-5"><a></a><span class="bu">print</span>(<span class="ss">f"Median price is </span><span class="sc">{</span>gdf<span class="sc">.</span>price<span class="sc">.</span>median()<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb2-6"><a></a><span class="bu">print</span>(<span class="ss">f"Standard dev is </span><span class="sc">{</span>gdf<span class="sc">.</span>price<span class="sc">.</span>std()<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
-<span id="cb2-7"><a></a><span class="bu">print</span>(<span class="ss">f"25th quantile is </span><span class="sc">{</span>gdf<span class="sc">.</span>price<span class="sc">.</span>quantile(q<span class="op">=</span><span class="fl">0.25</span>)<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></td>
-<td><pre><code>Count of non-nulls
-Mean
-Highest value
-Lowest value
-Median
-Standard deviation
-25th quantile</code></pre></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="what-can-we-do-data-frame" class="slide level2 smaller">
-<h2>What Can We Do? (Data Frame)</h2>
+<span id="cb2-7"><a></a><span class="bu">print</span>(<span class="ss">f"25th quantile is </span><span class="sc">{</span>gdf<span class="sc">.</span>price<span class="sc">.</span>quantile(q<span class="op">=</span><span class="fl">0.25</span>)<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Host count is 100
+Mean is 118
+Max price is 798.0
+Min price is 15.0
+Median price is 80.5
+Standard dev is 123.87
+25th quantile is 40.75</code></pre>
+</div>
+</div>
+<aside><ol class="aside-footnotes"><li id="fn1"><p>This is by no means all that we can do…</p></li></ol></aside></section>
+<section id="what-can-we-do-data-frame-edition" class="slide level2">
+<h2>What Can We Do?<sup>1</sup> (Data Frame Edition)</h2>
 <table class="caption-top" style="width:92%;">
 <colgroup>
 <col style="width: 31%">
@@ -416,10 +405,10 @@ Standard deviation
 <span id="cb4-4"><a></a><span class="co"># ...</span></span>
 <span id="cb4-5"><a></a><span class="bu">print</span>(df.corr())</span>
 <span id="cb4-6"><a></a><span class="bu">print</span>(df.describe())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></td>
-<td><pre><code>Mean of each column
+<td><pre><code>Mean of each *numerical* column
 Number of non-null values in each column
 Highest value in each column
-$\vdots$
+...
 Correlation between columns
 Summarise</code></pre></td>
 </tr>
@@ -438,38 +427,59 @@ Summarise</code></pre></td>
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
-</section>
+<aside><ol class="aside-footnotes"><li id="fn2"><p><em>Hint</em>: there’s a lot more we could do!</p></li></ol></aside></section>
 <section id="measures" class="slide level2">
 <h2>Measures</h2>
 <p>So pandas provides functions for commonly-used measures:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>df<span class="sc">.</span>price<span class="sc">.</span>mean()<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
-<span id="cb6-2"><a></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>df<span class="sc">.</span>price<span class="sc">.</span>median()<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
-<span id="cb6-3"><a></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>df<span class="sc">.</span>price<span class="sc">.</span>quantile(<span class="fl">0.25</span>)<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Output:</p>
-<pre><code>118.4542
-80.50
-40.75</code></pre>
+<div id="fecbca91" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="bu">print</span>(<span class="ss">f"Mean: </span><span class="sc">{</span>df<span class="sc">.</span>price<span class="sc">.</span>mean()<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb6-2"><a></a><span class="bu">print</span>(<span class="ss">f"Median: </span><span class="sc">{</span>df<span class="sc">.</span>price<span class="sc">.</span>median()<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb6-3"><a></a><span class="bu">print</span>(<span class="ss">f"25th Percentile: </span><span class="sc">{</span>df<span class="sc">.</span>price<span class="sc">.</span>quantile(<span class="fl">0.25</span>)<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Mean: 118.45
+Median: 80.50
+25th Percentile: 40.75</code></pre>
+</div>
+</div>
 </section>
-<section id="more-complex-measures" class="slide level2 smaller">
+<section id="more-complex-measures" class="slide level2">
 <h2>More Complex Measures</h2>
-<p>But Pandas <em>also</em> makes it easy to derive new variables… Here’s the <em>z</em>-score:</p>
-<p><span class="math display">\[ z = \frac{x - \bar{x}}{s}\]</span></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a>df[<span class="st">'zscore'</span>] <span class="op">=</span> (df.price <span class="op">-</span> df.price.mean())<span class="op">/</span>df.price.std()</span>
-<span id="cb8-2"><a></a>df.plot.box(column<span class="op">=</span><span class="st">'zscore'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Pandas <em>also</em> makes it easy to derive new variables… Here’s the <em>z</em>-score:</p>
+<div id="e4b4dba7" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a>df[<span class="st">'zscore'</span>] <span class="op">=</span> (df.price <span class="op">-</span> df.price.mean())<span class="op">/</span>df.price.std()</span>
+<span id="cb8-2"><a></a>df.plot.box(column<span class="op">=</span><span class="st">'zscore'</span>, figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><a href="7.3-EDA_files/figure-revealjs/cell-5-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img data-src="7.3-EDA_files/figure-revealjs/cell-5-output-1.png" width="643" height="374"></a></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="and-even-more-complex" class="slide level2 smaller">
+<section id="and-even-more-complex" class="slide level2">
 <h2>And Even More Complex</h2>
 <p>And here’s the Interquartile Range Standardised score:</p>
-<p><span class="math display">\[ x_{iqrs} = \frac{x - \widetilde{x}}{Q_{75} - Q_{25}} \]</span></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>df[<span class="st">'iqr_std'</span>] <span class="op">=</span> (df.price <span class="op">-</span> df.price.median())<span class="op">/</span> <span class="op">\</span></span>
+<div id="88e6298a" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>df[<span class="st">'iqr_std'</span>] <span class="op">=</span> (df.price <span class="op">-</span> df.price.median())<span class="op">/</span> <span class="op">\</span></span>
 <span id="cb9-2"><a></a>      (df.price.quantile(q<span class="op">=</span><span class="fl">0.75</span>)<span class="op">-</span>df.price.quantile(q<span class="op">=</span><span class="fl">0.25</span>))</span>
-<span id="cb9-3"><a></a>df.plot.box(column<span class="op">=</span><span class="st">'iqr_std'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><a href="./img/Price_IQR_Standardised.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img data-src="./img/Price_IQR_Standardised.png"></a></p>
+<span id="cb9-3"><a></a>df.plot.box(column<span class="op">=</span><span class="st">'iqr_std'</span>, figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><a href="7.3-EDA_files/figure-revealjs/cell-6-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img data-src="7.3-EDA_files/figure-revealjs/cell-6-output-1.png" width="632" height="374"></a></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="the-plot-thickens" class="slide level2">
 <h2>The Plot Thickens</h2>
 <p>We’ll get to more complex plotting over the course of the term, but here’s a good start for <em>exploring</em> the data! All plotting depends on <code>matplotlib</code> which is the ogre in the attic to R’s <code>ggplot</code>.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="43647fd8" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb10-2"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p>Get used to this import as it will allow you to save and manipulate the figures created in Python. It is <em>not</em> the most intuitive approach (unless you’ve used MATLAB before) but it <em>does</em> work.</p>
 </section></section>
 <section>
@@ -481,41 +491,96 @@ Summarise</code></pre></td>
 </section>
 <section id="boxplot" class="slide level2">
 <h2>Boxplot</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a>df.price.plot.box()</span>
+<div id="c452d344" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a>df.price.plot.box(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))</span>
 <span id="cb11-2"><a></a>plt.savefig(<span class="st">'pboxplot.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><a href="img/pboxplot.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img data-src="img/pboxplot.png"></a></p>
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><a href="7.3-EDA_files/figure-revealjs/cell-8-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img data-src="7.3-EDA_files/figure-revealjs/cell-8-output-1.png" width="649" height="374"></a></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="frequency" class="slide level2">
 <h2>Frequency</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>df.room_type.value_counts().plot.bar()</span>
+<div id="aa562496" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>df.room_type.value_counts().plot.bar(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))</span>
 <span id="cb12-2"><a></a>plt.savefig(<span class="st">'phistplot.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><a href="img/phistplot.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img data-src="img/phistplot.png"></a></p>
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><a href="7.3-EDA_files/figure-revealjs/cell-9-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img data-src="7.3-EDA_files/figure-revealjs/cell-9-output-1.png" width="641" height="487"></a></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="a-correlation-heatmap" class="slide level2">
 <h2>A Correlation Heatmap</h2>
 <p>We’ll get to these in more detail in a couple of weeks, but here’s some output…</p>
-<p><a href="img/correlation.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img data-src="img/correlation.png"></a></p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a>cols <span class="op">=</span> df.select_dtypes(</span>
+<span id="cb13-2"><a></a>    include<span class="op">=</span>np.number</span>
+<span id="cb13-3"><a></a>).columns.to_list()[:<span class="dv">4</span>]</span>
+<span id="cb13-4"><a></a>plt.matshow(df[cols].corr())</span>
+<span id="cb13-5"><a></a>xaxis <span class="op">=</span> np.arange(<span class="bu">len</span>(cols))</span>
+<span id="cb13-6"><a></a>ax <span class="op">=</span> plt.gca()</span>
+<span id="cb13-7"><a></a>ax.set_xticks(xaxis)</span>
+<span id="cb13-8"><a></a>ax.set_yticks(xaxis)</span>
+<span id="cb13-9"><a></a>ax.set_xticklabels(cols)</span>
+<span id="cb13-10"><a></a>ax.set_yticklabels(cols)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column" style="width:40%;">
+<p><a href="7.3-EDA_files/figure-revealjs/cell-10-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img data-src="7.3-EDA_files/figure-revealjs/cell-10-output-1.png" width="508" height="418"></a></p>
+</div></div>
 </section>
 <section id="a-map" class="slide level2">
 <h2>A ‘Map’</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a>df.plot.scatter(x<span class="op">=</span><span class="st">'longitude'</span>,y<span class="op">=</span><span class="st">'latitude'</span>)</span>
-<span id="cb13-2"><a></a>plt.savefig(<span class="st">'pscatterplot.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><a href="img/pscatterplot.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img data-src="img/pscatterplot.png"></a></p>
+<div id="cdb2b9b5" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a>df.plot.scatter(x<span class="op">=</span><span class="st">'longitude'</span>, y<span class="op">=</span><span class="st">'latitude'</span>, figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))</span>
+<span id="cb14-2"><a></a>plt.savefig(<span class="st">'pscatterplot.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><a href="7.3-EDA_files/figure-revealjs/cell-11-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img data-src="7.3-EDA_files/figure-revealjs/cell-11-output-1.png" width="680" height="393"></a></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="a-fancy-map" class="slide level2">
 <h2>A Fancy ‘Map’</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a>df.plot.scatter(x<span class="op">=</span><span class="st">'longitude'</span>,y<span class="op">=</span><span class="st">'latitude'</span>,</span>
-<span id="cb14-2"><a></a>                c<span class="op">=</span><span class="st">'price'</span>,colormap<span class="op">=</span><span class="st">'viridis'</span>,</span>
-<span id="cb14-3"><a></a>                figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">5</span>),title<span class="op">=</span><span class="st">'London'</span>,</span>
-<span id="cb14-4"><a></a>                grid<span class="op">=</span><span class="va">True</span>,s<span class="op">=</span><span class="dv">24</span>,marker<span class="op">=</span><span class="st">'x'</span>)</span>
-<span id="cb14-5"><a></a>plt.savefig(<span class="st">'pscatterplot.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><a href="img/pscatterplot-fancy.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img data-src="img/pscatterplot-fancy.png"></a></p>
+<div id="22460b84" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a>df.plot.scatter(x<span class="op">=</span><span class="st">'longitude'</span>,y<span class="op">=</span><span class="st">'latitude'</span>,</span>
+<span id="cb15-2"><a></a>                c<span class="op">=</span><span class="st">'price'</span>,colormap<span class="op">=</span><span class="st">'viridis'</span>,</span>
+<span id="cb15-3"><a></a>                figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>),title<span class="op">=</span><span class="st">'London'</span>,</span>
+<span id="cb15-4"><a></a>                grid<span class="op">=</span><span class="va">True</span>,s<span class="op">=</span><span class="dv">24</span>,marker<span class="op">=</span><span class="st">'x'</span>)</span>
+<span id="cb15-5"><a></a>plt.savefig(<span class="st">'pscatterplot.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><a href="7.3-EDA_files/figure-revealjs/cell-12-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img data-src="7.3-EDA_files/figure-revealjs/cell-12-output-1.png" width="661" height="413"></a></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="an-actual-map" class="slide level2">
 <h2>An Actual ‘Map’</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a>gdf.plot(column<span class="op">=</span><span class="st">'price'</span>, cmap<span class="op">=</span><span class="st">'viridis'</span>, </span>
-<span id="cb15-2"><a></a>         scheme<span class="op">=</span><span class="st">'quantiles'</span>, markersize<span class="op">=</span><span class="dv">8</span>, legend<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><a href="img/scattermap.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img data-src="img/scattermap.png"></a></p>
+<div id="19cd23ab" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a></a>gdf.plot(column<span class="op">=</span><span class="st">'price'</span>, cmap<span class="op">=</span><span class="st">'viridis'</span>, </span>
+<span id="cb16-2"><a></a>         scheme<span class="op">=</span><span class="st">'quantiles'</span>, markersize<span class="op">=</span><span class="dv">8</span>, legend<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb16-3"><a></a>         figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><a href="7.3-EDA_files/figure-revealjs/cell-13-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img data-src="7.3-EDA_files/figure-revealjs/cell-13-output-1.png" width="563" height="374"></a></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="additional-resources" class="slide level2 smaller">
 <h2>Additional Resources</h2>
@@ -550,6 +615,8 @@ References
 
 
 </section>
+
+
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <p><img src="../img/logo/full.svg" class="slide-logo"></p>
