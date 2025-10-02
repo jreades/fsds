@@ -1863,49 +1863,49 @@
     "href": "lectures/7.5-ESDA.html#getting-spatial-with-boroughs",
     "title": "Exploratory (Spatial) Data Analysis",
     "section": "Getting Spatial (with Boroughs)",
-    "text": "Getting Spatial (with Boroughs)\nimport geopandas as gpd\nurl = 'https://bit.ly/3neINBV'\nboros = gpd.read_file(url, driver='GPKG')\nboros.plot(color='none', edgecolor='red');"
+    "text": "Getting Spatial (with Boroughs)\n\nimport geopandas as gpd\nurl = 'https://bit.ly/3neINBV'\nboros = gpd.read_file(url, driver='GPKG')\nboros.plot(color='none', edgecolor='red', figsize=(8,4.5));"
   },
   {
     "objectID": "lectures/7.5-ESDA.html#convex-hull",
     "href": "lectures/7.5-ESDA.html#convex-hull",
     "title": "Exploratory (Spatial) Data Analysis",
     "section": "Convex Hull",
-    "text": "Convex Hull\nboros['hulls'] = boros.geometry.convex_hull\nboros = boros.set_geometry('hulls')\nboros.plot(column='NAME', categorical=True, alpha=0.5);"
+    "text": "Convex Hull\n\nboros['hulls'] = boros.geometry.convex_hull\nboros.set_geometry('hulls').plot(column='NAME', categorical=True, alpha=0.5, figsize=(8,4.5));"
   },
   {
     "objectID": "lectures/7.5-ESDA.html#dissolve",
     "href": "lectures/7.5-ESDA.html#dissolve",
     "title": "Exploratory (Spatial) Data Analysis",
     "section": "Dissolve",
-    "text": "Dissolve\nboros['region'] = 'London'\nboros = boros.set_geometry('geometry') # Set back to original geom\nldn   = boros.dissolve(by='region')    # And dissolve to a single poly\n\nf,ax = plt.subplots(figsize=(10,8))    # New plot\nldn.plot(ax=ax)                        # Add London layer to axis"
+    "text": "Dissolve\n\nboros['region'] = 'London'\nldn   = boros.dissolve(by='region') \nax = ldn.plot(figsize=(8,4.5)) \nboros.plot(ax=ax, color='none', edgecolor='red')"
   },
   {
     "objectID": "lectures/7.5-ESDA.html#simplify",
     "href": "lectures/7.5-ESDA.html#simplify",
     "title": "Exploratory (Spatial) Data Analysis",
     "section": "Simplify",
-    "text": "Simplify\nldn.simplify(500).plot()"
+    "text": "Simplify\n\nldn.simplify(500).plot(figsize=(8,4.5))"
   },
   {
     "objectID": "lectures/7.5-ESDA.html#buffer",
     "href": "lectures/7.5-ESDA.html#buffer",
     "title": "Exploratory (Spatial) Data Analysis",
     "section": "Buffer",
-    "text": "Buffer\nldn.buffer(500).plot()"
+    "text": "Buffer\n\nldn.buffer(500).plot(figsize=(8,4.5))"
   },
   {
     "objectID": "lectures/7.5-ESDA.html#buffer-simplify",
     "href": "lectures/7.5-ESDA.html#buffer-simplify",
     "title": "Exploratory (Spatial) Data Analysis",
     "section": "Buffer & Simplify",
-    "text": "Buffer & Simplify\nldn.buffer(1000).simplify(1000).plot()"
+    "text": "Buffer & Simplify\n\nldn.buffer(1000).simplify(1000).plot(figsize=(8,4.5))"
   },
   {
     "objectID": "lectures/7.5-ESDA.html#difference",
     "href": "lectures/7.5-ESDA.html#difference",
     "title": "Exploratory (Spatial) Data Analysis",
     "section": "Difference",
-    "text": "Difference\nAnd some nice chaining…\nldn.buffer(3000).simplify(2500).difference(ldn.geometry).plot()"
+    "text": "Difference\nAnd some nice chaining…\n\nldn.buffer(3000).simplify(2500).difference(ldn.geometry).plot(figsize=(8,4.5))"
   },
   {
     "objectID": "lectures/7.5-ESDA.html#legendgrams",
@@ -8353,5 +8353,12 @@
     "title": "ExploratoryData Analysis",
     "section": "What Can We Do?1 (Data Frame Edition)",
     "text": "What Can We Do?1 (Data Frame Edition)\n\n\n\n\n\n\n\nCommand\nReturns\n\n\n\n\nprint(df.mean())\nprint(df.count())\nprint(df.max())\n# ...\nprint(df.corr())\nprint(df.describe())\nMean of each *numerical* column\nNumber of non-null values in each column\nHighest value in each column\n...\nCorrelation between columns\nSummarise\n\n\n\n\nNotice how we have the same functionality, but it operates at the level of the data set itself now. We gain a few new functions as well that relate to interactions between columns (a.k.a. data series).\n\nHint: there’s a lot more we could do!"
+  },
+  {
+    "objectID": "lectures/7.5-ESDA.html#implementing-lags",
+    "href": "lectures/7.5-ESDA.html#implementing-lags",
+    "title": "Exploratory (Spatial) Data Analysis",
+    "section": "Implementing Lags",
+    "text": "Implementing Lags\nw2 = weights.DistanceBand.from_dataframe(gdf, threshold=2000, alpha=-0.25)\ngdf['price_std'] = (gdf.price - gdf.price.mean()) / gdf.price.std()\ngdf['w_price_std'] = weights.lag_spatial(w2, gdf.price_std)\ngdf[['name','price_std','w_price_std']].sample(5, random_state=42)\n\n\n\n\nname\nprice_std\nw_price_std\n\n\n\n\n83\nSouthfields Home\n-0.27\n0.00\n\n\n53\nFlat in Islington, Central London\n-0.51\n-0.58\n\n\n70\n3bedroom Family Home minutes from Kensington Tube\n0.83\n0.46\n\n\n453\nBed, 20 min to Liverpool st, EAST LONDON\n-0.07\n-0.82\n\n\n44\nAvni Kensington Hotel\n2.52\n3.25"
   }
 ]

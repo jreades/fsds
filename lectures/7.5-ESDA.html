@@ -222,53 +222,80 @@
 </section>
 <section id="getting-spatial-with-boroughs" class="slide level2 smaller">
 <h2>Getting Spatial (with Boroughs)</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
+<div id="b8a20318" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
 <span id="cb1-2"><a></a>url <span class="op">=</span> <span class="st">'https://bit.ly/3neINBV'</span></span>
 <span id="cb1-3"><a></a>boros <span class="op">=</span> gpd.read_file(url, driver<span class="op">=</span><span class="st">'GPKG'</span>)</span>
-<span id="cb1-4"><a></a>boros.plot(color<span class="op">=</span><span class="st">'none'</span>, edgecolor<span class="op">=</span><span class="st">'red'</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><a href="img/Borough_Map.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img data-src="img/Borough_Map.png"></a></p>
+<span id="cb1-4"><a></a>boros.plot(color<span class="op">=</span><span class="st">'none'</span>, edgecolor<span class="op">=</span><span class="st">'red'</span>, figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><a href="7.5-ESDA_files/figure-revealjs/cell-2-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img data-src="7.5-ESDA_files/figure-revealjs/cell-2-output-1.png" width="510" height="374"></a></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="convex-hull" class="slide level2">
 <h2>Convex Hull</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>boros[<span class="st">'hulls'</span>] <span class="op">=</span> boros.geometry.convex_hull</span>
-<span id="cb2-2"><a></a>boros <span class="op">=</span> boros.set_geometry(<span class="st">'hulls'</span>)</span>
-<span id="cb2-3"><a></a>boros.plot(column<span class="op">=</span><span class="st">'NAME'</span>, categorical<span class="op">=</span><span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><a href="img/Boroughs_Hull.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img data-src="img/Boroughs_Hull.png"></a></p>
+<div id="6b358443" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>boros[<span class="st">'hulls'</span>] <span class="op">=</span> boros.geometry.convex_hull</span>
+<span id="cb2-2"><a></a>boros.set_geometry(<span class="st">'hulls'</span>).plot(column<span class="op">=</span><span class="st">'NAME'</span>, categorical<span class="op">=</span><span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><a href="7.5-ESDA_files/figure-revealjs/cell-3-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img data-src="7.5-ESDA_files/figure-revealjs/cell-3-output-1.png" width="510" height="374"></a></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="dissolve" class="slide level2 smaller">
+<section id="dissolve" class="slide level2">
 <h2>Dissolve</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>boros[<span class="st">'region'</span>] <span class="op">=</span> <span class="st">'London'</span></span>
-<span id="cb3-2"><a></a>boros <span class="op">=</span> boros.set_geometry(<span class="st">'geometry'</span>) <span class="co"># Set back to original geom</span></span>
-<span id="cb3-3"><a></a>ldn   <span class="op">=</span> boros.dissolve(by<span class="op">=</span><span class="st">'region'</span>)    <span class="co"># And dissolve to a single poly</span></span>
-<span id="cb3-4"><a></a></span>
-<span id="cb3-5"><a></a>f,ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">8</span>))    <span class="co"># New plot</span></span>
-<span id="cb3-6"><a></a>ldn.plot(ax<span class="op">=</span>ax)                        <span class="co"># Add London layer to axis</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><a href="img/London.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img data-src="img/London.png" height="400"></a></p>
-</section>
-<section id="simplify" class="slide level2">
-<h2>Simplify</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>ldn.simplify(<span class="dv">500</span>).plot()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><a href="img/London_Simplify.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img data-src="img/London_Simplify.png" height="500"></a></p>
-</section>
-<section id="buffer" class="slide level2">
-<h2>Buffer</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>ldn.<span class="bu">buffer</span>(<span class="dv">500</span>).plot()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><a href="img/London_Buffer.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img data-src="img/London_Buffer.png" height="500"></a></p>
+<div id="9b9c81ad" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>boros[<span class="st">'region'</span>] <span class="op">=</span> <span class="st">'London'</span></span>
+<span id="cb3-2"><a></a>ldn   <span class="op">=</span> boros.dissolve(by<span class="op">=</span><span class="st">'region'</span>) </span>
+<span id="cb3-3"><a></a>ax <span class="op">=</span> ldn.plot(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>)) </span>
+<span id="cb3-4"><a></a>boros.plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'none'</span>, edgecolor<span class="op">=</span><span class="st">'red'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><a href="7.5-ESDA_files/figure-revealjs/cell-4-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img data-src="7.5-ESDA_files/figure-revealjs/cell-4-output-1.png" width="510" height="374"></a></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="buffer-simplify" class="slide level2">
 <h2>Buffer &amp; Simplify</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a>ldn.<span class="bu">buffer</span>(<span class="dv">1000</span>).simplify(<span class="dv">1000</span>).plot()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><a href="img/London_Buffer_Simplify.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img data-src="img/London_Buffer_Simplify.png" height="500"></a></p>
+<div id="5867550d" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>ldn.<span class="bu">buffer</span>(<span class="dv">1000</span>).simplify(<span class="dv">1000</span>).plot(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><a href="7.5-ESDA_files/figure-revealjs/cell-5-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img data-src="7.5-ESDA_files/figure-revealjs/cell-5-output-1.png" width="511" height="374"></a></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="difference" class="slide level2">
 <h2>Difference</h2>
 <p>And some nice chaining…</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>ldn.<span class="bu">buffer</span>(<span class="dv">3000</span>).simplify(<span class="dv">2500</span>).difference(ldn.geometry).plot()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><a href="img/London_Buffer_Simplify_Diff.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img data-src="img/London_Buffer_Simplify_Diff.png" height="500"></a></p>
+<div id="5a6f4c48" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>ldn.<span class="bu">buffer</span>(<span class="dv">3000</span>).simplify(<span class="dv">2500</span>).difference(ldn.geometry).plot(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><a href="7.5-ESDA_files/figure-revealjs/cell-6-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img data-src="7.5-ESDA_files/figure-revealjs/cell-6-output-1.png" width="504" height="374"></a></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="legendgrams" class="slide level2">
 <h2>Legendgrams</h2>
-<p><a href="img/Legendgram.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img data-src="img/Legendgram.png" height="500"></a></p>
+<p><a href="img/Legendgram.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img data-src="img/Legendgram.png" height="500"></a></p>
 
 <aside><div>
 <p>Code begins on next slide.</p>
@@ -276,24 +303,24 @@
 
 <section id="implementing-legendgrams" class="slide level2 smaller">
 <h2>Implementing Legendgrams</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a><span class="im">import</span> pysal <span class="im">as</span> ps</span>
-<span id="cb9-2"><a></a><span class="co"># https://github.com/pysal/mapclassify</span></span>
-<span id="cb9-3"><a></a><span class="im">import</span> mapclassify <span class="im">as</span> mc</span>
-<span id="cb9-4"><a></a><span class="co">#&nbsp;https://jiffyclub.github.io/palettable/</span></span>
-<span id="cb9-5"><a></a><span class="im">import</span> palettable.matplotlib <span class="im">as</span> palmpl</span>
-<span id="cb9-6"><a></a><span class="im">from</span> legendgram <span class="im">import</span> legendgram</span>
-<span id="cb9-7"><a></a></span>
-<span id="cb9-8"><a></a>f,ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">8</span>))</span>
-<span id="cb9-9"><a></a>gdf.plot(column<span class="op">=</span><span class="st">'price'</span>, scheme<span class="op">=</span><span class="st">'Quantiles'</span>, cmap<span class="op">=</span><span class="st">'magma'</span>, k<span class="op">=</span><span class="dv">5</span>, ax<span class="op">=</span>ax)</span>
-<span id="cb9-10"><a></a>q <span class="op">=</span> mc.Quantiles(gdf.price.array, k<span class="op">=</span><span class="dv">5</span>)</span>
-<span id="cb9-11"><a></a></span>
-<span id="cb9-12"><a></a><span class="co"># https://github.com/pysal/legendgram/blob/master/legendgram/legendgram.py</span></span>
-<span id="cb9-13"><a></a>legendgram(f, ax, </span>
-<span id="cb9-14"><a></a>               gdf.price, q.bins, pal<span class="op">=</span>palmpl.Magma_5,</span>
-<span id="cb9-15"><a></a>               legend_size<span class="op">=</span>(<span class="fl">.4</span>,<span class="fl">.2</span>), <span class="co"># legend size in fractions of the axis</span></span>
-<span id="cb9-16"><a></a>               loc <span class="op">=</span> <span class="st">'upper left'</span>, <span class="co"># mpl-style legend loc</span></span>
-<span id="cb9-17"><a></a>               clip <span class="op">=</span> (<span class="dv">0</span>,<span class="dv">500</span>), <span class="co"># clip range of the histogram</span></span>
-<span id="cb9-18"><a></a>               frameon<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="im">import</span> pysal <span class="im">as</span> ps</span>
+<span id="cb7-2"><a></a><span class="co"># https://github.com/pysal/mapclassify</span></span>
+<span id="cb7-3"><a></a><span class="im">import</span> mapclassify <span class="im">as</span> mc</span>
+<span id="cb7-4"><a></a><span class="co">#&nbsp;https://jiffyclub.github.io/palettable/</span></span>
+<span id="cb7-5"><a></a><span class="im">import</span> palettable.matplotlib <span class="im">as</span> palmpl</span>
+<span id="cb7-6"><a></a><span class="im">from</span> legendgram <span class="im">import</span> legendgram</span>
+<span id="cb7-7"><a></a></span>
+<span id="cb7-8"><a></a>f,ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">8</span>))</span>
+<span id="cb7-9"><a></a>gdf.plot(column<span class="op">=</span><span class="st">'price'</span>, scheme<span class="op">=</span><span class="st">'Quantiles'</span>, cmap<span class="op">=</span><span class="st">'magma'</span>, k<span class="op">=</span><span class="dv">5</span>, ax<span class="op">=</span>ax)</span>
+<span id="cb7-10"><a></a>q <span class="op">=</span> mc.Quantiles(gdf.price.array, k<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb7-11"><a></a></span>
+<span id="cb7-12"><a></a><span class="co"># https://github.com/pysal/legendgram/blob/master/legendgram/legendgram.py</span></span>
+<span id="cb7-13"><a></a>legendgram(f, ax, </span>
+<span id="cb7-14"><a></a>               gdf.price, q.bins, pal<span class="op">=</span>palmpl.Magma_5,</span>
+<span id="cb7-15"><a></a>               legend_size<span class="op">=</span>(<span class="fl">.4</span>,<span class="fl">.2</span>), <span class="co"># legend size in fractions of the axis</span></span>
+<span id="cb7-16"><a></a>               loc <span class="op">=</span> <span class="st">'upper left'</span>, <span class="co"># mpl-style legend loc</span></span>
+<span id="cb7-17"><a></a>               clip <span class="op">=</span> (<span class="dv">0</span>,<span class="dv">500</span>), <span class="co"># clip range of the histogram</span></span>
+<span id="cb7-18"><a></a>               frameon<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <aside class="notes">
 <p>Note that the number of colours need to match <em>k</em>, which is 5 in this case.</p>
 <p>It <em>should</em> be possible to set up the colormap and bins such that they can be passed to both GeoPandas and Legendgram.</p>
@@ -309,16 +336,16 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="knn-weights" class="slide level2 smaller">
+<section id="knn-weights" class="slide level2">
 <h2>KNN Weights</h2>
-<p><a href="img/Airbnb_KNN.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img data-src="img/Airbnb_KNN.png"></a></p>
+<p><a href="img/Airbnb_KNN.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img data-src="img/Airbnb_KNN.png" height="500"></a></p>
 </section>
 <section id="implementing-knn" class="slide level2 smaller">
 <h2>Implementing KNN</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a><span class="im">from</span> pysal.lib <span class="im">import</span> weights</span>
-<span id="cb10-2"><a></a>w <span class="op">=</span> weights.KNN.from_dataframe(gdf, k<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb10-3"><a></a>gdf[<span class="st">'w_price'</span>] <span class="op">=</span> weights.lag_spatial(w, gdf.price)</span>
-<span id="cb10-4"><a></a>gdf[[<span class="st">'name'</span>,<span class="st">'price'</span>,<span class="st">'w_price'</span>]].sample(<span class="dv">5</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a><span class="im">from</span> pysal.lib <span class="im">import</span> weights</span>
+<span id="cb8-2"><a></a>w <span class="op">=</span> weights.KNN.from_dataframe(gdf, k<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb8-3"><a></a>gdf[<span class="st">'w_price'</span>] <span class="op">=</span> weights.lag_spatial(w, gdf.price)</span>
+<span id="cb8-4"><a></a>gdf[[<span class="st">'name'</span>,<span class="st">'price'</span>,<span class="st">'w_price'</span>]].sample(<span class="dv">5</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <table class="caption-top">
 <colgroup>
 <col style="width: 9%">
@@ -368,16 +395,16 @@
 </tbody>
 </table>
 </section>
-<section id="spatial-lag-of-distance-band" class="slide level2 smaller">
+<section id="spatial-lag-of-distance-band" class="slide level2">
 <h2>Spatial Lag of Distance Band</h2>
-<p><a href="img/Airbnb_DistanceBand.png" class="lightbox" data-gallery="quarto-lightbox-gallery-11"><img data-src="img/Airbnb_DistanceBand.png"></a></p>
+<p><a href="img/Airbnb_DistanceBand.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img data-src="img/Airbnb_DistanceBand.png" height="500"></a></p>
 </section>
-<section id="implementing-db" class="slide level2 smaller">
-<h2>Implementing DB</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a>w2 <span class="op">=</span> weights.DistanceBand.from_dataframe(gdf, threshold<span class="op">=</span><span class="dv">2000</span>, alpha<span class="op">=-</span><span class="fl">0.25</span>)</span>
-<span id="cb11-2"><a></a>gdf[<span class="st">'price_std'</span>] <span class="op">=</span> (gdf.price <span class="op">-</span> gdf.price.mean()) <span class="op">/</span> gdf.price.std()</span>
-<span id="cb11-3"><a></a>gdf[<span class="st">'w_price_std'</span>] <span class="op">=</span> weights.lag_spatial(w2, gdf.price_std)</span>
-<span id="cb11-4"><a></a>gdf[[<span class="st">'name'</span>,<span class="st">'price_std'</span>,<span class="st">'w_price_std'</span>]].sample(<span class="dv">5</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="implementing-lags" class="slide level2 smaller">
+<h2>Implementing Lags</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>w2 <span class="op">=</span> weights.DistanceBand.from_dataframe(gdf, threshold<span class="op">=</span><span class="dv">2000</span>, alpha<span class="op">=-</span><span class="fl">0.25</span>)</span>
+<span id="cb9-2"><a></a>gdf[<span class="st">'price_std'</span>] <span class="op">=</span> (gdf.price <span class="op">-</span> gdf.price.mean()) <span class="op">/</span> gdf.price.std()</span>
+<span id="cb9-3"><a></a>gdf[<span class="st">'w_price_std'</span>] <span class="op">=</span> weights.lag_spatial(w2, gdf.price_std)</span>
+<span id="cb9-4"><a></a>gdf[[<span class="st">'name'</span>,<span class="st">'price_std'</span>,<span class="st">'w_price_std'</span>]].sample(<span class="dv">5</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <table class="caption-top">
 <thead>
 <tr class="header">
@@ -423,24 +450,24 @@
 </section>
 <section id="morans-i" class="slide level2">
 <h2>Moran’s I</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>mi <span class="op">=</span> esda.Moran(gdf[<span class="st">'price'</span>], w)</span>
-<span id="cb12-2"><a></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>mi<span class="sc">.</span>I<span class="sc">:0.4f}</span><span class="ss">"</span>)</span>
-<span id="cb12-3"><a></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>mi<span class="sc">.</span>p_sim<span class="sc">:0.4f}</span><span class="ss">"</span>)</span>
-<span id="cb12-4"><a></a>moran_scatterplot(mi)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><a href="img/Moran_Global.png" class="lightbox" data-gallery="quarto-lightbox-gallery-12"><img data-src="img/Moran_Global.png"></a></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>mi <span class="op">=</span> esda.Moran(gdf[<span class="st">'price'</span>], w)</span>
+<span id="cb10-2"><a></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>mi<span class="sc">.</span>I<span class="sc">:0.4f}</span><span class="ss">"</span>)</span>
+<span id="cb10-3"><a></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>mi<span class="sc">.</span>p_sim<span class="sc">:0.4f}</span><span class="ss">"</span>)</span>
+<span id="cb10-4"><a></a>moran_scatterplot(mi)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="img/Moran_Global.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img data-src="img/Moran_Global.png" height="450"></a></p>
 </section>
 <section id="local-morans-i" class="slide level2">
 <h2>Local Moran’s I</h2>
-<p><a href="img/Moran_Local.png" class="lightbox" data-gallery="quarto-lightbox-gallery-13"><img data-src="img/Moran_Local.png"></a></p>
+<p><a href="img/Moran_Local.png" class="lightbox" data-gallery="quarto-lightbox-gallery-11"><img data-src="img/Moran_Local.png" height="500"></a></p>
 </section>
 <section id="implementing-local-morans-i" class="slide level2 smaller">
 <h2>Implementing Local Moran’s I</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a>lisa <span class="op">=</span> esda.Moran_Local(gdf.price, w)</span>
-<span id="cb13-2"><a></a><span class="co"># Break observations into significant or not</span></span>
-<span id="cb13-3"><a></a>gdf[<span class="st">'sig'</span>] <span class="op">=</span> lisa.p_sim <span class="op">&lt;</span> <span class="fl">0.05</span></span>
-<span id="cb13-4"><a></a><span class="co"># Store the quadrant they belong to</span></span>
-<span id="cb13-5"><a></a>gdf[<span class="st">'quad'</span>] <span class="op">=</span> lisa.q</span>
-<span id="cb13-6"><a></a>gdf[[<span class="st">'name'</span>,<span class="st">'price'</span>,<span class="st">'sig'</span>,<span class="st">'quad'</span>]].sample(<span class="dv">5</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a>lisa <span class="op">=</span> esda.Moran_Local(gdf.price, w)</span>
+<span id="cb11-2"><a></a><span class="co"># Break observations into significant or not</span></span>
+<span id="cb11-3"><a></a>gdf[<span class="st">'sig'</span>] <span class="op">=</span> lisa.p_sim <span class="op">&lt;</span> <span class="fl">0.05</span></span>
+<span id="cb11-4"><a></a><span class="co"># Store the quadrant they belong to</span></span>
+<span id="cb11-5"><a></a>gdf[<span class="st">'quad'</span>] <span class="op">=</span> lisa.q</span>
+<span id="cb11-6"><a></a>gdf[[<span class="st">'name'</span>,<span class="st">'price'</span>,<span class="st">'sig'</span>,<span class="st">'quad'</span>]].sample(<span class="dv">5</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <table class="caption-top" style="width:100%;">
 <colgroup>
 <col style="width: 9%">
@@ -499,8 +526,8 @@
 </section>
 <section id="full-lisa" class="slide level2">
 <h2>Full LISA</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a>plot_local_autocorrelation(lisa, gdf, <span class="st">'price'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><a href="img/LISA.png" class="lightbox" data-gallery="quarto-lightbox-gallery-14"><img data-src="img/LISA.png"></a></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>plot_local_autocorrelation(lisa, gdf, <span class="st">'price'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="img/LISA.png" class="lightbox" data-gallery="quarto-lightbox-gallery-12"><img data-src="img/LISA.png"></a></p>
 </section>
 <section id="additional-resources" class="slide level2 smaller">
 <h2>Additional Resources</h2>
