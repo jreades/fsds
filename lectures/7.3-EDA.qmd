@@ -76,7 +76,7 @@ Here's another view of how to do EDA:
 
 You can follow along by loading the Inside Airbnb sample:
 
-```python
+```{python}
 import pandas as pd
 import geopandas as gpd
 url='https://bit.ly/3I0XDrq'
@@ -90,43 +90,36 @@ gdf = gpd.GeoDataFrame(df,
                         crs='epsg:4326'
             )
       )
-gdf.to_file('Airbnb_Sample.gpkg', driver='GPKG')
+# Should you want to save your work
+#gdf.to_file('Airbnb_Sample.gpkg', driver='GPKG')
 ```
 
 ::: {.notes}
 Note that this  (re)loads the sampled Airbnb data from GitHub every time you run it. For a large data set on someone else'e server you might want to save and (re)load it locally. A simple helper function would then just check if the file already existed locally *before* trying to download the file again: that would allow you to work while offline and speed up your code substantially too!
 :::
 
-## What Can We Do? (Series) {.smaller}
+## What Can We Do?^[This is by no means all that we can do...] (Series)
 
-This is by no means all that we can do...
+```{python}
+print(f"Host count is {gdf.host_name.count()}")
+print(f"Mean is {gdf.price.mean():.0f}")
+print(f"Max price is {gdf.price.max()}")
+print(f"Min price is {gdf.price.min()}")
+print(f"Median price is {gdf.price.median()}")
+print(f"Standard dev is {gdf.price.std():.2f}")
+print(f"25th quantile is {gdf.price.quantile(q=0.25)}")
+```
 
-+---------------------------------------------------------+--------------------------+
-| Command                                                 | Returns                  |
-+=========================================================+==========================+
-| ```python                                               | ```                      |
-| print(f"Host count is {gdf.host_name.count()}")         | Count of non-nulls       |
-| print(f"Mean is {gdf.price.mean():.0f}")                | Mean                     |
-| print(f"Max price is {gdf.price.max()}")                | Highest value            |
-| print(f"Min price is {gdf.price.min()}")                | Lowest value             |
-| print(f"Median price is {gdf.price.median()}")          | Median                   |
-| print(f"Standard dev is {gdf.price.std():.2f}")         | Standard deviation       |
-| print(f"25th quantile is {gdf.price.quantile(q=0.25)}") | 25th quantile            |
-| ```                                                     | ```                      |
-+---------------------------------------------------------+--------------------------+
-
-: Series-level Methods.
-
-## What Can We Do? (Data Frame) {.smaller}
+## What Can We Do?^[*Hint*: there's a lot more we could do!] (Data Frame Edition) 
 
 +----------------------+------------------------------------------+
 | Command              | Returns                                  |
 +======================+==========================================+
 | ```python            | ```                                      |
-| print(df.mean())     | Mean of each column                      |
+| print(df.mean())     | Mean of each *numerical* column          |
 | print(df.count())    | Number of non-null values in each column |
 | print(df.max())      | Highest value in each column             |
-| # ...                | $\vdots$                                 |
+| # ...                | ...                                      |
 | print(df.corr())     | Correlation between columns              |
 | print(df.describe()) | Summarise                                |
 | ```                  | ```                                      |
@@ -142,51 +135,38 @@ Notice how we have the *same* functionality, but it operates at the level of the
 
 So pandas provides functions for commonly-used measures:
 
-```python
-print(f"{df.price.mean():.2f}")
-print(f"{df.price.median():.2f}")
-print(f"{df.price.quantile(0.25):.2f}")
+```{python}
+print(f"Mean: {df.price.mean():.2f}")
+print(f"Median: {df.price.median():.2f}")
+print(f"25th Percentile: {df.price.quantile(0.25):.2f}")
 ```
 
-Output:
-```
-118.4542
-80.50
-40.75
-```
+## More Complex Measures
 
-## More Complex Measures {.smaller}
+Pandas *also* makes it easy to derive new variables... Here's the *z*-score:
 
-But Pandas *also* makes it easy to derive new variables... Here's the *z*-score:
-
-$$ z = \frac{x - \bar{x}}{s}$$
-
-```python
+```{python}
 df['zscore'] = (df.price - df.price.mean())/df.price.std()
-df.plot.box(column='zscore')
+df.plot.box(column='zscore', figsize=(8,4.5))
 ```
 
-## And Even More Complex {.smaller}
+## And Even More Complex
 
 And here's the Interquartile Range Standardised score:
 
-$$ x_{iqrs} = \frac{x - \widetilde{x}}{Q_{75} - Q_{25}} $$
-
-```python
+```{python}
 df['iqr_std'] = (df.price - df.price.median())/ \
       (df.price.quantile(q=0.75)-df.price.quantile(q=0.25))
-df.plot.box(column='iqr_std')
+df.plot.box(column='iqr_std', figsize=(8,4.5))
 ```
-
-![](./img/Price_IQR_Standardised.png)
-
 
 ## The Plot Thickens
 
 We'll get to more complex plotting over the course of the term, but here's a good start for *exploring* the data! All plotting depends on `matplotlib` which is the ogre in the attic to R's `ggplot`.
 
-```python
+```{python}
 import matplotlib.pyplot as plt
+import numpy as np
 ```
 
 Get used to this import as it will allow you to save and manipulate the figures created in Python. It is *not* the most intuitive approach (unless you've used MATLAB before) but it *does* work. 
@@ -198,62 +178,80 @@ Get used to this import as it will allow you to save and manipulate the figures 
 
 ## Boxplot
 
-```python
-df.price.plot.box()
+```{python}
+df.price.plot.box(figsize=(8,4.5))
 plt.savefig('pboxplot.png', dpi=150, transparent=True)
 ```
 
-![](img/pboxplot.png)
-
-
 ## Frequency
 
-```python
-df.room_type.value_counts().plot.bar()
+```{python}
+df.room_type.value_counts().plot.bar(figsize=(8,4.5))
 plt.savefig('phistplot.png', dpi=150, transparent=True)
 ```
-
-![](img/phistplot.png)
-
 
 ## A Correlation Heatmap
 
 We'll get to these in more detail in a couple of weeks, but here's some output... 
 
-![](img/correlation.png)
-
+:::: {.columns}
+::: {.column width="50%"}
+```python
+cols = df.select_dtypes(
+    include=np.number
+).columns.to_list()[:4]
+plt.matshow(df[cols].corr())
+xaxis = np.arange(len(cols))
+ax = plt.gca()
+ax.set_xticks(xaxis)
+ax.set_yticks(xaxis)
+ax.set_xticklabels(cols)
+ax.set_yticklabels(cols)
+```
+:::
+::: {.column width="40%"}
+```{python}
+#| echo: false
+#| output: asis
+cols = df.select_dtypes(
+    include=np.number
+).columns.to_list()[:4]
+plt.matshow(df[cols].corr())
+xaxis = np.arange(len(cols))
+ax = plt.gca()
+ax.set_xticks(xaxis)
+ax.set_yticks(xaxis)
+ax.set_xticklabels(cols)
+ax.set_yticklabels(cols);
+plt.show()
+```
+:::
+::::
 
 ## A 'Map'
 
-```python
-df.plot.scatter(x='longitude',y='latitude')
+```{python}
+df.plot.scatter(x='longitude', y='latitude', figsize=(8,4.5))
 plt.savefig('pscatterplot.png', dpi=150, transparent=True)
 ```
 
-![](img/pscatterplot.png)
-
-
 ## A Fancy 'Map'
 
-```python
+```{python}
 df.plot.scatter(x='longitude',y='latitude',
                 c='price',colormap='viridis',
-                figsize=(10,5),title='London',
+                figsize=(8,4.5),title='London',
                 grid=True,s=24,marker='x')
 plt.savefig('pscatterplot.png', dpi=150, transparent=True)
 ```
 
-![](img/pscatterplot-fancy.png)
-
-
 ## An Actual 'Map'
 
-```python
+```{python}
 gdf.plot(column='price', cmap='viridis', 
-         scheme='quantiles', markersize=8, legend=True)
+         scheme='quantiles', markersize=8, legend=True,
+         figsize=(8,4.5))
 ```
-
-![](img/scattermap.png)
 
 
 ## Additional Resources {.smaller}

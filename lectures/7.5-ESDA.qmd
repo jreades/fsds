@@ -13,69 +13,44 @@ For this one, you really need to [read the docs](https://pysal.org/docs/users/).
 
 ## Getting Spatial (with Boroughs) {.smaller}
 
-```python
+```{python}
 import geopandas as gpd
 url = 'https://bit.ly/3neINBV'
 boros = gpd.read_file(url, driver='GPKG')
-boros.plot(color='none', edgecolor='red');
+boros.plot(color='none', edgecolor='red', figsize=(8,4.5));
 ```
-
-![](img/Borough_Map.png)
 
 ## Convex Hull
 
-```python
+```{python}
 boros['hulls'] = boros.geometry.convex_hull
-boros = boros.set_geometry('hulls')
-boros.plot(column='NAME', categorical=True, alpha=0.5);
+boros.set_geometry('hulls').plot(column='NAME', categorical=True, alpha=0.5, figsize=(8,4.5));
 ```
-![](img/Boroughs_Hull.png)
 
+## Dissolve
 
-## Dissolve {.smaller}
-
-```python
+```{python}
 boros['region'] = 'London'
-boros = boros.set_geometry('geometry') # Set back to original geom
-ldn   = boros.dissolve(by='region')    # And dissolve to a single poly
-
-f,ax = plt.subplots(figsize=(10,8))    # New plot
-ldn.plot(ax=ax)                        # Add London layer to axis
+ldn   = boros.dissolve(by='region') 
+ax = ldn.plot(figsize=(8,4.5)) 
+boros.plot(ax=ax, color='none', edgecolor='red')
 ```
-![](img/London.png){height="400"}
-
-
-## Simplify
-
-```python
-ldn.simplify(500).plot()
-```
-![](img/London_Simplify.png){height="500"}
-
-
-## Buffer
-
-```python
-ldn.buffer(500).plot()
-```
-![](img/London_Buffer.png){height="500"}
 
 
 ## Buffer & Simplify
 
-```python
-ldn.buffer(1000).simplify(1000).plot()
+```{python}
+ldn.buffer(1000).simplify(1000).plot(figsize=(8,4.5))
 ```
-![](img/London_Buffer_Simplify.png){height="500"}
 
 
 ## Difference
 
 And some nice chaining...
-```python
-ldn.buffer(3000).simplify(2500).difference(ldn.geometry).plot()
+
+```{python}
+ldn.buffer(3000).simplify(2500).difference(ldn.geometry).plot(figsize=(8,4.5))
 ```
-![](img/London_Buffer_Simplify_Diff.png){height="500"}
 
 
 ## Legendgrams
@@ -135,9 +110,9 @@ It *should* be possible to set up the colormap and bins such that they can be pa
 
 :::
 
-## KNN Weights {.smaller}
+## KNN Weights
 
-![](img/Airbnb_KNN.png)
+![](img/Airbnb_KNN.png){height="500px"}
 
 ## Implementing KNN {.smaller}
 
@@ -157,11 +132,11 @@ gdf[['name','price','w_price']].sample(5, random_state=42)
 | 44 | Avni Kensington Hotel | 430.0 | 821.0 |
 
 
-## Spatial Lag of Distance Band {.smaller}
+## Spatial Lag of Distance Band
 
-![](img/Airbnb_DistanceBand.png)
+![](img/Airbnb_DistanceBand.png){height="500px"}
 
-## Implementing DB {.smaller}
+## Implementing Lags {.smaller}
 
 ```python
 w2 = weights.DistanceBand.from_dataframe(gdf, threshold=2000, alpha=-0.25)
@@ -180,18 +155,20 @@ gdf[['name','price_std','w_price_std']].sample(5, random_state=42)
 
 
 ## Moran's I
+
 ```python
 mi = esda.Moran(gdf['price'], w)
 print(f"{mi.I:0.4f}")
 print(f"{mi.p_sim:0.4f}")
 moran_scatterplot(mi)
 ```
-![](img/Moran_Global.png)
+
+![](img/Moran_Global.png){height="450px"}
 
 
 ## Local Moran's I
 
-![](img/Moran_Local.png)
+![](img/Moran_Local.png){height="500px"}
 
 
 ## Implementing Local Moran's I {.smaller}
