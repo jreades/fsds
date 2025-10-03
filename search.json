@@ -1632,7 +1632,7 @@
     "href": "lectures/8.4-Analysing_Text.html#one-hot-encoders",
     "title": "Analysing Text",
     "section": "One-Hot Encoders",
-    "text": "One-Hot Encoders\n\n\n\nDocument\nUK\nTop\nPop\nCoronavirus\n\n\n\n\nNews item\n1\n1\n0\n1\n\n\nCulture item\n0\n1\n1\n0\n\n\nPolitics item\n1\n0\n0\n1\n\n\nEntertainment item\n1\n1\n1\n1\n\n\n\n\nOne-Hot encoders are not often used this way, but for keyword detection or keyword-based classification this might be appropriate: i.e. this keyword was used in this document!\nSo the big difference is One Hot == \\(n\\) variables, Dummy == \\(n-1\\).\nDefinitely some ‘gotchas’ in deployment: one-hot models shouldn’t have an intercept unless you apply a ‘ridge shrinkage penalty’. Standardisation affects whether or not an intercept is needed."
+    "text": "One-Hot Encoders\n\n\n\n\nNews\nCulture\nPolitics\nEntertainment\n\n\n\n\nArticle 1\n1\n0\n0\n0\n\n\nArticle 2\n0\n1\n0\n0\n\n\nArticle 3\n0\n0\n1\n0\n\n\nArticle 4\n0\n0\n0\n1\n\n\n\n\nSo the big difference is One Hot == \\(n\\) variables, Dummy == \\(n-1\\).\nDefinitely some ‘gotchas’ in deployment: one-hot models shouldn’t have an intercept unless you apply a ‘ridge shrinkage penalty’. Standardisation affects whether or not an intercept is needed."
   },
   {
     "objectID": "lectures/8.4-Analysing_Text.html#the-bag-of-words",
@@ -1744,35 +1744,35 @@
     "href": "lectures/8.2-Patterns_in_Text.html#regular-expressions",
     "title": "Patterns in Text",
     "section": "Regular Expressions",
-    "text": "Regular Expressions\nRegexes are a way for talking about patterns observed in text, although their origins are rooted in philosophy and linguistics.\nImplemented in Python as:\nimport re\n# re.search(&lt;regex&gt;, &lt;str&gt;)\ns = '123foo456'\nif re.search('123',s):\n  print(\"Found a match.\")\nelse:\n  print(\"No match.\")\nPrints 'Found a match.'"
+    "text": "Regular Expressions\nRegexes are a way for talking about patterns observed in text, although their origins are rooted in philosophy and linguistics.\nImplemented in Python as:\n\nimport re\ns = '123foo456'\n\n# re.search(&lt;regex&gt;, &lt;str&gt;)\nif re.search('123',s):\n  print(\"Found a match.\")\nelse:\n  print(\"No match.\")\n\nFound a match."
   },
   {
     "objectID": "lectures/8.2-Patterns_in_Text.html#capturing-matches",
     "href": "lectures/8.2-Patterns_in_Text.html#capturing-matches",
     "title": "Patterns in Text",
     "section": "Capturing Matches",
-    "text": "Capturing Matches\nm = re.search('123',s)\nprint(m.start())\nprint(m.end())\nprint(m.span())\nprint(m.group())\nOutputs:\n0\n3\n(0,3)\n123\n\nSo, we have None if a search fails, but if it succeeds then we have attributes of the match objection like start, end, span, and group (this last is going to be particularly interesting since it tells us what matched)."
+    "text": "Capturing Matches\nFor singular matches it’s fairly straightforward:\n\nprint(f\"String: {s}\")\nm = re.search('123',s)\n\nprint(f\"Start of match: {m.start()}\")\nprint(f\"End of match: {m.end()}\")\nprint(f\"Span of match: {m.span()}\")\nprint(f\"Match group: {m.group()}\")\n\nString: 123foo456\nStart of match: 0\nEnd of match: 3\nSpan of match: (0, 3)\nMatch group: 123\n\n\n\n\nSo, we have None if a search fails, but if it succeeds then we have attributes of the match objection like start, end, span, and group (this last is going to be particularly interesting since it tells us what matched).\n\n\nThe match group is often more complicated than this because of ‘memoisation’."
   },
   {
     "objectID": "lectures/8.2-Patterns_in_Text.html#configuring-matches",
     "href": "lectures/8.2-Patterns_in_Text.html#configuring-matches",
     "title": "Patterns in Text",
     "section": "Configuring Matches",
-    "text": "Configuring Matches\ns = '123foo456'\nm = re.search('FOO',s)\nprint(m)\nm = re.search('FOO',s,re.IGNORECASE)\nprint(m)\nOutputs:\nNone\n&lt;re.Match object; span=(3, 6), match='foo'&gt;\nThe third parameter allows us to: match newlines (re.DOTALL), ignore case (re.IGNORECASE), take language into account (re.LOCALE), match across lines (re.MULTILINE), and write patterns across multiple lines (re.VERBOSE). If you need multiple options it’s re.DOTALL | re.IGNORECASE. Bitwise again!"
+    "text": "Configuring Matches\n\ns = '123foo456'\n\nm = re.search('FOO',s)\nprint(f\"First search: {m}\")\n\nm = re.search('FOO',s,re.IGNORECASE)\nprint(f\"Second search: {m}\")\n\nFirst search: None\nSecond search: &lt;re.Match object; span=(3, 6), match='foo'&gt;\n\n\nThe third parameter allows us to: match newlines (re.DOTALL), ignore case (re.IGNORECASE), take language into account (re.LOCALE), match across lines (re.MULTILINE), and write patterns across multiple lines (re.VERBOSE). If you need multiple options it’s re.DOTALL | re.IGNORECASE. Bitwise again!"
   },
   {
     "objectID": "lectures/8.2-Patterns_in_Text.html#more-than-one-match",
     "href": "lectures/8.2-Patterns_in_Text.html#more-than-one-match",
     "title": "Patterns in Text",
     "section": "More Than One Match",
-    "text": "More Than One Match\ns = '123foo456foo789'\nlst = re.findall('foo',s)\nprint(lst)\nlst = re.finditer('foo',s)\n[x for x in lst]\nrs  = re.sub('foo',' ',s)\nprint(rs)\nrs  = re.split(' ',rs)\nprint(rs)\nOutputs:\n['foo','foo']\n[&lt;re.Match object; span=(3, 6), match='foo'&gt;, &lt;re.Match object; span=(9, 12), match='foo'&gt;]\n'123 456 789'\n['123', '456', '789']"
+    "text": "More Than One Match\n\ns = '123foo456foo789'\n\nlst1 = re.findall('foo',s)\nprint(f\"Match list: {lst1}\")\n\nlst2 = re.finditer('foo',s)\nprint(f\"List iterator: {[x for x in lst2]}\")\n\nrs  = re.sub('foo',' ',s)\nprint(f\"Substitution: {rs}\")\n\nrs  = re.split(' ',rs)\nprint(f\"Splitting: {rs}\")\n\nMatch list: ['foo', 'foo']\nList iterator: [&lt;re.Match object; span=(3, 6), match='foo'&gt;, &lt;re.Match object; span=(9, 12), match='foo'&gt;]\nSubstitution: 123 456 789\nSplitting: ['123', '456', '789']"
   },
   {
     "objectID": "lectures/8.2-Patterns_in_Text.html#regular-expressions-do-much-more",
     "href": "lectures/8.2-Patterns_in_Text.html#regular-expressions-do-much-more",
     "title": "Patterns in Text",
     "section": "Regular Expressions Do Much More",
-    "text": "Regular Expressions Do Much More\nimport re\nm = re.search(r'\\$((\\d+,){2,}\\d+)',\n        \"'That will be $1,000,000 he said...'\")\nprint(m.group(1)) # '1,000,000'\nThis looks for sequences of 1-or-more digits followed by a comma… and for those sequences to repeat two or more times:\n# Look for a literal '$'\nre.search(r'\\$') \n# Group of &gt;=1 digits followed by a comma...\nre.search(r'(\\d+,)') \n# Repeated two or more times...\nre.search(r'(\\d+,){2,}') \n\n\nAlso notice the r'&lt;regex&gt;' with an r in front of the string. This means ‘raw’ and is often a required modifier for regular expression patterns. Simple ones don’t need it, but from here on out you will."
+    "text": "Regular Expressions Do Much More\n\ns = \"'That will be $1,000,000, he said...'\"\nm = re.search(r'\\$((\\d+,){2,}\\d+)',s)\n        \nprint(m.group(1))\n\n1,000,000\n\n\nIt breaks down like this:\n\n# Look for a literal '$'\nprint(re.search(r'\\$',s))\n# Group of &gt;=1 digits followed by a comma...\nprint(re.search(r'(\\d+,)',s))\n# Repeated two or more times...\nprint(re.search(r'(\\d+,){2,}',s))\n\n&lt;re.Match object; span=(14, 15), match='$'&gt;\n&lt;re.Match object; span=(15, 17), match='1,'&gt;\n&lt;re.Match object; span=(15, 25), match='1,000,000,'&gt;\n\n\n\n\nAlso notice the r'&lt;regex&gt;' with an r in front of the string. This means ‘raw’ and is often a required modifier for regular expression patterns. Simple ones don’t need it, but from here on out you will."
   },
   {
     "objectID": "lectures/8.2-Patterns_in_Text.html#character-classes",
@@ -1800,14 +1800,14 @@
     "href": "lectures/8.2-Patterns_in_Text.html#exploring",
     "title": "Patterns in Text",
     "section": "Exploring",
-    "text": "Exploring\nRegex101 can be a useful way to build a regex interactively:"
+    "text": "Exploring\nRegex101 might be a fun way to learn:"
   },
   {
     "objectID": "lectures/8.2-Patterns_in_Text.html#whats-this",
     "href": "lectures/8.2-Patterns_in_Text.html#whats-this",
     "title": "Patterns in Text",
     "section": "What’s This?",
-    "text": "What’s This?\nre.match(r'^[^@]+@([a-z0-9\\-]+\\.){1,5}[a-z0-9\\-]+$', s)\n\ns should be replaced with any string you want to check."
+    "text": "What’s This?\nre.VERBOSE to the rescue:\nregex = r\"\"\"\n([GIR] 0[A]{2})|    # Girobank \n(\n  (\n    ([A-Z][0-9]{1,2})| # e.g A00...Z99\n      (\n        ([A-Z][A-HJ-Y][0-9]{1,2})|  # e.g. AB54...ZX11\n          (([A-Z][0-9][A-Z])|  # e.g. A0B...Z9Z \n          ([A-Z][A-HJ-Y][0-9][A-Z]?))  # e.g. WC1 or WC1H\n        )\n      )\n    \\s?[0-9][A-Z]{2} # e.g. 5RX\n  )\n\"\"\"\nre.match(regex,s,re.VERBOSE|re.IGNORECASE) # Can also use: re.X|re.I\n\nThis is the government’s own regex but is probably not 100% accurate."
   },
   {
     "objectID": "lectures/8.2-Patterns_in_Text.html#whats-this-1",
@@ -1828,14 +1828,14 @@
     "href": "lectures/8.2-Patterns_in_Text.html#whats-this-3",
     "title": "Patterns in Text",
     "section": "What’s This?",
-    "text": "What’s This?\nre.match(r'^(http|https|ftp):[\\/]{2}([a-zA-Z0-9\\-]+\\.){1,4}[a-zA-Z]{2,5}(:[0-9]+)?\\/?([a-zA-Z0-9\\-\\._\\?\\'\\/\\\\\\+\\&\\%\\$#\\=~]*)',s)"
+    "text": "What’s This?\nre.VERBOSE to the rescue:\nregex = r\"\"\"\n([GIR] 0[A]{2})|    # Girobank \n(\n  (\n    ([A-Z][0-9]{1,2})| # e.g A00...Z99\n      (\n        ([A-Z][A-HJ-Y][0-9]{1,2})|  # e.g. AB54...ZX11\n          (([A-Z][0-9][A-Z])|  # e.g. A0B...Z9Z \n          ([A-Z][A-HJ-Y][0-9][A-Z]?))  # e.g. WC1 or WC1H\n        )\n      )\n    \\s?[0-9][A-Z]{2} # e.g. 5RX\n  )\n\"\"\"\nre.match(regex,s,re.VERBOSE|re.IGNORECASE) # Can also use: re.X|re.I\n\nThis is the government’s own regex but is probably not 100% accurate."
   },
   {
     "objectID": "lectures/8.2-Patterns_in_Text.html#whats-this-4",
     "href": "lectures/8.2-Patterns_in_Text.html#whats-this-4",
     "title": "Patterns in Text",
     "section": "What’s This?",
-    "text": "What’s This?\nre.match(r'([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\\s?[0-9][A-Za-z]{2})',s)"
+    "text": "What’s This?\nre.match(r'([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\\s?[0-9][A-Za-z]{2})',s)\nre.VERBOSE to the rescue:\nregex = r\"\"\"\n([GIR] 0[A]{2})|    # Girobank \n(\n  (\n    ([A-Z][0-9]{1,2})| # e.g A00...Z99\n      (\n        ([A-Z][A-HJ-Y][0-9]{1,2})|  # e.g. AB54...ZX11\n          (([A-Z][0-9][A-Z])|  # e.g. A0B...Z9Z \n          ([A-Z][A-HJ-Y][0-9][A-Z]?))  # e.g. WC1 or WC1H\n        )\n      )\n    \\s?[0-9][A-Z]{2} # e.g. 5RX\n  )\n\"\"\"\nre.match(regex,s,re.VERBOSE|re.IGNORECASE) # Can also use: re.X|re.I\n\nThis is the government’s own regex but is probably not 100% accurate."
   },
   {
     "objectID": "lectures/8.2-Patterns_in_Text.html#to-help",
@@ -6946,42 +6946,42 @@
     "href": "lectures/8.3-Cleaning_Text.html#when-a-loop-is-not-best",
     "title": "Cleaning Text",
     "section": "When a Loop Is Not Best",
-    "text": "When a Loop Is Not Best\nIf you need to apply the same operation to lots of data why do it sequentially?\n\nYour computer has many cores and can run many threads in parallel.\nThe computer divides the work across the threads it sees fit.\nThe computer reassemble the answer at the end from the threads.\n\nIf you have 4 cores then parallelisation cuts analysis time by 75%."
+    "text": "When a Loop Is Not Best\nIf you need to apply the same operation to lots of data why do it sequentially?\n\nYour computer has many cores and can run many threads in parallel.\nThe computer divides the work across the threads it sees fit.\nThe computer reassembles the answer at the end from the threads.\n\nIf you have 4 cores then parallelisation cuts analysis time by 75%."
   },
   {
     "objectID": "lectures/8.3-Cleaning_Text.html#so-do-more-with-each-clock-cycle",
     "href": "lectures/8.3-Cleaning_Text.html#so-do-more-with-each-clock-cycle",
     "title": "Cleaning Text",
     "section": "So Do More with Each Clock Cycle",
-    "text": "So Do More with Each Clock Cycle\n\nMany libraries/packages implement weak forms of vectorisation or parallelisation, but some libraries do more.\nYou must request it because it requires hardware or other support and it is highly optimsed.\nMultiple separate machines acting as one.\nMultiple GPUs acting as one.\n\n\nConceptually, these get challenging if you can’t clearly separate/parallelise tasks."
+    "text": "So Do More with Each Clock Cycle\nWe can tackle this problem in multiple ways:\n\nImplicit: many libraries/packages implement weak forms of vectorisation (or parallelisation).\nExplicit: you must request it because it requires hardware or other support and it is highly optimsed.\nMassive: you must commission it because it requires specialist hardware and software.\n\n\nConceptually, these get challenging if you can’t clearly separate/parallelise tasks."
   },
   {
     "objectID": "lectures/8.3-Cleaning_Text.html#pandas.apply-vs.-numpy",
     "href": "lectures/8.3-Cleaning_Text.html#pandas.apply-vs.-numpy",
     "title": "Cleaning Text",
     "section": "Pandas.apply() vs. Numpy",
-    "text": "Pandas.apply() vs. Numpy\nNumpy is fully vectorised and will almost always out-perform Pandas apply, but both are massive improvements on for loops:\n\nExecute row-wise and column-wise operations.\nApply any arbitrary function to individual elements or whole axes (i.e. row or col).\nCan make use of lambda functions too for ‘one off’ operations (ad-ohoc functions)."
+    "text": "Pandas.apply() vs. Numpy\nNumpy is fully vectorised and will almost always out-perform Pandas apply, but both are massive improvements on for loops:\n\nExecute row-wise and column-wise operations.\nApply any arbitrary function to individual elements or whole axes (i.e. row or col).\nCan make use of lambda functions too for ‘one off’ operations (ad-hoc functions)."
   },
   {
     "objectID": "lectures/8.3-Cleaning_Text.html#lambda-functions",
     "href": "lectures/8.3-Cleaning_Text.html#lambda-functions",
     "title": "Cleaning Text",
     "section": "Lambda Functions",
-    "text": "Lambda Functions\nFunctional equivalent of list comprehensions: 1-line, anonymous functions.\nFor example:\nx = lambda a : a + 10\nprint(x(5)) # 15\nOr:\nfull_name = lambda first, last: f'Full name: {first.title()} {last.title()}'\nprint(full_name('guido', 'van rossum')) # 'Guido Van Rossum'\nThese are very useful with pandas."
+    "text": "Lambda Functions\nFunctional equivalent of list comprehensions: 1-line, anonymous functions.\nFor example:\n\nx = lambda a : a + 10\nprint(x(5))\n\n15\n\n\nOr:\n\nfull_name = lambda first, last: f'Full name: {first.title()} {last.title()}'\nprint(full_name('guido', 'van rossum'))\n\nFull name: Guido Van Rossum\n\n\nThese are very useful with pandas."
   },
   {
     "objectID": "lectures/8.3-Cleaning_Text.html#lets-compare",
     "href": "lectures/8.3-Cleaning_Text.html#lets-compare",
     "title": "Cleaning Text",
     "section": "Let’s Compare",
-    "text": "Let’s Compare\nimport time\nimport numpy as np\ndef func(a,b):\n  c = 0\n  for i in range(len(a)): c += a[i]*b[i]\n  return c\n\na = np.random.rand(1000000)\nb = np.random.rand(1000000)\nt1 = time.time()\nprint(func(a,b))\nt2 = time.time()\nprint(np.dot(a,b))\nt3 = time.time()\n\nprint(f\"For loop took {(t2-t1)*1000:.0f} milliseconds\")\nprint(f\"Numpy took {(t3-t2)*1000:.0f} milliseconds\")\nGenerally, I get numpy taking 86ms, while the for loop takes 331ms!\n\n\n/ht to The Last Byte for inspiration."
+    "text": "Let’s Compare\n\nimport time\nimport numpy as np\ndef func(a,b):\n  c = 0\n  for i in range(len(a)): c += a[i]*b[i]\n  return c\n\na = np.random.rand(1000000)\nb = np.random.rand(1000000)\nt1 = time.time()\nfunc(a,b) # Dot product\nt2 = time.time()\nnp.dot(a,b) # Dot product\nt3 = time.time()\n\nprint(f\"For loop took {(t2-t1)*1000:.0f} milliseconds\")\nprint(f\"Numpy took {(t3-t2)*1000:.0f} milliseconds\")\n\nFor loop took 207 milliseconds\nNumpy took 2 milliseconds\n\n\nWithout running this hundreds of times you’ll get a different answer every time, but in general numpy is orders of magnitude faster.\n\n\n/ht to The Last Byte for inspiration."
   },
   {
     "objectID": "lectures/8.3-Cleaning_Text.html#beautiful-soup-selenium",
     "href": "lectures/8.3-Cleaning_Text.html#beautiful-soup-selenium",
     "title": "Cleaning Text",
     "section": "Beautiful Soup & Selenium",
-    "text": "Beautiful Soup & Selenium\nTwo stages to acquiring web-based documents:\n\nAccessing the document: urllib can deal with many issues (even authentication), but not with dynamic web pages (which are increasingly common); for that, you need Selenium (library + driver).\nProcessing the document: simple data can be extracted from web pages with RegularExpressions, but not with complex (esp. dynamic) content; for that, you need BeautifulSoup4.\n\nThese interact with wider issues of Fair Use (e.g. rate limits and licenses); processing pipelines (e.g. saving WARCs or just the text file, multiple stages, etc.); and other practical constraints."
+    "text": "Beautiful Soup & Selenium\nTwo stages to acquiring web-based documents:\n\nAccessing the document: urllib can deal with many issues (even authentication), but not with dynamic web pages (which are increasingly common); for that, you need Selenium (library + driver).\nProcessing the document: simple data can be extracted from web pages with Regular Expressions, but not with complex (esp. dynamic) content; for that, you need BeautifulSoup4.\n\nThese interact with wider issues of Fair Use (e.g. rate limits and licenses); processing pipelines (e.g. saving WARCs or just the text file, multiple stages, etc.); and other practical constraints."
   },
   {
     "objectID": "lectures/8.3-Cleaning_Text.html#regular-expressions-breaks",
@@ -8360,5 +8360,40 @@
     "title": "Exploratory (Spatial) Data Analysis",
     "section": "Implementing Lags",
     "text": "Implementing Lags\nw2 = weights.DistanceBand.from_dataframe(gdf, threshold=2000, alpha=-0.25)\ngdf['price_std'] = (gdf.price - gdf.price.mean()) / gdf.price.std()\ngdf['w_price_std'] = weights.lag_spatial(w2, gdf.price_std)\ngdf[['name','price_std','w_price_std']].sample(5, random_state=42)\n\n\n\n\nname\nprice_std\nw_price_std\n\n\n\n\n83\nSouthfields Home\n-0.27\n0.00\n\n\n53\nFlat in Islington, Central London\n-0.51\n-0.58\n\n\n70\n3bedroom Family Home minutes from Kensington Tube\n0.83\n0.46\n\n\n453\nBed, 20 min to Liverpool st, EAST LONDON\n-0.07\n-0.82\n\n\n44\nAvni Kensington Hotel\n2.52\n3.25"
+  },
+  {
+    "objectID": "lectures/8.2-Patterns_in_Text.html#string-methods-are-not-enough",
+    "href": "lectures/8.2-Patterns_in_Text.html#string-methods-are-not-enough",
+    "title": "Patterns in Text",
+    "section": "String Methods are Not Enough",
+    "text": "String Methods are Not Enough\n\nprint(f\"Index: {'123foo456'.index('foo')}\")\nprint(f\"Split: {'123foo456'.split('foo')}\") \nprint(f\"Strip: {' 123 foo 456 '.strip()}\") \nprint(f\"Lower: {'HOW NOW BROWN COW?'.lower()}\")\nprint(f\"Replace: {'How now brown cow?'.replace('brown ','green-')}\")\n\nIndex: 3\nSplit: ['123', '456']\nStrip: 123 foo 456\nLower: how now brown cow?\nReplace: How now green-cow?\n\n\nSee: dir(str) for full list of string methods."
+  },
+  {
+    "objectID": "lectures/8.4-Analysing_Text.html#dummy-values",
+    "href": "lectures/8.4-Analysing_Text.html#dummy-values",
+    "title": "Analysing Text",
+    "section": "Dummy Values?",
+    "text": "Dummy Values?\nWhat’s wrong with this approach?1\n\n\n\n\nTopic Text\nTopic Number\n\n\n\n\nArticle 1\nNews\n1\n\n\nArticle 2\nCulture\n2\n\n\nArticle 3\nPolitics\n3\n\n\nArticle 4\nEntertainment\n4\n\n\n\n\nWhat’s the problem with this approach when you’re thinking about the topics in a document? You either have to assign each document to one, and only one, topic, or you need a lot of dummies.\n\nIf you can spot the problem right away, congratulations! I didn’t see it for a few years because everyone else thought it was too obvious to explain!"
+  },
+  {
+    "objectID": "lectures/8.4-Analysing_Text.html#dummy-columns",
+    "href": "lectures/8.4-Analysing_Text.html#dummy-columns",
+    "title": "Analysing Text",
+    "section": "Dummy Columns!",
+    "text": "Dummy Columns!\n\n\n\n\nNews\nCulture\nPolitics\n\n\n\n\nArticle 1\n1\n0\n0\n\n\nArticle 2\n0\n1\n0\n\n\nArticle 3\n0\n0\n1\n\n\nArticle 4\n0\n0\n0"
+  },
+  {
+    "objectID": "lectures/8.4-Analysing_Text.html#dummy-variables-columns",
+    "href": "lectures/8.4-Analysing_Text.html#dummy-variables-columns",
+    "title": "Analysing Text",
+    "section": "Dummy Variables Columns!",
+    "text": "Dummy Variables Columns!\n\n\n\n\nNews\nCulture\nPolitics\n\n\n\n\nArticle 1\n1\n0\n0\n\n\nArticle 2\n0\n1\n0\n\n\nArticle 3\n0\n0\n1\n\n\nArticle 4\n0\n0\n0"
+  },
+  {
+    "objectID": "lectures/8.4-Analysing_Text.html#enter-embeddings",
+    "href": "lectures/8.4-Analysing_Text.html#enter-embeddings",
+    "title": "Analysing Text",
+    "section": "Enter Embeddings",
+    "text": "Enter Embeddings\nTypically, some kind of 2 or 3-layer neural network that ‘learns’ how to embed the TCM into a lower-dimension representation: from \\(m \\times m\\) to \\(m \\times n, n &lt;&lt; m\\).\nSimilar to PCA in terms of what we’re trying to achieve, but the process is utterly different.\n\nMany different approaches, but GloVe (Stanford), word2vec (Google), fastText (Facebook), and ELMo (Allen) or BERT (Google) are probably the best-known."
   }
 ]

@@ -237,17 +237,17 @@
 <ul>
 <li>Your computer has many cores and can run many threads <em>in parallel</em>.</li>
 <li>The computer divides the work across the threads it sees fit.</li>
-<li>The computer reassemble the answer at the end from the threads.</li>
+<li>The computer reassembles the answer at the end from the threads.</li>
 </ul>
 <p>If you have 4 cores then parallelisation cuts analysis time by 75%.</p>
 </section>
 <section id="so-do-more-with-each-clock-cycle" class="slide level2">
 <h2>So Do More with Each Clock Cycle</h2>
+<p>We can tackle this problem in multiple ways:</p>
 <ul>
-<li>Many libraries/packages implement weak forms of vectorisation or parallelisation, but some libraries do more.</li>
-<li>You must request it because it requires hardware or other support and it is highly optimsed.</li>
-<li>Multiple separate machines acting as one.</li>
-<li>Multiple GPUs acting as one.</li>
+<li><strong>Implicit</strong>: many libraries/packages implement weak forms of vectorisation (or parallelisation).</li>
+<li><strong>Explicit</strong>: you must request it because it requires hardware or other support and it is highly optimsed.</li>
+<li><strong>Massive</strong>: you must commission it because it requires specialist hardware and software.</li>
 </ul>
 <aside class="notes">
 <p>Conceptually, these get challenging if you can’t clearly separate/parallelise tasks.</p>
@@ -269,40 +269,56 @@
 <ul>
 <li>Execute row-wise and column-wise operations.</li>
 <li>Apply any arbitrary function to individual elements or whole axes (i.e.&nbsp;row or col).</li>
-<li>Can make use of <code>lambda</code> functions too for ‘one off’ operations (ad-ohoc functions).</li>
+<li>Can make use of <code>lambda</code> functions too for ‘one off’ operations (ad-hoc functions).</li>
 </ul>
 </section>
-<section id="lambda-functions" class="slide level2 smaller">
+<section id="lambda-functions" class="slide level2">
 <h2>Lambda Functions</h2>
 <p>Functional equivalent of list comprehensions: 1-line, anonymous functions.</p>
 <p>For example:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a>x <span class="op">=</span> <span class="kw">lambda</span> a : a <span class="op">+</span> <span class="dv">10</span></span>
-<span id="cb1-2"><a></a><span class="bu">print</span>(x(<span class="dv">5</span>)) <span class="co"># 15</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="971ba6c7" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a>x <span class="op">=</span> <span class="kw">lambda</span> a : a <span class="op">+</span> <span class="dv">10</span></span>
+<span id="cb1-2"><a></a><span class="bu">print</span>(x(<span class="dv">5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>15</code></pre>
+</div>
+</div>
 <p>Or:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>full_name <span class="op">=</span> <span class="kw">lambda</span> first, last: <span class="ss">f'Full name: </span><span class="sc">{</span>first<span class="sc">.</span>title()<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span>last<span class="sc">.</span>title()<span class="sc">}</span><span class="ss">'</span></span>
-<span id="cb2-2"><a></a><span class="bu">print</span>(full_name(<span class="st">'guido'</span>, <span class="st">'van rossum'</span>)) <span class="co"># 'Guido Van Rossum'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="54f36ee6" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>full_name <span class="op">=</span> <span class="kw">lambda</span> first, last: <span class="ss">f'Full name: </span><span class="sc">{</span>first<span class="sc">.</span>title()<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span>last<span class="sc">.</span>title()<span class="sc">}</span><span class="ss">'</span></span>
+<span id="cb3-2"><a></a><span class="bu">print</span>(full_name(<span class="st">'guido'</span>, <span class="st">'van rossum'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Full name: Guido Van Rossum</code></pre>
+</div>
+</div>
 <p>These are very useful with pandas.</p>
 </section>
-<section id="lets-compare" class="slide level2 smaller">
+<section id="lets-compare" class="slide level2">
 <h2>Let’s Compare</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">import</span> time</span>
-<span id="cb3-2"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb3-3"><a></a><span class="kw">def</span> func(a,b):</span>
-<span id="cb3-4"><a></a>  c <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb3-5"><a></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(a)): c <span class="op">+=</span> a[i]<span class="op">*</span>b[i]</span>
-<span id="cb3-6"><a></a>  <span class="cf">return</span> c</span>
-<span id="cb3-7"><a></a></span>
-<span id="cb3-8"><a></a>a <span class="op">=</span> np.random.rand(<span class="dv">1000000</span>)</span>
-<span id="cb3-9"><a></a>b <span class="op">=</span> np.random.rand(<span class="dv">1000000</span>)</span>
-<span id="cb3-10"><a></a>t1 <span class="op">=</span> time.time()</span>
-<span id="cb3-11"><a></a><span class="bu">print</span>(func(a,b))</span>
-<span id="cb3-12"><a></a>t2 <span class="op">=</span> time.time()</span>
-<span id="cb3-13"><a></a><span class="bu">print</span>(np.dot(a,b))</span>
-<span id="cb3-14"><a></a>t3 <span class="op">=</span> time.time()</span>
-<span id="cb3-15"><a></a></span>
-<span id="cb3-16"><a></a><span class="bu">print</span>(<span class="ss">f"For loop took </span><span class="sc">{</span>(t2<span class="op">-</span>t1)<span class="op">*</span><span class="dv">1000</span><span class="sc">:.0f}</span><span class="ss"> milliseconds"</span>)</span>
-<span id="cb3-17"><a></a><span class="bu">print</span>(<span class="ss">f"Numpy took </span><span class="sc">{</span>(t3<span class="op">-</span>t2)<span class="op">*</span><span class="dv">1000</span><span class="sc">:.0f}</span><span class="ss"> milliseconds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Generally, I get <code>numpy</code> taking 86ms, while the <code>for</code> loop takes 331ms!</p>
+<div id="97bc3bed" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="im">import</span> time</span>
+<span id="cb5-2"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb5-3"><a></a><span class="kw">def</span> func(a,b):</span>
+<span id="cb5-4"><a></a>  c <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb5-5"><a></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(a)): c <span class="op">+=</span> a[i]<span class="op">*</span>b[i]</span>
+<span id="cb5-6"><a></a>  <span class="cf">return</span> c</span>
+<span id="cb5-7"><a></a></span>
+<span id="cb5-8"><a></a>a <span class="op">=</span> np.random.rand(<span class="dv">1000000</span>)</span>
+<span id="cb5-9"><a></a>b <span class="op">=</span> np.random.rand(<span class="dv">1000000</span>)</span>
+<span id="cb5-10"><a></a>t1 <span class="op">=</span> time.time()</span>
+<span id="cb5-11"><a></a>func(a,b) <span class="co"># Dot product</span></span>
+<span id="cb5-12"><a></a>t2 <span class="op">=</span> time.time()</span>
+<span id="cb5-13"><a></a>np.dot(a,b) <span class="co"># Dot product</span></span>
+<span id="cb5-14"><a></a>t3 <span class="op">=</span> time.time()</span>
+<span id="cb5-15"><a></a></span>
+<span id="cb5-16"><a></a><span class="bu">print</span>(<span class="ss">f"For loop took </span><span class="sc">{</span>(t2<span class="op">-</span>t1)<span class="op">*</span><span class="dv">1000</span><span class="sc">:.0f}</span><span class="ss"> milliseconds"</span>)</span>
+<span id="cb5-17"><a></a><span class="bu">print</span>(<span class="ss">f"Numpy took </span><span class="sc">{</span>(t3<span class="op">-</span>t2)<span class="op">*</span><span class="dv">1000</span><span class="sc">:.0f}</span><span class="ss"> milliseconds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>For loop took 207 milliseconds
+Numpy took 2 milliseconds</code></pre>
+</div>
+</div>
+<p>Without running this hundreds of times you’ll get a different answer <em>every</em> time, but in general <code>numpy</code> is orders of magnitude faster.</p>
 
 <aside><div>
 <p>/ht to <a href="https://thelastbyteblog.wordpress.com/2020/06/09/vectorization-vs-parallelization-making-you-code-run-faster/">The Last Byte</a> for inspiration.</p>
@@ -317,7 +333,7 @@
 <p>Two stages to acquiring web-based documents:</p>
 <ol type="1">
 <li>Accessing the document: <code>urllib</code> can deal with many issues (even authentication), but <em>not</em> with dynamic web pages (which are increasingly common); for that, you need <a href="https://selenium-python.readthedocs.io/">Selenium</a> (library + driver).</li>
-<li>Processing the document: simple data can be extracted from web pages with RegularExpressions, but <em>not</em> with complex (esp.&nbsp;dynamic) content; for that, you need <a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">BeautifulSoup4</a>.</li>
+<li>Processing the document: simple data can be extracted from web pages with Regular Expressions, but <em>not</em> with complex (esp.&nbsp;dynamic) content; for that, you need <a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">BeautifulSoup4</a>.</li>
 </ol>
 <p>These interact with wider issues of Fair Use (e.g.&nbsp;rate limits and licenses); processing pipelines (e.g.&nbsp;saving WARCs or just the text file, multiple stages, etc.); and other practical constraints.</p>
 </section>
@@ -457,14 +473,14 @@
 </tr>
 </tbody>
 </table>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="im">from</span> nltk.stem.porter <span class="im">import</span> PorterStemmer</span>
-<span id="cb4-2"><a></a><span class="im">from</span> nltk.stem.snowball <span class="im">import</span> SnowballStemmer</span>
-<span id="cb4-3"><a></a><span class="im">from</span> nltk.stem <span class="im">import</span> WordNetLemmatizer</span>
-<span id="cb4-4"><a></a>wnl <span class="op">=</span> WordNetLemmatizer()</span>
-<span id="cb4-5"><a></a><span class="cf">for</span> w <span class="kw">in</span> [<span class="st">'monkeys'</span>,<span class="st">'cities'</span>,<span class="st">'complexity'</span>,<span class="st">'Reades'</span>]:</span>
-<span id="cb4-6"><a></a>    <span class="bu">print</span>(<span class="ss">f"Porter: </span><span class="sc">{</span>PorterStemmer()<span class="sc">.</span>stem(w)<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb4-7"><a></a>    <span class="bu">print</span>(<span class="ss">f"Snowball: </span><span class="sc">{</span>SnowballStemmer(<span class="st">'english'</span>)<span class="sc">.</span>stem(w)<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb4-8"><a></a>    <span class="bu">print</span>(<span class="ss">f"Lemmatisation: </span><span class="sc">{</span>wnl<span class="sc">.</span>lemmatize(w)<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="im">from</span> nltk.stem.porter <span class="im">import</span> PorterStemmer</span>
+<span id="cb7-2"><a></a><span class="im">from</span> nltk.stem.snowball <span class="im">import</span> SnowballStemmer</span>
+<span id="cb7-3"><a></a><span class="im">from</span> nltk.stem <span class="im">import</span> WordNetLemmatizer</span>
+<span id="cb7-4"><a></a>wnl <span class="op">=</span> WordNetLemmatizer()</span>
+<span id="cb7-5"><a></a><span class="cf">for</span> w <span class="kw">in</span> [<span class="st">'monkeys'</span>,<span class="st">'cities'</span>,<span class="st">'complexity'</span>,<span class="st">'Reades'</span>]:</span>
+<span id="cb7-6"><a></a>    <span class="bu">print</span>(<span class="ss">f"Porter: </span><span class="sc">{</span>PorterStemmer()<span class="sc">.</span>stem(w)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb7-7"><a></a>    <span class="bu">print</span>(<span class="ss">f"Snowball: </span><span class="sc">{</span>SnowballStemmer(<span class="st">'english'</span>)<span class="sc">.</span>stem(w)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb7-8"><a></a>    <span class="bu">print</span>(<span class="ss">f"Lemmatisation: </span><span class="sc">{</span>wnl<span class="sc">.</span>lemmatize(w)<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="additional-resources" class="slide level2 smaller">
 <h2>Additional Resources</h2>
