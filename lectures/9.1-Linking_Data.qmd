@@ -11,6 +11,12 @@ format: revealjs
 
 # Non-Spatial Linkages
 
+```{python}
+#| echo: false
+#| output: asis
+import pandas as pd
+```
+
 ---
 
 :::: {.columns}
@@ -18,40 +24,27 @@ format: revealjs
 
 ### Data Set 1
 
-| SensorID | Place | Owner    |
-| -------- | ----- | -------- |
-| 1        | LHR   | BAA      |
-| 2        | LGA   | GIP      |
-| 3        | STA   | MAG      |
-| 4        | LUT   | Luton LA |
-| 5        | SEN   | Stobart  |
-
-```{.python .code-overflow-wrap .smaller}
+```{python .code-overflow-wrap .smaller}
 df1 = pd.DataFrame({
   'SensorID': [1,2,3,4,5],
   'Place': ['LHR','LGA','STA','LUT','SEN'],
   'Owner': ['BAA','GIP','MAG','Luton LA','Stobart']
 })
+df1
 ```
 
 :::
 ::: {.column width="50%"}
+
 ### Data Set 2
 
-| SensorID | Parameter   | Value |
-| -------- | ----------- | ----- |
-| 1        | Temperature | 5ºC   |
-| 1        | Humidity    | 15%   |
-| 3        | Temperature | 7ºC   |
-| 4        | Temperature | 7ºC   |
-| 6        | Humidity    | 18%   |
-
-```{.python .code-overflow-wrap}
+```{python .code-overflow-wrap .smaller}
 df2 = pd.DataFrame({
-  'SensorID': [1,2,3,4,5],
+  'SensorID': [1,1,3,4,6],
   'Parameter': ['Temperature','Humidity','Temperature','Temperature','Humidity'],
   'Value': ['5ºC','15%','7ºC','7ºC','18%']
 })
+df2
 ```
 
 :::
@@ -65,8 +58,14 @@ How do we connect these?
 
 A **join** refers to the merging of two (or more) data tables using one (or more) matching columns:
 
-```{.python}
+```{python}
 pd.merge(df1, df2, on='SensorID')
+```
+
+This can also be written:
+
+```{.python}
+pd.merge(df1, df2, how='inner', on='SensorID')
 ```
 
 ::: {.notes}
@@ -110,93 +109,36 @@ Note that the *default* behaviour is an inner join (i.e. defaults to `how='inner
 :::
 ::::
 
-## Inner Join Result
-
-On an **Inner Join** all non-matching rows are dropped:
-
-```{.python}
-pd.merge(df1, df2, 
-         how = 'inner',
-         on  = 'SensorID')
-```
-
-&nbsp;
-
-| SensorID | Place | Owner    | Parameter   | Value |
-| -------- | ----- | -------- | ----------- | ----- |
-| 1        | LHR   | BAA      | Temperature | 5ºC   |
-| 1        | LHR   | BAA      | Humidity    | 15%   |
-| 3        | STA   | MAG      | Temperature | 7ºC   |
-| 4        | LUT   | Luton LA | Temperature | 7ºC   |
-
-
 ## But What If...
 
 If Data Set 2 had a `SensorKey` instead of a `SensorID` then:
 
-```{.python}
-pd.merge(df1, df2, 
+```{python}
+pd.merge(df1, df2.rename(columns={'SensorID':'SensorKey'}), 
          how      = 'inner',
          left_on  = 'SensorID',
          right_on = 'SensorKey')
 ```
 
-&nbsp;
-
-We will get an 'extra' field:
-
-| SensorID | Place | Owner    | SensorKey | Parameter   | Value |
-| -------- | ----- | -------- | --------- | ----------- | ----- |
-| 1        | LHR   | BAA      | 1         | Temperature | 5ºC   |
-| 1        | LHR   | BAA      | 1         | Humidity    | 15%   |
-| 3        | STA   | MAG      | 3         | Temperature | 7ºC   |
-| 4        | LUT   | Luton LA | 4         | Temperature | 7ºC   |
-
-
 ## Outer Join
 
 On an **Outer Join** all rows are retained, including ones with no match:
 
-```python
+```{python}
 pd.merge(df1, df2,
          how = 'outer',
          on  = 'SensorID')
 ```
 
-&nbsp;
-
-| SensorID | Place | Owner             | Parameter | Value |
-| -------- | ----- | ----------------- | --------- | ----- |
-| 1        | LHR   | BAA               | Temp.     | 5℃    |
-| 1        | LHR   | BAA               | Hum.      | 15%   |
-| 2        | LGA   | GIP               | NaN       | NaN   |
-| 3        | STA   | MAG               | Temp.     | 7℃    |
-| 4        | LUT   | Luton     Borough | NaN       | NaN   |
-| 5        | SEN   | Stobart           | NaN       | NaN   |
-| 6        | NaN   | NaN               | Hum.      | 20%   |
-
-
 ## Left Join
 
 On a **Left Join** all rows on the left table are retained, including ones with no match, but unmatched right rows are dropped:
 
- ```python
+```{python}
 pd.merge(df1, df2, 
          how = 'left',
          on  = 'SensorID')
- ```
-
-&nbsp;
-
-| SensorID | Place | Owner             | Parameter | Value |
-| -------- | ----- | ----------------- | --------- | ----- |
-| 1        | LHR   | BAA               | Temp.     | 5℃    |
-| 1        | LHR   | BAA               | Hum.      | 15%   |
-| 2        | LGA   | GIP               | NaN       | NaN   |
-| 3        | STA   | MAG               | Temp.     | 7℃    |
-| 4        | LUT   | Luton     Borough | NaN       | NULL  |
-| 5        | SEN   | Stobart           | NaN       | NaN   |
-
+```
 
 # > Any guesses for the fourth type?
 
@@ -211,7 +153,7 @@ Pandas has two *additional* join-*like* functions:
 
 ## Concat {.smaller}
 
-```python
+```{python}
 df3 = pd.DataFrame.from_dict({
     'SensorID': [2,3,8,9,10],
     'Place': ['STA','LUT','BHX','MAN','INV'],
@@ -220,42 +162,16 @@ df3 = pd.DataFrame.from_dict({
 pd.concat([df1, df3], ignore_index=True)
 ```
 
-Outputs:
+## ~~Append~~ *Also* Concat {.smaller}
 
-|      | SensorID | Place |    Owner |
-| ---: | -------: | ----: | -------: |
-|    0 |        1 |   LHR |      BAA |
-| $\vdots$ | $\vdots$ | $\vdots$ | $\vdots$ |
-|    4 |        5 |   SEN |  Stobart |
-|    5 |        2 |   STA |      BAA |
-|    6 |        3 |   LUT |      GIP |
-|    7 |        8 |   BHX |      ??? |
-|    8 |        9 |   MAN |      ??? |
-|    9 |       10 |   INV |      ??? |
-
-
-## Append {.smaller}
-
-```python
+```{python}
 to_append = [
-    {'SensorID': 0, 'Parameter': 5,  'Humidity', 'Value': 0.45},
-    {'SensorID': 1, 'Parameter': 5,  'Humidity', 'Value': 0.31},
-    {'SensorID': 2, 'Parameter': 4, 'Temperature', 'Value': 2},
-    {'SensorID': 3, 'Parameter': 3, 'Temperature', 'Value': 3}]
-df2.append(to_append)
+    {'SensorID': 0, 'Parameter': 'Humidity', 'Value': 0.45},
+    {'SensorID': 1, 'Parameter': 'Humidity', 'Value': 0.31},
+    {'SensorID': 2, 'Parameter': 'Temperature', 'Value': 2},
+    {'SensorID': 3, 'Parameter': 'Temperature', 'Value': 3}]
+pd.concat([df2, pd.DataFrame(to_append)], ignore_index=True)
 ```
-
-Outputs:
-
-| SensorID | Parameter |       Value |      |
-| -------: | --------: | ----------: | ---- |
-|        0 |         1 | Temperature | 5.00 |
-| $\vdots$ | $\vdots$  | $\vdots$    | $\vdots$ |
-|        4 |         6 |    Humidity | 0.18 |
-|        0 |         5 |    Humidity | 0.45 |
-|        1 |         5 |    Humidity | 0.31 |
-|        2 |         4 | Temperature | 2.00 |
-|        3 |         3 | Temperature | 3.00 |
 
 ::: {.notes}
 
@@ -263,7 +179,7 @@ Note that a Dictionary-of-Lists would also work for an append and that appending
 
 :::
 
-## Merge vs. Append vs. Concat vs. Join? {.smaller}
+## Merge vs. Concat vs. Join? {.smaller}
 
 As usual, [Stack Overflow to the rescue](https://stackoverflow.com/questions/38256104/differences-between-merge-and-concat-in-pandas):
 
@@ -273,20 +189,21 @@ As usual, [Stack Overflow to the rescue](https://stackoverflow.com/questions/382
 
 *[Hint](https://railsware.com/blog/python-for-machine-learning-pandas-axis-explained/):* `axis=0` refers to the row index & `axis=1` to the column index.
 
-## Merge vs. Append vs. Concat vs. Join? {.smaller}
+## Merge vs. Concat vs. Join? {.smaller}
 
-These achieve the same thing, but they are *not* always equivalent:
+These achieve the same thing, but they are *not* always equivalent or what you want:
 
-```python
+```{python}
 pd.merge(df1, df2, left_index=True, right_index=True)
 pd.concat([df1, df2], axis=1)
-df1.join(df2)
+df1.join(df2, rsuffix='_r')
 ```
+
 Generally:
 
-- **Concat** expects the number of columns in all data frames to match (if concatenating vertically) and the number of rows in all data frames to match (if concatenating horizontally). It does *not* deal well with *linking*.
-- **Append** assumes that *either* the columns or the rows will match.
-- **Join** is basically a functionality-restricted merge.
+- **Concat** expects the number of columns in all data frames to match (if concatenating vertically) and the number of rows in all data frames to match (if concatenating horizontally). It does *not* deal well with *linking* ([docs](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.merge.html#pandas.DataFrame.merge)).
+- **Join** is basically a functionality-restricted merge ([docs](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.join.html)).
+- ~~**Append** assumes that *either* the columns or the rows will match.~~ *[Append has been deprecated]*
 
 ## Additional Resources {.smaller}
 

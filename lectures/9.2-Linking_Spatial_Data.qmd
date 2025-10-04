@@ -7,9 +7,16 @@ date-as-string: "1st October 2025"
 format: revealjs
 ---
 
-# > Data sets with spatial attributes can be connected in more complex ways than those without such attributes; consequently the ability to link such data unlocks even more exciting new applications!
+# > Spatial data connected in more complex ways unlocking even more applications, but at a cost!
 
 # Non-Spatial Linkages can be Spatial
+
+```{python}
+#| echo: false
+#| output: asis
+import pandas as pd
+import geopandas as gpd
+```
 
 ## {.smaller}
 
@@ -18,40 +25,26 @@ format: revealjs
 
 ### Data Set 1
 
-| SensorID | Latitude | Longitude |
-| -------- | -------- | --------- |
-| 1        | 51.5070  | -0.1347   |
-| 2        | 51.5071  | -0.0042   |
-| 3        | 51.5074  | -0.1223   |
-| 4        | 51.5073  | -0.1122   |
-| 5        | 51.5072  | 0.1589    |
-
-```python
-df = pd.DataFrame({
+```{python}
+df1 = pd.DataFrame({
   'SensorID': [1,2,3,4,5],
   'Latitude': [51.5070, 51.5071, 51.5074, 51.5073, 51.5073],
   'Longitude': [-0.1347, -0.0042, -0.1223, -0.1122, 0.1589]
 })
+df1
 ```
 :::
 ::: {.column width="50%"}
 
 ### Data Set 2
 
-| SensorID | Parameter   | Value |
-| -------- | ----------- | ----- |
-| 1        | Temperature | 5ºC   |
-| 1        | Humidity    | 15%   |
-| 3        | Temperature | 7ºC   |
-| 4        | Temperature | 7ºC   |
-| 6        | Humidity    | 18%   |
-
-```python
-df1 = pd.DataFrame({
+```{python}
+df2 = pd.DataFrame({
   'SensorID': [1,2,3,4,5],
   'Parameter': ['Temperature','Humidity','Temperature','Temperature','Humidity'], 
   'Value': ['5ºC', '15%', '7ºC', '7ºC', '18%']
 })
+df2
 ```
 :::
 ::::
@@ -61,38 +54,39 @@ df1 = pd.DataFrame({
 This wouldn't be a particularly *good* design for a data structure... why?
 :::
 
-::: {.notes}
-Obviously, we can use non-spatial operations on spatial data sets.
-:::
+## Going Spatial
 
-## Sjoin vs. Join {.smaller}
-
-Sjoin adds an *operator* (`['intersects','contains','within']`) and example code can be [found on GitHub](https://github.com/jreades/i2p/blob/master/lectures/8.2-Linking_Spatial_Data.ipynb).
-
-```python
-gdf = gpd.GeoDataFrame(df, 
-            geometry=gpd.points_from_xy(df.longitude, df.latitude,
-            crs='epsg:4326')).to_crs('epsg:27700')
-hackney = boros[boros.NAME=='Hackney']
-rs = gpd.sjoin(gdf, hackney, op='within')
+```{python}
+boros = gpd.read_file('https://bit.ly/3neINBV', driver='GPKG')
+df    = pd.read_csv('https://bit.ly/3I0XDrq')
+gdf   = gpd.GeoDataFrame(df,
+        geometry=gpd.points_from_xy(
+          df['longitude'], df['latitude'], crs='epsg:4326'
+        )
+      ).to_crs('epsg:27700')
 ```
 
-![](img/Hackney.png)
+## A Spatial Join
 
+Sjoin adds an *predicate* (`'intersects','contains','within'`): 
+
+```{python}
+hackney = boros[boros.NAME=='Hackney']
+rs = gpd.sjoin(gdf, hackney, predicate='within')
+ax = hackney.plot(facecolor='none', edgecolor='blue', figsize=(8,4.5))
+rs.plot(ax=ax, marker='*', color='red', markersize=5)
+```
 
 ## Combining Operators & How {.smaller}
 
 Changing how to `left`, `right`, or `inner` changes the join's behaviour:
 
-```python
-rs = gpd.sjoin(gdf, hackney, how='left', op='within')
+```{python}
+rs = gpd.sjoin(gdf, hackney, how='left', predicate='within')
 rs.NAME.fillna('None', inplace=True)
-ax = boros[boros.NAME=='Hackney'].plot(edgecolor='k', facecolor='none', figsize=(8,8))
+ax = boros[boros.NAME=='Hackney'].plot(edgecolor='k', facecolor='none', figsize=(8,4.5))
 rs.plot(ax=ax, column='NAME', legend=True)
 ```
-
-![](img/Hackney-Left.png)
-
 
 ## Merging Data
 

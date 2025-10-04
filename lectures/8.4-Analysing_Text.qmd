@@ -7,33 +7,40 @@ date-as-string: "1st October 2025"
 format: revealjs
 ---
 
-## Dummy Variables
+## Dummy Values?
 
-The concept of 'dummy variables' in economics/regression is a useful point to start thinking about text:
+What's wrong with this approach?^[If you can spot the problem right away, congratulations! I didn't see it for a few years because everyone *else* thought it was too obvious to explain!]
 
-| Topic         | Dummy | 
-| ------------- | ----- | 
-| News          | 0     | 
-| Culture       | 1     | 
-| Politics      | 2     | 
-| Entertainment | 3     | 
+|      | Topic Text   | Topic Number | 
+| ------ | ------------- | ------ | 
+| Article 1 | News          | 1     | 
+| Article 2 | Culture       | 2     | 
+| Article 3 | Politics      | 3     | 
+| Article 4 | Entertainment | 4     | 
 
 ::: {.notes}
 What's the problem with this approach when you're thinking about the topics in a document? You either have to assign each document to one, and only one, topic, or you need a _lot_ of dummies.
 :::
 
+## Dummy ~~Variables~~ Columns!
+
+|        | News   | Culture | Politics |
+| ------ | ------ | ------ | ------ |
+| Article 1  | 1  | 0 | 0 |
+| Article 2  | 0  | 1 | 0 |
+| Article 3  | 0  | 0 | 1 |
+| Article 4  | 0  | 0 | 0 |
+
 ## One-Hot Encoders
 
-| Document           | UK   | Top  | Pop  | Coronavirus |
-| ------------------ | ---- | ---- | ---- | ----------- |
-| News item          | 1    | 1    | 0    | 1           |
-| Culture item       | 0    | 1    | 1    | 0           |
-| Politics item      | 1    | 0    | 0    | 1           |
-| Entertainment item | 1    | 1    | 1    | 1           |
+|        | News   | Culture | Politics | Entertainment |
+| ------ | ------ | ------ | ------ | ------ |
+| Article 1  | 1  | 0 | 0 | 0 |
+| Article 2  | 0  | 1 | 0 | 0 |
+| Article 3  | 0  | 0 | 1 | 0 |
+| Article 4  | 0  | 0 | 0 | 1 |
 
 ::: {.notes}
-
-One-Hot encoders are not _often_ used this way, but for keyword detection or keyword-based classification this might be appropriate: i.e. this keyword was used in this document! 
 
 So the big difference is One Hot == $n$ variables, Dummy == $n-1$.
 
@@ -145,7 +152,7 @@ Cleaning is _necessary_, but it's not _sufficient_ to create a tractable TCM on 
 Although usually used in the context of clustering, there's also a curse of dimensionality here!
 :::
 
-## Enter Document Embeddings
+## Enter Embeddings
 
 Typically, some kind of 2 or 3-layer neural network that 'learns' how to _embed_ the TCM into a lower-dimension representation: from $m \times m$ to $m \times n, n << m$. 
 

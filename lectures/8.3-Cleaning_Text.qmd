@@ -25,16 +25,17 @@ If you need to apply the same operation to lots of data why do it *sequentially*
 
 - Your computer has many cores and can run many threads *in parallel*.
 - The computer divides the work across the threads it sees fit.
-- The computer reassemble the answer at the end from the threads.
+- The computer reassembles the answer at the end from the threads.
 
 If you have 4 cores then parallelisation cuts analysis time by 75%. 
 
 ## So Do More with Each Clock Cycle
 
-- Many libraries/packages implement weak forms of vectorisation or parallelisation, but some libraries do more.
-- You must request it because it requires hardware or other support and it is highly optimsed.
-- Multiple separate machines acting as one.
-- Multiple GPUs acting as one.
+We can tackle this problem in multiple ways:
+
+- **Implicit**: many libraries/packages implement weak forms of vectorisation (or parallelisation).
+- **Explicit**: you must request it because it requires hardware or other support and it is highly optimsed.
+- **Massive**: you must commission it because it requires specialist hardware and software.
 
 ::: {.notes}
 Conceptually, these get challenging if you can't clearly separate/parallelise tasks.
@@ -46,32 +47,32 @@ Numpy is fully vectorised and will almost *always* out-perform Pandas `apply`, b
 
 - Execute row-wise and column-wise operations.
 - Apply any arbitrary function to individual elements or whole axes (i.e. row or col).
-- Can make use of `lambda` functions too for 'one off' operations (ad-ohoc functions).
+- Can make use of `lambda` functions too for 'one off' operations (ad-hoc functions).
 
-## Lambda Functions {.smaller}
+## Lambda Functions
 
 Functional equivalent of list comprehensions: 1-line, anonymous functions.
 
 For example:
 
-```python
+```{python}
 x = lambda a : a + 10
-print(x(5)) # 15
+print(x(5))
 ```
 
 Or:
 
-```python
+```{python}
 full_name = lambda first, last: f'Full name: {first.title()} {last.title()}'
-print(full_name('guido', 'van rossum')) # 'Guido Van Rossum'
+print(full_name('guido', 'van rossum'))
 ```
 
 These are very useful with pandas.
 
 
-## Let's Compare {.smaller}
+## Let's Compare
 
-```python
+```{python}
 import time
 import numpy as np
 def func(a,b):
@@ -82,15 +83,16 @@ def func(a,b):
 a = np.random.rand(1000000)
 b = np.random.rand(1000000)
 t1 = time.time()
-print(func(a,b))
+func(a,b) # Dot product
 t2 = time.time()
-print(np.dot(a,b))
+np.dot(a,b) # Dot product
 t3 = time.time()
 
 print(f"For loop took {(t2-t1)*1000:.0f} milliseconds")
 print(f"Numpy took {(t3-t2)*1000:.0f} milliseconds")
 ```
-Generally, I get `numpy` taking 86ms, while the `for` loop takes 331ms!
+
+Without running this hundreds of times you'll get a different answer *every* time, but in general `numpy` is orders of magnitude faster.
 
 ::: {.aside}
 /ht to [The Last Byte](https://thelastbyteblog.wordpress.com/2020/06/09/vectorization-vs-parallelization-making-you-code-run-faster/) for inspiration.
@@ -103,7 +105,7 @@ Generally, I get `numpy` taking 86ms, while the `for` loop takes 331ms!
 Two stages to acquiring web-based documents:
 
 1. Accessing the document: `urllib` can deal with many issues (even authentication), but *not* with dynamic web pages (which are increasingly common); for that, you need [Selenium](https://selenium-python.readthedocs.io/) (library + driver).
-2. Processing the document: simple data can be extracted from web pages with RegularExpressions, but *not* with complex (esp. dynamic) content; for that, you need [BeautifulSoup4](https://www.crummy.com/software/BeautifulSoup/bs4/doc/).
+2. Processing the document: simple data can be extracted from web pages with Regular Expressions, but *not* with complex (esp. dynamic) content; for that, you need [BeautifulSoup4](https://www.crummy.com/software/BeautifulSoup/bs4/doc/).
 
 These interact with wider issues of Fair Use (e.g. rate limits and licenses); processing pipelines (e.g. saving WARCs or just the text file, multiple stages, etc.); and other practical constraints.
 

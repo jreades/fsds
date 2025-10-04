@@ -240,7 +240,7 @@ print(f"Polars execution time: {pl_execution_time:.6f} seconds")
 ```{python}
 #| echo: False
 #| output: asis
-print(f"{abs((pl_execution_time - pd_execution_time)/pd_execution_time*100):0.2f}% faster than pandas.")
+print(f'[{abs((pl_execution_time - pd_execution_time)/pd_execution_time*100):0.2f}% faster than pandas.]{{style="font-size: 0.8em;"}}')
 ```
 
 #### DuckDB
@@ -253,8 +253,8 @@ print(f"DuckDB execution time: {db_execution_time:.6f} seconds")
 ```{python}
 #| echo: False
 #| output: asis
-print(f"{abs((db_execution_time - pd_execution_time)/pd_execution_time*100):0.2f}% faster than pandas and", end=" ")
-print(f"{abs((db_execution_time - pl_execution_time)/pl_execution_time*100):0.2f}% faster than polars.")
+print(f'[{abs((db_execution_time - pd_execution_time)/pd_execution_time*100):0.2f}% faster than pandas and', end=" ")
+print(f'{abs((db_execution_time - pl_execution_time)/pl_execution_time*100):0.2f}% faster than polars.]{{style="font-size: 0.8em;"}}')
 ```
 
 # Summarising Data
@@ -284,13 +284,13 @@ In Pandas these follow a split / apply / combine approach:
 
 ![](img/Split-Apply-Combine.png)
 
-::: {.notes}
+::: {.aside}
 
 Note that, for simplicity, I've abbreviate the Local Authority names since this is just a simplified example: `TH` (Tower Hamlets), `HAK` (Hackney), `W` (Westminster).
 
 :::
 
-## In Practice {.smaller}
+## In Practice
 
 ```python
 grouped_df = df.groupby(<fields>).<function>
@@ -332,12 +332,12 @@ A 'special case' of Group By features:
 
 ## In Practice
 
-```python
-age = pd.cut(titanic['age'], [0, 18, 80])
-titanic.pivot_table('survived', ['sex', age], 'class')
+```{python}
+ttc = pd.read_parquet('titanic.pq')
+age = pd.cut(ttc['age'], [0, 18, 80])
+pd.set_option('display.float_format', '{:,.3f}'.format)
+ttc.pivot_table('survived', ['sex', age], 'class')
 ```
-
-![](img/Pivot_Table.png)
 
 ## Counts
 

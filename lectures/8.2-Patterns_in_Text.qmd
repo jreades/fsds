@@ -21,15 +21,14 @@ Consider the following character sequences:
 We need ways to distinguish: Upper and Lower Case, Digits, Space Characters, Other Characters, Repetition, Type... Can you do those with strings alone?
 :::
 
-## Strings Methods are _Not_ Enough
+## String Methods are _Not_ Enough
 
-```python
-'123foo456'.index('foo') # 2
-'123foo456'.split('foo') # ['123', '456']
-' 123 foo 456 '.strip()  # '123 foo 456'
-'HOW NOW BROWN COW?'.lower() # 'how now brown cow?'
-'How now brown cow?'.replace('brown ','green-')
-# 'How now green-cow?'
+```{python}
+print(f"Index: {'123foo456'.index('foo')}")
+print(f"Split: {'123foo456'.split('foo')}") 
+print(f"Strip: {' 123 foo 456 '.strip()}") 
+print(f"Lower: {'HOW NOW BROWN COW?'.lower()}")
+print(f"Replace: {'How now brown cow?'.replace('brown ','green-')}")
 ```
 
 See: `dir(str)` for full list of string methods.
@@ -41,35 +40,34 @@ Regexes are a way for talking _about_ patterns observed in text, although their 
 
 Implemented in Python as:
 
-```python
+```{python}
 import re
-# re.search(<regex>, <str>)
 s = '123foo456'
+
+# re.search(<regex>, <str>)
 if re.search('123',s):
   print("Found a match.")
 else:
   print("No match.")
 ```
-Prints `'Found a match.'`
 
 ## Capturing Matches
 
-```python
+For singular matches it's fairly straightforward:
+
+```{python}
+print(f"String: {s}")
 m = re.search('123',s)
-print(m.start())
-print(m.end())
-print(m.span())
-print(m.group())
+
+print(f"Start of match: {m.start()}")
+print(f"End of match: {m.end()}")
+print(f"Span of match: {m.span()}")
+print(f"Match group: {m.group()}")
 ```
 
-Outputs:
-
-```python
-0
-3
-(0,3)
-123
-```
+::: {.aside}
+The match group is often more complicated than this because of 'memoisation'.
+:::
 
 ::: {.notes}
 
@@ -79,68 +77,57 @@ So, we have `None` if a search fails, but if it succeeds then we have attributes
 
 ## Configuring Matches
 
-```python
+```{python}
 s = '123foo456'
+
 m = re.search('FOO',s)
-print(m)
+print(f"First search: {m}")
+
 m = re.search('FOO',s,re.IGNORECASE)
-print(m)
-```
-
-Outputs:
-
-```python
-None
-<re.Match object; span=(3, 6), match='foo'>
+print(f"Second search: {m}")
 ```
 
 The third parameter allows us to: match newlines (`re.DOTALL`), ignore case (`re.IGNORECASE`), take language into account (`re.LOCALE`), match across lines (`re.MULTILINE`), and write patterns across multiple lines (`re.VERBOSE`). If you need multiple options it's `re.DOTALL | re.IGNORECASE`. Bitwise again!
 
 
-## More Than One Match {.smaller}
+## More Than One Match
 
-```python
+```{python}
 s = '123foo456foo789'
-lst = re.findall('foo',s)
-print(lst)
-lst = re.finditer('foo',s)
-[x for x in lst]
+
+lst1 = re.findall('foo',s)
+print(f"Match list: {lst1}")
+
+lst2 = re.finditer('foo',s)
+print(f"List iterator: {[x for x in lst2]}")
+
 rs  = re.sub('foo',' ',s)
-print(rs)
+print(f"Substitution: {rs}")
+
 rs  = re.split(' ',rs)
-print(rs)
+print(f"Splitting: {rs}")
 ```
-
-Outputs:
-
-```python
-['foo','foo']
-[<re.Match object; span=(3, 6), match='foo'>, <re.Match object; span=(9, 12), match='foo'>]
-'123 456 789'
-['123', '456', '789']
-```
-
 
 # Let's Get Meta
 
 ## Regular Expressions Do *Much* More
 
-```python
-import re
-m = re.search(r'\$((\d+,){2,}\d+)',
-		"'That will be $1,000,000 he said...'")
-print(m.group(1)) # '1,000,000'
+```{python}
+s = "'That will be $1,000,000, he said...'"
+m = re.search(r'\$((\d+,){2,}\d+)',s)
+		
+print(m.group(1))
 ```
 
-This looks for sequences of 1-or-more digits followed by a comma... and for those sequences to repeat two or more times:
+It breaks down like this:
 
-```python
+```{python}
 # Look for a literal '$'
-re.search(r'\$') 
+print(re.search(r'\$',s))
 # Group of >=1 digits followed by a comma...
-re.search(r'(\d+,)') 
+print(re.search(r'(\d+,)',s))
 # Repeated two or more times...
-re.search(r'(\d+,){2,}') 
+print(re.search(r'(\d+,){2,}',s))
 ```
 
 ::: {.aside}
@@ -200,51 +187,11 @@ Let's take some real regexes and try to make sense of them.
 
 ## Exploring
 
-Regex101 can be a useful way to *build* a regex interactively:
+Regex101 *might* be a fun way to learn:
 
-<iframe width="800" height="600" src="https://regex101.com" title="Regex 101"></iframe>
+<iframe width="800" height="500" src="https://regexle.com" title="Regexle"></iframe>
 
-## What's This? {.smaller}
-
-```python
-re.match(r'^[^@]+@([a-z0-9\-]+\.){1,5}[a-z0-9\-]+$', s)
-```
-
-::: {.notes}
-
-`s` should be replaced with any string you want to check.
-
-:::
-
-## What's This? {.smaller}
-
-```python
-re.match(r'\d{4}-\d{2}-\d{2}', s)
-```
-
-
-## What's This? {.smaller}
-
-```python
-re.match(r'^\s*$', s)
-```
-
-
-## What's This? {.smaller}
-
-```python
-re.match(r'^(http|https|ftp):[\/]{2}([a-zA-Z0-9\-]+\.){1,4}[a-zA-Z]{2,5}(:[0-9]+)?\/?([a-zA-Z0-9\-\._\?\'\/\\\+\&\%\$#\=~]*)',s)
-```
-
-
-## What's This? {.smaller}
-
-```python
-re.match(r'([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})',s)
-```
-
-
-## To Help... {.smaller}
+## What's This?
 
 `re.VERBOSE` to the rescue:
 
