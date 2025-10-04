@@ -216,7 +216,7 @@ def load_polars():
     pl.read_parquet('titanic.pq', columns=['age'])['age'].mean()
 
 def load_duck():
-	duck.sql("SELECT MEAN(age) FROM read_parquet('titanic.pq')")
+    duck.sql("SELECT MEAN(age) FROM read_parquet('titanic.pq')")
 
 num_reps = 1000
 ```
@@ -339,17 +339,34 @@ pd.set_option('display.float_format', '{:,.3f}'.format)
 ttc.pivot_table('survived', ['sex', age], 'class')
 ```
 
+## In SQL
+
+A little less immediately useful: 
+
+```{python}
+sql = """PIVOT (
+    SELECT sex, survived, class, CASE WHEN age < 18 then '(0, 18]' else '(18, 80]' end as age 
+    FROM read_parquet('titanic.pq'))
+  ON class
+  USING SUM(survived) AS survived
+  GROUP BY sex, age"""
+pd.set_option('display.float_format', '{:,.0f}'.format)
+tmp = duck.sql(sql).to_df().set_index('sex')
+tmp.columns = ['Age','First','Second','Third']
+tmp
+```
+
 ## Counts
 
+Other ways to summarise:
 
-## Pivots & Groups
+```{python}
+duck.sql("""SELECT class, sex, case WHEN survived=1 THEN 'Y' ELSE 'N' end AS survived, COUNT(*) AS n
+  FROM read_parquet('titanic.pq') WHERE sex='female' GROUP BY sex, class, survived
+  ORDER BY sex ASC, class ASC, survived DESC""").to_df().set_index(['class','sex'])
+```
 
-# Extracting
-
-
-# Thank You {background-image="/img/web/title-slide.png" background-color="#f7eff5" background-opacity="0.2"}
-
-<h3>References</h3>
+## Additional Resources
 
 - [Life Altering Postgres Patterns](https://mccue.dev/pages/3-11-25-life-altering-postgresql-patterns)
 - [pandas 2.0 and the Arrow revolution (Part 1)](https://datapythonista.me/blog/pandas-20-and-the-arrow-revolution-part-i)
@@ -357,3 +374,8 @@ ttc.pivot_table('survived', ['sex', age], 'class')
 - [DuckDB Documentation](https://duckdb.org/docs/)
 - [Migrating from Pandas to Polars](https://docs.pola.rs/user-guide/migration/pandas/)
 - [Read remote Parquet files with DuckDB](https://rfsaldanha.github.io/posts/query_remot_parquet_file.html)
+
+# Thank You {background-image="/img/web/title-slide.png" background-color="#f7eff5" background-opacity="0.2"}
+
+<h3>References</h3>
+
