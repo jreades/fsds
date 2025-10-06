@@ -1541,7 +1541,7 @@
     "href": "lectures/9.2-Linking_Spatial_Data.html#section",
     "title": "Linking (Spatial) Data",
     "section": "",
-    "text": "Data Set 1\n\n\n\nSensorID\nLatitude\nLongitude\n\n\n\n\n1\n51.5070\n-0.1347\n\n\n2\n51.5071\n-0.0042\n\n\n3\n51.5074\n-0.1223\n\n\n4\n51.5073\n-0.1122\n\n\n5\n51.5072\n0.1589\n\n\n\ndf = pd.DataFrame({\n  'SensorID': [1,2,3,4,5],\n  'Latitude': [51.5070, 51.5071, 51.5074, 51.5073, 51.5073],\n  'Longitude': [-0.1347, -0.0042, -0.1223, -0.1122, 0.1589]\n})\n\nData Set 2\n\n\n\nSensorID\nParameter\nValue\n\n\n\n\n1\nTemperature\n5ºC\n\n\n1\nHumidity\n15%\n\n\n3\nTemperature\n7ºC\n\n\n4\nTemperature\n7ºC\n\n\n6\nHumidity\n18%\n\n\n\ndf1 = pd.DataFrame({\n  'SensorID': [1,2,3,4,5],\n  'Parameter': ['Temperature','Humidity','Temperature','Temperature','Humidity'], \n  'Value': ['5ºC', '15%', '7ºC', '7ºC', '18%']\n})\n\n\n\nObviously, we can use non-spatial operations on spatial data sets.\n\n\nThis wouldn’t be a particularly good design for a data structure… why?"
+    "text": "Data Set 1\n\ndf1 = pd.DataFrame({\n  'SensorID': [1,2,3,4,5],\n  'Latitude': [51.5070, 51.5071, 51.5074, 51.5073, 51.5073],\n  'Longitude': [-0.1347, -0.0042, -0.1223, -0.1122, 0.1589]\n})\ndf1\n\n\n\n\n\n\n\n\nSensorID\nLatitude\nLongitude\n\n\n\n\n0\n1\n51.5070\n-0.1347\n\n\n1\n2\n51.5071\n-0.0042\n\n\n2\n3\n51.5074\n-0.1223\n\n\n3\n4\n51.5073\n-0.1122\n\n\n4\n5\n51.5073\n0.1589\n\n\n\n\n\n\n\n\nData Set 2\n\ndf2 = pd.DataFrame({\n  'SensorID': [1,2,3,4,5],\n  'Parameter': ['Temperature','Humidity','Temperature','Temperature','Humidity'], \n  'Value': ['5ºC', '15%', '7ºC', '7ºC', '18%']\n})\ndf2\n\n\n\n\n\n\n\n\nSensorID\nParameter\nValue\n\n\n\n\n0\n1\nTemperature\n5ºC\n\n\n1\n2\nHumidity\n15%\n\n\n2\n3\nTemperature\n7ºC\n\n\n3\n4\nTemperature\n7ºC\n\n\n4\n5\nHumidity\n18%\n\n\n\n\n\n\n\n\n\n\nThis wouldn’t be a particularly good design for a data structure… why?"
   },
   {
     "objectID": "lectures/9.2-Linking_Spatial_Data.html#sjoin-vs.-join",
@@ -1555,7 +1555,7 @@
     "href": "lectures/9.2-Linking_Spatial_Data.html#combining-operators-how",
     "title": "Linking (Spatial) Data",
     "section": "Combining Operators & How",
-    "text": "Combining Operators & How\nChanging how to left, right, or inner changes the join’s behaviour:\nrs = gpd.sjoin(gdf, hackney, how='left', op='within')\nrs.NAME.fillna('None', inplace=True)\nax = boros[boros.NAME=='Hackney'].plot(edgecolor='k', facecolor='none', figsize=(8,8))\nrs.plot(ax=ax, column='NAME', legend=True)"
+    "text": "Combining Operators & How\nChanging how to left, right, or inner changes the join’s behaviour:\n\nrs = gpd.sjoin(gdf, hackney, how='left', predicate='within')\nrs.NAME.fillna('None', inplace=True)\nax = boros[boros.NAME=='Hackney'].plot(edgecolor='k', facecolor='none', figsize=(8,4.5))\nrs.plot(ax=ax, column='NAME', legend=True)"
   },
   {
     "objectID": "lectures/9.2-Linking_Spatial_Data.html#merging-data",
@@ -5014,7 +5014,7 @@
     "href": "lectures/10.1-Visualising_Data.html#start-with-chart-part-2",
     "title": "Visualising Data",
     "section": "Start with Chart (Part 2)",
-    "text": "Start with Chart (Part 2)\nBuilding on Week 7, here are some deeper links between models and visualistions:\n\nWhat are we trying to model?\nWhat are we trying to penalise?\nWhat isn’t fitting into the model?\n\n\nInspired by this: https://towardsdatascience.com/when-averages-lie-moving-beyond-single-point-predictions-23201e8c04c8/\nLink it to the following kinds of issues:"
+    "text": "Start with Chart (Part 2)\nBuilding on Week 7, here are some deeper links between models and visualistions:\n\n\n\nWhat are we trying to model?\nWhat are we trying to penalise?\nWhat isn’t fitting into the model?\n\n\n\n\n\n\nThis section was inspired by this: When Averages Lie"
   },
   {
     "objectID": "lectures/10.1-Visualising_Data.html#what-are-we-modelling",
@@ -7030,7 +7030,7 @@
     "href": "lectures/9.1-Linking_Data.html#general-join-syntax",
     "title": "Linking Data",
     "section": "General Join Syntax",
-    "text": "General Join Syntax\nA join refers to the merging of two (or more) data tables using one (or more) matching columns:\npd.merge(df1, df2, on='SensorID')\n\nNote that if you want to use the index column which isn’t, technically, a column then you need to use left_index=True and right_index=True — where left is the first data set in the join.\nNote that the default behaviour is an inner join (i.e. defaults to how='inner')"
+    "text": "General Join Syntax\nA join refers to the merging of two (or more) data tables using one (or more) matching columns:\n\npd.merge(df1, df2, on='SensorID')\n\n\n\n\n\n\n\n\nSensorID\nPlace\nOwner\nParameter\nValue\n\n\n\n\n0\n1\nLHR\nBAA\nTemperature\n5ºC\n\n\n1\n1\nLHR\nBAA\nHumidity\n15%\n\n\n2\n3\nSTA\nMAG\nTemperature\n7ºC\n\n\n3\n4\nLUT\nLuton LA\nTemperature\n7ºC\n\n\n\n\n\n\n\nThis can also be written:\npd.merge(df1, df2, how='inner', on='SensorID')\n\nNote that if you want to use the index column which isn’t, technically, a column then you need to use left_index=True and right_index=True — where left is the first data set in the join.\nNote that the default behaviour is an inner join (i.e. defaults to how='inner')"
   },
   {
     "objectID": "lectures/9.1-Linking_Data.html#inner-join",
@@ -7044,28 +7044,28 @@
     "href": "lectures/9.1-Linking_Data.html#inner-join-result",
     "title": "Linking Data",
     "section": "Inner Join Result",
-    "text": "Inner Join Result\nOn an Inner Join all non-matching rows are dropped:\npd.merge(df1, df2, \n         how = 'inner',\n         on  = 'SensorID')\n \n\n\n\nSensorID\nPlace\nOwner\nParameter\nValue\n\n\n\n\n1\nLHR\nBAA\nTemperature\n5ºC\n\n\n1\nLHR\nBAA\nHumidity\n15%\n\n\n3\nSTA\nMAG\nTemperature\n7ºC\n\n\n4\nLUT\nLuton LA\nTemperature\n7ºC"
+    "text": "Inner Join Result\nOn an Inner Join all non-matching rows are dropped:\npd.merge(df1, df2, \n         how = 'inner',\n         on  = 'SensorID')"
   },
   {
     "objectID": "lectures/9.1-Linking_Data.html#but-what-if",
     "href": "lectures/9.1-Linking_Data.html#but-what-if",
     "title": "Linking Data",
     "section": "But What If…",
-    "text": "But What If…\nIf Data Set 2 had a SensorKey instead of a SensorID then:\npd.merge(df1, df2, \n         how      = 'inner',\n         left_on  = 'SensorID',\n         right_on = 'SensorKey')\n \nWe will get an ‘extra’ field:\n\n\n\nSensorID\nPlace\nOwner\nSensorKey\nParameter\nValue\n\n\n\n\n1\nLHR\nBAA\n1\nTemperature\n5ºC\n\n\n1\nLHR\nBAA\n1\nHumidity\n15%\n\n\n3\nSTA\nMAG\n3\nTemperature\n7ºC\n\n\n4\nLUT\nLuton LA\n4\nTemperature\n7ºC"
+    "text": "But What If…\nIf Data Set 2 had a SensorKey instead of a SensorID then:\n\npd.merge(df1, df2.rename(columns={'SensorID':'SensorKey'}), \n         how      = 'inner',\n         left_on  = 'SensorID',\n         right_on = 'SensorKey')\n\n\n\n\n\n\n\n\nSensorID\nPlace\nOwner\nSensorKey\nParameter\nValue\n\n\n\n\n0\n1\nLHR\nBAA\n1\nTemperature\n5ºC\n\n\n1\n1\nLHR\nBAA\n1\nHumidity\n15%\n\n\n2\n3\nSTA\nMAG\n3\nTemperature\n7ºC\n\n\n3\n4\nLUT\nLuton LA\n4\nTemperature\n7ºC"
   },
   {
     "objectID": "lectures/9.1-Linking_Data.html#outer-join",
     "href": "lectures/9.1-Linking_Data.html#outer-join",
     "title": "Linking Data",
     "section": "Outer Join",
-    "text": "Outer Join\nOn an Outer Join all rows are retained, including ones with no match:\npd.merge(df1, df2,\n         how = 'outer',\n         on  = 'SensorID')\n \n\n\n\nSensorID\nPlace\nOwner\nParameter\nValue\n\n\n\n\n1\nLHR\nBAA\nTemp.\n5℃\n\n\n1\nLHR\nBAA\nHum.\n15%\n\n\n2\nLGA\nGIP\nNaN\nNaN\n\n\n3\nSTA\nMAG\nTemp.\n7℃\n\n\n4\nLUT\nLuton Borough\nNaN\nNaN\n\n\n5\nSEN\nStobart\nNaN\nNaN\n\n\n6\nNaN\nNaN\nHum.\n20%"
+    "text": "Outer Join\nOn an Outer Join all rows are retained, including ones with no match:\n\npd.merge(df1, df2,\n         how = 'outer',\n         on  = 'SensorID')\n\n\n\n\n\n\n\n\nSensorID\nPlace\nOwner\nParameter\nValue\n\n\n\n\n0\n1\nLHR\nBAA\nTemperature\n5ºC\n\n\n1\n1\nLHR\nBAA\nHumidity\n15%\n\n\n2\n2\nLGA\nGIP\nNaN\nNaN\n\n\n3\n3\nSTA\nMAG\nTemperature\n7ºC\n\n\n4\n4\nLUT\nLuton LA\nTemperature\n7ºC\n\n\n5\n5\nSEN\nStobart\nNaN\nNaN\n\n\n6\n6\nNaN\nNaN\nHumidity\n18%"
   },
   {
     "objectID": "lectures/9.1-Linking_Data.html#left-join",
     "href": "lectures/9.1-Linking_Data.html#left-join",
     "title": "Linking Data",
     "section": "Left Join",
-    "text": "Left Join\nOn a Left Join all rows on the left table are retained, including ones with no match, but unmatched right rows are dropped:\npd.merge(df1, df2, \n        how = 'left',\n        on  = 'SensorID')\n \n\n\n\nSensorID\nPlace\nOwner\nParameter\nValue\n\n\n\n\n1\nLHR\nBAA\nTemp.\n5℃\n\n\n1\nLHR\nBAA\nHum.\n15%\n\n\n2\nLGA\nGIP\nNaN\nNaN\n\n\n3\nSTA\nMAG\nTemp.\n7℃\n\n\n4\nLUT\nLuton Borough\nNaN\nNULL\n\n\n5\nSEN\nStobart\nNaN\nNaN"
+    "text": "Left Join\nOn a Left Join all rows on the left table are retained, including ones with no match, but unmatched right rows are dropped:\n\npd.merge(df1, df2, \n         how = 'left',\n         on  = 'SensorID')\n\n\n\n\n\n\n\n\nSensorID\nPlace\nOwner\nParameter\nValue\n\n\n\n\n0\n1\nLHR\nBAA\nTemperature\n5ºC\n\n\n1\n1\nLHR\nBAA\nHumidity\n15%\n\n\n2\n2\nLGA\nGIP\nNaN\nNaN\n\n\n3\n3\nSTA\nMAG\nTemperature\n7ºC\n\n\n4\n4\nLUT\nLuton LA\nTemperature\n7ºC\n\n\n5\n5\nSEN\nStobart\nNaN\nNaN"
   },
   {
     "objectID": "lectures/9.1-Linking_Data.html#append-concat",
@@ -7079,14 +7079,14 @@
     "href": "lectures/9.1-Linking_Data.html#concat",
     "title": "Linking Data",
     "section": "Concat",
-    "text": "Concat\ndf3 = pd.DataFrame.from_dict({\n    'SensorID': [2,3,8,9,10],\n    'Place': ['STA','LUT','BHX','MAN','INV'],\n    'Owner': ['BAA','Luton LA','???','???','???']\n})\npd.concat([df1, df3], ignore_index=True)\nOutputs:\n\n\n\n\nSensorID\nPlace\nOwner\n\n\n\n\n0\n1\nLHR\nBAA\n\n\n\\(\\vdots\\)\n\\(\\vdots\\)\n\\(\\vdots\\)\n\\(\\vdots\\)\n\n\n4\n5\nSEN\nStobart\n\n\n5\n2\nSTA\nBAA\n\n\n6\n3\nLUT\nGIP\n\n\n7\n8\nBHX\n???\n\n\n8\n9\nMAN\n???\n\n\n9\n10\nINV\n???"
+    "text": "Concat\n\ndf3 = pd.DataFrame.from_dict({\n    'SensorID': [2,3,8,9,10],\n    'Place': ['STA','LUT','BHX','MAN','INV'],\n    'Owner': ['BAA','Luton LA','???','???','???']\n})\npd.concat([df1, df3], ignore_index=True)\n\n\n\n\n\n\n\n\nSensorID\nPlace\nOwner\n\n\n\n\n0\n1\nLHR\nBAA\n\n\n1\n2\nLGA\nGIP\n\n\n2\n3\nSTA\nMAG\n\n\n3\n4\nLUT\nLuton LA\n\n\n4\n5\nSEN\nStobart\n\n\n5\n2\nSTA\nBAA\n\n\n6\n3\nLUT\nLuton LA\n\n\n7\n8\nBHX\n???\n\n\n8\n9\nMAN\n???\n\n\n9\n10\nINV\n???"
   },
   {
     "objectID": "lectures/9.1-Linking_Data.html#append",
     "href": "lectures/9.1-Linking_Data.html#append",
     "title": "Linking Data",
     "section": "Append",
-    "text": "Append\nto_append = [\n    {'SensorID': 0, 'Parameter': 5,  'Humidity', 'Value': 0.45},\n    {'SensorID': 1, 'Parameter': 5,  'Humidity', 'Value': 0.31},\n    {'SensorID': 2, 'Parameter': 4, 'Temperature', 'Value': 2},\n    {'SensorID': 3, 'Parameter': 3, 'Temperature', 'Value': 3}]\ndf2.append(to_append)\nOutputs:\n\n\n\nSensorID\nParameter\nValue\n\n\n\n\n\n0\n1\nTemperature\n5.00\n\n\n\\(\\vdots\\)\n\\(\\vdots\\)\n\\(\\vdots\\)\n\\(\\vdots\\)\n\n\n4\n6\nHumidity\n0.18\n\n\n0\n5\nHumidity\n0.45\n\n\n1\n5\nHumidity\n0.31\n\n\n2\n4\nTemperature\n2.00\n\n\n3\n3\nTemperature\n3.00\n\n\n\n\nNote that a Dictionary-of-Lists would also work for an append and that appending a column that doesn’t exist (for vertical appends) will cause the column to be created while appending a row that doesn’t exist (for horizontal appends) with cause the row to be created."
+    "text": "Append\n\nto_append = [\n    {'SensorID': 0, 'Parameter': 'Humidity', 'Value': 0.45},\n    {'SensorID': 1, 'Parameter': 'Humidity', 'Value': 0.31},\n    {'SensorID': 2, 'Parameter': 'Temperature', 'Value': 2},\n    {'SensorID': 3, 'Parameter': 'Temperature', 'Value': 3}]\npd.concat([df2, pd.DataFrame(to_append)], ignore_index=True)\n\n\n\n\n\n\n\n\nSensorID\nParameter\nValue\n\n\n\n\n0\n1\nTemperature\n5ºC\n\n\n1\n1\nHumidity\n15%\n\n\n2\n3\nTemperature\n7ºC\n\n\n3\n4\nTemperature\n7ºC\n\n\n4\n6\nHumidity\n18%\n\n\n5\n0\nHumidity\n0.45\n\n\n6\n1\nHumidity\n0.31\n\n\n7\n2\nTemperature\n2.0\n\n\n8\n3\nTemperature\n3.0\n\n\n\n\n\n\n\n\nNote that a Dictionary-of-Lists would also work for an append and that appending a column that doesn’t exist (for vertical appends) will cause the column to be created while appending a row that doesn’t exist (for horizontal appends) with cause the row to be created."
   },
   {
     "objectID": "lectures/9.1-Linking_Data.html#merge-vs.-append-vs.-concat-vs.-join",
@@ -7184,7 +7184,7 @@
     "href": "lectures/9.3-Scaling_Data.html#the-results",
     "title": "Scaling Data",
     "section": "The Results",
-    "text": "The Results\nPandas\n\npd_execution_time = timeit.timeit(load_pandas, number=num_reps)\nprint(f\"Pandas execution time: {pd_execution_time:.6f} seconds\")\n\nPandas execution time: 0.762337 seconds\n\n\nPolars\n\npl_execution_time = timeit.timeit(load_polars, number=num_reps)\nprint(f\"Polars execution time: {pl_execution_time:.6f} seconds\")\n\nPolars execution time: 0.138823 seconds\n\n\n81.79% faster than pandas.\nDuckDB\n\ndb_execution_time = timeit.timeit(load_duck, number=num_reps)\nprint(f\"DuckDB execution time: {db_execution_time:.6f} seconds\")\n\nDuckDB execution time: 0.097314 seconds\n\n\n87.23% faster than pandas and 29.90% faster than polars."
+    "text": "The Results\nPandas\n\npd_execution_time = timeit.timeit(load_pandas, number=num_reps)\nprint(f\"Pandas execution time: {pd_execution_time:.6f} seconds\")\n\nPandas execution time: 1.176813 seconds\n\n\nPolars\n\npl_execution_time = timeit.timeit(load_polars, number=num_reps)\nprint(f\"Polars execution time: {pl_execution_time:.6f} seconds\")\n\nPolars execution time: 1.050749 seconds\n\n\n10.71% faster than pandas.\nDuckDB\n\ndb_execution_time = timeit.timeit(load_duck, number=num_reps)\nprint(f\"DuckDB execution time: {db_execution_time:.6f} seconds\")\n\nDuckDB execution time: 0.271305 seconds\n\n\n76.95% faster than pandas and 74.18% faster than polars."
   },
   {
     "objectID": "lectures/9.3-Scaling_Data.html#useful-but-limited",
@@ -7198,21 +7198,21 @@
     "href": "lectures/9.3-Scaling_Data.html#grouping-operations",
     "title": "Scaling Data",
     "section": "Grouping Operations",
-    "text": "Grouping Operations\nIn Pandas these follow a split / apply / combine approach:\n\n\nNote that, for simplicity, I’ve abbreviate the Local Authority names since this is just a simplified example: TH (Tower Hamlets), HAK (Hackney), W (Westminster)."
+    "text": "Grouping Operations\nIn Pandas these follow a split / apply / combine approach:\n\n\n\n\n1. Raw data\n\n\n\nclass\nsex\nage\n\n\n\n\n0\nThird\nm\n22.0\n\n\n1\nFirst\nf\n38.0\n\n\n2\nThird\nf\n26.0\n\n\n3\nFirst\nf\n35.0\n\n\n4\nThird\nm\n35.0\n\n\n5\nThird\nm\nNaN\n\n\n6\nFirst\nm\n54.0\n\n\n7\nThird\nm\n2.0\n\n\n\n\n\n \n\n\n\n2a. Grouped First Class\n\n\n\nclass\nsex\nage\n\n\n\n\n1\nFirst\nf\n38.0\n\n\n3\nFirst\nf\n35.0\n\n\n6\nFirst\nm\n54.0\n\n\n\n\n2b. Grouped Third Class\n\n\n\nclass\nsex\nage\n\n\n\n\n0\nThird\nm\n22.0\n\n\n2\nThird\nf\n26.0\n\n\n4\nThird\nm\n35.0\n\n\n5\nThird\nm\nNaN\n\n\n7\nThird\nm\n2.0\n\n\n\n\n\n \n\n\n\n3a. Summary First Class\n\n\n\nclass\nage\n\n\n\n\n\nFirst\n42.33\n\n\n\n\n3b. Summary Third Class\n\n\n\nclass\nage\n\n\n\n\n\nThird\n21.25\n\n\n\n\n\n \n\n\n\n4. Result\n\n\n\nclass\nage\n\n\n\n\n\nFirst\n42.33\n\n\n\nThird\n21.25"
   },
   {
     "objectID": "lectures/9.3-Scaling_Data.html#in-practice",
     "href": "lectures/9.3-Scaling_Data.html#in-practice",
     "title": "Scaling Data",
     "section": "In Practice",
-    "text": "In Practice\ngrouped_df = df.groupby(&lt;fields&gt;).&lt;function&gt;\nFor instance, if we had a Local Authority (LA) field:\ngrouped_df = df.groupby('LA').sum()\nUsing apply the function could be anything:\ndef norm_by_data(x): # x is a column from the grouped df\n    x['d1'] /= x['d2'].sum() \n    return x\n\ndf.groupby('LA').apply(norm_by_data)"
+    "text": "In Practice\ngrouped_df = df.groupby(&lt;fields&gt;).agg(['&lt;function1&gt;', ..., '&lt;functionn&gt;'])\nFor instance, to get multiple summary values:\n\n# This will throw an error when there are non-numeric columns\n# grouped_df = df.groupby('class').agg(['sum','mean'])\n# This will only aggregate one column\ngrouped_df = df.groupby('class').age.agg(['sum','mean'])\ngrouped_df.head()\n\n\n\n\n\n\n\n\nsum\nmean\n\n\nclass\n\n\n\n\n\n\nFirst\n7111.42\n38.233441\n\n\nSecond\n5168.83\n29.877630\n\n\nThird\n8924.92\n25.140620"
   },
   {
     "objectID": "lectures/9.3-Scaling_Data.html#grouping-by-arbitrary-mappings",
     "href": "lectures/9.3-Scaling_Data.html#grouping-by-arbitrary-mappings",
     "title": "Scaling Data",
     "section": "Grouping by Arbitrary Mappings",
-    "text": "Grouping by Arbitrary Mappings\nmapping = {'HAK':'Inner', 'TH':'Outer', 'W':'Inner'}\ndf.set_index('LA', inplace=True)\ndf.groupby(mapping).sum()"
+    "text": "Grouping by Arbitrary Mappings\nIn cases where we want to group by a derived value that doesn’t exist in the data we can apply a mapping as part of the process:\n\nmapping = {'First':'Fancy', 'Second':'Not-Fancy', 'Third':'Not-Fancy'}\ngrouped_df = df.set_index('class').groupby(mapping).age.agg(['sum','mean'])\ngrouped_df.head()\n\n\n\n\n\n\n\n\nsum\nmean\n\n\nclass\n\n\n\n\n\n\nFancy\n7111.42\n38.233441\n\n\nNot-Fancy\n14093.75\n26.692708\n\n\n\n\n\n\n\n\n\nNote you need set to the index for this to work!"
   },
   {
     "objectID": "lectures/9.3-Scaling_Data.html#pivot-tables",
@@ -7226,14 +7226,14 @@
     "href": "lectures/9.3-Scaling_Data.html#in-practice-1",
     "title": "Scaling Data",
     "section": "In Practice",
-    "text": "In Practice\nage = pd.cut(titanic['age'], [0, 18, 80])\ntitanic.pivot_table('survived', ['sex', age], 'class')"
+    "text": "In Practice\n\nttc = pd.read_parquet('titanic.pq')\nage = pd.cut(ttc['age'], [0, 18, 80])\npd.set_option('display.float_format', '{:,.3f}'.format)\nttc.pivot_table('survived', ['sex', age], 'class')\n\n\n\n\n\n\n\n\nclass\nFirst\nSecond\nThird\n\n\nsex\nage\n\n\n\n\n\n\n\nfemale\n(0, 18]\n0.909\n1.000\n0.512\n\n\n(18, 80]\n0.973\n0.900\n0.424\n\n\nmale\n(0, 18]\n0.800\n0.600\n0.216\n\n\n(18, 80]\n0.375\n0.071\n0.134"
   },
   {
     "objectID": "lectures/9.3-Scaling_Data.html#counts",
     "href": "lectures/9.3-Scaling_Data.html#counts",
     "title": "Scaling Data",
     "section": "Counts",
-    "text": "Counts"
+    "text": "Counts\nOther ways to summarise:\n\nduck.sql(\"\"\"SELECT class, sex, case WHEN survived=1 THEN 'Y' ELSE 'N' end AS survived, COUNT(*) AS n\n  FROM read_parquet('titanic.pq') WHERE sex='female' GROUP BY sex, class, survived\n  ORDER BY sex ASC, class ASC, survived DESC\"\"\").to_df().set_index(['class','sex'])\n\n\n\n\n\n\n\n\n\nsurvived\nn\n\n\nclass\nsex\n\n\n\n\n\n\nFirst\nfemale\nY\n91\n\n\nfemale\nN\n3\n\n\nSecond\nfemale\nY\n70\n\n\nfemale\nN\n6\n\n\nThird\nfemale\nY\n72\n\n\nfemale\nN\n72"
   },
   {
     "objectID": "lectures/9.3-Scaling_Data.html#pivots-groups",
@@ -8395,5 +8395,75 @@
     "title": "Analysing Text",
     "section": "Enter Embeddings",
     "text": "Enter Embeddings\nTypically, some kind of 2 or 3-layer neural network that ‘learns’ how to embed the TCM into a lower-dimension representation: from \\(m \\times m\\) to \\(m \\times n, n &lt;&lt; m\\).\nSimilar to PCA in terms of what we’re trying to achieve, but the process is utterly different.\n\nMany different approaches, but GloVe (Stanford), word2vec (Google), fastText (Facebook), and ELMo (Allen) or BERT (Google) are probably the best-known."
+  },
+  {
+    "objectID": "lectures/9.1-Linking_Data.html#append-also-concat",
+    "href": "lectures/9.1-Linking_Data.html#append-also-concat",
+    "title": "Linking Data",
+    "section": "Append Also Concat",
+    "text": "Append Also Concat\n\nto_append = [\n    {'SensorID': 0, 'Parameter': 'Humidity', 'Value': 0.45},\n    {'SensorID': 1, 'Parameter': 'Humidity', 'Value': 0.31},\n    {'SensorID': 2, 'Parameter': 'Temperature', 'Value': 2},\n    {'SensorID': 3, 'Parameter': 'Temperature', 'Value': 3}]\npd.concat([df2, pd.DataFrame(to_append)], ignore_index=True)\n\n\n\n\n\n\n\n\nSensorID\nParameter\nValue\n\n\n\n\n0\n1\nTemperature\n5ºC\n\n\n1\n1\nHumidity\n15%\n\n\n2\n3\nTemperature\n7ºC\n\n\n3\n4\nTemperature\n7ºC\n\n\n4\n6\nHumidity\n18%\n\n\n5\n0\nHumidity\n0.45\n\n\n6\n1\nHumidity\n0.31\n\n\n7\n2\nTemperature\n2.0\n\n\n8\n3\nTemperature\n3.0\n\n\n\n\n\n\n\n\nNote that a Dictionary-of-Lists would also work for an append and that appending a column that doesn’t exist (for vertical appends) will cause the column to be created while appending a row that doesn’t exist (for horizontal appends) with cause the row to be created."
+  },
+  {
+    "objectID": "lectures/9.1-Linking_Data.html#merge-vs.-concat-vs.-join",
+    "href": "lectures/9.1-Linking_Data.html#merge-vs.-concat-vs.-join",
+    "title": "Linking Data",
+    "section": "Merge vs. Concat vs. Join?",
+    "text": "Merge vs. Concat vs. Join?\nAs usual, Stack Overflow to the rescue:\n\nA very high level difference is that merge() is used to combine two (or more) dataframes on the basis of values of common columns (indices can also be used, use left_index=True and/or right_index=True), and concat() is used to append one (or more) dataframes one below the other (or sideways, depending on whether the axis option is set to 0 or 1).\n\n\njoin() is used to merge 2 dataframes on the basis of the index; instead of using merge() with the option left_index=True we can use join().\n\nHint: axis=0 refers to the row index & axis=1 to the column index."
+  },
+  {
+    "objectID": "lectures/9.1-Linking_Data.html#merge-vs.-concat-vs.-join-1",
+    "href": "lectures/9.1-Linking_Data.html#merge-vs.-concat-vs.-join-1",
+    "title": "Linking Data",
+    "section": "Merge vs. Concat vs. Join?",
+    "text": "Merge vs. Concat vs. Join?\nThese achieve the same thing, but they are not always equivalent or what you want:\n\npd.merge(df1, df2, left_index=True, right_index=True)\npd.concat([df1, df2], axis=1)\ndf1.join(df2, rsuffix='_r')\n\n\n\n\n\n\n\n\nSensorID\nPlace\nOwner\nSensorID_r\nParameter\nValue\n\n\n\n\n0\n1\nLHR\nBAA\n1\nTemperature\n5ºC\n\n\n1\n2\nLGA\nGIP\n1\nHumidity\n15%\n\n\n2\n3\nSTA\nMAG\n3\nTemperature\n7ºC\n\n\n3\n4\nLUT\nLuton LA\n4\nTemperature\n7ºC\n\n\n4\n5\nSEN\nStobart\n6\nHumidity\n18%\n\n\n\n\n\n\n\nGenerally:\n\nConcat expects the number of columns in all data frames to match (if concatenating vertically) and the number of rows in all data frames to match (if concatenating horizontally). It does not deal well with linking (docs).\nJoin is basically a functionality-restricted merge (docs).\nAppend assumes that either the columns or the rows will match. [Append has been deprecated]"
+  },
+  {
+    "objectID": "lectures/9.2-Linking_Spatial_Data.html#going-spatial",
+    "href": "lectures/9.2-Linking_Spatial_Data.html#going-spatial",
+    "title": "Linking (Spatial) Data",
+    "section": "Going Spatial",
+    "text": "Going Spatial\n\nboros = gpd.read_file('https://bit.ly/3neINBV', driver='GPKG')\ndf    = pd.read_csv('https://bit.ly/3I0XDrq')\ngdf   = gpd.GeoDataFrame(df,\n        geometry=gpd.points_from_xy(\n          df['longitude'], df['latitude'], crs='epsg:4326'\n        )\n      ).to_crs('epsg:27700')"
+  },
+  {
+    "objectID": "lectures/9.2-Linking_Spatial_Data.html#a-spatial-join",
+    "href": "lectures/9.2-Linking_Spatial_Data.html#a-spatial-join",
+    "title": "Linking (Spatial) Data",
+    "section": "A Spatial Join",
+    "text": "A Spatial Join\nSjoin adds an predicate ('intersects','contains','within'):\n\nhackney = boros[boros.NAME=='Hackney']\nrs = gpd.sjoin(gdf, hackney, predicate='within')\nax = hackney.plot(facecolor='none', edgecolor='blue', figsize=(8,4.5))\nrs.plot(ax=ax, marker='*', color='red', markersize=5)"
+  },
+  {
+    "objectID": "lectures/9.3-Scaling_Data.html#in-sql",
+    "href": "lectures/9.3-Scaling_Data.html#in-sql",
+    "title": "Scaling Data",
+    "section": "In SQL1",
+    "text": "In SQL1\n\nsql = \"\"\"PIVOT (\n    SELECT sex, survived, class, CASE WHEN age &lt; 18 then '(0, 18]' else '(18, 80]' end as age \n    FROM read_parquet('titanic.pq'))\n  ON class USING SUM(survived) AS survived GROUP BY sex, age\"\"\"\n  \npd.set_option('display.float_format', '{:,.0f}'.format)\ndf = duck.sql(sql).to_df().set_index('sex')\ndf.columns = ['Age','First','Second','Third']\ndf\n\n\n\n\n\n\n\n\nAge\nFirst\nSecond\nThird\n\n\nsex\n\n\n\n\n\n\n\n\nfemale\n(18, 80]\n84\n58\n53\n\n\nmale\n(0, 18]\n4\n9\n10\n\n\nmale\n(18, 80]\n41\n8\n37\n\n\nfemale\n(0, 18]\n7\n12\n19\n\n\n\n\n\n\n\nNote the critical difference with Pandas output!"
+  },
+  {
+    "objectID": "lectures/9.3-Scaling_Data.html#additional-resources",
+    "href": "lectures/9.3-Scaling_Data.html#additional-resources",
+    "title": "Scaling Data",
+    "section": "Additional Resources",
+    "text": "Additional Resources\n\nLife Altering Postgres Patterns\npandas 2.0 and the Arrow revolution (Part 1)\nWhat parquet files are my preferred API for bulk open data\nDuckDB Documentation\nMigrating from Pandas to Polars\nRead remote Parquet files with DuckDB"
+  },
+  {
+    "objectID": "lectures/9.3-Scaling_Data.html#apply",
+    "href": "lectures/9.3-Scaling_Data.html#apply",
+    "title": "Scaling Data",
+    "section": "Apply",
+    "text": "Apply\nYou can take this one step further by ‘applying’ an arbitrary function in a row- or column-wise fashion.\n\ndef norm(x): # x is a column from the grouped df\n    return x['age'] * x['fare'] \n\ndf.groupby('class').apply(norm)\n\nclass     \nFirst  1      2708.7654\n       3      1858.5000\n       6      2800.5750\n       11     1539.9000\n       23      994.0000\n                ...    \nThird  882     231.3674\n       884     176.2500\n       885    1135.8750\n       888          NaN\n       890     248.0000\nLength: 891, dtype: float64\n\n\n\n\nNot saying this is a useful calculation."
+  },
+  {
+    "objectID": "lectures/9.3-Scaling_Data.html#grouping-operations-2",
+    "href": "lectures/9.3-Scaling_Data.html#grouping-operations-2",
+    "title": "Scaling Data",
+    "section": "Grouping Operations 2",
+    "text": "Grouping Operations 2\nIn Pandas these follow a split / apply / combine approach:\n\n\n\n\nRaw data\n\n\n\nclass\nsex\nage\n\n\n\n\n0\nThird\nm\n22.0\n\n\n1\nFirst\nf\n38.0\n\n\n2\nThird\nf\n26.0\n\n\n3\nFirst\nf\n35.0\n\n\n4\nThird\nm\n35.0\n\n\n5\nThird\nm\nNaN\n\n\n6\nFirst\nm\n54.0\n\n\n7\nThird\nm\n2.0\n\n\n\n\n\n \n\n\n\nGrouped First Class\n\n\n\nclass\nsex\nage\n\n\n\n\n1\nFirst\nf\n38.0\n\n\n3\nFirst\nf\n35.0\n\n\n6\nFirst\nm\n54.0\n\n\n\n\nGrouped Third Class\n\n\n\nclass\nsex\nage\n\n\n\n\n0\nThird\nm\n22.0\n\n\n2\nThird\nf\n26.0\n\n\n4\nThird\nm\n35.0\n\n\n5\nThird\nm\nNaN\n\n\n7\nThird\nm\n2.0\n\n\n\n\n\n \n\n\n\nSummary First Class\n\n\n\nclass\nage\n\n\n\n\n\nFirst\n42.33\n\n\n\n\nSummary Third Class\n\n\n\nclass\nage\n\n\n\n\n\nThird\n21.25\n\n\n\n\n\n \n\n\n\nSummary\n\n\n\nclass\nage\n\n\n\n\n\nFirst\n42.33\n\n\n\nThird\n21.25"
+  },
+  {
+    "objectID": "lectures/9.3-Scaling_Data.html#in-pandas",
+    "href": "lectures/9.3-Scaling_Data.html#in-pandas",
+    "title": "Scaling Data",
+    "section": "In Pandas",
+    "text": "In Pandas\n\nage = pd.cut(df['age'], [0, 18, 80])\npd.set_option('display.float_format', '{:,.3f}'.format)\ndf.pivot_table('survived', ['sex', age], 'class', observed=False)\n\n\n\n\n\n\n\n\nclass\nFirst\nSecond\nThird\n\n\nsex\nage\n\n\n\n\n\n\n\nfemale\n(0, 18]\n0.909\n1.000\n0.512\n\n\n(18, 80]\n0.973\n0.900\n0.424\n\n\nmale\n(0, 18]\n0.800\n0.600\n0.216\n\n\n(18, 80]\n0.375\n0.071\n0.134"
   }
 ]

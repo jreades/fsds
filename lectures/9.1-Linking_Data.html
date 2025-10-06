@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head>
 <link href="..//img/favicon.ico" rel="icon">
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -187,6 +187,9 @@
       margin-right: 0; 
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+  
+  <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 <meta property="og:title" content="Linking Data – Foundations of Spatial Data Science">
 <meta property="og:image" content="img/logo/full_sm.png">
 <meta property="og:site_name" content="Foundations">
@@ -227,90 +230,146 @@
 <div class="columns">
 <div class="column" style="width:50%;">
 <h3 id="data-set-1">Data Set 1</h3>
-<table class="caption-top">
+<div id="4e61d642" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a>df1 <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb1-2"><a></a>  <span class="st">'SensorID'</span>: [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>],</span>
+<span id="cb1-3"><a></a>  <span class="st">'Place'</span>: [<span class="st">'LHR'</span>,<span class="st">'LGA'</span>,<span class="st">'STA'</span>,<span class="st">'LUT'</span>,<span class="st">'SEN'</span>],</span>
+<span id="cb1-4"><a></a>  <span class="st">'Owner'</span>: [<span class="st">'BAA'</span>,<span class="st">'GIP'</span>,<span class="st">'MAG'</span>,<span class="st">'Luton LA'</span>,<span class="st">'Stobart'</span>]</span>
+<span id="cb1-5"><a></a>})</span>
+<span id="cb1-6"><a></a>df1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+<table class="dataframe caption-top" data-border="1">
 <thead>
-<tr class="header">
-<th>SensorID</th>
-<th>Place</th>
-<th>Owner</th>
+<tr class="header" style="text-align: right;">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">SensorID</th>
+<th data-quarto-table-cell-role="th">Place</th>
+<th data-quarto-table-cell-role="th">Owner</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
 <td>1</td>
 <td>LHR</td>
 <td>BAA</td>
 </tr>
 <tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
 <td>2</td>
 <td>LGA</td>
 <td>GIP</td>
 </tr>
 <tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
 <td>3</td>
 <td>STA</td>
 <td>MAG</td>
 </tr>
 <tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
 <td>4</td>
 <td>LUT</td>
 <td>Luton LA</td>
 </tr>
 <tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
 <td>5</td>
 <td>SEN</td>
 <td>Stobart</td>
 </tr>
 </tbody>
 </table>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python code-overflow-wrap smaller number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a>df1 <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb1-2"><a></a>  <span class="st">'SensorID'</span>: [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>],</span>
-<span id="cb1-3"><a></a>  <span class="st">'Place'</span>: [<span class="st">'LHR'</span>,<span class="st">'LGA'</span>,<span class="st">'STA'</span>,<span class="st">'LUT'</span>,<span class="st">'SEN'</span>],</span>
-<span id="cb1-4"><a></a>  <span class="st">'Owner'</span>: [<span class="st">'BAA'</span>,<span class="st">'GIP'</span>,<span class="st">'MAG'</span>,<span class="st">'Luton LA'</span>,<span class="st">'Stobart'</span>]</span>
-<span id="cb1-5"><a></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+</div>
+</div>
+</div>
 </div><div class="column" style="width:50%;">
 <h3 id="data-set-2">Data Set 2</h3>
-<table class="caption-top">
+<div id="aeb9c37d" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>df2 <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb2-2"><a></a>  <span class="st">'SensorID'</span>: [<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">6</span>],</span>
+<span id="cb2-3"><a></a>  <span class="st">'Parameter'</span>: [<span class="st">'Temperature'</span>,<span class="st">'Humidity'</span>,<span class="st">'Temperature'</span>,<span class="st">'Temperature'</span>,<span class="st">'Humidity'</span>],</span>
+<span id="cb2-4"><a></a>  <span class="st">'Value'</span>: [<span class="st">'5ºC'</span>,<span class="st">'15%'</span>,<span class="st">'7ºC'</span>,<span class="st">'7ºC'</span>,<span class="st">'18%'</span>]</span>
+<span id="cb2-5"><a></a>})</span>
+<span id="cb2-6"><a></a>df2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+<table class="dataframe caption-top" data-border="1">
 <thead>
-<tr class="header">
-<th>SensorID</th>
-<th>Parameter</th>
-<th>Value</th>
+<tr class="header" style="text-align: right;">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">SensorID</th>
+<th data-quarto-table-cell-role="th">Parameter</th>
+<th data-quarto-table-cell-role="th">Value</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
 <td>1</td>
 <td>Temperature</td>
 <td>5ºC</td>
 </tr>
 <tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
 <td>1</td>
 <td>Humidity</td>
 <td>15%</td>
 </tr>
 <tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
 <td>3</td>
 <td>Temperature</td>
 <td>7ºC</td>
 </tr>
 <tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
 <td>4</td>
 <td>Temperature</td>
 <td>7ºC</td>
 </tr>
 <tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
 <td>6</td>
 <td>Humidity</td>
 <td>18%</td>
 </tr>
 </tbody>
 </table>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python code-overflow-wrap number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>df2 <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb2-2"><a></a>  <span class="st">'SensorID'</span>: [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>],</span>
-<span id="cb2-3"><a></a>  <span class="st">'Parameter'</span>: [<span class="st">'Temperature'</span>,<span class="st">'Humidity'</span>,<span class="st">'Temperature'</span>,<span class="st">'Temperature'</span>,<span class="st">'Humidity'</span>],</span>
-<span id="cb2-4"><a></a>  <span class="st">'Value'</span>: [<span class="st">'5ºC'</span>,<span class="st">'15%'</span>,<span class="st">'7ºC'</span>,<span class="st">'7ºC'</span>,<span class="st">'18%'</span>]</span>
-<span id="cb2-5"><a></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+</div>
+</div>
+</div>
 </div></div>
 <aside class="notes">
 <p>How do we connect these?</p>
@@ -329,7 +388,76 @@
 <section id="general-join-syntax" class="slide level2">
 <h2>General Join Syntax</h2>
 <p>A <strong>join</strong> refers to the merging of two (or more) data tables using one (or more) matching columns:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>pd.merge(df1, df2, on<span class="op">=</span><span class="st">'SensorID'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="d99760f3" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>pd.merge(df1, df2, on<span class="op">=</span><span class="st">'SensorID'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+<table class="dataframe caption-top" data-border="1">
+<thead>
+<tr class="header" style="text-align: right;">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">SensorID</th>
+<th data-quarto-table-cell-role="th">Place</th>
+<th data-quarto-table-cell-role="th">Owner</th>
+<th data-quarto-table-cell-role="th">Parameter</th>
+<th data-quarto-table-cell-role="th">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>1</td>
+<td>LHR</td>
+<td>BAA</td>
+<td>Temperature</td>
+<td>5ºC</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>1</td>
+<td>LHR</td>
+<td>BAA</td>
+<td>Humidity</td>
+<td>15%</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>3</td>
+<td>STA</td>
+<td>MAG</td>
+<td>Temperature</td>
+<td>7ºC</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>4</td>
+<td>LUT</td>
+<td>Luton LA</td>
+<td>Temperature</td>
+<td>7ºC</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>This can also be written:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>pd.merge(df1, df2, how<span class="op">=</span><span class="st">'inner'</span>, on<span class="op">=</span><span class="st">'SensorID'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <aside class="notes">
 <p>Note that if you want to use the index column which isn’t, technically, a column then you need to use <code>left_index=True</code> and <code>right_index=True</code> — where left is the first data set in the join.</p>
 <p>Note that the <em>default</em> behaviour is an inner join (i.e.&nbsp;defaults to <code>how='inner'</code>)</p>
@@ -426,77 +554,45 @@
 </table>
 </div></div>
 </section>
-<section id="inner-join-result" class="slide level2">
-<h2>Inner Join Result</h2>
-<p>On an <strong>Inner Join</strong> all non-matching rows are dropped:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>pd.merge(df1, df2, </span>
-<span id="cb4-2"><a></a>         how <span class="op">=</span> <span class="st">'inner'</span>,</span>
-<span id="cb4-3"><a></a>         on  <span class="op">=</span> <span class="st">'SensorID'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>&nbsp;</p>
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>SensorID</th>
-<th>Place</th>
-<th>Owner</th>
-<th>Parameter</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1</td>
-<td>LHR</td>
-<td>BAA</td>
-<td>Temperature</td>
-<td>5ºC</td>
-</tr>
-<tr class="even">
-<td>1</td>
-<td>LHR</td>
-<td>BAA</td>
-<td>Humidity</td>
-<td>15%</td>
-</tr>
-<tr class="odd">
-<td>3</td>
-<td>STA</td>
-<td>MAG</td>
-<td>Temperature</td>
-<td>7ºC</td>
-</tr>
-<tr class="even">
-<td>4</td>
-<td>LUT</td>
-<td>Luton LA</td>
-<td>Temperature</td>
-<td>7ºC</td>
-</tr>
-</tbody>
-</table>
-</section>
 <section id="but-what-if" class="slide level2">
 <h2>But What If…</h2>
 <p>If Data Set 2 had a <code>SensorKey</code> instead of a <code>SensorID</code> then:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>pd.merge(df1, df2, </span>
+<div id="1ca09f18" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>pd.merge(df1, df2.rename(columns<span class="op">=</span>{<span class="st">'SensorID'</span>:<span class="st">'SensorKey'</span>}), </span>
 <span id="cb5-2"><a></a>         how      <span class="op">=</span> <span class="st">'inner'</span>,</span>
 <span id="cb5-3"><a></a>         left_on  <span class="op">=</span> <span class="st">'SensorID'</span>,</span>
 <span id="cb5-4"><a></a>         right_on <span class="op">=</span> <span class="st">'SensorKey'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>&nbsp;</p>
-<p>We will get an ‘extra’ field:</p>
-<table class="caption-top">
+<div class="cell-output cell-output-display" data-execution_count="5">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+<table class="dataframe caption-top" data-border="1">
 <thead>
-<tr class="header">
-<th>SensorID</th>
-<th>Place</th>
-<th>Owner</th>
-<th>SensorKey</th>
-<th>Parameter</th>
-<th>Value</th>
+<tr class="header" style="text-align: right;">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">SensorID</th>
+<th data-quarto-table-cell-role="th">Place</th>
+<th data-quarto-table-cell-role="th">Owner</th>
+<th data-quarto-table-cell-role="th">SensorKey</th>
+<th data-quarto-table-cell-role="th">Parameter</th>
+<th data-quarto-table-cell-role="th">Value</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
 <td>1</td>
 <td>LHR</td>
 <td>BAA</td>
@@ -505,6 +601,7 @@
 <td>5ºC</td>
 </tr>
 <tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
 <td>1</td>
 <td>LHR</td>
 <td>BAA</td>
@@ -513,6 +610,7 @@
 <td>15%</td>
 </tr>
 <tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
 <td>3</td>
 <td>STA</td>
 <td>MAG</td>
@@ -521,6 +619,7 @@
 <td>7ºC</td>
 </tr>
 <tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
 <td>4</td>
 <td>LUT</td>
 <td>Luton LA</td>
@@ -530,40 +629,64 @@
 </tr>
 </tbody>
 </table>
+
+</div>
+</div>
+</div>
 </section>
 <section id="outer-join" class="slide level2">
 <h2>Outer Join</h2>
 <p>On an <strong>Outer Join</strong> all rows are retained, including ones with no match:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a>pd.merge(df1, df2,</span>
+<div id="f061083f" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a>pd.merge(df1, df2,</span>
 <span id="cb6-2"><a></a>         how <span class="op">=</span> <span class="st">'outer'</span>,</span>
 <span id="cb6-3"><a></a>         on  <span class="op">=</span> <span class="st">'SensorID'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>&nbsp;</p>
-<table class="caption-top">
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+<table class="dataframe caption-top" data-border="1">
 <thead>
-<tr class="header">
-<th>SensorID</th>
-<th>Place</th>
-<th>Owner</th>
-<th>Parameter</th>
-<th>Value</th>
+<tr class="header" style="text-align: right;">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">SensorID</th>
+<th data-quarto-table-cell-role="th">Place</th>
+<th data-quarto-table-cell-role="th">Owner</th>
+<th data-quarto-table-cell-role="th">Parameter</th>
+<th data-quarto-table-cell-role="th">Value</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
 <td>1</td>
 <td>LHR</td>
 <td>BAA</td>
-<td>Temp.</td>
-<td>5℃</td>
+<td>Temperature</td>
+<td>5ºC</td>
 </tr>
 <tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
 <td>1</td>
 <td>LHR</td>
 <td>BAA</td>
-<td>Hum.</td>
+<td>Humidity</td>
 <td>15%</td>
 </tr>
 <tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
 <td>2</td>
 <td>LGA</td>
 <td>GIP</td>
@@ -571,20 +694,23 @@
 <td>NaN</td>
 </tr>
 <tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
 <td>3</td>
 <td>STA</td>
 <td>MAG</td>
-<td>Temp.</td>
-<td>7℃</td>
+<td>Temperature</td>
+<td>7ºC</td>
 </tr>
 <tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
 <td>4</td>
 <td>LUT</td>
-<td>Luton Borough</td>
-<td>NaN</td>
-<td>NaN</td>
+<td>Luton LA</td>
+<td>Temperature</td>
+<td>7ºC</td>
 </tr>
 <tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
 <td>5</td>
 <td>SEN</td>
 <td>Stobart</td>
@@ -592,48 +718,73 @@
 <td>NaN</td>
 </tr>
 <tr class="odd">
+<th data-quarto-table-cell-role="th">6</th>
 <td>6</td>
 <td>NaN</td>
 <td>NaN</td>
-<td>Hum.</td>
-<td>20%</td>
+<td>Humidity</td>
+<td>18%</td>
 </tr>
 </tbody>
 </table>
+
+</div>
+</div>
+</div>
 </section>
 <section id="left-join" class="slide level2">
 <h2>Left Join</h2>
 <p>On a <strong>Left Join</strong> all rows on the left table are retained, including ones with no match, but unmatched right rows are dropped:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>pd.merge(df1, df2, </span>
-<span id="cb7-2"><a></a>        how <span class="op">=</span> <span class="st">'left'</span>,</span>
-<span id="cb7-3"><a></a>        on  <span class="op">=</span> <span class="st">'SensorID'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>&nbsp;</p>
-<table class="caption-top">
+<div id="5600ab5f" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>pd.merge(df1, df2, </span>
+<span id="cb7-2"><a></a>         how <span class="op">=</span> <span class="st">'left'</span>,</span>
+<span id="cb7-3"><a></a>         on  <span class="op">=</span> <span class="st">'SensorID'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+<table class="dataframe caption-top" data-border="1">
 <thead>
-<tr class="header">
-<th>SensorID</th>
-<th>Place</th>
-<th>Owner</th>
-<th>Parameter</th>
-<th>Value</th>
+<tr class="header" style="text-align: right;">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">SensorID</th>
+<th data-quarto-table-cell-role="th">Place</th>
+<th data-quarto-table-cell-role="th">Owner</th>
+<th data-quarto-table-cell-role="th">Parameter</th>
+<th data-quarto-table-cell-role="th">Value</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
 <td>1</td>
 <td>LHR</td>
 <td>BAA</td>
-<td>Temp.</td>
-<td>5℃</td>
+<td>Temperature</td>
+<td>5ºC</td>
 </tr>
 <tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
 <td>1</td>
 <td>LHR</td>
 <td>BAA</td>
-<td>Hum.</td>
+<td>Humidity</td>
 <td>15%</td>
 </tr>
 <tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
 <td>2</td>
 <td>LGA</td>
 <td>GIP</td>
@@ -641,20 +792,23 @@
 <td>NaN</td>
 </tr>
 <tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
 <td>3</td>
 <td>STA</td>
 <td>MAG</td>
-<td>Temp.</td>
-<td>7℃</td>
+<td>Temperature</td>
+<td>7ºC</td>
 </tr>
 <tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
 <td>4</td>
 <td>LUT</td>
-<td>Luton Borough</td>
-<td>NaN</td>
-<td>NULL</td>
+<td>Luton LA</td>
+<td>Temperature</td>
+<td>7ºC</td>
 </tr>
 <tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
 <td>5</td>
 <td>SEN</td>
 <td>Stobart</td>
@@ -663,6 +817,10 @@
 </tr>
 </tbody>
 </table>
+
+</div>
+</div>
+</div>
 </section></section>
 <section>
 <section id="any-guesses-for-the-fourth-type" class="title-slide slide level1 center">
@@ -679,137 +837,201 @@
 </section>
 <section id="concat" class="slide level2 smaller">
 <h2>Concat</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a>df3 <span class="op">=</span> pd.DataFrame.from_dict({</span>
+<div id="c31d77d7" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a>df3 <span class="op">=</span> pd.DataFrame.from_dict({</span>
 <span id="cb8-2"><a></a>    <span class="st">'SensorID'</span>: [<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">8</span>,<span class="dv">9</span>,<span class="dv">10</span>],</span>
 <span id="cb8-3"><a></a>    <span class="st">'Place'</span>: [<span class="st">'STA'</span>,<span class="st">'LUT'</span>,<span class="st">'BHX'</span>,<span class="st">'MAN'</span>,<span class="st">'INV'</span>],</span>
 <span id="cb8-4"><a></a>    <span class="st">'Owner'</span>: [<span class="st">'BAA'</span>,<span class="st">'Luton LA'</span>,<span class="st">'???'</span>,<span class="st">'???'</span>,<span class="st">'???'</span>]</span>
 <span id="cb8-5"><a></a>})</span>
 <span id="cb8-6"><a></a>pd.concat([df1, df3], ignore_index<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Outputs:</p>
-<table class="caption-top">
+<div class="cell-output cell-output-display" data-execution_count="8">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+<table class="dataframe caption-top" data-border="1">
 <thead>
-<tr class="header">
-<th style="text-align: right;"></th>
-<th style="text-align: right;">SensorID</th>
-<th style="text-align: right;">Place</th>
-<th style="text-align: right;">Owner</th>
+<tr class="header" style="text-align: right;">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">SensorID</th>
+<th data-quarto-table-cell-role="th">Place</th>
+<th data-quarto-table-cell-role="th">Owner</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">LHR</td>
-<td style="text-align: right;">BAA</td>
+<th data-quarto-table-cell-role="th">0</th>
+<td>1</td>
+<td>LHR</td>
+<td>BAA</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;"><span class="math inline">\(\vdots\)</span></td>
-<td style="text-align: right;"><span class="math inline">\(\vdots\)</span></td>
-<td style="text-align: right;"><span class="math inline">\(\vdots\)</span></td>
-<td style="text-align: right;"><span class="math inline">\(\vdots\)</span></td>
+<th data-quarto-table-cell-role="th">1</th>
+<td>2</td>
+<td>LGA</td>
+<td>GIP</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">SEN</td>
-<td style="text-align: right;">Stobart</td>
+<th data-quarto-table-cell-role="th">2</th>
+<td>3</td>
+<td>STA</td>
+<td>MAG</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">STA</td>
-<td style="text-align: right;">BAA</td>
+<th data-quarto-table-cell-role="th">3</th>
+<td>4</td>
+<td>LUT</td>
+<td>Luton LA</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">LUT</td>
-<td style="text-align: right;">GIP</td>
+<th data-quarto-table-cell-role="th">4</th>
+<td>5</td>
+<td>SEN</td>
+<td>Stobart</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">7</td>
-<td style="text-align: right;">8</td>
-<td style="text-align: right;">BHX</td>
-<td style="text-align: right;">???</td>
+<th data-quarto-table-cell-role="th">5</th>
+<td>2</td>
+<td>STA</td>
+<td>BAA</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">8</td>
-<td style="text-align: right;">9</td>
-<td style="text-align: right;">MAN</td>
-<td style="text-align: right;">???</td>
+<th data-quarto-table-cell-role="th">6</th>
+<td>3</td>
+<td>LUT</td>
+<td>Luton LA</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">9</td>
-<td style="text-align: right;">10</td>
-<td style="text-align: right;">INV</td>
-<td style="text-align: right;">???</td>
+<th data-quarto-table-cell-role="th">7</th>
+<td>8</td>
+<td>BHX</td>
+<td>???</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">8</th>
+<td>9</td>
+<td>MAN</td>
+<td>???</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">9</th>
+<td>10</td>
+<td>INV</td>
+<td>???</td>
 </tr>
 </tbody>
 </table>
+
+</div>
+</div>
+</div>
 </section>
-<section id="append" class="slide level2 smaller">
-<h2>Append</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>to_append <span class="op">=</span> [</span>
-<span id="cb9-2"><a></a>    {<span class="st">'SensorID'</span>: <span class="dv">0</span>, <span class="st">'Parameter'</span>: <span class="dv">5</span>,  <span class="st">'Humidity'</span>, <span class="st">'Value'</span>: <span class="fl">0.45</span>},</span>
-<span id="cb9-3"><a></a>    {<span class="st">'SensorID'</span>: <span class="dv">1</span>, <span class="st">'Parameter'</span>: <span class="dv">5</span>,  <span class="st">'Humidity'</span>, <span class="st">'Value'</span>: <span class="fl">0.31</span>},</span>
-<span id="cb9-4"><a></a>    {<span class="st">'SensorID'</span>: <span class="dv">2</span>, <span class="st">'Parameter'</span>: <span class="dv">4</span>, <span class="st">'Temperature'</span>, <span class="st">'Value'</span>: <span class="dv">2</span>},</span>
-<span id="cb9-5"><a></a>    {<span class="st">'SensorID'</span>: <span class="dv">3</span>, <span class="st">'Parameter'</span>: <span class="dv">3</span>, <span class="st">'Temperature'</span>, <span class="st">'Value'</span>: <span class="dv">3</span>}]</span>
-<span id="cb9-6"><a></a>df2.append(to_append)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Outputs:</p>
-<table class="caption-top">
+<section id="append-also-concat" class="slide level2 smaller">
+<h2><del>Append</del> <em>Also</em> Concat</h2>
+<div id="245062fd" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>to_append <span class="op">=</span> [</span>
+<span id="cb9-2"><a></a>    {<span class="st">'SensorID'</span>: <span class="dv">0</span>, <span class="st">'Parameter'</span>: <span class="st">'Humidity'</span>, <span class="st">'Value'</span>: <span class="fl">0.45</span>},</span>
+<span id="cb9-3"><a></a>    {<span class="st">'SensorID'</span>: <span class="dv">1</span>, <span class="st">'Parameter'</span>: <span class="st">'Humidity'</span>, <span class="st">'Value'</span>: <span class="fl">0.31</span>},</span>
+<span id="cb9-4"><a></a>    {<span class="st">'SensorID'</span>: <span class="dv">2</span>, <span class="st">'Parameter'</span>: <span class="st">'Temperature'</span>, <span class="st">'Value'</span>: <span class="dv">2</span>},</span>
+<span id="cb9-5"><a></a>    {<span class="st">'SensorID'</span>: <span class="dv">3</span>, <span class="st">'Parameter'</span>: <span class="st">'Temperature'</span>, <span class="st">'Value'</span>: <span class="dv">3</span>}]</span>
+<span id="cb9-6"><a></a>pd.concat([df2, pd.DataFrame(to_append)], ignore_index<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+<table class="dataframe caption-top" data-border="1">
 <thead>
-<tr class="header">
-<th style="text-align: right;">SensorID</th>
-<th style="text-align: right;">Parameter</th>
-<th style="text-align: right;">Value</th>
-<th></th>
+<tr class="header" style="text-align: right;">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">SensorID</th>
+<th data-quarto-table-cell-role="th">Parameter</th>
+<th data-quarto-table-cell-role="th">Value</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">Temperature</td>
-<td>5.00</td>
+<th data-quarto-table-cell-role="th">0</th>
+<td>1</td>
+<td>Temperature</td>
+<td>5ºC</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;"><span class="math inline">\(\vdots\)</span></td>
-<td style="text-align: right;"><span class="math inline">\(\vdots\)</span></td>
-<td style="text-align: right;"><span class="math inline">\(\vdots\)</span></td>
-<td><span class="math inline">\(\vdots\)</span></td>
+<th data-quarto-table-cell-role="th">1</th>
+<td>1</td>
+<td>Humidity</td>
+<td>15%</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">Humidity</td>
-<td>0.18</td>
+<th data-quarto-table-cell-role="th">2</th>
+<td>3</td>
+<td>Temperature</td>
+<td>7ºC</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">Humidity</td>
+<th data-quarto-table-cell-role="th">3</th>
+<td>4</td>
+<td>Temperature</td>
+<td>7ºC</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>6</td>
+<td>Humidity</td>
+<td>18%</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>0</td>
+<td>Humidity</td>
 <td>0.45</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">Humidity</td>
+<th data-quarto-table-cell-role="th">6</th>
+<td>1</td>
+<td>Humidity</td>
 <td>0.31</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">Temperature</td>
-<td>2.00</td>
+<th data-quarto-table-cell-role="th">7</th>
+<td>2</td>
+<td>Temperature</td>
+<td>2.0</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">Temperature</td>
-<td>3.00</td>
+<th data-quarto-table-cell-role="th">8</th>
+<td>3</td>
+<td>Temperature</td>
+<td>3.0</td>
 </tr>
 </tbody>
 </table>
+
+</div>
+</div>
+</div>
 <aside class="notes">
 <p>Note that a Dictionary-of-Lists would also work for an append and that appending a column that doesn’t exist (for vertical appends) will cause the column to be created while appending a row that doesn’t exist (for horizontal appends) with cause the row to be created.</p>
 <style type="text/css">
@@ -824,8 +1046,8 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="merge-vs.-append-vs.-concat-vs.-join" class="slide level2 smaller">
-<h2>Merge vs.&nbsp;Append vs.&nbsp;Concat vs.&nbsp;Join?</h2>
+<section id="merge-vs.-concat-vs.-join" class="slide level2 smaller">
+<h2>Merge vs.&nbsp;Concat vs.&nbsp;Join?</h2>
 <p>As usual, <a href="https://stackoverflow.com/questions/38256104/differences-between-merge-and-concat-in-pandas">Stack Overflow to the rescue</a>:</p>
 <blockquote>
 <p>A very high level difference is that <code>merge()</code> is used to combine two (or more) dataframes on the basis of values of common columns (indices can also be used, use <code>left_index=True</code> and/or <code>right_index=True</code>), and <code>concat()</code> is used to append one (or more) dataframes one below the other (or sideways, depending on whether the axis option is set to 0 or 1).</p>
@@ -835,17 +1057,98 @@
 </blockquote>
 <p><em><a href="https://railsware.com/blog/python-for-machine-learning-pandas-axis-explained/">Hint</a>:</em> <code>axis=0</code> refers to the row index &amp; <code>axis=1</code> to the column index.</p>
 </section>
-<section id="merge-vs.-append-vs.-concat-vs.-join-1" class="slide level2 smaller">
-<h2>Merge vs.&nbsp;Append vs.&nbsp;Concat vs.&nbsp;Join?</h2>
-<p>These achieve the same thing, but they are <em>not</em> always equivalent:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>pd.merge(df1, df2, left_index<span class="op">=</span><span class="va">True</span>, right_index<span class="op">=</span><span class="va">True</span>)</span>
+<section id="merge-vs.-concat-vs.-join-1" class="slide level2 smaller">
+<h2>Merge vs.&nbsp;Concat vs.&nbsp;Join?</h2>
+<p>These achieve the same thing, but they are <em>not</em> always equivalent or what you want:</p>
+<div id="b2d13013" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>pd.merge(df1, df2, left_index<span class="op">=</span><span class="va">True</span>, right_index<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb10-2"><a></a>pd.concat([df1, df2], axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb10-3"><a></a>df1.join(df2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb10-3"><a></a>df1.join(df2, rsuffix<span class="op">=</span><span class="st">'_r'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+<table class="dataframe caption-top" data-border="1">
+<thead>
+<tr class="header" style="text-align: right;">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">SensorID</th>
+<th data-quarto-table-cell-role="th">Place</th>
+<th data-quarto-table-cell-role="th">Owner</th>
+<th data-quarto-table-cell-role="th">SensorID_r</th>
+<th data-quarto-table-cell-role="th">Parameter</th>
+<th data-quarto-table-cell-role="th">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>1</td>
+<td>LHR</td>
+<td>BAA</td>
+<td>1</td>
+<td>Temperature</td>
+<td>5ºC</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>2</td>
+<td>LGA</td>
+<td>GIP</td>
+<td>1</td>
+<td>Humidity</td>
+<td>15%</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>3</td>
+<td>STA</td>
+<td>MAG</td>
+<td>3</td>
+<td>Temperature</td>
+<td>7ºC</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>4</td>
+<td>LUT</td>
+<td>Luton LA</td>
+<td>4</td>
+<td>Temperature</td>
+<td>7ºC</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>5</td>
+<td>SEN</td>
+<td>Stobart</td>
+<td>6</td>
+<td>Humidity</td>
+<td>18%</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
 <p>Generally:</p>
 <ul>
-<li><strong>Concat</strong> expects the number of columns in all data frames to match (if concatenating vertically) and the number of rows in all data frames to match (if concatenating horizontally). It does <em>not</em> deal well with <em>linking</em>.</li>
-<li><strong>Append</strong> assumes that <em>either</em> the columns or the rows will match.</li>
-<li><strong>Join</strong> is basically a functionality-restricted merge.</li>
+<li><strong>Concat</strong> expects the number of columns in all data frames to match (if concatenating vertically) and the number of rows in all data frames to match (if concatenating horizontally). It does <em>not</em> deal well with <em>linking</em> (<a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.merge.html#pandas.DataFrame.merge">docs</a>).</li>
+<li><strong>Join</strong> is basically a functionality-restricted merge (<a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.join.html">docs</a>).</li>
+<li><del><strong>Append</strong> assumes that <em>either</em> the columns or the rows will match.</del> <em>[Append has been deprecated]</em></li>
 </ul>
 </section>
 <section id="additional-resources" class="slide level2 smaller">

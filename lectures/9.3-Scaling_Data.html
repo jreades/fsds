@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 <html lang="en"><head>
 <link href="..//img/favicon.ico" rel="icon">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-da61f9a05e9cefe097d79e8430a73dd4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
-<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
-<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><meta charset="utf-8">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-da61f9a05e9cefe097d79e8430a73dd4.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.8.24">
 
   <meta name="author" content="Jon Reades">
@@ -190,7 +187,7 @@
       margin-right: 0; 
     }
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
   
   <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 <meta property="og:title" content="Scaling Data – Foundations of Spatial Data Science">
@@ -422,10 +419,15 @@ Introducing:<br> Polars, Dask, DuckDB, and Postgres.
 <li>Moving lots of data in/out of the database is <em>slow</em>.</li>
 </ul>
 </div></div>
+</section></section>
+<section>
+<section id="is-it-worth-it" class="title-slide slide level1 center">
+<h1>Is it Worth It?</h1>
+
 </section>
 <section id="a-simple-comparison" class="slide level2">
 <h2>A Simple Comparison</h2>
-<div id="8f7aa37d" class="cell" data-execution_count="1">
+<div id="d8705a4d" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb1-3"><a></a><span class="im">import</span> duckdb <span class="im">as</span> duck</span>
@@ -433,7 +435,7 @@ Introducing:<br> Polars, Dask, DuckDB, and Postgres.
 <span id="cb1-5"><a></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb1-6"><a></a>sns.load_dataset(<span class="st">'titanic'</span>).to_parquet(<span class="st">'titanic.pq'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="a4fcff87" class="cell" data-execution_count="2">
+<div id="aca14e37" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 <style scoped="">
@@ -572,7 +574,7 @@ Introducing:<br> Polars, Dask, DuckDB, and Postgres.
 <section id="measuring-performance" class="slide level2">
 <h2>Measuring Performance</h2>
 <p>We can compare performance using profiling<sup>1</sup>:</p>
-<div id="bb0c3010" class="cell" data-execution_count="3">
+<div id="ac2d78b1" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">import</span> timeit</span>
 <span id="cb2-2"><a></a></span>
 <span id="cb2-3"><a></a><span class="kw">def</span> load_pandas():</span>
@@ -590,31 +592,31 @@ Introducing:<br> Polars, Dask, DuckDB, and Postgres.
 <section id="the-results" class="slide level2">
 <h2>The Results</h2>
 <h4 id="pandas">Pandas</h4>
-<div id="8d433a1d" class="cell" data-execution_count="4">
+<div id="1e9aa2db" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>pd_execution_time <span class="op">=</span> timeit.timeit(load_pandas, number<span class="op">=</span>num_reps)</span>
 <span id="cb3-2"><a></a><span class="bu">print</span>(<span class="ss">f"Pandas execution time: </span><span class="sc">{</span>pd_execution_time<span class="sc">:.6f}</span><span class="ss"> seconds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Pandas execution time: 0.762337 seconds</code></pre>
+<pre><code>Pandas execution time: 1.176813 seconds</code></pre>
 </div>
 </div>
 <h4 id="polars">Polars</h4>
-<div id="0ab1715f" class="cell" data-execution_count="5">
+<div id="6cfaf837" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>pl_execution_time <span class="op">=</span> timeit.timeit(load_polars, number<span class="op">=</span>num_reps)</span>
 <span id="cb5-2"><a></a><span class="bu">print</span>(<span class="ss">f"Polars execution time: </span><span class="sc">{</span>pl_execution_time<span class="sc">:.6f}</span><span class="ss"> seconds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Polars execution time: 0.138823 seconds</code></pre>
+<pre><code>Polars execution time: 1.050749 seconds</code></pre>
 </div>
 </div>
-<p>81.79% faster than pandas.</p>
+<p><span style="font-size: 0.8em;">10.71% faster than pandas.</span></p>
 <h4 id="duckdb">DuckDB</h4>
-<div id="9376799d" class="cell" data-execution_count="7">
+<div id="77d943be" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>db_execution_time <span class="op">=</span> timeit.timeit(load_duck, number<span class="op">=</span>num_reps)</span>
 <span id="cb7-2"><a></a><span class="bu">print</span>(<span class="ss">f"DuckDB execution time: </span><span class="sc">{</span>db_execution_time<span class="sc">:.6f}</span><span class="ss"> seconds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>DuckDB execution time: 0.097314 seconds</code></pre>
+<pre><code>DuckDB execution time: 0.271305 seconds</code></pre>
 </div>
 </div>
-<p>87.23% faster than pandas and 29.90% faster than polars.</p>
+<p><span style="font-size: 0.8em;">76.95% faster than pandas and 74.18% faster than polars.</span></p>
 </section></section>
 <section>
 <section id="summarising-data" class="title-slide slide level1 center">
@@ -679,43 +681,369 @@ Introducing:<br> Polars, Dask, DuckDB, and Postgres.
           display:block!important;
       }</style></aside>
 </section>
-<section id="grouping-operations" class="slide level2">
+<section id="grouping-operations" class="slide level2 smaller">
 <h2>Grouping Operations</h2>
 <p>In Pandas these follow a split / apply / combine approach:</p>
-<p><a href="img/Split-Apply-Combine.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img data-src="img/Split-Apply-Combine.png"></a></p>
-<aside class="notes">
-<p>Note that, for simplicity, I’ve abbreviate the Local Authority names since this is just a simplified example: <code>TH</code> (Tower Hamlets), <code>HAK</code> (Hackney), <code>W</code> (Westminster).</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
+<div class="quarto-layout-panel" data-layout="[0.24, -0.02, 0.24, -0.02, 0.23, -0.02, 0.23]">
+<div class="quarto-layout-row">
+<div id="first-column" class="quarto-layout-cell" style="flex-basis: 24.0%;justify-content: center;">
+<table class="table-hover table-striped caption-top">
+<caption>1. Raw data</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">class</th>
+<th style="text-align: left;">sex</th>
+<th style="text-align: right;">age</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">Third</td>
+<td style="text-align: left;">m</td>
+<td style="text-align: right;">22.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">First</td>
+<td style="text-align: left;">f</td>
+<td style="text-align: right;">38.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">Third</td>
+<td style="text-align: left;">f</td>
+<td style="text-align: right;">26.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">First</td>
+<td style="text-align: left;">f</td>
+<td style="text-align: right;">35.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">Third</td>
+<td style="text-align: left;">m</td>
+<td style="text-align: right;">35.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">Third</td>
+<td style="text-align: left;">m</td>
+<td style="text-align: right;">NaN</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">6</td>
+<td style="text-align: left;">First</td>
+<td style="text-align: left;">m</td>
+<td style="text-align: right;">54.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">7</td>
+<td style="text-align: left;">Third</td>
+<td style="text-align: left;">m</td>
+<td style="text-align: right;">2.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="quarto-figure-spacer quarto-layout-cell" style="flex-basis: 2.0%;justify-content: flex-start;">
+<p>&nbsp;</p>
+</div>
+<div id="second-column" class="quarto-layout-cell" style="flex-basis: 24.0%;justify-content: center;">
+<table class="table-hover table-striped caption-top">
+<caption>2a. Grouped First Class</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">class</th>
+<th style="text-align: left;">sex</th>
+<th style="text-align: right;">age</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">First</td>
+<td style="text-align: left;">f</td>
+<td style="text-align: right;">38.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">First</td>
+<td style="text-align: left;">f</td>
+<td style="text-align: right;">35.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">6</td>
+<td style="text-align: left;">First</td>
+<td style="text-align: left;">m</td>
+<td style="text-align: right;">54.0</td>
+</tr>
+</tbody>
+</table>
+<table class="table-hover table-striped caption-top">
+<caption>2b. Grouped Third Class</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">class</th>
+<th style="text-align: left;">sex</th>
+<th style="text-align: right;">age</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">Third</td>
+<td style="text-align: left;">m</td>
+<td style="text-align: right;">22.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">Third</td>
+<td style="text-align: left;">f</td>
+<td style="text-align: right;">26.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">Third</td>
+<td style="text-align: left;">m</td>
+<td style="text-align: right;">35.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">Third</td>
+<td style="text-align: left;">m</td>
+<td style="text-align: right;">NaN</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">7</td>
+<td style="text-align: left;">Third</td>
+<td style="text-align: left;">m</td>
+<td style="text-align: right;">2.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="quarto-figure-spacer quarto-layout-cell" style="flex-basis: 2.0%;justify-content: flex-start;">
+<p>&nbsp;</p>
+</div>
+<div id="third-column" class="quarto-layout-cell" style="flex-basis: 23.0%;justify-content: center;">
+<table class="table-hover table-striped caption-top">
+<caption>3a. Summary First Class</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">class</th>
+<th style="text-align: right;">age</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">First</td>
+<td style="text-align: right;">42.33</td>
+</tr>
+</tbody>
+</table>
+<table class="table-hover table-striped caption-top">
+<caption>3b. Summary Third Class</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">class</th>
+<th style="text-align: right;">age</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Third</td>
+<td style="text-align: right;">21.25</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="quarto-figure-spacer quarto-layout-cell" style="flex-basis: 2.0%;justify-content: flex-start;">
+<p>&nbsp;</p>
+</div>
+<div id="fourth-column" class="quarto-layout-cell" style="flex-basis: 23.0%;justify-content: center;">
+<table class="table-hover table-striped caption-top">
+<caption>4. Result</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">class</th>
+<th style="text-align: right;">age</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">First</td>
+<td style="text-align: right;">42.33</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Third</td>
+<td style="text-align: right;">21.25</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
 </section>
-<section id="in-practice" class="slide level2 smaller">
+<section id="in-practice" class="slide level2">
 <h2>In Practice</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>grouped_df <span class="op">=</span> df.groupby(<span class="op">&lt;</span>fields<span class="op">&gt;</span>).<span class="op">&lt;</span>function<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>For instance, if we had a Local Authority (<code>LA</code>) field:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>grouped_df <span class="op">=</span> df.groupby(<span class="st">'LA'</span>).<span class="bu">sum</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Using <code>apply</code> the function could be anything:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a><span class="kw">def</span> norm_by_data(x): <span class="co"># x is a column from the grouped df</span></span>
-<span id="cb11-2"><a></a>    x[<span class="st">'d1'</span>] <span class="op">/=</span> x[<span class="st">'d2'</span>].<span class="bu">sum</span>() </span>
-<span id="cb11-3"><a></a>    <span class="cf">return</span> x</span>
-<span id="cb11-4"><a></a></span>
-<span id="cb11-5"><a></a>df.groupby(<span class="st">'LA'</span>).<span class="bu">apply</span>(norm_by_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>grouped_df <span class="op">=</span> df.groupby(<span class="op">&lt;</span>fields<span class="op">&gt;</span>).agg([<span class="st">'&lt;function1&gt;'</span>, ..., <span class="st">'&lt;functionn&gt;'</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>For instance, to get multiple summary values:</p>
+<div id="d617f3dd" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a><span class="co"># This will throw an error when there are non-numeric columns</span></span>
+<span id="cb10-2"><a></a><span class="co"># grouped_df = df.groupby('class').agg(['sum','mean'])</span></span>
+<span id="cb10-3"><a></a><span class="co"># This will only aggregate one column</span></span>
+<span id="cb10-4"><a></a>grouped_df <span class="op">=</span> df.groupby(<span class="st">'class'</span>).age.agg([<span class="st">'sum'</span>,<span class="st">'mean'</span>])</span>
+<span id="cb10-5"><a></a>grouped_df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+<table class="dataframe caption-top" data-border="1">
+<thead>
+<tr class="header" style="text-align: right;">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">sum</th>
+<th data-quarto-table-cell-role="th">mean</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">class</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">First</th>
+<td>7111.42</td>
+<td>38.233441</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Second</th>
+<td>5168.83</td>
+<td>29.877630</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Third</th>
+<td>8924.92</td>
+<td>25.140620</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
 </section>
 <section id="grouping-by-arbitrary-mappings" class="slide level2">
 <h2>Grouping by Arbitrary Mappings</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>mapping <span class="op">=</span> {<span class="st">'HAK'</span>:<span class="st">'Inner'</span>, <span class="st">'TH'</span>:<span class="st">'Outer'</span>, <span class="st">'W'</span>:<span class="st">'Inner'</span>}</span>
-<span id="cb12-2"><a></a>df.set_index(<span class="st">'LA'</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb12-3"><a></a>df.groupby(mapping).<span class="bu">sum</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><a href="img/Arbitrary_Mappings.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img data-src="img/Arbitrary_Mappings.png"></a></p>
-</section>
+<p>In cases where we want to group by a derived value that doesn’t exist in the data we can apply a mapping as part of the process:</p>
+<div id="55b88bb5" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a>mapping <span class="op">=</span> {<span class="st">'First'</span>:<span class="st">'Fancy'</span>, <span class="st">'Second'</span>:<span class="st">'Not-Fancy'</span>, <span class="st">'Third'</span>:<span class="st">'Not-Fancy'</span>}</span>
+<span id="cb11-2"><a></a>grouped_df <span class="op">=</span> df.set_index(<span class="st">'class'</span>).groupby(mapping).age.agg([<span class="st">'sum'</span>,<span class="st">'mean'</span>])</span>
+<span id="cb11-3"><a></a>grouped_df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+<table class="dataframe caption-top" data-border="1">
+<thead>
+<tr class="header" style="text-align: right;">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">sum</th>
+<th data-quarto-table-cell-role="th">mean</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">class</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Fancy</th>
+<td>7111.42</td>
+<td>38.233441</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Not-Fancy</th>
+<td>14093.75</td>
+<td>26.692708</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+
+<aside><div>
+<p><em>Note</em> you need set to the index for this to work!</p>
+</div></aside></section>
+<section id="apply" class="slide level2">
+<h2>Apply</h2>
+<p>You can take this one step further by ‘applying’ an arbitrary function in a row- or column-wise fashion.</p>
+<div id="e1f7fcb9" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a><span class="kw">def</span> norm(x): <span class="co"># x is a column from the grouped df</span></span>
+<span id="cb12-2"><a></a>    <span class="cf">return</span> x[<span class="st">'age'</span>] <span class="op">*</span> x[<span class="st">'fare'</span>] </span>
+<span id="cb12-3"><a></a></span>
+<span id="cb12-4"><a></a>df.groupby(<span class="st">'class'</span>).<span class="bu">apply</span>(norm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<pre><code>class     
+First  1      2708.7654
+       3      1858.5000
+       6      2800.5750
+       11     1539.9000
+       23      994.0000
+                ...    
+Third  882     231.3674
+       884     176.2500
+       885    1135.8750
+       888          NaN
+       890     248.0000
+Length: 891, dtype: float64</code></pre>
+</div>
+</div>
+
+<aside><div>
+<p>Not saying this is a <em>useful</em> calculation.</p>
+</div></aside></section>
 <section id="pivot-tables" class="slide level2">
 <h2>Pivot Tables</h2>
 <p>A ‘special case’ of Group By features:</p>
@@ -725,28 +1053,241 @@ Introducing:<br> Polars, Dask, DuckDB, and Postgres.
 <li><code>pandas.cut(&lt;series&gt;, &lt;bins&gt;)</code> can be a useful feature here since it chops a continuous feature into bins suitable for grouping.</li>
 </ul>
 </section>
-<section id="in-practice-1" class="slide level2">
-<h2>In Practice</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a>age <span class="op">=</span> pd.cut(titanic[<span class="st">'age'</span>], [<span class="dv">0</span>, <span class="dv">18</span>, <span class="dv">80</span>])</span>
-<span id="cb13-2"><a></a>titanic.pivot_table(<span class="st">'survived'</span>, [<span class="st">'sex'</span>, age], <span class="st">'class'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><a href="img/Pivot_Table.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img data-src="img/Pivot_Table.png"></a></p>
+<section id="in-pandas" class="slide level2">
+<h2>In Pandas</h2>
+<div id="745e2a52" class="cell" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a>age <span class="op">=</span> pd.cut(df[<span class="st">'age'</span>], [<span class="dv">0</span>, <span class="dv">18</span>, <span class="dv">80</span>])</span>
+<span id="cb14-2"><a></a>pd.set_option(<span class="st">'display.float_format'</span>, <span class="st">'</span><span class="sc">{:,.3f}</span><span class="st">'</span>.<span class="bu">format</span>)</span>
+<span id="cb14-3"><a></a>df.pivot_table(<span class="st">'survived'</span>, [<span class="st">'sex'</span>, age], <span class="st">'class'</span>, observed<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+<table class="dataframe caption-top" data-border="1">
+<thead>
+<tr class="header" style="text-align: right;">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">class</th>
+<th data-quarto-table-cell-role="th">First</th>
+<th data-quarto-table-cell-role="th">Second</th>
+<th data-quarto-table-cell-role="th">Third</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">sex</th>
+<th data-quarto-table-cell-role="th">age</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th rowspan="2" data-quarto-table-cell-role="th" data-valign="top">female</th>
+<th data-quarto-table-cell-role="th">(0, 18]</th>
+<td>0.909</td>
+<td>1.000</td>
+<td>0.512</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">(18, 80]</th>
+<td>0.973</td>
+<td>0.900</td>
+<td>0.424</td>
+</tr>
+<tr class="odd">
+<th rowspan="2" data-quarto-table-cell-role="th" data-valign="top">male</th>
+<th data-quarto-table-cell-role="th">(0, 18]</th>
+<td>0.800</td>
+<td>0.600</td>
+<td>0.216</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">(18, 80]</th>
+<td>0.375</td>
+<td>0.071</td>
+<td>0.134</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
 </section>
+<section id="in-sql" class="slide level2">
+<h2>In SQL<sup>1</sup></h2>
+<div id="5859977d" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a>sql <span class="op">=</span> <span class="st">"""PIVOT (</span></span>
+<span id="cb15-2"><a></a><span class="st">    SELECT sex, survived, class, CASE WHEN age &lt; 18 then '(0, 18]' else '(18, 80]' end as age </span></span>
+<span id="cb15-3"><a></a><span class="st">    FROM read_parquet('titanic.pq'))</span></span>
+<span id="cb15-4"><a></a><span class="st">  ON class USING SUM(survived) AS survived GROUP BY sex, age"""</span></span>
+<span id="cb15-5"><a></a>  </span>
+<span id="cb15-6"><a></a>pd.set_option(<span class="st">'display.float_format'</span>, <span class="st">'</span><span class="sc">{:,.0f}</span><span class="st">'</span>.<span class="bu">format</span>)</span>
+<span id="cb15-7"><a></a>df <span class="op">=</span> duck.sql(sql).to_df().set_index(<span class="st">'sex'</span>)</span>
+<span id="cb15-8"><a></a>df.columns <span class="op">=</span> [<span class="st">'Age'</span>,<span class="st">'First'</span>,<span class="st">'Second'</span>,<span class="st">'Third'</span>]</span>
+<span id="cb15-9"><a></a>df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+<table class="dataframe caption-top" data-border="1">
+<thead>
+<tr class="header" style="text-align: right;">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Age</th>
+<th data-quarto-table-cell-role="th">First</th>
+<th data-quarto-table-cell-role="th">Second</th>
+<th data-quarto-table-cell-role="th">Third</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">sex</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">female</th>
+<td>(18, 80]</td>
+<td>84</td>
+<td>58</td>
+<td>53</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">male</th>
+<td>(0, 18]</td>
+<td>4</td>
+<td>9</td>
+<td>10</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">male</th>
+<td>(18, 80]</td>
+<td>41</td>
+<td>8</td>
+<td>37</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">female</th>
+<td>(0, 18]</td>
+<td>7</td>
+<td>12</td>
+<td>19</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<aside><ol class="aside-footnotes"><li id="fn4"><p>Note the critical difference with Pandas output!</p></li></ol></aside></section>
 <section id="counts" class="slide level2">
 <h2>Counts</h2>
-</section>
-<section id="pivots-groups" class="slide level2">
-<h2>Pivots &amp; Groups</h2>
-</section></section>
-<section id="extracting" class="title-slide slide level1 center">
-<h1>Extracting</h1>
+<p>Other ways to summarise:</p>
+<div id="5a27149f" class="cell" data-execution_count="16">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a></a>duck.sql(<span class="st">"""SELECT class, sex, case WHEN survived=1 THEN 'Y' ELSE 'N' end AS survived, COUNT(*) AS n</span></span>
+<span id="cb16-2"><a></a><span class="st">  FROM read_parquet('titanic.pq') WHERE sex='female' GROUP BY sex, class, survived</span></span>
+<span id="cb16-3"><a></a><span class="st">  ORDER BY sex ASC, class ASC, survived DESC"""</span>).to_df().set_index([<span class="st">'class'</span>,<span class="st">'sex'</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-</section>
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
 
-<section id="thank-you" class="title-slide slide level1 center" data-background-image="../img/web/title-slide.png" data-background-color="#f7eff5" data-background-opacity="0.2">
-<h1>Thank You</h1>
-<h3>
-References
-</h3>
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+<table class="dataframe caption-top" data-border="1">
+<thead>
+<tr class="header" style="text-align: right;">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">survived</th>
+<th data-quarto-table-cell-role="th">n</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">class</th>
+<th data-quarto-table-cell-role="th">sex</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th rowspan="2" data-quarto-table-cell-role="th" data-valign="top">First</th>
+<th data-quarto-table-cell-role="th">female</th>
+<td>Y</td>
+<td>91</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">female</th>
+<td>N</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<th rowspan="2" data-quarto-table-cell-role="th" data-valign="top">Second</th>
+<th data-quarto-table-cell-role="th">female</th>
+<td>Y</td>
+<td>70</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">female</th>
+<td>N</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<th rowspan="2" data-quarto-table-cell-role="th" data-valign="top">Third</th>
+<th data-quarto-table-cell-role="th">female</th>
+<td>Y</td>
+<td>72</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">female</th>
+<td>N</td>
+<td>72</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="additional-resources" class="slide level2">
+<h2>Additional Resources</h2>
 <ul>
 <li><a href="https://mccue.dev/pages/3-11-25-life-altering-postgresql-patterns">Life Altering Postgres Patterns</a></li>
 <li><a href="https://datapythonista.me/blog/pandas-20-and-the-arrow-revolution-part-i">pandas 2.0 and the Arrow revolution (Part 1)</a></li>
@@ -755,6 +1296,12 @@ References
 <li><a href="https://docs.pola.rs/user-guide/migration/pandas/">Migrating from Pandas to Polars</a></li>
 <li><a href="https://rfsaldanha.github.io/posts/query_remot_parquet_file.html">Read remote Parquet files with DuckDB</a></li>
 </ul>
+</section></section>
+<section id="thank-you" class="title-slide slide level1 center" data-background-image="../img/web/title-slide.png" data-background-color="#f7eff5" data-background-opacity="0.2">
+<h1>Thank You</h1>
+<h3>
+References
+</h3>
 
 
 </section>
@@ -1144,38 +1691,6 @@ References
         }
       });
       </script>
-    <script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
-    (function() {
-      let previousOnload = window.onload;
-      window.onload = () => {
-        if (previousOnload) {
-          previousOnload();
-        }
-        lightboxQuarto.on('slide_before_load', (data) => {
-          const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-          const href = trigger.getAttribute('href');
-          if (href !== null) {
-            const imgEl = window.document.querySelector(`a[href="${href}"] img`);
-            if (imgEl !== null) {
-              const srcAttr = imgEl.getAttribute("src");
-              if (srcAttr && srcAttr.startsWith("data:")) {
-                slideConfig.href = srcAttr;
-              }
-            }
-          } 
-        });
-      
-        lightboxQuarto.on('slide_after_load', (data) => {
-          const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-          if (window.Quarto?.typesetMath) {
-            window.Quarto.typesetMath(slideNode);
-          }
-        });
-      
-      };
-      
-    })();
-              </script>
     
 
 </body></html>

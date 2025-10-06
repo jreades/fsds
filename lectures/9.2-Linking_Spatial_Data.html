@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head>
 <link href="..//img/favicon.ico" rel="icon">
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -190,6 +190,9 @@
       margin-right: 0; 
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+  
+  <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 <meta property="og:title" content="Linking (Spatial) Data – Foundations of Spatial Data Science">
 <meta property="og:image" content="img/logo/full_sm.png">
 <meta property="og:site_name" content="Foundations">
@@ -215,8 +218,8 @@
 <p style="opacity:0.8;"></p>
 
 </section>
-<section id="data-sets-with-spatial-attributes-can-be-connected-in-more-complex-ways-than-those-without-such-attributes-consequently-the-ability-to-link-such-data-unlocks-even-more-exciting-new-applications" class="title-slide slide level1 center">
-<h1>&gt; Data sets with spatial attributes can be connected in more complex ways than those without such attributes; consequently the ability to link such data unlocks even more exciting new applications!</h1>
+<section id="spatial-data-connected-in-more-complex-ways-unlocking-even-more-applications-but-at-a-cost" class="title-slide slide level1 center">
+<h1>&gt; Spatial data connected in more complex ways unlocking even more applications, but at a cost!</h1>
 
 </section>
 
@@ -230,126 +233,196 @@
 <div class="columns">
 <div class="column" style="width:50%;">
 <h3 id="data-set-1">Data Set 1</h3>
-<table class="caption-top">
+<div id="e3243477" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a>df1 <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb1-2"><a></a>  <span class="st">'SensorID'</span>: [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>],</span>
+<span id="cb1-3"><a></a>  <span class="st">'Latitude'</span>: [<span class="fl">51.5070</span>, <span class="fl">51.5071</span>, <span class="fl">51.5074</span>, <span class="fl">51.5073</span>, <span class="fl">51.5073</span>],</span>
+<span id="cb1-4"><a></a>  <span class="st">'Longitude'</span>: [<span class="op">-</span><span class="fl">0.1347</span>, <span class="op">-</span><span class="fl">0.0042</span>, <span class="op">-</span><span class="fl">0.1223</span>, <span class="op">-</span><span class="fl">0.1122</span>, <span class="fl">0.1589</span>]</span>
+<span id="cb1-5"><a></a>})</span>
+<span id="cb1-6"><a></a>df1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="44">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+<table class="dataframe caption-top" data-border="1">
 <thead>
-<tr class="header">
-<th>SensorID</th>
-<th>Latitude</th>
-<th>Longitude</th>
+<tr class="header" style="text-align: right;">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">SensorID</th>
+<th data-quarto-table-cell-role="th">Latitude</th>
+<th data-quarto-table-cell-role="th">Longitude</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
 <td>1</td>
 <td>51.5070</td>
 <td>-0.1347</td>
 </tr>
 <tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
 <td>2</td>
 <td>51.5071</td>
 <td>-0.0042</td>
 </tr>
 <tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
 <td>3</td>
 <td>51.5074</td>
 <td>-0.1223</td>
 </tr>
 <tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
 <td>4</td>
 <td>51.5073</td>
 <td>-0.1122</td>
 </tr>
 <tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
 <td>5</td>
-<td>51.5072</td>
+<td>51.5073</td>
 <td>0.1589</td>
 </tr>
 </tbody>
 </table>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a>df <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb1-2"><a></a>  <span class="st">'SensorID'</span>: [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>],</span>
-<span id="cb1-3"><a></a>  <span class="st">'Latitude'</span>: [<span class="fl">51.5070</span>, <span class="fl">51.5071</span>, <span class="fl">51.5074</span>, <span class="fl">51.5073</span>, <span class="fl">51.5073</span>],</span>
-<span id="cb1-4"><a></a>  <span class="st">'Longitude'</span>: [<span class="op">-</span><span class="fl">0.1347</span>, <span class="op">-</span><span class="fl">0.0042</span>, <span class="op">-</span><span class="fl">0.1223</span>, <span class="op">-</span><span class="fl">0.1122</span>, <span class="fl">0.1589</span>]</span>
-<span id="cb1-5"><a></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+</div>
+</div>
+</div>
 </div><div class="column" style="width:50%;">
 <h3 id="data-set-2">Data Set 2</h3>
-<table class="caption-top">
+<div id="73609404" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>df2 <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb2-2"><a></a>  <span class="st">'SensorID'</span>: [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>],</span>
+<span id="cb2-3"><a></a>  <span class="st">'Parameter'</span>: [<span class="st">'Temperature'</span>,<span class="st">'Humidity'</span>,<span class="st">'Temperature'</span>,<span class="st">'Temperature'</span>,<span class="st">'Humidity'</span>], </span>
+<span id="cb2-4"><a></a>  <span class="st">'Value'</span>: [<span class="st">'5ºC'</span>, <span class="st">'15%'</span>, <span class="st">'7ºC'</span>, <span class="st">'7ºC'</span>, <span class="st">'18%'</span>]</span>
+<span id="cb2-5"><a></a>})</span>
+<span id="cb2-6"><a></a>df2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="45">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+<table class="dataframe caption-top" data-border="1">
 <thead>
-<tr class="header">
-<th>SensorID</th>
-<th>Parameter</th>
-<th>Value</th>
+<tr class="header" style="text-align: right;">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">SensorID</th>
+<th data-quarto-table-cell-role="th">Parameter</th>
+<th data-quarto-table-cell-role="th">Value</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
 <td>1</td>
 <td>Temperature</td>
 <td>5ºC</td>
 </tr>
 <tr class="even">
-<td>1</td>
+<th data-quarto-table-cell-role="th">1</th>
+<td>2</td>
 <td>Humidity</td>
 <td>15%</td>
 </tr>
 <tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
 <td>3</td>
 <td>Temperature</td>
 <td>7ºC</td>
 </tr>
 <tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
 <td>4</td>
 <td>Temperature</td>
 <td>7ºC</td>
 </tr>
 <tr class="odd">
-<td>6</td>
+<th data-quarto-table-cell-role="th">4</th>
+<td>5</td>
 <td>Humidity</td>
 <td>18%</td>
 </tr>
 </tbody>
 </table>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>df1 <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb2-2"><a></a>  <span class="st">'SensorID'</span>: [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>],</span>
-<span id="cb2-3"><a></a>  <span class="st">'Parameter'</span>: [<span class="st">'Temperature'</span>,<span class="st">'Humidity'</span>,<span class="st">'Temperature'</span>,<span class="st">'Temperature'</span>,<span class="st">'Humidity'</span>], </span>
-<span id="cb2-4"><a></a>  <span class="st">'Value'</span>: [<span class="st">'5ºC'</span>, <span class="st">'15%'</span>, <span class="st">'7ºC'</span>, <span class="st">'7ºC'</span>, <span class="st">'18%'</span>]</span>
-<span id="cb2-5"><a></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+</div>
+</div>
+</div>
 </div></div>
 
-<aside class="notes">
-<p>Obviously, we can use non-spatial operations on spatial data sets.</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
 <aside><div>
 <p>This wouldn’t be a particularly <em>good</em> design for a data structure… why?</p>
 </div></aside></section>
-<section id="sjoin-vs.-join" class="slide level2 smaller">
-<h2>Sjoin vs.&nbsp;Join</h2>
-<p>Sjoin adds an <em>operator</em> (<code>['intersects','contains','within']</code>) and example code can be <a href="https://github.com/jreades/i2p/blob/master/lectures/8.2-Linking_Spatial_Data.ipynb">found on GitHub</a>.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>gdf <span class="op">=</span> gpd.GeoDataFrame(df, </span>
-<span id="cb3-2"><a></a>            geometry<span class="op">=</span>gpd.points_from_xy(df.longitude, df.latitude,</span>
-<span id="cb3-3"><a></a>            crs<span class="op">=</span><span class="st">'epsg:4326'</span>)).to_crs(<span class="st">'epsg:27700'</span>)</span>
-<span id="cb3-4"><a></a>hackney <span class="op">=</span> boros[boros.NAME<span class="op">==</span><span class="st">'Hackney'</span>]</span>
-<span id="cb3-5"><a></a>rs <span class="op">=</span> gpd.sjoin(gdf, hackney, op<span class="op">=</span><span class="st">'within'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><a href="img/Hackney.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img data-src="img/Hackney.png"></a></p>
+<section id="going-spatial" class="slide level2">
+<h2>Going Spatial</h2>
+<div id="e0fb35a3" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>boros <span class="op">=</span> gpd.read_file(<span class="st">'https://bit.ly/3neINBV'</span>, driver<span class="op">=</span><span class="st">'GPKG'</span>)</span>
+<span id="cb3-2"><a></a>df    <span class="op">=</span> pd.read_csv(<span class="st">'https://bit.ly/3I0XDrq'</span>)</span>
+<span id="cb3-3"><a></a>gdf   <span class="op">=</span> gpd.GeoDataFrame(df,</span>
+<span id="cb3-4"><a></a>        geometry<span class="op">=</span>gpd.points_from_xy(</span>
+<span id="cb3-5"><a></a>          df[<span class="st">'longitude'</span>], df[<span class="st">'latitude'</span>], crs<span class="op">=</span><span class="st">'epsg:4326'</span></span>
+<span id="cb3-6"><a></a>        )</span>
+<span id="cb3-7"><a></a>      ).to_crs(<span class="st">'epsg:27700'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="a-spatial-join" class="slide level2">
+<h2>A Spatial Join</h2>
+<p>Sjoin adds an <em>predicate</em> (<code>'intersects','contains','within'</code>):</p>
+<div id="2a584700" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>hackney <span class="op">=</span> boros[boros.NAME<span class="op">==</span><span class="st">'Hackney'</span>]</span>
+<span id="cb4-2"><a></a>rs <span class="op">=</span> gpd.sjoin(gdf, hackney, predicate<span class="op">=</span><span class="st">'within'</span>)</span>
+<span id="cb4-3"><a></a>ax <span class="op">=</span> hackney.plot(facecolor<span class="op">=</span><span class="st">'none'</span>, edgecolor<span class="op">=</span><span class="st">'blue'</span>, figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))</span>
+<span id="cb4-4"><a></a>rs.plot(ax<span class="op">=</span>ax, marker<span class="op">=</span><span class="st">'*'</span>, color<span class="op">=</span><span class="st">'red'</span>, markersize<span class="op">=</span><span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><a href="9.2-Linking_Spatial_Data_files/figure-revealjs/cell-6-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img data-src="9.2-Linking_Spatial_Data_files/figure-revealjs/cell-6-output-1.png" width="395" height="374"></a></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="combining-operators-how" class="slide level2 smaller">
 <h2>Combining Operators &amp; How</h2>
 <p>Changing how to <code>left</code>, <code>right</code>, or <code>inner</code> changes the join’s behaviour:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>rs <span class="op">=</span> gpd.sjoin(gdf, hackney, how<span class="op">=</span><span class="st">'left'</span>, op<span class="op">=</span><span class="st">'within'</span>)</span>
-<span id="cb4-2"><a></a>rs.NAME.fillna(<span class="st">'None'</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb4-3"><a></a>ax <span class="op">=</span> boros[boros.NAME<span class="op">==</span><span class="st">'Hackney'</span>].plot(edgecolor<span class="op">=</span><span class="st">'k'</span>, facecolor<span class="op">=</span><span class="st">'none'</span>, figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">8</span>))</span>
-<span id="cb4-4"><a></a>rs.plot(ax<span class="op">=</span>ax, column<span class="op">=</span><span class="st">'NAME'</span>, legend<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><a href="img/Hackney-Left.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img data-src="img/Hackney-Left.png"></a></p>
+<div id="e16b68c4" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>rs <span class="op">=</span> gpd.sjoin(gdf, hackney, how<span class="op">=</span><span class="st">'left'</span>, predicate<span class="op">=</span><span class="st">'within'</span>)</span>
+<span id="cb5-2"><a></a>rs.NAME.fillna(<span class="st">'None'</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-3"><a></a>ax <span class="op">=</span> boros[boros.NAME<span class="op">==</span><span class="st">'Hackney'</span>].plot(edgecolor<span class="op">=</span><span class="st">'k'</span>, facecolor<span class="op">=</span><span class="st">'none'</span>, figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))</span>
+<span id="cb5-4"><a></a>rs.plot(ax<span class="op">=</span>ax, column<span class="op">=</span><span class="st">'NAME'</span>, legend<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><a href="9.2-Linking_Spatial_Data_files/figure-revealjs/cell-7-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img data-src="9.2-Linking_Spatial_Data_files/figure-revealjs/cell-7-output-1.png" width="575" height="379"></a></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="merging-data" class="slide level2">
 <h2>Merging Data</h2>
@@ -400,7 +473,7 @@
 <p>It is also possible to apply GIS-type ‘overlay’ operations:</p>
 <p><a href="https://geopandas.org/_images/overlay_operations.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img data-src="https://geopandas.org/_images/overlay_operations.png"></a></p>
 <p><a href="https://geopandas.org/set_operations.html#set-operations-with-overlay">These operations</a> return indexes for <code>gdf1</code> and <code>gdf2</code> (either could be a <code>NaN</code>) together with a geometry and (usually?) columns from both data frames:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>rs_union <span class="op">=</span> geopandas.overlay(gdf1, gdf2, how<span class="op">=</span><span class="st">'union'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a>rs_union <span class="op">=</span> geopandas.overlay(gdf1, gdf2, how<span class="op">=</span><span class="st">'union'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The set of operations includes: <code>union</code>, <code>intersection</code>, <code>difference</code>, <code>symmetric_difference</code>, and <code>identity</code>.</p>
 <aside class="notes">
 <p>A notebook example <a href="https://nbviewer.jupyter.org/github/geopandas/geopandas/blob/master/examples/overlays.ipynb">can be found here</a>.</p>
