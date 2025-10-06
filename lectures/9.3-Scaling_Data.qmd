@@ -281,49 +281,128 @@ Here are a bunch of pandas functions that have to do with aggregating data in so
 
 :::
 
-## Grouping Operations
+## Grouping Operations {.smaller}
 
 In Pandas these follow a split / apply / combine approach:
 
-![](img/Split-Apply-Combine.png)
+::: {layout="[0.24, -0.02, 0.24, -0.02, 0.23, -0.02, 0.23]"}
 
-::: {.aside}
+:::: {#first-column}
 
-Note that, for simplicity, I've abbreviate the Local Authority names since this is just a simplified example: `TH` (Tower Hamlets), `HAK` (Hackney), `W` (Westminster).
+|    | class |   sex |   age |
+| :- | :---- | :---- | ----: |
+| 0  | Third |    m  | 22.0 |
+| 1  | First |    f  | 38.0 |
+| 2  | Third |    f  | 26.0 |
+| 3  | First |    f  | 35.0 |
+| 4  | Third |    m  | 35.0 |
+| 5  | Third |    m  |  NaN |
+| 6  | First |    m  | 54.0 |
+| 7  | Third |    m  |  2.0 |
+
+: 1. Raw data {.hover .striped}
+
+::::
+:::: {#second-column}
+
+|    | class |   sex |   age |
+| :- | :---- | :---- | ----: |
+| 1  | First |     f |  38.0 |
+| 3  | First |     f |  35.0 |
+| 6  | First |     m |  54.0 |
+
+: 2a. Grouped First Class {.hover .striped}
+
+|    | class |   sex |   age |
+| :- | :---- | :---- | ----: |
+| 0  | Third |     m |  22.0 |
+| 2  | Third |     f |  26.0 |
+| 4  | Third |     m |  35.0 |
+| 5  | Third |     m |   NaN |
+| 7  | Third |     m |   2.0 |
+
+: 2b. Grouped Third Class {.hover .striped}
+
+::::
+:::: {#third-column}
+
+|    | class |   age |
+| :- | :---- | ----: |
+|    | First | 42.33 |
+
+: 3a. Summary First Class {.hover .striped}
+
+|    | class |   age |
+| :- | :---- | ----: |
+|    | Third | 21.25 |
+
+: 3b. Summary Third Class {.hover .striped}
+::::
+:::: {#fourth-column}
+
+|    | class |   age |
+| :- | :---- | ----: |
+|    | First | 42.33 |
+|    | Third | 21.25 |
+
+: 4. Result {.hover .striped}
+::::
 
 :::
 
+
 ## In Practice
 
-```python
-grouped_df = df.groupby(<fields>).<function>
+```{python}
+#| echo: false
+#| output: asis
+df = pd.read_parquet('titanic.pq')
 ```
 
-For instance, if we had a Local Authority (`LA`) field:
-
 ```python
-grouped_df = df.groupby('LA').sum()
+grouped_df = df.groupby(<fields>).agg(['<function1>', ..., '<functionn>'])
 ```
 
-Using `apply` the function could be anything:
+For instance, to grouped statistics by Local Authority:
 
-```python
-def norm_by_data(x): # x is a column from the grouped df
-	x['d1'] /= x['d2'].sum() 
-	return x
-
-df.groupby('LA').apply(norm_by_data)
+```{python}
+# This will throw an error when there are non-numeric columns
+# grouped_df = df.groupby('class').agg(['sum','mean'])
+# This will only aggregate one column
+grouped_df = df.groupby('class').age.agg(['sum','mean'])
+grouped_df.head()
 ```
 
 ## Grouping by Arbitrary Mappings
 
-```python
-mapping = {'HAK':'Inner', 'TH':'Outer', 'W':'Inner'}
-df.set_index('LA', inplace=True)
-df.groupby(mapping).sum()
+In cases where we want to group by a derived value that doesn't exist in the data we can apply a mapping as part of the process:
+
+```{python}
+mapping = {'First':'Fancy', 'Second':'Not-Fancy', 'Third':'Not-Fancy'}
+grouped_df = df.set_index('class').groupby(mapping).age.agg(['sum','mean'])
+grouped_df.head()
 ```
 
-![](img/Arbitrary_Mappings.png)
+::: {.aside}
+
+*Note* you need set to the index for this to work!
+
+:::
+
+## Apply
+
+You can take this one step further by 'applying' an arbitrary function in a row- or column-wise fashion.
+
+```{python}
+def norm(x): # x is a column from the grouped df
+	return x['age'] * x['fare'] 
+
+df.groupby('class').apply(norm)
+```
+
+::: {.aside}
+Not saying this is a *useful* calculation.
+:::
 
 ## Pivot Tables
 
@@ -333,30 +412,27 @@ A 'special case' of Group By features:
 - Grouping (summarisation) happens along both axes (Group By operates only on one).
 - `pandas.cut(<series>, <bins>)` can be a useful feature here since it chops a continuous feature into bins suitable for grouping.
 
-## In Practice
+## In Pandas
 
 ```{python}
-ttc = pd.read_parquet('titanic.pq')
-age = pd.cut(ttc['age'], [0, 18, 80])
+df = pd.read_parquet('titanic.pq')
+age = pd.cut(df['age'], [0, 18, 80])
 pd.set_option('display.float_format', '{:,.3f}'.format)
-ttc.pivot_table('survived', ['sex', age], 'class')
+df.pivot_table('survived', ['sex', age], 'class', observed=False)
 ```
 
-## In SQL
-
-A little less immediately useful: 
+## In SQL^[Note the critical difference with Pandas output!]
 
 ```{python}
 sql = """PIVOT (
     SELECT sex, survived, class, CASE WHEN age < 18 then '(0, 18]' else '(18, 80]' end as age 
     FROM read_parquet('titanic.pq'))
-  ON class
-  USING SUM(survived) AS survived
-  GROUP BY sex, age"""
+  ON class USING SUM(survived) AS survived GROUP BY sex, age"""
+  
 pd.set_option('display.float_format', '{:,.0f}'.format)
-tmp = duck.sql(sql).to_df().set_index('sex')
-tmp.columns = ['Age','First','Second','Third']
-tmp
+df = duck.sql(sql).to_df().set_index('sex')
+df.columns = ['Age','First','Second','Third']
+df
 ```
 
 ## Counts
