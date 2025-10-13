@@ -427,7 +427,7 @@ Introducing:<br> Polars, Dask, DuckDB, and Postgres.
 </section>
 <section id="a-simple-comparison" class="slide level2">
 <h2>A Simple Comparison</h2>
-<div id="d8705a4d" class="cell" data-execution_count="1">
+<div id="427c79bf" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb1-3"><a></a><span class="im">import</span> duckdb <span class="im">as</span> duck</span>
@@ -435,7 +435,7 @@ Introducing:<br> Polars, Dask, DuckDB, and Postgres.
 <span id="cb1-5"><a></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb1-6"><a></a>sns.load_dataset(<span class="st">'titanic'</span>).to_parquet(<span class="st">'titanic.pq'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="aca14e37" class="cell" data-execution_count="2">
+<div id="162ce9c8" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 <style scoped="">
@@ -574,7 +574,7 @@ Introducing:<br> Polars, Dask, DuckDB, and Postgres.
 <section id="measuring-performance" class="slide level2">
 <h2>Measuring Performance</h2>
 <p>We can compare performance using profiling<sup>1</sup>:</p>
-<div id="ac2d78b1" class="cell" data-execution_count="3">
+<div id="c625c692" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">import</span> timeit</span>
 <span id="cb2-2"><a></a></span>
 <span id="cb2-3"><a></a><span class="kw">def</span> load_pandas():</span>
@@ -592,31 +592,31 @@ Introducing:<br> Polars, Dask, DuckDB, and Postgres.
 <section id="the-results" class="slide level2">
 <h2>The Results</h2>
 <h4 id="pandas">Pandas</h4>
-<div id="1e9aa2db" class="cell" data-execution_count="4">
+<div id="dc0ade32" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>pd_execution_time <span class="op">=</span> timeit.timeit(load_pandas, number<span class="op">=</span>num_reps)</span>
 <span id="cb3-2"><a></a><span class="bu">print</span>(<span class="ss">f"Pandas execution time: </span><span class="sc">{</span>pd_execution_time<span class="sc">:.6f}</span><span class="ss"> seconds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Pandas execution time: 1.176813 seconds</code></pre>
+<pre><code>Pandas execution time: 1.171555 seconds</code></pre>
 </div>
 </div>
 <h4 id="polars">Polars</h4>
-<div id="6cfaf837" class="cell" data-execution_count="5">
+<div id="ed33f3cf" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>pl_execution_time <span class="op">=</span> timeit.timeit(load_polars, number<span class="op">=</span>num_reps)</span>
 <span id="cb5-2"><a></a><span class="bu">print</span>(<span class="ss">f"Polars execution time: </span><span class="sc">{</span>pl_execution_time<span class="sc">:.6f}</span><span class="ss"> seconds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Polars execution time: 1.050749 seconds</code></pre>
+<pre><code>Polars execution time: 1.030761 seconds</code></pre>
 </div>
 </div>
-<p><span style="font-size: 0.8em;">10.71% faster than pandas.</span></p>
+<p><span style="font-size: 0.8em;">12.02% faster than pandas.</span></p>
 <h4 id="duckdb">DuckDB</h4>
-<div id="77d943be" class="cell" data-execution_count="7">
+<div id="fe716be6" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>db_execution_time <span class="op">=</span> timeit.timeit(load_duck, number<span class="op">=</span>num_reps)</span>
 <span id="cb7-2"><a></a><span class="bu">print</span>(<span class="ss">f"DuckDB execution time: </span><span class="sc">{</span>db_execution_time<span class="sc">:.6f}</span><span class="ss"> seconds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>DuckDB execution time: 0.271305 seconds</code></pre>
+<pre><code>DuckDB execution time: 0.409600 seconds</code></pre>
 </div>
 </div>
-<p><span style="font-size: 0.8em;">76.95% faster than pandas and 74.18% faster than polars.</span></p>
+<p><span style="font-size: 0.8em;">65.04% faster than pandas and 60.26% faster than polars.</span></p>
 </section></section>
 <section>
 <section id="summarising-data" class="title-slide slide level1 center">
@@ -901,7 +901,7 @@ Introducing:<br> Polars, Dask, DuckDB, and Postgres.
 <h2>In Practice</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>grouped_df <span class="op">=</span> df.groupby(<span class="op">&lt;</span>fields<span class="op">&gt;</span>).agg([<span class="st">'&lt;function1&gt;'</span>, ..., <span class="st">'&lt;functionn&gt;'</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>For instance, to get multiple summary values:</p>
-<div id="d617f3dd" class="cell" data-execution_count="10">
+<div id="d19d67ae" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a><span class="co"># This will throw an error when there are non-numeric columns</span></span>
 <span id="cb10-2"><a></a><span class="co"># grouped_df = df.groupby('class').agg(['sum','mean'])</span></span>
 <span id="cb10-3"><a></a><span class="co"># This will only aggregate one column</span></span>
@@ -962,7 +962,7 @@ Introducing:<br> Polars, Dask, DuckDB, and Postgres.
 <section id="grouping-by-arbitrary-mappings" class="slide level2">
 <h2>Grouping by Arbitrary Mappings</h2>
 <p>In cases where we want to group by a derived value that doesn’t exist in the data we can apply a mapping as part of the process:</p>
-<div id="55b88bb5" class="cell" data-execution_count="11">
+<div id="9a3daa05" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a>mapping <span class="op">=</span> {<span class="st">'First'</span>:<span class="st">'Fancy'</span>, <span class="st">'Second'</span>:<span class="st">'Not-Fancy'</span>, <span class="st">'Third'</span>:<span class="st">'Not-Fancy'</span>}</span>
 <span id="cb11-2"><a></a>grouped_df <span class="op">=</span> df.set_index(<span class="st">'class'</span>).groupby(mapping).age.agg([<span class="st">'sum'</span>,<span class="st">'mean'</span>])</span>
 <span id="cb11-3"><a></a>grouped_df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1019,7 +1019,7 @@ Introducing:<br> Polars, Dask, DuckDB, and Postgres.
 <section id="apply" class="slide level2">
 <h2>Apply</h2>
 <p>You can take this one step further by ‘applying’ an arbitrary function in a row- or column-wise fashion.</p>
-<div id="e1f7fcb9" class="cell" data-execution_count="12">
+<div id="723e9574" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a><span class="kw">def</span> norm(x): <span class="co"># x is a column from the grouped df</span></span>
 <span id="cb12-2"><a></a>    <span class="cf">return</span> x[<span class="st">'age'</span>] <span class="op">*</span> x[<span class="st">'fare'</span>] </span>
 <span id="cb12-3"><a></a></span>
@@ -1055,7 +1055,7 @@ Length: 891, dtype: float64</code></pre>
 </section>
 <section id="in-pandas" class="slide level2">
 <h2>In Pandas</h2>
-<div id="745e2a52" class="cell" data-execution_count="14">
+<div id="4c99fc41" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a>age <span class="op">=</span> pd.cut(df[<span class="st">'age'</span>], [<span class="dv">0</span>, <span class="dv">18</span>, <span class="dv">80</span>])</span>
 <span id="cb14-2"><a></a>pd.set_option(<span class="st">'display.float_format'</span>, <span class="st">'</span><span class="sc">{:,.3f}</span><span class="st">'</span>.<span class="bu">format</span>)</span>
 <span id="cb14-3"><a></a>df.pivot_table(<span class="st">'survived'</span>, [<span class="st">'sex'</span>, age], <span class="st">'class'</span>, observed<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1128,7 +1128,7 @@ Length: 891, dtype: float64</code></pre>
 </section>
 <section id="in-sql" class="slide level2">
 <h2>In SQL<sup>1</sup></h2>
-<div id="5859977d" class="cell" data-execution_count="15">
+<div id="71e35ad8" class="cell" data-execution_count="15">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a>sql <span class="op">=</span> <span class="st">"""PIVOT (</span></span>
 <span id="cb15-2"><a></a><span class="st">    SELECT sex, survived, class, CASE WHEN age &lt; 18 then '(0, 18]' else '(18, 80]' end as age </span></span>
 <span id="cb15-3"><a></a><span class="st">    FROM read_parquet('titanic.pq'))</span></span>
@@ -1210,7 +1210,7 @@ Length: 891, dtype: float64</code></pre>
 <section id="counts" class="slide level2">
 <h2>Counts</h2>
 <p>Other ways to summarise:</p>
-<div id="5a27149f" class="cell" data-execution_count="16">
+<div id="b1d4f34c" class="cell" data-execution_count="16">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a></a>duck.sql(<span class="st">"""SELECT class, sex, case WHEN survived=1 THEN 'Y' ELSE 'N' end AS survived, COUNT(*) AS n</span></span>
 <span id="cb16-2"><a></a><span class="st">  FROM read_parquet('titanic.pq') WHERE sex='female' GROUP BY sex, class, survived</span></span>
 <span id="cb16-3"><a></a><span class="st">  ORDER BY sex ASC, class ASC, survived DESC"""</span>).to_df().set_index([<span class="st">'class'</span>,<span class="st">'sex'</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
