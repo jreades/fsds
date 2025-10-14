@@ -2969,56 +2969,56 @@
     "href": "lectures/3.1-Dictionaries.html#deliberately-similar",
     "title": "Dictionaries",
     "section": "Deliberately Similar",
-    "text": "Deliberately Similar\nNotice the differences when creating them, and the absence of difference when accessing them.\n\n\nList\ncities = [\n  'San Francisco',\n  'London',\n  'Paris',\n  'Beijing']\n  \n# Prints London\nprint(cities[2]) \n\nDict\ncities = {\n  'San Francisco': 837442,\n  'London': 8673713,\n  'Paris': 837442,\n  'Beijing': '0.17'00000}\n\n# Prints pop of London\nprint(cities['London'])\n\n\nSo why might we prefer the dictionary?\n\nDicts are created using: d = { key: value, key: value }\nDicts are accessed using: d[key]\n\nSo the only difference between lists and dicts is: [...] and {...} when they are created.\nOver the next couple of weeks we’ll see ways that you can store more information in a list and also why lists are sometimes more powerful than you realise… if you can think about your data in an entirely new way. But for simple key/value stuff it’s hard to beat a dictionary!"
+    "text": "Deliberately Similar\nNotice the differences when creating them, and the absence of difference when accessing them.\n\n\nList\n\ncities = [\n  'San Francisco',\n  'London',\n  'Paris',\n  'Beijing']\n  \n# Prints London\nprint(cities[2]) \n\nParis\n\n\n\nDict\n\ncities = {\n  'San Francisco': 837442,\n  'London': 8673713,\n  'Paris': 837442,\n  'Beijing': 21716620}\n\n# Prints pop of London\nprint(f\"{cities['London']:,.0f}\")\n\n8,673,713\n\n\n\n\nSo why might we prefer the dictionary?\n\nDicts are created using: d = { key: value, key: value }\nDicts are accessed using: d[key]\n\nSo the only difference between lists and dicts is: [...] and {...} when they are created.\nOver the next couple of weeks we’ll see ways that you can store more information in a list and also why lists are sometimes more powerful than you realise… if you can think about your data in an entirely new way. But for simple key/value stuff it’s hard to beat a dictionary!"
   },
   {
     "objectID": "lectures/3.1-Dictionaries.html#its-all-about-access",
     "href": "lectures/3.1-Dictionaries.html#its-all-about-access",
     "title": "Dictionaries",
     "section": "It’s All About Access",
-    "text": "It’s All About Access\nSpecifically: do we need sequential or random access?\n\n\nList\n\n\n\nindex\nvalue\n\n\n\n\n0\nSan Francisco\n\n\n1\nLondon\n\n\n2\nParis\n\n\n3\nBeijing\n\n\n\n\nDict\n\n\n\nkey\nvalue\n\n\n\n\nSan Francisco\n837442\n\n\nLondon\n8673713\n\n\nParis\n2229621\n\n\nBeijing\n21700000"
+    "text": "It’s All About Access\nSpecifically: do we need sequential or random access?\n\n\nList\n\n\n\nindex\nvalue\n\n\n\n\n0\nSan Francisco\n\n\n1\nLondon\n\n\n2\nParis\n\n\n3\nBeijing\n\n\n\n\nDict\n\n\n\nkey\nvalue\n\n\n\n\nSan Francisco\n837442\n\n\nLondon\n8673713\n\n\nParis\n2229621\n\n\nBeijing\n21716620"
   },
   {
     "objectID": "lectures/3.1-Dictionaries.html#getting-values",
     "href": "lectures/3.1-Dictionaries.html#getting-values",
     "title": "Dictionaries",
     "section": "Getting Values",
-    "text": "Getting Values\nThere are two ways to retrieve values from a dictionary:\n\ncities['Beijing']\ncities.get('Beijing')\n\nWhy have two? Consider:\ncities = {\n  'San Francisco': 837442,\n  'London': 8673713,\n  'Paris': 837442,\n  'Beijing': '0.17'00000}\n\nprint(cities['Sao Paulo'])     # Throws KeyError\nprint(cities.get('Sao Paulo')) # Returns None\nprint(cities.get('Sao Paulo','No Data')) # Returns 'No Data'\n\nThe first triggers an error, the second returns None. Errors can be unfriendly: do you want your entire Python program to fail because a single city is missing, or would you rather than it did something a little more sensible such as… skipping the row or returning a sensible default?"
+    "text": "Getting Values\nThere are two ways to retrieve values from a dictionary:\n\ncities['Beijing']\ncities.get('Beijing')\n\nWhy have two? Consider:\ncities = {\n  'San Francisco': 837442,\n  'London': 8673713,\n  'Paris': 2229621,\n  'Beijing': 21716620}\n\nprint(cities['Sao Paulo'])     # Throws KeyError\nprint(cities.get('Sao Paulo')) # Returns None\nprint(cities.get('Sao Paulo','No Data')) # Returns 'No Data'\n\nThe first triggers an error, the second returns None. Errors can be unfriendly: do you want your entire Python program to fail because a single city is missing, or would you rather than it did something a little more sensible such as… skipping the row or returning a sensible default?"
   },
   {
     "objectID": "lectures/3.1-Dictionaries.html#getting-values-contd",
     "href": "lectures/3.1-Dictionaries.html#getting-values-contd",
     "title": "Dictionaries",
     "section": "Getting Values (cont’d)",
-    "text": "Getting Values (cont’d)\nIf we want to think about whether a value is in the dictionary (as opposed to just retrieving it) then notice these options:\nc = cities.get('Sao Paulo')\nif not c:\n  print(\"Sorry, no city by that name.\")\n\nif 'Beijing' in cities:\n  print(\"Found Beijing!\")\n\nThe first example works because cities.get returns None, which is the same as ‘undefined’ for Python. So we can use ‘not’ to imply ‘if c is not defined then do something…’\nThe second example works because we are implicitly treating the keys in the cities dictionary as a list and looking to see if Beijing is one of the values in that list.\nPython often benefits and suffers from TMTOWTDI (There’s More Than One Way To Do It): think of these as being different ways to say the same thing, but depending on where you want to put the emphasis you would choose one or the other."
+    "text": "Getting Values (cont’d)\nIf we want to think about whether a value is in the dictionary (as opposed to just retrieving it) then notice these options:\n\nc = cities.get('Sao Paulo')\nif not c:\n  print(\"Sorry, no city by that name.\")\n\nif 'Beijing' in cities:\n  print(\"Found Beijing!\")\n\nSorry, no city by that name.\nFound Beijing!\n\n\n\nThe first example works because cities.get returns None, which is the same as ‘undefined’ for Python. So we can use ‘not’ to imply ‘if c is not defined then do something…’\nThe second example works because we are implicitly treating the keys in the cities dictionary as a list and looking to see if Beijing is one of the values in that list.\nPython often benefits and suffers from TMTOWTDI (There’s More Than One Way To Do It): think of these as being different ways to say the same thing, but depending on where you want to put the emphasis you would choose one or the other."
   },
   {
     "objectID": "lectures/3.1-Dictionaries.html#setting-values",
     "href": "lectures/3.1-Dictionaries.html#setting-values",
     "title": "Dictionaries",
     "section": "Setting Values",
-    "text": "Setting Values\nIt’s the same process to update an existing value or create a new one:\ncities = {}  # Empty dictionary\ncities['Beijing'] = 21716620    # Sets key-&gt;value\ncities['Toronto'] = 2930000     # Sets key-&gt;value\n\nprint(cities['Toronto'])        # Prints 2930000\ndel cities['Toronto']           # Deletes Toronto key (and value)\ncities.pop('Toronto','Default') # Prints 'Default' b/c key not found\nprint(cities)\nThis last command outputs:\n{'Beijing': '0.17'16620}"
+    "text": "Setting Values\nIt’s the same process to update an existing value or create a new one:\n\ncities2 = {}  # Empty dictionary\ncities2['Beijing'] = 21716620    # Sets key-&gt;value\ncities2['Toronto'] = 2930000     # Sets key-&gt;value\n\nprint(f\"Toronto population is {cities2['Toronto']:,}\")\ndel cities2['Toronto']           # Deletes Toronto key (and value)\nprint(f\"Pop: {cities2.pop('Toronto','Default')}\") \nprint(cities2)\n\nToronto population is 2,930,000\nPop: Default\n{'Beijing': 21716620}"
   },
   {
     "objectID": "lectures/3.1-Dictionaries.html#iterating",
     "href": "lectures/3.1-Dictionaries.html#iterating",
     "title": "Dictionaries",
     "section": "Iterating",
-    "text": "Iterating\nSimilar to iterating over lists but…\ncities = {\n  'San Francisco': 837442,\n  'London': 8673713,\n  'Paris': 837442,\n  'Beijing': '0.17'00000}\n\nfor c in cities:\n  print(c)\nPrints:\n'San Francisco'\n'London'\n'Paris'\n'Beijing'\n\nOne really important point to note: here, the cities are printed out in the same order that they were added to the dictionary, but that is not guaranteed! Unlike lists, dictionaries are unordered.\nAlso, how would we print out the population of each city?"
+    "text": "Iterating\nSimilar to iterating over lists but…\n\ncities = {\n  'San Francisco': 837442,\n  'London': 8673713,\n  'Paris': 837442,\n  'Beijing': 21716620}\n\nfor c in cities:\n  print(c)\n\nSan Francisco\nLondon\nParis\nBeijing\n\n\n\nOne really important point to note: here, the cities are printed out in the same order that they were added to the dictionary, but that is not guaranteed! Unlike lists, dictionaries are unordered.\nAlso, how would we print out the population of each city?"
   },
   {
     "objectID": "lectures/3.1-Dictionaries.html#section",
     "href": "lectures/3.1-Dictionaries.html#section",
     "title": "Dictionaries",
     "section": "",
-    "text": "Keys\nfor k in cities.keys():\n  print(k)\nPrints:\n'San Francisco'\n'London'\n'Paris'\n'Beijing'\n\nValues\nfor v in cities.values():\n  print(v)\nPrints:\n837442\n8673713\n2229621\n21716620\n\nBoth\nfor k,v in cities.items():\n  print(f\"{k} -&gt; {v}\")\nPrints:\nSan Francisco -&gt; 837442\nLondon -&gt; 8673713\nParis -&gt; 837442\nBeijing -&gt; 21700000"
+    "text": "Keys\n\nfor k in cities.keys():\n  print(k)\n\nSan Francisco\nLondon\nParis\nBeijing\n\n\n\nValues\n\nfor v in cities.values():\n  print(v)\n\n837442\n8673713\n837442\n21716620\n\n\n\nBoth\n\nfor k,v in cities.items():\n  print(f\"{k} -&gt; {v}\")\n\nSan Francisco -&gt; 837442\nLondon -&gt; 8673713\nParis -&gt; 837442\nBeijing -&gt; 21716620"
   },
   {
     "objectID": "lectures/3.1-Dictionaries.html#a-final-note",
     "href": "lectures/3.1-Dictionaries.html#a-final-note",
     "title": "Dictionaries",
     "section": "A Final Note!",
-    "text": "A Final Note!\nValues can be almost anything, including a dictionary or list! This opens up some interesting possibilities:\n\n\ncities = {\n  'San Francisco': \n    [37.77, -122.43, 'SFO']\n}\n\ncities = {\n  'San Francisco': {\n    'lat': 37.77,\n    'lon': -122.43,\n    'airport':'SFO'}\n}\nprint(cities['San Francisco']['lat'])\n\nSpoiler: you’re going to encounter this kind of thing a lot.\n\nWhat is this starting to look like? This is basically what JSON is."
+    "text": "A Final Note!\nValues can be almost anything, including a dictionary or list! This opens up some interesting possibilities:\n\n\n\ncities = {\n  'San Francisco': \n    [37.77, -122.43, 'SFO']\n}\nprint(cities['San Francisco'][0])\n\n37.77\n\n\n\n\ncities = {\n  'San Francisco': {\n    'lat': 37.77,\n    'lon': -122.43,\n    'airport':'SFO'}\n}\nprint(cities['San Francisco']['lat'])\n\n37.77\n\n\n\nSpoiler: you’re going to encounter this kind of thing a lot.\n\nWhat is this starting to look like? This is basically what JSON is."
   },
   {
     "objectID": "lectures/3.1-Dictionaries.html#danger-will-robinson",
