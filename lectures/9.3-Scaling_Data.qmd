@@ -363,7 +363,7 @@ df = pd.read_parquet('titanic.pq')
 grouped_df = df.groupby(<fields>).agg(['<function1>', ..., '<functionn>'])
 ```
 
-For instance, to grouped statistics by Local Authority:
+For instance, to get multiple summary values:
 
 ```{python}
 # This will throw an error when there are non-numeric columns
@@ -415,7 +415,12 @@ A 'special case' of Group By features:
 ## In Pandas
 
 ```{python}
+#| echo: false
+#| output: asis
 df = pd.read_parquet('titanic.pq')
+```
+
+```{python}
 age = pd.cut(df['age'], [0, 18, 80])
 pd.set_option('display.float_format', '{:,.3f}'.format)
 df.pivot_table('survived', ['sex', age], 'class', observed=False)
