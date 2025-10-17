@@ -53,7 +53,7 @@ Notice the differences when *creating* them, and the absence of difference when 
 ::: {.column width="43%"}
 
 ### List
-```python
+```{python}
 cities = [
   'San Francisco',
   'London',
@@ -67,15 +67,15 @@ print(cities[2])
 :::
 ::: {.column width="57%"}
 ### Dict
-```python
+```{python}
 cities = {
   'San Francisco': 837442,
   'London': 8673713,
   'Paris': 837442,
-  'Beijing': '0.17'00000}
+  'Beijing': 21716620}
 
 # Prints pop of London
-print(cities['London'])
+print(f"{cities['London']:,.0f}")
 ```
 :::
 ::::
@@ -118,7 +118,7 @@ Specifically: do we need sequential or random access?
 | San Francisco | 837442 |
 | London | 8673713 |
 | Paris | 2229621 |
-| Beijing | 21700000 |
+| Beijing | 21716620 |
 
 :::
 ::::
@@ -135,8 +135,8 @@ Why have two? Consider:
 cities = {
   'San Francisco': 837442,
   'London': 8673713,
-  'Paris': 837442,
-  'Beijing': '0.17'00000}
+  'Paris': 2229621,
+  'Beijing': 21716620}
 
 print(cities['Sao Paulo'])     # Throws KeyError
 print(cities.get('Sao Paulo')) # Returns None
@@ -153,10 +153,10 @@ The first triggers an **error**, the second returns `None`. Errors _can_ be unfr
 
 If we want to think about whether a value is *in* the dictionary (as opposed to just retrieving it) then notice these options:
 
-```python
+```{python}
 c = cities.get('Sao Paulo')
 if not c:
-  print("Sorry, no city by that name.")
+  print("Sorry, no city by that name.")
 
 if 'Beijing' in cities:
   print("Found Beijing!")
@@ -170,45 +170,33 @@ The second example works because we are implicitly treating the *keys* in the ci
 Python often benefits *and* suffers from TMTOWTDI (There's More Than One Way To Do It): think of these as being different ways to say the same thing, but depending on where you want to put the emphasis you would choose one or the other.
 :::
 
-## Setting Values {.smaller}
+## Setting Values
 
 It's the same process to update an existing value or create a new one:
-```python
-cities = {}  # Empty dictionary
-cities['Beijing'] = 21716620    # Sets key->value
-cities['Toronto'] = 2930000     # Sets key->value
+```{python}
+cities2 = {}  # Empty dictionary
+cities2['Beijing'] = 21716620    # Sets key->value
+cities2['Toronto'] = 2930000     # Sets key->value
 
-print(cities['Toronto'])        # Prints 2930000
-del cities['Toronto']           # Deletes Toronto key (and value)
-cities.pop('Toronto','Default') # Prints 'Default' b/c key not found
-print(cities)
-```
-This last command outputs:
-```python
-{'Beijing': '0.17'16620}
+print(f"Toronto population is {cities2['Toronto']:,}")
+del cities2['Toronto']           # Deletes Toronto key (and value)
+print(f"Pop: {cities2.pop('Toronto','Default')}") 
+print(cities2)
 ```
 
-
-## Iterating {.smaller}
+## Iterating
 
 Similar to iterating over lists but... 
 
-```python
+```{python}
 cities = {
   'San Francisco': 837442,
   'London': 8673713,
   'Paris': 837442,
-  'Beijing': '0.17'00000}
+  'Beijing': 21716620}
 
 for c in cities:
   print(c)
-```
-Prints:
-```python
-'San Francisco'
-'London'
-'Paris'
-'Beijing'
 ```
 
 ::: {.notes}
@@ -220,76 +208,52 @@ Also, how would we print out the population of each city?
 :::
 
 ---
-## {.smaller}
 
 :::: {.columns}
 ::: {.column width="33%"}
 
 ### Keys
-```python
+```{python}
 for k in cities.keys():
   print(k)
-```
-
-Prints:
-```python
-'San Francisco'
-'London'
-'Paris'
-'Beijing'
 ```
 
 :::
 ::: {.column width="33%"}
 ### Values
-```python
+```{python}
 for v in cities.values():
   print(v)
-```
-
-Prints:
-```python
-837442
-8673713
-2229621
-21716620
 ```
 
 :::
 ::: {.column width="33%"}
 ### Both
-```python
+```{python}
 for k,v in cities.items():
   print(f"{k} -> {v}")
-```
-
-Prints:
-```python
-San Francisco -> 837442
-London -> 8673713
-Paris -> 837442
-Beijing -> 21700000
 ```
 
 :::
 ::::
 
-## A Final Note! {.smaller}
+## A Final Note!
 
 Values can be almost anything, including a dictionary or list! This opens up some interesting possibilities:
 
 :::: {.columns}
 ::: {.column width="42%"}
-```python
+```{python}
 cities = {
   'San Francisco': 
     [37.77, -122.43, 'SFO']
 }
+print(cities['San Francisco'][0])
 ```
 :::
 ::: {.column width="58%"}
 
-```python
+```{python}
 cities = {
   'San Francisco': {
     'lat': 37.77,
@@ -312,14 +276,17 @@ What is this starting to look like? This is *basically* what JSON is.
 # One More Thing...
 
 You may come across this:
-```python
+
+```{python}
 s = {1, 2, 3}
 ```
+
 It _looks_ like a dictionary, but where are the keys? 
-```python
-type(s)
-> <class 'set'>
+
+```{python}
+print(type(s))
 ```
+
 A set is just a group of unique keys (no values attached). They have many uses!
 
 
