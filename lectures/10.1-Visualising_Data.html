@@ -235,8 +235,8 @@
 <p style="opacity:0.8;"></p>
 
 </section>
-<section id="start-with-chart-part-2" class="slide level2">
-<h2>Start with Chart (Part 2)</h2>
+<section id="start-with-a-chart-part-2" class="slide level2">
+<h2>Start with a Chart (Part 2)</h2>
 <p>Building on <a href="../lectures/7.4-Signal_and_Noise.html">Week 7</a>, here are some deeper links between models and visualistions:</p>
 <div class="columns">
 <div class="column" style="width:40%;">
@@ -254,9 +254,11 @@
 </div></aside></section>
 <section id="what-are-we-modelling" class="slide level2">
 <h2>What are We Modelling?</h2>
+<h3 style="margin-top: 200px;">
 <blockquote>
-<p>Exploratory, predictive, and causal modelling have very different bases.</p>
+Exploratory, predictive, and causal modelling have very different bases.
 </blockquote>
+</h3>
 <aside class="notes">
 <p>Issues of skew and leverage. It’s not (so much) about normality <em>per se</em> with OLS.</p>
 <style type="text/css">
@@ -273,9 +275,19 @@
 </section>
 <section id="what-are-we-penalising" class="slide level2">
 <h2>What are We Penalising?</h2>
+<h3 style="margin-top: 200px;">
+<blockquote>
+Depending on how we conceptualise and tackle ‘error’, our models will differ. Often dramatically.
+</blockquote>
+</h3>
 </section>
 <section id="what-isnt-fitting" class="slide level2">
 <h2>What isn’t Fitting?</h2>
+<h3 style="margin-top: 200px;">
+<blockquote>
+This is why we care about leverage and skew; not because we <em>need</em> normality, but because they impact model quulity.
+</blockquote>
+</h3>
 </section>
 <section id="choices-choices" class="slide level2">
 <h2>Choices, Choices…</h2>
@@ -312,24 +324,40 @@
 <aside><div>
 <p>For the fuller overview see <a href="https://seaborn.pydata.org/tutorial/function_overview.html?highlight=function%20overview">Overview of seaborn plotting functions</a> and the <a href="https://seaborn.pydata.org/api.html">full API reference</a>.</p>
 </div></aside></section>
-<section id="in-practice" class="slide level2 smaller">
+<section id="in-practice" class="slide level2">
 <h2>In Practice</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<div id="3e202796" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb1-2"><a></a>sns.set_theme(style<span class="op">=</span><span class="st">"darkgrid"</span>)</span>
 <span id="cb1-3"><a></a>fmri <span class="op">=</span> sns.load_dataset(<span class="st">"fmri"</span>)</span>
 <span id="cb1-4"><a></a>sns.lineplot(x<span class="op">=</span><span class="st">"timepoint"</span>, y<span class="op">=</span><span class="st">"signal"</span>,</span>
 <span id="cb1-5"><a></a>             hue<span class="op">=</span><span class="st">"region"</span>, style<span class="op">=</span><span class="st">"event"</span>,</span>
 <span id="cb1-6"><a></a>             data<span class="op">=</span>fmri)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><a href="https://seaborn.pydata.org/_images/errorband_lineplots.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img data-src="https://seaborn.pydata.org/_images/errorband_lineplots.png"></a></p>
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><a href="10.1-Visualising_Data_files/figure-revealjs/cell-2-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img data-src="10.1-Visualising_Data_files/figure-revealjs/cell-2-output-1.png" width="832" height="437"></a></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="in-practice-2" class="slide level2 smaller">
+<section id="in-practice-2" class="slide level2">
 <h2>In Practice 2</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>sns.set_theme(style<span class="op">=</span><span class="st">"whitegrid"</span>, palette<span class="op">=</span><span class="st">"muted"</span>)</span>
+<div id="6fb7f36f" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>sns.set_theme(style<span class="op">=</span><span class="st">"whitegrid"</span>, palette<span class="op">=</span><span class="st">"muted"</span>)</span>
 <span id="cb2-2"><a></a>df <span class="op">=</span> sns.load_dataset(<span class="st">"penguins"</span>)</span>
 <span id="cb2-3"><a></a></span>
 <span id="cb2-4"><a></a>ax <span class="op">=</span> sns.swarmplot(data<span class="op">=</span>df, x<span class="op">=</span><span class="st">"body_mass_g"</span>, y<span class="op">=</span><span class="st">"sex"</span>, hue<span class="op">=</span><span class="st">"species"</span>)</span>
 <span id="cb2-5"><a></a>ax.<span class="bu">set</span>(ylabel<span class="op">=</span><span class="st">""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><a href="https://seaborn.pydata.org/_images/scatterplot_categorical.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img data-src="https://seaborn.pydata.org/_images/scatterplot_categorical.png"></a></p>
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><a href="10.1-Visualising_Data_files/figure-revealjs/cell-3-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img data-src="10.1-Visualising_Data_files/figure-revealjs/cell-3-output-1.png" width="829" height="437"></a></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="configuring-seaborn" class="slide level2 smaller">
 <h2>Configuring Seaborn</h2>
@@ -367,16 +395,18 @@
 <p>You can also access:</p>
 <ul>
 <li><a href="https://seaborn.pydata.org/tutorial/color_palettes.html">Palettes</a>: colormaps can be generated using <code>sns.color_palette(...)</code> and set using <code>sns.set_palette(...)</code>.</li>
-<li><a href="https://seaborn.pydata.org/generated/seaborn.axes_style.html#seaborn.axes_style">Axes Styles</a>: includes <code>darkgrid</code>, <code>whitegrid</code>, <code>dark</code>, <code>white</code>, <code>ticks</code>.</li>
+<li><a href="https://seaborn.pydata.org/generated/seaborn.axes_style.html#seaborn.axes_style">Axis Styles</a>: includes <code>darkgrid</code>, <code>whitegrid</code>, <code>dark</code>, <code>white</code>, <code>ticks</code>.</li>
 </ul>
 </section>
 <section id="anatomy-of-a-figure" class="slide level2">
 <h2>Anatomy of a Figure</h2>
+<p><a href="https://matplotlib.org/_images/sphx_glr_anatomy_001.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img data-src="https://matplotlib.org/_images/sphx_glr_anatomy_001.png" height="500"></a></p>
 
-<img data-src="https://matplotlib.org/_images/sphx_glr_anatomy_001.png" class="r-stretch"><p><a href="https://matplotlib.org/gallery/showcase/anatomy.html#anatomy-of-a-figure">Source</a>.</p>
-</section>
-<section id="writing-a-figure" class="slide level2">
-<h2>Writing a Figure</h2>
+<aside><div>
+<p>Source: <a href="https://matplotlib.org/gallery/showcase/anatomy.html#anatomy-of-a-figure">Matplotlib documentation</a>.</p>
+</div></aside></section>
+<section id="accessing-a-figure" class="slide level2">
+<h2>Accessing a Figure</h2>
 <p>There are <em>multiple</em> ways to access/write elements of a plot:</p>
 <ul>
 <li><strong>Figure</strong>: high-level features (<em>e.g.</em> title, padding, etc.). Can be accessed via <code>plt.gcf()</code> (<strong>g</strong>et <strong>c</strong>urrent <strong>f</strong>igure) or upon creation (e.g.&nbsp;<code>f, ax = plt.subplots(1,1)</code> or <code>f = plt.figure()</code>).</li>
@@ -386,22 +416,30 @@
 </section>
 <section id="adding-a-3rd-dimension" class="slide level2 smaller">
 <h2>Adding a 3rd Dimension</h2>
-<p>This ‘feature’ is less well-developed but <em>does</em> work:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">from</span> mpl_toolkits.mplot3d <span class="im">import</span> Axes3D</span>
-<span id="cb3-2"><a></a>fig <span class="op">=</span> plt.figure()</span>
-<span id="cb3-3"><a></a>ax  <span class="op">=</span> plt.axes(projection<span class="op">=</span><span class="st">'3d'</span>)</span>
-<span id="cb3-4"><a></a><span class="co"># OR</span></span>
-<span id="cb3-5"><a></a>fig <span class="op">=</span> plt.figure()</span>
-<span id="cb3-6"><a></a>ax  <span class="op">=</span> fig.add_subplot(<span class="dv">111</span>, projection<span class="op">=</span><span class="st">'3d'</span>)</span>
-<span id="cb3-7"><a></a><span class="co"># THEN</span></span>
-<span id="cb3-8"><a></a>ax.contour3D(X, Y, Z, ...)</span>
-<span id="cb3-9"><a></a>ax.plot_surface(x, y, z, ...)</span>
-<span id="cb3-10"><a></a>ax.plot3D(xline, yline, zline, ...)</span>
-<span id="cb3-11"><a></a>ax.scatter3D(x, y, z, ...)</span>
-<span id="cb3-12"><a></a><span class="co"># ax.plot_surface and ax.plot_wire also give you 3D renderings</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>You can then set the elevation and azimuth using: <code>ax.view_init(&lt;elevation&gt;, &lt;azimuth&gt;)</code>.</p>
-</section>
-<section id="saving-outputs" class="slide level2 smaller">
+<p>This feature <a href="https://matplotlib.org/stable/gallery/mplot3d/index.html">has many options</a> though you’ll not get QGIS-quality output:</p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<div id="78e2c2ef" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">from</span> mpl_toolkits.mplot3d <span class="im">import</span> axes3d</span>
+<span id="cb3-2"><a></a>ax <span class="op">=</span> plt.figure().add_subplot(projection<span class="op">=</span><span class="st">'3d'</span>)</span>
+<span id="cb3-3"><a></a>X,Y,Z <span class="op">=</span> axes3d.get_test_data(<span class="fl">0.05</span>)</span>
+<span id="cb3-4"><a></a><span class="co"># THEN</span></span>
+<span id="cb3-5"><a></a>ax.plot_surface(X, Y, Z, edgecolor<span class="op">=</span><span class="st">'royalblue'</span>, lw<span class="op">=</span><span class="fl">0.5</span>, rstride<span class="op">=</span><span class="dv">8</span>, cstride<span class="op">=</span><span class="dv">8</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb3-6"><a></a>ax.contour(X, Y, Z, zdir<span class="op">=</span><span class="st">'x'</span>, offset<span class="op">=-</span><span class="dv">40</span>, cmap<span class="op">=</span><span class="st">'coolwarm'</span>)</span>
+<span id="cb3-7"><a></a>ax.contour(X, Y, Z, zdir<span class="op">=</span><span class="st">'x'</span>, offset<span class="op">=-</span><span class="dv">40</span>, cmap<span class="op">=</span><span class="st">'coolwarm'</span>)</span>
+<span id="cb3-8"><a></a>ax.contour(X, Y, Z, zdir<span class="op">=</span><span class="st">'y'</span>, offset<span class="op">=</span><span class="dv">40</span>, cmap<span class="op">=</span><span class="st">'coolwarm'</span>)</span>
+<span id="cb3-9"><a></a>ax.<span class="bu">set</span>(xlim<span class="op">=</span>(<span class="op">-</span><span class="dv">40</span>, <span class="dv">40</span>), ylim<span class="op">=</span>(<span class="op">-</span><span class="dv">40</span>, <span class="dv">40</span>), zlim<span class="op">=</span>(<span class="op">-</span><span class="dv">100</span>, <span class="dv">100</span>),</span>
+<span id="cb3-10"><a></a>       xlabel<span class="op">=</span><span class="st">'X'</span>, ylabel<span class="op">=</span><span class="st">'Y'</span>, zlabel<span class="op">=</span><span class="st">'Z'</span>)<span class="op">;</span></span>
+<span id="cb3-11"><a></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div><div class="column" style="width:45%;">
+<p><a href="10.1-Visualising_Data_files/figure-revealjs/cell-6-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img data-src="10.1-Visualising_Data_files/figure-revealjs/cell-6-output-1.png" width="411" height="402"></a></p>
+</div></div>
+
+<aside><div>
+<p>You can also set the elevation and azimuth using: <code>ax.view_init(&lt;elevation&gt;, &lt;azimuth&gt;)</code>.</p>
+</div></aside></section>
+<section id="saving-outputs" class="slide level2">
 <h2>Saving Outputs</h2>
 <p>Straightforward via <a href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.savefig.html">save figure</a> function, but lots of options!</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>plt.savefig(fname, dpi<span class="op">=</span><span class="va">None</span>, facecolor<span class="op">=</span><span class="st">'w'</span>, edgecolor<span class="op">=</span><span class="st">'w'</span>,</span>
@@ -426,7 +464,7 @@
 <span id="cb5-3"><a></a>rs.NAME.fillna(<span class="st">'None'</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb5-4"><a></a>ax <span class="op">=</span> hackney.plot(edgecolor<span class="op">=</span><span class="st">'k'</span>, facecolor<span class="op">=</span><span class="st">'none'</span>)</span>
 <span id="cb5-5"><a></a>rs.plot(ax<span class="op">=</span>ax, column<span class="op">=</span><span class="st">'NAME'</span>, legend<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><a href="img/Matplotlib_Widget.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img data-src="img/Matplotlib_Widget.png"></a></p>
+<p><a href="img/Matplotlib_Widget.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img data-src="img/Matplotlib_Widget.png" height="500"></a></p>
 </section>
 <section id="interact" class="slide level2 smaller">
 <h2>Interact()</h2>
@@ -442,7 +480,7 @@
 </section>
 <section id="bokeh" class="slide level2">
 <h2>Bokeh</h2>
-<p><a href="./img/Bokeh.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img data-src="./img/Bokeh.png"></a></p>
+<p><a href="./img/Bokeh.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img data-src="./img/Bokeh.png" height="500"></a></p>
 </section>
 <section id="automation" class="slide level2 smaller">
 <h2>Automation</h2>
@@ -464,52 +502,52 @@
 <section id="dont-underestimate-text" class="slide level2">
 <h2>Don’t Underestimate Text!</h2>
 <p>Label directly<sup>1</sup>:</p>
-<p><a href="./img/datawrapper-1.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img data-src="./img/datawrapper-1.avif" style="width:75.0%"></a></p>
+<p><a href="./img/datawrapper-1.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img data-src="./img/datawrapper-1.avif" style="width:75.0%"></a></p>
 <aside><ol class="aside-footnotes"><li id="fn1"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li></ol></aside></section>
 <section id="dont-underestimate-text-1" class="slide level2">
 <h2>Don’t Underestimate Text!</h2>
-<p>Repeat measurement units<sup>1</sup> <sup>2</sup>:</p>
-<p><a href="./img/datawrapper-2.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img data-src="./img/datawrapper-2.avif" style="width:75.0%"></a></p>
-<aside><ol class="aside-footnotes"><li id="fn2"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li><li id="fn3"><p>Interestingly, this flies in the face of the ‘chart junk minimisation’ of <span class="citation" data-cites="tufte:1983">Tufte and Graves-Morris (<a href="#/thank-you" role="doc-biblioref" onclick="">1983</a>)</span></p></li></ol></aside></section>
+<p>Use outlines to allow overlaps<sup>1</sup> <sup>2</sup>:</p>
+<p><a href="./img/datawrapper-9.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img data-src="./img/datawrapper-9.avif" style="width:75.0%"></a></p>
+<aside><ol class="aside-footnotes"><li id="fn2"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li><li id="fn3"><p>Notice how this supports the focus and interpretation.</p></li></ol></aside></section>
 <section id="dont-underestimate-text-2" class="slide level2">
 <h2>Don’t Underestimate Text!</h2>
-<p>Put the axes where they’re needed<sup>1</sup>:</p>
-<p><a href="./img/datawrapper-3.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img data-src="./img/datawrapper-3.avif" style="width:75.0%"></a></p>
-<aside><ol class="aside-footnotes"><li id="fn4"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li></ol></aside></section>
+<p>Repeat measurement units<sup>1</sup> <sup>2</sup>:</p>
+<p><a href="./img/datawrapper-2.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-11"><img data-src="./img/datawrapper-2.avif" style="width:75.0%"></a></p>
+<aside><ol class="aside-footnotes"><li id="fn4"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li><li id="fn5"><p>Interestingly, this flies in the face of the ‘chart junk minimisation’ of <span class="citation" data-cites="tufte:1983">Tufte and Graves-Morris (<a href="#/thank-you" role="doc-biblioref" onclick="">1983</a>)</span></p></li></ol></aside></section>
 <section id="dont-underestimate-text-3" class="slide level2">
 <h2>Don’t Underestimate Text!</h2>
-<p>Emphasise and explain with annotation<sup>1</sup>:</p>
-<p><a href="./img/datawrapper-4.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-11"><img data-src="./img/datawrapper-4.avif" style="width:75.0%"></a></p>
-<aside><ol class="aside-footnotes"><li id="fn5"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li></ol></aside></section>
+<p>Put the axes where they’re needed<sup>1</sup>:</p>
+<p><a href="./img/datawrapper-3.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-12"><img data-src="./img/datawrapper-3.avif" style="width:75.0%"></a></p>
+<aside><ol class="aside-footnotes"><li id="fn6"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li></ol></aside></section>
 <section id="dont-underestimate-text-4" class="slide level2">
 <h2>Don’t Underestimate Text!</h2>
-<p>Lead the eye with font sizes, styles, and colors<sup>1</sup> <sup>2</sup>:</p>
-<p><a href="./img/datawrapper-5.webp" class="lightbox" data-gallery="quarto-lightbox-gallery-12"><img data-src="./img/datawrapper-5.webp" style="width:55.0%"></a></p>
-<aside><ol class="aside-footnotes"><li id="fn6"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li><li id="fn7"><p>Just not too many of them in too many different styles!</p></li></ol></aside></section>
+<p>Emphasise and explain with annotation<sup>1</sup>:</p>
+<p><a href="./img/datawrapper-4.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-13"><img data-src="./img/datawrapper-4.avif" style="width:75.0%"></a></p>
+<aside><ol class="aside-footnotes"><li id="fn7"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li></ol></aside></section>
 <section id="dont-underestimate-text-5" class="slide level2">
 <h2>Don’t Underestimate Text!</h2>
-<p>See what I said on the previous slide about ‘too much going on’<sup>1</sup>:</p>
-<p><a href="./img/datawrapper-6.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-13"><img data-src="./img/datawrapper-6.avif" style="width:75.0%"></a></p>
-<aside><ol class="aside-footnotes"><li id="fn8"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li></ol></aside></section>
+<p>Lead the eye with font sizes, styles, and colors<sup>1</sup> <sup>2</sup>:</p>
+<p><a href="./img/datawrapper-5.webp" class="lightbox" data-gallery="quarto-lightbox-gallery-14"><img data-src="./img/datawrapper-5.webp" style="width:55.0%"></a></p>
+<aside><ol class="aside-footnotes"><li id="fn8"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li><li id="fn9"><p>Just not too many of them in too many different styles!</p></li></ol></aside></section>
 <section id="dont-underestimate-text-6" class="slide level2">
 <h2>Don’t Underestimate Text!</h2>
-<p>For the sake of all that is holy, please don’t <strong>center-align text</strong><sup>1</sup>:</p>
-<p><a href="./img/datawrapper-7.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-14"><img data-src="./img/datawrapper-7.avif" style="width:75.0%"></a></p>
-<aside><ol class="aside-footnotes"><li id="fn9"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li></ol></aside></section>
+<p>See what I said on the previous slide about ‘too much going on’<sup>1</sup>:</p>
+<p><a href="./img/datawrapper-6.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-15"><img data-src="./img/datawrapper-6.avif" style="width:75.0%"></a></p>
+<aside><ol class="aside-footnotes"><li id="fn10"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li></ol></aside></section>
 <section id="dont-underestimate-text-7" class="slide level2">
 <h2>Don’t Underestimate Text!</h2>
-<p>Make reading easy and interpretation intuitive<sup>1</sup> <sup>2</sup>:</p>
-<p><a href="./img/datawrapper-8.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-15"><img data-src="./img/datawrapper-8.avif" style="width:75.0%"></a></p>
-<aside><ol class="aside-footnotes"><li id="fn10"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li><li id="fn11"><p>Your readers don’t need to legal names for each country, nor do they like akward hypens.</p></li></ol></aside></section>
+<p>For the sake of all that is holy, please don’t <strong>center-align text</strong><sup>1</sup>:</p>
+<p><a href="./img/datawrapper-7.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-16"><img data-src="./img/datawrapper-7.avif" style="width:75.0%"></a></p>
+<aside><ol class="aside-footnotes"><li id="fn11"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li></ol></aside></section>
 <section id="dont-underestimate-text-8" class="slide level2">
 <h2>Don’t Underestimate Text!</h2>
-<p>Use outlines to allow overlaps<sup>1</sup> <sup>2</sup>:</p>
-<p><a href="./img/datawrapper-9.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-16"><img data-src="./img/datawrapper-9.avif" style="width:75.0%"></a></p>
-<aside><ol class="aside-footnotes"><li id="fn12"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li><li id="fn13"><p>Notice how this supports the focus and interpretation.</p></li></ol></aside></section>
+<p>Make reading easy and interpretation intuitive<sup>1</sup> <sup>2</sup>:</p>
+<p><a href="./img/datawrapper-8.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-17"><img data-src="./img/datawrapper-8.avif" style="width:75.0%"></a></p>
+<aside><ol class="aside-footnotes"><li id="fn12"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li><li id="fn13"><p>Your readers don’t need to legal names for each country, nor do they like akward hypens.</p></li></ol></aside></section>
 <section id="dont-underestimate-text-9" class="slide level2">
 <h2>Don’t Underestimate Text!</h2>
 <p>Get to the <strong>point</strong> in a way that works for the reader<sup>1</sup> <sup>2</sup>:</p>
-<p><a href="./img/datawrapper-10.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-17"><img data-src="./img/datawrapper-10.avif" style="width:75.0%"></a></p>
+<p><a href="./img/datawrapper-10.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-18"><img data-src="./img/datawrapper-10.avif" style="width:75.0%"></a></p>
 <aside><ol class="aside-footnotes"><li id="fn14"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li><li id="fn15"><p>Rephrase for legibility and intelligibility.</p></li></ol></aside></section>
 <section id="additional-resources" class="slide level2 smaller">
 <h2>Additional Resources</h2>
