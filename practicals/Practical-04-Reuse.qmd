@@ -452,10 +452,10 @@ Here's how it would look as a dictionary of lists organised by _column_, and _no
 #| echo: true
 myData = {
     'id'         : [0, 1, 2, 3, 4],
-    'Name'       : ['Gorgeous 2 bed flat w easy access to Earlsfiel...', 'Welcome to London!', '2 bedroom 8th floor serviced apartment.','Prime city studio apartment','Cozy Room near Canary Wharf'],
+    'Name'       : ['Gorgeous 3 bed flat w easy access to Earlsfiel...', 'Welcome to London!', '2 bedroom 8th floor serviced apartment.','Prime city studio apartment','Cozy Room near Canary Wharf'],
     'Longitude'  : [-0.189030, -0.093411, -0.022240, -0.078328, -0.029900],
     'Latitude'   : [51.442430, 51.593397, 51.499260, 51.525488, 51.514680],
-    'Bedrooms'   : [2, 1, 2, 1, 3],
+    'Bedrooms'   : [3, 4, 2, 0, 1],
 }
 
 print(myData['Name'])
@@ -530,6 +530,7 @@ print(f"The easternmost listing is: {listing}")
 ```
 
 ::::
+
 To find the `mean` number of bedrooms we can use a package called numpy. `numpy` (Numerical Python) is used _so_ much that most people simply refer to it as `np`. This is a _huge_ package in terms of features, but right now we're interested only in the simple arithmatic `mean`.
 
 ::: {.qna}
@@ -564,41 +565,37 @@ print(f"The mean number of bedrooms is: {mean}")
 
 We'll go through each one in turn, but they nearly all work in the same way and the really key thing is that you'll notice that we no longer have any loops (which are slow) just `index` or `np.<function>` (which is _very_ fast). 
 
-## The Location of Lerwick
+## The Location of a Listing
 
-Let's take a detour... Lerwick is a small town in [the Shetlands](https://www.shetland.org/), way up to the North of mainland U.K. and somewhere I've wanted to go ever since I got back from [Orkney](https://www.orkney.com/)--but then I spent my honeymoon in the far North of [Iceland](https://www.westfjords.is/), so perhaps I just don't like being around lots of people... 🙃
+Let's have a look at how we might print a listing's lat/long:
 
-Anyway, this one _might_ be a tiny bit easier conceptually than the other problems, except that I've deliberately used a slightly different way of showing the output that might be confusing:
-
-To print the location of Lerwick:
-
-```python
-# This won't actually run, it's an example
-city = "Lerwick"
-print(f"The town of {city} can be found at " + 
-    f"{abs(myData['Longitude'][myData['Name'].index(city)])}ºW, " +
-    f"{myData['Latitude'][myData['Name'].index(city)]}ºN")
+```{python}
+#| eval: false
+loc = 'Cozy Room near Canary Wharf'
+print(f"The listing of {loc} can be found at " + 
+    f"{abs(myData['Longitude'][myData['Name'].index(loc)])}ºW, " +
+    f"{myData['Latitude'][myData['Name'].index(loc)]}ºN")
 ```
 
-The first thing to do is to pull apart the `print` statement: you can see that this is actually just two 'f-strings' joined by a `+`--having that at the end of the line tells Python that it should carry on to the next line. That's a handy way to make your code a little easier to read. If you're creating a list and it's getting a little long, then you can also continue a line using a `,` as well!
+The first thing to do is to pull apart the `print` statement: you can see that this is actually just two 'f-strings' joined by a `+`---having that at the end of the line tells Python that it should carry on reading code on to the next line. That's a handy way to make your code a *little* easier to read. If you're creating a list and it's getting a little long, then you can also continue a line using a `,` as well!
 
 ### 1. The first f-string
    
-The first string will help you to make sense of the second: f-strings allow you to 'interpolate' a variable into a string directly rather than having to have lots of `str(x) + " some text " + str(y)`. You can write `f"{x} some text {y}"` and Python will automatically convert the variables `x` and `y` to strings and replace `{x}` with the _value of `x`_ and `{y}` with the _value of `y`_. 
+The first string will help you to make sense of the second: recall that f-strings allow you to 'interpolate' a variable into a string directly rather than having to have lots of `str(x) + " some text " + str(y)`. Instead, you can write `f"{x} some text {y}"` and Python will automatically convert the variables `x` and `y` to strings and replace `{x}` with the _value of `x`_ and `{y}` with the _value of `y`_. 
 
-So here `f"The town of {city} can be found at "` becomes `f"The town of Lerwick can be found at "` because `{city}` is replaced by the value of the variable `city`. This makes for code that is easier for humans to read and so I'd consider that a good thing.
+So here `f"The listing of {loc} can be found at "` becomes `f"The listing of Cozy Room near Canary Wharf can be found at "` because `{loc}` is replaced by the value of the variable `loc`. This makes for code that is easier for humans to read and so I'd consider that a good thing.
 
-### 2. The second f-string
-This one is hard because there's just a _lot_ of code there. But, again, if we start with what we recognise that it gets just a little bit more manageable... Also, it stands to reason that the only difference between the two outputs is that one asks for the 'Longitude' and the other for the 'Latitude'. So if you can make sense of one you have _automatically_ made sense of the other and don't need to work it all out.
+### 2. The second and third f-strings
+These are harder because there's just a _lot_ of code there. But, again, if we start with what we recognise that it gets just a little bit more manageable... Also, it stands to reason that the only difference between the two outputs is that one asks for the 'Longitude' and the other for the 'Latitude'. So if you can make sense of one you have _automatically_ made sense of the other and don't need to work it all out.
 
 Let's start with a part that you might recognise:
 
 ```{python}
 #| eval: False
-myData['Name'].index(listing)
+myData['Name'].index(loc)
 ```
 
-You've _got_ this. This is just asking Python to work out the index of Lerwick (because `city = 'Lerwick'`). So it's a number. 5 in this case. And we can then think, 'OK so what does this return:
+You've _got_ this. This is just asking Python to work out the index of 'Cozy Room near Canary Wharf' (because `loc = 'Cozy Room near Canary Wharf'`). So it's a number. And we can then think, 'OK so what does this return:
 
 ```{python}
 #| eval: False
@@ -610,7 +607,7 @@ myData['Longitude'][4]
 o3 = myData['Longitude'][4]
 ```
 
-And the answer is `-1.145`. That's the Longitude of Lerwick! There's just _one_ last thing: notice that we're talking about degrees West here. So the answer isn't a negative (because negative West degrees would be _East_!), it's the _absolute_ value. And that is the final piece of the puzzle: `abs(...)` gives us the absolute value of a number!
+And the answer is `{python} o3 `. That's the Longitude of the listing! There's just _one_ last thing: notice that we're talking about degrees West here. So the answer isn't a negative (because negative West degrees would be _East_!), it's the _absolute_ value. And that is the final piece of the puzzle: `abs(...)` gives us the absolute value of a number!
 
 ```{python}
 #| eval: False
@@ -623,7 +620,7 @@ The code we've just seen can look pretty daunting, so let's break it down into t
 
 ```{python}
 #| eval: False
-myData['Longitude'][2]
+myData['Longitude'][4]
 ```
 
 Remember that this is a dictionary-of-lists (DoL). So, Python first looks for a key named `Longitude` in the myData dictionary. It finds out that the value associated with this key is a _list_ and, in this example, it just pulls out the second value (index `1`). Does **that part** make sense?
@@ -632,10 +629,10 @@ Now, to the second part:
 
 ```{python}
 #| eval: False
-myData['Name'].index('2 bedroom 8th floor serviced apartment.')
+myData['Name'].index('Cozy Room near Canary Wharf')
 ```
 
-Here we look in the dictionary for the key `Name` and find that that's _also_ a list. All we're doing here is asking Python to find the index of '2 bedroom 8th floor serviced apartment.' for us in that list. And `myData['Name'].index('2 bedroom 8th floor serviced apartment.')` gives us back a `2`, so _instead_ of just writing `myData['Longitude'][2]` we can replace the `2` with `myData['Name'].index('2 bedroom 8th floor serviced apartment.')`! Crucially, notice the complete _absence_ of a for loop, which means that this code is _fast_!
+Here we look in the dictionary for the key `Name` and find that that's _also_ a list. All we're doing here is asking Python to find the index of 'Cozy Room near Canary Wharf' for us in that list. And `myData['Name'].index('Cozy Room near Canary Wharf')` gives us back a `4`, so _instead_ of just writing `myData['Longitude'][4]` we can replace the `4` with `myData['Name'].index('Cozy Room near Canary Wharf')`! Crucially, notice the complete _absence_ of a for loop, which means that this code is _fast_!
 
 Does that make sense? If it does then you should be having a kind of an &#129327; moment because what we've done by taking a column view, rather than a row view, is to make Python's `index()` command do the work for us. Instead of having to look through each row for a field that matches 'Name' and then check to see if it's '2 bedroom 8th floor serviced apartment.', we've pointed Python at the right column immediately and asked it to find the match (which it can do very quickly). Once we have a match then we _also_ have the row number to go and do the lookup in the 'Longitude' column because the index _is_ the row number!
 
@@ -703,10 +700,10 @@ So here we're going to 'cheat' a little bit: rather than writing our own functio
 ```{python}
 #| eval: False
 import numpy as np
-print(f"The mean number of bedrooms is {np.mean(myData['Bedrooms'])}")
+print(f"The mean number of bedrooms is {??(myData['Bedrooms'])}")
 ```
 
-This is where our new approach really comes into its own: because all of the population data is in one place (a.k.a. a _series_ or column), we can just throw the whole list into the `np.mean` function rather than having to use all of those convoluted loops and counters. Simples, right? 
+This is where our new approach really comes into its own: because all of the population data is in one place (a.k.a. a _series_ or column), we can just throw the whole list into a function from the `np` package rather than having to use all of those convoluted loops and counters. Simples, right? 
 
 No, not _simple_ at all, but we've come up with a way to _make_ it simple.
 
