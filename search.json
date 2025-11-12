@@ -2017,7 +2017,7 @@
     "href": "lectures/7.3-EDA.html#getting-started",
     "title": "ExploratoryData Analysis",
     "section": "Getting Started",
-    "text": "Getting Started\nYou can follow along by loading the Inside Airbnb sample:\n\nimport pandas as pd\nimport geopandas as gpd\nurl='https://bit.ly/3I0XDrq'\ndf = pd.read_csv(url)\ndf.set_index('id', inplace=True)\ndf['price'] = df.price.str.replace('$','',regex=False).astype('float')\ngdf = gpd.GeoDataFrame(df, \n            geometry=gpd.points_from_xy(\n                        df['longitude'], \n                        df['latitude'], \n                        crs='epsg:4326'\n            )\n      )\n# Should you want to save your work\n#gdf.to_file('Airbnb_Sample.gpkg', driver='GPKG')\n\n\nNote that this (re)loads the sampled Airbnb data from GitHub every time you run it. For a large data set on someone else’e server you might want to save and (re)load it locally. A simple helper function would then just check if the file already existed locally before trying to download the file again: that would allow you to work while offline and speed up your code substantially too!"
+    "text": "Getting Started\nYou can follow along by loading the Inside Airbnb sample:\n\nimport pandas as pd\nimport geopandas as gpd\nurl='https://bit.ly/3I0XDrq'\ndf = pd.read_csv(url)\ndf.set_index('id', inplace=True)\ndf['price'] = df.price.str.replace('$','',regex=False).astype('float')\ngdf = gpd.GeoDataFrame(df, \n            geometry=gpd.points_from_xy(\n                        df['longitude'], \n                        df['latitude'], \n                        crs='epsg:4326'\n            )\n      )\n\n\nNote that this (re)loads the sampled Airbnb data from GitHub every time you run it. For a large data set on someone else’e server you might want to save and (re)load it locally. A simple helper function would then just check if the file already existed locally before trying to download the file again: that would allow you to work while offline and speed up your code substantially too!"
   },
   {
     "objectID": "lectures/7.3-EDA.html#what-can-we-do-series",
@@ -2059,7 +2059,7 @@
     "href": "lectures/7.3-EDA.html#the-plot-thickens",
     "title": "ExploratoryData Analysis",
     "section": "The Plot Thickens",
-    "text": "The Plot Thickens\nWe’ll get to more complex plotting over the course of the term, but here’s a good start for exploring the data! All plotting depends on matplotlib which is the ogre in the attic to R’s ggplot.\n\nimport matplotlib.pyplot as plt\nimport numpy as np\n\nGet used to this import as it will allow you to save and manipulate the figures created in Python. It is not the most intuitive approach (unless you’ve used MATLAB before) but it does work."
+    "text": "The Plot Thickens\nWe’ll get to more complex plotting over the course of the term, but here’s a good start for exploring the data! All plotting depends on matplotlib which is the ogre in the attic to R’s ggplot.\n\nimport matplotlib.pyplot as plt\n\nGet used to this import as it will allow you to save and manipulate the figures created in Python. It is not the most intuitive approach (unless you’ve used MATLAB before) but it does work."
   },
   {
     "objectID": "lectures/7.3-EDA.html#boxplot",
@@ -2080,7 +2080,7 @@
     "href": "lectures/7.3-EDA.html#a-correlation-heatmap",
     "title": "ExploratoryData Analysis",
     "section": "A Correlation Heatmap",
-    "text": "A Correlation Heatmap\nWe’ll get to these in more detail in a couple of weeks, but here’s some output…\n\n\ncols = df.select_dtypes(\n    include=np.number\n).columns.to_list()[:4]\nplt.matshow(df[cols].corr())\nxaxis = np.arange(len(cols))\nax = plt.gca()\nax.set_xticks(xaxis)\nax.set_yticks(xaxis)\nax.set_xticklabels(cols)\nax.set_yticklabels(cols)"
+    "text": "A Correlation Heatmap\nWe’ll get to these in more detail in a couple of weeks, but here’s some output…\n\n\nimport numpy as np\ncols = df.select_dtypes(\n    include=np.number\n).columns.to_list()[:4]\nplt.matshow(df[cols].corr())\nxaxis = np.arange(len(cols))\nax = plt.gca()\nax.set_xticks(xaxis)\nax.set_yticks(xaxis)\nax.set_xticklabels(cols)\nax.set_yticklabels(cols)"
   },
   {
     "objectID": "lectures/7.3-EDA.html#a-map",
@@ -6672,8 +6672,8 @@
     "objectID": "lectures/7.2-Geopandas.html#csv-to-points-in-3-lines",
     "href": "lectures/7.2-Geopandas.html#csv-to-points-in-3-lines",
     "title": "Geopandas",
-    "section": "CSV to Points in 31 Lines!",
-    "text": "CSV to Points in 31 Lines!\n\ngdf.plot()\n\n\n\n\n\n\n\n\n\nNotice that the default plot from a GeoDataFrame is… a map!\n\nTechnically, lines 4-10 could be on one line!"
+    "section": "CSV to Points in 3 Lines!1",
+    "text": "CSV to Points in 3 Lines!1\n\ngdf.plot()\n\n\n\n\n\n\n\n\n\nNotice that the default plot from a GeoDataFrame is… a map!\n\nTechnically, lines 4-10 could be on one line!"
   },
   {
     "objectID": "lectures/7.2-Geopandas.html#converting-non-spatial-data-2",

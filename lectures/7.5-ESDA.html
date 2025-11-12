@@ -222,7 +222,7 @@
 </section>
 <section id="getting-spatial-with-boroughs" class="slide level2 smaller">
 <h2>Getting Spatial (with Boroughs)</h2>
-<div id="b8a20318" class="cell" data-execution_count="1">
+<div id="32602b77" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
 <span id="cb1-2"><a></a>url <span class="op">=</span> <span class="st">'https://bit.ly/3neINBV'</span></span>
 <span id="cb1-3"><a></a>boros <span class="op">=</span> gpd.read_file(url, driver<span class="op">=</span><span class="st">'GPKG'</span>)</span>
@@ -238,7 +238,7 @@
 </section>
 <section id="convex-hull" class="slide level2">
 <h2>Convex Hull</h2>
-<div id="6b358443" class="cell" data-execution_count="2">
+<div id="59729991" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>boros[<span class="st">'hulls'</span>] <span class="op">=</span> boros.geometry.convex_hull</span>
 <span id="cb2-2"><a></a>boros.set_geometry(<span class="st">'hulls'</span>).plot(column<span class="op">=</span><span class="st">'NAME'</span>, categorical<span class="op">=</span><span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
@@ -252,7 +252,7 @@
 </section>
 <section id="dissolve" class="slide level2">
 <h2>Dissolve</h2>
-<div id="9b9c81ad" class="cell" data-execution_count="3">
+<div id="7151f3b1" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>boros[<span class="st">'region'</span>] <span class="op">=</span> <span class="st">'London'</span></span>
 <span id="cb3-2"><a></a>ldn   <span class="op">=</span> boros.dissolve(by<span class="op">=</span><span class="st">'region'</span>) </span>
 <span id="cb3-3"><a></a>ax <span class="op">=</span> ldn.plot(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>)) </span>
@@ -268,7 +268,7 @@
 </section>
 <section id="buffer-simplify" class="slide level2">
 <h2>Buffer &amp; Simplify</h2>
-<div id="5867550d" class="cell" data-execution_count="4">
+<div id="319aa871" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>ldn.<span class="bu">buffer</span>(<span class="dv">1000</span>).simplify(<span class="dv">1000</span>).plot(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -282,7 +282,7 @@
 <section id="difference" class="slide level2">
 <h2>Difference</h2>
 <p>And some nice chaining…</p>
-<div id="5a6f4c48" class="cell" data-execution_count="5">
+<div id="8c2f7562" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>ldn.<span class="bu">buffer</span>(<span class="dv">3000</span>).simplify(<span class="dv">2500</span>).difference(ldn.geometry).plot(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
