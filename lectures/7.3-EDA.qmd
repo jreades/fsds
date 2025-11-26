@@ -72,6 +72,22 @@ Here's another view of how to do EDA:
 
 # In Practice
 
+```python
+import pandas as pd
+import geopandas as gpd
+url='https://bit.ly/3I0XDrq'
+df = pd.read_csv(url)
+df.set_index('id', inplace=True)
+df['price'] = df.price.str.replace('$','',regex=False).astype('float')
+gdf = gpd.GeoDataFrame(df,
+            geometry=gpd.points_from_xy(
+                        df['longitude'],
+                        df['latitude'],
+                        crs='epsg:4326'
+            )
+      )
+```
+
 ## Getting Started {.smaller}
 
 You can follow along by loading the Inside Airbnb sample:
@@ -90,8 +106,6 @@ gdf = gpd.GeoDataFrame(df,
                         crs='epsg:4326'
             )
       )
-# Should you want to save your work
-#gdf.to_file('Airbnb_Sample.gpkg', driver='GPKG')
 ```
 
 ::: {.notes}
@@ -166,7 +180,6 @@ We'll get to more complex plotting over the course of the term, but here's a goo
 
 ```{python}
 import matplotlib.pyplot as plt
-import numpy as np
 ```
 
 Get used to this import as it will allow you to save and manipulate the figures created in Python. It is *not* the most intuitive approach (unless you've used MATLAB before) but it *does* work. 
@@ -197,6 +210,7 @@ We'll get to these in more detail in a couple of weeks, but here's some output..
 :::: {.columns}
 ::: {.column width="50%"}
 ```python
+import numpy as np
 cols = df.select_dtypes(
     include=np.number
 ).columns.to_list()[:4]
@@ -213,6 +227,7 @@ ax.set_yticklabels(cols)
 ```{python}
 #| echo: false
 #| output: asis
+import numpy as np
 cols = df.select_dtypes(
     include=np.number
 ).columns.to_list()[:4]

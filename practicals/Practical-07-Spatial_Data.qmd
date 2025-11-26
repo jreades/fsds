@@ -111,8 +111,14 @@ def cache_data(src:Path, dst:Path) -> str:
     print(' + Done downloading...')
 
     return dst.resolve()
+```
 
-help(cache_data) # <- This should show the docstring you've written
+```{python}
+#| output: asis
+print('```')
+print('# help(cache_data)')
+help(cache_data)
+print('```')
 ```
 
 #### Answer
@@ -196,7 +202,7 @@ print(f"Data frame is {df.shape[0]:,} x {df.shape[1]}")
 
 ```{python}
 # your code here
-df = pd.read_parquet( cache_data(url, Path('data/clean')) )
+df = pd.read_parquet( cache_data(url, Path('data/raw')) )
 print(f"Data frame is {df.shape[0]:,} x {df.shape[1]}")
 ```
 
@@ -221,20 +227,20 @@ We'll tackle each of these eventually, but for now we're going to focus on the f
 
 :::
 
-Right, we're finally there! We need to convert our coordinates into some kind of geo-data. GeoPandas offers two ways to do this: the original way using `zip` and a new utility method called `points_from_xy`. Here's the old way:
+Right, we're finally there! We need to convert our coordinates into some kind of geo-data. GeoPandas offers two ways to do this: the original way using `zip` and a new utility method called `points_from_xy`. Here's the old way **which still works but shouldn't be used**:
 
-```{python}
-#| eval: False
+```python
 from shapely.geometry import Point
 gdf = gpd.GeoDataFrame(df, 
-                geometry=[Point(x,y) for x, y in zip(df.Longitude,df.Latitude)])
+                geometry=[Point(x,y) for x, y in zip(df.longitude,df.latitude)])
 ```
 
-Note, however, that this does not automatically set a projection, unlike the new approach with the 'helper function':
+The old way is interesting because it's very explicit about what you're doing (creating a list of Points that will be come a new GeoSeries), but it does not allow you to set a projection, unlike the new approach with the 'helper function' from the module **which is what you should use**:
 
 ```{python}
 gdf = gpd.GeoDataFrame(df,
       geometry=gpd.points_from_xy(df.longitude, df.latitude, crs='epsg:4326'))
+gdf.to_parquet(Path(f'data/geo/{ymd}-{city}-listings.geoparquet').resolve())
 ```
 
 ```{python}
@@ -287,18 +293,28 @@ You *may* find that saving to a GeoPackage fails with a `TypeError` because of t
 
 It's also worth comparing the output of a point with the output of a polygon or multi-polygon because you may well come across data in formats (e.g. WKT) resembling both of these in real data sets and they *can* be read as well. Notice too that we can use `loc` and `iloc` accessor methods to pull individual points and polygons out of a GeoDataFrame!
 
-```{python}
-#| eval: false
-print(gdf.geometry.iloc[1]) # Print out the object's contents
-gdf.geometry.iloc[1] # The object knows how to print itself as a point
-```
+A polygon:
 
 ```{python}
 #| eval: false
-# Object to string then print out first 399 characters
-print(str(boros.geometry.iloc[1])[:399] + "...") 
+ 
 # So this is a multi-polygon boundary
 boros.geometry.iloc[1] 
+
+# Print out first 399 characters of the string
+print(str(boros.geometry.iloc[1])[:399] + "...") 
+```
+
+A point:
+
+```{python}
+#| eval: false
+
+# Print out the object as a string
+print(boros.geometry.centroid.iloc[1]) 
+
+# And here's a point
+boros.geometry.centroid.iloc[1]
 ```
 
 So each element of this Series has text indicating the type of shape the geometry applies to (e.g. _POLYGON_) followed by a bunch of numbers. These numbers are truncated here just to make things a little more legible.
@@ -354,38 +370,6 @@ print(f"The top-right corner is {df.longitude.max():0.1f}, {df.latitude.max():0.
 
 ::::
 
-### Checking via a Plot
-
-::: {.callout-tip collapse="true"}
-
-#### Difficulty level: Low
-
-:::
-
-We'll see how you control figure-making more effectively later, but for now let's just see what they look like using GeoPanda's plotting functionality. You should output three plots from the loop.
-
-:::: {.qna}
-
-#### Question
-
-Can you plot the 'boros', water, and green space in a loop?
-
-```{python}
-#| eval: False
-for ??:
-    ??.plot()
-```
-#### Answer
-
-Note that here the data has *already* been reprojected so we're looking as `EPSG:27700` and not `EPSG:4326`.
-
-```{python}
-for g in [boros,water,green]:
-    g.plot()
-```
-
-::::
-
 ### Checking the Projection
 
 ::: {.callout-tip collapse="true"}
@@ -394,7 +378,7 @@ for g in [boros,water,green]:
 
 :::
 
-Check the projection of each GeoDataFrame using a for loop and the `crs` attribute.
+Print out the projection of each GeoDataFrame (the water, borough, greenspace, and InsideAirbnb data) using a for loop.
 
 :::: {.qna}
 
@@ -409,13 +393,13 @@ for g in [??]:
 #### Answer
 
 ```{python}
-for g in [boros,water,green]:
+for g in [boros,water,green,gdf]:
     print(g.crs)
 ```
 
 ::::
 
-You should see that all three are in the [EPSG:27700 CRS](https://epsg.io/27700) which is a common one for analysis using GB data.
+You should see that three are in the [EPSG:27700 CRS](https://epsg.io/27700) which is a common one for analysis using GB data, but the InsideAirbnb data is not.
 
 ### Reprojecting the Data
 
@@ -425,7 +409,7 @@ You should see that all three are in the [EPSG:27700 CRS](https://epsg.io/27700)
 
 :::
 
-Let's start by taking our InsideAirbnb data in its original projection...
+Let's view the CRS information for the InsideAirbnb data in its original projection...
 
 ```{python}
 #| eval: false
@@ -433,7 +417,7 @@ print(gdf.geometry.crs)
 print(gdf.total_bounds)
 ```
 
-... and reprojecting this into the `OSGB1936/BNG` CRS:
+... and reproject this into the `OSGB1936/BNG` CRS:
 
 :::: {.qna}
 
@@ -468,6 +452,32 @@ print(gdf.total_bounds)
 # Simple Mapping
 
 Behind the scenes, GeoPandas is using `matplotlib` to render the map, so let's play with the colours to get the _start_ of something map-like. You will want to look both at [how to make maps in GeoPandas](https://geopandas.org/mapping.html) and  at the different ways to [specify colours in Matplotlib](https://matplotlib.org/stable/users/explain/colors/colors.html). For the greenspace map you are looking for information about tuples... which can have three or four elements.
+
+## Making Plots
+
+We'll see how you control figure-making more effectively later, but for now let's just see what they look like using GeoPanda's plotting functionality. You should output three plots from the loop.
+
+:::: {.qna}
+
+#### Question
+
+Can you plot the 'boros', water, and green space in a loop?
+
+```{python}
+#| eval: False
+for ??:
+    ??.plot()
+```
+#### Answer
+
+Note that here the data has *already* been reprojected so we're looking as `EPSG:27700` and not `EPSG:4326`.
+
+```{python}
+for g in [boros,water,green]:
+    g.plot()
+```
+
+::::
 
 ## Work Out the Colour Scheme
 
@@ -1198,7 +1208,15 @@ matplotlib.font_manager.FontManager().findfont(fontname, fontext='ttf', rebuild_
 
 :::
 
-To give a bit of a show of how we can put it all together try to get this working
+To give a bit of a show of how we can put it all together try to get this working for something approximating a half-decent map.
+
+
+Note that the following command seems to produce a lot of warnings for me: reading closely, I think it's about changes to Python with 3.12 and higher which have triggered warnings to do with syntax that _was_ perfectly legitimate with Python 3.10 but is now more strongly deprecated.
+
+```{python}
+#| eval: False
+import pysal as p
+```
 
 :::: {.qna}
 
@@ -1297,7 +1315,7 @@ for c in ax.collections:
         ax.add_artist(legend1)
 
 # And don't forget to add a source!
-a = ax.text(tgdf.geometry.x.max(), tgdf.geometry.y.min(), 'Source: InsideAirbnb (2022)', 
+a = ax.text(tgdf.geometry.x.max(), tgdf.geometry.y.min(), 'Source: InsideAirbnb (2025)', 
              horizontalalignment='right', verticalalignment='bottom', 
              fontsize=14, fontweight=4, color='#333333', family=fontname)
 
@@ -1418,7 +1436,7 @@ for c in ax.collections:
         ax.add_artist(legend1)
 
 # And don't forget to add a source!
-a = ax.text(tgdf.geometry.x.max(), tgdf.geometry.y.min(), 'Source: InsideAirbnb (2022)',
+a = ax.text(tgdf.geometry.x.max(), tgdf.geometry.y.min(), 'Source: InsideAirbnb (2025)',
              horizontalalignment='right', verticalalignment='bottom',
              fontsize=14, fontweight=4, color='#333333', family=fontname)
 
