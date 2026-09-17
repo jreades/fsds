@@ -45,6 +45,19 @@ ROLE_BUTTON_PATTERNS = [
     re.compile(r'(<a class="flex-grow-1 no-decor"[^>]*?) role="navigation"'),
 ]
 
+# Quarto's theme CSS sets `div.sourceCode { overflow: auto; }`, making any
+# code block wider than its container horizontally scrollable. That div has
+# no tabindex, so a keyboard-only user can't focus it to scroll — WCAG 2.1.1
+# ("scrollable region must have keyboard access", axe rule
+# scrollable-region-focusable). Whether a given block actually overflows
+# depends on rendered width/font, which isn't knowable from the static HTML,
+# so tabindex="0" is added to every sourceCode block; this is the standard
+# remediation pattern for CSS-scrollable containers and is harmless on
+# blocks that never overflow (just one extra, no-op tab stop).
+TABINDEX_PATTERNS = [
+    re.compile(r'<div class="sourceCode"(?!\s+tabindex)'),
+]
+
 
 def label_nav_landmarks(output_dir: str) -> None:
     site = Path(output_dir)
@@ -58,10 +71,12 @@ def label_nav_landmarks(output_dir: str) -> None:
             text = pattern.sub(lambda m: m.group(0) + label_attr, text)
         for pattern in ROLE_BUTTON_PATTERNS:
             text = pattern.sub(r'\1 role="button" tabindex="0"', text)
+        for pattern in TABINDEX_PATTERNS:
+            text = pattern.sub(lambda m: m.group(0) + ' tabindex="0"', text)
         if text != original:
             html_file.write_text(text, encoding="utf-8")
             n_files += 1
-    print(f"[post.py] Added nav aria-labels to {n_files} HTML file(s) in {site}")
+    print(f"[post.py] Added nav aria-labels/roles to {n_files} HTML file(s) in {site}")
 
 
 _output_dir = os.environ.get("QUARTO_PROJECT_OUTPUT_DIR", "_site")
