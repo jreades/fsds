@@ -30,7 +30,7 @@ qna:
 format:
   html:
     axe:
-      output: document 
+      output: console
     theme:
       - minty
       - brand
@@ -45,7 +45,14 @@ format:
     toc-expand: 2
     toc-title: "On this page"
   revealjs:
-    # multiplex: true 
+    # Quarto <1.9 bug: this crashed theme compilation (fixed variable
+    # dependency hardcoded to "bootstrap", which doesn't exist for
+    # revealjs). Fixed upstream by 1.10.18 — the axe report now depends on
+    # "reveal-theme" for revealjs and uses CSS custom properties instead of
+    # SCSS variables. See quality_reports/session_logs/2026-09-15_axe-accessibility-navbar.md.
+    axe:
+      output: document
+    # multiplex: true
     # embed-resources: true
     logo: "/img/logo/full.svg"
     template-partials:
