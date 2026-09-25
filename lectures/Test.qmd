@@ -1,0 +1,29 @@
+---
+author: "Jon Reades"
+email: "j.reades@ucl.ac.uk"
+title: "Randomness"
+other: ""
+format: revealjs
+---
+
+```{mermaid}
+%%| echo: false
+flowchart LR
+    SEED("seed(42)")
+
+    subgraph TAPE [Sequence]
+        N1["17"] --> N2["9"] --> N4["7"] --> N5["4"] --> NN["..."]
+    end
+
+    subgraph TAPEX [Sequence]
+        NN1["17"] .- NN2["9"] --> NN4["7"] --> NN5["4"] --> NNN["..."]
+    end
+
+    SEED --> N1
+    
+    N2-. "getstate()" .->SNAP("Saved State")
+    SNAP-. "setstate()" .->NN2
+
+    style TAPE fill: lightpink
+    style TAPEX fill: lightpink
+```
