@@ -3,7 +3,6 @@ author: "Jon Reades"
 email: "j.reades@ucl.ac.uk"
 title: "Randomness"
 other: ""
-date-as-string: "1st October 2025"
 format: revealjs
 ---
 
@@ -233,6 +232,36 @@ np.random.seed(42)
 Turning now from the security aspects, let's look at other types seeds.
 
 Why do you often see 42 used as a seed?
+
+:::
+
+## How Seeds Work
+
+```{mermaid}
+%%| echo: false
+flowchart LR
+    SEED("seed(42)")
+
+    subgraph TAPE [Sequence]
+        N1["17"] --> N2["9"] --> N4["7"] --> N5["4"] --> NN["..."]
+    end
+
+    subgraph TAPEX [Sequence]
+        NN1["17"] .- NN2["9"] --> NN4["7"] --> NN5["4"] --> NNN["..."]
+    end
+
+    SEED --> N1
+    
+    N2-. "getstate()" .->SNAP("Saved State")
+    SNAP-. "setstate()" .->NN2
+
+    style TAPE fill: lightpink
+    style TAPEX fill: lightpink
+```
+
+::: {.notes}
+
+Think of the PRNG -- Pseudo-Random Number Generator -- as a very long tape of numbers that never changes. Each `seed` creates a different tape and places you at the starting position on the tape. Each call to `random.randint()` reads the next value off the tape and advances the position of the 'read head' by one. `getstate()` saves a location on the tape. `setstate()` moves the reader to the saved location, so from there the same values will be read off the tape again. No seed means a random tape is selected.
 
 :::
 
