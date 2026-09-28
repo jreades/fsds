@@ -58,6 +58,23 @@ TABINDEX_PATTERNS = [
     re.compile(r'<div class="sourceCode"(?!\s+tabindex)'),
 ]
 
+# RevealJS-specific defects from Quarto's revealjs template (every deck):
+# 1. The viewport meta sets `maximum-scale=1.0, user-scalable=no`, which
+#    blocks pinch-zoom (axe meta-viewport, WCAG 1.4.4). Reveal does its own
+#    slide scaling, so allowing user zoom is safe.
+# 2. Slide footnotes are moved into a bare <aside><ol class="aside-footnotes">,
+#    which maps to an unnamed "complementary" landmark on every slide that has
+#    footnotes (axe landmark rules). role="note" is the permitted, non-landmark
+#    role for this content. (Speaker-note <aside class="notes"> are display:none
+#    and ignored by axe, so they're left alone.)
+# 3. The deck logo <img class="slide-logo"> has no alt. It isn't a link and
+#    repeats on every slide, so it's decorative: alt="".
+REVEAL_PATTERNS = [
+    (re.compile(r'(<meta name="viewport" content="[^"]*?),\s*maximum-scale=1\.0,\s*user-scalable=no'), r'\1'),
+    (re.compile(r'<aside>(?=<ol class="aside-footnotes">)'), '<aside role="note" aria-label="Footnotes">'),
+    (re.compile(r'(<img src="[^"]*" class="slide-logo")(?![^>]*\balt=)'), r'\1 alt=""'),
+]
+
 
 def label_nav_landmarks(output_dir: str) -> None:
     site = Path(output_dir)
@@ -73,6 +90,8 @@ def label_nav_landmarks(output_dir: str) -> None:
             text = pattern.sub(r'\1 role="button" tabindex="0"', text)
         for pattern in TABINDEX_PATTERNS:
             text = pattern.sub(lambda m: m.group(0) + ' tabindex="0"', text)
+        for pattern, repl in REVEAL_PATTERNS:
+            text = pattern.sub(repl, text)
         if text != original:
             html_file.write_text(text, encoding="utf-8")
             n_files += 1
