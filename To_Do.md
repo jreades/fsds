@@ -51,12 +51,14 @@ Where a lecture has an error in its *narration*, the end slide can also carry a 
 
 ## Before term starts (this week)
 
+> **Merge blocker:** `assessments/index.qmd` already includes the draft `_ai_policy.qmd`. Before merging to `master` and publishing, resolve every `[CHECK]` marker (D6). Check with `grep -n CHECK assessments/_ai_policy.qmd`, which should print nothing.
+
 A checklist that pulls together the P1s below, each tagged with its week.
 
 - [ ] **Decisions D1–D6** below (assessment structure and AI policy). D1–D5 are done but not committed. D6 is blocked on UCL guidance.
 - [x] **[A] P1 M** Align 1.1, 4.5, `assessments/index.qmd`, `peer.qmd` and `group.qmd` once D1–D5 are decided (committed in 6460ea1).
 - [x] **[L] P1 S** Replaced hard-coded `date-as-string` with `date: last-modified` + `date-format: "Do MMMM YYYY"` in `lectures/_metadata.yml`; `inc/title-slide.html` now prints `$date$` (uncommitted).
-- [ ] **[L] P1 S** Replace the stale `QRCode for CASA0013 Group Signup (25_26).png` in 4.4 and 4.5.
+- [x] **[L] P1 S** Replace the stale `QRCode for CASA0013 Group Signup (25_26).png` in 4.4 and 4.5.
 - [x] **[A] P1 S** Setup docs from Asana: Podman RAM (`podman machine init --cpus 4 --memory 8192`), the macOS `containers.conf` fix, and the rootful/`keep-id` permissions workaround (Week 1).
 - [ ] **[R] P1 S** Week 2–4 session-page errors (see each week).
 - [ ] **[V] P1** Visual-only rebuilds for **2.1, 2.2, 2.3** (Week 2 is taught first). Weeks 3–5 can follow in term.
