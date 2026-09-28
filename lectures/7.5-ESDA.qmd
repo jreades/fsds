@@ -6,13 +6,14 @@ other: ""
 format: revealjs
 ---
 
-![](https://pysal.org/pysal1.png)
+![](https://pysal.org/pysal1.png){fig-alt="PySAL logo"}
 
 For this one, you really need to [read the docs](https://pysal.org/docs/users/).
 
 ## Getting Spatial (with Boroughs) {.smaller}
 
 ```{python}
+#| fig-alt: "Plot of London boroughs"
 import geopandas as gpd
 url = 'https://bit.ly/3neINBV'
 boros = gpd.read_file(url, driver='GPKG')
@@ -22,6 +23,7 @@ boros.plot(color='none', edgecolor='red', figsize=(8,4.5));
 ## Convex Hull
 
 ```{python}
+#| fig-alt: "Convex hull of London boroughs"
 boros['hulls'] = boros.geometry.convex_hull
 boros.set_geometry('hulls').plot(column='NAME', categorical=True, alpha=0.5, figsize=(8,4.5));
 ```
@@ -29,6 +31,7 @@ boros.set_geometry('hulls').plot(column='NAME', categorical=True, alpha=0.5, fig
 ## Dissolve
 
 ```{python}
+#| fig-alt: "Dissolving London boroughs into the GLA region"
 boros['region'] = 'London'
 ldn   = boros.dissolve(by='region') 
 ax = ldn.plot(figsize=(8,4.5)) 
@@ -39,6 +42,7 @@ boros.plot(ax=ax, color='none', edgecolor='red')
 ## Buffer & Simplify
 
 ```{python}
+#| fig-alt: "Buffering the GLA area"
 ldn.buffer(1000).simplify(1000).plot(figsize=(8,4.5))
 ```
 
@@ -48,13 +52,14 @@ ldn.buffer(1000).simplify(1000).plot(figsize=(8,4.5))
 And some nice chaining...
 
 ```{python}
+#| fig-alt: "Buffering, simplifying, and 'differencing' one geometry for its source"
 ldn.buffer(3000).simplify(2500).difference(ldn.geometry).plot(figsize=(8,4.5))
 ```
 
 
 ## Legendgrams
 
-![](img/Legendgram.png){height="500"}
+![](img/Legendgram.png){height="500" fig-alt="Choropleth map with a legendgram: a histogram of the mapped values used as the legend"}
 
 ::: {.aside}
 Code begins on next slide.
@@ -111,7 +116,7 @@ It *should* be possible to set up the colormap and bins such that they can be pa
 
 ## KNN Weights
 
-![](img/Airbnb_KNN.png){height="500px"}
+![](img/Airbnb_KNN.png){height="500px" fig-alt="Map of Airbnb listings with lines connecting each listing to its k nearest neighbours"}
 
 ## Implementing KNN {.smaller}
 
@@ -133,7 +138,7 @@ gdf[['name','price','w_price']].sample(5, random_state=42)
 
 ## Spatial Lag of Distance Band
 
-![](img/Airbnb_DistanceBand.png){height="500px"}
+![](img/Airbnb_DistanceBand.png){height="500px" fig-alt="Map of the spatial lag of Airbnb prices calculated with distance-band weights"}
 
 ## Implementing Lags {.smaller}
 
@@ -162,12 +167,12 @@ print(f"{mi.p_sim:0.4f}")
 moran_scatterplot(mi)
 ```
 
-![](img/Moran_Global.png){height="450px"}
+![](img/Moran_Global.png){height="450px" fig-alt="Moran scatterplot of values against their spatial lag, whose slope is global Moran's I"}
 
 
 ## Local Moran's I
 
-![](img/Moran_Local.png){height="500px"}
+![](img/Moran_Local.png){height="500px" fig-alt="Local Moran's I statistics plotted for each observation"}
 
 
 ## Implementing Local Moran's I {.smaller}
@@ -196,7 +201,7 @@ gdf[['name','price','sig','quad']].sample(5, random_state=42)
 plot_local_autocorrelation(lisa, gdf, 'price')
 ```
 
-![](img/LISA.png)
+![](img/LISA.png){fig-alt="LISA panel: a Moran scatterplot, a cluster map of hot and cold spots, and a choropleth of Airbnb prices"}
 
 ## Additional Resources {.smaller}
 

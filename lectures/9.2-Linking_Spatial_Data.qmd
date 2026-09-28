@@ -70,6 +70,7 @@ gdf   = gpd.GeoDataFrame(df,
 Sjoin adds an *predicate* (`'intersects','contains','within'`): 
 
 ```{python}
+#| fig-alt: "Plot of Hackney"
 hackney = boros[boros.NAME=='Hackney']
 rs = gpd.sjoin(gdf, hackney, predicate='within')
 ax = hackney.plot(facecolor='none', edgecolor='blue', figsize=(8,4.5))
@@ -81,6 +82,7 @@ rs.plot(ax=ax, marker='*', color='red', markersize=5)
 Changing how to `left`, `right`, or `inner` changes the join's behaviour:
 
 ```{python}
+#| fig-alt: "Adjusting one borough to highlight it on the map"
 rs = gpd.sjoin(gdf, hackney, how='left', predicate='within')
 rs.NAME.fillna('None', inplace=True)
 ax = boros[boros.NAME=='Hackney'].plot(edgecolor='k', facecolor='none', figsize=(8,4.5))
@@ -133,7 +135,7 @@ These operators apply to the [GeoSeries](https://geopandas.org/reference.html#ge
 
 It is also possible to apply GIS-type 'overlay' operations:
 
-![](https://geopandas.org/_images/overlay_operations.png)
+![](https://geopandas.org/_images/overlay_operations.png){fig-alt="GeoPandas overlay operations on two overlapping shapes: intersection, union, symmetric difference and difference"}
 
 [These operations](https://geopandas.org/set_operations.html#set-operations-with-overlay) return indexes for `gdf1` and `gdf2` (either could be a `NaN`) together with a geometry and (usually?) columns from both data frames:
 

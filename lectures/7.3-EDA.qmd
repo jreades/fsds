@@ -6,7 +6,7 @@ other: ""
 format: revealjs
 ---
 
-![](./img/Epicycles.png){width="400"}
+![](./img/Epicycles.png){width="400" fig-alt="Diagram of the epicycles of data analysis: repeated loops of setting expectations, collecting data and revising"}
 
 ## Epicyclic Feedback {.smaller}
 
@@ -159,15 +159,17 @@ print(f"25th Percentile: {df.price.quantile(0.25):.2f}")
 Pandas *also* makes it easy to derive new variables... Here's the *z*-score:
 
 ```{python}
+#| fig-alt: "Box-plot of z-scores"
 df['zscore'] = (df.price - df.price.mean())/df.price.std()
 df.plot.box(column='zscore', figsize=(8,4.5))
 ```
 
 ## And Even More Complex
 
-And here's the Interquartile Range Standardised score:
+And here's the Inter-Quartile Range Standardised score:
 
 ```{python}
+#| fig-alt: "Box-plot of IQR standardised scores"
 df['iqr_std'] = (df.price - df.price.median())/ \
       (df.price.quantile(q=0.75)-df.price.quantile(q=0.25))
 df.plot.box(column='iqr_std', figsize=(8,4.5))
@@ -191,6 +193,7 @@ Get used to this import as it will allow you to save and manipulate the figures 
 ## Boxplot
 
 ```{python}
+#| fig-alt: "Saving a boxplot of prices"
 df.price.plot.box(figsize=(8,4.5))
 plt.savefig('pboxplot.png', dpi=150, transparent=True)
 ```
@@ -198,6 +201,7 @@ plt.savefig('pboxplot.png', dpi=150, transparent=True)
 ## Frequency
 
 ```{python}
+#| fig-alt: "Saving a histogram of room type frequencies"
 df.room_type.value_counts().plot.bar(figsize=(8,4.5))
 plt.savefig('phistplot.png', dpi=150, transparent=True)
 ```
@@ -226,6 +230,7 @@ ax.set_yticklabels(cols)
 ```{python}
 #| echo: false
 #| output: asis
+#| fig-alt: "Correlation plot of numerical columns"
 import numpy as np
 cols = df.select_dtypes(
     include=np.number
@@ -245,6 +250,7 @@ plt.show()
 ## A 'Map'
 
 ```{python}
+#| fig-alt: "Saving a scatter plot of x/y coordinates"
 df.plot.scatter(x='longitude', y='latitude', figsize=(8,4.5))
 plt.savefig('pscatterplot.png', dpi=150, transparent=True)
 ```
@@ -252,6 +258,7 @@ plt.savefig('pscatterplot.png', dpi=150, transparent=True)
 ## A Fancy 'Map'
 
 ```{python}
+#| fig-alt: "Adjusting a scatter plot of x/y coordinates to show prices too"
 df.plot.scatter(x='longitude',y='latitude',
                 c='price',colormap='viridis',
                 figsize=(8,4.5),title='London',
@@ -262,6 +269,7 @@ plt.savefig('pscatterplot.png', dpi=150, transparent=True)
 ## An Actual 'Map'
 
 ```{python}
+#| fig-alt: "Adjusting a scatter plot of x/y coordinates to show prices as quantiles" 
 gdf.plot(column='price', cmap='viridis', 
          scheme='quantiles', markersize=8, legend=True,
          figsize=(8,4.5))

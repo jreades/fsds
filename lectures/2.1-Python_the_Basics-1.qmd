@@ -79,13 +79,13 @@ One to remember for the session on objects and classes:
 isinstance(msg,object)     # True
 isinstance(answer,object)  # True
 isinstance(pi,object)      # True
-isinstance(c,object)       # True
+isinstance(c,object)       # True
 isinstance(correct,object) # True
 ```
 
 ::: {.notes}
 
-Like `str()`, `int()`, and `print()`, you see here another command — or 'function' in Python terminology — called `ininstance`. An 'instance' of something is just a way of asking 'is it a type of': so the first line asks if string `msg` is a kind of `object`, and the answer to that is: `True`. But it's the *same* for `answer` (an integer), `pi` (a floating point number), and so on. They are *all* a kind of object, and we'll see why that is a useful answer in a few weeks' time.
+Like `str()`, `int()`, and `print()`, you see here another command — or 'function' in Python terminology — called `isinstance`. An 'instance' of something is just a way of asking 'is it a type of': so the first line asks if string `msg` is a kind of `object`, and the answer to that is: `True`. But it's the *same* for `answer` (an integer), `pi` (a floating point number), and so on. They are *all* a kind of object, and we'll see why that is a useful answer in a few weeks' time.
 
 :::
 
@@ -100,19 +100,26 @@ Rules for variable names:
 - Variable names should be *long enough* to be clear but not *so long* as to be impractical: `bldg_height` vs. `bh` vs. `max_building_height_at_eaves`.
 
 
-## ...But Not All Words Are Allowed
+## ...But Not All Words Are Allowed {.smaller}
 
-Do not try to use *any* of these as variable names. Python *may* not complain, but strange things will happen when you run your code.
+Do not try to use *any* of these as variable names: Python will refuse with a `SyntaxError`.
 
-|          |         |        |        |       |
-| -------- | ------- | ------ | ------ | ----- |
-| and      | del     | from   | not    | while |
-| as       | elif    | global | or     | with  |
-| assert   | else    | if     | pass   | yield |
-| break    | except  | import | print  |       |
-| class    | exec    | in     | raise  |       |
-| continue | finally | is     | return |       |
-| def      | for     | lambda | try    |       |
+```{python}
+#| echo: false
+#| output: asis
+import keyword
+kw = keyword.kwlist  # reserved words for the Python that renders this deck
+ncol = 5
+print("|" + "|".join([" "] * ncol) + "|")
+print("|" + "|".join([" --- "] * ncol) + "|")
+for i in range(0, len(kw), ncol):
+    row = [f"`{w}`" for w in kw[i:i + ncol]]
+    row += [""] * (ncol - len(row))
+    print("| " + " | ".join(row) + " |")
+```
+
+Python *will* let you reuse the names of built-in functions such as `list`, `str`, or `sum`, but then they stop working: after `list = [1,2]`, calling `list('abc')` raises a `TypeError`.
+
 
 # Operators
 
@@ -145,7 +152,7 @@ When you do things with strings the answers can look a little different. Let's s
 
 ## Using Strings to Output Information
 
-Python has no fewer than three ways output information: 
+Python has no fewer than three ways to output information: 
 
 1. string concatenation using `+`; 
 2. string formatting using `<str>.format(<variables>)`; and 
@@ -234,7 +241,7 @@ Notice the *very* subtle *visual* difference between `=` and `==`!
 x = 5
 y = 10
 x = y   # Probably a mistake: setting x to the value of y
-x == y  # True, because x and z are now both set to 10
+x == y  # True, because x and y are now both set to 10
 ```
 
 **Remember this!**
@@ -264,7 +271,7 @@ If we want to compare them then we'll need to *change* their type:
 ```python
 x > str(y)   # False
 int(x) <= y  # True
-x > = str(y) # Also True
+x >= str(y)  # Also True
 ```
 
 ::: {.notes}

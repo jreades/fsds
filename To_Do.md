@@ -60,8 +60,8 @@ A checklist that pulls together the P1s below, each tagged with its week.
 - [x] **[L] P1 S** Replaced hard-coded `date-as-string` with `date: last-modified` + `date-format: "Do MMMM YYYY"` in `lectures/_metadata.yml`; `inc/title-slide.html` now prints `$date$` (uncommitted).
 - [x] **[L] P1 S** Replace the stale `QRCode for CASA0013 Group Signup (25_26).png` in 4.4 and 4.5.
 - [x] **[A] P1 S** Setup docs from Asana: Podman RAM (`podman machine init --cpus 4 --memory 8192`), the macOS `containers.conf` fix, and the rootful/`keep-id` permissions workaround (Week 1).
-- [ ] **[R] P1 S** Week 2–4 session-page errors (see each week).
-- [ ] **[V] P1** Visual-only rebuilds for **2.1, 2.2, 2.3** (Week 2 is taught first). Weeks 3–5 can follow in term.
+- [x] **[R] P1 S** Week 2–4 session-page errors (see each week).
+- [x] **[V] P1** Visual-only rebuilds for **2.1, 2.2, 2.3** (slides fixed and videos rebuilt 2026-09-28). Weeks 3–5 can follow in term.
 
 ## Decisions needed
 
@@ -83,12 +83,12 @@ A checklist that pulls together the P1s below, each tagged with its week.
 ## Module-wide
 
 - [x] **[L] P1 S** Deck dates now come from `last-modified` (see the "Before term starts" checklist).
-- [ ] **[R] P2 M** Asana: *"tasks and assignments for each class [should be] clearly stated before the reading material"*. Add a short **"This week, before class"** checklist at the top of each `weekN.qmd` (watch X, read Y, do Z), rather than having it split between Readings, Pre-Recorded and Practical. Do weeks 1–5 now and the rest in term. **Done for weeks 1–12** (uncommitted). Reading week is deliberately left alone: its objectives and 'Past student performance…' list already serve as a checklist.
-- [ ] **[R] P2 M** Learning objectives for weeks 2–4 aren't measurable ("An understanding of how none of this all that new"). Rewrite them with verbs (explain / use / choose / diagnose) that map onto that week's talks and practical. Suggestions under each week.
+- [x] **[R] P2 M** Asana: *"tasks and assignments for each class [should be] clearly stated before the reading material"*. Add a short **"This week, before class"** checklist at the top of each `weekN.qmd` (watch X, read Y, do Z), rather than having it split between Readings, Pre-Recorded and Practical. Do weeks 1–5 now and the rest in term. **Done for weeks 1–12** (uncommitted). Reading week is deliberately left alone: its objectives and 'Past student performance…' list already serve as a checklist.
+- [x] **[R] P2 M** (Done 2026-09-28: weeks 1–10 rewritten against revised module outcomes; see `quality_reports/2026-09-28_learning-outcomes.md`.) Learning objectives for weeks 2–4 aren't measurable ("An understanding of how none of this all that new"). Rewrite them with verbs (explain / use / choose / diagnose) that map onto that week's talks and practical. Suggestions under each week.
 - [x] **[A] P3 S** Asana: signpost Code Camp to non-CASA students (Moodle and the module description).
 - [x] **[A]** `sessions/index.qmd`: the reading Template instruction was removed (done on branch). No `weekN.qmd` references it either. Confirm that's intended.
 - [x] **[A]** `sessions/index.qmd`: clarified practical group swaps (done on branch).
-- [ ] *Summer* **[V] P3 L** Alt text is missing on many lecture images (e.g. the 5.4 book cover, 3.2 `Alice.png`, 3.4 `phd101212s.gif`). This is also on Asana. It's visual-only, but touches every deck.
+- [x] **[L] P3 M** Alt text is missing on many lecture images. **Applied 2026-09-28** (uncommitted): 134 `fig-alt` + 10 HTML `alt`, and the 8.1 and 12.3 URLs fixed. Code-generated plots still need `#| fig-alt:` chunk options. It isn't visible on the slides, so no video rebuild is needed. Proposals for 142 images are in `quality_reports/2026-09-28_lecture-alt-text.md` (35 marked `[?]`); edit them there, then apply. Captions reused for 1.1 ACC and 10.1 Seaborn. **Broken images:** 8.1 (hackernoon, 404) and 12.3 `ml_map.png` (scikit-learn, 404). Earlier note: (e.g. the 5.4 book cover, 3.2 `Alice.png`, 3.4 `phd101212s.gif`). This is also on Asana. It's visual-only, but touches every deck.
 
 ---
 
@@ -114,7 +114,7 @@ A checklist that pulls together the P1s below, each tagged with its week.
 
 **Session page**
 
-- [ ] **[R] P1 S** Learning objective 2 is garbled ("An understanding of how none of this all that new"). Overview typo: "intelligen".
+- [x] **[R] P1 S** Learning objective 2 is garbled ("An understanding of how none of this all that new"). Overview typo: "intelligen".
   - Suggested LOs: (1) use variables, types, operators, conditions, lists and loops to solve short problems; (2) read Python error messages to find syntax errors; (3) explain why current debates about data volume and computation have precedents (Burton, Donoho).
 - [ ] **[R] P2 S** "Dykstra" → "Dijkstra" (twice, in Connections).
 - [ ] **[R] P2 S** The practical's Connections list "Ensuring that you are set up with Git/GitHub", but Git is taught in Week 3 (3.4). Move it or reword.
@@ -175,7 +175,7 @@ A checklist that pulls together the P1s below, each tagged with its week.
 
 - [x] **[R] P1 S** Overview: "We will also be looking to the Unix Shell/Terminal", but that was Week 2 (2.5). This week is Git.
 - [x] **[R] P1 S** Practical: "how functions … can be collected into reusable packages" is **Week 4's** practical text (it's duplicated there). Replace it with nested data structures (DOLs, LOLs).
-- [ ] **[R] P2 S** LO1 is vague. Suggested LOs: (1) choose between a list, dict, LOL or DOL for a given dataset and justify the choice; (2) access nested values by chaining indexes and keys; (3) use `add` / `commit` / `push` / `pull` to version a notebook on GitHub.
+- [x] **[R] P2 S** LO1 is vague. Suggested LOs: (1) choose between a list, dict, LOL or DOL for a given dataset and justify the choice; (2) access nested values by chaining indexes and keys; (3) use `add` / `commit` / `push` / `pull` to version a notebook on GitHub.
 - [ ] **[R] P2 M** Asana: "Need to update summary of chapter 6 of Data Feminism" (the study guide).
 - [x] **[R] P3 S** The LOLs row says "Notes" instead of "Slides". Typo: "minortised".
 - [ ] **[A] P2 S** Asana: review the Moodle quiz for this week or next (the "markdown one in week 3 or 4" has questionable answers).
@@ -312,7 +312,7 @@ A checklist that pulls together the P1s below, each tagged with its week.
 
 ## Weeks 7–12 (skimmed via session pages only)
 
-- [ ] **[R] P2 S** Week 8: learning objective 6 is empty. The week also leans on Miller:2015; Asana suggests moving it forward or replacing it with the "LLMs in Urban Planning" reading.
+- [x] **[R] P2 S** Week 8: learning objective 6 is empty. The week also leans on Miller:2015; Asana suggests moving it forward or replacing it with the "LLMs in Urban Planning" reading.
 - [ ] **[R] P2 S** Week 7: the reading key `Bunday:0000` has no year, so check the bib entry.
 - [ ] **[R] P3 S** Week 12: "classifcation".
 - [ ] Full review of the week 6–12 decks: *after term starts*.
