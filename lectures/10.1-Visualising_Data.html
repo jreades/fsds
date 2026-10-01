@@ -7,24 +7,34 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-da61f9a05e9cefe097d79e8430a73dd4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-aced932c6eb97d642153b8e218288f9f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/quarto-axe/axe.min.js"></script>
+<script src="../site_libs/quarto-axe/axe-check.js" type="module"></script>
+<script id="quarto-axe-checker-options" type="text/plain">eyJvdXRwdXQiOiJkb2N1bWVudCJ9</script>
+<link href="../site_libs/reveal-theme/reveal-theme-6ec7a94939c7281a5ee2e5382b76028b.min.css" rel="stylesheet" append-hash="true" data-mode="light">
 <script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.8.24">
+  <meta name="generator" content="quarto-1.10.18">
 
   <meta name="author" content="Jon Reades">
   <title>Foundations of Spatial Data Science – Visualising Data</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
   <style>
-    code{white-space: pre-wrap;}
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
@@ -118,7 +128,7 @@
     div.csl-indent {
       margin-left: 2em;
     }  </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-b6d6ca89e0c39dcc6c0c87d5e30c596f.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-d945b4c252f9130eae0c493518ea35dc.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -212,7 +222,7 @@
   </style>
 <meta property="og:title" content="Visualising Data – Foundations of Spatial Data Science">
 <meta property="og:image" content="img/logo/full_sm.png">
-<meta property="og:site_name" content="Foundations">
+<meta property="og:site_name" content="Foundations of Spatial Data Science">
 <meta property="og:locale" content="en_GB">
 </head>
 <body class="quarto-light">
@@ -230,7 +240,7 @@
 
 <p><span style="margin:0px; font-weight:700;" class="author">Jon Reades</span> - j.reades@ucl.ac.uk </p>
 
-<p style="opacity: 0.8">1st October 2025</p>
+<p style="opacity: 0.8">28th September 2026</p>
 
 <p style="opacity:0.8;"></p>
 
@@ -326,17 +336,17 @@ This is why we care about leverage and skew; not because we <em>need</em> normal
 </div></aside></section>
 <section id="in-practice" class="slide level2">
 <h2>In Practice</h2>
-<div id="3e202796" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb1-2"><a></a>sns.set_theme(style<span class="op">=</span><span class="st">"darkgrid"</span>)</span>
-<span id="cb1-3"><a></a>fmri <span class="op">=</span> sns.load_dataset(<span class="st">"fmri"</span>)</span>
-<span id="cb1-4"><a></a>sns.lineplot(x<span class="op">=</span><span class="st">"timepoint"</span>, y<span class="op">=</span><span class="st">"signal"</span>,</span>
-<span id="cb1-5"><a></a>             hue<span class="op">=</span><span class="st">"region"</span>, style<span class="op">=</span><span class="st">"event"</span>,</span>
-<span id="cb1-6"><a></a>             data<span class="op">=</span>fmri)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="b181ef42" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a aria-label="1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-2"><a aria-label="2"></a>sns.set_theme(style<span class="op">=</span><span class="st">"darkgrid"</span>)</span>
+<span id="cb1-3"><a aria-label="3"></a>fmri <span class="op">=</span> sns.load_dataset(<span class="st">"fmri"</span>)</span>
+<span id="cb1-4"><a aria-label="4"></a>sns.lineplot(x<span class="op">=</span><span class="st">"timepoint"</span>, y<span class="op">=</span><span class="st">"signal"</span>,</span>
+<span id="cb1-5"><a aria-label="5"></a>             hue<span class="op">=</span><span class="st">"region"</span>, style<span class="op">=</span><span class="st">"event"</span>,</span>
+<span id="cb1-6"><a aria-label="6"></a>             data<span class="op">=</span>fmri)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><a href="10.1-Visualising_Data_files/figure-revealjs/cell-2-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img data-src="10.1-Visualising_Data_files/figure-revealjs/cell-2-output-1.png" width="832" height="437"></a></p>
+<p><a href="10.1-Visualising_Data_files/figure-revealjs/cell-2-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img data-src="10.1-Visualising_Data_files/figure-revealjs/cell-2-output-1.png" alt="A Seaborn line-plot with confidence intervals from sample FMRI data" width="825" height="435"></a></p>
 </figure>
 </div>
 </div>
@@ -344,16 +354,16 @@ This is why we care about leverage and skew; not because we <em>need</em> normal
 </section>
 <section id="in-practice-2" class="slide level2">
 <h2>In Practice 2</h2>
-<div id="6fb7f36f" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>sns.set_theme(style<span class="op">=</span><span class="st">"whitegrid"</span>, palette<span class="op">=</span><span class="st">"muted"</span>)</span>
-<span id="cb2-2"><a></a>df <span class="op">=</span> sns.load_dataset(<span class="st">"penguins"</span>)</span>
-<span id="cb2-3"><a></a></span>
-<span id="cb2-4"><a></a>ax <span class="op">=</span> sns.swarmplot(data<span class="op">=</span>df, x<span class="op">=</span><span class="st">"body_mass_g"</span>, y<span class="op">=</span><span class="st">"sex"</span>, hue<span class="op">=</span><span class="st">"species"</span>)</span>
-<span id="cb2-5"><a></a>ax.<span class="bu">set</span>(ylabel<span class="op">=</span><span class="st">""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="f0f3c6b1" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a aria-label="1"></a>sns.set_theme(style<span class="op">=</span><span class="st">"whitegrid"</span>, palette<span class="op">=</span><span class="st">"muted"</span>)</span>
+<span id="cb2-2"><a aria-label="2"></a>df <span class="op">=</span> sns.load_dataset(<span class="st">"penguins"</span>)</span>
+<span id="cb2-3"><a aria-label="3"></a></span>
+<span id="cb2-4"><a aria-label="4"></a>ax <span class="op">=</span> sns.swarmplot(data<span class="op">=</span>df, x<span class="op">=</span><span class="st">"body_mass_g"</span>, y<span class="op">=</span><span class="st">"sex"</span>, hue<span class="op">=</span><span class="st">"species"</span>)</span>
+<span id="cb2-5"><a aria-label="5"></a>ax.<span class="bu">set</span>(ylabel<span class="op">=</span><span class="st">""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><a href="10.1-Visualising_Data_files/figure-revealjs/cell-3-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img data-src="10.1-Visualising_Data_files/figure-revealjs/cell-3-output-1.png" width="829" height="437"></a></p>
+<p><a href="10.1-Visualising_Data_files/figure-revealjs/cell-3-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img data-src="10.1-Visualising_Data_files/figure-revealjs/cell-3-output-1.png" alt="A swarmplot with muted, white-grid theme of penguin types" width="825" height="435"></a></p>
 </figure>
 </div>
 </div>
@@ -400,7 +410,7 @@ This is why we care about leverage and skew; not because we <em>need</em> normal
 </section>
 <section id="anatomy-of-a-figure" class="slide level2">
 <h2>Anatomy of a Figure</h2>
-<p><a href="https://matplotlib.org/_images/sphx_glr_anatomy_001.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img data-src="https://matplotlib.org/_images/sphx_glr_anatomy_001.png" height="500"></a></p>
+<p><a href="https://matplotlib.org/_images/sphx_glr_anatomy_001.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img data-src="https://matplotlib.org/_images/sphx_glr_anatomy_001.png" alt="Matplotlib's 'anatomy of a figure': a chart labelling each element, including figure, axes, title, ticks, labels, legend and grid" height="500"></a></p>
 
 <aside><div>
 <p>Source: <a href="https://matplotlib.org/gallery/showcase/anatomy.html#anatomy-of-a-figure">Matplotlib documentation</a>.</p>
@@ -419,21 +429,21 @@ This is why we care about leverage and skew; not because we <em>need</em> normal
 <p>This feature <a href="https://matplotlib.org/stable/gallery/mplot3d/index.html">has many options</a> though you’ll not get QGIS-quality output:</p>
 <div class="columns">
 <div class="column" style="width:55%;">
-<div id="78e2c2ef" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">from</span> mpl_toolkits.mplot3d <span class="im">import</span> axes3d</span>
-<span id="cb3-2"><a></a>ax <span class="op">=</span> plt.figure().add_subplot(projection<span class="op">=</span><span class="st">'3d'</span>)</span>
-<span id="cb3-3"><a></a>X,Y,Z <span class="op">=</span> axes3d.get_test_data(<span class="fl">0.05</span>)</span>
-<span id="cb3-4"><a></a><span class="co"># THEN</span></span>
-<span id="cb3-5"><a></a>ax.plot_surface(X, Y, Z, edgecolor<span class="op">=</span><span class="st">'royalblue'</span>, lw<span class="op">=</span><span class="fl">0.5</span>, rstride<span class="op">=</span><span class="dv">8</span>, cstride<span class="op">=</span><span class="dv">8</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb3-6"><a></a>ax.contour(X, Y, Z, zdir<span class="op">=</span><span class="st">'x'</span>, offset<span class="op">=-</span><span class="dv">40</span>, cmap<span class="op">=</span><span class="st">'coolwarm'</span>)</span>
-<span id="cb3-7"><a></a>ax.contour(X, Y, Z, zdir<span class="op">=</span><span class="st">'x'</span>, offset<span class="op">=-</span><span class="dv">40</span>, cmap<span class="op">=</span><span class="st">'coolwarm'</span>)</span>
-<span id="cb3-8"><a></a>ax.contour(X, Y, Z, zdir<span class="op">=</span><span class="st">'y'</span>, offset<span class="op">=</span><span class="dv">40</span>, cmap<span class="op">=</span><span class="st">'coolwarm'</span>)</span>
-<span id="cb3-9"><a></a>ax.<span class="bu">set</span>(xlim<span class="op">=</span>(<span class="op">-</span><span class="dv">40</span>, <span class="dv">40</span>), ylim<span class="op">=</span>(<span class="op">-</span><span class="dv">40</span>, <span class="dv">40</span>), zlim<span class="op">=</span>(<span class="op">-</span><span class="dv">100</span>, <span class="dv">100</span>),</span>
-<span id="cb3-10"><a></a>       xlabel<span class="op">=</span><span class="st">'X'</span>, ylabel<span class="op">=</span><span class="st">'Y'</span>, zlabel<span class="op">=</span><span class="st">'Z'</span>)<span class="op">;</span></span>
-<span id="cb3-11"><a></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="a63a1d19" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a aria-label="1"></a><span class="im">from</span> mpl_toolkits.mplot3d <span class="im">import</span> axes3d</span>
+<span id="cb3-2"><a aria-label="2"></a>ax <span class="op">=</span> plt.figure().add_subplot(projection<span class="op">=</span><span class="st">'3d'</span>)</span>
+<span id="cb3-3"><a aria-label="3"></a>X,Y,Z <span class="op">=</span> axes3d.get_test_data(<span class="fl">0.05</span>)</span>
+<span id="cb3-4"><a aria-label="4"></a><span class="co"># THEN</span></span>
+<span id="cb3-5"><a aria-label="5"></a>ax.plot_surface(X, Y, Z, edgecolor<span class="op">=</span><span class="st">'royalblue'</span>, lw<span class="op">=</span><span class="fl">0.5</span>, rstride<span class="op">=</span><span class="dv">8</span>, cstride<span class="op">=</span><span class="dv">8</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb3-6"><a aria-label="6"></a>ax.contour(X, Y, Z, zdir<span class="op">=</span><span class="st">'x'</span>, offset<span class="op">=-</span><span class="dv">40</span>, cmap<span class="op">=</span><span class="st">'coolwarm'</span>)</span>
+<span id="cb3-7"><a aria-label="7"></a>ax.contour(X, Y, Z, zdir<span class="op">=</span><span class="st">'x'</span>, offset<span class="op">=-</span><span class="dv">40</span>, cmap<span class="op">=</span><span class="st">'coolwarm'</span>)</span>
+<span id="cb3-8"><a aria-label="8"></a>ax.contour(X, Y, Z, zdir<span class="op">=</span><span class="st">'y'</span>, offset<span class="op">=</span><span class="dv">40</span>, cmap<span class="op">=</span><span class="st">'coolwarm'</span>)</span>
+<span id="cb3-9"><a aria-label="9"></a>ax.<span class="bu">set</span>(xlim<span class="op">=</span>(<span class="op">-</span><span class="dv">40</span>, <span class="dv">40</span>), ylim<span class="op">=</span>(<span class="op">-</span><span class="dv">40</span>, <span class="dv">40</span>), zlim<span class="op">=</span>(<span class="op">-</span><span class="dv">100</span>, <span class="dv">100</span>),</span>
+<span id="cb3-10"><a aria-label="10"></a>       xlabel<span class="op">=</span><span class="st">'X'</span>, ylabel<span class="op">=</span><span class="st">'Y'</span>, zlabel<span class="op">=</span><span class="st">'Z'</span>)<span class="op">;</span></span>
+<span id="cb3-11"><a aria-label="11"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div><div class="column" style="width:45%;">
-<p><a href="10.1-Visualising_Data_files/figure-revealjs/cell-6-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img data-src="10.1-Visualising_Data_files/figure-revealjs/cell-6-output-1.png" width="411" height="402"></a></p>
+<p><a href="10.1-Visualising_Data_files/figure-revealjs/cell-6-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img data-src="10.1-Visualising_Data_files/figure-revealjs/cell-6-output-1.png" alt="Example 3D plot with 2D projections" width="410" height="402"></a></p>
 </div></div>
 
 <aside><div>
@@ -442,10 +452,10 @@ This is why we care about leverage and skew; not because we <em>need</em> normal
 <section id="saving-outputs" class="slide level2">
 <h2>Saving Outputs</h2>
 <p>Straightforward via <a href="https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.savefig.html">save figure</a> function, but lots of options!</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>plt.savefig(fname, dpi<span class="op">=</span><span class="va">None</span>, facecolor<span class="op">=</span><span class="st">'w'</span>, edgecolor<span class="op">=</span><span class="st">'w'</span>,</span>
-<span id="cb4-2"><a></a>    orientation<span class="op">=</span><span class="st">'portrait'</span>, papertype<span class="op">=</span><span class="va">None</span>, <span class="bu">format</span><span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb4-3"><a></a>    transparent<span class="op">=</span><span class="va">False</span>, bbox_inches<span class="op">=</span><span class="va">None</span>, pad_inches<span class="op">=</span><span class="fl">0.1</span>,</span>
-<span id="cb4-4"><a></a>    frameon<span class="op">=</span><span class="va">None</span>, metadata<span class="op">=</span><span class="va">None</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a aria-label="1"></a>plt.savefig(fname, dpi<span class="op">=</span><span class="va">None</span>, facecolor<span class="op">=</span><span class="st">'w'</span>, edgecolor<span class="op">=</span><span class="st">'w'</span>,</span>
+<span id="cb4-2"><a aria-label="2"></a>    orientation<span class="op">=</span><span class="st">'portrait'</span>, papertype<span class="op">=</span><span class="va">None</span>, <span class="bu">format</span><span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb4-3"><a aria-label="3"></a>    transparent<span class="op">=</span><span class="va">False</span>, bbox_inches<span class="op">=</span><span class="va">None</span>, pad_inches<span class="op">=</span><span class="fl">0.1</span>,</span>
+<span id="cb4-4"><a aria-label="4"></a>    frameon<span class="op">=</span><span class="va">None</span>, metadata<span class="op">=</span><span class="va">None</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The format can be largely determined by the file extension in the <code>fname</code> (file name) and the supported formats depends on what you’ve installed! You can find out what’s available to you using: <code>plt.gcf().canvas.get_supported_filetypes()</code>.</p>
 </section>
 <section id="jupyter" class="slide level2">
@@ -459,96 +469,96 @@ This is why we care about leverage and skew; not because we <em>need</em> normal
 </section>
 <section id="widgets" class="slide level2 smaller">
 <h2>Widgets</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="op">%</span>matplotlib widget</span>
-<span id="cb5-2"><a></a>rs <span class="op">=</span> gpd.sjoin(gdf, hackney, how<span class="op">=</span><span class="st">'left'</span>, op<span class="op">=</span><span class="st">'within'</span>)</span>
-<span id="cb5-3"><a></a>rs.NAME.fillna(<span class="st">'None'</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb5-4"><a></a>ax <span class="op">=</span> hackney.plot(edgecolor<span class="op">=</span><span class="st">'k'</span>, facecolor<span class="op">=</span><span class="st">'none'</span>)</span>
-<span id="cb5-5"><a></a>rs.plot(ax<span class="op">=</span>ax, column<span class="op">=</span><span class="st">'NAME'</span>, legend<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><a href="img/Matplotlib_Widget.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img data-src="img/Matplotlib_Widget.png" height="500"></a></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a aria-label="1"></a><span class="op">%</span>matplotlib widget</span>
+<span id="cb5-2"><a aria-label="2"></a>rs <span class="op">=</span> gpd.sjoin(gdf, hackney, how<span class="op">=</span><span class="st">'left'</span>, op<span class="op">=</span><span class="st">'within'</span>)</span>
+<span id="cb5-3"><a aria-label="3"></a>rs.NAME.fillna(<span class="st">'None'</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-4"><a aria-label="4"></a>ax <span class="op">=</span> hackney.plot(edgecolor<span class="op">=</span><span class="st">'k'</span>, facecolor<span class="op">=</span><span class="st">'none'</span>)</span>
+<span id="cb5-5"><a aria-label="5"></a>rs.plot(ax<span class="op">=</span>ax, column<span class="op">=</span><span class="st">'NAME'</span>, legend<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="img/Matplotlib_Widget.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img data-src="img/Matplotlib_Widget.png" alt="Interactive Matplotlib map with a widget control for changing what is shown" height="500"></a></p>
 </section>
 <section id="interact" class="slide level2 smaller">
 <h2>Interact()</h2>
 <p>Taking an example from <a href="https://darribas.org/gds_course/content/bH/lab_H.html#advanced-plotting">Dani’s work</a>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="im">from</span> ipywidgets <span class="im">import</span> interact</span>
-<span id="cb6-2"><a></a><span class="co"># Alternatives: interactive, fixed, interact_manual</span></span>
-<span id="cb6-3"><a></a>interact(</span>
-<span id="cb6-4"><a></a>    <span class="op">&lt;</span>function<span class="op">&gt;</span>, <span class="co"># Function to make interactive</span></span>
-<span id="cb6-5"><a></a>    <span class="op">&lt;</span>param0<span class="op">&gt;</span>,   <span class="co"># e.g. Data to use</span></span>
-<span id="cb6-6"><a></a>    <span class="op">&lt;</span>param1<span class="op">&gt;</span>,   <span class="co"># e.g. Range start/end/step</span></span>
-<span id="cb6-7"><a></a>    <span class="op">&lt;</span>param2<span class="op">&gt;</span>    <span class="co"># e.g. Fixed value</span></span>
-<span id="cb6-8"><a></a>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a aria-label="1"></a><span class="im">from</span> ipywidgets <span class="im">import</span> interact</span>
+<span id="cb6-2"><a aria-label="2"></a><span class="co"># Alternatives: interactive, fixed, interact_manual</span></span>
+<span id="cb6-3"><a aria-label="3"></a>interact(</span>
+<span id="cb6-4"><a aria-label="4"></a>    <span class="op">&lt;</span>function<span class="op">&gt;</span>, <span class="co"># Function to make interactive</span></span>
+<span id="cb6-5"><a aria-label="5"></a>    <span class="op">&lt;</span>param0<span class="op">&gt;</span>,   <span class="co"># e.g. Data to use</span></span>
+<span id="cb6-6"><a aria-label="6"></a>    <span class="op">&lt;</span>param1<span class="op">&gt;</span>,   <span class="co"># e.g. Range start/end/step</span></span>
+<span id="cb6-7"><a aria-label="7"></a>    <span class="op">&lt;</span>param2<span class="op">&gt;</span>    <span class="co"># e.g. Fixed value</span></span>
+<span id="cb6-8"><a aria-label="8"></a>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="bokeh" class="slide level2">
 <h2>Bokeh</h2>
-<p><a href="./img/Bokeh.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img data-src="./img/Bokeh.png" height="500"></a></p>
+<p><a href="./img/Bokeh.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img data-src="./img/Bokeh.png" alt="Example of an interactive chart made with Bokeh" height="500"></a></p>
 </section>
 <section id="automation" class="slide level2 smaller">
 <h2>Automation</h2>
 <p>Plots built on top of matploblib can, to some extent, be automated using functions. For example, to draw circles and place text:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="kw">def</span> circle(ax, x, y, radius<span class="op">=</span><span class="fl">0.15</span>):</span>
-<span id="cb7-2"><a></a>    <span class="im">from</span> matplotlib.patches <span class="im">import</span> Circle</span>
-<span id="cb7-3"><a></a>    <span class="im">from</span> matplotlib.patheffects <span class="im">import</span> withStroke</span>
-<span id="cb7-4"><a></a>    circle <span class="op">=</span> Circle((x, y), radius, clip_on<span class="op">=</span><span class="va">False</span>, zorder<span class="op">=</span><span class="dv">10</span>, </span>
-<span id="cb7-5"><a></a>                    linewidth<span class="op">=</span><span class="dv">1</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>, </span>
-<span id="cb7-6"><a></a>                    facecolor<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">.0125</span>),</span>
-<span id="cb7-7"><a></a>                    path_effects<span class="op">=</span>[withStroke(linewidth<span class="op">=</span><span class="dv">5</span>, </span>
-<span id="cb7-8"><a></a>                                  foreground<span class="op">=</span><span class="st">'w'</span>)])</span>
-<span id="cb7-9"><a></a>    ax.add_artist(circle)</span>
-<span id="cb7-10"><a></a></span>
-<span id="cb7-11"><a></a><span class="kw">def</span> text(ax, x, y, text):</span>
-<span id="cb7-12"><a></a>    ax.text(x, y, text, backgroundcolor<span class="op">=</span><span class="st">"white"</span>,</span>
-<span id="cb7-13"><a></a>         ha<span class="op">=</span><span class="st">'center'</span>, va<span class="op">=</span><span class="st">'top'</span>, weight<span class="op">=</span><span class="st">'bold'</span>, color<span class="op">=</span><span class="st">'blue'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a aria-label="1"></a><span class="kw">def</span> circle(ax, x, y, radius<span class="op">=</span><span class="fl">0.15</span>):</span>
+<span id="cb7-2"><a aria-label="2"></a>    <span class="im">from</span> matplotlib.patches <span class="im">import</span> Circle</span>
+<span id="cb7-3"><a aria-label="3"></a>    <span class="im">from</span> matplotlib.patheffects <span class="im">import</span> withStroke</span>
+<span id="cb7-4"><a aria-label="4"></a>    circle <span class="op">=</span> Circle((x, y), radius, clip_on<span class="op">=</span><span class="va">False</span>, zorder<span class="op">=</span><span class="dv">10</span>, </span>
+<span id="cb7-5"><a aria-label="5"></a>                    linewidth<span class="op">=</span><span class="dv">1</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>, </span>
+<span id="cb7-6"><a aria-label="6"></a>                    facecolor<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">.0125</span>),</span>
+<span id="cb7-7"><a aria-label="7"></a>                    path_effects<span class="op">=</span>[withStroke(linewidth<span class="op">=</span><span class="dv">5</span>, </span>
+<span id="cb7-8"><a aria-label="8"></a>                                  foreground<span class="op">=</span><span class="st">'w'</span>)])</span>
+<span id="cb7-9"><a aria-label="9"></a>    ax.add_artist(circle)</span>
+<span id="cb7-10"><a aria-label="10"></a></span>
+<span id="cb7-11"><a aria-label="11"></a><span class="kw">def</span> text(ax, x, y, text):</span>
+<span id="cb7-12"><a aria-label="12"></a>    ax.text(x, y, text, backgroundcolor<span class="op">=</span><span class="st">"white"</span>,</span>
+<span id="cb7-13"><a aria-label="13"></a>         ha<span class="op">=</span><span class="st">'center'</span>, va<span class="op">=</span><span class="st">'top'</span>, weight<span class="op">=</span><span class="st">'bold'</span>, color<span class="op">=</span><span class="st">'blue'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="dont-underestimate-text" class="slide level2">
 <h2>Don’t Underestimate Text!</h2>
 <p>Label directly<sup>1</sup>:</p>
-<p><a href="./img/datawrapper-1.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img data-src="./img/datawrapper-1.avif" style="width:75.0%"></a></p>
-<aside><ol class="aside-footnotes"><li id="fn1"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li></ol></aside></section>
+<p><a href="./img/datawrapper-1.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img data-src="./img/datawrapper-1.avif" style="width:75.0%" alt="Datawrapper example: labelling lines directly instead of using a legend"></a></p>
+<aside role="note" aria-label="Footnotes"><ol class="aside-footnotes"><li id="fn1"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li></ol></aside></section>
 <section id="dont-underestimate-text-1" class="slide level2">
 <h2>Don’t Underestimate Text!</h2>
 <p>Use outlines to allow overlaps<sup>1</sup> <sup>2</sup>:</p>
-<p><a href="./img/datawrapper-9.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img data-src="./img/datawrapper-9.avif" style="width:75.0%"></a></p>
-<aside><ol class="aside-footnotes"><li id="fn2"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li><li id="fn3"><p>Notice how this supports the focus and interpretation.</p></li></ol></aside></section>
+<p><a href="./img/datawrapper-9.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img data-src="./img/datawrapper-9.avif" style="width:75.0%" alt="Datawrapper example: text with outlines so labels stay readable where they overlap the data"></a></p>
+<aside role="note" aria-label="Footnotes"><ol class="aside-footnotes"><li id="fn2"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li><li id="fn3"><p>Notice how this supports the focus and interpretation.</p></li></ol></aside></section>
 <section id="dont-underestimate-text-2" class="slide level2">
 <h2>Don’t Underestimate Text!</h2>
 <p>Repeat measurement units<sup>1</sup> <sup>2</sup>:</p>
-<p><a href="./img/datawrapper-2.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-11"><img data-src="./img/datawrapper-2.avif" style="width:75.0%"></a></p>
-<aside><ol class="aside-footnotes"><li id="fn4"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li><li id="fn5"><p>Interestingly, this flies in the face of the ‘chart junk minimisation’ of <span class="citation" data-cites="tufte:1983">Tufte and Graves-Morris (<a href="#/thank-you" role="doc-biblioref" onclick="">1983</a>)</span></p></li></ol></aside></section>
+<p><a href="./img/datawrapper-2.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-11"><img data-src="./img/datawrapper-2.avif" style="width:75.0%" alt="Datawrapper example: repeating the measurement units on the axis labels"></a></p>
+<aside role="note" aria-label="Footnotes"><ol class="aside-footnotes"><li id="fn4"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li><li id="fn5"><p>Interestingly, this flies in the face of the ‘chart junk minimisation’ of <span class="citation" data-cites="tufte:1983">Tufte and Graves-Morris (<a href="#/thank-you" role="doc-biblioref" onclick="">1983</a>)</span></p></li></ol></aside></section>
 <section id="dont-underestimate-text-3" class="slide level2">
 <h2>Don’t Underestimate Text!</h2>
 <p>Put the axes where they’re needed<sup>1</sup>:</p>
-<p><a href="./img/datawrapper-3.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-12"><img data-src="./img/datawrapper-3.avif" style="width:75.0%"></a></p>
-<aside><ol class="aside-footnotes"><li id="fn6"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li></ol></aside></section>
+<p><a href="./img/datawrapper-3.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-12"><img data-src="./img/datawrapper-3.avif" style="width:75.0%" alt="Datawrapper example: placing axis labels only where they are needed"></a></p>
+<aside role="note" aria-label="Footnotes"><ol class="aside-footnotes"><li id="fn6"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li></ol></aside></section>
 <section id="dont-underestimate-text-4" class="slide level2">
 <h2>Don’t Underestimate Text!</h2>
 <p>Emphasise and explain with annotation<sup>1</sup>:</p>
-<p><a href="./img/datawrapper-4.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-13"><img data-src="./img/datawrapper-4.avif" style="width:75.0%"></a></p>
-<aside><ol class="aside-footnotes"><li id="fn7"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li></ol></aside></section>
+<p><a href="./img/datawrapper-4.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-13"><img data-src="./img/datawrapper-4.avif" style="width:75.0%" alt="Datawrapper example: annotations that emphasise and explain key points in a chart"></a></p>
+<aside role="note" aria-label="Footnotes"><ol class="aside-footnotes"><li id="fn7"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li></ol></aside></section>
 <section id="dont-underestimate-text-5" class="slide level2">
 <h2>Don’t Underestimate Text!</h2>
 <p>Lead the eye with font sizes, styles, and colors<sup>1</sup> <sup>2</sup>:</p>
-<p><a href="./img/datawrapper-5.webp" class="lightbox" data-gallery="quarto-lightbox-gallery-14"><img data-src="./img/datawrapper-5.webp" style="width:55.0%"></a></p>
-<aside><ol class="aside-footnotes"><li id="fn8"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li><li id="fn9"><p>Just not too many of them in too many different styles!</p></li></ol></aside></section>
+<p><a href="./img/datawrapper-5.webp" class="lightbox" data-gallery="quarto-lightbox-gallery-14"><img data-src="./img/datawrapper-5.webp" style="width:55.0%" alt="Datawrapper example: font size, style and colour used to lead the reader's eye"></a></p>
+<aside role="note" aria-label="Footnotes"><ol class="aside-footnotes"><li id="fn8"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li><li id="fn9"><p>Just not too many of them in too many different styles!</p></li></ol></aside></section>
 <section id="dont-underestimate-text-6" class="slide level2">
 <h2>Don’t Underestimate Text!</h2>
 <p>See what I said on the previous slide about ‘too much going on’<sup>1</sup>:</p>
-<p><a href="./img/datawrapper-6.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-15"><img data-src="./img/datawrapper-6.avif" style="width:75.0%"></a></p>
-<aside><ol class="aside-footnotes"><li id="fn10"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li></ol></aside></section>
+<p><a href="./img/datawrapper-6.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-15"><img data-src="./img/datawrapper-6.avif" style="width:75.0%" alt="Datawrapper example of a chart with too much going on in the text"></a></p>
+<aside role="note" aria-label="Footnotes"><ol class="aside-footnotes"><li id="fn10"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li></ol></aside></section>
 <section id="dont-underestimate-text-7" class="slide level2">
 <h2>Don’t Underestimate Text!</h2>
 <p>For the sake of all that is holy, please don’t <strong>center-align text</strong><sup>1</sup>:</p>
-<p><a href="./img/datawrapper-7.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-16"><img data-src="./img/datawrapper-7.avif" style="width:75.0%"></a></p>
-<aside><ol class="aside-footnotes"><li id="fn11"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li></ol></aside></section>
+<p><a href="./img/datawrapper-7.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-16"><img data-src="./img/datawrapper-7.avif" style="width:75.0%" alt="Datawrapper example comparing centre-aligned and left-aligned chart text"></a></p>
+<aside role="note" aria-label="Footnotes"><ol class="aside-footnotes"><li id="fn11"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li></ol></aside></section>
 <section id="dont-underestimate-text-8" class="slide level2">
 <h2>Don’t Underestimate Text!</h2>
 <p>Make reading easy and interpretation intuitive<sup>1</sup> <sup>2</sup>:</p>
-<p><a href="./img/datawrapper-8.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-17"><img data-src="./img/datawrapper-8.avif" style="width:75.0%"></a></p>
-<aside><ol class="aside-footnotes"><li id="fn12"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li><li id="fn13"><p>Your readers don’t need to legal names for each country, nor do they like akward hypens.</p></li></ol></aside></section>
+<p><a href="./img/datawrapper-8.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-17"><img data-src="./img/datawrapper-8.avif" style="width:75.0%" alt="Datawrapper example: short, familiar country names that make a chart easy to read"></a></p>
+<aside role="note" aria-label="Footnotes"><ol class="aside-footnotes"><li id="fn12"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li><li id="fn13"><p>Your readers don’t need to legal names for each country, nor do they like akward hypens.</p></li></ol></aside></section>
 <section id="dont-underestimate-text-9" class="slide level2">
 <h2>Don’t Underestimate Text!</h2>
 <p>Get to the <strong>point</strong> in a way that works for the reader<sup>1</sup> <sup>2</sup>:</p>
-<p><a href="./img/datawrapper-10.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-18"><img data-src="./img/datawrapper-10.avif" style="width:75.0%"></a></p>
-<aside><ol class="aside-footnotes"><li id="fn14"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li><li id="fn15"><p>Rephrase for legibility and intelligibility.</p></li></ol></aside></section>
+<p><a href="./img/datawrapper-10.avif" class="lightbox" data-gallery="quarto-lightbox-gallery-18"><img data-src="./img/datawrapper-10.avif" style="width:75.0%" alt="Datawrapper example: a title rephrased to state the point of the chart"></a></p>
+<aside role="note" aria-label="Footnotes"><ol class="aside-footnotes"><li id="fn14"><p>Shamelssly taken from <a href="https://blog.datawrapper.de/text-in-data-visualizations/">Datawrapper</a></p></li><li id="fn15"><p>Rephrase for legibility and intelligibility.</p></li></ol></aside></section>
 <section id="additional-resources" class="slide level2 smaller">
 <h2>Additional Resources</h2>
 <div class="columns">
@@ -595,9 +605,9 @@ Tufte, Edward R, and Peter R Graves-Morris. 1983. <em>The Visual Display of Quan
 
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
-<p><img src="../img/logo/full.svg" class="slide-logo"></p>
+<p><img src="../img/logo/full.svg" class="slide-logo" alt=""></p>
 <div class="footer footer-default">
-<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2025 | Jon Reades</a></p>
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2026 | Jon Reades</a></p>
 </div>
 </div></div>
 

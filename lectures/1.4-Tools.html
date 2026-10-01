@@ -7,26 +7,36 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-da61f9a05e9cefe097d79e8430a73dd4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-aced932c6eb97d642153b8e218288f9f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/quarto-axe/axe.min.js"></script>
+<script src="../site_libs/quarto-axe/axe-check.js" type="module"></script>
+<script id="quarto-axe-checker-options" type="text/plain">eyJvdXRwdXQiOiJkb2N1bWVudCJ9</script>
+<link href="../site_libs/reveal-theme/reveal-theme-6ec7a94939c7281a5ee2e5382b76028b.min.css" rel="stylesheet" append-hash="true" data-mode="light">
 <script src="../site_libs/quarto-contrib/videojs/video.min.js"></script>
 <link href="../site_libs/quarto-contrib/videojs/video-js.css" rel="stylesheet">
 <script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.8.24">
+  <meta name="generator" content="quarto-1.10.18">
 
   <meta name="author" content="Jon Reades">
   <title>Foundations of Spatial Data Science – Tools of the Trade</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
   <style>
-    code{white-space: pre-wrap;}
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
@@ -120,7 +130,7 @@
     div.csl-indent {
       margin-left: 2em;
     }  </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-b6d6ca89e0c39dcc6c0c87d5e30c596f.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-d945b4c252f9130eae0c493518ea35dc.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -214,7 +224,7 @@
   </style>
 <meta property="og:title" content="Tools of the Trade – Foundations of Spatial Data Science">
 <meta property="og:image" content="img/logo/full_sm.png">
-<meta property="og:site_name" content="Foundations">
+<meta property="og:site_name" content="Foundations of Spatial Data Science">
 <meta property="og:locale" content="en_GB">
 </head>
 <body class="quarto-light">
@@ -232,7 +242,7 @@
 
 <p><span style="margin:0px; font-weight:700;" class="author">Jon Reades</span> - j.reades@ucl.ac.uk </p>
 
-<p style="opacity: 0.8">1st October 2025</p>
+<p style="opacity: 0.8">28th September 2026</p>
 
 <p style="opacity:0.8;"></p>
 
@@ -273,10 +283,10 @@ But <strong>why</strong> would we want this?
 </ol>
 </section>
 <section>
-<section id="jupyterlab-notebooks" class="title-slide slide level1 center">
-<h1>Jupyter(Lab) &amp; Notebooks</h1>
+<section id="jupyterlabquarto-notebooks" class="title-slide slide level1 center">
+<h1>Jupyter(Lab)/Quarto &amp; Notebooks</h1>
 <blockquote>
-<p>Browser + JupyterLab + Markup == Tangled, Woven code in (m)any languages</p>
+<p>JupyterLab + Quarto/Markup == Tangled, Woven code in (m)any languages</p>
 </blockquote>
 <aside class="notes">
 <p><em>Note</em>: you can set equations too!</p>
@@ -293,7 +303,7 @@ But <strong>why</strong> would we want this?
       }</style></aside>
 </section>
 <section id="why-use-jupyterlab" class="slide level2">
-<h2>Why Use JupyterLab?</h2>
+<h2>Why Use Jupyter(Lab)?</h2>
 <p>Coding in JupyterLab has a number of advantages over ‘point-and-click’:</p>
 <ol type="1">
 <li class="fragment">Coding requires our instructions to be unambiguous and logical.<sup>1</sup></li>
@@ -301,7 +311,16 @@ But <strong>why</strong> would we want this?
 <li class="fragment">There is nothing to install (runs in your web browser).</li>
 <li class="fragment">You can run code from anywhere (runs in your web browser).</li>
 </ol>
-<aside><ol class="aside-footnotes"><li id="fn1"><p>This does not guarantee that they’ll be <em>correct</em>.</p></li></ol></aside></section>
+<aside role="note" aria-label="Footnotes"><ol class="aside-footnotes"><li id="fn1"><p>This does not guarantee that they’ll be <em>correct</em>.</p></li></ol></aside></section>
+<section id="why-use-quarto" class="slide level2">
+<h2>Why Use Quarto?</h2>
+<p>Coding in Quarto has a number of advantages over ‘raw’ Jupyter:</p>
+<ol type="1">
+<li class="fragment">Simple markdown with <em>intergrated</em> coding</li>
+<li class="fragment">Work well with version control.</li>
+<li class="fragment">Easy to create PDFs, Word, web sites and presentations.<sup>1</sup></li>
+</ol>
+<aside role="note" aria-label="Footnotes"><ol class="aside-footnotes"><li id="fn2"><p>Everything you use this year came from Quarto.</p></li></ol></aside></section>
 <section id="the-bigger-picture" class="slide level2">
 <h2>The Bigger Picture</h2>
 <blockquote>
@@ -329,7 +348,17 @@ But <strong>why</strong> would we want this?
 </section>
 <section id="jupyterlab-python" class="slide level2">
 <h2>JupyterLab + Python</h2>
-<p><a href="./img/Notebook.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img data-src="./img/Notebook.png" style="width:85%;"></a></p>
+<p><a href="./img/Notebook.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img data-src="./img/Notebook.png" style="width:85%;" alt="Screenshot of a Jupyter notebook in JupyterLab mixing formatted text and Python code"></a></p>
+</section>
+<section id="quarto-python" class="slide level2">
+<h2>Quarto + Python</h2>
+<div id="a1776472" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a aria-label="1"></a><span class="bu">print</span>(<span class="st">"This is Python from Quarto!"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>This is Python from Quarto!</code></pre>
+</div>
+</div>
+<p><a href="./img/QMD.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img data-src="./img/QMD.png" style="width:85%;" alt="Screenshot of a Quarto document combining Markdown text and Python code"></a></p>
 </section></section>
 <section>
 <section id="virtualisation" class="title-slide slide level1 center">
@@ -339,9 +368,9 @@ But <strong>why</strong> would we want this?
 <p>Source: <span class="citation" data-cites="susnjara:2025">Susnjara and Smalley (<a href="#/lets-get-started" role="doc-biblioref" onclick="">2025</a>)</span></p>
 </blockquote>
 </section>
-<section id="two-basic-flavours" class="slide level2">
+<section id="two-basic-flavours" class="slide level2 smaller">
 <h2>Two Basic ‘Flavours’</h2>
-<p>Both do the <em>same</em> thing: separate the platform from the hardware, but they do this in defferent ways for different reasons.</p>
+<p>Both do the <em>same</em> thing: separate the platform from the hardware, but they do this in different ways for different reasons.</p>
 <ul>
 <li>A ‘full’ Virtual Machine (VM) includes the Operating System and behaves like a <em>separate computer</em> even though it may share hardware with other VMs.</li>
 <li>A ‘container’ is a ‘lightweight’ VM running only the application and its dependencies; everything else is managed by the host Operating System so the resulting ‘image’ is small and easy to distribute.</li>
@@ -374,7 +403,7 @@ But <strong>why</strong> would we want this?
 </section>
 <section id="podman" class="slide level2">
 <h2>Podman</h2>
-<p><a href="./img/Podman-logo.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img data-src="./img/Podman-logo.png" style="width:85%;"></a></p>
+<p><a href="./img/Podman-logo.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img data-src="./img/Podman-logo.png" style="width:85%;fig-align:left" alt="Podman logo"></a></p>
 <blockquote>
 <p>Podman is an <strong>open source</strong> container and image management engine. Podman makes it easy to find, run, build, and share containers.</p>
 </blockquote>
@@ -384,10 +413,10 @@ But <strong>why</strong> would we want this?
 <p>Podman makes configuring a development environment (fairly) simple. If a Podman image works for us then we <em>know</em><sup>1</sup> it works for you.</p>
 <p>Use either:</p>
 <ol type="1">
-<li><code>jreades/sds:2025-amd</code> (Windows and Older Macs)</li>
-<li><code>jreades/sds:2025-arm</code> (Newer Macs)</li>
+<li><code>jreades/sds:2026-amd</code> (Windows and Older Macs)</li>
+<li><code>jreades/sds:2026-arm</code> (Newer Macs)</li>
 </ol>
-<aside><ol class="aside-footnotes"><li id="fn2"><p>Usually, but not always, true.</p></li></ol></aside></section></section>
+<aside role="note" aria-label="Footnotes"><ol class="aside-footnotes"><li id="fn3"><p>Usually, but not always, true.</p></li></ol></aside></section></section>
 <section>
 <section id="version-control" class="title-slide slide level1 center">
 <h1>Version Control</h1>
@@ -433,11 +462,11 @@ But <strong>why</strong> would we want this?
 <li>We still want to be able to share <em>our</em> version of the code / outputs of the code with other people, and a web site is a good way to do that.</li>
 </ul>
 </section>
-<section id="git" class="slide level2">
+<section id="git" class="slide level2 smaller">
 <h2>Git</h2>
 <div class="columns">
 <div class="column" style="width:30%;">
-<p><a href="./img/Git.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img data-src="./img/Git.png"></a></p>
+<p><a href="./img/Git.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img data-src="./img/Git.png" alt="Git logo"></a></p>
 </div><div class="column" style="width:70%;">
 <p>Version control allows us to:</p>
 <ol type="1">
@@ -457,7 +486,7 @@ But <strong>why</strong> would we want this?
 <h2>GitHub</h2>
 <div class="columns">
 <div class="column" style="width:30%;">
-<p><a href="./img/Octocat.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img data-src="./img/Octocat.png"></a></p>
+<p><a href="./img/Octocat.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img data-src="./img/Octocat.png" alt="GitHub's Octocat mascot"></a></p>
 </div><div class="column" style="width:70%;">
 <p>Git is distributed, meaning that every computer is a potential server <em>and</em> a potential authority. <strong>Result</strong>: commits on a plane!</p>
 <p>But how do people find and access your code if your ‘server’ is a home machine that goes to sleep at night? <strong>Result</strong>: GitHub.</p>
@@ -483,7 +512,7 @@ But <strong>why</strong> would we want this?
 </section>
 <section id="oh-my-git" class="slide level2">
 <h2>Oh My Git!</h2>
-<video id="video_shortcode_videojs_video1" class="video-js vjs-default-skin vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="https://ohmygit.org/assets/trailer.mov"></video>
+<video id="video_shortcode_videojs_video1" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="https://ohmygit.org/assets/trailer.mov"></video>
 <div style="width: 95%; text-align: right; font-size: small;">
 <p>Source: <a href="https://ohmygit.org/">OhMyGit</a></p>
 </div>
@@ -604,7 +633,7 @@ Some text in **bold** and *italics* with a [link](https://jreades.github.io/).
 </tr>
 <tr class="odd">
 <td>`x=y+1`</td>
-<td><div class="sourceCode">
+<td><div class="sourceCode" tabindex="0">
 <code class="sourceCode python"> </code><span class="co"><code class="sourceCode python"> x<span class="op">=</span>y<span class="op">+</span><span class="dv">1</span> </code></span><code class="sourceCode python"> </code>
 </div></td>
 </tr>
@@ -613,7 +642,7 @@ Some text in **bold** and *italics* with a [link](https://jreades.github.io/).
 # A block of Python code<br>
 x = y+1<br>
 ```</td>
-<td><div class="sourceCode">
+<td><div class="sourceCode" tabindex="0">
 <code class="sourceCode python"> </code><span class="co"><code class="sourceCode python"> <span class="co"># A block of Python code</span></code><br>
 <code class="sourceCode python">&nbsp;&nbsp;x <span class="op">=</span> y<span class="op">+</span><span class="dv">1</span> </code></span><code class="sourceCode python"> </code>
 </div></td>
@@ -670,7 +699,7 @@ f(a) = \frac{1}{2\pi i} \oint_{\gamma} \frac{f(z)}{z-a} dz
 <li>Podman is how you will run a virtual machine with all the necessary tools pre-installed.</li>
 <li>JupyterLab is how you will ‘talk’ to the virtual machine and tell it to run code.</li>
 <li>Markdown is how you will write simply-formatted content (in JupyterLab and Quarto)</li>
-<li>Git/GitHub is how you <sub>will</sub> <em>can</em> manage code and content so that you always have a backup plan.</li>
+<li>Git/GitHub is how you <del>will</del> <em>can</em> manage code and content so that you always have a backup plan.</li>
 <li>Rendering in Quarto is how you will output nicely formatted code and content.</li>
 </ul>
 </section>
@@ -684,49 +713,49 @@ Don’t just take our word for it…
 </section>
 <section id="programming-languages-used" class="slide level2">
 <h2>Programming Languages (Used)</h2>
-<div class="scroll-container" style="overflow-y: scroll; height: 575px;">
-<p><a href="./img/stackoverflow-dev-survey-2024-technology-most-popular-technologies-language-social.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img data-src="./img/stackoverflow-dev-survey-2024-technology-most-popular-technologies-language-social.svg"></a></p>
+<div class="scroll-container" style="overflow-y: scroll; height: 550px;">
+<p><a href="./img/stackoverflow-dev-survey-2024-technology-most-popular-technologies-language-social.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img data-src="./img/stackoverflow-dev-survey-2024-technology-most-popular-technologies-language-social.svg" alt="Stack Overflow 2024 Developer Survey chart: most-used programming languages"></a></p>
 </div>
 </section>
 <section id="databases-used" class="slide level2">
 <h2>Databases (Used)</h2>
-<div class="scroll-container" style="overflow-y: scroll; height: 575px;">
-<p><a href="./img/stackoverflow-dev-survey-2024-technology-most-popular-technologies-database-social.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img data-src="./img/stackoverflow-dev-survey-2024-technology-most-popular-technologies-database-social.svg"></a></p>
+<div class="scroll-container" style="overflow-y: scroll; height: 550px;">
+<p><a href="./img/stackoverflow-dev-survey-2024-technology-most-popular-technologies-database-social.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img data-src="./img/stackoverflow-dev-survey-2024-technology-most-popular-technologies-database-social.svg" alt="Stack Overflow 2024 Developer Survey chart: most-used databases"></a></p>
 </div>
 </section>
 <section id="frameworks-libraries-used" class="slide level2">
 <h2>Frameworks &amp; Libraries (Used)</h2>
-<div class="scroll-container" style="overflow-y: scroll; height: 575px;">
-<p><a href="./img/stackoverflow-dev-survey-2024-technology-most-popular-technologies-misc-tech-social.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img data-src="./img/stackoverflow-dev-survey-2024-technology-most-popular-technologies-misc-tech-social.svg"></a></p>
+<div class="scroll-container" style="overflow-y: scroll; height: 550px;">
+<p><a href="./img/stackoverflow-dev-survey-2024-technology-most-popular-technologies-misc-tech-social.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img data-src="./img/stackoverflow-dev-survey-2024-technology-most-popular-technologies-misc-tech-social.svg" alt="Stack Overflow 2024 Developer Survey chart: most-used frameworks and libraries"></a></p>
 </div>
 </section>
 <section id="virtualisation-other-tools-used" class="slide level2">
 <h2>Virtualisation &amp; Other Tools (Used)</h2>
-<div class="scroll-container" style="overflow-y: scroll; height: 575px;">
-<p><a href="./img/stackoverflow-dev-survey-2024-technology-most-popular-technologies-tools-tech-social.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img data-src="./img/stackoverflow-dev-survey-2024-technology-most-popular-technologies-tools-tech-social.svg"></a></p>
+<div class="scroll-container" style="overflow-y: scroll; height: 550px;">
+<p><a href="./img/stackoverflow-dev-survey-2024-technology-most-popular-technologies-tools-tech-social.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img data-src="./img/stackoverflow-dev-survey-2024-technology-most-popular-technologies-tools-tech-social.svg" alt="Stack Overflow 2024 Developer Survey chart: most-used virtualisation and other tools"></a></p>
 </div>
 </section>
 <section id="programming-languages-desiredadmired" class="slide level2">
 <h2>Programming Languages (Desired/Admired)</h2>
-<div class="scroll-container" style="overflow-y: scroll; height: 575px;">
-<p><a href="./img/stackoverflow-dev-survey-2024-technology-admired-and-desired-language-desire-admire-social.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img data-src="./img/stackoverflow-dev-survey-2024-technology-admired-and-desired-language-desire-admire-social.svg"></a></p>
+<div class="scroll-container" style="overflow-y: scroll; height: 550px;">
+<p><a href="./img/stackoverflow-dev-survey-2024-technology-admired-and-desired-language-desire-admire-social.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img data-src="./img/stackoverflow-dev-survey-2024-technology-admired-and-desired-language-desire-admire-social.svg" alt="Stack Overflow 2024 Developer Survey chart: most admired and desired programming languages"></a></p>
 </div>
 </section>
 <section id="databases-desiredadmired" class="slide level2">
 <h2>Databases (Desired/Admired)</h2>
-<div class="scroll-container" style="overflow-y: scroll; height: 575px;">
-<p><a href="./img/stackoverflow-dev-survey-2024-technology-admired-and-desired-database-desire-admire-social.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img data-src="./img/stackoverflow-dev-survey-2024-technology-admired-and-desired-database-desire-admire-social.svg"></a></p>
+<div class="scroll-container" style="overflow-y: scroll; height: 550px;">
+<p><a href="./img/stackoverflow-dev-survey-2024-technology-admired-and-desired-database-desire-admire-social.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-11"><img data-src="./img/stackoverflow-dev-survey-2024-technology-admired-and-desired-database-desire-admire-social.svg" alt="Stack Overflow 2024 Developer Survey chart: most admired and desired databases"></a></p>
 </div>
 <!-- 
 ## Frameworks & Libraries (Desired/Admired)
 
-::: {.scroll-container style="overflow-y: scroll; height: 575px;"}
+::: {.scroll-container style="overflow-y: scroll; height: 550px;"}
 ![](./img/stackoverflow-dev-survey-2024-technology-admired-and-desired-misc-tech-desire-admire-social.svg)
 :::
 
 ## Virtualisation & Other Tools (Desired/Admired)
 
-::: {.scroll-container style="overflow-y: scroll; height: 575px;"}
+::: {.scroll-container style="overflow-y: scroll; height: 550px;"}
 ![](./img/stackoverflow-dev-survey-2024-technology-admired-and-desired-tools-desire-admire-social.svg)
 :::
 -->
@@ -746,7 +775,7 @@ Don’t just take our word for it…
 <li><a href="https://www.toptal.com/designers/htmlarrows/punctuation/">This guide</a> is good for HTML entities, though Google will also give you them pretty easily if you type <code>HTML entity code for copyright</code>…</li>
 </ul>
 <p>And once you’re ready to get ‘serious’, check out <a href="https://programminghistorian.org/en/lessons/sustainable-authorship-in-plain-text-using-pandoc-and-markdown">this tutorial</a> on <em>Sustainable Authorship in Plain Text using Pandoc and Markdown</em> from <a href="https://programminghistorian.org/en/lessons/">The Programming Historian</a>! That’s what actually underpins Quarto, but you can do so much more…</p>
-<aside><ol class="aside-footnotes"><li id="fn3"><p>Part art, part activism, part tech!</p></li></ol></aside></section></section>
+<aside role="note" aria-label="Footnotes"><ol class="aside-footnotes"><li id="fn4"><p>Part art, part activism, part tech!</p></li></ol></aside></section></section>
 <section id="lets-get-started" class="title-slide slide level1 smaller scrollable" data-background-image="../img/web/title-slide.png" data-background-color="#f7eff5" data-background-opacity="0.2">
 <h1>Let’s Get Started!</h1>
 <h3>
@@ -773,9 +802,9 @@ Susnjara, S., and I. Smalley. 2025. <span>“What Is Virtualization?”</span> 2
 
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
-<p><img src="../img/logo/full.svg" class="slide-logo"></p>
+<p><img src="../img/logo/full.svg" class="slide-logo" alt=""></p>
 <div class="footer footer-default">
-<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2025 | Jon Reades</a></p>
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2026 | Jon Reades</a></p>
 </div>
 </div></div>
 

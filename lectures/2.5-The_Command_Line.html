@@ -7,24 +7,34 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-da61f9a05e9cefe097d79e8430a73dd4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-aced932c6eb97d642153b8e218288f9f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/quarto-axe/axe.min.js"></script>
+<script src="../site_libs/quarto-axe/axe-check.js" type="module"></script>
+<script id="quarto-axe-checker-options" type="text/plain">eyJvdXRwdXQiOiJkb2N1bWVudCJ9</script>
+<link href="../site_libs/reveal-theme/reveal-theme-6ec7a94939c7281a5ee2e5382b76028b.min.css" rel="stylesheet" append-hash="true" data-mode="light">
 <script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.8.24">
+  <meta name="generator" content="quarto-1.10.18">
 
   <meta name="author" content="Jon Reades">
   <title>Foundations of Spatial Data Science – The CLI</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
   <style>
-    code{white-space: pre-wrap;}
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
@@ -98,7 +108,7 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-b6d6ca89e0c39dcc6c0c87d5e30c596f.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-d945b4c252f9130eae0c493518ea35dc.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -192,7 +202,7 @@
   </style>
 <meta property="og:title" content="The CLI – Foundations of Spatial Data Science">
 <meta property="og:image" content="img/logo/full_sm.png">
-<meta property="og:site_name" content="Foundations">
+<meta property="og:site_name" content="Foundations of Spatial Data Science">
 <meta property="og:locale" content="en_GB">
 </head>
 <body class="quarto-light">
@@ -210,7 +220,7 @@
 
 <p><span style="margin:0px; font-weight:700;" class="author">Jon Reades</span> - j.reades@ucl.ac.uk </p>
 
-<p style="opacity: 0.8">1st October 2025</p>
+<p style="opacity: 0.8">28th September 2026</p>
 
 <p style="opacity:0.8;"></p>
 
@@ -267,9 +277,9 @@
 </section>
 <section id="anatomy-of-a-command" class="slide level2">
 <h2>Anatomy of a Command</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a></a><span class="ex">curl</span> <span class="at">-L</span> http://bit.ly/2vrUFKi <span class="kw">|</span> </span>
-<span id="cb1-2"><a></a>  <span class="fu">head</span> <span class="at">-3</span> <span class="kw">|</span>  </span>
-<span id="cb1-3"><a></a>  <span class="fu">awk</span> <span class="at">-F</span><span class="st">","</span> <span class="st">'{ print $2, $4, $6; }'</span> <span class="op">&gt;</span> results.txt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb1"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a aria-label="1"></a><span class="ex">curl</span> <span class="at">-L</span> http://bit.ly/2vrUFKi <span class="kw">|</span> </span>
+<span id="cb1-2"><a aria-label="2"></a>  <span class="fu">head</span> <span class="at">-3</span> <span class="kw">|</span>  </span>
+<span id="cb1-3"><a aria-label="3"></a>  <span class="fu">awk</span> <span class="at">-F</span><span class="st">","</span> <span class="st">'{ print $2, $4, $6; }'</span> <span class="op">&gt;</span> results.txt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This command does <em>four</em> things in one ‘line’ on the CLI:</p>
 <ol type="1">
 <li><code>curl</code> downloads the file and passes the contents to…</li>
@@ -410,24 +420,24 @@
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
-<aside><ol class="aside-footnotes"><li id="fn1"><p>This may be easier to remember and write as <code>cd $HOME</code>, which does the same thing.</p></li></ol></aside></section>
+<aside role="note" aria-label="Footnotes"><ol class="aside-footnotes"><li id="fn1"><p>This may be easier to remember and write as <code>cd $HOME</code>, which does the same thing.</p></li></ol></aside></section>
 <section id="a-simulated-walk-across-my-laptop" class="slide level2 smaller">
 <h2>A Simulated Walk Across My Laptop</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a></a><span class="bu">cd</span> /</span>
-<span id="cb2-2"><a></a><span class="bu">pwd</span></span>
-<span id="cb2-3"><a></a><span class="op">&gt;</span> /</span>
-<span id="cb2-4"><a></a><span class="fu">ls</span></span>
-<span id="cb2-5"><a></a><span class="op">&gt;</span> Applications  <span class="ex">Library</span>  System  Users Volumes ...</span>
-<span id="cb2-6"><a></a><span class="bu">cd</span> <span class="va">$HOME</span></span>
-<span id="cb2-7"><a></a><span class="bu">pwd</span></span>
-<span id="cb2-8"><a></a><span class="op">&gt;</span> /Users/casa</span>
-<span id="cb2-9"><a></a><span class="fu">ls</span></span>
-<span id="cb2-10"><a></a><span class="op">&gt;</span> Applications  <span class="ex">Desktop</span>  Dropbox  ...</span>
-<span id="cb2-11"><a></a><span class="bu">cd</span> Dropbox</span>
-<span id="cb2-12"><a></a><span class="bu">pwd</span></span>
-<span id="cb2-13"><a></a><span class="op">&gt;</span> /Users/casa/Dropbox</span>
-<span id="cb2-14"><a></a><span class="fu">ls</span></span>
-<span id="cb2-15"><a></a><span class="op">&gt;</span> CASA  <span class="ex">Lectures</span>  Practicals ...</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a aria-label="1"></a><span class="bu">cd</span> /</span>
+<span id="cb2-2"><a aria-label="2"></a><span class="bu">pwd</span></span>
+<span id="cb2-3"><a aria-label="3"></a><span class="op">&gt;</span> /</span>
+<span id="cb2-4"><a aria-label="4"></a><span class="fu">ls</span></span>
+<span id="cb2-5"><a aria-label="5"></a><span class="op">&gt;</span> Applications  <span class="ex">Library</span>  System  Users Volumes ...</span>
+<span id="cb2-6"><a aria-label="6"></a><span class="bu">cd</span> <span class="va">$HOME</span></span>
+<span id="cb2-7"><a aria-label="7"></a><span class="bu">pwd</span></span>
+<span id="cb2-8"><a aria-label="8"></a><span class="op">&gt;</span> /Users/casa</span>
+<span id="cb2-9"><a aria-label="9"></a><span class="fu">ls</span></span>
+<span id="cb2-10"><a aria-label="10"></a><span class="op">&gt;</span> Applications  <span class="ex">Desktop</span>  Dropbox  ...</span>
+<span id="cb2-11"><a aria-label="11"></a><span class="bu">cd</span> Dropbox</span>
+<span id="cb2-12"><a aria-label="12"></a><span class="bu">pwd</span></span>
+<span id="cb2-13"><a aria-label="13"></a><span class="op">&gt;</span> /Users/casa/Dropbox</span>
+<span id="cb2-14"><a aria-label="14"></a><span class="fu">ls</span></span>
+<span id="cb2-15"><a aria-label="15"></a><span class="op">&gt;</span> CASA  <span class="ex">Lectures</span>  Practicals ...</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <aside class="notes">
 <p>Modern computers (especially if you’ve grown up around iPhones and Android phones/tablets) are really good at hiding this fact, but that’s because people using phones or tablets really don’t want to be thinking about <em>where</em> their data is being stored, they just want to click save. But when you start coding then you need to start caring a lot more about <em>where</em> something is happening.</p>
 <style type="text/css">
@@ -554,9 +564,9 @@
 </tbody>
 </table>
 <p>This also becomes relevant when you’re dealing with quotes:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a></a><span class="st">""</span><span class="ex">This</span> is a problem,<span class="st">" she said."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a aria-label="1"></a><span class="st">""</span><span class="ex">This</span> is a problem,<span class="st">" she said."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>vs.&nbsp;</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a></a><span class="st">"</span><span class="dt">\"</span><span class="st">This is a problem,</span><span class="dt">\"</span><span class="st"> she said."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb4"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a aria-label="1"></a><span class="st">"</span><span class="dt">\"</span><span class="st">This is a problem,</span><span class="dt">\"</span><span class="st"> she said."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <aside class="notes">
 <p>The carriage return is only ever encountered on files that have been opened on Windows machines.</p>
 <style type="text/css">
@@ -599,13 +609,13 @@
 </tr>
 </tbody>
 </table>
-<aside><ol class="aside-footnotes"><li id="fn2"><p>This can also be done using ‘switches’ passed to gzip: <code>gzip -cd</code> (where <code>-d</code> means ‘decompress’).</p></li></ol></aside></section>
+<aside role="note" aria-label="Footnotes"><ol class="aside-footnotes"><li id="fn2"><p>This can also be done using ‘switches’ passed to gzip: <code>gzip -cd</code> (where <code>-d</code> means ‘decompress’).</p></li></ol></aside></section>
 <section id="chaining-commands" class="slide level2">
 <h2>Chaining Commands</h2>
 <p>The CLI becomes much useful with command chaining:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a></a><span class="fu">gzip</span> <span class="at">-cd</span> very_lg_file.txt.gz <span class="kw">|</span> </span>
-<span id="cb5-2"><a></a>  <span class="fu">head</span> <span class="at">-n</span> 500 <span class="kw">|</span> </span>
-<span id="cb5-3"><a></a>  <span class="fu">grep</span> <span class="st">"pattern"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb5"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a aria-label="1"></a><span class="fu">gzip</span> <span class="at">-cd</span> very_lg_file.txt.gz <span class="kw">|</span> </span>
+<span id="cb5-2"><a aria-label="2"></a>  <span class="fu">head</span> <span class="at">-n</span> 500 <span class="kw">|</span> </span>
+<span id="cb5-3"><a aria-label="3"></a>  <span class="fu">grep</span> <span class="st">"pattern"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The ‘pipe’ (<code>|</code>) takes output from command and ‘pipes’ (aka. passes) it to another.</p>
 <aside class="notes">
 <p>This will give you an ‘answer’ much, much, much faster than trying to open the whole file in, say, Excel, Numbers, or even Python.</p>
@@ -624,23 +634,23 @@
 <section id="redirecting-output" class="slide level2">
 <h2>Redirecting Output</h2>
 <p>We can redirect outputs <em>in to</em> new files with <code>&gt;</code>, and inputs <em>out of</em> existing files using <code>&lt;</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a></a><span class="fu">gzip</span> <span class="at">-cd</span> very_lg_file.txt.gz <span class="kw">|</span> </span>
-<span id="cb6-2"><a></a>  <span class="fu">head</span> <span class="at">-n</span> 500 <span class="kw">|</span> </span>
-<span id="cb6-3"><a></a>  <span class="fu">grep</span> <span class="st">"pattern"</span> <span class="op">&gt;</span> matches.txt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb6"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a aria-label="1"></a><span class="fu">gzip</span> <span class="at">-cd</span> very_lg_file.txt.gz <span class="kw">|</span> </span>
+<span id="cb6-2"><a aria-label="2"></a>  <span class="fu">head</span> <span class="at">-n</span> 500 <span class="kw">|</span> </span>
+<span id="cb6-3"><a aria-label="3"></a>  <span class="fu">grep</span> <span class="st">"pattern"</span> <span class="op">&gt;</span> matches.txt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>So the output from the previous commands goes into <code>matches.txt</code> as plain-text. The reverse <code>&lt;</code> is only used in very special circumstances so you probably won’t encounter it very often.</p>
 </section>
 <section id="practical-applications" class="slide level2">
 <h2>Practical Applications</h2>
 <p>Most developers will use one or more of these on a daily basis:</p>
-<p><a href="./img/log_parsing_cheat_sheet.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img data-src="./img/log_parsing_cheat_sheet.png"></a></p>
+<p><a href="./img/log_parsing_cheat_sheet.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img data-src="./img/log_parsing_cheat_sheet.png" alt="Cheat sheet of command-line tools for parsing log files, such as grep, awk, sed, sort and uniq"></a></p>
 </section>
 <section id="a-complex-example" class="slide level2 smaller">
 <h2>A (Complex) Example</h2>
 <p>I do <em>not</em> expect you to understand this, but I do want you to understand why this is important:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a></a><span class="ex">docker</span> run <span class="at">-v</span> conda:/home/jovyan/work <span class="at">--rm</span> <span class="va">${DOCKER_NM}</span> start.sh <span class="dt">\</span></span>
-<span id="cb7-2"><a></a>   conda env export <span class="at">-n</span> <span class="va">${ENV_NM}</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">'1d;$d'</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">'$d'</span> <span class="dt">\</span></span>
-<span id="cb7-3"><a></a>   <span class="kw">|</span> <span class="fu">perl</span> <span class="at">-p</span> <span class="at">-e</span> <span class="st">'s/^([^=]+=)([^=]+)=.+$/$1$2/m'</span> <span class="dt">\</span></span>
-<span id="cb7-4"><a></a>   <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-Ev</span> <span class="st">'\- _|cpp|backports|\- lib|\- tk|\- xorg'</span> <span class="op">&gt;</span> conda/environment_py.yml</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb7"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a aria-label="1"></a><span class="ex">docker</span> run <span class="at">-v</span> conda:/home/jovyan/work <span class="at">--rm</span> <span class="va">${DOCKER_NM}</span> start.sh <span class="dt">\</span></span>
+<span id="cb7-2"><a aria-label="2"></a>   conda env export <span class="at">-n</span> <span class="va">${ENV_NM}</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">'1d;$d'</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">'$d'</span> <span class="dt">\</span></span>
+<span id="cb7-3"><a aria-label="3"></a>   <span class="kw">|</span> <span class="fu">perl</span> <span class="at">-p</span> <span class="at">-e</span> <span class="st">'s/^([^=]+=)([^=]+)=.+$/$1$2/m'</span> <span class="dt">\</span></span>
+<span id="cb7-4"><a aria-label="4"></a>   <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-Ev</span> <span class="st">'\- _|cpp|backports|\- lib|\- tk|\- xorg'</span> <span class="op">&gt;</span> conda/environment_py.yml</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <aside class="notes">
 <p>This is how I generated the YAML file used by Anaconda Python installers: it is running a command on a virtual machine, collecting the output, filtering out lines by both row number and textual pattern, and directing this all in the <code>environment_py.yml</code> file. This can be run as part of my ‘build’ of the programming environment. It’s <em>all</em> automated!</p>
 <style type="text/css">
@@ -699,9 +709,9 @@ References
 
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
-<p><img src="../img/logo/full.svg" class="slide-logo"></p>
+<p><img src="../img/logo/full.svg" class="slide-logo" alt=""></p>
 <div class="footer footer-default">
-<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2025 | Jon Reades</a></p>
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2026 | Jon Reades</a></p>
 </div>
 </div></div>
 

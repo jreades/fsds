@@ -7,21 +7,31 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-da61f9a05e9cefe097d79e8430a73dd4.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.8.24">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-aced932c6eb97d642153b8e218288f9f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/quarto-axe/axe.min.js"></script>
+<script src="../site_libs/quarto-axe/axe-check.js" type="module"></script>
+<script id="quarto-axe-checker-options" type="text/plain">eyJvdXRwdXQiOiJkb2N1bWVudCJ9</script>
+<link href="../site_libs/reveal-theme/reveal-theme-6ec7a94939c7281a5ee2e5382b76028b.min.css" rel="stylesheet" append-hash="true" data-mode="light"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.10.18">
 
   <meta name="author" content="Jon Reades">
   <title>Foundations of Spatial Data Science – Functions</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
   <style>
-    code{white-space: pre-wrap;}
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
@@ -95,7 +105,7 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-b6d6ca89e0c39dcc6c0c87d5e30c596f.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-d945b4c252f9130eae0c493518ea35dc.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -189,7 +199,7 @@
   </style>
 <meta property="og:title" content="Functions – Foundations of Spatial Data Science">
 <meta property="og:image" content="img/logo/full_sm.png">
-<meta property="og:site_name" content="Foundations">
+<meta property="og:site_name" content="Foundations of Spatial Data Science">
 <meta property="og:locale" content="en_GB">
 </head>
 <body class="quarto-light">
@@ -207,7 +217,7 @@
 
 <p><span style="margin:0px; font-weight:700;" class="author">Jon Reades</span> - j.reades@ucl.ac.uk </p>
 
-<p style="opacity: 0.8">1st October 2025</p>
+<p style="opacity: 0.8">25th September 2026</p>
 
 <p style="opacity:0.8;"></p>
 
@@ -259,34 +269,34 @@
 <section id="so-what-does-a-function-look-like" class="slide level2">
 <h2>So What Does a Function Look like?</h2>
 <p>All function ‘calls’ looking something like this:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a>function_name(...)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a aria-label="1"></a>function_name(...)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Where the ‘<code>...</code>’ are the inputs to the function; it could be one variable, 25 variables, a list, even another function!</p>
 <p>And if the function ‘returns’ something it will look like this:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>return_data <span class="op">=</span> function_name(...)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a aria-label="1"></a>return_data <span class="op">=</span> function_name(...)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section class="slide level2">
 
 <div class="columns">
 <div class="column" style="width:50%;">
 <h3 id="as-code">As Code</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>data <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">25</span>,<span class="op">-</span><span class="dv">4</span>,<span class="dv">14</span>,<span class="dv">7</span>,<span class="dv">9</span>]</span>
-<span id="cb3-2"><a></a>total <span class="op">=</span> <span class="fl">0.0</span></span>
-<span id="cb3-3"><a></a>count <span class="op">=</span> <span class="bu">len</span>(data)</span>
-<span id="cb3-4"><a></a><span class="cf">for</span> i <span class="kw">in</span> data:</span>
-<span id="cb3-5"><a></a>&nbsp; total <span class="op">+=</span> i</span>
-<span id="cb3-6"><a></a></span>
-<span id="cb3-7"><a></a><span class="bu">print</span>(total<span class="op">/</span>count)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a aria-label="1"></a>data <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">25</span>,<span class="op">-</span><span class="dv">4</span>,<span class="dv">14</span>,<span class="dv">7</span>,<span class="dv">9</span>]</span>
+<span id="cb3-2"><a aria-label="2"></a>total <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb3-3"><a aria-label="3"></a>count <span class="op">=</span> <span class="bu">len</span>(data)</span>
+<span id="cb3-4"><a aria-label="4"></a><span class="cf">for</span> i <span class="kw">in</span> data:</span>
+<span id="cb3-5"><a aria-label="5"></a>&nbsp; total <span class="op">+=</span> i</span>
+<span id="cb3-6"><a aria-label="6"></a></span>
+<span id="cb3-7"><a aria-label="7"></a><span class="bu">print</span>(total<span class="op">/</span>count)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column" style="width:50%;">
 <h3 id="as-function">As Function</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="kw">def</span> calc_mean(numbers):</span>
-<span id="cb4-2"><a></a>  total <span class="op">=</span> <span class="fl">0.0</span></span>
-<span id="cb4-3"><a></a>  count <span class="op">=</span> <span class="bu">len</span>(numbers)</span>
-<span id="cb4-4"><a></a>  <span class="cf">for</span> i <span class="kw">in</span> numbers:</span>
-<span id="cb4-5"><a></a>    total <span class="op">+=</span> i</span>
-<span id="cb4-6"><a></a>  <span class="cf">return</span> total<span class="op">/</span>count</span>
-<span id="cb4-7"><a></a></span>
-<span id="cb4-8"><a></a>data <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">25</span>,<span class="op">-</span><span class="dv">4</span>,<span class="dv">14</span>,<span class="dv">7</span>,<span class="dv">9</span>]</span>
-<span id="cb4-9"><a></a><span class="bu">print</span>(calc_mean(data))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a aria-label="1"></a><span class="kw">def</span> calc_mean(numbers):</span>
+<span id="cb4-2"><a aria-label="2"></a>  total <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb4-3"><a aria-label="3"></a>  count <span class="op">=</span> <span class="bu">len</span>(numbers)</span>
+<span id="cb4-4"><a aria-label="4"></a>  <span class="cf">for</span> i <span class="kw">in</span> numbers:</span>
+<span id="cb4-5"><a aria-label="5"></a>    total <span class="op">+=</span> i</span>
+<span id="cb4-6"><a aria-label="6"></a>  <span class="cf">return</span> total<span class="op">/</span>count</span>
+<span id="cb4-7"><a aria-label="7"></a></span>
+<span id="cb4-8"><a aria-label="8"></a>data <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">25</span>,<span class="op">-</span><span class="dv">4</span>,<span class="dv">14</span>,<span class="dv">7</span>,<span class="dv">9</span>]</span>
+<span id="cb4-9"><a aria-label="9"></a><span class="bu">print</span>(calc_mean(data))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
 <aside class="notes">
 <p>The advantage of the function is that I can keep sending new lists to <code>calc_mean</code> without writing <em>any</em> new code. Whereas the other approach requires me to copy+paste repeatedly.</p>
@@ -305,36 +315,36 @@
 </section>
 <section id="in-action" class="slide level2 smaller">
 <h2>In Action!</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="kw">def</span> calc_mean(numbers):</span>
-<span id="cb5-2"><a></a>&nbsp; total <span class="op">=</span> <span class="fl">0.0</span></span>
-<span id="cb5-3"><a></a>  count <span class="op">=</span> <span class="bu">len</span>(numbers)</span>
-<span id="cb5-4"><a></a>&nbsp; <span class="cf">for</span> i <span class="kw">in</span> numbers:</span>
-<span id="cb5-5"><a></a>&nbsp;   total <span class="op">+=</span> i</span>
-<span id="cb5-6"><a></a>&nbsp; <span class="cf">return</span> total<span class="op">/</span>count</span>
-<span id="cb5-7"><a></a></span>
-<span id="cb5-8"><a></a>data <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">25</span>,<span class="op">-</span><span class="dv">4</span>,<span class="dv">14</span>,<span class="dv">7</span>,<span class="dv">9</span>]</span>
-<span id="cb5-9"><a></a><span class="bu">print</span>(calc_mean(data)) <span class="co"># 8.666666666666666</span></span>
-<span id="cb5-10"><a></a>data2 <span class="op">=</span> [<span class="dv">200000</span>,<span class="dv">2500000</span>,<span class="op">-</span><span class="dv">4</span>,<span class="dv">1400000</span>,<span class="dv">70</span>,<span class="dv">900000</span>]</span>
-<span id="cb5-11"><a></a><span class="bu">print</span>(calc_mean(data2)) <span class="co"># 833344.3333333334</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a aria-label="1"></a><span class="kw">def</span> calc_mean(numbers):</span>
+<span id="cb5-2"><a aria-label="2"></a>&nbsp; total <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb5-3"><a aria-label="3"></a>  count <span class="op">=</span> <span class="bu">len</span>(numbers)</span>
+<span id="cb5-4"><a aria-label="4"></a>&nbsp; <span class="cf">for</span> i <span class="kw">in</span> numbers:</span>
+<span id="cb5-5"><a aria-label="5"></a>&nbsp;   total <span class="op">+=</span> i</span>
+<span id="cb5-6"><a aria-label="6"></a>&nbsp; <span class="cf">return</span> total<span class="op">/</span>count</span>
+<span id="cb5-7"><a aria-label="7"></a></span>
+<span id="cb5-8"><a aria-label="8"></a>data <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">25</span>,<span class="op">-</span><span class="dv">4</span>,<span class="dv">14</span>,<span class="dv">7</span>,<span class="dv">9</span>]</span>
+<span id="cb5-9"><a aria-label="9"></a><span class="bu">print</span>(calc_mean(data)) <span class="co"># 8.666666666666666</span></span>
+<span id="cb5-10"><a aria-label="10"></a>data2 <span class="op">=</span> [<span class="dv">200000</span>,<span class="dv">2500000</span>,<span class="op">-</span><span class="dv">4</span>,<span class="dv">1400000</span>,<span class="dv">70</span>,<span class="dv">900000</span>]</span>
+<span id="cb5-11"><a aria-label="11"></a><span class="bu">print</span>(calc_mean(data2)) <span class="co"># 833344.3333333334</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="but-notice" class="slide level2 smaller">
 <h2>But Notice!</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a>data    <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">25</span>,<span class="op">-</span><span class="dv">4</span>,<span class="dv">14</span>,<span class="dv">7</span>,<span class="dv">9</span>]</span>
-<span id="cb6-2"><a></a>total   <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb6-3"><a></a>numbers <span class="op">=</span> []</span>
-<span id="cb6-4"><a></a></span>
-<span id="cb6-5"><a></a><span class="kw">def</span> calc_mean(numbers):</span>
-<span id="cb6-6"><a></a>&nbsp; total <span class="op">=</span> <span class="fl">0.0</span></span>
-<span id="cb6-7"><a></a>  count <span class="op">=</span> <span class="bu">len</span>(numbers)</span>
-<span id="cb6-8"><a></a>&nbsp; <span class="cf">for</span> i <span class="kw">in</span> numbers:</span>
-<span id="cb6-9"><a></a>&nbsp;   total <span class="op">+=</span> i</span>
-<span id="cb6-10"><a></a>&nbsp; <span class="cf">return</span> total<span class="op">/</span>count</span>
-<span id="cb6-11"><a></a></span>
-<span id="cb6-12"><a></a><span class="bu">print</span>(calc_mean(data))</span>
-<span id="cb6-13"><a></a></span>
-<span id="cb6-14"><a></a><span class="co"># Why haven't these changed????</span></span>
-<span id="cb6-15"><a></a><span class="bu">print</span>(total)</span>
-<span id="cb6-16"><a></a><span class="bu">print</span>(numbers)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a aria-label="1"></a>data    <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">25</span>,<span class="op">-</span><span class="dv">4</span>,<span class="dv">14</span>,<span class="dv">7</span>,<span class="dv">9</span>]</span>
+<span id="cb6-2"><a aria-label="2"></a>total   <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb6-3"><a aria-label="3"></a>numbers <span class="op">=</span> []</span>
+<span id="cb6-4"><a aria-label="4"></a></span>
+<span id="cb6-5"><a aria-label="5"></a><span class="kw">def</span> calc_mean(numbers):</span>
+<span id="cb6-6"><a aria-label="6"></a>&nbsp; total <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb6-7"><a aria-label="7"></a>  count <span class="op">=</span> <span class="bu">len</span>(numbers)</span>
+<span id="cb6-8"><a aria-label="8"></a>&nbsp; <span class="cf">for</span> i <span class="kw">in</span> numbers:</span>
+<span id="cb6-9"><a aria-label="9"></a>&nbsp;   total <span class="op">+=</span> i</span>
+<span id="cb6-10"><a aria-label="10"></a>&nbsp; <span class="cf">return</span> total<span class="op">/</span>count</span>
+<span id="cb6-11"><a aria-label="11"></a></span>
+<span id="cb6-12"><a aria-label="12"></a><span class="bu">print</span>(calc_mean(data))</span>
+<span id="cb6-13"><a aria-label="13"></a></span>
+<span id="cb6-14"><a aria-label="14"></a><span class="co"># Why haven't these changed????</span></span>
+<span id="cb6-15"><a aria-label="15"></a><span class="bu">print</span>(total)</span>
+<span id="cb6-16"><a aria-label="16"></a><span class="bu">print</span>(numbers)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <aside class="notes">
 <p>Functions <em>encapsulate</em> information: the <code>total</code> and <code>numbers</code> used within the function are <em>different</em> from the variables with the <em>same name</em> that we created outside the function. When we get to libraries and packages you’ll understand why, but the key concept here is ‘namespace’ and that these variables might have the same <em>name</em> but they sit in different <em>namespaces</em>.</p>
 <style type="text/css">
@@ -352,61 +362,61 @@
 <section id="simple-function" class="slide level2">
 <h2>Simple Function</h2>
 <p>By ‘simple’ I don’t mean <em>easy</em>, I mean it does <em>one</em> thing only:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="kw">def</span> hello():</span>
-<span id="cb7-2"><a></a>  <span class="bu">print</span>(<span class="st">"Hello world!"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a aria-label="1"></a><span class="kw">def</span> hello():</span>
+<span id="cb7-2"><a aria-label="2"></a>  <span class="bu">print</span>(<span class="st">"Hello world!"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>We then run it with:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a>hello()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a aria-label="1"></a>hello()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>And that produces:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>Hello world<span class="op">!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a aria-label="1"></a>Hello world<span class="op">!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="passing-in-information" class="slide level2">
 <h2>Passing in Information</h2>
 <p>We can pass information <em>to</em> a function if we tell the function what to expect:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a><span class="kw">def</span> hello(name:<span class="bu">str</span>):</span>
-<span id="cb10-2"><a></a>  <span class="bu">print</span>(<span class="ss">f"Hello </span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">!"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a aria-label="1"></a><span class="kw">def</span> hello(name:<span class="bu">str</span>):</span>
+<span id="cb10-2"><a aria-label="2"></a>  <span class="bu">print</span>(<span class="ss">f"Hello </span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">!"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Now we can do this:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a>hello(<span class="st">"new programmers"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a aria-label="1"></a>hello(<span class="st">"new programmers"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>And that produces:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>Hello new programmers<span class="op">!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a aria-label="1"></a>Hello new programmers<span class="op">!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="getting-information-out" class="slide level2">
 <h2>Getting Information Out</h2>
 <p>We can also get information <em>out</em> of them!</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a><span class="kw">def</span> hello(name:<span class="bu">str</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:</span>
-<span id="cb13-2"><a></a>  <span class="cf">return</span> <span class="ss">f"Hello </span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">!"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a aria-label="1"></a><span class="kw">def</span> hello(name:<span class="bu">str</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:</span>
+<span id="cb13-2"><a aria-label="2"></a>  <span class="cf">return</span> <span class="ss">f"Hello </span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">!"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Now we can do this:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a>output <span class="op">=</span> hello(<span class="st">"new programmers"</span>)</span>
-<span id="cb14-2"><a></a><span class="bu">print</span>(output.title())</span>
-<span id="cb14-3"><a></a><span class="co"># Same as: print(hello("new programmers").title())</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a aria-label="1"></a>output <span class="op">=</span> hello(<span class="st">"new programmers"</span>)</span>
+<span id="cb14-2"><a aria-label="2"></a><span class="bu">print</span>(output.title())</span>
+<span id="cb14-3"><a aria-label="3"></a><span class="co"># Same as: print(hello("new programmers").title())</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>And this produces:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a><span class="co">'Hello New Programmers!'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a aria-label="1"></a><span class="co">'Hello New Programmers!'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="writing-a-function" class="slide level2 smaller">
 <h2>Writing a Function</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a></a><span class="kw">def</span> <span class="op">&lt;</span>function_name<span class="op">&gt;</span>(<span class="op">&lt;</span>var_name<span class="op">&gt;</span>: <span class="op">&lt;</span>var_type<span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="op">&lt;</span>var_type<span class="op">&gt;</span>:</span>
-<span id="cb16-2"><a></a>  ...</span>
-<span id="cb16-3"><a></a>  <span class="cf">return</span> <span class="op">&lt;</span>var<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a aria-label="1"></a><span class="kw">def</span> <span class="op">&lt;</span>function_name<span class="op">&gt;</span>(<span class="op">&lt;</span>var_name<span class="op">&gt;</span>: <span class="op">&lt;</span>var_type<span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="op">&lt;</span>var_type<span class="op">&gt;</span>:</span>
+<span id="cb16-2"><a aria-label="2"></a>  ...</span>
+<span id="cb16-3"><a aria-label="3"></a>  <span class="cf">return</span> <span class="op">&lt;</span>var<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This can also be written:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a></a><span class="kw">def</span> <span class="op">&lt;</span>function_name<span class="op">&gt;</span>(<span class="op">&lt;</span>var_name<span class="op">&gt;</span>):</span>
-<span id="cb17-2"><a></a>  ...</span>
-<span id="cb17-3"><a></a>  <span class="cf">return</span> <span class="op">&lt;</span>var<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a aria-label="1"></a><span class="kw">def</span> <span class="op">&lt;</span>function_name<span class="op">&gt;</span>(<span class="op">&lt;</span>var_name<span class="op">&gt;</span>):</span>
+<span id="cb17-2"><a aria-label="2"></a>  ...</span>
+<span id="cb17-3"><a aria-label="3"></a>  <span class="cf">return</span> <span class="op">&lt;</span>var<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Python is ‘friendly’ in the sense that all of the <code>&lt;var_type&gt;</code> information is optional, but it will help you (and Python) to know what you were <em>expecting</em> to see happen.</p>
 </section>
 <section id="complicating-things" class="slide level2 smaller">
 <h2>Complicating Things…</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a></a>ds2 <span class="op">=</span> {</span>
-<span id="cb18-2"><a></a>  <span class="st">'lat'</span>:[<span class="fl">51.51</span>,<span class="fl">40.71</span>,<span class="fl">35.69</span>],</span>
-<span id="cb18-3"><a></a>  <span class="st">'lon'</span>:[<span class="fl">0.13</span>,<span class="fl">74.01</span>,<span class="fl">139.68</span>],</span>
-<span id="cb18-4"><a></a>  <span class="st">'tz'</span>: [<span class="op">+</span><span class="dv">0</span>,<span class="op">-</span><span class="dv">5</span>,<span class="op">+</span><span class="dv">8</span>],</span>
-<span id="cb18-5"><a></a>  <span class="st">'name'</span>:[<span class="st">'London'</span>,<span class="st">'New York'</span>,<span class="st">'Tokyo'</span>]</span>
-<span id="cb18-6"><a></a>}</span>
-<span id="cb18-7"><a></a></span>
-<span id="cb18-8"><a></a><span class="kw">def</span> get_city_info(city:<span class="bu">str</span>, field:<span class="bu">str</span>, city_lookup:<span class="bu">str</span><span class="op">=</span><span class="st">'name'</span>, data:<span class="bu">dict</span><span class="op">=</span>ds2) <span class="op">-&gt;</span> <span class="bu">str</span>:</span>
-<span id="cb18-9"><a></a>  <span class="cf">return</span> <span class="bu">str</span>(data[field][ data[city_lookup].index(city) ])</span>
-<span id="cb18-10"><a></a></span>
-<span id="cb18-11"><a></a>city <span class="op">=</span> <span class="st">'New York'</span></span>
-<span id="cb18-12"><a></a><span class="bu">print</span>(<span class="ss">f"The latitude of </span><span class="sc">{</span>city<span class="sc">}</span><span class="ss"> is </span><span class="sc">{</span>get_city_info(city,<span class="st">'lat'</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb18-13"><a></a><span class="co"># The latitude of New York is 40.71</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a aria-label="1"></a>ds2 <span class="op">=</span> {</span>
+<span id="cb18-2"><a aria-label="2"></a>  <span class="st">'lat'</span>:[<span class="fl">51.51</span>,<span class="fl">40.71</span>,<span class="fl">35.69</span>],</span>
+<span id="cb18-3"><a aria-label="3"></a>  <span class="st">'lon'</span>:[<span class="fl">0.13</span>,<span class="fl">74.01</span>,<span class="fl">139.68</span>],</span>
+<span id="cb18-4"><a aria-label="4"></a>  <span class="st">'tz'</span>: [<span class="op">+</span><span class="dv">0</span>,<span class="op">-</span><span class="dv">5</span>,<span class="op">+</span><span class="dv">8</span>],</span>
+<span id="cb18-5"><a aria-label="5"></a>  <span class="st">'name'</span>:[<span class="st">'London'</span>,<span class="st">'New York'</span>,<span class="st">'Tokyo'</span>]</span>
+<span id="cb18-6"><a aria-label="6"></a>}</span>
+<span id="cb18-7"><a aria-label="7"></a></span>
+<span id="cb18-8"><a aria-label="8"></a><span class="kw">def</span> get_city_info(city:<span class="bu">str</span>, field:<span class="bu">str</span>, city_lookup:<span class="bu">str</span><span class="op">=</span><span class="st">'name'</span>, data:<span class="bu">dict</span><span class="op">=</span>ds2) <span class="op">-&gt;</span> <span class="bu">str</span>:</span>
+<span id="cb18-9"><a aria-label="9"></a>  <span class="cf">return</span> <span class="bu">str</span>(data[field][ data[city_lookup].index(city) ])</span>
+<span id="cb18-10"><a aria-label="10"></a></span>
+<span id="cb18-11"><a aria-label="11"></a>city <span class="op">=</span> <span class="st">'New York'</span></span>
+<span id="cb18-12"><a aria-label="12"></a><span class="bu">print</span>(<span class="ss">f"The latitude of </span><span class="sc">{</span>city<span class="sc">}</span><span class="ss"> is </span><span class="sc">{</span>get_city_info(city,<span class="st">'lat'</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb18-13"><a aria-label="13"></a><span class="co"># The latitude of New York is 40.71</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section></section>
 <section>
 <section id="any-time-you-type-the-same-code-more-than-twice-consider-a-function" class="title-slide slide level1 center">
@@ -447,9 +457,9 @@ References
 </section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
-<p><img src="../img/logo/full.svg" class="slide-logo"></p>
+<p><img src="../img/logo/full.svg" class="slide-logo" alt=""></p>
 <div class="footer footer-default">
-<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2025 | Jon Reades</a></p>
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2026 | Jon Reades</a></p>
 </div>
 </div></div>
 

@@ -7,21 +7,31 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-da61f9a05e9cefe097d79e8430a73dd4.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.8.24">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-aced932c6eb97d642153b8e218288f9f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/quarto-axe/axe.min.js"></script>
+<script src="../site_libs/quarto-axe/axe-check.js" type="module"></script>
+<script id="quarto-axe-checker-options" type="text/plain">eyJvdXRwdXQiOiJkb2N1bWVudCJ9</script>
+<link href="../site_libs/reveal-theme/reveal-theme-6ec7a94939c7281a5ee2e5382b76028b.min.css" rel="stylesheet" append-hash="true" data-mode="light"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.10.18">
 
   <meta name="author" content="Jon Reades">
   <title>Foundations of Spatial Data Science – Dictionaries</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
   <style>
-    code{white-space: pre-wrap;}
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
@@ -95,7 +105,7 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-b6d6ca89e0c39dcc6c0c87d5e30c596f.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-d945b4c252f9130eae0c493518ea35dc.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -189,7 +199,7 @@
   </style>
 <meta property="og:title" content="Dictionaries – Foundations of Spatial Data Science">
 <meta property="og:image" content="img/logo/full_sm.png">
-<meta property="og:site_name" content="Foundations">
+<meta property="og:site_name" content="Foundations of Spatial Data Science">
 <meta property="og:locale" content="en_GB">
 </head>
 <body class="quarto-light">
@@ -207,7 +217,7 @@
 
 <p><span style="margin:0px; font-weight:700;" class="author">Jon Reades</span> - j.reades@ucl.ac.uk </p>
 
-<p style="opacity: 0.8">1st October 2025</p>
+<p style="opacity: 0.8">25th September 2026</p>
 
 <p style="opacity:0.8;"></p>
 
@@ -232,15 +242,15 @@
 <section id="so-key---value" class="slide level2">
 <h2>So: Key -&gt; Value</h2>
 <p>The key can be <em>almost</em> anything that is <em>immutable</em> (aka. hashable). So these are all ‘legit’:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a>lookup[<span class="dv">1</span>]             <span class="co"># Int</span></span>
-<span id="cb1-2"><a></a>lookup(<span class="fl">52.1</span>)          <span class="co"># Float</span></span>
-<span id="cb1-3"><a></a>lookup[<span class="st">'1'</span>]           <span class="co"># String</span></span>
-<span id="cb1-4"><a></a>lookup[<span class="st">'Jon Reades'</span>]  <span class="co"># String</span></span>
-<span id="cb1-5"><a></a>k <span class="op">=</span> <span class="st">'Jon Reades'</span></span>
-<span id="cb1-6"><a></a>lookup[k]             <span class="co"># String variable</span></span>
-<span id="cb1-7"><a></a>lookup[(<span class="fl">52.1</span>, <span class="op">-</span><span class="fl">0.04</span>)] <span class="co"># Tuple</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a aria-label="1"></a>lookup[<span class="dv">1</span>]             <span class="co"># Int</span></span>
+<span id="cb1-2"><a aria-label="2"></a>lookup(<span class="fl">52.1</span>)          <span class="co"># Float</span></span>
+<span id="cb1-3"><a aria-label="3"></a>lookup[<span class="st">'1'</span>]           <span class="co"># String</span></span>
+<span id="cb1-4"><a aria-label="4"></a>lookup[<span class="st">'Jon Reades'</span>]  <span class="co"># String</span></span>
+<span id="cb1-5"><a aria-label="5"></a>k <span class="op">=</span> <span class="st">'Jon Reades'</span></span>
+<span id="cb1-6"><a aria-label="6"></a>lookup[k]             <span class="co"># String variable</span></span>
+<span id="cb1-7"><a aria-label="7"></a>lookup[(<span class="fl">52.1</span>, <span class="op">-</span><span class="fl">0.04</span>)] <span class="co"># Tuple</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>But this is not:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>lookup[[<span class="st">'Jon'</span>,<span class="st">'Reades'</span>]] <span class="co"># Error, unhashable type</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a aria-label="1"></a>lookup[[<span class="st">'Jon'</span>,<span class="st">'Reades'</span>]] <span class="co"># Error, unhashable type</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>That’s because a list is <em>not</em> immutable.</p>
 <aside class="notes">
 <p>Again, just like a real dictionary: you don’t have multiple entries for ‘dog’, otherwise the dictionary wouldn’t <em>work</em>. You might have multiple definitions: which is to say, the key might return multiple values.</p>
@@ -262,30 +272,30 @@
 <div class="columns">
 <div class="column" style="width:43%;">
 <h3 id="list">List</h3>
-<div id="af82816b" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>cities <span class="op">=</span> [</span>
-<span id="cb3-2"><a></a>  <span class="st">'San Francisco'</span>,</span>
-<span id="cb3-3"><a></a>  <span class="st">'London'</span>,</span>
-<span id="cb3-4"><a></a>  <span class="st">'Paris'</span>,</span>
-<span id="cb3-5"><a></a>  <span class="st">'Beijing'</span>]</span>
-<span id="cb3-6"><a></a>  </span>
-<span id="cb3-7"><a></a><span class="co"># Prints London</span></span>
-<span id="cb3-8"><a></a><span class="bu">print</span>(cities[<span class="dv">2</span>]) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="51c0162b" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a aria-label="1"></a>cities <span class="op">=</span> [</span>
+<span id="cb3-2"><a aria-label="2"></a>  <span class="st">'San Francisco'</span>,</span>
+<span id="cb3-3"><a aria-label="3"></a>  <span class="st">'London'</span>,</span>
+<span id="cb3-4"><a aria-label="4"></a>  <span class="st">'Paris'</span>,</span>
+<span id="cb3-5"><a aria-label="5"></a>  <span class="st">'Beijing'</span>]</span>
+<span id="cb3-6"><a aria-label="6"></a>  </span>
+<span id="cb3-7"><a aria-label="7"></a><span class="co"># Prints London</span></span>
+<span id="cb3-8"><a aria-label="8"></a><span class="bu">print</span>(cities[<span class="dv">2</span>]) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Paris</code></pre>
 </div>
 </div>
 </div><div class="column" style="width:57%;">
 <h3 id="dict">Dict</h3>
-<div id="4192bcb9" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>cities <span class="op">=</span> {</span>
-<span id="cb5-2"><a></a>  <span class="st">'San Francisco'</span>: <span class="dv">837442</span>,</span>
-<span id="cb5-3"><a></a>  <span class="st">'London'</span>: <span class="dv">8673713</span>,</span>
-<span id="cb5-4"><a></a>  <span class="st">'Paris'</span>: <span class="dv">837442</span>,</span>
-<span id="cb5-5"><a></a>  <span class="st">'Beijing'</span>: <span class="dv">21716620</span>}</span>
-<span id="cb5-6"><a></a></span>
-<span id="cb5-7"><a></a><span class="co"># Prints pop of London</span></span>
-<span id="cb5-8"><a></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>cities[<span class="st">'London'</span>]<span class="sc">:,.0f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="d94a9927" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a aria-label="1"></a>cities <span class="op">=</span> {</span>
+<span id="cb5-2"><a aria-label="2"></a>  <span class="st">'San Francisco'</span>: <span class="dv">837442</span>,</span>
+<span id="cb5-3"><a aria-label="3"></a>  <span class="st">'London'</span>: <span class="dv">8673713</span>,</span>
+<span id="cb5-4"><a aria-label="4"></a>  <span class="st">'Paris'</span>: <span class="dv">837442</span>,</span>
+<span id="cb5-5"><a aria-label="5"></a>  <span class="st">'Beijing'</span>: <span class="dv">21716620</span>}</span>
+<span id="cb5-6"><a aria-label="6"></a></span>
+<span id="cb5-7"><a aria-label="7"></a><span class="co"># Prints pop of London</span></span>
+<span id="cb5-8"><a aria-label="8"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>cities[<span class="st">'London'</span>]<span class="sc">:,.0f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>8,673,713</code></pre>
 </div>
@@ -381,15 +391,15 @@
 <li><code>cities.get('Beijing')</code></li>
 </ol>
 <p>Why have two? Consider:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>cities <span class="op">=</span> {</span>
-<span id="cb7-2"><a></a>  <span class="st">'San Francisco'</span>: <span class="dv">837442</span>,</span>
-<span id="cb7-3"><a></a>  <span class="st">'London'</span>: <span class="dv">8673713</span>,</span>
-<span id="cb7-4"><a></a>  <span class="st">'Paris'</span>: <span class="dv">2229621</span>,</span>
-<span id="cb7-5"><a></a>  <span class="st">'Beijing'</span>: <span class="dv">21716620</span>}</span>
-<span id="cb7-6"><a></a></span>
-<span id="cb7-7"><a></a><span class="bu">print</span>(cities[<span class="st">'Sao Paulo'</span>])     <span class="co"># Throws KeyError</span></span>
-<span id="cb7-8"><a></a><span class="bu">print</span>(cities.get(<span class="st">'Sao Paulo'</span>)) <span class="co"># Returns None</span></span>
-<span id="cb7-9"><a></a><span class="bu">print</span>(cities.get(<span class="st">'Sao Paulo'</span>,<span class="st">'No Data'</span>)) <span class="co"># Returns 'No Data'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a aria-label="1"></a>cities <span class="op">=</span> {</span>
+<span id="cb7-2"><a aria-label="2"></a>  <span class="st">'San Francisco'</span>: <span class="dv">837442</span>,</span>
+<span id="cb7-3"><a aria-label="3"></a>  <span class="st">'London'</span>: <span class="dv">8673713</span>,</span>
+<span id="cb7-4"><a aria-label="4"></a>  <span class="st">'Paris'</span>: <span class="dv">2229621</span>,</span>
+<span id="cb7-5"><a aria-label="5"></a>  <span class="st">'Beijing'</span>: <span class="dv">21716620</span>}</span>
+<span id="cb7-6"><a aria-label="6"></a></span>
+<span id="cb7-7"><a aria-label="7"></a><span class="bu">print</span>(cities[<span class="st">'Sao Paulo'</span>])     <span class="co"># Throws KeyError</span></span>
+<span id="cb7-8"><a aria-label="8"></a><span class="bu">print</span>(cities.get(<span class="st">'Sao Paulo'</span>)) <span class="co"># Returns None</span></span>
+<span id="cb7-9"><a aria-label="9"></a><span class="bu">print</span>(cities.get(<span class="st">'Sao Paulo'</span>,<span class="st">'No Data'</span>)) <span class="co"># Returns 'No Data'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <aside class="notes">
 <p>The first triggers an <strong>error</strong>, the second returns <code>None</code>. Errors <em>can</em> be unfriendly: do you want your entire Python program to fail because a single city is missing, or would you rather than it did something a little more sensible such as… skipping the row or returning a sensible default?</p>
 <style type="text/css">
@@ -407,13 +417,13 @@
 <section id="getting-values-contd" class="slide level2">
 <h2>Getting Values (cont’d)</h2>
 <p>If we want to think about whether a value is <em>in</em> the dictionary (as opposed to just retrieving it) then notice these options:</p>
-<div id="bcf5d03e" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a>c <span class="op">=</span> cities.get(<span class="st">'Sao Paulo'</span>)</span>
-<span id="cb8-2"><a></a><span class="cf">if</span> <span class="kw">not</span> c:</span>
-<span id="cb8-3"><a></a>  <span class="bu">print</span>(<span class="st">"Sorry, no city by that name."</span>)</span>
-<span id="cb8-4"><a></a></span>
-<span id="cb8-5"><a></a><span class="cf">if</span> <span class="st">'Beijing'</span> <span class="kw">in</span> cities:</span>
-<span id="cb8-6"><a></a>  <span class="bu">print</span>(<span class="st">"Found Beijing!"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="52c72068" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a aria-label="1"></a>c <span class="op">=</span> cities.get(<span class="st">'Sao Paulo'</span>)</span>
+<span id="cb8-2"><a aria-label="2"></a><span class="cf">if</span> <span class="kw">not</span> c:</span>
+<span id="cb8-3"><a aria-label="3"></a>  <span class="bu">print</span>(<span class="st">"Sorry, no city by that name."</span>)</span>
+<span id="cb8-4"><a aria-label="4"></a></span>
+<span id="cb8-5"><a aria-label="5"></a><span class="cf">if</span> <span class="st">'Beijing'</span> <span class="kw">in</span> cities:</span>
+<span id="cb8-6"><a aria-label="6"></a>  <span class="bu">print</span>(<span class="st">"Found Beijing!"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Sorry, no city by that name.
 Found Beijing!</code></pre>
@@ -438,15 +448,15 @@ Found Beijing!</code></pre>
 <section id="setting-values" class="slide level2">
 <h2>Setting Values</h2>
 <p>It’s the same process to update an existing value or create a new one:</p>
-<div id="c8121fb3" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>cities2 <span class="op">=</span> {}  <span class="co"># Empty dictionary</span></span>
-<span id="cb10-2"><a></a>cities2[<span class="st">'Beijing'</span>] <span class="op">=</span> <span class="dv">21716620</span>    <span class="co"># Sets key-&gt;value</span></span>
-<span id="cb10-3"><a></a>cities2[<span class="st">'Toronto'</span>] <span class="op">=</span> <span class="dv">2930000</span>     <span class="co"># Sets key-&gt;value</span></span>
-<span id="cb10-4"><a></a></span>
-<span id="cb10-5"><a></a><span class="bu">print</span>(<span class="ss">f"Toronto population is </span><span class="sc">{</span>cities2[<span class="st">'Toronto'</span>]<span class="sc">:,}</span><span class="ss">"</span>)</span>
-<span id="cb10-6"><a></a><span class="kw">del</span> cities2[<span class="st">'Toronto'</span>]           <span class="co"># Deletes Toronto key (and value)</span></span>
-<span id="cb10-7"><a></a><span class="bu">print</span>(<span class="ss">f"Pop: </span><span class="sc">{</span>cities2<span class="sc">.</span>pop(<span class="st">'Toronto'</span>,<span class="st">'Default'</span>)<span class="sc">}</span><span class="ss">"</span>) </span>
-<span id="cb10-8"><a></a><span class="bu">print</span>(cities2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="e29e09c7" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a aria-label="1"></a>cities2 <span class="op">=</span> {}  <span class="co"># Empty dictionary</span></span>
+<span id="cb10-2"><a aria-label="2"></a>cities2[<span class="st">'Beijing'</span>] <span class="op">=</span> <span class="dv">21716620</span>    <span class="co"># Sets key-&gt;value</span></span>
+<span id="cb10-3"><a aria-label="3"></a>cities2[<span class="st">'Toronto'</span>] <span class="op">=</span> <span class="dv">2930000</span>     <span class="co"># Sets key-&gt;value</span></span>
+<span id="cb10-4"><a aria-label="4"></a></span>
+<span id="cb10-5"><a aria-label="5"></a><span class="bu">print</span>(<span class="ss">f"Toronto population is </span><span class="sc">{</span>cities2[<span class="st">'Toronto'</span>]<span class="sc">:,}</span><span class="ss">"</span>)</span>
+<span id="cb10-6"><a aria-label="6"></a><span class="kw">del</span> cities2[<span class="st">'Toronto'</span>]           <span class="co"># Deletes Toronto key (and value)</span></span>
+<span id="cb10-7"><a aria-label="7"></a><span class="bu">print</span>(<span class="ss">f"Pop: </span><span class="sc">{</span>cities2<span class="sc">.</span>pop(<span class="st">'Toronto'</span>,<span class="st">'Default'</span>)<span class="sc">}</span><span class="ss">"</span>) </span>
+<span id="cb10-8"><a aria-label="8"></a><span class="bu">print</span>(cities2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Toronto population is 2,930,000
 Pop: Default
@@ -457,15 +467,15 @@ Pop: Default
 <section id="iterating" class="slide level2">
 <h2>Iterating</h2>
 <p>Similar to iterating over lists but…</p>
-<div id="68b04aaf" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>cities <span class="op">=</span> {</span>
-<span id="cb12-2"><a></a>  <span class="st">'San Francisco'</span>: <span class="dv">837442</span>,</span>
-<span id="cb12-3"><a></a>  <span class="st">'London'</span>: <span class="dv">8673713</span>,</span>
-<span id="cb12-4"><a></a>  <span class="st">'Paris'</span>: <span class="dv">837442</span>,</span>
-<span id="cb12-5"><a></a>  <span class="st">'Beijing'</span>: <span class="dv">21716620</span>}</span>
-<span id="cb12-6"><a></a></span>
-<span id="cb12-7"><a></a><span class="cf">for</span> c <span class="kw">in</span> cities:</span>
-<span id="cb12-8"><a></a>  <span class="bu">print</span>(c)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="285fdae4" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a aria-label="1"></a>cities <span class="op">=</span> {</span>
+<span id="cb12-2"><a aria-label="2"></a>  <span class="st">'San Francisco'</span>: <span class="dv">837442</span>,</span>
+<span id="cb12-3"><a aria-label="3"></a>  <span class="st">'London'</span>: <span class="dv">8673713</span>,</span>
+<span id="cb12-4"><a aria-label="4"></a>  <span class="st">'Paris'</span>: <span class="dv">837442</span>,</span>
+<span id="cb12-5"><a aria-label="5"></a>  <span class="st">'Beijing'</span>: <span class="dv">21716620</span>}</span>
+<span id="cb12-6"><a aria-label="6"></a></span>
+<span id="cb12-7"><a aria-label="7"></a><span class="cf">for</span> c <span class="kw">in</span> cities:</span>
+<span id="cb12-8"><a aria-label="8"></a>  <span class="bu">print</span>(c)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>San Francisco
 London
@@ -493,9 +503,9 @@ Beijing</code></pre>
 <div class="columns">
 <div class="column" style="width:33%;">
 <h3 id="keys">Keys</h3>
-<div id="249a6aee" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a><span class="cf">for</span> k <span class="kw">in</span> cities.keys():</span>
-<span id="cb14-2"><a></a>  <span class="bu">print</span>(k)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="96ca44a0" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a aria-label="1"></a><span class="cf">for</span> k <span class="kw">in</span> cities.keys():</span>
+<span id="cb14-2"><a aria-label="2"></a>  <span class="bu">print</span>(k)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>San Francisco
 London
@@ -505,9 +515,9 @@ Beijing</code></pre>
 </div>
 </div><div class="column" style="width:33%;">
 <h3 id="values">Values</h3>
-<div id="1d48e1b8" class="cell" data-execution_count="7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a></a><span class="cf">for</span> v <span class="kw">in</span> cities.values():</span>
-<span id="cb16-2"><a></a>  <span class="bu">print</span>(v)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="34335f16" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a aria-label="1"></a><span class="cf">for</span> v <span class="kw">in</span> cities.values():</span>
+<span id="cb16-2"><a aria-label="2"></a>  <span class="bu">print</span>(v)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>837442
 8673713
@@ -517,9 +527,9 @@ Beijing</code></pre>
 </div>
 </div><div class="column" style="width:33%;">
 <h3 id="both">Both</h3>
-<div id="74c25c15" class="cell" data-execution_count="8">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a></a><span class="cf">for</span> k,v <span class="kw">in</span> cities.items():</span>
-<span id="cb18-2"><a></a>  <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>k<span class="sc">}</span><span class="ss"> -&gt; </span><span class="sc">{</span>v<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="165ed3ed" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a aria-label="1"></a><span class="cf">for</span> k,v <span class="kw">in</span> cities.items():</span>
+<span id="cb18-2"><a aria-label="2"></a>  <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>k<span class="sc">}</span><span class="ss"> -&gt; </span><span class="sc">{</span>v<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>San Francisco -&gt; 837442
 London -&gt; 8673713
@@ -534,25 +544,25 @@ Beijing -&gt; 21716620</code></pre>
 <p>Values can be almost anything, including a dictionary or list! This opens up some interesting possibilities:</p>
 <div class="columns">
 <div class="column" style="width:42%;">
-<div id="e615121f" class="cell" data-execution_count="9">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a></a>cities <span class="op">=</span> {</span>
-<span id="cb20-2"><a></a>  <span class="st">'San Francisco'</span>: </span>
-<span id="cb20-3"><a></a>    [<span class="fl">37.77</span>, <span class="op">-</span><span class="fl">122.43</span>, <span class="st">'SFO'</span>]</span>
-<span id="cb20-4"><a></a>}</span>
-<span id="cb20-5"><a></a><span class="bu">print</span>(cities[<span class="st">'San Francisco'</span>][<span class="dv">0</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="4f9927a9" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a aria-label="1"></a>cities <span class="op">=</span> {</span>
+<span id="cb20-2"><a aria-label="2"></a>  <span class="st">'San Francisco'</span>: </span>
+<span id="cb20-3"><a aria-label="3"></a>    [<span class="fl">37.77</span>, <span class="op">-</span><span class="fl">122.43</span>, <span class="st">'SFO'</span>]</span>
+<span id="cb20-4"><a aria-label="4"></a>}</span>
+<span id="cb20-5"><a aria-label="5"></a><span class="bu">print</span>(cities[<span class="st">'San Francisco'</span>][<span class="dv">0</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>37.77</code></pre>
 </div>
 </div>
 </div><div class="column" style="width:58%;">
-<div id="ee219684" class="cell" data-execution_count="10">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a></a>cities <span class="op">=</span> {</span>
-<span id="cb22-2"><a></a>  <span class="st">'San Francisco'</span>: {</span>
-<span id="cb22-3"><a></a>    <span class="st">'lat'</span>: <span class="fl">37.77</span>,</span>
-<span id="cb22-4"><a></a>    <span class="st">'lon'</span>: <span class="op">-</span><span class="fl">122.43</span>,</span>
-<span id="cb22-5"><a></a>    <span class="st">'airport'</span>:<span class="st">'SFO'</span>}</span>
-<span id="cb22-6"><a></a>}</span>
-<span id="cb22-7"><a></a><span class="bu">print</span>(cities[<span class="st">'San Francisco'</span>][<span class="st">'lat'</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="d99b9769" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a aria-label="1"></a>cities <span class="op">=</span> {</span>
+<span id="cb22-2"><a aria-label="2"></a>  <span class="st">'San Francisco'</span>: {</span>
+<span id="cb22-3"><a aria-label="3"></a>    <span class="st">'lat'</span>: <span class="fl">37.77</span>,</span>
+<span id="cb22-4"><a aria-label="4"></a>    <span class="st">'lon'</span>: <span class="op">-</span><span class="fl">122.43</span>,</span>
+<span id="cb22-5"><a aria-label="5"></a>    <span class="st">'airport'</span>:<span class="st">'SFO'</span>}</span>
+<span id="cb22-6"><a aria-label="6"></a>}</span>
+<span id="cb22-7"><a aria-label="7"></a><span class="bu">print</span>(cities[<span class="st">'San Francisco'</span>][<span class="st">'lat'</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>37.77</code></pre>
 </div>
@@ -577,12 +587,12 @@ Beijing -&gt; 21716620</code></pre>
 <section id="one-more-thing" class="title-slide slide level1 center">
 <h1>One More Thing…</h1>
 <p>You may come across this:</p>
-<div id="9b88356d" class="cell" data-execution_count="11">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a></a>s <span class="op">=</span> {<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="c52d30e8" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a aria-label="1"></a>s <span class="op">=</span> {<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>It <em>looks</em> like a dictionary, but where are the keys?</p>
-<div id="4f6ebafc" class="cell" data-execution_count="12">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a></a><span class="bu">print</span>(<span class="bu">type</span>(s))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="46895994" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a aria-label="1"></a><span class="bu">print</span>(<span class="bu">type</span>(s))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;class 'set'&gt;</code></pre>
 </div>
@@ -627,9 +637,9 @@ References
 </section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
-<p><img src="../img/logo/full.svg" class="slide-logo"></p>
+<p><img src="../img/logo/full.svg" class="slide-logo" alt=""></p>
 <div class="footer footer-default">
-<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2025 | Jon Reades</a></p>
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2026 | Jon Reades</a></p>
 </div>
 </div></div>
 

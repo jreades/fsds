@@ -7,24 +7,34 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-da61f9a05e9cefe097d79e8430a73dd4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-aced932c6eb97d642153b8e218288f9f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/quarto-axe/axe.min.js"></script>
+<script src="../site_libs/quarto-axe/axe-check.js" type="module"></script>
+<script id="quarto-axe-checker-options" type="text/plain">eyJvdXRwdXQiOiJkb2N1bWVudCJ9</script>
+<link href="../site_libs/reveal-theme/reveal-theme-6ec7a94939c7281a5ee2e5382b76028b.min.css" rel="stylesheet" append-hash="true" data-mode="light">
 <script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.8.24">
+  <meta name="generator" content="quarto-1.10.18">
 
   <meta name="author" content="Jon Reades">
   <title>Foundations of Spatial Data Science – Getting to Grips with Git</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
   <style>
-    code{white-space: pre-wrap;}
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
@@ -98,7 +108,7 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-b6d6ca89e0c39dcc6c0c87d5e30c596f.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-d945b4c252f9130eae0c493518ea35dc.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -192,7 +202,7 @@
   </style>
 <meta property="og:title" content="Getting to Grips with Git – Foundations of Spatial Data Science">
 <meta property="og:image" content="img/logo/full_sm.png">
-<meta property="og:site_name" content="Foundations">
+<meta property="og:site_name" content="Foundations of Spatial Data Science">
 <meta property="og:locale" content="en_GB">
 </head>
 <body class="quarto-light">
@@ -210,7 +220,7 @@
 
 <p><span style="margin:0px; font-weight:700;" class="author">Jon Reades</span> - j.reades@ucl.ac.uk </p>
 
-<p style="opacity: 0.8">1st October 2025</p>
+<p style="opacity: 0.8">28th September 2026</p>
 
 <p style="opacity:0.8;"></p>
 
@@ -239,7 +249,7 @@
 <section class="slide level2">
 
 
-<img data-src="img/phd101212s.gif" class="r-stretch"><aside class="notes">
+<img data-src="img/phd101212s.gif" class="r-stretch" alt="PhD Comics strip: a thesis saved as ever-longer versions such as final.doc, final_rev2.doc and FINAL_really_final.doc"><aside class="notes">
 <p>Version control has been around longer than the Internet. Broadly, it was designed to achieve three things:</p>
 <ol type="1">
 <li>A record of any and all edits made to a file containing code.</li>
@@ -312,7 +322,7 @@
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
-<aside><ol class="aside-footnotes"><li id="fn1"><p>I’d suggest that this is leaving the benefit of free backups on the table for no good reason!</p></li></ol></aside></section>
+<aside role="note" aria-label="Footnotes"><ol class="aside-footnotes"><li id="fn1"><p>I’d suggest that this is leaving the benefit of free backups on the table for no good reason!</p></li></ol></aside></section>
 <section id="github" class="slide level2">
 <h2>GitHub</h2>
 <p>GitHub is <strong>nothing special</strong> to Git, just another Git server with which to negotiate changes. Do <em>not</em> think of GitHub as the ‘master’ copy. There isn’t one.</p>
@@ -383,12 +393,12 @@
 </tbody>
 </table>
 <p>This creates a local repo that is <em>unsynchronised</em> with anything else:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a></a><span class="fu">mkdir</span> test</span>
-<span id="cb1-2"><a></a><span class="bu">cd</span> test</span>
-<span id="cb1-3"><a></a><span class="fu">git</span> init</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb1"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a aria-label="1"></a><span class="fu">mkdir</span> test</span>
+<span id="cb1-2"><a aria-label="2"></a><span class="bu">cd</span> test</span>
+<span id="cb1-3"><a aria-label="3"></a><span class="fu">git</span> init</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Whereas this creates a local clone that is <em>fully synchronised</em> with GitHub:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a></a><span class="bu">cd</span> .. <span class="co">#&nbsp;To move out of 'test'</span></span>
-<span id="cb2-2"><a></a><span class="fu">git</span> clone https://github.com/jreades/fsds.git</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a aria-label="1"></a><span class="bu">cd</span> .. <span class="co">#&nbsp;To move out of 'test'</span></span>
+<span id="cb2-2"><a aria-label="2"></a><span class="fu">git</span> clone https://github.com/jreades/fsds.git</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="working-on-a-file" class="slide level2 smaller">
 <h2>Working on a File</h2>
@@ -415,15 +425,15 @@
 </tbody>
 </table>
 <p>For example:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a></a><span class="bu">cd</span> test <span class="co"># Back into the new Repo</span></span>
-<span id="cb3-2"><a></a><span class="fu">touch</span> README.md <span class="co"># Create empty file called README.md</span></span>
-<span id="cb3-3"><a></a><span class="fu">git</span> add README.md <span class="co"># Add it to the repository</span></span>
-<span id="cb3-4"><a></a><span class="fu">git</span> mv README.md fileA.md <span class="co"># Rename it (move it)</span></span>
-<span id="cb3-5"><a></a><span class="fu">git</span> rm fileA.md <span class="co"># Remove it... which is an Error!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a aria-label="1"></a><span class="bu">cd</span> test <span class="co"># Back into the new Repo</span></span>
+<span id="cb3-2"><a aria-label="2"></a><span class="fu">touch</span> README.md <span class="co"># Create empty file called README.md</span></span>
+<span id="cb3-3"><a aria-label="3"></a><span class="fu">git</span> add README.md <span class="co"># Add it to the repository</span></span>
+<span id="cb3-4"><a aria-label="4"></a><span class="fu">git</span> mv README.md fileA.md <span class="co"># Rename it (move it)</span></span>
+<span id="cb3-5"><a aria-label="5"></a><span class="fu">git</span> rm fileA.md <span class="co"># Remove it... which is an Error!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This produces:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a></a><span class="ex">error:</span> the following file has changes staged in the index:</span>
-<span id="cb4-2"><a></a>    <span class="ex">fileA.md</span></span>
-<span id="cb4-3"><a></a><span class="kw">(</span><span class="ex">use</span> <span class="at">--cached</span> to keep the file, or <span class="at">-f</span> to force removal<span class="kw">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb4"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a aria-label="1"></a><span class="ex">error:</span> the following file has changes staged in the index:</span>
+<span id="cb4-2"><a aria-label="2"></a>    <span class="ex">fileA.md</span></span>
+<span id="cb4-3"><a aria-label="3"></a><span class="kw">(</span><span class="ex">use</span> <span class="at">--cached</span> to keep the file, or <span class="at">-f</span> to force removal<span class="kw">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <aside class="notes">
 <p>This is telling you that you can force remove (<code>git rm -f fileA.md</code>) if you really want, but you’d probably be better off commiting the changes that have been ‘staged’… more on this in a second!</p>
 <p><em>Also</em>: no one <em>else</em> knows about these changes yet!</p>
@@ -464,16 +474,16 @@
 </tbody>
 </table>
 <p>For example:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a></a><span class="bu">cd</span> ../test/ <span class="co"># In case you weren't already there</span></span>
-<span id="cb5-2"><a></a><span class="fu">git</span> status  <span class="co"># What's the status</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb5"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a aria-label="1"></a><span class="bu">cd</span> ../test/ <span class="co"># In case you weren't already there</span></span>
+<span id="cb5-2"><a aria-label="2"></a><span class="fu">git</span> status  <span class="co"># What's the status</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This produces:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a></a><span class="ex">On</span> branch master</span>
-<span id="cb6-2"><a></a></span>
-<span id="cb6-3"><a></a><span class="ex">No</span> commits yet</span>
-<span id="cb6-4"><a></a></span>
-<span id="cb6-5"><a></a><span class="ex">Changes</span> to be committed:</span>
-<span id="cb6-6"><a></a>  <span class="kw">(</span><span class="ex">use</span> <span class="st">"git rm --cached &lt;file&gt;..."</span> to unstage<span class="kw">)</span></span>
-<span id="cb6-7"><a></a>    <span class="ex">new</span> file:   fileA.md</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb6"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a aria-label="1"></a><span class="ex">On</span> branch master</span>
+<span id="cb6-2"><a aria-label="2"></a></span>
+<span id="cb6-3"><a aria-label="3"></a><span class="ex">No</span> commits yet</span>
+<span id="cb6-4"><a aria-label="4"></a></span>
+<span id="cb6-5"><a aria-label="5"></a><span class="ex">Changes</span> to be committed:</span>
+<span id="cb6-6"><a aria-label="6"></a>  <span class="kw">(</span><span class="ex">use</span> <span class="st">"git rm --cached &lt;file&gt;..."</span> to unstage<span class="kw">)</span></span>
+<span id="cb6-7"><a aria-label="7"></a>    <span class="ex">new</span> file:   fileA.md</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <aside class="notes">
 <p>So again, git is giving us hints as to the options: ‘changes to be <em>committed</em>’ vs.&nbsp;‘<em>unstage</em>’ the changes. We can also see what files are to be committed (i.e.&nbsp;have changed).</p>
 <style type="text/css">
@@ -513,25 +523,25 @@
 </tbody>
 </table>
 <p>For example:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Added and then renamed the README."</span></span>
-<span id="cb7-2"><a></a><span class="fu">git</span> status</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb7"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a aria-label="1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Added and then renamed the README."</span></span>
+<span id="cb7-2"><a aria-label="2"></a><span class="fu">git</span> status</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>You should see:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a></a><span class="ex">[master</span> <span class="er">(</span><span class="ex">root-commit</span><span class="kw">)</span> <span class="ex">e7a0b25]</span> Added and then renamed the README Markdown file.</span>
-<span id="cb8-2"><a></a> <span class="ex">1</span> file changed, 0 insertions<span class="er">(</span><span class="ex">+</span><span class="kw">)</span><span class="ex">,</span> 0 deletions<span class="er">(</span><span class="ex">-</span><span class="kw">)</span></span>
-<span id="cb8-3"><a></a> <span class="ex">create</span> mode 100644 fileA.md</span>
-<span id="cb8-4"><a></a><span class="co"># ... and then this:</span></span>
-<span id="cb8-5"><a></a><span class="ex">On</span> branch master</span>
-<span id="cb8-6"><a></a><span class="ex">nothing</span> to commit, working tree clean</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb8"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a aria-label="1"></a><span class="ex">[master</span> <span class="er">(</span><span class="ex">root-commit</span><span class="kw">)</span> <span class="ex">e7a0b25]</span> Added and then renamed the README Markdown file.</span>
+<span id="cb8-2"><a aria-label="2"></a> <span class="ex">1</span> file changed, 0 insertions<span class="er">(</span><span class="ex">+</span><span class="kw">)</span><span class="ex">,</span> 0 deletions<span class="er">(</span><span class="ex">-</span><span class="kw">)</span></span>
+<span id="cb8-3"><a aria-label="3"></a> <span class="ex">create</span> mode 100644 fileA.md</span>
+<span id="cb8-4"><a aria-label="4"></a><span class="co"># ... and then this:</span></span>
+<span id="cb8-5"><a aria-label="5"></a><span class="ex">On</span> branch master</span>
+<span id="cb8-6"><a aria-label="6"></a><span class="ex">nothing</span> to commit, working tree clean</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Make a note of the number after ‘root-commit’!</strong></p>
 </section>
 <section id="recovery" class="slide level2">
 <h2>Recovery</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a></a><span class="fu">git</span> rm fileA.md</span>
-<span id="cb9-2"><a></a><span class="fu">git</span> status</span>
-<span id="cb9-3"><a></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Removed file."</span></span>
-<span id="cb9-4"><a></a><span class="fu">ls</span> </span>
-<span id="cb9-5"><a></a><span class="fu">git</span> checkout <span class="op">&lt;</span>number you wrote down earlier<span class="op">&gt;</span></span>
-<span id="cb9-6"><a></a><span class="fu">ls</span> </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb9"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a aria-label="1"></a><span class="fu">git</span> rm fileA.md</span>
+<span id="cb9-2"><a aria-label="2"></a><span class="fu">git</span> status</span>
+<span id="cb9-3"><a aria-label="3"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Removed file."</span></span>
+<span id="cb9-4"><a aria-label="4"></a><span class="fu">ls</span> </span>
+<span id="cb9-5"><a aria-label="5"></a><span class="fu">git</span> checkout <span class="op">&lt;</span>number you wrote down earlier<span class="op">&gt;</span></span>
+<span id="cb9-6"><a aria-label="6"></a><span class="fu">ls</span> </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <aside class="notes">
 <p>So <em>every</em> operation on a file is recorded in the repository: adding, renaming, deleting, and so on. And we can roll back any change at any time. For plain-text files (such as Markdown, Python and R scripts) these changes are recorded at the level of each line of code: so you can jump around through your entire history of a project and trace exactly when and what changes you (or anyone else) made.</p>
 <style type="text/css">
@@ -548,7 +558,7 @@
 </section>
 <section id="an-analogy" class="slide level2">
 <h2>An Analogy</h2>
-<p><a href="https://openscapes.org/img/blog/github-illustrated-series/github_wickham_bryan_git_quote.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img data-src="https://openscapes.org/img/blog/github-illustrated-series/github_wickham_bryan_git_quote.png"></a></p>
+<p><a href="https://openscapes.org/img/blog/github-illustrated-series/github_wickham_bryan_git_quote.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img data-src="https://openscapes.org/img/blog/github-illustrated-series/github_wickham_bryan_git_quote.png" alt="Illustration of a rock climber from Hadley Wickham and Jenny Bryan's analogy: committing in Git is like placing protection while climbing, so a fall only takes you back to your last commit"></a></p>
 </section>
 <section id="collaborating-on-a-project" class="slide level2 smaller">
 <h2>Collaborating on a Project</h2>
@@ -594,7 +604,7 @@
 <h2>This is <em>not</em> easy</h2>
 <div class="quarto-figure quarto-figure-middle">
 <figure>
-<p><a href="img/xkcd-git.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img data-src="img/xkcd-git.png" class="quarto-figure quarto-figure-middle"></a></p>
+<p><a href="img/xkcd-git.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img data-src="img/xkcd-git.png" class="quarto-figure quarto-figure-middle" alt="xkcd comic 1597 'Git': nobody really understands Git, so when it breaks you save your work elsewhere, delete the project and download a fresh copy"></a></p>
 </figure>
 </div>
 <p><a href="https://xkcd.com/1597/">Source</a></p>
@@ -603,9 +613,9 @@
 <h2>So here are some cheat sheets</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
-<p><a href="./img/Git_Cheat_Sheet.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img data-src="./img/Git_Cheat_Sheet.png"></a></p>
+<p><a href="./img/Git_Cheat_Sheet.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img data-src="./img/Git_Cheat_Sheet.png" alt="Git cheat sheet summarising common commands (1 of 2)"></a></p>
 </div><div class="column" style="width:50%;">
-<p><a href="./img/Git_Cheat_Sheet_2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img data-src="./img/Git_Cheat_Sheet_2.png"></a></p>
+<p><a href="./img/Git_Cheat_Sheet_2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img data-src="./img/Git_Cheat_Sheet_2.png" alt="Git cheat sheet summarising common commands (2 of 2)"></a></p>
 </div></div>
 </section>
 <section id="additional-resources" class="slide level2 smaller">
@@ -618,6 +628,8 @@
 <li><a href="https://jvns.ca/blog/2023/11/01/confusing-git-terminology/">Confusing Git Terminology</a></li>
 <li><a href="https://www.jrebel.com/blog/git-cheat-sheet">Git Cheat Sheet: Commands and Best Practices</a></li>
 <li><a href="https://andrewmaclachlan.github.io/CASA0005repo/git-github-and-rmarkdown.html#set-up-your-github">Andy’s R-focussed Tutorial</a></li>
+<li><a href="https://docs.github.com/en/github/setting-up-and-managing-your-github-user-account">Setting up and managing your GitHub user account</a></li>
+<li><a href="https://docs.github.com/en/free-pro-team@latest/developers/apps/about-apps#personal-access-tokens">Personal Access Tokens on Git</a></li>
 </ul>
 <aside class="notes">
 <p>I now have everything in Git repos: articles, research, presentations, modules… the uses are basically endless once you start using Markdown heavily (even if you don’t do much coding).</p>
@@ -645,9 +657,9 @@ References
 
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
-<p><img src="../img/logo/full.svg" class="slide-logo"></p>
+<p><img src="../img/logo/full.svg" class="slide-logo" alt=""></p>
 <div class="footer footer-default">
-<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2025 | Jon Reades</a></p>
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2026 | Jon Reades</a></p>
 </div>
 </div></div>
 

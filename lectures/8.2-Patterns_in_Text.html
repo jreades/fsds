@@ -7,21 +7,31 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-da61f9a05e9cefe097d79e8430a73dd4.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.8.24">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-aced932c6eb97d642153b8e218288f9f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/quarto-axe/axe.min.js"></script>
+<script src="../site_libs/quarto-axe/axe-check.js" type="module"></script>
+<script id="quarto-axe-checker-options" type="text/plain">eyJvdXRwdXQiOiJkb2N1bWVudCJ9</script>
+<link href="../site_libs/reveal-theme/reveal-theme-6ec7a94939c7281a5ee2e5382b76028b.min.css" rel="stylesheet" append-hash="true" data-mode="light"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.10.18">
 
   <meta name="author" content="Jon Reades">
   <title>Foundations of Spatial Data Science – Patterns in Text</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
   <style>
-    code{white-space: pre-wrap;}
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
@@ -95,7 +105,7 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-b6d6ca89e0c39dcc6c0c87d5e30c596f.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-d945b4c252f9130eae0c493518ea35dc.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -189,7 +199,7 @@
   </style>
 <meta property="og:title" content="Patterns in Text – Foundations of Spatial Data Science">
 <meta property="og:image" content="img/logo/full_sm.png">
-<meta property="og:site_name" content="Foundations">
+<meta property="og:site_name" content="Foundations of Spatial Data Science">
 <meta property="og:locale" content="en_GB">
 </head>
 <body class="quarto-light">
@@ -207,7 +217,7 @@
 
 <p><span style="margin:0px; font-weight:700;" class="author">Jon Reades</span> - j.reades@ucl.ac.uk </p>
 
-<p style="opacity: 0.8">1st October 2025</p>
+<p style="opacity: 0.8">25th September 2026</p>
 
 <p style="opacity:0.8;"></p>
 
@@ -238,12 +248,12 @@
 </section>
 <section id="string-methods-are-not-enough" class="slide level2">
 <h2>String Methods are <em>Not</em> Enough</h2>
-<div id="ed318b0d" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="bu">print</span>(<span class="ss">f"Index: </span><span class="sc">{</span><span class="st">'123foo456'</span><span class="sc">.</span>index(<span class="st">'foo'</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb1-2"><a></a><span class="bu">print</span>(<span class="ss">f"Split: </span><span class="sc">{</span><span class="st">'123foo456'</span><span class="sc">.</span>split(<span class="st">'foo'</span>)<span class="sc">}</span><span class="ss">"</span>) </span>
-<span id="cb1-3"><a></a><span class="bu">print</span>(<span class="ss">f"Strip: </span><span class="sc">{</span><span class="st">' 123 foo 456 '</span><span class="sc">.</span>strip()<span class="sc">}</span><span class="ss">"</span>) </span>
-<span id="cb1-4"><a></a><span class="bu">print</span>(<span class="ss">f"Lower: </span><span class="sc">{</span><span class="st">'HOW NOW BROWN COW?'</span><span class="sc">.</span>lower()<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb1-5"><a></a><span class="bu">print</span>(<span class="ss">f"Replace: </span><span class="sc">{</span><span class="st">'How now brown cow?'</span><span class="sc">.</span>replace(<span class="st">'brown '</span>,<span class="st">'green-'</span>)<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="cec22094" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a aria-label="1"></a><span class="bu">print</span>(<span class="ss">f"Index: </span><span class="sc">{</span><span class="st">'123foo456'</span><span class="sc">.</span>index(<span class="st">'foo'</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-2"><a aria-label="2"></a><span class="bu">print</span>(<span class="ss">f"Split: </span><span class="sc">{</span><span class="st">'123foo456'</span><span class="sc">.</span>split(<span class="st">'foo'</span>)<span class="sc">}</span><span class="ss">"</span>) </span>
+<span id="cb1-3"><a aria-label="3"></a><span class="bu">print</span>(<span class="ss">f"Strip: </span><span class="sc">{</span><span class="st">' 123 foo 456 '</span><span class="sc">.</span>strip()<span class="sc">}</span><span class="ss">"</span>) </span>
+<span id="cb1-4"><a aria-label="4"></a><span class="bu">print</span>(<span class="ss">f"Lower: </span><span class="sc">{</span><span class="st">'HOW NOW BROWN COW?'</span><span class="sc">.</span>lower()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-5"><a aria-label="5"></a><span class="bu">print</span>(<span class="ss">f"Replace: </span><span class="sc">{</span><span class="st">'How now brown cow?'</span><span class="sc">.</span>replace(<span class="st">'brown '</span>,<span class="st">'green-'</span>)<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Index: 3
 Split: ['123', '456']
@@ -258,15 +268,15 @@ Replace: How now green-cow?</code></pre>
 <h2>Regular Expressions</h2>
 <p>Regexes are a way for talking <em>about</em> patterns observed in text, although their origins are rooted in philosophy and linguistics.</p>
 <p>Implemented in Python as:</p>
-<div id="d8ad4768" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">import</span> re</span>
-<span id="cb3-2"><a></a>s <span class="op">=</span> <span class="st">'123foo456'</span></span>
-<span id="cb3-3"><a></a></span>
-<span id="cb3-4"><a></a><span class="co"># re.search(&lt;regex&gt;, &lt;str&gt;)</span></span>
-<span id="cb3-5"><a></a><span class="cf">if</span> re.search(<span class="st">'123'</span>,s):</span>
-<span id="cb3-6"><a></a>  <span class="bu">print</span>(<span class="st">"Found a match."</span>)</span>
-<span id="cb3-7"><a></a><span class="cf">else</span>:</span>
-<span id="cb3-8"><a></a>  <span class="bu">print</span>(<span class="st">"No match."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="3c82dd7b" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a aria-label="1"></a><span class="im">import</span> re</span>
+<span id="cb3-2"><a aria-label="2"></a>s <span class="op">=</span> <span class="st">'123foo456'</span></span>
+<span id="cb3-3"><a aria-label="3"></a></span>
+<span id="cb3-4"><a aria-label="4"></a><span class="co"># re.search(&lt;regex&gt;, &lt;str&gt;)</span></span>
+<span id="cb3-5"><a aria-label="5"></a><span class="cf">if</span> re.search(<span class="st">'123'</span>,s):</span>
+<span id="cb3-6"><a aria-label="6"></a>  <span class="bu">print</span>(<span class="st">"Found a match."</span>)</span>
+<span id="cb3-7"><a aria-label="7"></a><span class="cf">else</span>:</span>
+<span id="cb3-8"><a aria-label="8"></a>  <span class="bu">print</span>(<span class="st">"No match."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Found a match.</code></pre>
 </div>
@@ -275,14 +285,14 @@ Replace: How now green-cow?</code></pre>
 <section id="capturing-matches" class="slide level2">
 <h2>Capturing Matches</h2>
 <p>For singular matches it’s fairly straightforward:</p>
-<div id="2a947d6c" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="bu">print</span>(<span class="ss">f"String: </span><span class="sc">{</span>s<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb5-2"><a></a>m <span class="op">=</span> re.search(<span class="st">'123'</span>,s)</span>
-<span id="cb5-3"><a></a></span>
-<span id="cb5-4"><a></a><span class="bu">print</span>(<span class="ss">f"Start of match: </span><span class="sc">{</span>m<span class="sc">.</span>start()<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb5-5"><a></a><span class="bu">print</span>(<span class="ss">f"End of match: </span><span class="sc">{</span>m<span class="sc">.</span>end()<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb5-6"><a></a><span class="bu">print</span>(<span class="ss">f"Span of match: </span><span class="sc">{</span>m<span class="sc">.</span>span()<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb5-7"><a></a><span class="bu">print</span>(<span class="ss">f"Match group: </span><span class="sc">{</span>m<span class="sc">.</span>group()<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="87edb970" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a aria-label="1"></a><span class="bu">print</span>(<span class="ss">f"String: </span><span class="sc">{</span>s<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb5-2"><a aria-label="2"></a>m <span class="op">=</span> re.search(<span class="st">'123'</span>,s)</span>
+<span id="cb5-3"><a aria-label="3"></a></span>
+<span id="cb5-4"><a aria-label="4"></a><span class="bu">print</span>(<span class="ss">f"Start of match: </span><span class="sc">{</span>m<span class="sc">.</span>start()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb5-5"><a aria-label="5"></a><span class="bu">print</span>(<span class="ss">f"End of match: </span><span class="sc">{</span>m<span class="sc">.</span>end()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb5-6"><a aria-label="6"></a><span class="bu">print</span>(<span class="ss">f"Span of match: </span><span class="sc">{</span>m<span class="sc">.</span>span()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb5-7"><a aria-label="7"></a><span class="bu">print</span>(<span class="ss">f"Match group: </span><span class="sc">{</span>m<span class="sc">.</span>group()<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>String: 123foo456
 Start of match: 0
@@ -310,14 +320,14 @@ Match group: 123</code></pre>
 </div></aside></section>
 <section id="configuring-matches" class="slide level2">
 <h2>Configuring Matches</h2>
-<div id="30a63d2a" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>s <span class="op">=</span> <span class="st">'123foo456'</span></span>
-<span id="cb7-2"><a></a></span>
-<span id="cb7-3"><a></a>m <span class="op">=</span> re.search(<span class="st">'FOO'</span>,s)</span>
-<span id="cb7-4"><a></a><span class="bu">print</span>(<span class="ss">f"First search: </span><span class="sc">{</span>m<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb7-5"><a></a></span>
-<span id="cb7-6"><a></a>m <span class="op">=</span> re.search(<span class="st">'FOO'</span>,s,re.IGNORECASE)</span>
-<span id="cb7-7"><a></a><span class="bu">print</span>(<span class="ss">f"Second search: </span><span class="sc">{</span>m<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="f18aa850" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a aria-label="1"></a>s <span class="op">=</span> <span class="st">'123foo456'</span></span>
+<span id="cb7-2"><a aria-label="2"></a></span>
+<span id="cb7-3"><a aria-label="3"></a>m <span class="op">=</span> re.search(<span class="st">'FOO'</span>,s)</span>
+<span id="cb7-4"><a aria-label="4"></a><span class="bu">print</span>(<span class="ss">f"First search: </span><span class="sc">{</span>m<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb7-5"><a aria-label="5"></a></span>
+<span id="cb7-6"><a aria-label="6"></a>m <span class="op">=</span> re.search(<span class="st">'FOO'</span>,s,re.IGNORECASE)</span>
+<span id="cb7-7"><a aria-label="7"></a><span class="bu">print</span>(<span class="ss">f"Second search: </span><span class="sc">{</span>m<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>First search: None
 Second search: &lt;re.Match object; span=(3, 6), match='foo'&gt;</code></pre>
@@ -327,20 +337,20 @@ Second search: &lt;re.Match object; span=(3, 6), match='foo'&gt;</code></pre>
 </section>
 <section id="more-than-one-match" class="slide level2">
 <h2>More Than One Match</h2>
-<div id="8e0c1cfc" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>s <span class="op">=</span> <span class="st">'123foo456foo789'</span></span>
-<span id="cb9-2"><a></a></span>
-<span id="cb9-3"><a></a>lst1 <span class="op">=</span> re.findall(<span class="st">'foo'</span>,s)</span>
-<span id="cb9-4"><a></a><span class="bu">print</span>(<span class="ss">f"Match list: </span><span class="sc">{</span>lst1<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb9-5"><a></a></span>
-<span id="cb9-6"><a></a>lst2 <span class="op">=</span> re.finditer(<span class="st">'foo'</span>,s)</span>
-<span id="cb9-7"><a></a><span class="bu">print</span>(<span class="ss">f"List iterator: </span><span class="sc">{</span>[x <span class="cf">for</span> x <span class="kw">in</span> lst2]<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb9-8"><a></a></span>
-<span id="cb9-9"><a></a>rs  <span class="op">=</span> re.sub(<span class="st">'foo'</span>,<span class="st">' '</span>,s)</span>
-<span id="cb9-10"><a></a><span class="bu">print</span>(<span class="ss">f"Substitution: </span><span class="sc">{</span>rs<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb9-11"><a></a></span>
-<span id="cb9-12"><a></a>rs  <span class="op">=</span> re.split(<span class="st">' '</span>,rs)</span>
-<span id="cb9-13"><a></a><span class="bu">print</span>(<span class="ss">f"Splitting: </span><span class="sc">{</span>rs<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="5475a3e3" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a aria-label="1"></a>s <span class="op">=</span> <span class="st">'123foo456foo789'</span></span>
+<span id="cb9-2"><a aria-label="2"></a></span>
+<span id="cb9-3"><a aria-label="3"></a>lst1 <span class="op">=</span> re.findall(<span class="st">'foo'</span>,s)</span>
+<span id="cb9-4"><a aria-label="4"></a><span class="bu">print</span>(<span class="ss">f"Match list: </span><span class="sc">{</span>lst1<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb9-5"><a aria-label="5"></a></span>
+<span id="cb9-6"><a aria-label="6"></a>lst2 <span class="op">=</span> re.finditer(<span class="st">'foo'</span>,s)</span>
+<span id="cb9-7"><a aria-label="7"></a><span class="bu">print</span>(<span class="ss">f"List iterator: </span><span class="sc">{</span>[x <span class="cf">for</span> x <span class="kw">in</span> lst2]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb9-8"><a aria-label="8"></a></span>
+<span id="cb9-9"><a aria-label="9"></a>rs  <span class="op">=</span> re.sub(<span class="st">'foo'</span>,<span class="st">' '</span>,s)</span>
+<span id="cb9-10"><a aria-label="10"></a><span class="bu">print</span>(<span class="ss">f"Substitution: </span><span class="sc">{</span>rs<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb9-11"><a aria-label="11"></a></span>
+<span id="cb9-12"><a aria-label="12"></a>rs  <span class="op">=</span> re.split(<span class="st">' '</span>,rs)</span>
+<span id="cb9-13"><a aria-label="13"></a><span class="bu">print</span>(<span class="ss">f"Splitting: </span><span class="sc">{</span>rs<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Match list: ['foo', 'foo']
 List iterator: [&lt;re.Match object; span=(3, 6), match='foo'&gt;, &lt;re.Match object; span=(9, 12), match='foo'&gt;]
@@ -356,23 +366,23 @@ Splitting: ['123', '456', '789']</code></pre>
 </section>
 <section id="regular-expressions-do-much-more" class="slide level2">
 <h2>Regular Expressions Do <em>Much</em> More</h2>
-<div id="bbb28a05" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a>s <span class="op">=</span> <span class="st">"'That will be $1,000,000, he said...'"</span></span>
-<span id="cb11-2"><a></a>m <span class="op">=</span> re.search(<span class="vs">r'</span><span class="ch">\$</span><span class="kw">((</span><span class="dv">\d</span><span class="op">+</span><span class="vs">,</span><span class="kw">)</span><span class="op">{2,}</span><span class="dv">\d</span><span class="op">+</span><span class="kw">)</span><span class="vs">'</span>,s)</span>
-<span id="cb11-3"><a></a>        </span>
-<span id="cb11-4"><a></a><span class="bu">print</span>(m.group(<span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="23f45236" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a aria-label="1"></a>s <span class="op">=</span> <span class="st">"'That will be $1,000,000, he said...'"</span></span>
+<span id="cb11-2"><a aria-label="2"></a>m <span class="op">=</span> re.search(<span class="vs">r'</span><span class="ch">\$</span><span class="kw">((</span><span class="dv">\d</span><span class="op">+</span><span class="vs">,</span><span class="kw">)</span><span class="op">{2,}</span><span class="dv">\d</span><span class="op">+</span><span class="kw">)</span><span class="vs">'</span>,s)</span>
+<span id="cb11-3"><a aria-label="3"></a>        </span>
+<span id="cb11-4"><a aria-label="4"></a><span class="bu">print</span>(m.group(<span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>1,000,000</code></pre>
 </div>
 </div>
 <p>It breaks down like this:</p>
-<div id="4d921a93" class="cell" data-execution_count="7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a><span class="co"># Look for a literal '$'</span></span>
-<span id="cb13-2"><a></a><span class="bu">print</span>(re.search(<span class="vs">r'</span><span class="ch">\$</span><span class="vs">'</span>,s))</span>
-<span id="cb13-3"><a></a><span class="co">#&nbsp;Group of &gt;=1 digits followed by a comma...</span></span>
-<span id="cb13-4"><a></a><span class="bu">print</span>(re.search(<span class="vs">r'</span><span class="kw">(</span><span class="dv">\d</span><span class="op">+</span><span class="vs">,</span><span class="kw">)</span><span class="vs">'</span>,s))</span>
-<span id="cb13-5"><a></a><span class="co">#&nbsp;Repeated two or more times...</span></span>
-<span id="cb13-6"><a></a><span class="bu">print</span>(re.search(<span class="vs">r'</span><span class="kw">(</span><span class="dv">\d</span><span class="op">+</span><span class="vs">,</span><span class="kw">)</span><span class="op">{2,}</span><span class="vs">'</span>,s))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="3e62b119" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a aria-label="1"></a><span class="co"># Look for a literal '$'</span></span>
+<span id="cb13-2"><a aria-label="2"></a><span class="bu">print</span>(re.search(<span class="vs">r'</span><span class="ch">\$</span><span class="vs">'</span>,s))</span>
+<span id="cb13-3"><a aria-label="3"></a><span class="co">#&nbsp;Group of &gt;=1 digits followed by a comma...</span></span>
+<span id="cb13-4"><a aria-label="4"></a><span class="bu">print</span>(re.search(<span class="vs">r'</span><span class="kw">(</span><span class="dv">\d</span><span class="op">+</span><span class="vs">,</span><span class="kw">)</span><span class="vs">'</span>,s))</span>
+<span id="cb13-5"><a aria-label="5"></a><span class="co">#&nbsp;Repeated two or more times...</span></span>
+<span id="cb13-6"><a aria-label="6"></a><span class="bu">print</span>(re.search(<span class="vs">r'</span><span class="kw">(</span><span class="dv">\d</span><span class="op">+</span><span class="vs">,</span><span class="kw">)</span><span class="op">{2,}</span><span class="vs">'</span>,s))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;re.Match object; span=(14, 15), match='$'&gt;
 &lt;re.Match object; span=(15, 17), match='1,'&gt;
@@ -561,21 +571,21 @@ Splitting: ['123', '456', '789']</code></pre>
 <section id="whats-this" class="slide level2">
 <h2>What’s This?</h2>
 <p><code>re.VERBOSE</code> to the rescue:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a>regex <span class="op">=</span> <span class="vs">r"""</span></span>
-<span id="cb15-2"><a></a><span class="kw">(</span><span class="pp">[GIR]</span><span class="vs"> 0</span><span class="pp">[A]</span><span class="op">{2}</span><span class="kw">)</span><span class="cf">|</span><span class="vs">    </span><span class="co"># Girobank </span></span>
-<span id="cb15-3"><a></a><span class="kw">(</span></span>
-<span id="cb15-4"><a></a><span class="vs">  </span><span class="kw">(</span></span>
-<span id="cb15-5"><a></a><span class="vs">    </span><span class="kw">(</span><span class="pp">[A-Z][0-9]</span><span class="op">{1,2}</span><span class="kw">)</span><span class="cf">|</span><span class="vs"> </span><span class="co"># e.g A00...Z99</span></span>
-<span id="cb15-6"><a></a><span class="vs">      </span><span class="kw">(</span></span>
-<span id="cb15-7"><a></a><span class="vs">        </span><span class="kw">(</span><span class="pp">[A-Z][A-HJ-Y][0-9]</span><span class="op">{1,2}</span><span class="kw">)</span><span class="cf">|</span><span class="vs">  </span><span class="co"># e.g. AB54...ZX11</span></span>
-<span id="cb15-8"><a></a><span class="vs">          </span><span class="kw">((</span><span class="pp">[A-Z][0-9][A-Z]</span><span class="kw">)</span><span class="cf">|</span><span class="vs">  </span><span class="co"># e.g. A0B...Z9Z </span></span>
-<span id="cb15-9"><a></a><span class="vs">          </span><span class="kw">(</span><span class="pp">[A-Z][A-HJ-Y][0-9][A-Z]</span><span class="op">?</span><span class="kw">))</span><span class="vs">  </span><span class="co"># e.g. WC1 or WC1H</span></span>
-<span id="cb15-10"><a></a><span class="vs">        </span><span class="kw">)</span></span>
-<span id="cb15-11"><a></a><span class="vs">      </span><span class="kw">)</span></span>
-<span id="cb15-12"><a></a><span class="vs">    </span><span class="dv">\s</span><span class="op">?</span><span class="pp">[0-9][A-Z]</span><span class="op">{2}</span><span class="vs"> </span><span class="co"># e.g. 5RX</span></span>
-<span id="cb15-13"><a></a><span class="vs">  </span><span class="kw">)</span></span>
-<span id="cb15-14"><a></a><span class="vs">"""</span></span>
-<span id="cb15-15"><a></a>re.match(regex,s,re.VERBOSE<span class="op">|</span>re.IGNORECASE) <span class="co"># Can also use: re.X|re.I</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a aria-label="1"></a>regex <span class="op">=</span> <span class="vs">r"""</span></span>
+<span id="cb15-2"><a aria-label="2"></a><span class="kw">(</span><span class="pp">[GIR]</span><span class="vs"> 0</span><span class="pp">[A]</span><span class="op">{2}</span><span class="kw">)</span><span class="cf">|</span><span class="vs">    </span><span class="co"># Girobank </span></span>
+<span id="cb15-3"><a aria-label="3"></a><span class="kw">(</span></span>
+<span id="cb15-4"><a aria-label="4"></a><span class="vs">  </span><span class="kw">(</span></span>
+<span id="cb15-5"><a aria-label="5"></a><span class="vs">    </span><span class="kw">(</span><span class="pp">[A-Z][0-9]</span><span class="op">{1,2}</span><span class="kw">)</span><span class="cf">|</span><span class="vs"> </span><span class="co"># e.g A00...Z99</span></span>
+<span id="cb15-6"><a aria-label="6"></a><span class="vs">      </span><span class="kw">(</span></span>
+<span id="cb15-7"><a aria-label="7"></a><span class="vs">        </span><span class="kw">(</span><span class="pp">[A-Z][A-HJ-Y][0-9]</span><span class="op">{1,2}</span><span class="kw">)</span><span class="cf">|</span><span class="vs">  </span><span class="co"># e.g. AB54...ZX11</span></span>
+<span id="cb15-8"><a aria-label="8"></a><span class="vs">          </span><span class="kw">((</span><span class="pp">[A-Z][0-9][A-Z]</span><span class="kw">)</span><span class="cf">|</span><span class="vs">  </span><span class="co"># e.g. A0B...Z9Z </span></span>
+<span id="cb15-9"><a aria-label="9"></a><span class="vs">          </span><span class="kw">(</span><span class="pp">[A-Z][A-HJ-Y][0-9][A-Z]</span><span class="op">?</span><span class="kw">))</span><span class="vs">  </span><span class="co"># e.g. WC1 or WC1H</span></span>
+<span id="cb15-10"><a aria-label="10"></a><span class="vs">        </span><span class="kw">)</span></span>
+<span id="cb15-11"><a aria-label="11"></a><span class="vs">      </span><span class="kw">)</span></span>
+<span id="cb15-12"><a aria-label="12"></a><span class="vs">    </span><span class="dv">\s</span><span class="op">?</span><span class="pp">[0-9][A-Z]</span><span class="op">{2}</span><span class="vs"> </span><span class="co"># e.g. 5RX</span></span>
+<span id="cb15-13"><a aria-label="13"></a><span class="vs">  </span><span class="kw">)</span></span>
+<span id="cb15-14"><a aria-label="14"></a><span class="vs">"""</span></span>
+<span id="cb15-15"><a aria-label="15"></a>re.match(regex,s,re.VERBOSE<span class="op">|</span>re.IGNORECASE) <span class="co"># Can also use: re.X|re.I</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <aside class="notes">
 <p>This is the <a href="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/488478/Bulk_Data_Transfer_-_additional_validation_valid_from_12_November_2015.pdf">government’s own regex</a> but is probably <em>not</em> 100% accurate.</p>
 <style type="text/css">
@@ -672,9 +682,9 @@ References
 </section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
-<p><img src="../img/logo/full.svg" class="slide-logo"></p>
+<p><img src="../img/logo/full.svg" class="slide-logo" alt=""></p>
 <div class="footer footer-default">
-<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2025 | Jon Reades</a></p>
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2026 | Jon Reades</a></p>
 </div>
 </div></div>
 

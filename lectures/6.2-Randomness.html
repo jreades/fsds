@@ -7,24 +7,34 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-da61f9a05e9cefe097d79e8430a73dd4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-aced932c6eb97d642153b8e218288f9f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/quarto-axe/axe.min.js"></script>
+<script src="../site_libs/quarto-axe/axe-check.js" type="module"></script>
+<script id="quarto-axe-checker-options" type="text/plain">eyJvdXRwdXQiOiJkb2N1bWVudCJ9</script>
+<link href="../site_libs/reveal-theme/reveal-theme-6ec7a94939c7281a5ee2e5382b76028b.min.css" rel="stylesheet" append-hash="true" data-mode="light">
 <script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.8.24">
+  <meta name="generator" content="quarto-1.10.18">
 
   <meta name="author" content="Jon Reades">
   <title>Foundations of Spatial Data Science – Randomness</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
   <style>
-    code{white-space: pre-wrap;}
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
@@ -98,7 +108,7 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-b6d6ca89e0c39dcc6c0c87d5e30c596f.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-d945b4c252f9130eae0c493518ea35dc.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -190,9 +200,12 @@
       margin-right: 0; 
     }
   </style>
+  <script src="../site_libs/quarto-diagram/mermaid.min.js"></script>
+  <script src="../site_libs/quarto-diagram/mermaid-init.js"></script>
+  <link href="../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 <meta property="og:title" content="Randomness – Foundations of Spatial Data Science">
 <meta property="og:image" content="img/logo/full_sm.png">
-<meta property="og:site_name" content="Foundations">
+<meta property="og:site_name" content="Foundations of Spatial Data Science">
 <meta property="og:locale" content="en_GB">
 </head>
 <body class="quarto-light">
@@ -210,7 +223,7 @@
 
 <p><span style="margin:0px; font-weight:700;" class="author">Jon Reades</span> - j.reades@ucl.ac.uk </p>
 
-<p style="opacity: 0.8">1st October 2025</p>
+<p style="opacity: 0.8">28th September 2026</p>
 
 <p style="opacity:0.8;"></p>
 
@@ -222,7 +235,7 @@
 </section>
 <section class="slide level2">
 
-<p><a href="./img/Benford.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img data-src="./img/Benford.png" height="550"></a></p>
+<p><a href="./img/Benford.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img data-src="./img/Benford.png" alt="Bar chart of Benford's Law: the expected frequency of leading digits 1 to 9, with 1 appearing about 30pc of the time" height="550"></a></p>
 <p><a href="https://en.wikipedia.org/wiki/Benford%27s_law#:~:text=Benford's%20law%2C%20also%20called%20the,life%20sets%20of%20numerical%20data.&amp;text=If%20the%20digits%20were%20distributed,about%2011.1%25%20of%20the%20time">Benford’s Law</a>, which has <a href="https://towardsdatascience.com/what-is-benfords-law-and-why-is-it-important-for-data-science-312cb8b61048">applications in data science</a> and <a href="https://www.journalofaccountancy.com/issues/2017/apr/excel-and-benfords-law-to-detect-fraud.html">fraud detection</a>.</p>
 <aside class="notes">
 <p>Genuine randomness is <em>hard</em>. Most of us, both humans and computers, tend to use shortcuts when generating random numbers.</p>
@@ -298,20 +311,20 @@
 </section>
 <section id="python-is-random" class="slide level2">
 <h2>Python is Random</h2>
-<div id="fcf641e7" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> random</span>
-<span id="cb1-2"><a></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">10</span>):</span>
-<span id="cb1-3"><a></a>    <span class="bu">print</span>(random.randint(<span class="dv">0</span>,<span class="dv">10</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="d093109e" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a aria-label="1"></a><span class="im">import</span> random</span>
+<span id="cb1-2"><a aria-label="2"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">10</span>):</span>
+<span id="cb1-3"><a aria-label="3"></a>    <span class="bu">print</span>(random.randint(<span class="dv">0</span>,<span class="dv">10</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>1
-9
-6
-0
-0
+<pre><code>7
+7
+10
 1
-3
-3
+2
+0
 8
+9
+7
 9</code></pre>
 </div>
 </div>
@@ -319,29 +332,29 @@
 </section>
 <section id="and-repeat" class="slide level2">
 <h2>And Repeat…</h2>
-<div id="cf02be71" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">import</span> random</span>
-<span id="cb3-2"><a></a>size <span class="op">=</span> <span class="dv">10</span></span>
-<span id="cb3-3"><a></a>results <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> size</span>
-<span id="cb3-4"><a></a></span>
-<span id="cb3-5"><a></a>tests <span class="op">=</span> <span class="dv">100000</span></span>
-<span id="cb3-6"><a></a><span class="cf">while</span> tests <span class="op">&gt;</span> <span class="dv">0</span>:</span>
-<span id="cb3-7"><a></a>    results[random.randint(<span class="dv">0</span>,<span class="bu">len</span>(results)<span class="op">-</span><span class="dv">1</span>)] <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb3-8"><a></a>    tests <span class="op">-=</span> <span class="dv">1</span></span>
-<span id="cb3-9"><a></a></span>
-<span id="cb3-10"><a></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="bu">len</span>(results)):</span>
-<span id="cb3-11"><a></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss"> -&gt; </span><span class="sc">{</span>results[i]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="ef718624" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a aria-label="1"></a><span class="im">import</span> random</span>
+<span id="cb3-2"><a aria-label="2"></a>size <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb3-3"><a aria-label="3"></a>results <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> size</span>
+<span id="cb3-4"><a aria-label="4"></a></span>
+<span id="cb3-5"><a aria-label="5"></a>tests <span class="op">=</span> <span class="dv">100000</span></span>
+<span id="cb3-6"><a aria-label="6"></a><span class="cf">while</span> tests <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb3-7"><a aria-label="7"></a>    results[random.randint(<span class="dv">0</span>,<span class="bu">len</span>(results)<span class="op">-</span><span class="dv">1</span>)] <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb3-8"><a aria-label="8"></a>    tests <span class="op">-=</span> <span class="dv">1</span></span>
+<span id="cb3-9"><a aria-label="9"></a></span>
+<span id="cb3-10"><a aria-label="10"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="bu">len</span>(results)):</span>
+<span id="cb3-11"><a aria-label="11"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss"> -&gt; </span><span class="sc">{</span>results[i]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>0 -&gt; 9995
-1 -&gt; 10100
-2 -&gt; 10099
-3 -&gt; 9865
-4 -&gt; 9908
-5 -&gt; 9874
-6 -&gt; 10121
-7 -&gt; 10110
-8 -&gt; 9859
-9 -&gt; 10069</code></pre>
+<pre><code>0 -&gt; 10110
+1 -&gt; 9911
+2 -&gt; 9917
+3 -&gt; 9982
+4 -&gt; 10036
+5 -&gt; 9849
+6 -&gt; 10275
+7 -&gt; 10059
+8 -&gt; 9767
+9 -&gt; 10094</code></pre>
 </div>
 </div>
 <aside class="notes">
@@ -361,30 +374,30 @@
 </section>
 <section id="aaaaaaaaaaand-repeat" class="slide level2">
 <h2>Aaaaaaaaaaand Repeat</h2>
-<div id="5a5752e0" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="im">import</span> random </span>
-<span id="cb5-2"><a></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot <span class="im">as</span> plt</span>
-<span id="cb5-3"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb5-4"><a></a></span>
-<span id="cb5-5"><a></a>size <span class="op">=</span> <span class="dv">1000</span></span>
-<span id="cb5-6"><a></a>data <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> size</span>
-<span id="cb5-7"><a></a></span>
-<span id="cb5-8"><a></a>tests <span class="op">=</span> <span class="dv">10000000</span></span>
-<span id="cb5-9"><a></a><span class="cf">while</span> tests <span class="op">&gt;</span> <span class="dv">0</span>:</span>
-<span id="cb5-10"><a></a>    data[random.randint(<span class="dv">0</span>,<span class="bu">len</span>(data)<span class="op">-</span><span class="dv">1</span>)] <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb5-11"><a></a>    tests <span class="op">-=</span> <span class="dv">1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="a0ec4c4b" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a aria-label="1"></a><span class="im">import</span> random </span>
+<span id="cb5-2"><a aria-label="2"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot <span class="im">as</span> plt</span>
+<span id="cb5-3"><a aria-label="3"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb5-4"><a aria-label="4"></a></span>
+<span id="cb5-5"><a aria-label="5"></a>size <span class="op">=</span> <span class="dv">1000</span></span>
+<span id="cb5-6"><a aria-label="6"></a>data <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> size</span>
+<span id="cb5-7"><a aria-label="7"></a></span>
+<span id="cb5-8"><a aria-label="8"></a>tests <span class="op">=</span> <span class="dv">10000000</span></span>
+<span id="cb5-9"><a aria-label="9"></a><span class="cf">while</span> tests <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb5-10"><a aria-label="10"></a>    data[random.randint(<span class="dv">0</span>,<span class="bu">len</span>(data)<span class="op">-</span><span class="dv">1</span>)] <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb5-11"><a aria-label="11"></a>    tests <span class="op">-=</span> <span class="dv">1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Answer on next slide…</p>
 </section>
 <section id="aaaaaaaaaaand-repeat-1" class="slide level2">
 <h2>Aaaaaaaaaaand Repeat</h2>
-<div id="8f204bdb" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a>fig <span class="op">=</span> plt.figure()</span>
-<span id="cb6-2"><a></a>plt.bar(np.arange(<span class="dv">0</span>,<span class="bu">len</span>(data)), data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="24b3b221" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a aria-label="1"></a>fig <span class="op">=</span> plt.figure()</span>
+<span id="cb6-2"><a aria-label="2"></a>plt.bar(np.arange(<span class="dv">0</span>,<span class="bu">len</span>(data)), data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><a href="6.2-Randomness_files/figure-revealjs/cell-5-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img data-src="6.2-Randomness_files/figure-revealjs/cell-5-output-1.png" width="815" height="411"></a></p>
+<p><a href="6.2-Randomness_files/figure-html/cell-5-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img data-src="6.2-Randomness_files/figure-html/cell-5-output-1.png" alt="Bar chart of random integers from a draw of 10000000" width="592" height="411"></a></p>
 </figure>
 </div>
 </div>
@@ -420,25 +433,25 @@ Seeds and Salts
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
-<aside><ol class="aside-footnotes"><li id="fn1"><p>I like <a href="https://security.stackexchange.com/a/80988">schroeder</a>’s Stack Exchange explanation of the difference.</p></li></ol></aside></section>
+<aside role="note" aria-label="Footnotes"><ol class="aside-footnotes"><li id="fn1"><p>I like <a href="https://security.stackexchange.com/a/80988">schroeder</a>’s Stack Exchange explanation of the difference.</p></li></ol></aside></section>
 <section id="just-add-salt" class="slide level2">
 <h2>Just add salt</h2>
-<p><a href="./img/Hashing_and_Salts.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img data-src="./img/Hashing_and_Salts.png"></a></p>
+<p><a href="./img/Hashing_and_Salts.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img data-src="./img/Hashing_and_Salts.png" alt="Diagram of a password combined with a random salt and passed through a hash function to produce a stored hash"></a></p>
 </section>
 <section id="hashing" class="slide level2">
 <h2>Hashing</h2>
 <p>Spot the difference:</p>
-<div id="be912aa9" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="im">import</span> hashlib <span class="co"># Can take a 'salt' (similar to a 'seed')</span></span>
-<span id="cb7-2"><a></a></span>
-<span id="cb7-3"><a></a>r1 <span class="op">=</span> hashlib.md5(<span class="st">'CASA Intro to Programming'</span>.encode())</span>
-<span id="cb7-4"><a></a><span class="bu">print</span>(<span class="ss">f"The hashed equivalent of r1 is: </span><span class="sc">{</span>r1<span class="sc">.</span>hexdigest()<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb7-5"><a></a></span>
-<span id="cb7-6"><a></a>r2 <span class="op">=</span> hashlib.md5(<span class="st">'CASA Intro to Programming '</span>.encode())</span>
-<span id="cb7-7"><a></a><span class="bu">print</span>(<span class="ss">f"The hashed equivalent of r2 is: </span><span class="sc">{</span>r2<span class="sc">.</span>hexdigest()<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb7-8"><a></a></span>
-<span id="cb7-9"><a></a>r3 <span class="op">=</span> hashlib.md5(<span class="st">'CASA Intro to Programming'</span>.encode())</span>
-<span id="cb7-10"><a></a><span class="bu">print</span>(<span class="ss">f"The hashed equivalent of r3 is: </span><span class="sc">{</span>r3<span class="sc">.</span>hexdigest()<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="9f7d9354" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a aria-label="1"></a><span class="im">import</span> hashlib <span class="co"># Can take a 'salt' (similar to a 'seed')</span></span>
+<span id="cb7-2"><a aria-label="2"></a></span>
+<span id="cb7-3"><a aria-label="3"></a>r1 <span class="op">=</span> hashlib.md5(<span class="st">'CASA Intro to Programming'</span>.encode())</span>
+<span id="cb7-4"><a aria-label="4"></a><span class="bu">print</span>(<span class="ss">f"The hashed equivalent of r1 is: </span><span class="sc">{</span>r1<span class="sc">.</span>hexdigest()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb7-5"><a aria-label="5"></a></span>
+<span id="cb7-6"><a aria-label="6"></a>r2 <span class="op">=</span> hashlib.md5(<span class="st">'CASA Intro to Programming '</span>.encode())</span>
+<span id="cb7-7"><a aria-label="7"></a><span class="bu">print</span>(<span class="ss">f"The hashed equivalent of r2 is: </span><span class="sc">{</span>r2<span class="sc">.</span>hexdigest()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb7-8"><a aria-label="8"></a></span>
+<span id="cb7-9"><a aria-label="9"></a>r3 <span class="op">=</span> hashlib.md5(<span class="st">'CASA Intro to Programming'</span>.encode())</span>
+<span id="cb7-10"><a aria-label="10"></a><span class="bu">print</span>(<span class="ss">f"The hashed equivalent of r3 is: </span><span class="sc">{</span>r3<span class="sc">.</span>hexdigest()<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>The hashed equivalent of r1 is: acd601db5552408851070043947683ef
 The hashed equivalent of r2 is: 4458e89e9eb806f1ac60acfdf45d85b6
@@ -461,17 +474,17 @@ The hashed equivalent of r3 is: acd601db5552408851070043947683ef</code></pre>
 </section>
 <section id="and-note" class="slide level2">
 <h2>And Note…</h2>
-<div id="c4821db5" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a><span class="im">import</span> requests</span>
-<span id="cb9-2"><a></a>night <span class="op">=</span> requests.get(<span class="st">"http://www.gutenberg.org/ebooks/1514.txt.utf-8"</span>)</span>
-<span id="cb9-3"><a></a><span class="bu">print</span>(<span class="ss">f"The text is '</span><span class="sc">{</span>night<span class="sc">.</span>text[<span class="dv">32</span>:<span class="dv">63</span>]<span class="sc">.</span>strip()<span class="sc">}</span><span class="ss">'"</span>)</span>
-<span id="cb9-4"><a></a><span class="bu">print</span>(<span class="ss">f"The text is </span><span class="sc">{</span><span class="bu">len</span>(night.text)<span class="sc">:,}</span><span class="ss"> characters long"</span>)</span>
-<span id="cb9-5"><a></a><span class="bu">hash</span> <span class="op">=</span> hashlib.md5(night.text.encode())</span>
-<span id="cb9-6"><a></a><span class="bu">print</span>(<span class="ss">f"This can be hashed into: </span><span class="sc">{</span><span class="bu">hash</span><span class="sc">.</span>hexdigest()<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="bf7c19e2" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a aria-label="1"></a><span class="im">import</span> requests</span>
+<span id="cb9-2"><a aria-label="2"></a>night <span class="op">=</span> requests.get(<span class="st">"http://www.gutenberg.org/ebooks/1514.txt.utf-8"</span>)</span>
+<span id="cb9-3"><a aria-label="3"></a><span class="bu">print</span>(<span class="ss">f"The text is '</span><span class="sc">{</span>night<span class="sc">.</span>text[<span class="dv">32</span>:<span class="dv">63</span>]<span class="sc">.</span>strip()<span class="sc">}</span><span class="ss">'"</span>)</span>
+<span id="cb9-4"><a aria-label="4"></a><span class="bu">print</span>(<span class="ss">f"The text is </span><span class="sc">{</span><span class="bu">len</span>(night.text)<span class="sc">:,}</span><span class="ss"> characters long"</span>)</span>
+<span id="cb9-5"><a aria-label="5"></a><span class="bu">hash</span> <span class="op">=</span> hashlib.md5(night.text.encode())</span>
+<span id="cb9-6"><a aria-label="6"></a><span class="bu">print</span>(<span class="ss">f"This can be hashed into: </span><span class="sc">{</span><span class="bu">hash</span><span class="sc">.</span>hexdigest()<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>The text is 'A Midsummer Night's Dream'
-The text is 119,968 characters long
-This can be hashed into: 2bd4cfe946d9a97d9ed07631450196af</code></pre>
+<pre><code>The text is 'Midsummer Night's Dream'
+The text is 120,008 characters long
+This can be hashed into: 8645f1222097ad5c953b3a82b536ec22</code></pre>
 </div>
 </div>
 <aside class="notes">
@@ -492,20 +505,20 @@ This can be hashed into: 2bd4cfe946d9a97d9ed07631450196af</code></pre>
 <section id="jupyterlab-password" class="slide level2">
 <h2>JupyterLab Password</h2>
 <p>To set a password in JupyterLab you need something like this:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a></a><span class="ex">sha1:d36ae21ea7f84801:2f60d6dba76a2b51ba884eb591cdb36e9f8f4dd2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb11"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a aria-label="1"></a><span class="ex">sha1:d36ae21ea7f84801:2f60d6dba76a2b51ba884eb591cdb36e9f8f4dd2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>How this was generated:</p>
-<div id="6735fe21" class="cell" data-execution_count="7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a><span class="im">import</span> uuid, hashlib</span>
-<span id="cb12-2"><a></a>salt <span class="op">=</span> uuid.uuid4().<span class="bu">hex</span>[:<span class="dv">16</span>] <span class="co"># Truncate salt</span></span>
-<span id="cb12-3"><a></a>password <span class="op">=</span> <span class="st">'casa2021'</span>        <span class="co"># Set password</span></span>
-<span id="cb12-4"><a></a></span>
-<span id="cb12-5"><a></a><span class="co"># Here we combine the password and salt to </span></span>
-<span id="cb12-6"><a></a><span class="co"># 'add complexity' to the hash</span></span>
-<span id="cb12-7"><a></a>hashed_password <span class="op">=</span> hashlib.sha1(password.encode() <span class="op">+</span> </span>
-<span id="cb12-8"><a></a>                  salt.encode()).hexdigest()</span>
-<span id="cb12-9"><a></a><span class="bu">print</span>(<span class="st">':'</span>.join([<span class="st">'sha1'</span>,salt,hashed_password]))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="769dc014" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a aria-label="1"></a><span class="im">import</span> uuid, hashlib</span>
+<span id="cb12-2"><a aria-label="2"></a>salt <span class="op">=</span> uuid.uuid4().<span class="bu">hex</span>[:<span class="dv">16</span>] <span class="co"># Truncate salt</span></span>
+<span id="cb12-3"><a aria-label="3"></a>password <span class="op">=</span> <span class="st">'casa2021'</span>        <span class="co"># Set password</span></span>
+<span id="cb12-4"><a aria-label="4"></a></span>
+<span id="cb12-5"><a aria-label="5"></a><span class="co"># Here we combine the password and salt to </span></span>
+<span id="cb12-6"><a aria-label="6"></a><span class="co"># 'add complexity' to the hash</span></span>
+<span id="cb12-7"><a aria-label="7"></a>hashed_password <span class="op">=</span> hashlib.sha1(password.encode() <span class="op">+</span> </span>
+<span id="cb12-8"><a aria-label="8"></a>                  salt.encode()).hexdigest()</span>
+<span id="cb12-9"><a aria-label="9"></a><span class="bu">print</span>(<span class="st">':'</span>.join([<span class="st">'sha1'</span>,salt,hashed_password]))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>sha1:4b75f2c47bdb41b1:2aa2a7ad58cfc4204fae2d8c029a629df18f1513</code></pre>
+<pre><code>sha1:4755b84bad7c4b50:0506faf1cabdfcae20378bde18cd3a0806431bb4</code></pre>
 </div>
 </div>
 
@@ -539,12 +552,12 @@ This can be hashed into: 2bd4cfe946d9a97d9ed07631450196af</code></pre>
 <section id="back-to-randomness" class="slide level2">
 <h2>Back to Randomness</h2>
 <p>Two main libraries where seeds are set:</p>
-<div id="f729dfcc" class="cell" data-execution_count="8">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a><span class="im">import</span> random</span>
-<span id="cb14-2"><a></a>random.seed(<span class="dv">42</span>)</span>
-<span id="cb14-3"><a></a></span>
-<span id="cb14-4"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb14-5"><a></a>np.random.seed(<span class="dv">42</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="00725df7" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a aria-label="1"></a><span class="im">import</span> random</span>
+<span id="cb14-2"><a aria-label="2"></a>random.seed(<span class="dv">42</span>)</span>
+<span id="cb14-3"><a aria-label="3"></a></span>
+<span id="cb14-4"><a aria-label="4"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb14-5"><a aria-label="5"></a>np.random.seed(<span class="dv">42</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <aside class="notes">
 <p>Turning now from the security aspects, let’s look at other types seeds.</p>
@@ -561,19 +574,66 @@ This can be hashed into: 2bd4cfe946d9a97d9ed07631450196af</code></pre>
           display:block!important;
       }</style></aside>
 </section>
+<section id="how-seeds-work" class="slide level2">
+<h2>How Seeds Work</h2>
+<div class="cell" data-reveal="true" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    accTitle: Mermaid chart explaining how seeds work
+    accDescr: seed(42) starts a fixed sequence of numbers (17, 9, 7, 4 and so on). getstate() saves the position after 9, and setstate() returns to that saved position so the same numbers are drawn again.
+    SEED("seed(42)")
+
+    subgraph TAPE [Sequence]
+        N1["17"] --&gt; N2["9"] --&gt; N4["7"] --&gt; N5["4"] --&gt; NN["..."]
+    end
+
+    subgraph TAPEX [Sequence]
+        NN1["17"] .- NN2["9"] --&gt; NN4["7"] --&gt; NN5["4"] --&gt; NNN["..."]
+    end
+
+    SEED --&gt; N1
+    
+    N2-. "getstate()" .-&gt;SNAP("Saved State")
+    SNAP-. "setstate()" .-&gt;NN2
+
+    style TAPE fill: lightpink
+    style TAPEX fill: lightpink
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<p>Think of the PRNG – Pseudo-Random Number Generator – as a very long tape of numbers that never changes. Each <code>seed</code> creates a different tape and places you at the starting position on the tape. Each call to <code>random.randint()</code> reads the next value off the tape and advances the position of the ‘read head’ by one. <code>getstate()</code> saves a location on the tape. <code>setstate()</code> moves the reader to the saved location, so from there the same values will be read off the tape again. No seed means a random tape is selected.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
 <section id="seeds-and-state" class="slide level2">
 <h2>Seeds and State</h2>
-<div id="d7b957db" class="cell" data-execution_count="9">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a><span class="im">import</span> random</span>
-<span id="cb15-2"><a></a>random.seed(<span class="dv">42</span>)</span>
-<span id="cb15-3"><a></a>st <span class="op">=</span> random.getstate()</span>
-<span id="cb15-4"><a></a><span class="cf">for</span> r <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">3</span>):</span>
-<span id="cb15-5"><a></a>    random.setstate(st)</span>
-<span id="cb15-6"><a></a>    <span class="bu">print</span>(<span class="ss">f"Repetition </span><span class="sc">{</span>r<span class="sc">}</span><span class="ss">:"</span>)</span>
-<span id="cb15-7"><a></a>    ints <span class="op">=</span> []</span>
-<span id="cb15-8"><a></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">10</span>):</span>
-<span id="cb15-9"><a></a>        ints.append(random.randint(<span class="dv">0</span>,<span class="dv">10</span>))</span>
-<span id="cb15-10"><a></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="sc">{</span>ints<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="b1347d07" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a aria-label="1"></a><span class="im">import</span> random</span>
+<span id="cb15-2"><a aria-label="2"></a>random.seed(<span class="dv">42</span>)</span>
+<span id="cb15-3"><a aria-label="3"></a>st <span class="op">=</span> random.getstate()</span>
+<span id="cb15-4"><a aria-label="4"></a><span class="cf">for</span> r <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">3</span>):</span>
+<span id="cb15-5"><a aria-label="5"></a>    random.setstate(st)</span>
+<span id="cb15-6"><a aria-label="6"></a>    <span class="bu">print</span>(<span class="ss">f"Repetition </span><span class="sc">{</span>r<span class="sc">}</span><span class="ss">:"</span>)</span>
+<span id="cb15-7"><a aria-label="7"></a>    ints <span class="op">=</span> []</span>
+<span id="cb15-8"><a aria-label="8"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">10</span>):</span>
+<span id="cb15-9"><a aria-label="9"></a>        ints.append(random.randint(<span class="dv">0</span>,<span class="dv">10</span>))</span>
+<span id="cb15-10"><a aria-label="10"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\t</span><span class="sc">{</span>ints<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Repetition 0:
     [10, 1, 0, 4, 3, 3, 2, 1, 10, 8]
@@ -614,9 +674,9 @@ References
 
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
-<p><img src="../img/logo/full.svg" class="slide-logo"></p>
+<p><img src="../img/logo/full.svg" class="slide-logo" alt=""></p>
 <div class="footer footer-default">
-<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2025 | Jon Reades</a></p>
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2026 | Jon Reades</a></p>
 </div>
 </div></div>
 

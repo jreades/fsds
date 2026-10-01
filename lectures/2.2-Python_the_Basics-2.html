@@ -7,21 +7,31 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-da61f9a05e9cefe097d79e8430a73dd4.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.8.24">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-aced932c6eb97d642153b8e218288f9f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/quarto-axe/axe.min.js"></script>
+<script src="../site_libs/quarto-axe/axe-check.js" type="module"></script>
+<script id="quarto-axe-checker-options" type="text/plain">eyJvdXRwdXQiOiJkb2N1bWVudCJ9</script>
+<link href="../site_libs/reveal-theme/reveal-theme-6ec7a94939c7281a5ee2e5382b76028b.min.css" rel="stylesheet" append-hash="true" data-mode="light"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.10.18">
 
   <meta name="author" content="Jon Reades">
   <title>Foundations of Spatial Data Science – Python: the Basics (Part 2)</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
   <style>
-    code{white-space: pre-wrap;}
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
@@ -95,7 +105,7 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-b6d6ca89e0c39dcc6c0c87d5e30c596f.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-d945b4c252f9130eae0c493518ea35dc.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -189,7 +199,7 @@
   </style>
 <meta property="og:title" content="Python: the Basics(Part 2) – Foundations of Spatial Data Science">
 <meta property="og:image" content="img/logo/full_sm.png">
-<meta property="og:site_name" content="Foundations">
+<meta property="og:site_name" content="Foundations of Spatial Data Science">
 <meta property="og:locale" content="en_GB">
 </head>
 <body class="quarto-light">
@@ -207,7 +217,7 @@
 
 <p><span style="margin:0px; font-weight:700;" class="author">Jon Reades</span> - j.reades@ucl.ac.uk </p>
 
-<p style="opacity: 0.8">1st October 2025</p>
+<p style="opacity: 0.8">28th September 2026</p>
 
 <p style="opacity:0.8;"></p>
 
@@ -220,17 +230,17 @@
 <section id="conditions-consequences" class="slide level2">
 <h2>Conditions &amp; Consequences</h2>
 <p>The simplest condition only considers one outcome:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="cf">if</span> <span class="op">&lt;</span>condition <span class="kw">is</span> true<span class="op">&gt;</span>:</span>
-<span id="cb1-2"><a></a>    <span class="co">#...do something...</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>But you’ll often needs something a little more sophisticated:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="cf">if</span> <span class="op">&lt;</span>condition <span class="kw">is</span> true<span class="op">&gt;</span>:</span>
-<span id="cb2-2"><a></a>    <span class="co">#...do something...</span></span>
-<span id="cb2-3"><a></a><span class="cf">elif</span> <span class="op">&lt;</span>some other condition <span class="kw">is</span> true<span class="op">&gt;</span>:</span>
-<span id="cb2-4"><a></a>    <span class="co">#...do something else...</span></span>
-<span id="cb2-5"><a></a><span class="cf">else</span>:</span>
-<span id="cb2-6"><a></a>    <span class="co">#...if no conditions are true...</span></span>
-<span id="cb2-7"><a></a></span>
-<span id="cb2-8"><a></a><span class="co">#...code continues...</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a aria-label="1"></a><span class="cf">if</span> <span class="op">&lt;</span>condition <span class="kw">is</span> true<span class="op">&gt;</span>:</span>
+<span id="cb1-2"><a aria-label="2"></a>    <span class="co">#...do something...</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>But you’ll often need something a little more sophisticated:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a aria-label="1"></a><span class="cf">if</span> <span class="op">&lt;</span>condition <span class="kw">is</span> true<span class="op">&gt;</span>:</span>
+<span id="cb2-2"><a aria-label="2"></a>    <span class="co">#...do something...</span></span>
+<span id="cb2-3"><a aria-label="3"></a><span class="cf">elif</span> <span class="op">&lt;</span>some other condition <span class="kw">is</span> true<span class="op">&gt;</span>:</span>
+<span id="cb2-4"><a aria-label="4"></a>    <span class="co">#...do something else...</span></span>
+<span id="cb2-5"><a aria-label="5"></a><span class="cf">else</span>:</span>
+<span id="cb2-6"><a aria-label="6"></a>    <span class="co">#...if no conditions are true...</span></span>
+<span id="cb2-7"><a aria-label="7"></a></span>
+<span id="cb2-8"><a aria-label="8"></a><span class="co">#...code continues...</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <aside class="notes">
 <p>But no matter how complex, conditions always ultimately evaluate to <code>True</code> or <code>False</code>.</p>
 <style type="text/css">
@@ -247,17 +257,17 @@
 </section>
 <section id="for-example" class="slide level2">
 <h2>For Example</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="cf">if</span> x <span class="op">&lt;</span> y:</span>
-<span id="cb3-2"><a></a>  <span class="bu">print</span>(<span class="st">"x is less than y"</span>)</span>
-<span id="cb3-3"><a></a><span class="cf">else</span>:</span>
-<span id="cb3-4"><a></a>  <span class="bu">print</span>(<span class="st">"x is not less than y"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a aria-label="1"></a><span class="cf">if</span> x <span class="op">&lt;</span> y:</span>
+<span id="cb3-2"><a aria-label="2"></a>  <span class="bu">print</span>(<span class="st">"x is less than y"</span>)</span>
+<span id="cb3-3"><a aria-label="3"></a><span class="cf">else</span>:</span>
+<span id="cb3-4"><a aria-label="4"></a>  <span class="bu">print</span>(<span class="st">"x is not less than y"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Or:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="cf">if</span> x <span class="op">&lt;</span> y:</span>
-<span id="cb4-2"><a></a>  <span class="bu">print</span>(<span class="st">"x is less than y"</span>)</span>
-<span id="cb4-3"><a></a><span class="cf">elif</span> x <span class="op">&gt;</span> y:</span>
-<span id="cb4-4"><a></a>  <span class="bu">print</span>(<span class="st">"x is greater than y"</span>)</span>
-<span id="cb4-5"><a></a><span class="cf">else</span>:</span>
-<span id="cb4-6"><a></a>  <span class="bu">print</span>(<span class="st">"x equals y"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a aria-label="1"></a><span class="cf">if</span> x <span class="op">&lt;</span> y:</span>
+<span id="cb4-2"><a aria-label="2"></a>  <span class="bu">print</span>(<span class="st">"x is less than y"</span>)</span>
+<span id="cb4-3"><a aria-label="3"></a><span class="cf">elif</span> x <span class="op">&gt;</span> y:</span>
+<span id="cb4-4"><a aria-label="4"></a>  <span class="bu">print</span>(<span class="st">"x is greater than y"</span>)</span>
+<span id="cb4-5"><a aria-label="5"></a><span class="cf">else</span>:</span>
+<span id="cb4-6"><a aria-label="6"></a>  <span class="bu">print</span>(<span class="st">"x equals y"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="conditional-syntax" class="slide level2">
 <h2>Conditional Syntax</h2>
@@ -271,39 +281,39 @@
 </section>
 <section id="all-of-them-together-input" class="slide level2">
 <h2>All of Them Together (Input)!</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="cf">if</span> hours <span class="op">&gt;=</span> <span class="dv">0</span>:</span>
-<span id="cb5-2"><a></a><span class="bu">print</span>(<span class="st">"Hours were worked."</span>)</span>
-<span id="cb5-3"><a></a><span class="cf">else</span></span>
-<span id="cb5-4"><a></a>    <span class="bu">print</span> <span class="st">"No hours were worked."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a aria-label="1"></a><span class="cf">if</span> hours <span class="op">&gt;=</span> <span class="dv">0</span>:</span>
+<span id="cb5-2"><a aria-label="2"></a><span class="bu">print</span>(<span class="st">"Hours were worked."</span>)</span>
+<span id="cb5-3"><a aria-label="3"></a><span class="cf">else</span></span>
+<span id="cb5-4"><a aria-label="4"></a>    <span class="bu">print</span> <span class="st">"No hours were worked."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>All <strong>four errors</strong> can be found here, can you spot them?</p>
 </section>
 <section id="all-of-them-together-output" class="slide level2">
 <h2>All of Them Together (Output)!</h2>
 <p>Output from the Python interpreter:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="op">&gt;&gt;&gt;</span> <span class="cf">if</span> hours <span class="op">&gt;=</span> <span class="dv">0</span>:</span>
-<span id="cb6-2"><a></a>... <span class="bu">print</span>(<span class="st">"Hours were worked."</span>)</span>
-<span id="cb6-3"><a></a>  File <span class="st">"&lt;stdin&gt;"</span>, line <span class="dv">2</span></span>
-<span id="cb6-4"><a></a>    <span class="bu">print</span>(<span class="st">"Hours were worked."</span>)</span>
-<span id="cb6-5"><a></a>    <span class="op">^</span></span>
-<span id="cb6-6"><a></a><span class="pp">IndentationError</span>: expected an indented block</span>
-<span id="cb6-7"><a></a><span class="op">&gt;&gt;&gt;</span> <span class="cf">else</span></span>
-<span id="cb6-8"><a></a>  File <span class="st">"&lt;stdin&gt;"</span>, line <span class="dv">1</span></span>
-<span id="cb6-9"><a></a>    <span class="cf">else</span></span>
-<span id="cb6-10"><a></a>    <span class="op">^</span></span>
-<span id="cb6-11"><a></a><span class="pp">SyntaxError</span>: invalid syntax</span>
-<span id="cb6-12"><a></a><span class="op">&gt;&gt;&gt;</span>     <span class="bu">print</span> <span class="st">"No hours were worked."</span>)</span>
-<span id="cb6-13"><a></a>  File <span class="st">"&lt;stdin&gt;"</span>, line <span class="dv">1</span></span>
-<span id="cb6-14"><a></a>    <span class="bu">print</span> <span class="st">"No hours were worked."</span>)</span>
-<span id="cb6-15"><a></a>    <span class="op">^</span></span>
-<span id="cb6-16"><a></a><span class="pp">IndentationError</span>: unexpected indent</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a aria-label="1"></a><span class="op">&gt;&gt;&gt;</span> <span class="cf">if</span> hours <span class="op">&gt;=</span> <span class="dv">0</span>:</span>
+<span id="cb6-2"><a aria-label="2"></a>... <span class="bu">print</span>(<span class="st">"Hours were worked."</span>)</span>
+<span id="cb6-3"><a aria-label="3"></a>  File <span class="st">"&lt;stdin&gt;"</span>, line <span class="dv">2</span></span>
+<span id="cb6-4"><a aria-label="4"></a>    <span class="bu">print</span>(<span class="st">"Hours were worked."</span>)</span>
+<span id="cb6-5"><a aria-label="5"></a>    <span class="op">^</span></span>
+<span id="cb6-6"><a aria-label="6"></a><span class="pp">IndentationError</span>: expected an indented block</span>
+<span id="cb6-7"><a aria-label="7"></a><span class="op">&gt;&gt;&gt;</span> <span class="cf">else</span></span>
+<span id="cb6-8"><a aria-label="8"></a>  File <span class="st">"&lt;stdin&gt;"</span>, line <span class="dv">1</span></span>
+<span id="cb6-9"><a aria-label="9"></a>    <span class="cf">else</span></span>
+<span id="cb6-10"><a aria-label="10"></a>    <span class="op">^</span></span>
+<span id="cb6-11"><a aria-label="11"></a><span class="pp">SyntaxError</span>: invalid syntax</span>
+<span id="cb6-12"><a aria-label="12"></a><span class="op">&gt;&gt;&gt;</span>     <span class="bu">print</span> <span class="st">"No hours were worked."</span>)</span>
+<span id="cb6-13"><a aria-label="13"></a>  File <span class="st">"&lt;stdin&gt;"</span>, line <span class="dv">1</span></span>
+<span id="cb6-14"><a aria-label="14"></a>    <span class="bu">print</span> <span class="st">"No hours were worked."</span>)</span>
+<span id="cb6-15"><a aria-label="15"></a>    <span class="op">^</span></span>
+<span id="cb6-16"><a aria-label="16"></a><span class="pp">IndentationError</span>: unexpected indent</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="thats-better" class="slide level2">
 <h2>That’s Better!</h2>
 <p>It’s <em>relatively</em> straightforward to figure out the <strong>syntax errors</strong>, but the <strong>logical error</strong> is much less obvious. Over time, you become far <em>more</em> likely to make logical errors than syntactical ones.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="cf">if</span> hours <span class="op">&gt;</span> <span class="dv">0</span>:</span>
-<span id="cb7-2"><a></a>    <span class="bu">print</span>(<span class="st">"Hours were worked."</span>)</span>
-<span id="cb7-3"><a></a><span class="cf">else</span>:</span>
-<span id="cb7-4"><a></a>    <span class="bu">print</span>(<span class="st">"No hours were worked."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a aria-label="1"></a><span class="cf">if</span> hours <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb7-2"><a aria-label="2"></a>    <span class="bu">print</span>(<span class="st">"Hours were worked."</span>)</span>
+<span id="cb7-3"><a aria-label="3"></a><span class="cf">else</span>:</span>
+<span id="cb7-4"><a aria-label="4"></a>    <span class="bu">print</span>(<span class="st">"No hours were worked."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section></section>
 <section>
 <section id="comment-your-code" class="title-slide slide level1 center">
@@ -347,44 +357,44 @@
 </section>
 <section id="different-comment-styles" class="slide level2">
 <h2>Different Comment Styles</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a><span class="co"># This is a short comment</span></span>
-<span id="cb8-2"><a></a><span class="bu">print</span>(<span class="st">"Foo"</span>)</span>
-<span id="cb8-3"><a></a><span class="bu">print</span>(<span class="st">"Bar"</span>) <span class="co"># Also a short comment</span></span>
-<span id="cb8-4"><a></a></span>
-<span id="cb8-5"><a></a><span class="co"># ------- New Section --------</span></span>
-<span id="cb8-6"><a></a><span class="co"># You can have comments span multiple</span></span>
-<span id="cb8-7"><a></a><span class="co"># lines just by adding more '#' at the </span></span>
-<span id="cb8-8"><a></a><span class="co"># start of the line.</span></span>
-<span id="cb8-9"><a></a></span>
-<span id="cb8-10"><a></a><span class="co"># You can keep code from running</span></span>
-<span id="cb8-11"><a></a><span class="co"># print("Baz")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a aria-label="1"></a><span class="co"># This is a short comment</span></span>
+<span id="cb8-2"><a aria-label="2"></a><span class="bu">print</span>(<span class="st">"Foo"</span>)</span>
+<span id="cb8-3"><a aria-label="3"></a><span class="bu">print</span>(<span class="st">"Bar"</span>) <span class="co"># Also a short comment</span></span>
+<span id="cb8-4"><a aria-label="4"></a></span>
+<span id="cb8-5"><a aria-label="5"></a><span class="co"># ------- New Section --------</span></span>
+<span id="cb8-6"><a aria-label="6"></a><span class="co"># You can have comments span multiple</span></span>
+<span id="cb8-7"><a aria-label="7"></a><span class="co"># lines just by adding more '#' at the </span></span>
+<span id="cb8-8"><a aria-label="8"></a><span class="co"># start of the line.</span></span>
+<span id="cb8-9"><a aria-label="9"></a></span>
+<span id="cb8-10"><a aria-label="10"></a><span class="co"># You can keep code from running</span></span>
+<span id="cb8-11"><a aria-label="11"></a><span class="co"># print("Baz")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="comments-follow-indentation" class="slide level2">
 <h2>Comments Follow Indentation</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a><span class="co"># Function for processing occupational data</span></span>
-<span id="cb9-2"><a></a><span class="co"># from the 2001 and 2011 Censuses.</span></span>
-<span id="cb9-3"><a></a><span class="kw">def</span> occ_data(df):</span>
-<span id="cb9-4"><a></a>  <span class="co">#  Columns of interest</span></span>
-<span id="cb9-5"><a></a>  cols <span class="op">=</span> [<span class="st">'Managerial'</span>,<span class="st">'Professional'</span>,<span class="st">'Technical'</span>]</span>
-<span id="cb9-6"><a></a>    </span>
-<span id="cb9-7"><a></a>  <span class="co"># Integrate results into single dataset -- </span></span>
-<span id="cb9-8"><a></a>  <span class="co"># right now we don't replicate Jordan's approach of</span></span>
-<span id="cb9-9"><a></a>  <span class="co"># grouping them into 'knowledge worker' and 'other'. </span></span>
-<span id="cb9-10"><a></a>  <span class="cf">for</span> i <span class="kw">in</span> df.iterrows():</span>
-<span id="cb9-11"><a></a>    <span class="co"># For each column...</span></span>
-<span id="cb9-12"><a></a>    <span class="cf">for</span> j <span class="kw">in</span> cols:</span>
-<span id="cb9-13"><a></a>      <span class="co"># Do something</span></span>
-<span id="cb9-14"><a></a>      ...</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a aria-label="1"></a><span class="co"># Function for processing occupational data</span></span>
+<span id="cb9-2"><a aria-label="2"></a><span class="co"># from the 2001 and 2011 Censuses.</span></span>
+<span id="cb9-3"><a aria-label="3"></a><span class="kw">def</span> occ_data(df):</span>
+<span id="cb9-4"><a aria-label="4"></a>  <span class="co">#  Columns of interest</span></span>
+<span id="cb9-5"><a aria-label="5"></a>  cols <span class="op">=</span> [<span class="st">'Managerial'</span>,<span class="st">'Professional'</span>,<span class="st">'Technical'</span>]</span>
+<span id="cb9-6"><a aria-label="6"></a>    </span>
+<span id="cb9-7"><a aria-label="7"></a>  <span class="co"># Integrate results into single dataset -- </span></span>
+<span id="cb9-8"><a aria-label="8"></a>  <span class="co"># right now we don't replicate Jordan's approach of</span></span>
+<span id="cb9-9"><a aria-label="9"></a>  <span class="co"># grouping them into 'knowledge worker' and 'other'. </span></span>
+<span id="cb9-10"><a aria-label="10"></a>  <span class="cf">for</span> i <span class="kw">in</span> df.iterrows():</span>
+<span id="cb9-11"><a aria-label="11"></a>    <span class="co"># For each column...</span></span>
+<span id="cb9-12"><a aria-label="12"></a>    <span class="cf">for</span> j <span class="kw">in</span> cols:</span>
+<span id="cb9-13"><a aria-label="13"></a>      <span class="co"># Do something</span></span>
+<span id="cb9-14"><a aria-label="14"></a>      ...</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="easier-multi-line-comments" class="slide level2">
 <h2>Easier Multi-Line Comments</h2>
 <p>The below are not <em>real</em> comments, but they can help when you have a really long comment that you want to make. They are also used to help explain what a function does (called a <code>docstring</code>).</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a><span class="co">"""</span></span>
-<span id="cb10-2"><a></a><span class="co">So I was thinking that what we need here is </span></span>
-<span id="cb10-3"><a></a><span class="co">a way to handle the case where the data is</span></span>
-<span id="cb10-4"><a></a><span class="co">incomplete or contains an observation that we</span></span>
-<span id="cb10-5"><a></a><span class="co">weren't expecting (e.g. "N/A" instead of "0").</span></span>
-<span id="cb10-6"><a></a><span class="co">"""</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a aria-label="1"></a><span class="co">"""</span></span>
+<span id="cb10-2"><a aria-label="2"></a><span class="co">So I was thinking that what we need here is </span></span>
+<span id="cb10-3"><a aria-label="3"></a><span class="co">a way to handle the case where the data is</span></span>
+<span id="cb10-4"><a aria-label="4"></a><span class="co">incomplete or contains an observation that we</span></span>
+<span id="cb10-5"><a aria-label="5"></a><span class="co">weren't expecting (e.g. "N/A" instead of "0").</span></span>
+<span id="cb10-6"><a aria-label="6"></a><span class="co">"""</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="tips" class="slide level2">
 <h2>Tips</h2>
@@ -421,9 +431,9 @@ References
 </section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
-<p><img src="../img/logo/full.svg" class="slide-logo"></p>
+<p><img src="../img/logo/full.svg" class="slide-logo" alt=""></p>
 <div class="footer footer-default">
-<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2025 | Jon Reades</a></p>
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2026 | Jon Reades</a></p>
 </div>
 </div></div>
 

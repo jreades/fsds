@@ -2,19 +2,25 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.24">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Jon Reades">
-<meta name="dcterms.date" content="2025-09-30">
+<meta name="dcterms.date" content="2026-09-28">
 
 <title>Foundations (Pt. 1) – Foundations of Spatial Data Science</title>
 <style>
-code{white-space: pre-wrap;}
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -57,19 +63,21 @@ div.csl-indent {
 <link href="..//img/favicon.ico" rel="icon">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-c65962dbb5d575cbb06919ca07087d11.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-c65962dbb5d575cbb06919ca07087d11.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-c65962dbb5d575cbb06919ca07087d11.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7da10b1139b0a40bb5a5d6e5a01f90aa.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-7da10b1139b0a40bb5a5d6e5a01f90aa.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7da10b1139b0a40bb5a5d6e5a01f90aa.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/quarto-axe/axe.min.js"></script>
+<script src="../site_libs/quarto-axe/axe-check.js" type="module"></script>
+<script id="quarto-axe-checker-options" type="text/plain">eyJvdXRwdXQiOiJjb25zb2xlIn0=</script>
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-fe853ba5246912d06385e22c6c0bf4b5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-fe853ba5246912d06385e22c6c0bf4b5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-fe853ba5246912d06385e22c6c0bf4b5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-e2c15e7ff1ae18c39977fd1f5c210dfa.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-52f3849a9dd9cb782fdcd44b2acaaa72.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-e2c15e7ff1ae18c39977fd1f5c210dfa.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -102,7 +110,7 @@ div.csl-indent {
 <meta property="og:title" content="Foundations (Pt. 1) – Foundations of Spatial Data Science">
 <meta property="og:description" content="">
 <meta property="og:image" content="img/logo/full_sm.png">
-<meta property="og:site_name" content="Foundations">
+<meta property="og:site_name" content="Foundations of Spatial Data Science">
 <meta property="og:locale" content="en_GB">
 </head>
 
@@ -110,12 +118,12 @@ div.csl-indent {
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+    <nav class="navbar navbar-expand-lg " aria-label="Main navigation" data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../img/logo/logo_only_sm.png" alt="" class="navbar-logo light-content">
-    <img src="../img/logo/logo_only_sm.png" alt="" class="navbar-logo dark-content">
+    <img src="../img/logo/logo_only_sm.png" alt="Foundations of Spatial Data Science home" class="navbar-logo light-content">
+    <img src="../img/logo/logo_only_sm.png" alt="Foundations of Spatial Data Science home" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Foundations of Spatial Data Science</span>
@@ -216,10 +224,6 @@ div.csl-indent {
         <li><hr class="dropdown-divider"></li>
         <li class="dropdown-header">Elements</li>
         <li>
-    <a class="dropdown-item" href="../assessments/exam.html">
- <span class="dropdown-text">Timed Open Book Exam</span></a>
-  </li>  
-        <li>
     <a class="dropdown-item" href="../assessments/group.html">
  <span class="dropdown-text">Group Work</span></a>
   </li>  
@@ -244,12 +248,12 @@ div.csl-indent {
 </div>
       </div> <!-- /container-fluid -->
     </nav>
-  <nav class="quarto-secondary-nav">
+  <nav class="quarto-secondary-nav" aria-label="Secondary navigation">
     <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <a class="flex-grow-1 no-decor" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1 no-decor" role="button" tabindex="0" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
           <h1 class="quarto-secondary-nav-title">Foundations (Pt. 1)</h1>
         </a>     
     </div>
@@ -258,7 +262,7 @@ div.csl-indent {
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto" aria-label="Section navigation">
     <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="../index.html" class="sidebar-logo-link">
       <img src="../img/logo/full_md.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
@@ -275,9 +279,9 @@ div.csl-indent {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="button" tabindex="0" aria-expanded="true">
  <span class="menu-text">Part 1: Foundations</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="button" tabindex="0" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -322,9 +326,9 @@ div.csl-indent {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="button" tabindex="0" aria-expanded="true">
  <span class="menu-text">Part 2: Process</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="button" tabindex="0" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -363,9 +367,9 @@ div.csl-indent {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="button" tabindex="0" aria-expanded="true">
  <span class="menu-text">Part 3: Bonus</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="button" tabindex="0" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -396,7 +400,7 @@ div.csl-indent {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="2">
+        <nav id="TOC" role="doc-toc" aria-label="Table of contents" class="toc-active" data-toc-expanded="2">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
@@ -434,7 +438,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">September 30, 2025</p>
+      <p class="date">September 28, 2026</p>
     </div>
   </div>
   
@@ -455,13 +459,34 @@ div.csl-indent {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Learning Objectives
+<span class="screen-reader-only">Important</span>Learning Outcomes
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By the end of this week you should be able to:</p>
+<ol type="1">
+<li>Use variables, types, operators, conditions, lists and loops to write short Python programs.</li>
+<li>Read Python error messages to locate and fix syntax errors.</li>
+<li>Navigate the file system and inspect files from the command line.</li>
+<li>Identify what makes writing clear for a non-specialist audience, and evaluate when generative AI helps or undermines learning to code and write.</li>
+<li>Explain how current debates about data and computation echo earlier ones in quantitative geography (Burton; Donoho; Franklin).</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Before class
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <ol type="1">
-<li>A review of basic Python syntax and operators.</li>
-<li>An understanding of how none of this all that new.</li>
+<li><strong>Watch</strong> the five <a href="#pre-recorded-lectures">pre-recorded lectures</a> (≈ 50 min in total): <a href="https://ucl.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=0003f131-157b-4e8c-a049-b37000a147e4">Basics 1</a> (14 min) · <a href="https://ucl.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=a15f6d34-dce6-4b26-bf9b-b3670093b0d1">Basics 2</a> (5 min) · <a href="https://ucl.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=28b27fa6-bb8c-46bc-8d27-b3670093afdf">Lists</a> (9 min) · <a href="https://ucl.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=6f8103d9-b2c6-45a1-b37c-b3670093b099">Iteration</a> (5 min) · <a href="https://ucl.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=4cff0797-b525-4a88-b058-b36700c8ad1c">The Command Line</a> (15 min)</li>
+<li><strong>Read</strong> <span class="citation" data-cites="Burton:1963">Burton (<a href="#ref-Burton:1963" role="doc-biblioref">1963</a>)</span>, <span class="citation" data-cites="Donoho:2017">Donoho (<a href="#ref-Donoho:2017" role="doc-biblioref">2017</a>)</span> and <span class="citation" data-cites="Franklin:2024">Franklin (<a href="#ref-Franklin:2024" role="doc-biblioref">2024</a>)</span>, making notes against the <a href="#study-guide">study guide</a> questions.</li>
+<li><strong>Bring</strong> your laptop with Podman running. If you’re new to Python, do the Code Camp <a href="https://jreades.github.io/code-camp/lessons/The_Basics.html">Basics</a>, <a href="https://jreades.github.io/code-camp/lessons/Boolean_Logic.html">Boolean Logic</a> and <a href="https://jreades.github.io/code-camp/lessons/Lists.html">Lists</a> lessons first.</li>
 </ol>
 </div>
 </div>
@@ -520,12 +545,15 @@ div.csl-indent {
 <li>What are three recent developments that distinguish the current landscape of open software in quantitative methods from previous eras?</li>
 <li>What are some of the emerging subfields within quantitative methods, and what common goal do they share?</li>
 <li>The author argues that the rebranding of quantitative methods as “data science” or “analytics” can be beneficial in certain contexts. Explain these benefits.</li>
-<li>What concerns are raised about the fragmentation of the quantitative methods community identity? <!--
-1. What is the main argument presented in "Housing and Inequality in London" by @Travers:2016? 
-  - How does the report define "affordable housing" and what are the key challenges facing London's housing market?
-  - What are the main drivers of inequality in London, and how do they intersect with housing issues?
-  - What policy recommendations are proposed to address the housing crisis in London?
---></li>
+<li>What concerns are raised about the fragmentation of the quantitative methods community identity? &lt;!–</li>
+</ul>
+<ol type="1">
+<li>What is the main argument presented in “Housing and Inequality in London” by <span class="citation" data-cites="Travers:2016">Travers, Sims, and Bosetti (<a href="#ref-Travers:2016" role="doc-biblioref">2016</a>)</span>?</li>
+</ol>
+<ul>
+<li>How does the report define “affordable housing” and what are the key challenges facing London’s housing market?</li>
+<li>What are the main drivers of inequality in London, and how do they intersect with housing issues?</li>
+<li>What policy recommendations are proposed to address the housing crisis in London? –&gt;</li>
 </ul>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -540,7 +568,7 @@ div.csl-indent {
 <p><span class="citation" data-cites="Franklin:2024">Franklin (<a href="#ref-Franklin:2024" role="doc-biblioref">2024</a>)</span> offers another perspective on ‘the discipline’ of quantitative human geography and its heterogeneity, while <span class="citation" data-cites="Donoho:2017">Donoho (<a href="#ref-Donoho:2017" role="doc-biblioref">2017</a>)</span> will give you context on how data science might differ from what’s covered in Quantitative Methods. You might also find <span class="citation" data-cites="Unwin:1980">Unwin (<a href="#ref-Unwin:1980" role="doc-biblioref">1980</a>)</span> useful for understanding why the practicals are set up the way they are and why we don’t post ‘answers’ until a few days after the last practical group has completed its session. You should read <span class="citation" data-cites="Burton:1963">Burton (<a href="#ref-Burton:1963" role="doc-biblioref">1963</a>)</span> while reflecting on <span class="citation" data-cites="ArribasBel:2018">Arribas-Bel and Reades (<a href="#ref-ArribasBel:2018" role="doc-biblioref">2018</a>)</span> with a view to seeing that ‘there is nothing new under the sun’: we tend to think that the challenges we face now in terms of data volumes and complexity are novel, but <em>they are not</em>. Indeed, here’s John Graham-Cumming keynoting a 2012 conference talking about the Lyons Tea Company and how its programmers invented Dykstra’s shortest path algorithm more than 20 years before Dykstra did!</p>
 </div>
 </div>
-<div class="quarto-video"><iframe data-external="1" src="https://www.youtube.com/embed/pcBJfkE5UwU?si=l6GeLIm2Ilzs4p0f" width="500" height="350" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<div class="quarto-video"><iframe data-external="1" src="https://www.youtube.com/embed/pcBJfkE5UwU?si=l6GeLIm2Ilzs4p0f" width="500" height="350" title="John Graham Cummings at Strata" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 </section>
 </section>
 <section id="pre-recorded-lectures" class="level2">
@@ -677,6 +705,9 @@ Donoho, D. 2017. <span>“50 Years of Data Science.”</span> <em>Journal of Com
 </div>
 <div id="ref-Franklin:2024" class="csl-entry" role="listitem">
 Franklin, Rachel. 2024. <span>“<span class="nocase">Quantitative methods III: Strength in numbers?</span>”</span> <em>Progress in Human Geography</em> 48 (2). SAGE Publications Sage UK: London, England:236–44. <a href="https://doi.org/10.1177/03091325231210512">https://doi.org/10.1177/03091325231210512</a>.
+</div>
+<div id="ref-Travers:2016" class="csl-entry" role="listitem">
+Travers, Tony, Sam Sims, and Nicolas Bosetti. 2016. <span>“Housing and Inequality in London.”</span> Centre for London. <a href="https://www.centreforlondon.org/wp-content/uploads/2016/08/CFLJ4292-London-Inequality-04_16_WEB_V4.pdf">https://www.centreforlondon.org/wp-content/uploads/2016/08/CFLJ4292-London-Inequality-04_16_WEB_V4.pdf</a>.
 </div>
 <div id="ref-Unwin:1980" class="csl-entry" role="listitem">
 Unwin, David. 1980. <span>“Make Your Practicals Open-Ended.”</span> <em>Journal of Geography in Higher Education</em> 4 (2). Taylor &amp; Francis:39–42. <a href="https://doi.org/10.1080/03098268008708772">https://doi.org/10.1080/03098268008708772</a>.
@@ -1087,7 +1118,7 @@ Unwin, David. 1980. <span>“Make Your Practicals Open-Ended.”</span> <em>Jour
     }
   });
   </script>
-<nav class="page-navigation">
+<nav class="page-navigation" aria-label="Page navigation">
   <div class="nav-page nav-page-previous">
       <a href="../sessions/week1.html" class="pagination-link" aria-label="1. Setting Up">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">1. Setting Up</span>
@@ -1103,22 +1134,22 @@ Unwin, David. 1980. <span>“Make Your Practicals Open-Ended.”</span> <em>Jour
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 2022–2025, Jon Reades</p>
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 2022–2026, Jon Reades</p>
 </div>   
     <div class="nav-footer-center">
-<p><img src="../img/logo/logo_only_sm.png" height="25"> Foundations of Spatial Data Science</p>
+<p><img src="../img/logo/logo_only_sm.png" alt="CASA Logo" height="25"> Foundations of Spatial Data Science</p>
 <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jreades/fsds/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/jreades/fsds">
-      <i class="bi bi-github" role="img">
+      <i class="bi bi-github" role="img" aria-label="GitHub">
 </i> 
     </a>
   </li>  
     <li class="nav-item compact">
     <a class="nav-link" href="https://bsky.app/profile/jreades.bsky.social/">
-      <i class="bi bi-twitter" role="img">
+      <i class="bi bi-twitter" role="img" aria-label="Bluesky">
 </i> 
     </a>
   </li>  

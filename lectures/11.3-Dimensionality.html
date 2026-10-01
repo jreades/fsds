@@ -7,24 +7,34 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-da61f9a05e9cefe097d79e8430a73dd4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-aced932c6eb97d642153b8e218288f9f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/quarto-axe/axe.min.js"></script>
+<script src="../site_libs/quarto-axe/axe-check.js" type="module"></script>
+<script id="quarto-axe-checker-options" type="text/plain">eyJvdXRwdXQiOiJkb2N1bWVudCJ9</script>
+<link href="../site_libs/reveal-theme/reveal-theme-6ec7a94939c7281a5ee2e5382b76028b.min.css" rel="stylesheet" append-hash="true" data-mode="light">
 <script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.8.24">
+  <meta name="generator" content="quarto-1.10.18">
 
   <meta name="author" content="Jon Reades">
   <title>Foundations of Spatial Data Science – Dimensionality</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
   <style>
-    code{white-space: pre-wrap;}
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
@@ -98,7 +108,7 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-b6d6ca89e0c39dcc6c0c87d5e30c596f.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-d945b4c252f9130eae0c493518ea35dc.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -192,7 +202,7 @@
   </style>
 <meta property="og:title" content="Dimensionality – Foundations of Spatial Data Science">
 <meta property="og:image" content="img/logo/full_sm.png">
-<meta property="og:site_name" content="Foundations">
+<meta property="og:site_name" content="Foundations of Spatial Data Science">
 <meta property="og:locale" content="en_GB">
 </head>
 <body class="quarto-light">
@@ -210,7 +220,7 @@
 
 <p><span style="margin:0px; font-weight:700;" class="author">Jon Reades</span> - j.reades@ucl.ac.uk </p>
 
-<p style="opacity: 0.8">1st October 2025</p>
+<p style="opacity: 0.8">28th September 2026</p>
 
 <p style="opacity:0.8;"></p>
 
@@ -246,12 +256,12 @@
 </section>
 <section id="in-practice" class="slide level2">
 <h2>In Practice…</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
-<span id="cb1-2"><a></a>pca <span class="op">=</span> PCA(n_components<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb1-3"><a></a>pca.fit(data)</span>
-<span id="cb1-4"><a></a><span class="bu">print</span>(pca.explained_variance_ratio_)</span>
-<span id="cb1-5"><a></a><span class="bu">print</span>(pca.singular_values_)</span>
-<span id="cb1-6"><a></a>pca.transform(data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a aria-label="1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
+<span id="cb1-2"><a aria-label="2"></a>pca <span class="op">=</span> PCA(n_components<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb1-3"><a aria-label="3"></a>pca.fit(data)</span>
+<span id="cb1-4"><a aria-label="4"></a><span class="bu">print</span>(pca.explained_variance_ratio_)</span>
+<span id="cb1-5"><a aria-label="5"></a><span class="bu">print</span>(pca.singular_values_)</span>
+<span id="cb1-6"><a aria-label="6"></a>pca.transform(data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>See also: <a href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.KernelPCA.html#sklearn.decomposition.KernelPCA">Kernel PCA</a> for non-linear problems.</p>
 </section>
 <section id="rtfm" class="slide level2">
@@ -285,11 +295,11 @@
 <h2>t-SNE</h2>
 <p>t-Distributed Stochastic Neighbour Embedding is best understood as a <strong>visualisation</strong> technique, not an <strong>analytical</strong> one. This is because it is <em>probabilistic</em> and not <em>deterministic</em>.</p>
 
-<img data-src="img/tsne-fashion.png" class="r-stretch"></section>
+<img data-src="img/tsne-fashion.png" class="r-stretch" alt="t-SNE plot of the Fashion-MNIST dataset showing clusters of different types of clothing"></section>
 <section id="in-practice-1" class="slide level2">
 <h2>In Practice…</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">from</span> sklearn.manifold <span class="im">import</span> TSNE</span>
-<span id="cb2-2"><a></a>embedded <span class="op">=</span> TSNE(n_components<span class="op">=</span>d).fit_transform(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a aria-label="1"></a><span class="im">from</span> sklearn.manifold <span class="im">import</span> TSNE</span>
+<span id="cb2-2"><a aria-label="2"></a>embedded <span class="op">=</span> TSNE(n_components<span class="op">=</span>d).fit_transform(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The choice of <code>perplexity</code> and <code>n_iter</code> <em>matter</em>, and so does the <code>metric</code>. In practice you will need to experiment with <a href="https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html">these</a>.</p>
 <aside class="notes">
 <p>t-SNE is also <em>much</em> harder computationally than PCA and it may be preferrable on very high-D data sets to <strong>apply PCA <em>first</em> and then t-SNE to the reduced data set</strong>! The output could then be fed to a clustering algorithm to make predictions about where new observations belong, but do not confuse that with <em>meaning</em>.</p>
@@ -308,7 +318,7 @@
 <section id="umap" class="slide level2">
 <h2>UMAP</h2>
 <p>Non-linear dimensionality reduction that tries to preserve both local <em>and</em> global structure. Puts it <em>between</em> PCA and t-SNE.</p>
-<p><a href="https://umap-learn.readthedocs.io/en/latest/_images/SupervisedUMAP_33_0.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img data-src="https://umap-learn.readthedocs.io/en/latest/_images/SupervisedUMAP_33_0.png"></a></p>
+<p><a href="https://umap-learn.readthedocs.io/en/latest/_images/SupervisedUMAP_33_0.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img data-src="https://umap-learn.readthedocs.io/en/latest/_images/SupervisedUMAP_33_0.png" alt="Supervised UMAP embedding of Fashion-MNIST with points coloured by clothing class"></a></p>
 
 <aside class="notes">
 <p>see examples on <a href="https://umap-learn.readthedocs.io/en/latest/parameters.html">umap-learn.readthedocs.io</a></p>
@@ -328,9 +338,9 @@
 </div></aside></section>
 <section id="in-practice-2" class="slide level2">
 <h2>In Practice…</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">import</span> umap</span>
-<span id="cb3-2"><a></a>transformer <span class="op">=</span> umap.UMAP(n_components<span class="op">=</span>d)</span>
-<span id="cb3-3"><a></a>embedded <span class="op">=</span> transformer.fit_transform(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a aria-label="1"></a><span class="im">import</span> umap</span>
+<span id="cb3-2"><a aria-label="2"></a>transformer <span class="op">=</span> umap.UMAP(n_components<span class="op">=</span>d)</span>
+<span id="cb3-3"><a aria-label="3"></a>embedded <span class="op">=</span> transformer.fit_transform(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The choice of <code>n_neighbors</code>, <code>min_dist</code>, and <code>metric</code> <em>matter</em>. In practice you may need to experiment with <a href="https://umap.scikit-tda.org/parameters.html#basic-umap-parameters">these</a>.</p>
 </section>
 <section id="gotcha" class="slide level2">
@@ -393,9 +403,9 @@ References
 </section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
-<p><img src="../img/logo/full.svg" class="slide-logo"></p>
+<p><img src="../img/logo/full.svg" class="slide-logo" alt=""></p>
 <div class="footer footer-default">
-<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2025 | Jon Reades</a></p>
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2026 | Jon Reades</a></p>
 </div>
 </div></div>
 

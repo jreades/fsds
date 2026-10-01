@@ -7,21 +7,31 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-da61f9a05e9cefe097d79e8430a73dd4.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.8.24">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-aced932c6eb97d642153b8e218288f9f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/quarto-axe/axe.min.js"></script>
+<script src="../site_libs/quarto-axe/axe-check.js" type="module"></script>
+<script id="quarto-axe-checker-options" type="text/plain">eyJvdXRwdXQiOiJkb2N1bWVudCJ9</script>
+<link href="../site_libs/reveal-theme/reveal-theme-6ec7a94939c7281a5ee2e5382b76028b.min.css" rel="stylesheet" append-hash="true" data-mode="light"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.10.18">
 
   <meta name="author" content="Jon Reades">
   <title>Foundations of Spatial Data Science – Data Structures</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
   <style>
-    code{white-space: pre-wrap;}
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
@@ -95,7 +105,7 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-b6d6ca89e0c39dcc6c0c87d5e30c596f.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-d945b4c252f9130eae0c493518ea35dc.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -189,7 +199,7 @@
   </style>
 <meta property="og:title" content="Data Structures – Foundations of Spatial Data Science">
 <meta property="og:image" content="img/logo/full_sm.png">
-<meta property="og:site_name" content="Foundations">
+<meta property="og:site_name" content="Foundations of Spatial Data Science">
 <meta property="og:locale" content="en_GB">
 </head>
 <body class="quarto-light">
@@ -207,7 +217,7 @@
 
 <p><span style="margin:0px; font-weight:700;" class="author">Jon Reades</span> - j.reades@ucl.ac.uk </p>
 
-<p style="opacity: 0.8">1st October 2025</p>
+<p style="opacity: 0.8">25th September 2026</p>
 
 <p style="opacity:0.8;"></p>
 
@@ -215,28 +225,28 @@
 <section>
 <section id="its-a-very-deep-rabbit-hole" class="title-slide slide level1 center">
 <h1>It’s a very deep rabbit hole…</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a>cities <span class="op">=</span> {</span>
-<span id="cb1-2"><a></a>  <span class="st">'London'</span>: [[<span class="fl">51.5072</span>, <span class="fl">0.1275</span>], <span class="op">+</span><span class="dv">0</span>], </span>
-<span id="cb1-3"><a></a>  <span class="st">'New York'</span>: [[<span class="fl">40.7127</span>, <span class="fl">74.0059</span>], <span class="op">-</span><span class="dv">5</span>], </span>
-<span id="cb1-4"><a></a>  <span class="st">'Tokyo'</span>: [[<span class="fl">35.6833</span>, <span class="fl">139.6833</span>], <span class="op">+</span><span class="dv">8</span>]</span>
-<span id="cb1-5"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a aria-label="1"></a>cities <span class="op">=</span> {</span>
+<span id="cb1-2"><a aria-label="2"></a>  <span class="st">'London'</span>: [[<span class="fl">51.5072</span>, <span class="fl">0.1275</span>], <span class="op">+</span><span class="dv">0</span>], </span>
+<span id="cb1-3"><a aria-label="3"></a>  <span class="st">'New York'</span>: [[<span class="fl">40.7127</span>, <span class="fl">74.0059</span>], <span class="op">-</span><span class="dv">5</span>], </span>
+<span id="cb1-4"><a aria-label="4"></a>  <span class="st">'Tokyo'</span>: [[<span class="fl">35.6833</span>, <span class="fl">139.6833</span>], <span class="op">+</span><span class="dv">8</span>]</span>
+<span id="cb1-5"><a aria-label="5"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>So:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="bu">print</span>(cities[<span class="st">'London'</span>][<span class="dv">0</span>]) <span class="co"># Prints [51.5072, 0.1275]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a aria-label="1"></a><span class="bu">print</span>(cities[<span class="st">'London'</span>][<span class="dv">0</span>]) <span class="co"># Prints [51.5072, 0.1275]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="but-compare" class="slide level2 smaller">
 <h2>But Compare…</h2>
 <p>Consider how these two data structures differ:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>cities <span class="op">=</span> [</span>
-<span id="cb3-2"><a></a>  {<span class="st">'name'</span>: <span class="st">'London'</span>, <span class="st">'loc'</span>: [<span class="fl">51.5072</span>, <span class="fl">0.1275</span>], <span class="st">'tz'</span>: <span class="op">+</span><span class="dv">0</span>}, </span>
-<span id="cb3-3"><a></a>  {<span class="st">'name'</span>: <span class="st">'New York'</span>, <span class="st">'loc'</span>: [<span class="fl">40.7127</span>, <span class="fl">74.0059</span>], <span class="st">'tz'</span>: <span class="op">-</span><span class="dv">5</span>}, </span>
-<span id="cb3-4"><a></a>  {<span class="st">'name'</span>: <span class="st">'Tokyo'</span>, <span class="st">'loc'</span>: [<span class="fl">35.6833</span>, <span class="fl">139.6833</span>], <span class="st">'tz'</span>: <span class="op">+</span><span class="dv">8</span>}</span>
-<span id="cb3-5"><a></a>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a aria-label="1"></a>cities <span class="op">=</span> [</span>
+<span id="cb3-2"><a aria-label="2"></a>  {<span class="st">'name'</span>: <span class="st">'London'</span>, <span class="st">'loc'</span>: [<span class="fl">51.5072</span>, <span class="fl">0.1275</span>], <span class="st">'tz'</span>: <span class="op">+</span><span class="dv">0</span>}, </span>
+<span id="cb3-3"><a aria-label="3"></a>  {<span class="st">'name'</span>: <span class="st">'New York'</span>, <span class="st">'loc'</span>: [<span class="fl">40.7127</span>, <span class="fl">74.0059</span>], <span class="st">'tz'</span>: <span class="op">-</span><span class="dv">5</span>}, </span>
+<span id="cb3-4"><a aria-label="4"></a>  {<span class="st">'name'</span>: <span class="st">'Tokyo'</span>, <span class="st">'loc'</span>: [<span class="fl">35.6833</span>, <span class="fl">139.6833</span>], <span class="st">'tz'</span>: <span class="op">+</span><span class="dv">8</span>}</span>
+<span id="cb3-5"><a aria-label="5"></a>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Or:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>cities <span class="op">=</span> {</span>
-<span id="cb4-2"><a></a>  <span class="st">'London'</span>: {<span class="st">'loc'</span>: [<span class="fl">51.5072</span>, <span class="fl">0.1275</span>], <span class="st">'tz'</span>: <span class="op">+</span><span class="dv">0</span>}, </span>
-<span id="cb4-3"><a></a>  <span class="st">'New York'</span>: {<span class="st">'loc'</span>: [<span class="fl">40.7127</span>, <span class="fl">74.0059</span>], <span class="st">'tz'</span>: <span class="op">-</span><span class="dv">5</span>}, </span>
-<span id="cb4-4"><a></a>  <span class="st">'Tokyo'</span>: {<span class="st">'loc'</span>: [<span class="fl">35.6833</span>, <span class="fl">139.6833</span>], <span class="st">'tz'</span>: <span class="op">+</span><span class="dv">8</span>}</span>
-<span id="cb4-5"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a aria-label="1"></a>cities <span class="op">=</span> {</span>
+<span id="cb4-2"><a aria-label="2"></a>  <span class="st">'London'</span>: {<span class="st">'loc'</span>: [<span class="fl">51.5072</span>, <span class="fl">0.1275</span>], <span class="st">'tz'</span>: <span class="op">+</span><span class="dv">0</span>}, </span>
+<span id="cb4-3"><a aria-label="3"></a>  <span class="st">'New York'</span>: {<span class="st">'loc'</span>: [<span class="fl">40.7127</span>, <span class="fl">74.0059</span>], <span class="st">'tz'</span>: <span class="op">-</span><span class="dv">5</span>}, </span>
+<span id="cb4-4"><a aria-label="4"></a>  <span class="st">'Tokyo'</span>: {<span class="st">'loc'</span>: [<span class="fl">35.6833</span>, <span class="fl">139.6833</span>], <span class="st">'tz'</span>: <span class="op">+</span><span class="dv">8</span>}</span>
+<span id="cb4-5"><a aria-label="5"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <aside class="notes">
 <p>Why don’t you copy the code and then see how to access different fields/values? What might be the pros and cons of each?</p>
 <style type="text/css">
@@ -281,20 +291,20 @@
 <div class="columns">
 <div class="column" style="width:45%;">
 <h3 id="option-1">Option 1</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>ds1 <span class="op">=</span> [</span>
-<span id="cb5-2"><a></a>  [<span class="st">'lat'</span>,<span class="st">'lon'</span>,<span class="st">'name'</span>,<span class="st">'tz'</span>],</span>
-<span id="cb5-3"><a></a>  [<span class="fl">51.51</span>,<span class="fl">0.13</span>,<span class="st">'London'</span>,<span class="op">+</span><span class="dv">0</span>],</span>
-<span id="cb5-4"><a></a>  [<span class="fl">40.71</span>,<span class="fl">74.01</span>,<span class="st">'New York'</span>,<span class="op">-</span><span class="dv">5</span>],</span>
-<span id="cb5-5"><a></a>  [<span class="fl">35.69</span>,<span class="fl">139.68</span>,<span class="st">'Tokyo'</span>,<span class="op">+</span><span class="dv">8</span>]</span>
-<span id="cb5-6"><a></a>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a aria-label="1"></a>ds1 <span class="op">=</span> [</span>
+<span id="cb5-2"><a aria-label="2"></a>  [<span class="st">'lat'</span>,<span class="st">'lon'</span>,<span class="st">'name'</span>,<span class="st">'tz'</span>],</span>
+<span id="cb5-3"><a aria-label="3"></a>  [<span class="fl">51.51</span>,<span class="fl">0.13</span>,<span class="st">'London'</span>,<span class="op">+</span><span class="dv">0</span>],</span>
+<span id="cb5-4"><a aria-label="4"></a>  [<span class="fl">40.71</span>,<span class="fl">74.01</span>,<span class="st">'New York'</span>,<span class="op">-</span><span class="dv">5</span>],</span>
+<span id="cb5-5"><a aria-label="5"></a>  [<span class="fl">35.69</span>,<span class="fl">139.68</span>,<span class="st">'Tokyo'</span>,<span class="op">+</span><span class="dv">8</span>]</span>
+<span id="cb5-6"><a aria-label="6"></a>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column" style="width:55%;">
 <h3 id="option-2">Option 2</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a>ds2 <span class="op">=</span> {</span>
-<span id="cb6-2"><a></a>  <span class="st">'lat'</span>: [<span class="fl">51.51</span>,<span class="fl">40.71</span>,<span class="fl">35.69</span>],</span>
-<span id="cb6-3"><a></a>  <span class="st">'lon'</span>: [<span class="fl">0.13</span>,<span class="fl">74.01</span>,<span class="fl">139.68</span>],</span>
-<span id="cb6-4"><a></a>  <span class="st">'tz'</span>:  [<span class="op">+</span><span class="dv">0</span>,<span class="op">-</span><span class="dv">5</span>,<span class="op">+</span><span class="dv">8</span>],</span>
-<span id="cb6-5"><a></a>  <span class="st">'name'</span>:[<span class="st">'London'</span>,<span class="st">'New York'</span>,<span class="st">'Tokyo'</span>]</span>
-<span id="cb6-6"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a aria-label="1"></a>ds2 <span class="op">=</span> {</span>
+<span id="cb6-2"><a aria-label="2"></a>  <span class="st">'lat'</span>: [<span class="fl">51.51</span>,<span class="fl">40.71</span>,<span class="fl">35.69</span>],</span>
+<span id="cb6-3"><a aria-label="3"></a>  <span class="st">'lon'</span>: [<span class="fl">0.13</span>,<span class="fl">74.01</span>,<span class="fl">139.68</span>],</span>
+<span id="cb6-4"><a aria-label="4"></a>  <span class="st">'tz'</span>:  [<span class="op">+</span><span class="dv">0</span>,<span class="op">-</span><span class="dv">5</span>,<span class="op">+</span><span class="dv">8</span>],</span>
+<span id="cb6-5"><a aria-label="5"></a>  <span class="st">'name'</span>:[<span class="st">'London'</span>,<span class="st">'New York'</span>,<span class="st">'Tokyo'</span>]</span>
+<span id="cb6-6"><a aria-label="6"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
 <aside class="notes">
 <p>To understand why I’m asking this question, here are two example questions I’d like you to try to answer:</p>
@@ -317,12 +327,12 @@
 <section id="thinking-it-through" class="slide level2 smaller">
 <h2>Thinking it Through</h2>
 <p>Why does this work for both computers <em>and</em> people?</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>ds2 <span class="op">=</span> {</span>
-<span id="cb7-2"><a></a>  <span class="st">'lat'</span>: [<span class="fl">51.51</span>,<span class="fl">40.71</span>,<span class="fl">35.69</span>],</span>
-<span id="cb7-3"><a></a>  <span class="st">'lon'</span>: [<span class="fl">0.13</span>,<span class="fl">74.01</span>,<span class="fl">139.68</span>],</span>
-<span id="cb7-4"><a></a>  <span class="st">'tz'</span>:  [<span class="op">+</span><span class="dv">0</span>,<span class="op">-</span><span class="dv">5</span>,<span class="op">+</span><span class="dv">8</span>],</span>
-<span id="cb7-5"><a></a>  <span class="st">'name'</span>:[<span class="st">'London'</span>,<span class="st">'New York'</span>,<span class="st">'Tokyo'</span>]</span>
-<span id="cb7-6"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a aria-label="1"></a>ds2 <span class="op">=</span> {</span>
+<span id="cb7-2"><a aria-label="2"></a>  <span class="st">'lat'</span>: [<span class="fl">51.51</span>,<span class="fl">40.71</span>,<span class="fl">35.69</span>],</span>
+<span id="cb7-3"><a aria-label="3"></a>  <span class="st">'lon'</span>: [<span class="fl">0.13</span>,<span class="fl">74.01</span>,<span class="fl">139.68</span>],</span>
+<span id="cb7-4"><a aria-label="4"></a>  <span class="st">'tz'</span>:  [<span class="op">+</span><span class="dv">0</span>,<span class="op">-</span><span class="dv">5</span>,<span class="op">+</span><span class="dv">8</span>],</span>
+<span id="cb7-5"><a aria-label="5"></a>  <span class="st">'name'</span>:[<span class="st">'London'</span>,<span class="st">'New York'</span>,<span class="st">'Tokyo'</span>]</span>
+<span id="cb7-6"><a aria-label="6"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <aside class="notes">
 <p>We are doing away with the idea that the order of columns matters (humans don’t care that a city’s name is in the first column, and a city’s latitude in the second). We just want to <em>find</em> the column. But because we have a dictionary-of-lists we can ensure that the <em>row order</em> is preserved. Let’s see this in action.</p>
 <style type="text/css">
@@ -339,16 +349,16 @@
 </section>
 <section id="examples" class="slide level2 smaller">
 <h2>Examples</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a>ds2 <span class="op">=</span> {</span>
-<span id="cb8-2"><a></a>  <span class="st">'lat'</span>: [<span class="fl">51.51</span>,<span class="fl">40.71</span>,<span class="fl">35.69</span>],</span>
-<span id="cb8-3"><a></a>  <span class="st">'lon'</span>: [<span class="fl">0.13</span>,<span class="fl">74.01</span>,<span class="fl">139.68</span>],</span>
-<span id="cb8-4"><a></a>  <span class="st">'tz'</span>:  [<span class="op">+</span><span class="dv">0</span>,<span class="op">-</span><span class="dv">5</span>,<span class="op">+</span><span class="dv">8</span>],</span>
-<span id="cb8-5"><a></a>  <span class="st">'name'</span>:[<span class="st">'London'</span>,<span class="st">'New York'</span>,<span class="st">'Tokyo'</span>]</span>
-<span id="cb8-6"><a></a>}</span>
-<span id="cb8-7"><a></a></span>
-<span id="cb8-8"><a></a><span class="bu">print</span>(ds2[<span class="st">'name'</span>][<span class="dv">0</span>]) <span class="co">#&nbsp;London</span></span>
-<span id="cb8-9"><a></a><span class="bu">print</span>(ds2[<span class="st">'lat'</span>][<span class="dv">0</span>])  <span class="co"># 51.51</span></span>
-<span id="cb8-10"><a></a><span class="bu">print</span>(ds2[<span class="st">'tz'</span>][<span class="dv">0</span>])   <span class="co"># 0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a aria-label="1"></a>ds2 <span class="op">=</span> {</span>
+<span id="cb8-2"><a aria-label="2"></a>  <span class="st">'lat'</span>: [<span class="fl">51.51</span>,<span class="fl">40.71</span>,<span class="fl">35.69</span>],</span>
+<span id="cb8-3"><a aria-label="3"></a>  <span class="st">'lon'</span>: [<span class="fl">0.13</span>,<span class="fl">74.01</span>,<span class="fl">139.68</span>],</span>
+<span id="cb8-4"><a aria-label="4"></a>  <span class="st">'tz'</span>:  [<span class="op">+</span><span class="dv">0</span>,<span class="op">-</span><span class="dv">5</span>,<span class="op">+</span><span class="dv">8</span>],</span>
+<span id="cb8-5"><a aria-label="5"></a>  <span class="st">'name'</span>:[<span class="st">'London'</span>,<span class="st">'New York'</span>,<span class="st">'Tokyo'</span>]</span>
+<span id="cb8-6"><a aria-label="6"></a>}</span>
+<span id="cb8-7"><a aria-label="7"></a></span>
+<span id="cb8-8"><a aria-label="8"></a><span class="bu">print</span>(ds2[<span class="st">'name'</span>][<span class="dv">0</span>]) <span class="co">#&nbsp;London</span></span>
+<span id="cb8-9"><a aria-label="9"></a><span class="bu">print</span>(ds2[<span class="st">'lat'</span>][<span class="dv">0</span>])  <span class="co"># 51.51</span></span>
+<span id="cb8-10"><a aria-label="10"></a><span class="bu">print</span>(ds2[<span class="st">'tz'</span>][<span class="dv">0</span>])   <span class="co"># 0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>So <code>0</code> <em>always</em> returns information about London, and <code>2</code> <em>always</em> returns information about Tokyo. But it’s <em>also</em> easy to ask for the latitude (<code>ds2['lat'][0]</code>) or time zone (<code>ds2['tz'][0]</code>) value once you know that <code>0</code> is London!</p>
 <aside class="notes">
 <p>But there’s <em>another</em> advantage that’s not quite so obvious: for the computer because everything of type ‘lat’ is a float, everything of type ‘tz’ is an integer, and everything of type ‘name’ is a string, it’s a lot easier to work with each column as data.</p>
@@ -367,20 +377,20 @@
 <section id="how-is-that-easier" class="slide level2 smaller">
 <h2>How is <em>that</em> easier???</h2>
 <p>Remember that we can use <em>any</em> immutable ‘thing’ as a key. This means…</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>ds2 <span class="op">=</span> {</span>
-<span id="cb9-2"><a></a>  <span class="st">'lat'</span>: [<span class="fl">51.51</span>,<span class="fl">40.71</span>,<span class="fl">35.69</span>],</span>
-<span id="cb9-3"><a></a>  <span class="st">'lon'</span>: [<span class="fl">0.13</span>,<span class="fl">74.01</span>,<span class="fl">139.68</span>],</span>
-<span id="cb9-4"><a></a>  <span class="st">'tz'</span>:  [<span class="op">+</span><span class="dv">0</span>,<span class="op">-</span><span class="dv">5</span>,<span class="op">+</span><span class="dv">8</span>],</span>
-<span id="cb9-5"><a></a>  <span class="st">'name'</span>:[<span class="st">'London'</span>,<span class="st">'New York'</span>,<span class="st">'Tokyo'</span>]</span>
-<span id="cb9-6"><a></a>}</span>
-<span id="cb9-7"><a></a></span>
-<span id="cb9-8"><a></a>city_nm <span class="op">=</span> <span class="st">'Tokyo'</span></span>
-<span id="cb9-9"><a></a>city_idx <span class="op">=</span> ds2[<span class="st">'name'</span>].index(city_nm)</span>
-<span id="cb9-10"><a></a></span>
-<span id="cb9-11"><a></a><span class="bu">print</span>(<span class="ss">f"The time zone of </span><span class="sc">{</span>city_nm<span class="sc">}</span><span class="ss"> is </span><span class="sc">{</span>ds2[<span class="st">'tz'</span>][city_idx]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a aria-label="1"></a>ds2 <span class="op">=</span> {</span>
+<span id="cb9-2"><a aria-label="2"></a>  <span class="st">'lat'</span>: [<span class="fl">51.51</span>,<span class="fl">40.71</span>,<span class="fl">35.69</span>],</span>
+<span id="cb9-3"><a aria-label="3"></a>  <span class="st">'lon'</span>: [<span class="fl">0.13</span>,<span class="fl">74.01</span>,<span class="fl">139.68</span>],</span>
+<span id="cb9-4"><a aria-label="4"></a>  <span class="st">'tz'</span>:  [<span class="op">+</span><span class="dv">0</span>,<span class="op">-</span><span class="dv">5</span>,<span class="op">+</span><span class="dv">8</span>],</span>
+<span id="cb9-5"><a aria-label="5"></a>  <span class="st">'name'</span>:[<span class="st">'London'</span>,<span class="st">'New York'</span>,<span class="st">'Tokyo'</span>]</span>
+<span id="cb9-6"><a aria-label="6"></a>}</span>
+<span id="cb9-7"><a aria-label="7"></a></span>
+<span id="cb9-8"><a aria-label="8"></a>city_nm <span class="op">=</span> <span class="st">'Tokyo'</span></span>
+<span id="cb9-9"><a aria-label="9"></a>city_idx <span class="op">=</span> ds2[<span class="st">'name'</span>].index(city_nm)</span>
+<span id="cb9-10"><a aria-label="10"></a></span>
+<span id="cb9-11"><a aria-label="11"></a><span class="bu">print</span>(<span class="ss">f"The time zone of </span><span class="sc">{</span>city_nm<span class="sc">}</span><span class="ss"> is </span><span class="sc">{</span>ds2[<span class="st">'tz'</span>][city_idx]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>We can re-write this into a single line as:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>city_nm <span class="op">=</span> <span class="st">'New York'</span></span>
-<span id="cb10-2"><a></a><span class="bu">print</span>(<span class="ss">f"The time zone of </span><span class="sc">{</span>city_nm<span class="sc">}</span><span class="ss"> is </span><span class="sc">{</span>ds2[<span class="st">'tz'</span>][ ds2[<span class="st">'name'</span>].index(city_nm)]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a aria-label="1"></a>city_nm <span class="op">=</span> <span class="st">'New York'</span></span>
+<span id="cb10-2"><a aria-label="2"></a><span class="bu">print</span>(<span class="ss">f"The time zone of </span><span class="sc">{</span>city_nm<span class="sc">}</span><span class="ss"> is </span><span class="sc">{</span>ds2[<span class="st">'tz'</span>][ ds2[<span class="st">'name'</span>].index(city_nm)]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <aside class="notes">
 <p>This achieves several useful things:</p>
 <ol type="1">
@@ -438,9 +448,9 @@ References
 </section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
-<p><img src="../img/logo/full.svg" class="slide-logo"></p>
+<p><img src="../img/logo/full.svg" class="slide-logo" alt=""></p>
 <div class="footer footer-default">
-<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2025 | Jon Reades</a></p>
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2026 | Jon Reades</a></p>
 </div>
 </div></div>
 

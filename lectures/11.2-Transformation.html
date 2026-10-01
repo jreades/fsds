@@ -7,24 +7,34 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-da61f9a05e9cefe097d79e8430a73dd4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-aced932c6eb97d642153b8e218288f9f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/quarto-axe/axe.min.js"></script>
+<script src="../site_libs/quarto-axe/axe-check.js" type="module"></script>
+<script id="quarto-axe-checker-options" type="text/plain">eyJvdXRwdXQiOiJkb2N1bWVudCJ9</script>
+<link href="../site_libs/reveal-theme/reveal-theme-6ec7a94939c7281a5ee2e5382b76028b.min.css" rel="stylesheet" append-hash="true" data-mode="light">
 <script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.8.24">
+  <meta name="generator" content="quarto-1.10.18">
 
   <meta name="author" content="Jon Reades">
   <title>Foundations of Spatial Data Science – Transformation</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
   <style>
-    code{white-space: pre-wrap;}
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
@@ -98,7 +108,7 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-b6d6ca89e0c39dcc6c0c87d5e30c596f.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-d945b4c252f9130eae0c493518ea35dc.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -192,7 +202,7 @@
   </style>
 <meta property="og:title" content="Transformation – Foundations of Spatial Data Science">
 <meta property="og:image" content="img/logo/full_sm.png">
-<meta property="og:site_name" content="Foundations">
+<meta property="og:site_name" content="Foundations of Spatial Data Science">
 <meta property="og:locale" content="en_GB">
 </head>
 <body class="quarto-light">
@@ -210,7 +220,7 @@
 
 <p><span style="margin:0px; font-weight:700;" class="author">Jon Reades</span> - j.reades@ucl.ac.uk </p>
 
-<p style="opacity: 0.8">1st October 2025</p>
+<p style="opacity: 0.8">28th September 2026</p>
 
 <p style="opacity:0.8;"></p>
 
@@ -240,7 +250,7 @@
 <section id="transformation-in-1d" class="slide level2">
 <h2>Transformation in 1D</h2>
 
-<img data-src="img/Transform-1D.png" class="r-stretch"><div class="fragment">
+<img data-src="img/Transform-1D.png" class="r-stretch" alt="Values on a number line before and after a transformation"><div class="fragment">
 <p><span class="math display">\[
 x-\bar{x}
 \]</span></p>
@@ -322,11 +332,11 @@ z = \dfrac{x-\bar{x}}{\sigma}
 <p><span class="math display">\[
 \dfrac{x-\bar{x}}{\sigma}
 \]</span></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
-<span id="cb1-2"><a></a>scaler <span class="op">=</span> StandardScaler()</span>
-<span id="cb1-3"><a></a>scaler.fit(x)</span>
-<span id="cb1-4"><a></a><span class="bu">print</span>(scaler.mean_)</span>
-<span id="cb1-5"><a></a>scaler.transform(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a aria-label="1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb1-2"><a aria-label="2"></a>scaler <span class="op">=</span> StandardScaler()</span>
+<span id="cb1-3"><a aria-label="3"></a>scaler.fit(x)</span>
+<span id="cb1-4"><a aria-label="4"></a><span class="bu">print</span>(scaler.mean_)</span>
+<span id="cb1-5"><a aria-label="5"></a>scaler.transform(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <aside class="notes">
 <p>The important thing to note is that if transform data that has not been fit <em>and</em> you get values outside the range used for fitting then you can no longer assume a standard normal.</p>
 <style type="text/css">
@@ -346,17 +356,17 @@ z = \dfrac{x-\bar{x}}{\sigma}
 <p><span class="math display">\[
 \dfrac{x_{i}-x_{Q2}}{x_{Q3}-x_{Q1}}
 \]</span></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> RobustScaler</span>
-<span id="cb2-2"><a></a>trf <span class="op">=</span> RobustScaler(</span>
-<span id="cb2-3"><a></a>        quantile_range<span class="op">=</span>(<span class="fl">25.0</span>,<span class="fl">75.0</span>)).fit(x)</span>
-<span id="cb2-4"><a></a>trf.transform(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a aria-label="1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> RobustScaler</span>
+<span id="cb2-2"><a aria-label="2"></a>trf <span class="op">=</span> RobustScaler(</span>
+<span id="cb2-3"><a aria-label="3"></a>        quantile_range<span class="op">=</span>(<span class="fl">25.0</span>,<span class="fl">75.0</span>)).fit(x)</span>
+<span id="cb2-4"><a aria-label="4"></a>trf.transform(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="interdecile-standardisation" class="slide level2">
 <h2>Interdecile Standardisation</h2>
 <p><span class="math display">\[
 \dfrac{x_{i}-x_{50^{th}}}{x_{90^{th}}-x_{10^{th}}}
 \]</span></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="bu">print</span>(<span class="st">"You've got this..."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a aria-label="1"></a><span class="bu">print</span>(<span class="st">"You've got this..."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <aside class="notes">
 <p>Why standardise:</p>
 <ul>
@@ -419,8 +429,8 @@ x'_{a,i} = \dfrac{x_{ai}}{\sum_{g} r_{N,g} P_{a,g}}
 <p><span class="math display">\[
 \dfrac{x_{i}}{\sum{x}_{i=1}^{n}}
 \]</span></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb4-2"><a></a>x<span class="op">/</span>np.<span class="bu">sum</span>(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a aria-label="1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb4-2"><a aria-label="2"></a>x<span class="op">/</span>np.<span class="bu">sum</span>(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <aside class="notes">
 <p>Numpy has a <a href="https://numpy.org/doc/stable/reference/generated/numpy.log.html">fair few options</a> for implementing this, but note that <code>log</code> <em>means</em> natural log, not <code>log10</code>!</p>
 <style type="text/css">
@@ -440,11 +450,11 @@ x'_{a,i} = \dfrac{x_{ai}}{\sum_{g} r_{N,g} P_{a,g}}
 <p><span class="math display">\[
 \dfrac{x_{i}-x_{min}}{x_{max}-x_{min}}
 \]</span></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> MinMaxScaler</span>
-<span id="cb5-2"><a></a>scaler <span class="op">=</span> MinMaxScaler()</span>
-<span id="cb5-3"><a></a>scaler.fit(x)</span>
-<span id="cb5-4"><a></a><span class="bu">print</span>(scaler.data_max_)</span>
-<span id="cb5-5"><a></a>scaler.transform(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a aria-label="1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> MinMaxScaler</span>
+<span id="cb5-2"><a aria-label="2"></a>scaler <span class="op">=</span> MinMaxScaler()</span>
+<span id="cb5-3"><a aria-label="3"></a>scaler.fit(x)</span>
+<span id="cb5-4"><a aria-label="4"></a><span class="bu">print</span>(scaler.data_max_)</span>
+<span id="cb5-5"><a aria-label="5"></a>scaler.transform(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <aside class="notes">
 <p>Normalisation helps in several ways:</p>
 <ul>
@@ -475,8 +485,8 @@ x'_{a,i} = \dfrac{x_{ai}}{\sum_{g} r_{N,g} P_{a,g}}
 <li>So if <span class="math inline">\(10^{3} = 1,000\)</span> then <span class="math inline">\(log_{10}(1,000) = 3\)</span>.</li>
 <li>And if <span class="math inline">\(10^{0} = 1\)</span> then <span class="math inline">\(log_{10}(1) = 0\)</span></li>
 </ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb6-2"><a></a>xhat <span class="op">=</span> np.log(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a aria-label="1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb6-2"><a aria-label="2"></a>xhat <span class="op">=</span> np.log(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 <aside class="notes">
 <p>Why is this so common? Esp. in social sciences?</p>
@@ -565,15 +575,15 @@ x'_{a,i} = \dfrac{x_{ai}}{\sum_{g} r_{N,g} P_{a,g}}
 </section>
 <section id="whats-wrong-with-this-map" class="slide level2">
 <h2>What’s Wrong with this Map?</h2>
-<p><a href="img/Transforms-Map1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img data-src="img/Transforms-Map1.png"></a></p>
+<p><a href="img/Transforms-Map1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img data-src="img/Transforms-Map1.png" alt="Choropleth map with a problem to spot, caused by untransformed values"></a></p>
 </section>
 <section id="thats-better" class="slide level2">
 <h2>That’s Better!</h2>
-<p><a href="img/Transforms-Map2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img data-src="img/Transforms-Map2.png"></a></p>
+<p><a href="img/Transforms-Map2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img data-src="img/Transforms-Map2.png" alt="The same choropleth map after the values have been transformed"></a></p>
 </section>
 <section id="whats-a-projection" class="slide level2">
 <h2>What’s a Projection?</h2>
-<p><a href="img/Projections.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img data-src="img/Projections.png"></a></p>
+<p><a href="img/Projections.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img data-src="img/Projections.png" alt="xkcd comic 977 'Map Projections': what your favourite map projection says about you"></a></p>
 <p><a href="http://imgs.xkcd.com/comics/map_projections.png">Source</a></p>
 </section>
 <section class="slide level2">
@@ -607,9 +617,9 @@ References
 </section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
-<p><img src="../img/logo/full.svg" class="slide-logo"></p>
+<p><img src="../img/logo/full.svg" class="slide-logo" alt=""></p>
 <div class="footer footer-default">
-<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2025 | Jon Reades</a></p>
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2026 | Jon Reades</a></p>
 </div>
 </div></div>
 

@@ -7,24 +7,34 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-da61f9a05e9cefe097d79e8430a73dd4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-aced932c6eb97d642153b8e218288f9f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/quarto-axe/axe.min.js"></script>
+<script src="../site_libs/quarto-axe/axe-check.js" type="module"></script>
+<script id="quarto-axe-checker-options" type="text/plain">eyJvdXRwdXQiOiJkb2N1bWVudCJ9</script>
+<link href="../site_libs/reveal-theme/reveal-theme-6ec7a94939c7281a5ee2e5382b76028b.min.css" rel="stylesheet" append-hash="true" data-mode="light">
 <script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.8.24">
+  <meta name="generator" content="quarto-1.10.18">
 
   <meta name="author" content="Jon Reades">
   <title>Foundations of Spatial Data Science – Exploratory Data Analysis</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
   <style>
-    code{white-space: pre-wrap;}
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
@@ -98,7 +108,7 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-b6d6ca89e0c39dcc6c0c87d5e30c596f.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-d945b4c252f9130eae0c493518ea35dc.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -192,7 +202,7 @@
   </style>
 <meta property="og:title" content="ExploratoryData Analysis – Foundations of Spatial Data Science">
 <meta property="og:image" content="img/logo/full_sm.png">
-<meta property="og:site_name" content="Foundations">
+<meta property="og:site_name" content="Foundations of Spatial Data Science">
 <meta property="og:locale" content="en_GB">
 </head>
 <body class="quarto-light">
@@ -210,14 +220,14 @@
 
 <p><span style="margin:0px; font-weight:700;" class="author">Jon Reades</span> - j.reades@ucl.ac.uk </p>
 
-<p style="opacity: 0.8">1st October 2025</p>
+<p style="opacity: 0.8">28th September 2026</p>
 
 <p style="opacity:0.8;"></p>
 
 </section>
 <section class="slide level2">
 
-<p><a href="./img/Epicycles.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img data-src="./img/Epicycles.png" width="400"></a></p>
+<p><a href="./img/Epicycles.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img data-src="./img/Epicycles.png" alt="Diagram of the epicycles of data analysis: repeated loops of setting expectations, collecting data and revising" width="400"></a></p>
 </section>
 <section id="epicyclic-feedback" class="slide level2 smaller">
 <h2>Epicyclic Feedback</h2>
@@ -327,37 +337,37 @@
 <section>
 <section id="in-practice" class="title-slide slide level1 center">
 <h1>In Practice</h1>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-2"><a></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
-<span id="cb1-3"><a></a>url<span class="op">=</span><span class="st">'https://bit.ly/3I0XDrq'</span></span>
-<span id="cb1-4"><a></a>df <span class="op">=</span> pd.read_csv(url)</span>
-<span id="cb1-5"><a></a>df.set_index(<span class="st">'id'</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb1-6"><a></a>df[<span class="st">'price'</span>] <span class="op">=</span> df.price.<span class="bu">str</span>.replace(<span class="st">'$'</span>,<span class="st">''</span>,regex<span class="op">=</span><span class="va">False</span>).astype(<span class="st">'float'</span>)</span>
-<span id="cb1-7"><a></a>gdf <span class="op">=</span> gpd.GeoDataFrame(df,</span>
-<span id="cb1-8"><a></a>            geometry<span class="op">=</span>gpd.points_from_xy(</span>
-<span id="cb1-9"><a></a>                        df[<span class="st">'longitude'</span>],</span>
-<span id="cb1-10"><a></a>                        df[<span class="st">'latitude'</span>],</span>
-<span id="cb1-11"><a></a>                        crs<span class="op">=</span><span class="st">'epsg:4326'</span></span>
-<span id="cb1-12"><a></a>            )</span>
-<span id="cb1-13"><a></a>      )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a aria-label="1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a aria-label="2"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
+<span id="cb1-3"><a aria-label="3"></a>url<span class="op">=</span><span class="st">'https://bit.ly/3I0XDrq'</span></span>
+<span id="cb1-4"><a aria-label="4"></a>df <span class="op">=</span> pd.read_csv(url)</span>
+<span id="cb1-5"><a aria-label="5"></a>df.set_index(<span class="st">'id'</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-6"><a aria-label="6"></a>df[<span class="st">'price'</span>] <span class="op">=</span> df.price.<span class="bu">str</span>.replace(<span class="st">'$'</span>,<span class="st">''</span>,regex<span class="op">=</span><span class="va">False</span>).astype(<span class="st">'float'</span>)</span>
+<span id="cb1-7"><a aria-label="7"></a>gdf <span class="op">=</span> gpd.GeoDataFrame(df,</span>
+<span id="cb1-8"><a aria-label="8"></a>            geometry<span class="op">=</span>gpd.points_from_xy(</span>
+<span id="cb1-9"><a aria-label="9"></a>                        df[<span class="st">'longitude'</span>],</span>
+<span id="cb1-10"><a aria-label="10"></a>                        df[<span class="st">'latitude'</span>],</span>
+<span id="cb1-11"><a aria-label="11"></a>                        crs<span class="op">=</span><span class="st">'epsg:4326'</span></span>
+<span id="cb1-12"><a aria-label="12"></a>            )</span>
+<span id="cb1-13"><a aria-label="13"></a>      )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="getting-started" class="slide level2 smaller">
 <h2>Getting Started</h2>
 <p>You can follow along by loading the Inside Airbnb sample:</p>
-<div id="041e77d9" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb2-2"><a></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
-<span id="cb2-3"><a></a>url<span class="op">=</span><span class="st">'https://bit.ly/3I0XDrq'</span></span>
-<span id="cb2-4"><a></a>df <span class="op">=</span> pd.read_csv(url)</span>
-<span id="cb2-5"><a></a>df.set_index(<span class="st">'id'</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb2-6"><a></a>df[<span class="st">'price'</span>] <span class="op">=</span> df.price.<span class="bu">str</span>.replace(<span class="st">'$'</span>,<span class="st">''</span>,regex<span class="op">=</span><span class="va">False</span>).astype(<span class="st">'float'</span>)</span>
-<span id="cb2-7"><a></a>gdf <span class="op">=</span> gpd.GeoDataFrame(df, </span>
-<span id="cb2-8"><a></a>            geometry<span class="op">=</span>gpd.points_from_xy(</span>
-<span id="cb2-9"><a></a>                        df[<span class="st">'longitude'</span>], </span>
-<span id="cb2-10"><a></a>                        df[<span class="st">'latitude'</span>], </span>
-<span id="cb2-11"><a></a>                        crs<span class="op">=</span><span class="st">'epsg:4326'</span></span>
-<span id="cb2-12"><a></a>            )</span>
-<span id="cb2-13"><a></a>      )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="c049dacf" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a aria-label="1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-2"><a aria-label="2"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
+<span id="cb2-3"><a aria-label="3"></a>url<span class="op">=</span><span class="st">'https://bit.ly/3I0XDrq'</span></span>
+<span id="cb2-4"><a aria-label="4"></a>df <span class="op">=</span> pd.read_csv(url)</span>
+<span id="cb2-5"><a aria-label="5"></a>df.set_index(<span class="st">'id'</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-6"><a aria-label="6"></a>df[<span class="st">'price'</span>] <span class="op">=</span> df.price.<span class="bu">str</span>.replace(<span class="st">'$'</span>,<span class="st">''</span>,regex<span class="op">=</span><span class="va">False</span>).astype(<span class="st">'float'</span>)</span>
+<span id="cb2-7"><a aria-label="7"></a>gdf <span class="op">=</span> gpd.GeoDataFrame(df, </span>
+<span id="cb2-8"><a aria-label="8"></a>            geometry<span class="op">=</span>gpd.points_from_xy(</span>
+<span id="cb2-9"><a aria-label="9"></a>                        df[<span class="st">'longitude'</span>], </span>
+<span id="cb2-10"><a aria-label="10"></a>                        df[<span class="st">'latitude'</span>], </span>
+<span id="cb2-11"><a aria-label="11"></a>                        crs<span class="op">=</span><span class="st">'epsg:4326'</span></span>
+<span id="cb2-12"><a aria-label="12"></a>            )</span>
+<span id="cb2-13"><a aria-label="13"></a>      )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <aside class="notes">
 <p>Note that this (re)loads the sampled Airbnb data from GitHub every time you run it. For a large data set on someone else’e server you might want to save and (re)load it locally. A simple helper function would then just check if the file already existed locally <em>before</em> trying to download the file again: that would allow you to work while offline and speed up your code substantially too!</p>
@@ -375,14 +385,14 @@
 </section>
 <section id="what-can-we-do-series" class="slide level2">
 <h2>What Can We Do?<sup>1</sup> (Series)</h2>
-<div id="064fd229" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="bu">print</span>(<span class="ss">f"Host count is </span><span class="sc">{</span>gdf<span class="sc">.</span>host_name<span class="sc">.</span>count()<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb3-2"><a></a><span class="bu">print</span>(<span class="ss">f"Mean is </span><span class="sc">{</span>gdf<span class="sc">.</span>price<span class="sc">.</span>mean()<span class="sc">:.0f}</span><span class="ss">"</span>)</span>
-<span id="cb3-3"><a></a><span class="bu">print</span>(<span class="ss">f"Max price is </span><span class="sc">{</span>gdf<span class="sc">.</span>price<span class="sc">.</span><span class="bu">max</span>()<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb3-4"><a></a><span class="bu">print</span>(<span class="ss">f"Min price is </span><span class="sc">{</span>gdf<span class="sc">.</span>price<span class="sc">.</span><span class="bu">min</span>()<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb3-5"><a></a><span class="bu">print</span>(<span class="ss">f"Median price is </span><span class="sc">{</span>gdf<span class="sc">.</span>price<span class="sc">.</span>median()<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb3-6"><a></a><span class="bu">print</span>(<span class="ss">f"Standard dev is </span><span class="sc">{</span>gdf<span class="sc">.</span>price<span class="sc">.</span>std()<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
-<span id="cb3-7"><a></a><span class="bu">print</span>(<span class="ss">f"25th quantile is </span><span class="sc">{</span>gdf<span class="sc">.</span>price<span class="sc">.</span>quantile(q<span class="op">=</span><span class="fl">0.25</span>)<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="1fe8f1b6" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a aria-label="1"></a><span class="bu">print</span>(<span class="ss">f"Host count is </span><span class="sc">{</span>gdf<span class="sc">.</span>host_name<span class="sc">.</span>count()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-2"><a aria-label="2"></a><span class="bu">print</span>(<span class="ss">f"Mean is </span><span class="sc">{</span>gdf<span class="sc">.</span>price<span class="sc">.</span>mean()<span class="sc">:.0f}</span><span class="ss">"</span>)</span>
+<span id="cb3-3"><a aria-label="3"></a><span class="bu">print</span>(<span class="ss">f"Max price is </span><span class="sc">{</span>gdf<span class="sc">.</span>price<span class="sc">.</span><span class="bu">max</span>()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-4"><a aria-label="4"></a><span class="bu">print</span>(<span class="ss">f"Min price is </span><span class="sc">{</span>gdf<span class="sc">.</span>price<span class="sc">.</span><span class="bu">min</span>()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-5"><a aria-label="5"></a><span class="bu">print</span>(<span class="ss">f"Median price is </span><span class="sc">{</span>gdf<span class="sc">.</span>price<span class="sc">.</span>median()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-6"><a aria-label="6"></a><span class="bu">print</span>(<span class="ss">f"Standard dev is </span><span class="sc">{</span>gdf<span class="sc">.</span>price<span class="sc">.</span>std()<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb3-7"><a aria-label="7"></a><span class="bu">print</span>(<span class="ss">f"25th quantile is </span><span class="sc">{</span>gdf<span class="sc">.</span>price<span class="sc">.</span>quantile(q<span class="op">=</span><span class="fl">0.25</span>)<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Host count is 100
 Mean is 118
@@ -393,7 +403,7 @@ Standard dev is 123.87
 25th quantile is 40.75</code></pre>
 </div>
 </div>
-<aside><ol class="aside-footnotes"><li id="fn1"><p>This is by no means all that we can do…</p></li></ol></aside></section>
+<aside role="note" aria-label="Footnotes"><ol class="aside-footnotes"><li id="fn1"><p>This is by no means all that we can do…</p></li></ol></aside></section>
 <section id="what-can-we-do-data-frame-edition" class="slide level2">
 <h2>What Can We Do?<sup>1</sup> (Data Frame Edition)</h2>
 <table class="caption-top" style="width:92%;">
@@ -409,12 +419,12 @@ Standard dev is 123.87
 </thead>
 <tbody>
 <tr class="odd">
-<td><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="bu">print</span>(df.mean())</span>
-<span id="cb5-2"><a></a><span class="bu">print</span>(df.count())</span>
-<span id="cb5-3"><a></a><span class="bu">print</span>(df.<span class="bu">max</span>())</span>
-<span id="cb5-4"><a></a><span class="co"># ...</span></span>
-<span id="cb5-5"><a></a><span class="bu">print</span>(df.corr())</span>
-<span id="cb5-6"><a></a><span class="bu">print</span>(df.describe())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></td>
+<td><div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a aria-label="1"></a><span class="bu">print</span>(df.mean())</span>
+<span id="cb5-2"><a aria-label="2"></a><span class="bu">print</span>(df.count())</span>
+<span id="cb5-3"><a aria-label="3"></a><span class="bu">print</span>(df.<span class="bu">max</span>())</span>
+<span id="cb5-4"><a aria-label="4"></a><span class="co"># ...</span></span>
+<span id="cb5-5"><a aria-label="5"></a><span class="bu">print</span>(df.corr())</span>
+<span id="cb5-6"><a aria-label="6"></a><span class="bu">print</span>(df.describe())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></td>
 <td><pre><code>Mean of each *numerical* column
 Number of non-null values in each column
 Highest value in each column
@@ -437,14 +447,14 @@ Summarise</code></pre></td>
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
-<aside><ol class="aside-footnotes"><li id="fn2"><p><em>Hint</em>: there’s a lot more we could do!</p></li></ol></aside></section>
+<aside role="note" aria-label="Footnotes"><ol class="aside-footnotes"><li id="fn2"><p><em>Hint</em>: there’s a lot more we could do!</p></li></ol></aside></section>
 <section id="measures" class="slide level2">
 <h2>Measures</h2>
 <p>So pandas provides functions for commonly-used measures:</p>
-<div id="239da5a6" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="bu">print</span>(<span class="ss">f"Mean: </span><span class="sc">{</span>df<span class="sc">.</span>price<span class="sc">.</span>mean()<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
-<span id="cb7-2"><a></a><span class="bu">print</span>(<span class="ss">f"Median: </span><span class="sc">{</span>df<span class="sc">.</span>price<span class="sc">.</span>median()<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
-<span id="cb7-3"><a></a><span class="bu">print</span>(<span class="ss">f"25th Percentile: </span><span class="sc">{</span>df<span class="sc">.</span>price<span class="sc">.</span>quantile(<span class="fl">0.25</span>)<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="defa3051" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a aria-label="1"></a><span class="bu">print</span>(<span class="ss">f"Mean: </span><span class="sc">{</span>df<span class="sc">.</span>price<span class="sc">.</span>mean()<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb7-2"><a aria-label="2"></a><span class="bu">print</span>(<span class="ss">f"Median: </span><span class="sc">{</span>df<span class="sc">.</span>price<span class="sc">.</span>median()<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb7-3"><a aria-label="3"></a><span class="bu">print</span>(<span class="ss">f"25th Percentile: </span><span class="sc">{</span>df<span class="sc">.</span>price<span class="sc">.</span>quantile(<span class="fl">0.25</span>)<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Mean: 118.45
 Median: 80.50
@@ -455,13 +465,13 @@ Median: 80.50
 <section id="more-complex-measures" class="slide level2">
 <h2>More Complex Measures</h2>
 <p>Pandas <em>also</em> makes it easy to derive new variables… Here’s the <em>z</em>-score:</p>
-<div id="e15559ac" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>df[<span class="st">'zscore'</span>] <span class="op">=</span> (df.price <span class="op">-</span> df.price.mean())<span class="op">/</span>df.price.std()</span>
-<span id="cb9-2"><a></a>df.plot.box(column<span class="op">=</span><span class="st">'zscore'</span>, figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="a63bb438" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a aria-label="1"></a>df[<span class="st">'zscore'</span>] <span class="op">=</span> (df.price <span class="op">-</span> df.price.mean())<span class="op">/</span>df.price.std()</span>
+<span id="cb9-2"><a aria-label="2"></a>df.plot.box(column<span class="op">=</span><span class="st">'zscore'</span>, figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><a href="7.3-EDA_files/figure-revealjs/cell-5-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img data-src="7.3-EDA_files/figure-revealjs/cell-5-output-1.png" width="643" height="374"></a></p>
+<p><a href="7.3-EDA_files/figure-revealjs/cell-5-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img data-src="7.3-EDA_files/figure-revealjs/cell-5-output-1.png" alt="Box-plot of z-scores" width="643" height="374"></a></p>
 </figure>
 </div>
 </div>
@@ -469,15 +479,15 @@ Median: 80.50
 </section>
 <section id="and-even-more-complex" class="slide level2">
 <h2>And Even More Complex</h2>
-<p>And here’s the Interquartile Range Standardised score:</p>
-<div id="acbb364a" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>df[<span class="st">'iqr_std'</span>] <span class="op">=</span> (df.price <span class="op">-</span> df.price.median())<span class="op">/</span> <span class="op">\</span></span>
-<span id="cb10-2"><a></a>      (df.price.quantile(q<span class="op">=</span><span class="fl">0.75</span>)<span class="op">-</span>df.price.quantile(q<span class="op">=</span><span class="fl">0.25</span>))</span>
-<span id="cb10-3"><a></a>df.plot.box(column<span class="op">=</span><span class="st">'iqr_std'</span>, figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>And here’s the Inter-Quartile Range Standardised score:</p>
+<div id="0d2a8d0b" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a aria-label="1"></a>df[<span class="st">'iqr_std'</span>] <span class="op">=</span> (df.price <span class="op">-</span> df.price.median())<span class="op">/</span> <span class="op">\</span></span>
+<span id="cb10-2"><a aria-label="2"></a>      (df.price.quantile(q<span class="op">=</span><span class="fl">0.75</span>)<span class="op">-</span>df.price.quantile(q<span class="op">=</span><span class="fl">0.25</span>))</span>
+<span id="cb10-3"><a aria-label="3"></a>df.plot.box(column<span class="op">=</span><span class="st">'iqr_std'</span>, figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><a href="7.3-EDA_files/figure-revealjs/cell-6-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img data-src="7.3-EDA_files/figure-revealjs/cell-6-output-1.png" width="632" height="374"></a></p>
+<p><a href="7.3-EDA_files/figure-revealjs/cell-6-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img data-src="7.3-EDA_files/figure-revealjs/cell-6-output-1.png" alt="Box-plot of IQR standardised scores" width="632" height="374"></a></p>
 </figure>
 </div>
 </div>
@@ -486,8 +496,8 @@ Median: 80.50
 <section id="the-plot-thickens" class="slide level2">
 <h2>The Plot Thickens</h2>
 <p>We’ll get to more complex plotting over the course of the term, but here’s a good start for <em>exploring</em> the data! All plotting depends on <code>matplotlib</code> which is the ogre in the attic to R’s <code>ggplot</code>.</p>
-<div id="aaf80aa5" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="35b47203" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a aria-label="1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Get used to this import as it will allow you to save and manipulate the figures created in Python. It is <em>not</em> the most intuitive approach (unless you’ve used MATLAB before) but it <em>does</em> work.</p>
 </section></section>
@@ -500,13 +510,13 @@ Median: 80.50
 </section>
 <section id="boxplot" class="slide level2">
 <h2>Boxplot</h2>
-<div id="b1fd30e5" class="cell" data-execution_count="7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>df.price.plot.box(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))</span>
-<span id="cb12-2"><a></a>plt.savefig(<span class="st">'pboxplot.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="012d141f" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a aria-label="1"></a>df.price.plot.box(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))</span>
+<span id="cb12-2"><a aria-label="2"></a>plt.savefig(<span class="st">'pboxplot.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><a href="7.3-EDA_files/figure-revealjs/cell-8-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img data-src="7.3-EDA_files/figure-revealjs/cell-8-output-1.png" width="649" height="374"></a></p>
+<p><a href="7.3-EDA_files/figure-revealjs/cell-8-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img data-src="7.3-EDA_files/figure-revealjs/cell-8-output-1.png" alt="Saving a boxplot of prices" width="649" height="374"></a></p>
 </figure>
 </div>
 </div>
@@ -514,13 +524,13 @@ Median: 80.50
 </section>
 <section id="frequency" class="slide level2">
 <h2>Frequency</h2>
-<div id="dbddcf0e" class="cell" data-execution_count="8">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a>df.room_type.value_counts().plot.bar(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))</span>
-<span id="cb13-2"><a></a>plt.savefig(<span class="st">'phistplot.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="1c156169" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a aria-label="1"></a>df.room_type.value_counts().plot.bar(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))</span>
+<span id="cb13-2"><a aria-label="2"></a>plt.savefig(<span class="st">'phistplot.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><a href="7.3-EDA_files/figure-revealjs/cell-9-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img data-src="7.3-EDA_files/figure-revealjs/cell-9-output-1.png" width="641" height="487"></a></p>
+<p><a href="7.3-EDA_files/figure-revealjs/cell-9-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img data-src="7.3-EDA_files/figure-revealjs/cell-9-output-1.png" alt="Saving a histogram of room type frequencies" width="641" height="487"></a></p>
 </figure>
 </div>
 </div>
@@ -531,30 +541,30 @@ Median: 80.50
 <p>We’ll get to these in more detail in a couple of weeks, but here’s some output…</p>
 <div class="columns">
 <div class="column" style="width:50%;">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb14-2"><a></a>cols <span class="op">=</span> df.select_dtypes(</span>
-<span id="cb14-3"><a></a>    include<span class="op">=</span>np.number</span>
-<span id="cb14-4"><a></a>).columns.to_list()[:<span class="dv">4</span>]</span>
-<span id="cb14-5"><a></a>plt.matshow(df[cols].corr())</span>
-<span id="cb14-6"><a></a>xaxis <span class="op">=</span> np.arange(<span class="bu">len</span>(cols))</span>
-<span id="cb14-7"><a></a>ax <span class="op">=</span> plt.gca()</span>
-<span id="cb14-8"><a></a>ax.set_xticks(xaxis)</span>
-<span id="cb14-9"><a></a>ax.set_yticks(xaxis)</span>
-<span id="cb14-10"><a></a>ax.set_xticklabels(cols)</span>
-<span id="cb14-11"><a></a>ax.set_yticklabels(cols)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a aria-label="1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb14-2"><a aria-label="2"></a>cols <span class="op">=</span> df.select_dtypes(</span>
+<span id="cb14-3"><a aria-label="3"></a>    include<span class="op">=</span>np.number</span>
+<span id="cb14-4"><a aria-label="4"></a>).columns.to_list()[:<span class="dv">4</span>]</span>
+<span id="cb14-5"><a aria-label="5"></a>plt.matshow(df[cols].corr())</span>
+<span id="cb14-6"><a aria-label="6"></a>xaxis <span class="op">=</span> np.arange(<span class="bu">len</span>(cols))</span>
+<span id="cb14-7"><a aria-label="7"></a>ax <span class="op">=</span> plt.gca()</span>
+<span id="cb14-8"><a aria-label="8"></a>ax.set_xticks(xaxis)</span>
+<span id="cb14-9"><a aria-label="9"></a>ax.set_yticks(xaxis)</span>
+<span id="cb14-10"><a aria-label="10"></a>ax.set_xticklabels(cols)</span>
+<span id="cb14-11"><a aria-label="11"></a>ax.set_yticklabels(cols)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column" style="width:40%;">
-<p><a href="7.3-EDA_files/figure-revealjs/cell-10-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img data-src="7.3-EDA_files/figure-revealjs/cell-10-output-1.png" width="508" height="418"></a></p>
+<p><a href="7.3-EDA_files/figure-revealjs/cell-10-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img data-src="7.3-EDA_files/figure-revealjs/cell-10-output-1.png" alt="Correlation plot of numerical columns" width="507" height="418"></a></p>
 </div></div>
 </section>
 <section id="a-map" class="slide level2">
 <h2>A ‘Map’</h2>
-<div id="a21c687b" class="cell" data-execution_count="10">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a>df.plot.scatter(x<span class="op">=</span><span class="st">'longitude'</span>, y<span class="op">=</span><span class="st">'latitude'</span>, figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))</span>
-<span id="cb15-2"><a></a>plt.savefig(<span class="st">'pscatterplot.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="7a8289a2" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a aria-label="1"></a>df.plot.scatter(x<span class="op">=</span><span class="st">'longitude'</span>, y<span class="op">=</span><span class="st">'latitude'</span>, figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))</span>
+<span id="cb15-2"><a aria-label="2"></a>plt.savefig(<span class="st">'pscatterplot.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><a href="7.3-EDA_files/figure-revealjs/cell-11-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img data-src="7.3-EDA_files/figure-revealjs/cell-11-output-1.png" width="680" height="393"></a></p>
+<p><a href="7.3-EDA_files/figure-revealjs/cell-11-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img data-src="7.3-EDA_files/figure-revealjs/cell-11-output-1.png" alt="Saving a scatter plot of x/y coordinates" width="680" height="393"></a></p>
 </figure>
 </div>
 </div>
@@ -562,16 +572,16 @@ Median: 80.50
 </section>
 <section id="a-fancy-map" class="slide level2">
 <h2>A Fancy ‘Map’</h2>
-<div id="77624025" class="cell" data-execution_count="11">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a></a>df.plot.scatter(x<span class="op">=</span><span class="st">'longitude'</span>,y<span class="op">=</span><span class="st">'latitude'</span>,</span>
-<span id="cb16-2"><a></a>                c<span class="op">=</span><span class="st">'price'</span>,colormap<span class="op">=</span><span class="st">'viridis'</span>,</span>
-<span id="cb16-3"><a></a>                figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>),title<span class="op">=</span><span class="st">'London'</span>,</span>
-<span id="cb16-4"><a></a>                grid<span class="op">=</span><span class="va">True</span>,s<span class="op">=</span><span class="dv">24</span>,marker<span class="op">=</span><span class="st">'x'</span>)</span>
-<span id="cb16-5"><a></a>plt.savefig(<span class="st">'pscatterplot.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="0e427726" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a aria-label="1"></a>df.plot.scatter(x<span class="op">=</span><span class="st">'longitude'</span>,y<span class="op">=</span><span class="st">'latitude'</span>,</span>
+<span id="cb16-2"><a aria-label="2"></a>                c<span class="op">=</span><span class="st">'price'</span>,colormap<span class="op">=</span><span class="st">'viridis'</span>,</span>
+<span id="cb16-3"><a aria-label="3"></a>                figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>),title<span class="op">=</span><span class="st">'London'</span>,</span>
+<span id="cb16-4"><a aria-label="4"></a>                grid<span class="op">=</span><span class="va">True</span>,s<span class="op">=</span><span class="dv">24</span>,marker<span class="op">=</span><span class="st">'x'</span>)</span>
+<span id="cb16-5"><a aria-label="5"></a>plt.savefig(<span class="st">'pscatterplot.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, transparent<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><a href="7.3-EDA_files/figure-revealjs/cell-12-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img data-src="7.3-EDA_files/figure-revealjs/cell-12-output-1.png" width="661" height="413"></a></p>
+<p><a href="7.3-EDA_files/figure-revealjs/cell-12-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img data-src="7.3-EDA_files/figure-revealjs/cell-12-output-1.png" alt="Adjusting a scatter plot of x/y coordinates to show prices too" width="661" height="413"></a></p>
 </figure>
 </div>
 </div>
@@ -579,14 +589,14 @@ Median: 80.50
 </section>
 <section id="an-actual-map" class="slide level2">
 <h2>An Actual ‘Map’</h2>
-<div id="fa9f014f" class="cell" data-execution_count="12">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a></a>gdf.plot(column<span class="op">=</span><span class="st">'price'</span>, cmap<span class="op">=</span><span class="st">'viridis'</span>, </span>
-<span id="cb17-2"><a></a>         scheme<span class="op">=</span><span class="st">'quantiles'</span>, markersize<span class="op">=</span><span class="dv">8</span>, legend<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb17-3"><a></a>         figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="aff4edf6" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a aria-label="1"></a>gdf.plot(column<span class="op">=</span><span class="st">'price'</span>, cmap<span class="op">=</span><span class="st">'viridis'</span>, </span>
+<span id="cb17-2"><a aria-label="2"></a>         scheme<span class="op">=</span><span class="st">'quantiles'</span>, markersize<span class="op">=</span><span class="dv">8</span>, legend<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb17-3"><a aria-label="3"></a>         figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="fl">4.5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><a href="7.3-EDA_files/figure-revealjs/cell-13-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img data-src="7.3-EDA_files/figure-revealjs/cell-13-output-1.png" width="563" height="374"></a></p>
+<p><a href="7.3-EDA_files/figure-revealjs/cell-13-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img data-src="7.3-EDA_files/figure-revealjs/cell-13-output-1.png" alt="Adjusting a scatter plot of x/y coordinates to show prices as quantiles" width="562" height="374"></a></p>
 </figure>
 </div>
 </div>
@@ -629,9 +639,9 @@ References
 
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
-<p><img src="../img/logo/full.svg" class="slide-logo"></p>
+<p><img src="../img/logo/full.svg" class="slide-logo" alt=""></p>
 <div class="footer footer-default">
-<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2025 | Jon Reades</a></p>
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0 2022-2026 | Jon Reades</a></p>
 </div>
 </div></div>
 
