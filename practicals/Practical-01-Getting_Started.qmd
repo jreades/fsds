@@ -94,7 +94,7 @@ By default, the best way to start the {{< var docker.name >}} virtual machine (a
 Using the *same* Power Shell copy and paste the following **all on one line**:
 
 ```bash
-podman run --rm -d --name {{< var docker.name >}} -p 8888:8888 -v "$(pwd):/home/jovyan/work" {{< var docker.all >}} start.sh jupyter lab --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
+podman run --userns=keep-id --rm -d --name {{< var docker.name >}} -p 8888:8888 -v "$(pwd):/home/jovyan/work" {{< var docker.all >}} start.sh jupyter lab --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
 ```
 ::: {.callout-warning}
 
@@ -110,6 +110,7 @@ Using the *same* Terminal copy and past the following (change the image to `{{< 
 
 ```bash
 podman run --rm -d --name {{< var docker.name >}} -p 8888:8888 \
+   --userns=keep-id \
    -v "$(pwd):/home/jovyan/work" \
   {{<var docker.mac >}} start.sh jupyter lab \
   --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
@@ -181,7 +182,7 @@ It's always helpful to provide some basic information about what's in the projec
 
 Click `Create Repository` and you should end up on a page that looks like this:
 
-![Repository created]({{< var module.web >}}/practicals/img/1.1-Repo_Created.png)
+![Repository created](img/1.1-Repo_Created.png)
 
 Your new repository has been created (on GitHub)! The `README` is a file -- written in Markdown -- that explains the purpose of a repository and any other notes you care to add. 
 
@@ -191,7 +192,7 @@ The `.gitignore` file tells Git what files to ignore by default. Unless you _for
 
 The Python template for `.gitignore` includes a lot of useful files and folders that we wouldn't want Git to track for us. But it _doesn't_ include data. In your web browser, click on the `.gitignore` file and then the 'pencil' icon on the right to edit it on GitHub. You should see something like this:
 
-![Editing the .gitignore file]({{< var module.web >}}/practicals/img/1.4-Editing_Gitignore.png)
+![Editing the .gitignore file](img/1.4-Editing_Gitignore.png)
 
 ## Exclude Data Files
 
@@ -228,7 +229,7 @@ Once you have committed your changes, you should be back to the default view of 
 
 Click on 'History' and let's go back in time! 
 
-![The Gitignore history]({{< var module.web >}}/practicals/img/1.5-Gitignore_History.png)
+![The Gitignore history](img/1.5-Gitignore_History.png)
 
 On the history page you can browse every edit to your file. Whenever you `commit` a file, this like taking a snapshot at a point in time. Using the 'History' you can compare two different snapshots in order to see what has changed. This would help you to work out how you broke something, check that requested changes have been made, or see how an error might have been introduced.
 
@@ -268,11 +269,11 @@ You can find the original [here]({{< var module.web >}}).
 
 **Don't forget to check out the "Preview" tab!**
 
-## Commiting a Change
+## Commititing a Change
 
 Once you're happy with how your text looks and works, it's time to commit! Scroll down to where you see something like this (you will see your _own_ GitHub username, not mine):
 
-![GitHub Commit]({{< var module.web >}}/practicals/img/1.2-Commit.png)
+![GitHub Commit](img/1.2-Commit.png)
   
 You can just accept the description (_e.g._ `Create README.md`) or you can write your own. You can also provide an extended description if you choose. Then click `Commit new file` and you will see your new README appear.
 
@@ -337,7 +338,7 @@ Now we are going to `clone` (i.e. copy) the repository that you just created on 
 
 On your private repository page, click on the green button labeled `Code` visible in the screenshot below:
 
-![Screenshot of cloning interface]({{< var module.web >}}/lectures/img/Cloning.png)
+![Screenshot of cloning interface](/lectures/img/Cloning.png)
 
 You should then copy your HTTPS URL (in my screenshot it's `https://github.com/jreades/i2p.git`). 
 
@@ -420,8 +421,8 @@ git status
 You should see something like:
 
 ```bash
-On branch master
-Your branch is ahead of 'origin/master' by 1 commit.
+On branch main
+Your branch is ahead of 'origin/main' by 1 commit.
   (use "git push" to publish your local commits)
 ```
 
@@ -448,7 +449,7 @@ remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
 remote: This repository moved. Please use the new location:
 remote:   https://github.com/jreades/fsds.git
 To https://github.com/jreades/fsds.git
-   7410d0e..45aa80a  master -> master
+   7410d0e..45aa80a  main -> main
 ```
 
 If you now go over to your browser and visit your GitHub repo page (_e.g._ `{{< var module.web >}}`) --- pressing the `Reload` button if you had the page open already --- then you should see that the file you added _on your computer_ is also showing up on the GitHub site as well! This means it's now fully version-controlled and backed-up.
