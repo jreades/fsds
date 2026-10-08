@@ -122,9 +122,9 @@ We gain quite a few benefits:
 
 1. Easier installation and 'everyone' has the same versions of the code.
 2. Each container is isolated and read-only.
-3. Easy to tidy up when you’re done.
+3. Easy to tidy up when you're done.
 4. Easy to scale up and scale down, or to link them together via 'microservices'.
-5. Used in the ‘real world’ by *many* companies (JP Morgan Chase, GSK, PayPal, Twitter, Spotify, Uber...).
+5. Used in the 'real world' by *many* companies (JP Morgan Chase, GSK, PayPal, Twitter, Spotify, Uber...).
 
 ## The Bigger Picture
 
@@ -147,10 +147,32 @@ Podman makes configuring a development environment (fairly) simple. If a Podman 
 
 Use either: 
 
-1. `{{< var docker.all >}}` (Windows and Older Macs)
-2. `{{< var docker.mac >}}` (Newer Macs)
+1. `{{< var docker.all >}}` (Windows)
+2. `{{< var docker.mac >}}` (Macs)[^2]
 
 [^1]: Usually, but not always, true.
+[^2]: The last machine this *won't* work for was built in 2019.
+
+## Save this for later
+
+If you launch Podman this way:
+
+```bash
+podman run --rm -d --name sds2026 -p 8888:8888 -p 4444:4444 \
+   --userns=keep-id \
+   -v "$(pwd):/home/jovyan/work" \
+  jreades/sds:2026-arm64 start.sh jupyter lab \
+  --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
+```
+
+And then use the **JupyterLab** Terminal to run:
+
+```bash
+quarto create project
+quarto preview --port 4444 --host 0.0.0.0 --no-browser
+```
+
+You will have real-time (re)rendering of your Quarto QMD file on [localhost:4444](http://localhost:4444) from within Podman.
 
 # Version Control
 
