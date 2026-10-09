@@ -87,29 +87,21 @@ By default, the best way to start the {{< var docker.name >}} virtual machine (a
 
 Using the *same* Power Shell copy and paste the following **all on one line**:
 
-```bash
-podman run --userns=keep-id --rm -d --name {{< var docker.name >}} -p 8888:8888 -v "$(pwd):/home/jovyan/work" {{< var docker.all >}} start.sh jupyter lab --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
-```
-::: {.callout-warning}
+{{< include /setup/win.qmd >}}
+
+:::: {.callout-tip]
 
 ### Windows Commands
 
 `$(pwd)` is actually a *command*, you are asking the Power Shell to use the *current working directory* (`pwd` == `print working directory`) as the 'mount point' for the `work` directory. The Command Prompt doesn't support `pwd`, but the Power Shell *should*. You can check this by simply typing `pwd` and hitting enter (&#9166;) to see if you get an error.
 
-:::
+::::
 
 ### On macOS
 
 Using the *same* Terminal copy and past the following (change the image to `{{< var docker.all >}}` if using an older Intel Mac):
 
-```bash
-podman run --rm -d --name {{< var docker.name >}} -p 8888:8888 \
-   --userns=keep-id \
-   -v "$(pwd):/home/jovyan/work" \
-  {{<var docker.mac >}} start.sh jupyter lab \
-  --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
-```
-
+{{< include /setup/mac.qmd >}}
 
 :::: {.callout-warning}
 #### No `work` directory or Permission Denied?
