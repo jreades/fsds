@@ -4342,28 +4342,19 @@ font-family: inherit;
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <p>Using the <em>same</em> Power Shell copy and paste the following <strong>all on one line</strong>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb1"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-label="1"></a><span class="ex">podman</span> run <span class="at">--userns</span><span class="op">=</span>keep-id <span class="at">--rm</span> <span class="at">-d</span> <span class="at">--name</span> sds2026 <span class="at">-p</span> 8888:8888 <span class="at">-v</span> <span class="st">&quot;</span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st">:/home/jovyan/work&quot;</span> jreades/sds:2026-amd64 start.sh jupyter lab <span class="at">--LabApp.password</span><span class="op">=</span><span class="st">&#39;&#39;</span> <span class="at">--ServerApp.password</span><span class="op">=</span><span class="st">&#39;&#39;</span> <span class="at">--NotebookApp.token</span><span class="op">=</span><span class="st">&#39;&#39;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>Windows Commands
-</div>
-</div>
-<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb1"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-label="1"></a><span class="ex">podman</span> run <span class="at">--rm</span> <span class="at">-d</span> <span class="at">--name</span> sds2026 <span class="at">-p</span> 8888:8888 <span class="at">-p</span> 4444:4444 <span class="at">--cgroups</span><span class="op">=</span>disable <span class="at">-v</span> <span class="dt">\&quot;</span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span>:/home/jovyan/work\&quot; jreades/sds:2026-amd64 start.sh jupyter lab <span class="at">--LabApp.password</span><span class="op">=</span><span class="st">&#39;&#39;</span> <span class="at">--ServerApp.password</span><span class="op">=</span><span class="st">&#39;&#39;</span> <span class="at">--NotebookApp.token</span><span class="op">=</span><span class="st">&#39;&#39;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="windows-commands" class="level3 {.callout-tip]">
+<h3 class="anchored" data-anchor-id="windows-commands">Windows Commands</h3>
 <p><code>$(pwd)</code> is actually a <em>command</em>, you are asking the Power Shell to use the <em>current working directory</em> (<code>pwd</code> == <code>print working directory</code>) as the ‘mount point’ for the <code>work</code> directory. The Command Prompt doesn’t support <code>pwd</code>, but the Power Shell <em>should</em>. You can check this by simply typing <code>pwd</code> and hitting enter (⏎) to see if you get an error.</p>
-</div>
-</div>
+</section>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <p>Using the <em>same</em> Terminal copy and past the following (change the image to <code>jreades/sds:2026-amd64</code> if using an older Intel Mac):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-label="1"></a><span class="ex">podman</span> run <span class="at">--rm</span> <span class="at">-d</span> <span class="at">--name</span> sds2026 <span class="at">-p</span> 8888:8888 <span class="dt">\</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-label="2"></a>   <span class="at">--userns</span><span class="op">=</span>keep-id <span class="dt">\</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-label="3"></a>   <span class="at">-v</span> <span class="st">&quot;</span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st">:/home/jovyan/work&quot;</span> <span class="dt">\</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-label="4"></a>  jreades/sds:2026-arm64 start.sh jupyter lab <span class="dt">\</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-label="5"></a>  <span class="at">--LabApp.password</span><span class="op">=</span><span class="st">&#39;&#39;</span> <span class="at">--ServerApp.password</span><span class="op">=</span><span class="st">&#39;&#39;</span> <span class="at">--NotebookApp.token</span><span class="op">=</span><span class="st">&#39;&#39;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-label="1"></a><span class="ex">podman</span> run <span class="at">--rm</span> <span class="at">-d</span> <span class="at">--name</span> sds2026 <span class="at">-p</span> 8888:8888 <span class="at">-p</span> 4444:4444 <span class="dt">\</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-label="2"></a>    <span class="at">--userns</span><span class="op">=</span>keep-id <span class="dt">\</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-label="3"></a>    <span class="at">-v</span> <span class="dt">\&quot;</span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span>:/home/jovyan/work\&quot; <span class="dt">\</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-label="4"></a>    jreades/sds:2026-arm64 start.sh jupyter lab <span class="dt">\</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-label="5"></a>    <span class="at">--LabApp.password</span><span class="op">=</span><span class="st">&#39;&#39;</span> <span class="at">--ServerApp.password</span><span class="op">=</span><span class="st">&#39;&#39;</span> <span class="at">--NotebookApp.token</span><span class="op">=</span><span class="st">&#39;&#39;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -4509,7 +4500,7 @@ font-family: inherit;
 <p>So how would you indicate that <code>data</code> is a directory? Once you’re sure, add the <code>data</code> directory!</p>
 <p>When you are done, don’t forget to add a ‘commit message’ (e.g. ‘Added file types to exclude to .gitignore’) at the bottom and then click <code>Commit changes</code>.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -4518,7 +4509,7 @@ font-family: inherit;
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>I don’t want you to get hung up on this <em>one</em> thing in Practical 1, so if you just can’t make sense of what you’re being asked to do here, have a look at the <a href="#answers">Answers</a> at the bottom of this page.</p>
 </div>
