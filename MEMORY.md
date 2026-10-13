@@ -1,0 +1,39 @@
+# MEMORY
+
+General lessons from working sessions, as `[LEARN:category]` entries. Machine- and user-specific notes go in `.claude/state/personal-memory.md` (gitignored). Keep this file under 200 lines.
+
+## Quarto
+
+- [LEARN:quarto] Shortcodes are processed even inside HTML comments. Never leave `{{< include file >}}` in a `<!-- -->` note inside the file being included: it includes itself.
+- [LEARN:quarto] For a per-file date on revealjs title slides, set `date: last-modified` and `date-format: "Do MMMM YYYY"` (gives "25th September 2026") in the folder's `_metadata.yml`, and print `$date$` in the title-slide partial. It's the file's modification time at render, so it resets on a fresh clone.
+- [LEARN:quarto] Code-cell figure files are named `cell-N-output-M.png`, with N one higher than the chunk's position because of a hidden setup cell. `_freeze/` can hold orphaned figures from old chunk versions, so treat the rendered HTML as authoritative.
+- [LEARN:quarto] `fig-alt` is ignored for `{mermaid}` cells in revealjs output (the source is passed through as `<pre class="mermaid">`). Use Mermaid's own `accTitle:` / `accDescr:` lines instead.
+- [LEARN:quarto] `quarto preview` doesn't run `post-render` scripts. Run `quarto render` before checking post-render fixes.
+- [LEARN:quarto] One `quarto render --quiet` run silently left the output unchanged. When verifying, check the output file's timestamp.
+
+## Accessibility
+
+- [LEARN:accessibility] Quarto's revealjs template produces axe issues in every deck: a viewport meta with `maximum-scale=1.0, user-scalable=no`, footnotes in a bare `<aside>` (unnamed landmark), and a slide logo `<img>` with no `alt`. Fix them in a post-render step, not per deck.
+- [LEARN:accessibility] When patching ARIA via post-render regex, changing or removing a `role` can flip an element to the implicit "generic" role, which forbids attributes like `aria-expanded`. Re-run axe after any role change.
+- [LEARN:accessibility] Alt text isn't visible, so adding it to a pre-recorded deck needs neither a video rebuild nor re-recording.
+- [LEARN:accessibility] Captions make a good default for `fig-alt`, but few slide images have them. Draft alt text from the slide title, surrounding text and file name, flag low-confidence ones, and have the author review before applying.
+
+## Pre-recorded (flipped) lectures
+
+- [LEARN:workflow] To add a recap to a recorded deck cheaply, insert one slide just after the last narrated slide and before any un-narrated "Additional Resources" slide. It then takes the next sequence number and nothing else needs renumbering. A mid-deck insertion shifts every later sequence number.
+- [LEARN:workflow] Before calling a slide fix "visual-only", check the narration script doesn't read out the changed text.
+- [LEARN:workflow] Rebuilding videos exports slides from whatever server the flip config names. Point it at the local preview when the fixes aren't published yet.
+
+## Editing and verification
+
+- [LEARN:workflow] Rules without a `paths:` scope load into every session, and scoped rules load on any matching file (a TikZ rule scoped to `scripts/**/*.py` loaded when a Python script was written). When moving a skill to `~/.claude/`, put the rules it depends on inside the skill's folder, not `~/.claude/rules/`, or they'll load in every project.
+
+- [LEARN:workflow] Python's text-mode read/write converts CRLF to LF, turning a two-line edit into a whole-file diff. Use `open(p, newline='')` when rewriting files that may have Windows line endings.
+- [LEARN:workflow] After a scripted bulk edit, verify every changed line mechanically: strip the inserted text from the new line and compare it with the original. This caught a bug that silently truncated text after the edit point.
+- [LEARN:workflow] When recommending an external resource for a purpose ("close to our length"), check that property, not just that the link works. Some sites (e.g. parliament.uk) block scripted requests with 403, so confirm those via search.
+- [LEARN:workflow] Keep consistency checks aligned with the author's deliberate choices: record intentional oddities (e.g. a deadline order chosen for timetabling reasons) so they aren't flagged again.
+
+## Course design
+
+- [LEARN:design] Weekly learning outcomes are easier to write, and easier to check for coverage, when each is tagged with the module outcome it supports. A coverage table (module outcome × weeks × assessment) shows thin spots straight away.
+- [LEARN:design] A "Before class" checklist at the top of each week page (watch with durations, read, week-specific actions) answers the common student request to know "what to do" before the reading material.
