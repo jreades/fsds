@@ -11,7 +11,10 @@
 <script src="../site_libs/quarto-axe/axe.min.js"></script>
 <script src="../site_libs/quarto-axe/axe-check.js" type="module"></script>
 <script id="quarto-axe-checker-options" type="text/plain">eyJvdXRwdXQiOiJkb2N1bWVudCJ9</script>
-<link href="../site_libs/reveal-theme/reveal-theme-6ec7a94939c7281a5ee2e5382b76028b.min.css" rel="stylesheet" append-hash="true" data-mode="light"><meta charset="utf-8">
+<link href="../site_libs/reveal-theme/reveal-theme-6ec7a94939c7281a5ee2e5382b76028b.min.css" rel="stylesheet" append-hash="true" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.10.18">
 
   <meta name="author" content="Jon Reades">
@@ -360,6 +363,7 @@
 </section>
 <section id="a-safe-prompt" class="slide level2 scrollable smaller">
 <h2>A ‘Safe’ Prompt</h2>
+<p>New this year: a <a href="../ref/PROMPT.md">draft LLM session prompt</a>.</p>
 <div style="font-style:fixed;">
 <p><role></role></p>
 <p>You are my individualised learning mentor. Your job is to help me <em>arrive at</em> answers, not to give them. I am the one who has to understand this afterwards — in an exam, a viva, an interview, or on the job. Assume I am capable and that struggle is the point.</p>
@@ -438,6 +442,40 @@
 <p>Do not flatter the first list. Be honest about the second.</p>
 <p></p>
 </div>
+</section>
+<section id="before-you-go" class="slide level2">
+<h2>Before You Go…</h2>
+<p>One sentence, finishing this:</p>
+<p>&nbsp;</p>
+<blockquote>
+Data science <strong>is</strong> / <strong>isn’t</strong> new because… and so I should learn it by…
+</blockquote>
+<p>&nbsp;</p>
+<p>A selection will open next week’s session.</p>
+</section>
+<section id="input" class="slide level2">
+<h2>Input</h2>
+<p>Provide your input here: <a href="https://form.menti.com/s/alps8wiq535z">form.menti.com/s/alps8wiq535z</a></p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><a href="./img/mentimeter-qr-week-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Mentimeter QR Code"><img data-src="./img/mentimeter-qr-week-2.png" height="500" alt="Mentimeter QR Code"></a></p>
+<figcaption>Mentimeter QR Code</figcaption>
+</figure>
+</div>
+<aside class="notes">
+<p>About 5 minutes. Collect via a Mentimeter open-text question (in a second browser tab), or ask for a handful aloud and write them down.</p>
+<p>After class: pick three for the first slide of Week 3.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="additional-resources" class="slide level2 smaller">
 <h2>Additional Resources</h2>
@@ -878,6 +916,38 @@ Richmond, T. 2025. <span>“<span class="nocase">EducAItion, educAItion, educAIt
         }
       });
       </script>
+    <script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+    (function() {
+      let previousOnload = window.onload;
+      window.onload = () => {
+        if (previousOnload) {
+          previousOnload();
+        }
+        lightboxQuarto.on('slide_before_load', (data) => {
+          const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+          const href = trigger.getAttribute('href');
+          if (href !== null) {
+            const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+            if (imgEl !== null) {
+              const srcAttr = imgEl.getAttribute("src");
+              if (srcAttr && srcAttr.startsWith("data:")) {
+                slideConfig.href = srcAttr;
+              }
+            }
+          } 
+        });
+      
+        lightboxQuarto.on('slide_after_load', (data) => {
+          const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(slideNode);
+          }
+        });
+      
+      };
+      
+    })();
+              </script>
     
 
 </body></html>
