@@ -21,14 +21,14 @@ Tracks what needs doing, session by session, before and during teaching. Review 
 
 | Field | Meaning |
 |---|---|
-| Slide (seq) | Slide title, and its **Sequence** number in the cut table in `fsds-private/ffmpeg/lessons.md` |
+| Slide (seq) | Slide title, and its **Sequence** number in the cut table in `fsds-private/flip.settings/lessons.md` |
 | Change | One sentence on what changes on the slide |
 | Audio | `none` = visual only, rebuild the PNGs · `re-record` = replace an existing segment · `new` = add a new segment |
 | Script | What to change in `fsds-private/scripts/<talk>.md` |
 
 ### How `flip` handles changes
 
-- `ffmpeg/project.toml` maps each talk to its audio track. The per-slide cut times are the markdown table under `## <track>` in `ffmpeg/lessons.md`. **Sequence = the PNG index** exported by decktape.
+- `flip.settings/project.toml` (in `fsds-private`) maps each talk to its audio track. The per-slide cut times are the markdown table under `## <track>` in `flip.settings/lessons.md`. **Sequence = the PNG index** exported by decktape.
 - **Visual-only fix:** re-export the deck and re-merge. The audio cuts don't change.
 - **End slide (the cheap way to add a recap):** insert the new slide **straight after the last narrated slide and before *Additional Resources***.
   - Its PNG index is then *last narrated seq + 1*, so add one row with that sequence and the times of the narration you appended to the M4A.

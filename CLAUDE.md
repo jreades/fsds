@@ -6,6 +6,8 @@ Writing: British spelling, Oxford comma, plain English.
 
 ## Where things are
 
+`fsds` and `../fsds-private` are **one source** with two levels of exposure. `fsds` is public (students and the web); `fsds-private` holds narration scripts, the video build and anything not for release. Read across both freely, but don't copy private material into `fsds`, and treat the `fsds-private` copy as the only version (no mirrors in `fsds`).
+
 | What | Where |
 |---|---|
 | Week pages (LOs, "Before class", readings, study guide, video/live tables) | `sessions/weekN.qmd` |
@@ -18,7 +20,7 @@ Writing: British spelling, Oxford comma, plain English.
 | Lessons learned (`[LEARN:category]`) | `MEMORY.md` |
 | Plans, session logs, reports (gitignored) | `quality_reports/` |
 | Video narration scripts | `../fsds-private/scripts/N.M-Title.md` |
-| Video build tool (`flip`) + config | `../fsds-private/flip*` (see `To_Do.md` § "How `flip` handles changes") |
+| Video build tool (`flip`) + config | `../fsds-private/flip/`, with cut tables in `../fsds-private/flip.settings/lessons.md` (see `To_Do.md` § "How `flip` handles changes") |
 | Annotated readings + summaries (`NN-Author.pdf`) | `~/Library/CloudStorage/Dropbox/FSDS_26-27/Readings/Week N/` |
 
 **Recorded vs live decks:** decks listed under "Pre-Recorded Lectures" on a week page have narrated videos. Changing their text may need a video rebuild or re-recording (check the narration script first). Decks under "In-Person Lectures" (e.g. 1.x, 2.6–2.8, 4.4, 4.5, 6.0, 10.2) are live-only and can be edited freely.

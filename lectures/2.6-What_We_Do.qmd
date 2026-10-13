@@ -1,47 +1,259 @@
 ---
 author: "Jon Reades"
 email: "j.reades@ucl.ac.uk"
-title: "What Does a (Spatial) Data Scientist Do?"
+title: "Is Data Science New?"
 other: ""
 format: revealjs
-nocite: |
-  @Xie:2024b, @Xie:2024c
 ---
 
-<blockquote style="margin-top:250px">"I used to think that writing is the most trivial part of the job of a data scientist; because the analyses and numbers should speak for themselves right? **Wrong!**" ~ @Xie:2024a^[This session draws liberally on her experience.]</blockquote>
+## This Week's Question
+
+<blockquote style="margin-top:150px">Is data science new? And, if so, how you should learn it?</blockquote>
+
+&nbsp;
+
+- The **[readings](../sessions/week2.qmd#readings)** answer the first half.
+- **[On Writing & Coding](./2.7-On_Writing.qmd)** answers the second half.
 
 ::: {.notes}
 
-This is from an article (see references at the end) by a **practicing data scientist** on the importance of communication skills. Their argument, with which I'd broadly agree, is that:
+Run sheet (about 85 minutes before handing over to 2.7):
 
-1. Writing is used everywhere the corporate world.
-2. Writing brings clarity to your thinking process.
-3. Writing is the 'last mile'.
+- The deal: 5 min
+- Predict the output: 20 min
+- Is data science new?: 35 min (including neighbour discussion)
+- Break: 10 min
+- What does a data scientist do?: 15 min
+- Bridge to On Writing & Coding
 
-I think there's a lot you can take away from that article, so I'd strongly encourage you to read it for yourself. Notice the **focus on the 'so what'** question and the emphasis on **story telling**. If you can you do this now, you'll find the dissertation that much easier.
-
-Keep it short. Keep it simple. Keep it direct. Signpost. Don't try to use complicated vocabulary where plain-English will do. This is something that ChatGPT gets wrong a *lot* when you ask it to do 'academic writing'.
-
-Use figures where they replace a paragraph (or more) of content. Use a sentence where it can replace a figure (or more) of content. 
+Voting is with fingers (1–4) unless Mentimeter is open in a second browser tab. Pairs means *whoever is sitting next to you*.
 
 :::
 
----
+## The Deal
 
-<div style="height: 600px;">
-<h1 style="margin-top: 200px; vertical-align: bottom;">So What?</h1>
-<h3>(Does a Spatial Data Scientist <i>do</i>?)</h3>
-</div>
+> [Tukey] saw apprenticeship with real data analysts and hence real data as the solution. ~ @Donoho:2017 [p.754]
+
+. . .
+
+From now on, I **assume** that you've watched the videos and done the reading. We will *use* them, not *repeat* them.
 
 ::: {.notes}
 
-Ask students what they think a data scientists does.
+My margin note on this page says: "This is what I'm trying to do with FSDS! Real problems. Real experience."
 
-Good answers can be added below.
+This is the justification for the format: you can't apprentice by watching someone else lecture. Class is where we *use* what you've prepared.
 
 :::
 
-## The 'Pipeline' {auto-animate=true}
+# Predict the Output
+
+Pairs. No laptops. Vote with your fingers.
+
+## 1. Strings
+
+```python
+w, x, y, z = '4a','4a','365','42'
+print(x > y)
+print(x > z)
+```
+
+&nbsp;
+
+1. `True` `False`
+2. `True` `True`
+3. `False` `False`
+4. An error
+
+. . .
+
+**Answer: 2.** Strings are compared character by character, and `'4'` > `'3'`; then `'a'` > `'2'`.
+
+::: {.notes}
+
+From Basics 1. Story (≤ 60 seconds): Point: if you're not careful about what type of data you're working with, you get odd, hard-to-diagnose bugs. Tie-in: Grace Hopper's moth.
+
+:::
+
+## 2. Slicing
+
+```python
+geographers = ["Massey", "Harvey", "Rose"]
+i = 2
+print( geographers[ (i-3)**2-4:-1 ] )
+```
+
+&nbsp;
+
+1. `['Massey', 'Harvey']`
+2. `['Harvey', 'Rose']`
+3. `['Rose']`
+4. An error
+
+. . .
+
+**Answer: 1.** `(2-3)**2-4` is `-3`, so this is `geographers[-3:-1]`.
+
+::: {.notes}
+
+From Lists ("Test Yourself"). Ask a pair who got it right to talk the room through the arithmetic. Work it *inside out*, the same way Python does.
+
+:::
+
+## 3. Appending
+
+```python
+female = ['Rose','Valentine','Massey','Jefferson']
+male   = ['Von Humboldt','Harvey','Hägerstrand']
+a = female + male
+b = []
+b.append(female)
+b.append(male)
+print(len(a), len(b))
+```
+
+. . .
+
+**Answer: `7 2`.** `+` joins two lists; `append` adds *one thing*, which here happens to be a list.
+
+::: {.notes}
+
+Why does `append` look inconsistent? It isn't inconsistent, it does one thing every time.
+
+**Story**: Basics 2, deleting code I didn't understand.
+
+:::
+
+## 4. Tricksy
+
+Same output. *How* are they different?
+
+:::: {.columns}
+::: {.column width="50%"}
+```{python}
+geographers = ['Rose','Massey','Jefferson']
+geographers.reverse()
+for g in geographers:
+  print(g)
+```
+:::
+::: {.column width="50%"}
+```{python}
+geographers = ['Rose','Massey','Jefferson']
+g = len(geographers)-1
+while g >= 0:
+  print( geographers[g] )
+  g -= 1
+```
+:::
+::::
+
+. . .
+
+`reverse()` changes the list **in place**: after the left-hand version, `geographers` is still backwards.
+
+::: {.notes}
+
+Link back to `sort()` in Lists.
+
+Two pieces of code that give the same output are not the same code. That matters later, when the next line depends on the order of the list.
+
+:::
+
+# Is Data Science New?
+
+## Vote
+
+For reading you did, what was its verdict on data science (or quantitative geography)?
+
+&nbsp;
+
+1. **New**: something genuinely different.
+2. **Rebrand**: old work under a new name.
+3. **Bandwagon**: driven by fashion, money or administrators.
+
+::: {.notes}
+
+Who read: Burton? Donoho? Franklin? None?
+
+Then vote **by reading**: Burton readers, hand up. Then Donoho, then Franklin. Note where the readings disagree.
+
+Then 5 minutes with neighbours: compare verdicts and find *one passage* that proves yours. Anyone who didn't read gets briefed by a neighbour.
+
+Plenary: start where the readings disagree, and cold-call by reading ("Franklin readers, who said rebrand? Why?").
+
+:::
+
+## Burton (1963)
+
+> It is no flight of fancy to foresee the day when geographers, if they are to remain abreast of developments, must re-learn their craft anew every decade. ~ @Burton:1963 [p.153]
+
+. . .
+
+> If the revolution had been inspired by belief in quantification for its own sake, or by fad and fashion, then it would have rapidly run its course and quickly died. ~ @Burton:1963 [p.156]
+
+::: {.notes}
+
+Burton's verdict: the revolution is *over* because its ideas became conventional, and it lasted because it had a purpose (theory), not because it was fashionable.
+
+"Re-learn their craft anew every decade": that was written in 1963. That's you now, with LLMs.
+
+:::
+
+## Donoho (2017)
+
+> Statisticians see administrators touting, as new, activities that statisticians have already been pursuing daily, for their entire careers [...] ~ @Donoho:2017 [p.746]
+
+. . .
+
+> The new skills attracting so much media attention are not skills for better solving the real problem of inference from data; they are coping skills for dealing with organizational artifacts of large-scale cluster computing. ~ @Donoho:2017 [p.747]
+
+::: {.notes}
+
+My margin notes: "Note the academic 'bandwagon' that everyone wants to jump on, esp. administrators." And on p.4: "New 'skills' are a function of the hardware available."
+
+Counterpoint for the room: is this any different from the way CS and data science have moved into geography and planning?
+
+:::
+
+## Franklin (2024)
+
+> Gone, too, is the illusion of a monolithic, unified quantitative human geography, replaced by urban analysts, geographic data scientists, geospatial data scientists, and GeoAI practitioners. ~ @Franklin:2024 [p.237]
+
+. . .
+
+> By identifying with tools and analytics, quantitative methods effectively shunts itself even further away from human geography, pigeonholing quantitative human geographers as methods people. ~ @Franklin:2024 [p.241]
+
+::: {.notes}
+
+My margin note on p.6: "Key problem here!" Franklin's worry isn't whether the work is new, it's what happens to *identity* when people name themselves after their tools.
+
+:::
+
+## So... Nothing New Under the Sun?
+
+> Four major influences act on data analysis today:
+>
+> 1. The formal theories of statistics
+> 2. Accelerating developments in computers and display devices
+> 3. The challenge, in many fields, of more and ever larger bodies of data
+> 4. The emphasis on quantification in an ever wider variety of disciplines
+
+What year?
+
+. . .
+
+Tukey, **1962** (quoted in @Donoho:2017 [p.749]).
+
+::: {.notes}
+
+Ask the room to guess the year before revealing it. My margin note: "Pretty much sounds like where we are today as well!"
+
+:::
+
+# What Does a (Spatial) Data Scientist Do?
+
+## Put These in Order
 
 - Code
 - Tidy
@@ -52,136 +264,81 @@ Good answers can be added below.
 
 ::: {.notes}
 
-Here are six things that we might imagine any data scientists, spatial or otherwise, does. 
+Pairs, 2 minutes: put these in order. Take two or three orders from the room.
 
-Do we think they're in the right order?
-
-I can tell you right now that this sequence of steps is how to get a mark of between 45 and 63 in your dissertation.
+This order is how to get a mark of between 45 and 63 in your dissertation.
 
 :::
 
+## A Better Order {.smaller}
 
-## The 'Pipeline' {auto-animate=true}
+:::: {.columns}
+::: {.column width="40%"}
+1. Understand
+2. Tidy
+3. Code
+4. Report
+5. Analyse
+6. Communicate
+:::
+::: {.column width="60%"}
+| Not this… | …but this |
+| :-- | :-- |
+| How should we do this? | Why are we doing this? |
+| This is the number. | These are the takeaways. |
+| These are the methods I can use. | This is the method that matches the need. |
+| What do I need to say? | Who needs to know? |
+:::
+::::
 
-- Understand
-- Tidy
-- Code
-- Report
-- Analyse
-- Communicate
+&nbsp;
+
+> Quantitative analysis of variables cannot be justified for its own sake. ~ @Burton:1963 [p.158]
 
 ::: {.notes}
 
-Here's a slightly better order, here's why:
+It's also a loop: each step feeds back into the others. Reports are for *you* (diagnostics, data quality) before they're for anyone else.
 
-- You can't answer a question -- from your boss, from an academic, from your friends even -- if you don't understand it. So before you run off and start writing some code, the first thing you need to do is understand the problem you're trying to solve. That problem should *not* be technical, it should be *practical*. 
-- Tidying the data is such a core part of what we do that it really needs to be seen as a step *before* coding, even though tidying is often done *through* code.
-- Once you understand the problem you can start trying to code a solution.
-- The code will allow you to produce reports. These reports might be to do with data quality, they might be diagnostics from a Random Forest Machine Learning algorithm. At each stage in the development of your results you should be generating reports that help you to better-understand your problem and work out if your code is working.
-- Once the reports have given you confidence in your findings now you can actually *write* the analysis. Your analysis might lead you to realise that you need to go back and write more code and produce more reports, but that's *normal*.
-- Finally, you need to work out how to *communicate* your analysis. If you *understand* the problem then you'll find this process rewarding. If you don't then you'll find it frustrating and want to brush it off quickly.
-
-So the fact these are in a list is still rather misleading because at each point you get feedback effects, and it's *also* a loop.
+Burton's line is "Understand" put another way: 60 years ago, the same argument.
 
 :::
 
-## How to Understand?
+## Compare: Donoho's 'Greater Data Science'
 
-<blockquote style="margin-top:250px">How should we do this?</blockquote>
-
-## How to Understand?
-
-<blockquote style="margin-top:250px">~~How should we do this?~~</blockquote>
-
-<blockquote>Why are we doing this?</blockquote>
-
+1. Data gathering, preparation, and exploration
+2. Data representation and transformation
+3. Computing with data
+4. Data modeling
+5. Data visualization and presentation
+6. Science about data science
 
 ::: {.notes}
 
-When you asked 'Why are we doing this?', often this is dictated by our user and they don't often listen to other ways of doing things, in our meeting earlier where we talked about 'as the crow flies' for nearest neighbour instead of using a network, this is often ignored by our 'customers'. 
+Neighbours, 4 minutes: what does each list leave out? Take three or four answers.
+
+(Donoho's own section headings swap 4 and 5; this is the order of his summary list.)
+
+Mine has *Understand* and *Communicate*; his has *science about data science* and, implicitly, reproducibility. Neither has "use the latest tool".
 
 :::
 
-## How to Report?
+## Why the Practicals Look Like This
 
-<blockquote style="margin-top:250px;">This is the number.</blockquote>
+> Students who only analyze precooked data are not being given the chance to learn these essential skills. ~ @Donoho:2017 [p.757]
 
-## How to Report?
+. . .
 
-<blockquote style="margin-top:250px;">~~This is the number.~~</blockquote>
-
-<blockquote>These are the takeaways.</blockquote>
-
-## How to Analyse?
-
-<blockquote style="margin-top:250px;">These are the methods we can use.</blockquote>
-
-## How to Analyse?
-
-<blockquote style="margin-top:250px;">~~These are the methods I can use.~~</blockquote>
-
-<blockquote>This is the method that matches the need.</blockquote>
-
+> An article about computational science in a scientific publication is not the scholarship itself, it is merely advertising of the scholarship. ~ @Donoho:2017 [p.760], summarising Jon Claerbout
 
 ::: {.notes}
 
-When you asked 'why are we using this method', often this is often ignored by our 'customers'. Context gets overlooked. Things are usually rushed and they don't look at the wider picture, other data sources and methods if it will delay the answers.
+This is why the practicals use real, messy data, and why the assessments are submitted as reproducible notebooks: the code *is* the scholarship.
 
 :::
 
-## How to Communicate?
+## The Story is Stable
 
-<blockquote style="margin-top:250px;">What do I need to say?</blockquote>
-
-## How to Communicate?
-
-<blockquote style="margin-top:250px;">~~What do I need to say?~~</blockquote>
-
-<blockquote>Who needs to know?</blockquote>
-
-## Tell Me a Story {auto-animate=true}
-
-<blockquote style="margin-top:250px;">All data science is, ultimately, a story.</blockquote>
-
-## Tell Me a Story {auto-animate=true}
-
-<blockquote style="margin-top:250px;">All data science is, ultimately, a story.</blockquote>
-<blockquote>Focus on the 'so what'.</blockquote>
-
-## Tell Me a Story {auto-animate=true}
-
-<blockquote style="margin-top:250px;">All data science is, ultimately, a story.</blockquote>
-<blockquote>Focus on the 'so what'.</blockquote>
-<blockquote>Don't bury the lede.</blockquote>
-
-::: {.notes}
-
-All data science is, ultimately, a story. A story of struggle. Frustration. Discovery. Learning. But you need to *tell* that story the right way.
-
-Many of you will have learned some 'system' for writing in school. The inverted pyramid or something like that. In university, in my literary *theory* class I picked up the pyramid approach: taking a single sentence and unpacking that into the themes of the entire book.
-
-There are mystery novels. Romance novels. Economist articles. Teen Vogue articles. They are all telling stories. They all do this in different ways.
-
-:::
-
---- 
-
-<div style="margin-top: 200px;">
-<h1>Tell the *Right* Story</h1>
-<h3>(And *that* requires soft-skills)^[See, e.g., @Huck:2025]</h3>
-</div>
-
-::: {.notes}
-
-So what's fine for consultancy, might not be for academia or newspaper reporting. And vice versa. 
-
-Across the last five years what we've noticed 
-
-:::
-
-## All Change?
-
-We think the *story* is the stable part, because everything else in data science is always changing. Here's *one* vision from @Uttam:2025:
+Job titles keep changing. Here's *one* version of that from @Uttam:2025:
 
 | Old Data Science Role  | New Job Title                   |
 | :--------------------- | :------------------------------ |
@@ -193,7 +350,21 @@ We think the *story* is the stable part, because everything else in data science
 
 ::: {.notes}
 
-Those JDs apply in the private sector — you also won’t find academics identifying with those titles because we tend to me one-stop-shops in most cases. I think you can assume that trends in the corporate world tend to hit the less lucrative sectors a few years later, but it wasn’t my intention to suggest that all those roles have come into existence, rather that it’s constantly evolving in terms of how people divvy up the work.
+Back to Franklin: if you identify with the tool, you're pigeonholed when the tool changes. These titles apply in the private sector; academics tend to be one-stop shops. The point isn't that all these roles exist, it's that the way the work is divided keeps changing.
+
+:::
+
+## So What Is Today's 'Coping Skill'?
+
+> The new skills attracting so much media attention [...] are coping skills. ~ @Donoho:2017 [p.747]
+
+. . .
+
+If Donoho's 'coping skills' were about dealing with "the severe new constraints on algorithms posed by the multiprocess/networked wolrd", what's ours?
+
+::: {.notes}
+
+Take one or two answers (someone will say LLMs), then switch to On Writing & Coding.
 
 :::
 
