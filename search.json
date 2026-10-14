@@ -102,7 +102,7 @@
     "href": "sessions/week6.html#readings",
     "title": "Numeric Data",
     "section": "Readings",
-    "text": "Readings\nCome to class prepared to discuss the following readings:\n\n\n\nCitation\nArticle\n\n\n\n\nAnderson (2008)\nURL\n\n\nD’Ignazio and Klein (2020a) Ch.4\nURL\n\n\nCox and Slee (2016)\nURL\n\n\n\n\nStudy Guide\nLooking at Anderson (2008):\n\nHow does the idea of “more is different” relate to the concept of the Petabyte Age?\nWhat does Anderson mean by “Correlation is enough”?\nWhat examples does Anderson provide to show that the scientific method is becoming obsolete?\n\nReading D’Ignazio and Klein (2020a, Ch.4):\n\nHow do their ideas about the power dynamics of data collection challenge Anderson’s claim that “the numbers speak for themselves”?\nWhat are the potential consequences of relying solely on correlation, as Anderson suggests, without considering the social and political contexts of data?\nHow might the concept of the “privilege hazard” inform an analysis of Anderson’s argument?\n\nConsidering Cox and Slee (2016):\n\nHow does the case study presented in Cox and Slee illustrate the issues explored in the other readings?\nAccording to Cox and Slee, how did the cleaning of the New York City listings reflect the company’s power and privilege?\nHow does this cleaning potentially harm less-privileged stakeholders in the company’s platform?\n\n\n\n\n\n\n\nTipConnections\n\n\n\nRead D’Ignazio and Klein (2020b) to highlight the importance of thinking about what a data set captures… and what it excludes. Cox and Slee (2016) is also a first introduction to the underlying data that we’ll be working with over the rest of term. D’Ignazio and Klein (2020b) should be getting you thinking about how ‘cleaning’ is not just about hygiene but has real implications for what you can and will find in your data: data is often a lot less ‘tidy’ than tidyr might lead you think! You should almost never be claiming that your (social) data represents the ‘universe’ of behaviours or is somehow ‘complete’.",
+    "text": "Readings\nCome to class prepared to discuss the following readings:\n\n\n\nCitation\nArticle\n\n\n\n\nAnderson (2008)\nURL\n\n\nD’Ignazio and Klein (2020a) Ch.4\nURL\n\n\nCox and Slee (2016)\nURL\n\n\n\n\nStudy Guide\nLooking at Anderson (2008):\n\nHow does the idea of “more is different” relate to the concept of the Petabyte Age?\nWhat does Anderson mean by “Correlation is enough”?\nWhat examples does Anderson provide to show that the scientific method is becoming obsolete?\n\nReading D’Ignazio and Klein (2020a, Ch.4):\n\nThe chapter’s principle is to “rethink binaries and hierarchies”. Using the census or Facebook examples, explain how a classification system decides what can be counted, and what this means for Anderson’s claim that, with enough data, the numbers speak for themselves.\nWhat is the “paradox of exposure”? Who stands to gain and who stands to lose from being counted, and why does this mean that more data (Anderson’s “more is different”) is not automatically better?\nHow might the concept of the “privilege hazard” inform an analysis of Anderson’s argument?\n\nConsidering Cox and Slee (2016):\n\nHow does the case study presented in Cox and Slee illustrate the issues explored in the other readings?\nAccording to Cox and Slee, how did the cleaning of the New York City listings reflect the company’s power and privilege?\nHow does this cleaning potentially harm less-privileged stakeholders in the company’s platform?\n\n\n\n\n\n\n\nTipConnections\n\n\n\nRead D’Ignazio and Klein (2020b) to highlight the importance of thinking about what a data set captures… and what it excludes. Cox and Slee (2016) is also a first introduction to the underlying data that we’ll be working with over the rest of term. D’Ignazio and Klein (2020b) should be getting you thinking about how ‘cleaning’ is not just about hygiene but has real implications for what you can and will find in your data: data is often a lot less ‘tidy’ than tidyr might lead you think! You should almost never be claiming that your (social) data represents the ‘universe’ of behaviours or is somehow ‘complete’.",
     "crumbs": [
       "Part 2: Process",
       "6. Numeric Data"
@@ -7331,7 +7331,7 @@
     "href": "practicals/Practical-01-Getting_Started.html#running-podman-1",
     "title": "Practical 1: Getting Started",
     "section": "Running Podman",
-    "text": "Running Podman\nBy default, the best way to start the sds2026 virtual machine (also called a ‘container’) is from the Terminal or Power Shell.\n\nOn WindowsOn macOS\n\n\nUsing the same Power Shell copy and paste the following all on one line:\npodman run --rm -d --name sds2026 -p 8888:8888 -p 4444:4444 --cgroups=disable -v \\\"$(pwd):/home/jovyan/work\\\" jreades/sds:2026-amd64 start.sh jupyter lab --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''\n\nWindows Commands\n$(pwd) is actually a command, you are asking the Power Shell to use the current working directory (pwd == print working directory) as the ‘mount point’ for the work directory. The Command Prompt doesn’t support pwd, but the Power Shell should. You can check this by simply typing pwd and hitting enter (⏎) to see if you get an error.\n\n\n\nUsing the same Terminal copy and past the following (change the image to jreades/sds:2026-amd64 if using an older Intel Mac):\npodman run --rm -d --name sds2026 -p 8888:8888 -p 4444:4444 \\\n    --userns=keep-id \\\n    -v \\\"$(pwd):/home/jovyan/work\\\" \\\n    jreades/sds:2026-arm64 start.sh jupyter lab \\\n    --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''\n\n\n\n\n\n\nWarningNo work directory or Permission Denied?\n\n\n\nOn some macOS machines we are seeing (or, rather, not seeing) problems with the work directory as well as ‘permission denied’ errors whenever you try to make changes to this directory. In this case the answer appears to be that you need to change part of the run command:\n\nFrom: -v \"$(pwd):/home/jovyan/work\"\nTo: -v \"$(pwd):/home/jovyan/work:rw,U\"1\n\nThis can still have a few issues with files that you add to the work directory after starting up podman but we’ll run you through this issue (and how to deal with it) in class."
+    "text": "Running Podman\nBy default, the best way to start the sds2026 virtual machine (also called a ‘container’) is from the Terminal or Power Shell.\n\nOn WindowsOn macOS\n\n\nUsing the same Power Shell copy and paste the following all on one line:\npodman run --rm -d --name sds2026 -p 8888:8888 -p 4444:4444 --cgroups=disabled -v \"$(pwd):/home/jovyan/work\" jreades/sds:2026-amd64 start.sh jupyter lab --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''\n\nWindows Commands\n$(pwd) is actually a command, you are asking the Power Shell to use the current working directory (pwd == print working directory) as the ‘mount point’ for the work directory. The Command Prompt doesn’t support pwd, but the Power Shell should. You can check this by simply typing pwd and hitting enter (⏎) to see if you get an error.\n\n\n\nUsing the same Terminal copy and past the following (change the image to jreades/sds:2026-amd64 if using an older Intel Mac):\npodman run --rm -d --name sds2026 -p 8888:8888 -p 4444:4444 \\\n    --userns=keep-id \\\n    -v \\\"$(pwd):/home/jovyan/work\\\" \\\n    jreades/sds:2026-arm64 start.sh jupyter lab \\\n    --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''\n\n\n\n\n\n\nWarningNo work directory or Permission Denied?\n\n\n\nOn some macOS machines we are seeing (or, rather, not seeing) problems with the work directory as well as ‘permission denied’ errors whenever you try to make changes to this directory. In this case the answer appears to be that you need to change part of the run command:\n\nFrom: -v \"$(pwd):/home/jovyan/work\"\nTo: -v \"$(pwd):/home/jovyan/work:rw,U\"1\n\nThis can still have a few issues with files that you add to the work directory after starting up podman but we’ll run you through this issue (and how to deal with it) in class."
   },
   {
     "objectID": "practicals/Practical-01-Getting_Started.html#how-do-i-know-it-worked",
@@ -8206,7 +8206,7 @@
     "href": "sessions/week3.html#readings",
     "title": "Foundations (Pt. 2)",
     "section": "Readings",
-    "text": "Readings\nCome to class prepared to discuss the following readings:\n\n\n\nCitation\nArticle\n\n\n\n\nD’Ignazio and Klein (2020) Ch.6\nURL\n\n\nMattern (2017)\nURL\n\n\n\n\nStudy Guide\nThe following questions will help guide your reading and prepare you for class discussions:\n\nDrawing on D’Ignazio and Klein (2020) (The Numbers Don’t Speak for Themselves) consider:\n\n\nWhat critical attribute is missing from ‘big data’ found in the wild and why does it matter?\nHow do the risks this creates differ for insiders, outsiders, and minoritised groups?\nHow can the case of VAWG (Violence Against Women and Girls) help you understand the feminist critique of these kinds of data?\nWhat does it mean to say that data emerges ‘fully cooked’?\nWhy is it fundamentally unethical to ‘let the numbers speak for themselves’?\n\n\nUsing Mattern (2017), critically analyze the “city as computer” metaphor:\n\n\nWhat are its strengths and weaknesses?\nHow does this metaphor shape our understanding of urban environments and the solutions we prioritize for urban challenges?\nWhat aspects of cities does it overlook or oversimplify?\nHow does Mattern propose we move beyond this metaphor towards a richer understanding of urban intelligence?",
+    "text": "Readings\nCome to class prepared to discuss the following readings:\n\n\n\nCitation\nArticle\n\n\n\n\nD’Ignazio and Klein (2020) Ch.6\nURL\n\n\nMattern (2017)\nURL\n\n\n\n\nStudy Guide\nThe following questions will help guide your reading and prepare you for class discussions:\n\nDrawing on D’Ignazio and Klein (2020) (The Numbers Don’t Speak for Themselves) consider:\n\n\nWhat critical attribute is missing from ‘big data’ found in the wild and why does it matter?\nHow do the risks this creates differ for insiders, outsiders, and minoritised groups?\nHow can the case of the Clery Act data on campus sexual assault (and the students at Emerson College) help you understand the feminist critique of these kinds of data?\nWhat does it mean to say that data emerges ‘fully cooked’?\nWhy is it fundamentally unethical to ‘let the numbers speak for themselves’?\n\n\nUsing Mattern (2017), critically analyze the “city as computer” metaphor:\n\n\nWhat are its strengths and weaknesses?\nHow does this metaphor shape our understanding of urban environments and the solutions we prioritize for urban challenges?\nWhat aspects of cities does it overlook or oversimplify?\nHow does Mattern propose we move beyond this metaphor towards a richer understanding of urban intelligence?",
     "crumbs": [
       "Part 1: Foundations",
       "3. Foundations (Pt.2)"
@@ -8587,5 +8587,145 @@
     "title": "On Writing & Coding",
     "section": "Input",
     "text": "Input\nProvide your input here: form.menti.com/s/alps8wiq535z\n\n\n\nMentimeter QR Code\n\n\n\nAbout 5 minutes. Collect via a Mentimeter open-text question (in a second browser tab), or ask for a handful aloud and write them down.\nAfter class: pick three for the first slide of Week 3."
+  },
+  {
+    "objectID": "lectures/3.5-Session.html#this-weeks-question",
+    "href": "lectures/3.5-Session.html#this-weeks-question",
+    "title": "Are You Just Organising It?",
+    "section": "This Week’s Question",
+    "text": "This Week’s Question\n\nWhen you decide how to store data, are you just organising it, or already deciding what it means?\n\n \nWe’ll answer it twice: once about Python, once about cities.\n\nRun sheet (120 min):\n\nThe question: 5 min\nPredict the output: 20 min\nReading verdict: 35 min (including neighbour discussion)\nBreak: 10 min\nWhat’s the key?: 25 min\nBreak it, then fix it (live Git): 17 min\nExit ticket: 8 min\n\nVoting is with fingers (1–4); hands by reading. Pairs means whoever is sitting next to you.\nIn the DOLs video I say there’s “no right way” to store data, then, thirty seconds later, that there is a right answer. Today is about which of those is true."
+  },
+  {
+    "objectID": "lectures/3.5-Session.html#deliberately-similar",
+    "href": "lectures/3.5-Session.html#deliberately-similar",
+    "title": "Are You Just Organising It?",
+    "section": "1. Deliberately Similar",
+    "text": "1. Deliberately Similar\ncities = [\n  'San Francisco',\n  'London',\n  'Paris',\n  'Beijing']\n\n# Prints London\nprint(cities[2])\n\nSan Francisco\nLondon\nParis\nIndexError\n\n\nAnswer: 3. Indexes start at 0. And the comment is wrong: it’s copied from my own slide in Dictionaries.\n\nFrom Dictionaries (“Deliberately Similar”). The point: a comment is context, and context can be wrong. Hold on to that for the readings.\nStory (≤ 60 seconds): zebras relabelled as finches, which is why a dictionary key has to be immutable."
+  },
+  {
+    "objectID": "lectures/3.5-Session.html#making-sense-of-this",
+    "href": "lectures/3.5-Session.html#making-sense-of-this",
+    "title": "Are You Just Organising It?",
+    "section": "2. Making Sense of This",
+    "text": "2. Making Sense of This\nmy_list = [\n  [1, 2, 3],\n  [4, 5, 6],\n  [7, 8, 9]\n]\n\nfor i in my_list:\n  print(i)\n\n1 to 9, one per line\n[1, 2, 3], [4, 5, 6], [7, 8, 9], one per line\nThe whole list, once\nAn error\n\n\nAnswer: 2. Each i is a list.\n\nFrom LOLs: the video says “pause the video and have a think”, so this keeps that promise.\nStory: a list-of-lists is like the reference list in a journal article. It points to other things rather than containing them."
+  },
+  {
+    "objectID": "lectures/3.5-Session.html#find-the-5",
+    "href": "lectures/3.5-Session.html#find-the-5",
+    "title": "Are You Just Organising It?",
+    "section": "3. Find the 5",
+    "text": "3. Find the 5\nmy_list = [\n  [1, 2, 3],\n  [4, 5, 6],\n  [7, 8, 9]\n]\nWhich prints 5?\n\nmy_list[1][1]\nmy_list[2][2]\nmy_list[1,1]\nmy_list[4]\n\n\nAnswer: 1. Row 1, column 1, counting from zero. (2 gives 9; 3 is a TypeError; 4 is an IndexError.)\n\nFrom LOLs (“Let’s Talk It Out”: “How would you print the number 5?”)."
+  },
+  {
+    "objectID": "lectures/3.5-Session.html#how-is-that-easier",
+    "href": "lectures/3.5-Session.html#how-is-that-easier",
+    "title": "Are You Just Organising It?",
+    "section": "4. How Is That Easier?",
+    "text": "4. How Is That Easier?\nds2 = {\n  'lat': [51.51,40.71,35.69],\n  'lon': [0.13,74.01,139.68],\n  'tz':  [+0,-5,+8],\n  'name':['London','New York','Tokyo']\n}\n\nprint(ds2['tz'][ ds2['name'].index('Tokyo') ])\n\n0\n-5\n8\nKeyError\n\n\nAnswer: 3. And it’s wrong. Tokyo is UTC+9.\n\nFrom DOLs to Data (“How is that easier???”).\nStory: it took trying to teach pandas for me to really get my head around why this structure is so good.\nDon’t explain the +9 yet: ask “How many of you noticed?” (expect almost no hands) and say that we’ll come back to it after the break."
+  },
+  {
+    "objectID": "lectures/3.5-Session.html#vote",
+    "href": "lectures/3.5-Session.html#vote",
+    "title": "Are You Just Organising It?",
+    "section": "Vote",
+    "text": "Vote\nAccording to the reading you did, when we decide how to store data, we are…\n \n\nJust organising it: an efficiency choice.\nMostly organising it, but the structure decides which questions are easy to ask.\nAlready deciding what it means: the key, the columns and what’s left out are choices about what counts.\n\n\nWho read: D’Ignazio & Klein? Mattern? Both? Neither? (Hands, so you get a preparation rate.)\nThen vote by reading: D’Ignazio readers first, then Mattern.\nThen 7 minutes with neighbours: compare votes and find one passage that proves yours. Anyone who didn’t read is briefed by a neighbour.\nPlenary (20 min): start where the readings disagree (see “Do They Disagree?”) and cold-call by reading.\nTo add: 1–2 of your own counterpoints. Neither reading has margin notes yet."
+  },
+  {
+    "objectID": "lectures/3.5-Session.html#dignazio-klein-2020",
+    "href": "lectures/3.5-Session.html#dignazio-klein-2020",
+    "title": "Are You Just Organising It?",
+    "section": "D’Ignazio & Klein (2020)",
+    "text": "D’Ignazio & Klein (2020)\n\nAlthough GDELT de-duplicated some of those stories to a single event, it still logged, erroneously, that hundreds of kidnapping events had happened that day. ~ D’Ignazio and Klein (2020, 2)\n\n\n\n[…] data enter into research projects already fully cooked—the result of a complex set of social, political, and historical circumstances. ~ D’Ignazio and Klein (2020, 13)\n\n\nThe first quote is about FiveThirtyEight’s use of GDELT after the Chibok kidnapping: media reports were counted as events.\n“Fully cooked” is D’Ignazio and Klein drawing on Gitelman and Jackson, whose line is “‘Raw data’ is an oxymoron” (we’ll use it after the break).\nMargin note: [to add]"
+  },
+  {
+    "objectID": "lectures/3.5-Session.html#mattern-2017",
+    "href": "lectures/3.5-Session.html#mattern-2017",
+    "title": "Are You Just Organising It?",
+    "section": "Mattern (2017)",
+    "text": "Mattern (2017)\n\nOur current paradigm, the city as computer, appeals because it frames the messiness of urban life as programmable and subject to rational order. ~ Mattern (2017)\n\n\n\nUrban information is made, commodified, accessed, secreted, politicized, and operationalized. ~ Mattern (2017)\n\n\nPlaces Journal has no page numbers. (In the printout these are pages 2 and 4 of 8.)\nMargin note: [to add]"
+  },
+  {
+    "objectID": "lectures/3.5-Session.html#do-they-disagree",
+    "href": "lectures/3.5-Session.html#do-they-disagree",
+    "title": "Are You Just Organising It?",
+    "section": "Do They Disagree?",
+    "text": "Do They Disagree?\n\nBut deep context and computation are not incompatible. ~ D’Ignazio and Klein (2020, 16)\n\n\nCity-making is always, simultaneously, an enactment of city-knowing — which cannot be reduced to computation. ~ Mattern (2017)\n\n\nThe plenary’s opening question: is this a real disagreement, or a difference of emphasis? D’Ignazio and Klein want to fix computation with context; Mattern is sceptical of the computational framing itself.\nCold-call: “Mattern readers, which of these two would you sign?”"
+  },
+  {
+    "objectID": "lectures/3.5-Session.html#reports-or-events",
+    "href": "lectures/3.5-Session.html#reports-or-events",
+    "title": "Are You Just Organising It?",
+    "section": "Reports or Events?",
+    "text": "Reports or Events?\n\nstories = [('BBC','Chibok'), ('CNN','Chibok'),\n           ('Japan Times','Chibok'), ('SaharaReporters','Chibok')]\n\ncounts = {}\nfor outlet, event in stories:\n  counts[event] = counts.get(event, 0) + 1\n\nprint(len(stories))\nprint(counts)\n\n4\n{'Chibok': 4}\n\n\nFour kidnappings, or one kidnapping reported four times?\n\nIllustrative data, not GDELT’s: the outlets are the ones that D’Ignazio and Klein name on p.2.\nSame data, two keys. Count by story and you get 4; count by event and you get 1. Remember from Dictionaries: “the key is unique. Always.” The choice of key is the choice of what you’re counting.\nThen the next slide."
+  },
+  {
+    "objectID": "lectures/3.5-Session.html#what-is-gdelt-measuring",
+    "href": "lectures/3.5-Session.html#what-is-gdelt-measuring",
+    "title": "Are You Just Organising It?",
+    "section": "What Is GDELT Measuring?",
+    "text": "What Is GDELT Measuring?\n\nSo what is it really that GDELT is measuring? What events are happening in the world, or what the major international news organizations are focusing their attention on? ~ D’Ignazio and Klein (2020, 16)\n\n\nNeighbours, 1 minute: which key would answer each of those two questions?"
+  },
+  {
+    "objectID": "lectures/3.5-Session.html#spot-the-problem",
+    "href": "lectures/3.5-Session.html#spot-the-problem",
+    "title": "Are You Just Organising It?",
+    "section": "Spot the Problem",
+    "text": "Spot the Problem\nFrom LOLs (“Making This Useful”):\nmy_cities = [\n  ['London', 51.5072, 0.1275, +0],\n  ['New York', 40.7127, 74.0059, -5],\n  ['Tokyo', 35.6833, 139.6833, +8]\n]\nWhat’s wrong with this data?\n\nNeighbours, 2 minutes. Shown exactly as it appears in the video, unchanged.\nHint if the room is stuck: “Which side of Greenwich is London? Which side is New York?”"
+  },
+  {
+    "objectID": "lectures/3.5-Session.html#the-numbers-dont-speak-for-themselves",
+    "href": "lectures/3.5-Session.html#the-numbers-dont-speak-for-themselves",
+    "title": "Are You Just Organising It?",
+    "section": "The Numbers Don’t Speak for Themselves",
+    "text": "The Numbers Don’t Speak for Themselves\n\n\n\n\nOn my slide\nActually\n\n\n\n\nLondon longitude\n0.1275\n-0.1275\n\n\nNew York longitude\n74.0059\n-74.0059\n\n\nTokyo time zone\n+8\n+9\n\n\nNew York time zone\n-5\n-5 (winter), -4 (summer)\n\n\n\n\n\n“‘Raw data’ is an oxymoron” ~ Gitelman and Jackson, quoted in D’Ignazio and Klein (2020, 13)\n\n\nThese numbers have been in my videos for years. Nobody spotted them, because numbers on a slide look authoritative. Those who did spot them had context: they know where New York is.\nThe New York time zone isn’t even wrong: it’s incomplete. The structure has nowhere to say “when”."
+  },
+  {
+    "objectID": "lectures/3.5-Session.html#a-data-dictionary",
+    "href": "lectures/3.5-Session.html#a-data-dictionary",
+    "title": "Are You Just Organising It?",
+    "section": "A Data Dictionary",
+    "text": "A Data Dictionary\n\nIf you are lucky you might get a paragraph about where the data are from or a data dictionary that describes what each column in a particular spreadsheet means. ~ D’Ignazio and Klein (2020, 6)\n\nds2 = {\n  'lat': [...], 'lon': [...], 'tz': [...], 'name': [...]\n}\nIn ds2, the keys are the only metadata. Is tz in hours? Is it summer time?\n\nThe pun is the point: a Python dictionary’s keys are a (very thin) data dictionary."
+  },
+  {
+    "objectID": "lectures/3.5-Session.html#what-cant-be-a-column",
+    "href": "lectures/3.5-Session.html#what-cant-be-a-column",
+    "title": "Are You Just Organising It?",
+    "section": "What Can’t Be a Column?",
+    "text": "What Can’t Be a Column?\n\nWe, humans, make urban information by various means: through sensory experience, through long-term exposure to a place, and, yes, by systematically filtering data. ~ Mattern (2017)\n\n\nNeighbours, 2 minutes: name one thing about a city you know that can’t be a key or a column in ds2. Take three answers.\nThen the week’s question again: was choosing ds2 just organising?"
+  },
+  {
+    "objectID": "lectures/3.5-Session.html#break-it",
+    "href": "lectures/3.5-Session.html#break-it",
+    "title": "Are You Just Organising It?",
+    "section": "Break It",
+    "text": "Break It\ngit rm fileA.md\ngit commit -m \"Removed file.\"\nls                       # fileA.md has gone\ngit log --oneline        # find the hash before the removal\ngit checkout &lt;hash&gt;\nls                       # fileA.md is back\n\nLive, in the SDS container: the Recovery slide from the Git video, done for real. Set up the repo beforehand (README → fileA.md → commit, as in the video).\nAsk before running git checkout: “What will git status say now?”"
+  },
+  {
+    "objectID": "lectures/3.5-Session.html#detached-head",
+    "href": "lectures/3.5-Session.html#detached-head",
+    "title": "Are You Just Organising It?",
+    "section": "Detached HEAD",
+    "text": "Detached HEAD\ngit status               # HEAD detached at &lt;hash&gt;\ngit switch -             # back to the branch you were on\nTo bring one file back into the present:\ngit restore --source=&lt;hash&gt; fileA.md\ngit commit -m \"Restored fileA.md\"\n\nThis is the “getting back to HEAD” discussion that the Git video promises but never delivers.\ngit switch - works whether your branch is main or master. GitHub now defaults to main, but the video slides say master."
+  },
+  {
+    "objectID": "lectures/3.5-Session.html#pull-then-push",
+    "href": "lectures/3.5-Session.html#pull-then-push",
+    "title": "Are You Just Organising It?",
+    "section": "Pull, Then Push",
+    "text": "Pull, Then Push\ngit pull                 # get any changes from GitHub first\ngit add &lt;notebook.ipynb&gt;\ngit commit -m \"What I did, and why\"\ngit push                 # only now are you backed up\nWhen asked for a password, GitHub wants a personal access token (or an SSH key), not your account password.\n\nThe video’s workflow slide leaves out pull, but the learning outcome includes it.\nAuthentication is the gap: “Before class” asked students to check they could log in, but nothing teaches it. Point to the practical’s instructions. [CHECK: how the practical sets up authentication]\nSpare question if time: “You commit, and then your laptop is stolen. Is your work on GitHub?” (No: all changes are local until pushed.) Story: the flatmate’s laptop."
+  },
+  {
+    "objectID": "lectures/3.5-Session.html#a-commit-message-is-context",
+    "href": "lectures/3.5-Session.html#a-commit-message-is-context",
+    "title": "Are You Just Organising It?",
+    "section": "A Commit Message Is Context",
+    "text": "A Commit Message Is Context\n\nThe way through this predicament is by considering context, a process that includes understanding the provenance and environment from which the data was collected […] ~ D’Ignazio and Klein (2020, 27)\n\n\ngit log is the provenance of your work. Write the message for the person who will read it in six months.\n\nBridge to the practical: the final commit of the notebook. Ask for a message that would make sense to a stranger."
+  },
+  {
+    "objectID": "lectures/3.5-Session.html#exit-ticket",
+    "href": "lectures/3.5-Session.html#exit-ticket",
+    "title": "Are You Just Organising It?",
+    "section": "Exit Ticket",
+    "text": "Exit Ticket\nComplete the sentence:\n\nHow I store data is / isn’t a neutral choice, because…\n\n\nMentimeter (open text) in the second browser tab. Say that week 4 opens with a selection of these."
   }
 ]
