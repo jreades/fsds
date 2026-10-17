@@ -37,3 +37,5 @@ General lessons from working sessions, as `[LEARN:category]` entries. Machine- a
 
 - [LEARN:design] Weekly learning outcomes are easier to write, and easier to check for coverage, when each is tagged with the module outcome it supports. A coverage table (module outcome × weeks × assessment) shows thin spots straight away.
 - [LEARN:design] A "Before class" checklist at the top of each week page (watch with durations, read, week-specific actions) answers the common student request to know "what to do" before the reading material.
+- [LEARN:quarto] `draft: true` → still renders revealjs decks in full (Quarto 1.10.18) → exclude with `!file` in `project.render`; a full render wipes `_site`.
+- [LEARN:pedagogy] Cold-calling and asking for volunteers → ask a pair or group while walking the room ("What did you two decide?"); add a minute of silent writing first. Week 2: the same 10% volunteered, but group answers worked.

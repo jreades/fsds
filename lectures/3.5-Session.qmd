@@ -1,0 +1,650 @@
+---
+author: "Jon Reades"
+email: "j.reades@ucl.ac.uk"
+title: "Are You Just Organising It?"
+other: ""
+format: revealjs
+---
+
+<!-- DRAFT proposal (2026-10-14) for lecturer mark-up. Plan: quality_reports/plans/2026-10-13_week3-flipped-session.md §4–5. D'Ignazio page numbers are from the PubPub PDF, not the MIT Press print edition: check before teaching. -->
+
+## Last Week, You Said…
+
+> It is because we are collecting exponentially more massive amounts of data and so the tools and methods must adapt to the scale
+
+> Data science builds upon decades (maybe longer -- knitting or cave paintings, I would argue, are a form of data science) of progress [...]
+
+> Practicing working with different datasets that are not perfect.
+
+::: {.notes}
+
+There were 17 Week 2 exit tickets (Mentimeter, 15 Oct). Not much feedback.
+
+These are anonymous, and this is what happens to them. That's the reason to write one at the end today.
+
+About 13 of 17 said "not new, but more data and more computing", which is close to Donoho's "coping skills". Only a few said "new" (the first quote is the clearest). Almost nobody cited a reading by name!
+
+:::
+
+## Why these three?
+
+- **Scale:** see the GDELT example.
+- **Knitting and cave paintings:** this is Mattern's point.
+- **"Not perfect":** who decided what 'perfect' looks like?
+
+On learning, "practice" was by far the most common answer. One said "Not relying on AI to write code for you". Maybe `git` commits are a record of your own practice?
+
+## This Week's Question
+
+<blockquote style="margin-top:150px">When you decide how to store data, are you just organising it, or already deciding what it means?</blockquote>
+
+&nbsp;
+
+We'll answer it twice: once about Python, once about cities.
+
+::: {.notes}
+
+Run sheet (120 min):
+
+- Last week's exit tickets + the question: 5 min
+- Predict the output: 15 min
+- Reading verdict: 28 min (including neighbour discussion)
+- Break: 10 min
+- What's the key?: 21 min
+- Break it, then fix it (Chicago CLI 8 min, Chicago in Python 10 min, live Git 15 min): 33 min
+- Exit ticket: 8 min
+
+Voting is with fingers; hands by reading. Pairs means *whoever is sitting next to you*.
+
+**Week 2 lesson:** the same 10% volunteered, but asking a *group* worked. So don't ask for volunteers: walk to a row and ask "What did you two decide?" The answer is then "we", not "I".
+
+In the DOLs video I say there's "*no* right way" to store data, then, thirty seconds later, that there *is* a right answer. Today is about which of those is true.
+
+:::
+
+# Predict the Output
+
+Pairs. No laptops. Vote with your fingers.
+
+## 1. Deliberately Similar
+
+```python
+cities = [
+  'San Francisco',
+  'London',
+  'Paris',
+  'Beijing']
+
+# Prints London
+print(cities[2])
+```
+
+1. `San Francisco`
+2. `London`
+3. `Paris`
+4. `IndexError`
+
+. . .
+
+**Answer: 3.** Indexes start at 0. And the comment is *wrong*: it's copied from my own slide in Dictionaries.
+
+::: {.notes}
+
+From Dictionaries ("Deliberately Similar"). The point: a comment is context, and context can be wrong. Hold on to that for the readings.
+
+Story (≤ 60 seconds): zebras relabelled as finches, which is why a dictionary key has to be **immutable**.
+
+:::
+
+## 2. Making Sense of This
+
+```python
+my_list = [
+  [1, 2, 3],
+  [4, 5, 6],
+  [7, 8, 9]
+]
+
+for i in my_list:
+  print(i)
+```
+
+1. `1` to `9`, one per line
+2. `[1, 2, 3]`, `[4, 5, 6]`, `[7, 8, 9]`, one per line
+3. The whole list, once
+4. An error
+
+. . .
+
+**Answer: 2.** Each `i` is a list.
+
+::: {.notes}
+
+Story: a list-of-lists is like the reference list in a journal article. It *points* to other things rather than containing them.
+
+:::
+
+## 3. Find the 5
+
+```python
+my_list = [
+  [1, 2, 3],
+  [4, 5, 6],
+  [7, 8, 9]
+]
+```
+
+Which prints `5`?
+
+1. `my_list[1][1]`
+2. `my_list[2][2]`
+3. `my_list[1,1]`
+4. `my_list[4]`
+
+. . .
+
+**Answer: 1.** Row 1, column 1, counting from zero. (2 gives `9`; 3 is a `TypeError`; 4 is an `IndexError`.)
+
+::: {.notes}
+
+From LOLs.
+
+:::
+
+## 4. How Is *That* Easier?
+
+```python
+ds2 = {
+  'lat': [51.51,40.71,35.69],
+  'lon': [0.13,74.01,139.68],
+  'tz':  [+0,-5,+8],
+  'name':['London','New York','Tokyo']
+}
+
+print(ds2['tz'][ ds2['name'].index('Tokyo') ])
+```
+
+1. `0`
+2. `-5`
+3. `8`
+4. `KeyError`
+
+. . .
+
+**Answer: 3.** And it's **wrong**. Tokyo is UTC+9.
+
+::: {.notes}
+
+From DOLs to Data.
+
+Story: it took trying to *teach* pandas for me to really get my head around why this structure is so good.
+
+Don't explain the +9 yet: ask "How many of you noticed?" (expect almost no hands) and say that we'll come back to it after the break.
+
+:::
+
+# Just Organising It?
+
+## Vote
+
+According to the reading you did, when we decide how to store data, we are...
+
+&nbsp;
+
+1. **Just organising it**: an efficiency choice.
+2. **Mostly organising it**, but the structure decides which questions are easy to ask.
+3. **Already deciding what it means**: the key, the columns and what's left out are choices about what counts.
+
+::: {.notes}
+
+Who read: D'Ignazio & Klein? Mattern? Both? Neither? (Hands!)
+
+Then vote **by reading**: D'Ignazio readers first, then Mattern.
+
+Then 1 minute of silent writing ("my vote, and one passage"), *then* 6 minutes with neighbours: compare votes and find *one passage* that proves yours. Anyone who didn't read is briefed by a neighbour. Writing first gives quieter students something to say.
+
+Plenary (20 min): start where the readings *disagree* (see "Do They Disagree?"). Walk the room and ask pairs, not individuals; ask which reading they used only *after* they've answered ("Was that a D'Ignazio pair?").
+
+Counterpoints from margin notes (use one or two):
+
+- D'Ignazio p.6 (the procurement-data questions): DOGE used crude keyword filters to find 'woke' research and cut it, without finding out what the research was about or how procurement and research funding work.
+- D'Ignazio p.2 ("Consider Context"): this connects to an AI's context window. How was it trained? What's in the frame?
+- Mattern p.1 (Sidewalk Labs): it failed in Toronto. The pitch was to 'start up' a new part of the city without 'legacy' infrastructure, which meant not consulting residents who didn't 'get it'.
+
+:::
+
+## D'Ignazio & Klein (2020)
+
+> Although GDELT de-duplicated some of those stories to a single event, it still logged, erroneously, that hundreds of kidnapping events had happened that day. ~ @dignazio:2020ch6 [p.2]
+
+. . .
+
+> [...] data enter into research projects already fully cooked—the result of a complex set of social, political, and historical circumstances. ~ @dignazio:2020ch6 [p.13]
+
+::: {.notes}
+
+The first quote is about FiveThirtyEight's use of GDELT after the Chibok kidnapping: media *reports* were counted as *events*.
+
+"Fully cooked" is D'Ignazio and Klein drawing on Gitelman and Jackson, whose line is "'Raw data' is an oxymoron" (we'll use it after the break).
+
+My margin notes:
+
+- p.2 (FiveThirtyEight): "The problem of finding 'interesting data' and then running with it. Especially if on a deadline."
+- p.3 (GDELT's hype): "This data isn't coming from nowhere, it's coming from people taking decisions about what to log, and what not to log, how to log it, and how to organise it." That is this week's question.
+- p.13: "All 'error is political'" (see the week 1 closer).
+
+:::
+
+## Mattern (2017)
+
+> Our current paradigm, the city as computer, appeals because it frames the messiness of urban life as programmable and subject to rational order. ~ @mattern:2017
+
+. . .
+
+> It matters because the metaphors give rise to technical models, which inform design processes, which in turn shape knowledges and politics, not to mention material cities. ~ @mattern:2017
+
+::: {.notes}
+
+Places Journal has no page numbers. (In the printout these are pages 2 and 3 of 8.)
+
+My margin notes:
+
+- p.2: "If you translate the city into a computer then you proceed on the basis of that understanding and become less able to recognise where your assumptions are incorrect."
+- p.3 (the second quote): "Key point of the essay. Metaphors shape our understanding!"
+- p.1 ("What should a city optimize for?"): "Optimisation assumes some kind of objective function for what 'matters'." That is the language of machine learning leaking into governance.
+
+Link back to the videos: at the end of LOLs I say that "Excel has been presenting everything to us the *wrong way round*". Metaphors shape code too.
+
+:::
+
+## Do They Disagree?
+
+> But deep context and computation are not incompatible. ~ @dignazio:2020ch6 [p.16]
+
+> City-making is always, simultaneously, an enactment of city-knowing — which cannot be reduced to computation. ~ @mattern:2017
+
+::: {.notes}
+
+The plenary's opening question: is this a real disagreement, or a difference of emphasis? D'Ignazio and Klein want to *fix* computation with context; Mattern is sceptical of the computational framing itself.
+
+Ask two or three pairs in different parts of the room: "Which of these two would you sign?"
+
+They aren't strangers: D'Ignazio and Klein cite Mattern on librarians being left out of smart-city conversations (p.26). My margin note: "Why these are paired."
+
+:::
+
+# What's the Key?
+
+## Reports or Events?
+
+```{python}
+#| echo: true
+stories = [('BBC','Chibok'), ('CNN','Chibok'),
+           ('Japan Times','Chibok'), ('SaharaReporters','Chibok')]
+
+counts = {}
+for outlet, event in stories:
+  counts[event] = counts.get(event, 0) + 1
+
+print(len(stories))
+print(counts)
+```
+
+Four kidnappings, or one kidnapping reported four times?
+
+::: {.notes}
+
+Illustrative data, not GDELT's: the outlets are the ones that D'Ignazio and Klein name on p.2.
+
+Same data, two keys. Count by *story* and you get 4; count by *event* and you get 1. Remember from Dictionaries: "the key is unique. Always." The choice of key *is* the choice of what you're counting.
+
+Then the next slide.
+
+:::
+
+## What Is GDELT Measuring?
+
+> So what is it really that GDELT is measuring? What events are happening in the world, or what the major international news organizations are focusing their attention on? ~ @dignazio:2020ch6 [p.16]
+
+::: {.notes}
+
+Neighbours, 1 minute: which key would answer *each* of those two questions?
+
+:::
+
+## Spot the Problem
+
+From LOLs ("Making This Useful"):
+
+```python
+my_cities = [
+  ['London', 51.5072, 0.1275, +0],
+  ['New York', 40.7127, 74.0059, -5],
+  ['Tokyo', 35.6833, 139.6833, +8]
+]
+```
+
+What's wrong with this data?
+
+::: {.notes}
+
+Neighbours, 2 minutes. Shown exactly as it appears in the video, unchanged.
+
+Hint if the room is stuck: "Which side of Greenwich is London? Which side is New York?"
+
+:::
+
+## The Numbers Don't Speak for Themselves
+
+| | On my slide | Actually |
+| :-- | --: | --: |
+| London longitude | `0.1275` | `-0.1275` |
+| New York longitude | `74.0059` | `-74.0059` |
+| Tokyo time zone | `+8` | `+9` |
+| New York time zone | `-5` | `-5` (winter), `-4` (summer) |
+
+. . .
+
+> "'Raw data' is an oxymoron" ~ Gitelman and Jackson, quoted in @dignazio:2020ch6 [p.13]
+
+::: {.notes}
+
+These numbers have been in my videos for years. Nobody spotted them, because numbers on a slide look authoritative. Those who did spot them had *context*: they know where New York is.
+
+The New York time zone isn't even wrong: it's *incomplete*. The structure has nowhere to say "when".
+
+:::
+
+## A Data Dictionary
+
+> If you are lucky you might get a paragraph about where the data are from or a data dictionary that describes what each column in a particular spreadsheet means. ~ @dignazio:2020ch6 [p.6]
+
+```python
+ds2 = {
+  'lat': [...], 'lon': [...], 'tz': [...], 'name': [...]
+}
+```
+
+In `ds2`, the keys are the *only* metadata. Is `tz` in hours? Is it summer time?
+
+::: {.notes}
+
+The pun is the point: a Python dictionary's keys are a (very thin) data dictionary.
+
+My margin note on p.6 ("Most data arrive on our computational doorstep context-free"): the problems I've had with EPC data. Tell that story here (≤ 60 seconds).
+
+:::
+
+## What Can't Be a Column?
+
+> What place-based "information" doesn't fit on a shelf or in a database? What are the non-textual, un-recordable forms of cultural memory? ~ @mattern:2017
+
+::: {.notes}
+
+Follow-up quote if needed: "We, humans, make urban information by various means: through sensory experience, through long-term exposure to a place, and, yes, by systematically filtering data."
+
+My margin note (printout p.4, the archive's omissions and erasures): "What does the archive/data set *not* capture?"
+
+
+Neighbours, 2 minutes: name one thing about a city you know that can't be a key or a column in `ds2`. Take three answers, from pairs in different parts of the room.
+
+Then the week's question again: was choosing `ds2` *just* organising?
+
+:::
+
+# Break It, Then Fix It
+
+## Why the Command Line?
+
+Every crime reported to Chicago police in 2025 (55MB):
+
+```bash
+wc -l crimes2025.csv                 # how many rows?
+head -2 crimes2025.csv               # what are the columns?
+cut -d, -f6 crimes2025.csv | sort | uniq -c | sort -rn | head
+```
+
+. . .
+
+About three seconds for 238,000 rows, and no Python.
+
+::: {.notes}
+
+**Download it beforehand.** It took 2 minutes on home broadband (16 Oct). Show the command, but don't run it on the room's wifi:
+
+`curl -L -o crimes2025.csv 'https://data.cityofchicago.org/api/views/t7ek-mgzi/rows.csv?accessType=DOWNLOAD'`
+
+This is the "Crimes - 2025" extract (`t7ek-mgzi`). The 2022 one the course used before is `9hwr-2zxp`. The full "Crimes - 2001 to Present" (`ijzp-q8t2`) is too big to demo.
+
+As of 16 Oct: 238,150 rows. Top types: THEFT 55,203, BATTERY 42,662, CRIMINAL DAMAGE 26,249. The portal updates daily, so the numbers will drift slightly; re-run before class.
+
+This is the pay-off for week 2's CLI video: `|` chains small tools. The same pipe idea is behind `git log | grep`.
+
+:::
+
+## Is That Right?
+
+```bash
+grep -c ',HOMICIDE,' crimes2025.csv                    # 441
+grep ',HOMICIDE,' crimes2025.csv | grep -c ',true,'    # arrests?
+```
+
+. . .
+
+193 is wrong. The answer is 187.
+
+. . .
+
+```bash
+awk -F, '{print NF}' crimes2025.csv | sort | uniq -c   # 22 columns?
+```
+
+::: {.notes}
+
+Ask the room (pairs, 1 minute) before revealing: "Is 193 the number of homicides with an arrest?"
+
+Why it's wrong: `Arrest` and `Domestic` are both `true`/`false` columns next to each other. `grep ',true,'` also matches the 6 homicides with no arrest that were domestic. (Checked with Python's `csv` module: 187 arrested, 254 not.)
+
+The `awk` line: most rows have 22 fields, but about 4,300 have 23–25, because descriptions like "AGG. DOMESTIC BATTERY - HANDS, FISTS, FEET, SERIOUS INJURY" contain commas inside quotes. `cut -d,` doesn't know about quotes. Column 6 happens to come before the problem, so the first count was right, but only by luck.
+
+Back to the week's question: the storage format (CSV, and someone's choice of description text) decides what a quick tool can see. The CLI is fast; it isn't clever.
+
+Two more data biography points if time:
+
+- `Updated On`: about 193,000 of the 2025 rows were revised in 2026. A 'record' is not fixed when it's written.
+- The city says the data shouldn't be used to compare over time, because classifications change after preliminary reporting. These are *reports*, as with GDELT.
+
+:::
+
+## From CSV to a Dict of Lists {.smaller}
+
+```python
+import csv
+import urllib.request
+
+url = 'https://data.cityofchicago.org/resource/t7ek-mgzi.csv?$limit=20'
+
+with urllib.request.urlopen(url) as f:
+    rows = list(csv.reader(f.read().decode('utf-8').splitlines()))
+
+header = rows[0]   # the column names
+data   = rows[1:]  # a list of lists: one list per crime
+
+crimes = {}        # a dict of lists: one list per column
+for col in ['date', 'primary_type', 'block', 'arrest', 'latitude']:
+    i = header.index(col)
+    crimes[col] = []
+    for row in data:
+        crimes[col].append(row[i])
+```
+
+::: {.notes}
+
+Copy and modify: this runs as-is in the SDS container, with no download. The `?$limit=20` asks the city's API for just 20 rows. (The API's column names are lower case with underscores, unlike the CSV export: `primary_type`, not `Primary Type`.)
+
+Don't explain the first block (`with`, `urlopen`, `decode`): "this gets the file; we'll see how in a later week". The part to walk through is the bottom half: the 3.2 list of lists becomes the 3.3 dict of lists. `header.index(col)` is the same trick as `ds2['name'].index('Tokyo')`.
+
+Invite them to change the column list, or `$limit=20` to `$limit=100`.
+
+:::
+
+## Ask the Data
+
+In pairs, write down the code *before* I run it:
+
+1. What was the first crime, and where?
+2. How many of the 20 led to an arrest?
+3. Where was the first `THEFT`?
+4. What is the average `latitude`?
+5. Look at rows 2 and 4. One crime or two?
+
+::: {.notes}
+
+Switch to JupyterLab in the container. Ask a pair for the code for each one, type what they say, and run it (wrong code is fine: the error is the lesson).
+
+Answers as of 16 Oct (the API returns the latest rows first; re-run before class):
+
+1. `crimes['primary_type'][0]`, `crimes['block'][0]` → ASSAULT, 050XX S PAULINA ST.
+2. `crimes['arrest'].count('true')` → 4. **Trap:** the values are the *strings* `'true'` and `'false'`, not `True`/`False`, so `crimes['arrest'].count(True)` gives 0.
+3. `crimes['block'][crimes['primary_type'].index('THEFT')]` → 006XX E GRAND AVE (row 9). This is the "time zone of Tokyo" pattern from the DOLs video.
+4. `sum(crimes['latitude'])` → `TypeError`: everything is a string. Someone has to *decide* it's a number: `float(...)` in a loop. Back to the week's question: the CSV doesn't store meaning, so you have to supply it.
+5. Both are PUBLIC PEACE VIOLATION, "OTHER VIOLATION", on an AIRCRAFT at 100XX W OHARE ST, at 23:54 on New Year's Eve, with different case numbers (JK100014, JK100011). Two reports of one incident, or two incidents? You can't tell from the data. That's GDELT again. (Rows 9 and 10 are similar: a theft and a credit card fraud at the same place and time.)
+
+:::
+
+## Break It
+
+```bash
+git rm fileA.md
+git commit -m "Removed file."
+ls                       # fileA.md has gone
+git log --oneline        # find the hash before the removal
+git checkout <hash>
+ls                       # fileA.md is back
+```
+
+::: {.notes}
+
+Live, in the SDS container: the Recovery slide from the Git video, done for real. Set up the repo beforehand (README → fileA.md → commit, as in the video).
+
+Ask before running `git checkout`: "What will `git status` say now?"
+
+:::
+
+## Detached HEAD
+
+```bash
+git status               # HEAD detached at <hash>
+git switch -             # back to the branch you were on
+```
+
+To bring *one* file back into the present:
+
+```bash
+git restore --source=<hash> fileA.md
+git commit -m "Restored fileA.md"
+```
+
+::: {.notes}
+
+This is the "getting back to HEAD" discussion that the Git video promises but never delivers.
+
+`git switch -` works whether your branch is `main` or `master`. GitHub now defaults to `main`, but the video slides say `master`.
+
+:::
+
+## Commits on a Plane
+
+| | CVS (1990), Subversion (2000) | Git (2005) |
+|---|---|---|
+| Where is the history? | On one central server | In every copy |
+| Commit offline? | No | Yes |
+| GitHub is… | (n/a) | just another copy |
+
+. . .
+
+So `commit` and `push` are *different* things.
+
+::: {.notes}
+
+The point the video doesn't make: Git is peer-to-peer. Every clone is a complete repository, with the full history. GitHub is a copy that everyone has agreed to treat as the main one; Git itself doesn't know that.
+
+The history (≤ 2 minutes): CVS and then Subversion ("CVS done right") were centralised: you needed the server to commit. The Linux kernel moved to BitKeeper, a proprietary distributed system, in 2002. In April 2005 the free licence was withdrawn after a dispute over reverse-engineering its protocol, and Linus Torvalds wrote Git in a matter of days to replace it. (Mercurial started that same month for the same reason.)
+
+Why it's weird: there's no single 'true' copy, so `pull` and `push` are needed to make copies agree. Why it's useful: you can commit on a plane, and the history survives if GitHub disappears.
+
+This sets up the next slide: a commit on your laptop is not a backup until you push.
+
+:::
+
+## Pull, Then Push
+
+```bash
+git pull                 # get any changes from GitHub first
+git add <notebook.ipynb>
+git commit -m "What I did, and why"
+git push                 # only now are you backed up
+```
+
+When asked for a password, GitHub wants a **personal access token** (or an SSH key), not your account password.
+
+::: {.notes}
+
+The video's workflow slide leaves out `pull`, but the learning outcome includes it.
+
+Why the command line rather than a GUI: it shows what's happening behind the scenes. `add` and `commit` are *separate* steps, and a GUI usually hides that. The separation is the point: you choose what goes into the record.
+
+Everyone should have a GitHub account by now. The first `push` from the command line is where the password prompt catches people out.
+
+Spare question if time: "You commit, and then your laptop is stolen. Is your work on GitHub?" (No: all changes are local until pushed.) Story: the flatmate's laptop.
+
+:::
+
+## A Commit Message Is Context
+
+> The way through this predicament is by considering context, a process that includes understanding the provenance and environment from which the data was collected [...] ~ @dignazio:2020ch6 [p.27]
+
+. . .
+
+`git log` is the provenance of *your* work. Write the message for the person who will read it in six months.
+
+::: {.notes}
+
+D'Ignazio and Klein's "data biography" (p.24) asks five questions: Where did it come from? Who collected it? When? How was it collected? Why was it collected? A good commit history answers most of them for your own code. My margin note: "Something to think about for the assessment, perhaps?"
+
+
+Bridge to the practical: the final commit of the notebook. Ask for a message that would make sense to a stranger.
+
+:::
+
+## Before You Go...
+
+Complete the sentence:
+
+&nbsp;
+
+How I store data **is / isn't** a neutral choice, because...
+
+&nbsp;
+
+A selection will open next week's session.
+
+## Input
+
+Provide your input here: [form.menti.com/s/albxtzgfabbm](https://form.menti.com/s/albxtzgfabbm)
+
+![Mentimeter QR Code](./img/mentimeter-qr-week-3.png){height="500px"}
+
+::: {.notes}
+
+Mentimeter (open text) in the second browser tab. Week 2 had 17 responses from about 110 students, even though we finished early, so time wasn't the problem.
+
+Start it at a fixed point (minute 110, or earlier if we're ahead), leave the code on screen, and give 3 minutes of silence before saying anything else. Repeat that it's anonymous and that today opened with three of last week's. Week 4 opens with a selection of these.
+
+:::
+
+## 
+
+# Thank You {background-image="/img/web/title-slide.png" background-color="#f7eff5" background-opacity="0.2"}
+
+<h3>References</h3>

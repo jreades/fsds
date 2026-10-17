@@ -9,9 +9,11 @@ allowed-tools: ["Read", "Grep", "Glob", "Write", "Bash"]
 
 Produce a session plan in which every pre-class item (video, reading) has a named point in the in-person session where it gets **used**. The worked example is `quality_reports/plans/2026-10-13_week2-flipped-session.md`; match its structure and level of detail.
 
-**Do NOT edit** existing session pages, decks, or transcripts. Proposed changes go in the plan. The only new course file is the session deck (step 10), and it must never overwrite an existing file.
+**Do NOT edit** existing session pages, decks, or transcripts. Proposed changes go in the plan. The only new course file is the session deck (step 10), and it must never overwrite an existing file. The one permitted edit to an existing file is adding the deck's render exclusion to `_quarto.yml` (step 10).
 
 **2026/27 scope (Tier A):** the lecturer has about 60–90 min a week. Follow the reduced pattern in `quality_reports/plans/2026-10-13_flipped-rollout-tiers.md`, not the full template: votes are with **fingers (1–4) or hands by reading**; Mentimeter (browser only, never PowerPoint) is used just for the exit ticket. No QR poll decks, short-text polls, or ranking polls. Suggest a surname split only if the readings total more than about 30 pages.
+
+**Participation (from the week 2 post-session note):** never ask for volunteers or cold-call individuals. Questions to the room go to a pair or group ("What did you two decide?"), and which reading they used is asked only after they answer. Each neighbour discussion starts with 1 minute of silent writing. Spare time goes to neighbour discussion, not to more lecturing. Write these into the run sheet and the deck notes.
 
 ## Configuration (machine-specific; change these here if they move)
 
@@ -73,19 +75,22 @@ Room constraint (from the template): about 110 students, free seating, 120 minut
 9. **Save** to `quality_reports/plans/YYYY-MM-DD_week$N-flipped-session.md` (today's date) with `**Status:** DRAFT`.
 
 10. **Draft the session deck** (skip with `--plan-only`). Copy the structure, front matter and notes style of the worked example `lectures/2.6-What_We_Do.qmd`:
+    0. **Last week, you said…** (1 slide): 3 quotes from the previous week's exit tickets (`data/exit-survey/`, gitignored), as written, chosen to lead into this week's question. The notes give the room's overall verdict and say that the tickets are anonymous and used. Skip it if there's no export yet, and say so in the report.
     1. **The week's question** (1 slide), with the run sheet timings in the notes.
     2. **Predict the output** (section): 3–4 snippets copied **verbatim** from the week's video decks ("Test Yourself", "what will this print?"). Use 4 numbered options for a finger vote and put the answer in a `. . .` fragment. **Run each snippet** with `.venv/bin/python -I -c` to confirm the answer. The notes name the video and the story to tell (≤ 60 seconds). If the decks have no such prompts, take short snippets from the video decks' code examples and say so in the report.
-    3. **The reading verdict** (section): one vote slide (the week's question as 2–3 numbered positions, with the vote-by-reading procedure in the notes), then one slide per reading with 1–2 quotes and the lecturer's margin note in the notes.
+    3. **The reading verdict** (section): one vote slide (the week's question as 2–3 numbered positions, with the vote-by-reading procedure in the notes), then one slide per reading with 1–2 quotes and the lecturer's margin note in the notes. The notes give the procedure: 1 minute of silent writing, then neighbours, then a plenary that asks pairs, not volunteers.
     4. **A bridge** into the existing live material or the practical: a reading quote that leads into it, plus one question to the room.
-    5. **Exit ticket**: one sentence completing a stem built from the week's question (see `lectures/2.8-Exit_Ticket.qmd`).
+    5. **Exit ticket**: one sentence completing a stem built from the week's question (see `lectures/2.8-Exit_Ticket.qmd`). The notes say: start at a fixed time (minute 110), give 3 minutes of silence, and repeat that it's anonymous.
 
     **Quotes must be verbatim.** Take them from the annotation extract or search the PDF text with pymupdf (`.venv/bin/python -I`, PDF path as an argument). Cite as `@Key [p.N]` using the **printed** page number, not the PDF page index (check the running header). Mark omissions with `[...]` and check who is actually being quoted (for example, Donoho quoting Tukey or Claerbout). Use only keys that exist in `ref/Readings.bib`; if one is missing, write `[CHECK: key]` and list it in the report.
 
     **Filename:** `lectures/$N.M-Session.qmd`, where `M` is the next number not already used by a `lectures/$N.*.qmd` file. Never reuse `$N.0` (for example, `6.0-Feedback.qmd` already exists). Title the deck with the week's question. Don't add it to the session page: list the table row to add in the report.
 
-    **Render** with `quarto render <deck>`, then confirm the `_site/` timestamp changed and scan the log for warnings or unresolved citations.
+    **Keep it off the site until after the session.** The deck contains the answers. Add `- "!lectures/$N.M-Session.qmd"` to `project.render` in `_quarto.yml`, under the existing `"*.qmd"` entry and the comment that explains it. A full render wipes `_site`, so a normal `quarto publish gh-pages` leaves the deck out. Committing it is fine (the lecturer wants the backup). Don't use `draft: true`: Quarto 1.10 still renders revealjs drafts in full.
 
-11. **Report** in fewer than 15 lines: the plan and deck paths, the week's question, the 3 strongest bridges, the live-talk recommendation (none, fold or pull; slides or video minutes before → after; the 3 biggest changes), quotes or snippets the lecturer should check, any missing inputs, and the assumptions to confirm (date, room).
+    **Render** with `quarto render <deck>`. While the deck is excluded, this writes a standalone copy *next to the source* (`lectures/$N.M-Session.html` and `_files/`), without the site theme, and nothing to `_site/`. Check that the output was created, then scan the log for warnings or unresolved citations. Delete the standalone `.html` and `_files/`, and confirm that `_site/lectures/` has no copy of the deck.
+
+11. **Report** in fewer than 15 lines: the plan and deck paths, the week's question, the 3 strongest bridges, the live-talk recommendation (none, fold or pull; slides or video minutes before → after; the 3 biggest changes), quotes or snippets the lecturer should check, any missing inputs, and the assumptions to confirm (date, room). Also give the offline steps. **To present:** delete the exclusion line, render the deck and present from `_site/`; don't publish until the session is over, and never use `publish --no-render`. **After the session:** leave the line deleted, add the session-page row, then render and publish.
 
 ## Token discipline
 

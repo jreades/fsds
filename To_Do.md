@@ -171,6 +171,15 @@ A checklist that pulls together the P1s below, each tagged with its week.
 
 ## Week 3 — Foundations (Pt. 2)
 
+**Session deck `lectures/3.5-Session.qmd`: offline until after the session**
+
+The deck contains the predict-the-output answers. It can be committed (for backup), but it stays off the site through the `!lectures/3.5-Session.qmd` line in `_quarto.yml`. A full render wipes `_site`, so a normal `quarto publish gh-pages` leaves it out. `draft: true` does **not** work for this: Quarto 1.10 still renders revealjs drafts in full.
+
+Rules until the session: never use `publish --no-render`, and never publish while the exclusion line is removed.
+
+- [ ] **To present (Thursday):** delete the `!lectures/3.5-Session.qmd` line, run `quarto render lectures/3.5-Session.qmd` and present from `_site/lectures/3.5-Session.html`. **Don't publish** until the session is over. (An explicit render while the file is excluded gives a standalone deck *without* the site theme.)
+- [ ] **After the session:** keep the exclusion line deleted, add the In-Person row to `sessions/week3.qmd` (plan §5.5), then render and publish.
+
 **Session page**
 
 - [x] **[R] P1 S** Overview: "We will also be looking to the Unix Shell/Terminal", but that was Week 2 (2.5). This week is Git.
@@ -314,6 +323,7 @@ A checklist that pulls together the P1s below, each tagged with its week.
 
 - [x] **[R] P2 S** Week 8: learning objective 6 is empty. The week also leans on Miller:2015; Asana suggests moving it forward or replacing it with the "LLMs in Urban Planning" reading.
 - [ ] **[R] P2 S** Week 7: the reading key `Bunday:0000` has no year, so check the bib entry.
+- [ ] **[A] P2 M** Week 7 live session: use two cases from @dignazio:2020ch6 (week 3 reading; PubPub pages) as examples of the data-generating process (Lu & Henning). (1) **Clery Act / Emerson College** (pp.10–13): colleges with higher reported assault rates were often the ones putting more resources into supporting survivors, and colleges have financial incentives not to report. Margin note: "why geospatial analyses of crime data are nearly *always* problematic". (2) **Google Flu Trends** (p.14): searches are not 1:1 signals for flu cases because they respond to what the media is reporting. Margin note: "the 'data generating process' as flagged in a later reading". Option (from the week 3 margin notes): the "three iterations on a single chart title" (pp.18–23) for a later visualisation week.
 - [ ] **[R] P3 S** Week 12: "classifcation".
 - [ ] Full review of the week 6–12 decks: *after term starts*.
 - [x] **[A] P2 S** Reading week LO2, "Start to work on the first few questions of the group assessment", sits awkwardly with 4.5/`group.qmd`: "Do *not* start … the data analysis … until we have covered Pandas in Week 6". Suggest rewording to "Start a literature scan for the group assessment".
