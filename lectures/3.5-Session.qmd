@@ -396,7 +396,7 @@ Then the week's question again: was choosing `ds2` *just* organising?
 
 ## Why the Command Line?
 
-Every crime reported to Chicago police in 2025 (55MB):
+The last 100,000 crimes reported to Chicago police in 2025 (28MB):
 
 ```bash
 wc -l crimes2025.csv                 # how many rows?
@@ -406,17 +406,21 @@ cut -d, -f6 crimes2025.csv | sort | uniq -c | sort -rn | head
 
 . . .
 
-About three seconds for 238,000 rows, and no Python.
+About two seconds for 100,000 rows, and no Python.
 
 ::: {.notes}
 
-**Download it beforehand.** It took 2 minutes on home broadband (16 Oct). Show the command, but don't run it on the room's wifi:
+**Download it beforehand.** It took about 40 seconds on home broadband (16 Oct). Show the command, but don't run it on the room's wifi. The server sometimes returns an empty file with no error (it happened once on 16 Oct): check with `wc -l` and run it again if you get 0.
 
-`curl -L -o crimes2025.csv 'https://data.cityofchicago.org/api/views/t7ek-mgzi/rows.csv?accessType=DOWNLOAD'`
+`curl -L -o crimes2025.csv 'https://data.cityofchicago.org/resource/t7ek-mgzi.csv?$limit=100000&$order=date%20DESC'`
+
+This is the city's API, as in the Python slide, with a limit and a fixed order (latest first: 30 July to 31 December 2025). Without `$limit` the API stops at 1,000 rows; with it set to 300,000 you get the whole year (238,150 rows, 69MB, about a minute). Don't use the portal's "Export" link (`/api/views/.../rows.csv`): it's deprecated and the server says it stops on 22 December 2026.
 
 This is the "Crimes - 2025" extract (`t7ek-mgzi`). The 2022 one the course used before is `9hwr-2zxp`. The full "Crimes - 2001 to Present" (`ijzp-q8t2`) is too big to demo.
 
-As of 16 Oct: 238,150 rows. Top types: THEFT 55,203, BATTERY 42,662, CRIMINAL DAMAGE 26,249. The portal updates daily, so the numbers will drift slightly; re-run before class.
+As of 16 Oct: top types THEFT 22,988, BATTERY 18,038, CRIMINAL DAMAGE 11,395. The API puts every field in quotes, so the output reads `"THEFT"`. Records are revised daily, so re-run before class.
+
+**Why not Excel?** 100,000 rows will open (Excel's limit is 1,048,576; the 2001-to-present file is well over that). The real problem is what Excel does to the values: 66,222 of these rows have an IUCR crime code with a leading zero (`"0560"`), and Excel turns it into the number 560. `beat` (`"0931"`) and `district` (`"009"`) go the same way. Excel decides what the data mean as it opens the file, which is today's question.
 
 This is the pay-off for week 2's CLI video: `|` chains small tools. The same pipe idea is behind `git log | grep`.
 
@@ -425,13 +429,13 @@ This is the pay-off for week 2's CLI video: `|` chains small tools. The same pip
 ## Is That Right?
 
 ```bash
-grep -c ',HOMICIDE,' crimes2025.csv                    # 441
-grep ',HOMICIDE,' crimes2025.csv | grep -c ',true,'    # arrests?
+grep -c '"HOMICIDE"' crimes2025.csv                    # 194
+grep '"HOMICIDE"' crimes2025.csv | grep -c '"true"'    # arrests?
 ```
 
 . . .
 
-193 is wrong. The answer is 187.
+81 is wrong. The answer is 78.
 
 . . .
 
@@ -441,17 +445,17 @@ awk -F, '{print NF}' crimes2025.csv | sort | uniq -c   # 22 columns?
 
 ::: {.notes}
 
-Ask the room (pairs, 1 minute) before revealing: "Is 193 the number of homicides with an arrest?"
+Ask the room (pairs, 1 minute) before revealing: "Is 81 the number of homicides with an arrest?"
 
-Why it's wrong: `Arrest` and `Domestic` are both `true`/`false` columns next to each other. `grep ',true,'` also matches the 6 homicides with no arrest that were domestic. (Checked with Python's `csv` module: 187 arrested, 254 not.)
+Why it's wrong: `arrest` and `domestic` are both `"true"`/`"false"` columns next to each other. `grep '"true"'` also matches the 3 homicides with no arrest that were domestic. (Checked with Python's `csv` module: 78 arrested, 116 not.)
 
-The `awk` line: most rows have 22 fields, but about 4,300 have 23–25, because descriptions like "AGG. DOMESTIC BATTERY - HANDS, FISTS, FEET, SERIOUS INJURY" contain commas inside quotes. `cut -d,` doesn't know about quotes. Column 6 happens to come before the problem, so the first count was right, but only by luck.
+The `awk` line: most rows have 22 fields, but about 1,800 have 23–25, because descriptions like "AGG. DOMESTIC BATTERY - HANDS, FISTS, FEET, SERIOUS INJURY" contain commas inside quotes. `cut -d,` doesn't know about quotes. Column 6 happens to come before the problem, so the first count was right, but only by luck.
 
 Back to the week's question: the storage format (CSV, and someone's choice of description text) decides what a quick tool can see. The CLI is fast; it isn't clever.
 
 Two more data biography points if time:
 
-- `Updated On`: about 193,000 of the 2025 rows were revised in 2026. A 'record' is not fixed when it's written.
+- `updated_on`: about 193,000 of the 238,150 rows for 2025 were revised in 2026. A 'record' is not fixed when it's written.
 - The city says the data shouldn't be used to compare over time, because classifications change after preliminary reporting. These are *reports*, as with GDELT.
 
 :::
@@ -617,6 +621,18 @@ Bridge to the practical: the final commit of the notebook. Ask for a message tha
 
 :::
 
+## A Word About Groups
+
+The group sign-up sheet will open next week *after* we've talked about group work, but you are welcome to talk about forming a group with others in the meantime. If you don't know anyone else, be social in the practicals!
+
+## Intro to the practical
+
+Here's what we're covering:
+
+- Bedding in your Git/GitHub workflow. We're trying to help you remember via repetition here and get good habits started early.
+- Lists and dictionaries are the 'workhorse' data structures of Python: you'll use them all the time even once you know of other, more powerful ways to organise and manage data. You might, for instance, have a list of advanced data structures that you want to iterate over. Or a dictionary of parameters that you want to test in a model.
+- We're also going to stretch your understanding of how these two data structures interrelate and, crucially, look at the DOL, which is analogous to how pandas — probably *the* single biggest reason Python dominates data science — manages and represents data to you.
+
 ## Before You Go...
 
 Complete the sentence:
@@ -642,8 +658,6 @@ Mentimeter (open text) in the second browser tab. Week 2 had 17 responses from a
 Start it at a fixed point (minute 110, or earlier if we're ahead), leave the code on screen, and give 3 minutes of silence before saying anything else. Repeat that it's anonymous and that today opened with three of last week's. Week 4 opens with a selection of these.
 
 :::
-
-## 
 
 # Thank You {background-image="/img/web/title-slide.png" background-color="#f7eff5" background-opacity="0.2"}
 

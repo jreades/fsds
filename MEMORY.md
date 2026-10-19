@@ -39,3 +39,5 @@ General lessons from working sessions, as `[LEARN:category]` entries. Machine- a
 - [LEARN:design] A "Before class" checklist at the top of each week page (watch with durations, read, week-specific actions) answers the common student request to know "what to do" before the reading material.
 - [LEARN:quarto] `draft: true` → still renders revealjs decks in full (Quarto 1.10.18) → exclude with `!file` in `project.render`; a full render wipes `_site`.
 - [LEARN:pedagogy] Cold-calling and asking for volunteers → ask a pair or group while walking the room ("What did you two decide?"); add a minute of silent writing first. Week 2: the same 10% volunteered, but group answers worked.
+- [LEARN:workflow] Editing a deck the lecturer also has open → their next save can silently undo it (week 3 lost the 100k Chicago change). Say which file you're editing; after the lecturer saves, diff against the last render.
+- [LEARN:style] Speaker notes with provenance ("From LOLs: the video says…") and editorial asides → the lecturer trims them. Keep notes to what to do and say; reasons for slide choices go on a visible slide if they matter to students.

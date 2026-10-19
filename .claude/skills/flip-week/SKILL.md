@@ -24,6 +24,8 @@ Produce a session plan in which every pre-class item (video, reading) has a name
 | Video transcripts | `../fsds-private/scripts/$N.*.md` |
 | Annotated readings | `~/Library/CloudStorage/Dropbox/FSDS_26-27/Readings/Week $N/` (or the folder passed as the 2nd argument) |
 | PDF helper venv | `.venv` in the repo root, with `pymupdf` installed |
+| Lecturer's session notes (earlier years) | `~/Library/CloudStorage/Dropbox/FSDS_26-27/Week $N Session.md`. Use the admin items (e.g. group sign-up) and "Intro to the practical" for the closing slides. The readings and study guide in it may be from an older schedule: don't use them. |
+| Mentimeter QR | `lectures/img/mentimeter-qr-week-$N.png` (the lecturer makes it) |
 
 Room constraint (from the template): about 110 students, free seating, 120 minutes. Design with neighbour pairs and whole-room votes only.
 
@@ -75,12 +77,18 @@ Room constraint (from the template): about 110 students, free seating, 120 minut
 9. **Save** to `quality_reports/plans/YYYY-MM-DD_week$N-flipped-session.md` (today's date) with `**Status:** DRAFT`.
 
 10. **Draft the session deck** (skip with `--plan-only`). Copy the structure, front matter and notes style of the worked example `lectures/2.6-What_We_Do.qmd`:
-    0. **Last week, you said…** (1 slide): 3 quotes from the previous week's exit tickets (`data/exit-survey/`, gitignored), as written, chosen to lead into this week's question. The notes give the room's overall verdict and say that the tickets are anonymous and used. Skip it if there's no export yet, and say so in the report.
+    0. **Last week, you said…** (2 slides): 3 quotes from the previous week's exit tickets (`data/exit-survey/`, gitignored), as written, chosen to lead into this week's question. The notes give the room's overall verdict and say that the tickets are anonymous and used. Then a visible **"Why these three?"** slide: one short line per quote linking it to today's material, and one line on the learning half. Skip both if there's no export yet, and say so in the report.
     1. **The week's question** (1 slide), with the run sheet timings in the notes.
     2. **Predict the output** (section): 3–4 snippets copied **verbatim** from the week's video decks ("Test Yourself", "what will this print?"). Use 4 numbered options for a finger vote and put the answer in a `. . .` fragment. **Run each snippet** with `.venv/bin/python -I -c` to confirm the answer. The notes name the video and the story to tell (≤ 60 seconds). If the decks have no such prompts, take short snippets from the video decks' code examples and say so in the report.
     3. **The reading verdict** (section): one vote slide (the week's question as 2–3 numbered positions, with the vote-by-reading procedure in the notes), then one slide per reading with 1–2 quotes and the lecturer's margin note in the notes. The notes give the procedure: 1 minute of silent writing, then neighbours, then a plenary that asks pairs, not volunteers.
     4. **A bridge** into the existing live material or the practical: a reading quote that leads into it, plus one question to the room.
-    5. **Exit ticket**: one sentence completing a stem built from the week's question (see `lectures/2.8-Exit_Ticket.qmd`). The notes say: start at a fixed time (minute 110), give 3 minutes of silence, and repeat that it's anonymous.
+    5. **Closing slides**, in this order (model: the end of `lectures/3.5-Session.qmd`):
+       - Admin from the lecturer's `Week $N Session.md`, if any (e.g. "A Word About Groups"). Check the dates are this year's.
+       - **"Intro to the practical"**: the bullets from `Week $N Session.md`, as written.
+       - **"Before You Go..."**: the exit-ticket stem, built from the week's question, and "A selection will open next week's session."
+       - **"Input"**: the Mentimeter link and `![Mentimeter QR Code](./img/mentimeter-qr-week-$N.png){height="500px"}`. If the link or image doesn't exist yet, write `[CHECK: menti link]` and list it in the report. The notes say: start at a fixed time (minute 110), give 3 minutes of silence, and repeat that it's anonymous.
+
+    **Notes style.** Keep speaker notes short: what to do and what to say. Leave out where a prompt came from ("From LOLs: the video says…") and editorial asides. Call them "margin notes", not "my margin notes".
 
     **Quotes must be verbatim.** Take them from the annotation extract or search the PDF text with pymupdf (`.venv/bin/python -I`, PDF path as an argument). Cite as `@Key [p.N]` using the **printed** page number, not the PDF page index (check the running header). Mark omissions with `[...]` and check who is actually being quoted (for example, Donoho quoting Tukey or Claerbout). Use only keys that exist in `ref/Readings.bib`; if one is missing, write `[CHECK: key]` and list it in the report.
 

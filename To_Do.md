@@ -178,6 +178,8 @@ The deck contains the predict-the-output answers. It can be committed (for backu
 Rules until the session: never use `publish --no-render`, and never publish while the exclusion line is removed.
 
 - [ ] **To present (Thursday):** delete the `!lectures/3.5-Session.qmd` line, run `quarto render lectures/3.5-Session.qmd` and present from `_site/lectures/3.5-Session.html`. **Don't publish** until the session is over. (An explicit render while the file is excluded gives a standalone deck *without* the site theme.)
+- [x] **P1 before Thursday** (re-applied 19 Oct): the lecturer's 19 Oct edit was saved over an older copy, which undid the 16 Oct switch to a 100k download on "Why the Command Line?" and "Is That Right?". Re-apply it: `resource/t7ek-mgzi.csv?$limit=100000&$order=date%20DESC` (28MB) instead of the deprecated `api/views/.../rows.csv` (sunset 22 Dec 2026); the greps become `'"HOMICIDE"'` → 194 and `'"true"'` → 81 vs 78 (3 domestic, no arrest); ~1,800 rows over 22 fields; the "Why not Excel?" note (66,222 leading-zero IUCR codes). Also add "if `wc -l` gives 0, re-run". Details: `quality_reports/session_logs/2026-10-13_week3-flip-plan.md`.
+- [x] **Before class** (19 Oct): Chicago file downloaded in the container (`wc -l` = 100,001) and `curl` works from the container. Optional: re-run the CLI counts and "Ask the Data" answers on the day (the data change daily; small differences are fine).
 - [ ] **After the session:** keep the exclusion line deleted, add the In-Person row to `sessions/week3.qmd` (plan §5.5), then render and publish.
 
 **Session page**
