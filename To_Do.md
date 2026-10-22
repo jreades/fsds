@@ -17,6 +17,12 @@ Tracks what needs doing, session by session, before and during teaching. Review 
 - **S** ≈ under 15 min · **M** ≈ under 1 hr · **L** = over 1 hr, or needs recording.
 - Within each week, items are ordered **P1 → P3**, and by effort (S first) within the same priority. Each week's items are due **before that week is taught** unless tagged *Summer*.
 
+### Rendering and publishing
+
+- **Full site:** `quarto render`, then `quarto publish gh-pages`. Slow (practicals included). A full render empties `_site` first, so it also clears out anything stale.
+- **Content only** (week pages, lectures, assessments): `scripts/publish-content.sh`. It renders with `--profile content --no-clean` and publishes `_site` with `--no-render`. It stops if `_site` has no practicals (do a full render first), or if a deck excluded in `_quarto.yml` (`"!lectures/N.M-Session.qmd"`) has HTML in `_site`. Use `--no-publish` to render and check without publishing.
+- Publishing replaces the whole `gh-pages` branch with `_site`. Never publish a `_site` that has only part of the site in it.
+
 ### Recording fields for [V] items
 
 | Field | Meaning |
@@ -175,7 +181,7 @@ A checklist that pulls together the P1s below, each tagged with its week.
 
 The deck contains the predict-the-output answers. It can be committed (for backup), but it stays off the site through the `!lectures/3.5-Session.qmd` line in `_quarto.yml`. A full render wipes `_site`, so a normal `quarto publish gh-pages` leaves it out. `draft: true` does **not** work for this: Quarto 1.10 still renders revealjs drafts in full.
 
-Rules until the session: never use `publish --no-render`, and never publish while the exclusion line is removed.
+Rules until the session: never use `publish --no-render` directly (`scripts/publish-content.sh` is fine: it refuses while an excluded deck has output in `_site`), and never publish while the exclusion line is removed.
 
 - [ ] **To present (Thursday):** delete the `!lectures/3.5-Session.qmd` line, run `quarto render lectures/3.5-Session.qmd` and present from `_site/lectures/3.5-Session.html`. **Don't publish** until the session is over. (An explicit render while the file is excluded gives a standalone deck *without* the site theme.)
 - [x] **P1 before Thursday** (re-applied 19 Oct): the lecturer's 19 Oct edit was saved over an older copy, which undid the 16 Oct switch to a 100k download on "Why the Command Line?" and "Is That Right?". Re-apply it: `resource/t7ek-mgzi.csv?$limit=100000&$order=date%20DESC` (28MB) instead of the deprecated `api/views/.../rows.csv` (sunset 22 Dec 2026); the greps become `'"HOMICIDE"'` → 194 and `'"true"'` → 81 vs 78 (3 domestic, no arrest); ~1,800 rows over 22 fields; the "Why not Excel?" note (66,222 leading-zero IUCR codes). Also add "if `wc -l` gives 0, re-run". Details: `quality_reports/session_logs/2026-10-13_week3-flip-plan.md`.

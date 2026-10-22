@@ -30,12 +30,17 @@ Writing: British spelling, Oxford comma, plain English.
 ```bash
 quarto render                    # whole site → _site/
 quarto render lectures/2.7-On_Writing.qmd   # one file
-quarto render --profile pracs    # practical answers → _answers/
+quarto render --profile content --no-clean  # sessions, lectures, assessments only (keeps rest of _site)
+quarto render --profile pracs    # practicals only → _answers/
 quarto preview                   # NB: doesn't run post-render scripts
+
+scripts/publish-content.sh       # content render + checks + publish --no-render (see To_Do.md § "Rendering and publishing")
 
 # Annotations from readings (needs .venv with pymupdf)
 .venv/bin/python scripts/extract_annotations.py "<Week N folder>" -o out.md
 ```
+
+`project.render` in `_quarto.yml` holds only `!` exclusions: profiles *append* to that list, so the files to render live in `_quarto-site.yml` (default), `_quarto-content.yml` and `_quarto-pracs.yml`. Any render of the whole project (profiles included) empties `_site` unless you pass `--no-clean`; `quarto publish gh-pages` replaces the branch with `_site`.
 
 ## Skills worth using here
 
