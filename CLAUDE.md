@@ -23,7 +23,7 @@ Writing: British spelling, Oxford comma, plain English.
 | Video build tool (`flip`) + config | `../fsds-private/flip/`, with cut tables in `../fsds-private/flip.settings/lessons.md` (see `To_Do.md` § "How `flip` handles changes") |
 | Annotated readings + summaries (`NN-Author.pdf`) | `~/Library/CloudStorage/Dropbox/FSDS_26-27/Readings/Week N/` |
 
-**Recorded vs live decks:** decks listed under "Pre-Recorded Lectures" on a week page have narrated videos. Changing their text may need a video rebuild or re-recording (check the narration script first). Decks under "In-Person Lectures" (e.g. 1.x, 2.6–2.8, 4.4, 4.5, 6.0, 10.2) are live-only and can be edited freely.
+**Recorded vs live decks:** decks listed under "Pre-Recorded Lectures" on a week page have narrated videos. Changing their text may need a video rebuild or re-recording (check the narration script first). Decks under "In-Person Lectures" (e.g. 1.x, 2.6–2.8, 3.5–3.7, 5.5, 6.0, 10.2) are live-only and can be edited freely.
 
 ## Commands
 

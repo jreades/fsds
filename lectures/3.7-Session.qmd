@@ -2,11 +2,12 @@
 author: "Jon Reades"
 email: "j.reades@ucl.ac.uk"
 title: "Are You Just<br />'Organising It'?"
+subtitle: "Part 2"
 other: ""
 format: revealjs
 ---
 
-# What's the Key?
+# What's the Key Idea?
 
 ## Reports or Events?
 
@@ -27,7 +28,7 @@ Four kidnappings, or one kidnapping reported four times?
 
 ::: {.notes}
 
-Illustrative data, not GDELT's: the outlets are the ones that D'Ignazio and Klein name on p.2.
+Illustrative data, not GDELT's: these are named on p.2 of the _Data Feminism_ PDF.
 
 Same data, two keys. Count by *story* and you get 4; count by *event* and you get 1. Remember from Dictionaries: "the key is unique. Always." The choice of key *is* the choice of what you're counting.
 
@@ -35,7 +36,7 @@ Then the next slide.
 
 :::
 
-## What Is GDELT Measuring?
+## What is GDELT Measuring?
 
 > So what is it really that GDELT is measuring? What events are happening in the world, or what the major international news organizations are focusing their attention on? ~ @dignazio:2020ch6 [p.16]
 
@@ -70,11 +71,11 @@ Hint if the room is stuck: "Which side of Greenwich is London? Which side is New
 ## The Numbers Don't Speak for Themselves
 
 | | On my slide | Actually |
-| :-- | --: | --: |
+| :----- | -----: | ----------: |
 | London longitude | `0.1275` | `-0.1275` |
 | New York longitude | `74.0059` | `-74.0059` |
-| Tokyo time zone | `+8` | `+9` |
-| New York time zone | `-5` | `-5` (winter), `-4` (summer) |
+| Tokyo time zone^[Claude Opus got this wrong multiple times] | `+8` | `+9` (winter), `+8` (summer) |
+| New York time zone | `-5` | `-5` (winter), `-4` (briefly in spring) |
 
 . . .
 
@@ -82,11 +83,13 @@ Hint if the room is stuck: "Which side of Greenwich is London? Which side is New
 
 ::: {.notes}
 
-These numbers have been in my videos for years. Nobody spotted them, because numbers on a slide look authoritative. Those who did spot them had *context*: they know where New York is.
+These numbers have been in my slides for years, but numbers on a slide look authoritative. Those who did spot them had *context*: they know where New York is. In this case, the structure isn't wrong: it's *incomplete*. The structure has nowhere to say "when".
 
-The New York time zone isn't even wrong: it's *incomplete*. The structure has nowhere to say "when".
+In `ds2` the keys are the *only* metadata, so a Python dictionary's keys are a (very thin) data dictionary. Is `tz` in hours? Is it summer time? 
 
-If time: in `ds2` the keys are the *only* metadata, so a Python dictionary's keys are a (very thin) data dictionary. Is `tz` in hours? Is it summer time? D'Ignazio and Klein (p.6): "If you are lucky you might get [...] a data dictionary that describes what each column [...] means." My margin note on p.6 ("Most data arrive on our computational doorstep context-free"): the problems I've had with EPC data (≤ 60 seconds).
+D'Ignazio and Klein (p.6): "If you are lucky you might get [...] a data dictionary that describes what each column [...] means." My margin note on p.6 ("Most data arrive on our computational doorstep context-free").
+
+Discuss the problems I've had with EPC data (≤ 60 seconds).
 
 :::
 
@@ -98,10 +101,9 @@ If time: in `ds2` the keys are the *only* metadata, so a Python dictionary's key
 
 Follow-up quote if needed: "We, humans, make urban information by various means: through sensory experience, through long-term exposure to a place, and, yes, by systematically filtering data."
 
-My margin note (printout p.4, the archive's omissions and erasures): "What does the archive/data set *not* capture?"
-
-
 Neighbours, 2 minutes: name one thing about a city you know that can't be a key or a column in `ds2`. Take three answers, from pairs in different parts of the room.
+
+My margin note (printout p.4): "What does the archive/data set *not* capture?"
 
 Then the week's question again: was choosing `ds2` *just* organising?
 
@@ -111,12 +113,12 @@ Then the week's question again: was choosing `ds2` *just* organising?
 
 ## Why the Command Line?
 
-The last 100,000 crimes reported to Chicago police in 2025 (28MB)^[Downloaded via `curl -L -o crimes2025.csv 'https://data.cityofchicago.org/resource/t7ek-mgzi.csv?$limit=100000&$order=date%20DESC'`]:
+The last 100,000 crimes reported to Chicago police in 2025 (28MB)^[Downloaded via `curl -L -o data/crimes2025.csv 'https://data.cityofchicago.org/resource/t7ek-mgzi.csv?$limit=100000&$order=date%20DESC'`]:
 
 ```bash
-wc -l crimes2025.csv                 # how many rows?
-head -2 crimes2025.csv               # what are the columns?
-cut -d, -f6 crimes2025.csv | sort | uniq -c | sort -rn | head
+wc -l data/crimes2025.csv                 # how many rows?
+head -2 data/crimes2025.csv               # what are the columns?
+cut -d, -f6 data/crimes2025.csv | sort | uniq -c | sort -rn | head
 ```
 
 . . .
@@ -133,7 +135,7 @@ This is the city's API, as in the Python slide, with a limit and a fixed order (
 
 This is the "Crimes - 2025" extract (`t7ek-mgzi`). The 2022 one the course used before is `9hwr-2zxp`. The full "Crimes - 2001 to Present" (`ijzp-q8t2`) is too big to demo.
 
-As of 16 Oct: top types THEFT 22,988, BATTERY 18,038, CRIMINAL DAMAGE 11,395. The API puts every field in quotes, so the output reads `"THEFT"`. Records are revised daily, so re-run before class.
+As of 22 Oct: top types THEFT 22,985, BATTERY 18,038, CRIMINAL DAMAGE 11,394. The API puts every field in quotes, so the output reads `"THEFT"`. Records are revised daily, so re-run before class.
 
 **Why not Excel?** 100,000 rows will open (Excel's limit is 1,048,576; the 2001-to-present file is well over that). The real problem is what Excel does to the values: 66,222 of these rows have an IUCR crime code with a leading zero (`"0560"`), and Excel turns it into the number 560. `beat` (`"0931"`) and `district` (`"009"`) go the same way. Excel decides what the data mean as it opens the file, which is today's question.
 
@@ -144,27 +146,27 @@ This is the pay-off for week 2's CLI video: `|` chains small tools. The same pip
 ## Is That Right?
 
 ```bash
-grep -c '"HOMICIDE"' crimes2025.csv                    # 194
-grep '"HOMICIDE"' crimes2025.csv | grep -c '"true"'    # arrests?
+grep -c '"HOMICIDE"' data/crimes2025.csv                    # 194
+grep '"HOMICIDE"' data/crimes2025.csv | grep -c '"true"'    # arrests?
 ```
 
 . . .
 
-81 is wrong. The answer is 78.
+That's *not* the number of homicides with an arrest: it's 3 too many. Why?
 
 . . .
 
 ```bash
-awk -F, '{print NF}' crimes2025.csv | sort | uniq -c   # 22 columns?
+awk -F, '{print NF}' data/crimes2025.csv | sort | uniq -c   # 22 columns?
 ```
 
 ::: {.notes}
 
-Ask the room (pairs, 1 minute) before revealing: "Is 81 the number of homicides with an arrest?"
+Ask the room (pairs, 1 minute) before revealing: "Is 83 the number of homicides with an arrest?"
 
-Why it's wrong: `arrest` and `domestic` are both `"true"`/`"false"` columns next to each other. `grep '"true"'` also matches the 3 homicides with no arrest that were domestic. (Checked with Python's `csv` module: 78 arrested, 116 not.)
+Why it's wrong: `arrest` and `domestic` are both `"true"`/`"false"` columns next to each other. `grep '"true"'` also matches the 3 homicides with no arrest that were domestic.
 
-The `awk` line: most rows have 22 fields, but about 1,800 have 23–25, because descriptions like "AGG. DOMESTIC BATTERY - HANDS, FISTS, FEET, SERIOUS INJURY" contain commas inside quotes. `cut -d,` doesn't know about quotes. Column 6 happens to come before the problem, so the first count was right, but only by luck.
+The `awk` line: most rows have 22 fields, but about 1,800 have 23--25 (1,814 on 22 Oct), because descriptions like "AGG. DOMESTIC BATTERY - HANDS, FISTS, FEET, SERIOUS INJURY" contain commas inside quotes. `cut -d,` doesn't know about quotes. Column 6 happens to come before the problem, so the first count was right, but only by luck.
 
 Back to the week's question: the storage format (CSV, and someone's choice of description text) decides what a quick tool can see. The CLI is fast; it isn't clever.
 
@@ -201,7 +203,7 @@ for col in ['date', 'primary_type', 'block', 'arrest', 'latitude']:
 
 Copy and modify: this runs as-is in the SDS container, with no download. The `?$limit=20` asks the city's API for just 20 rows. (The API's column names are lower case with underscores, unlike the CSV export: `primary_type`, not `Primary Type`.)
 
-Don't explain the first block (`with`, `urlopen`, `decode`): "this gets the file; we'll see how in a later week". The part to walk through is the bottom half: the 3.2 list of lists becomes the 3.3 dict of lists. `header.index(col)` is the same trick as `ds2['name'].index('Tokyo')`.
+We'll see how this code works across later weeks. Focus on how the 3.2 list of lists becomes the 3.3 dict of lists. `header.index(col)` is the same trick as `ds2['name'].index('Tokyo')`.
 
 Invite them to change the column list, or `$limit=20` to `$limit=100`.
 
@@ -219,10 +221,10 @@ In pairs, write down the code *before* I run it:
 
 Switch to JupyterLab in the container. Ask a pair for the code for each one, type what they say, and run it (wrong code is fine: the error is the lesson).
 
-Answers as of 16 Oct (the API returns the latest rows first; re-run before class):
+Answers:
 
 1. `crimes['arrest'].count('true')` → 4. **Trap:** the values are the *strings* `'true'` and `'false'`, not `True`/`False`, so `crimes['arrest'].count(True)` gives 0.
-2. `sum(crimes['latitude'])` → `TypeError`: everything is a string. Someone has to *decide* it's a number: `float(...)` in a loop. Back to the week's question: the CSV doesn't store meaning, so you have to supply it.
+2. `sum(crimes['latitude'])` → `TypeError`: everything is a string. We have to *decide* it's a number: `float(...)` in a loop. Back to the week's question: the CSV doesn't store meaning, so you have to supply it.
 3. Both are PUBLIC PEACE VIOLATION, "OTHER VIOLATION", on an AIRCRAFT at 100XX W OHARE ST, at 23:54 on New Year's Eve, with different case numbers (JK100014, JK100011). Two reports of one incident, or two incidents? You can't tell from the data. That's GDELT again. (Rows 9 and 10 are similar: a theft and a credit card fraud at the same place and time.)
 
 Cut for time, but use if you're ahead: "What was the first crime, and where?" (`crimes['primary_type'][0]`, `crimes['block'][0]` → ASSAULT, 050XX S PAULINA ST) and "Where was the first `THEFT`?" (`crimes['block'][crimes['primary_type'].index('THEFT')]` → 006XX E GRAND AVE, row 9: the "time zone of Tokyo" pattern from the DOLs video).
@@ -233,7 +235,14 @@ Cut for time, but use if you're ahead: "What was the first crime, and where?" (`
 
 ## Break It
 
+A reproducible sequence of interactions:
+
 ```bash
+mkdir tmp
+git init
+echo "Test" > fileA.md
+git add fileA.md
+git commit -m "Added."
 git rm fileA.md
 git commit -m "Removed file."
 ls                       # fileA.md has gone
@@ -261,6 +270,7 @@ To bring *one* file back into the present:
 
 ```bash
 git restore --source=<hash> fileA.md
+git add fileA.md
 git commit -m "Restored fileA.md"
 ```
 
@@ -288,9 +298,9 @@ So `commit` and `push` are *different* things.
 
 The point the video doesn't make: Git is peer-to-peer. Every clone is a complete repository, with the full history. GitHub is a copy that everyone has agreed to treat as the main one; Git itself doesn't know that.
 
-Keep this to a 1-minute aside; the history is optional. The history: CVS and then Subversion ("CVS done right") were centralised: you needed the server to commit. The Linux kernel moved to BitKeeper, a proprietary distributed system, in 2002. In April 2005 the free licence was withdrawn after a dispute over reverse-engineering its protocol, and Linus Torvalds wrote Git in a matter of days to replace it. (Mercurial started that same month for the same reason.)
+Can be brief, the history is optional. The history: CVS and then Subversion ("CVS done right") were centralised: you needed the server to commit. The Linux kernel moved to BitKeeper, a proprietary distributed system, in 2002. In April 2005 the free licence was withdrawn after a dispute over reverse-engineering its protocol, and Linus Torvalds wrote Git in a matter of days to replace it. (Mercurial started that same month for the same reason.)
 
-Why it's weird: there's no single 'true' copy, so `pull` and `push` are needed to make copies agree. Why it's useful: you can commit on a plane, and the history survives if GitHub disappears.
+Why it's weird: there's no single 'true' copy, so `pull` and `push` are needed to make copies agree. Why it's useful: you can commit on a plane, and the history survives if GitHub disappears. See: the great Moodle/PHP exploirt of 21 October 2026!
 
 This sets up the next slide: a commit on your laptop is not a backup until you push.
 
