@@ -82,7 +82,7 @@ Room constraint (from the template): about 110 students, free seating, 120 minut
     2. **Predict the output** (section): 3–4 snippets copied **verbatim** from the week's video decks ("Test Yourself", "what will this print?"). Use 4 numbered options for a finger vote and put the answer in a `. . .` fragment. **Run each snippet** with `.venv/bin/python -I -c` to confirm the answer. The notes name the video and the story to tell (≤ 60 seconds). If the decks have no such prompts, take short snippets from the video decks' code examples and say so in the report.
     3. **The reading verdict** (section): one vote slide (the week's question as 2–3 numbered positions, with the vote-by-reading procedure in the notes), then one slide per reading with 1–2 quotes and the lecturer's margin note in the notes. The notes give the procedure: 1 minute of silent writing, then neighbours, then a plenary that asks pairs, not volunteers.
     4. **A bridge** into the existing live material or the practical: a reading quote that leads into it, plus one question to the room.
-    5. **Closing slides**, in this order (model: the end of `lectures/3.5-Session.qmd`):
+    5. **Closing slides**, in this order (model: the end of `lectures/3.7-Session.qmd`):
        - Admin from the lecturer's `Week $N Session.md`, if any (e.g. "A Word About Groups"). Check the dates are this year's.
        - **"Intro to the practical"**: the bullets from `Week $N Session.md`, as written.
        - **"Before You Go..."**: the exit-ticket stem, built from the week's question, and "A selection will open next week's session."
