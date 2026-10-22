@@ -7,7 +7,7 @@ other: ""
 format: revealjs
 ---
 
-# What's the Key Idea?
+# What's the Key (Idea)?
 
 ## Reports or Events?
 
@@ -74,10 +74,12 @@ Hint if the room is stuck: "Which side of Greenwich is London? Which side is New
 | :----- | -----: | ----------: |
 | London longitude | `0.1275` | `-0.1275` |
 | New York longitude | `74.0059` | `-74.0059` |
-| Tokyo time zone^[Claude Opus got this wrong multiple times] | `+8` | `+9` (winter), `+8` (summer) |
+| Tokyo time zone^[Claude and I misunderstood each other multiple times] | `+8` | `+9` (winter), `+8` (summer) |
 | New York time zone | `-5` | `-5` (winter), `-4` (briefly in spring) |
 
 . . .
+
+Actually, it depends on where you're measuring *from*: London or UTC!
 
 > "'Raw data' is an oxymoron" ~ Gitelman and Jackson, quoted in @dignazio:2020ch6 [p.13]
 
@@ -129,7 +131,7 @@ About two seconds for 100,000 rows, and no Python.
 
 **Download it beforehand.** It took about 40 seconds on home broadband (16 Oct). Show the command, but don't run it on the room's wifi. The server sometimes returns an empty file with no error (it happened once on 16 Oct): check with `wc -l` and run it again if you get 0.
 
-`curl -L -o crimes2025.csv 'https://data.cityofchicago.org/resource/t7ek-mgzi.csv?$limit=100000&$order=date%20DESC'`
+`curl -L -o data/crimes2025.csv 'https://data.cityofchicago.org/resource/t7ek-mgzi.csv?$limit=100000&$order=date%20DESC'`
 
 This is the city's API, as in the Python slide, with a limit and a fixed order (latest first: 30 July to 31 December 2025). Without `$limit` the API stops at 1,000 rows; with it set to 300,000 you get the whole year (238,150 rows, 69MB, about a minute). Don't use the portal's "Export" link (`/api/views/.../rows.csv`): it's deprecated and the server says it stops on 22 December 2026.
 
@@ -239,6 +241,7 @@ A reproducible sequence of interactions:
 
 ```bash
 mkdir tmp
+cd tmp
 git init
 echo "Test" > fileA.md
 git add fileA.md
@@ -300,7 +303,7 @@ The point the video doesn't make: Git is peer-to-peer. Every clone is a complete
 
 Can be brief, the history is optional. The history: CVS and then Subversion ("CVS done right") were centralised: you needed the server to commit. The Linux kernel moved to BitKeeper, a proprietary distributed system, in 2002. In April 2005 the free licence was withdrawn after a dispute over reverse-engineering its protocol, and Linus Torvalds wrote Git in a matter of days to replace it. (Mercurial started that same month for the same reason.)
 
-Why it's weird: there's no single 'true' copy, so `pull` and `push` are needed to make copies agree. Why it's useful: you can commit on a plane, and the history survives if GitHub disappears. See: the great Moodle/PHP exploirt of 21 October 2026!
+Why it's weird: there's no single 'true' copy, so `pull` and `push` are needed to make copies agree. Why it's useful: you can commit on a plane, and the history survives if GitHub disappears. See: the great Moodle/PHP exploit of 21 October 2026!
 
 This sets up the next slide: a commit on your laptop is not a backup until you push.
 
