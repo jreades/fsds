@@ -4341,7 +4341,7 @@ font-family: inherit;
 <h1>Reading a Remote File</h1>
 <p>So, we are going to <a href="http://orca.casa.ucl.ac.uk/~jreades/data/Listings.csv">download a file from GitHub</a>, but we <strong>aren’t going to to try to turn it into data</strong> or otherwise make ‘sense’ of it yet, we just want to <strong>read</strong> it. We are then going to build from this first step towards the rest of the steps!</p>
 <p>Because we’re accessing data from a ‘URL’ we need to use the <code>urlopen</code> <a href="https://docs.python.org/3.0/library/urllib.request.html?highlight=urlopen#urllib.request.urlopen">function</a> from the <code>urllib.request</code> <a href="https://docs.python.org/3.0/library/urllib.request.html">package</a>. If you’re wondering how we know to use this function and package, you might google something like: <em>read remote csv file python 3</em> which in turn might get you to a StackOverflow question and answer like <a href="https://stackoverflow.com/questions/36965864/opening-a-url-with-urllib-in-python-3">this</a>.</p>
-<div id="1f9c60ff" class="cell" data-execution_count="1">
+<div id="9ebdc0a9" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-label="1"></a><span class="im">from</span> urllib.request <span class="im">import</span> urlopen</span>
 <span id="cb1-2"><a href="#cb1-2" aria-label="2"></a><span class="bu">help</span>(urlopen)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -4379,7 +4379,7 @@ os.environ[&#39;HTTPS_PROXY&#39;] = &#39;http://127.0.0.1:10809&#39;</code></pre
 </div>
 </div>
 <p>Before you start working on the code, why not open the data file <a href="http://orca.casa.ucl.ac.uk/~jreades/data/Listings.csv">directly in your browser</a>? It’s pretty small, and it will give you a sense of what is going on.</p>
-<div id="4e99a8c5" class="cell" data-execution_count="3">
+<div id="28f048cc" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-label="1"></a><span class="im">from</span> urllib.request <span class="im">import</span> URLError</span>
 <span id="cb3-2"><a href="#cb3-2" aria-label="2"></a><span class="im">from</span> urllib.request <span class="im">import</span> urlopen</span>
 <span id="cb3-3"><a href="#cb3-3" aria-label="3"></a></span>
@@ -4425,7 +4425,7 @@ Note
 </div>
 </div>
 <p>Remember that you can treat strings <em>as lists</em>, so when we <code>print</code> below we cut off the output using the <code>list[:&lt;Some Number&gt;]</code> syntax.</p>
-<div id="d06ca8a7" class="cell" data-execution_count="4">
+<div id="8e7ee540" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-label="1"></a><span class="bu">print</span>(<span class="ss">f&quot;There are </span><span class="sc">{</span><span class="bu">len</span>(data)<span class="sc">}</span><span class="ss"> characters in the data variable.&quot;</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-label="2"></a><span class="bu">print</span>(<span class="ss">f&quot;The first 125 characters are: &#39;</span><span class="sc">{</span>data[:<span class="dv">125</span>]<span class="sc">}</span><span class="ss">&#39;&quot;</span>) <span class="co"># Notice that &#39;\n&#39; count here!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -4445,7 +4445,7 @@ Note
 <span id="cb6-2"><a href="#cb6-2" aria-label="2"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>.join(??[<span class="dv">0</span>:<span class="dv">2</span>])) <span class="co"># New syntax alert! notice we can *join* list elements</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>That’s a little hard to read, though something has clearly changed. Let’s try printing the last row:</p>
-<div id="8bdc034d" class="cell" data-execution_count="9">
+<div id="8447d463" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-label="1"></a><span class="bu">print</span>(rows[<span class="op">-</span><span class="dv">1</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Lansbury Heritage A Sunday Hotel Lansbury Classic,Abhishek,51.50975734746474,-0.0150004514905809,$188.00</code></pre>
@@ -4457,15 +4457,15 @@ Note
 <h2 class="anchored" data-anchor-id="text-into-data">Text into Data</h2>
 <p>We now need to work on turning the response into useful data. We got partway there by splitting on line-breaks (<code>splitlines()</code>), but now we need to get columns for each line. You’ll notice that we are dealing with a <em>CSV</em> (Comma-Separated Value) file and that the format <em>looks</em> quite simple… So, in theory, to turn this into data we ‘just’ need to <em>split</em> each row into separate fields using the commas.</p>
 <p>There’s a handy function associated with strings called <code>split</code>:</p>
-<div id="9f7fc375" class="cell" data-execution_count="10">
+<div id="8bc5d4e6" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-label="1"></a><span class="bu">print</span>(<span class="st">&#39;abcdefgh&#39;</span>.split(<span class="st">&#39;d&#39;</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>You can also investigate further how the split function works using:</p>
-<div id="39114fd3" class="cell" data-execution_count="11">
+<div id="d0c594cc" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-label="1"></a><span class="bu">help</span>(<span class="st">&#39;abcdefgh&#39;</span>.split)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>So this seems like a good solution to turn our text into <em>data</em>:</p>
-<div id="5108ea2e" class="cell" data-execution_count="12">
+<div id="53a49b8c" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-label="1"></a>test <span class="op">=</span> rows[<span class="op">-</span><span class="dv">1</span>].split(<span class="st">&#39;,&#39;</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-label="2"></a><span class="bu">print</span>(test)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-label="3"></a><span class="bu">print</span>(<span class="ss">f&quot;The price of </span><span class="sc">{</span>test[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> is </span><span class="sc">{</span>test[<span class="op">-</span><span class="dv">1</span>]<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -4495,7 +4495,7 @@ Caution
 </ol>
 <p>This is where using code that someone <em>else</em> who is much more interested (and knowledgeable) has written and contributed is helpful: we don’t need to think through how to deal with this sort of thing ourselves, we can just find a library that does what we need and make use of <em>its</em> functionality. I’ve given you the skeleton of the answer below, but you’ll need to do a little Googling to find out how to <code>&quot;read csv python&quot;</code>.</p>
 <p><strong>Note:</strong> For now just focus on problem #2.</p>
-<div id="6efee0b3" class="cell" data-execution_count="13">
+<div id="bafb8b8f" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-label="1"></a><span class="im">from</span> urllib.request <span class="im">import</span> urlopen</span>
 <span id="cb12-2"><a href="#cb12-2" aria-label="2"></a><span class="im">import</span> csv</span>
 <span id="cb12-3"><a href="#cb12-3" aria-label="3"></a></span>
@@ -4518,7 +4518,7 @@ Caution
 <div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb13"><pre class="sourceCode numberSource default number-lines code-with-copy"><code class="sourceCode default"><span id="cb13-1"><a href="#cb13-1" aria-label="1"></a>urlData has 11 rows and 5 columns.</span>
 <span id="cb13-2"><a href="#cb13-2" aria-label="2"></a>[&#39;Lansbury Heritage A Sunday Hotel Lansbury Classic&#39;, &#39;Abhishek&#39;, &#39;51.50975734746474&#39;, &#39;-0.0150004514905809&#39;, &#39;$188.00&#39;]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>To you that might look a lot <em>worse</em> that the data that you originally had, but to a computer that list-of-lists is something it can work with; check it out:</p>
-<div id="38cb3fe3" class="cell" data-execution_count="16">
+<div id="14c806c1" class="cell" data-execution_count="16">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-label="1"></a><span class="cf">for</span> u <span class="kw">in</span> urlData[<span class="dv">1</span>:<span class="dv">4</span>]:</span>
 <span id="cb14-2"><a href="#cb14-2" aria-label="2"></a>    <span class="bu">print</span>(<span class="ss">f&quot;The price of &#39;</span><span class="sc">{</span>u[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">&#39; is &#39;</span><span class="sc">{</span>u[<span class="op">-</span><span class="dv">1</span>]<span class="sc">}</span><span class="ss">&#39;&quot;</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -4527,7 +4527,7 @@ Caution
 <p>Why did I use <code>urlData[1:]</code> instead of <code>urlData</code>?</p>
 <p>The advantage of using the <code>csv</code> library over plain old <code>string.split</code> is that the csv library knows how to deal with fields that contain commas (<em>e.g.</em> <code>&quot;Cardfiff, Caerdydd&quot;</code> or <code>&quot;An Amazing 4 Bedroom Home, Central London, Sleeps 12&quot;</code>) and so is much more flexible and consistent that our naive <code>split</code> approach. The vast majority of <em>common</em> tasks (reading certain types of files, getting remote files, etc.) have libraries that do exactly what you want without you needing to write much code yourself to take advantage of it. You should always have a look around online to see if a library exists before thinking that you need to write everything/anything from scratch. The tricky part is knowing what words to use for your search and how to read the answers that you find…</p>
 <p>Let’s try this with a ‘bigger’ data set… In an ideal world, the ‘power’ of code is that once we’ve solved the problem <em>once</em>, we’ve solved it more generally as well. So let’s try with the ‘scaled-up’ data set and see what happens!</p>
-<div id="c49e1c29" class="cell" data-execution_count="17">
+<div id="e155199f" class="cell" data-execution_count="17">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-label="1"></a><span class="im">from</span> urllib.request <span class="im">import</span> urlopen</span>
 <span id="cb15-2"><a href="#cb15-2" aria-label="2"></a><span class="im">import</span> csv</span>
 <span id="cb15-3"><a href="#cb15-3" aria-label="3"></a></span>
@@ -4633,7 +4633,7 @@ Caution
 <span id="cb17-5"><a href="#cb17-5" aria-label="5"></a>Prime city studio apartment, Entire rental unit, Entire home/apt, $82.00, 1.0, 1.0, Alan &amp; Wanlin, 51.52548766243926, -0.0783275711639452</span>
 <span id="cb17-6"><a href="#cb17-6" aria-label="6"></a>Cozy Room near Canary Wharf, Private room in home, Private room, , , , Sujata, 51.51468, -0.0299</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Here’s how it would look as a dictionary of lists organised by <em>column</em>, and <em>not</em> by row, though note that (for now) I’ve changed the <code>NaN</code> (Not a Number) values to something that will be easier to work with:</p>
-<div id="794c59f1" class="cell" data-execution_count="20">
+<div id="8c014c5a" class="cell" data-execution_count="20">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-label="1"></a>myData <span class="op">=</span> {</span>
 <span id="cb18-2"><a href="#cb18-2" aria-label="2"></a>    <span class="st">&#39;id&#39;</span>         : [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>],</span>
 <span id="cb18-3"><a href="#cb18-3" aria-label="3"></a>    <span class="st">&#39;Name&#39;</span>       : [<span class="st">&#39;Gorgeous 3 bed flat w easy access to Earlsfiel...&#39;</span>, <span class="st">&#39;Welcome to London!&#39;</span>, <span class="st">&#39;2 bedroom 8th floor serviced apartment.&#39;</span>,<span class="st">&#39;Prime city studio apartment&#39;</span>,<span class="st">&#39;Cozy Room near Canary Wharf&#39;</span>],</span>
@@ -4671,7 +4671,7 @@ Caution
 </div>
 </div>
 <p>We can find the latitude of ‘Prime city studio apartment’ by putting together what we know about searching for a value in a list with what we know about dictionaries:</p>
-<div id="c1097879" class="cell" data-execution_count="21">
+<div id="2ef18981" class="cell" data-execution_count="21">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-label="1"></a>loc <span class="op">=</span> <span class="st">&#39;Prime city studio apartment&#39;</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-label="2"></a>lat <span class="op">=</span> myData[<span class="st">&#39;Latitude&#39;</span>][ myData[<span class="st">&#39;Name&#39;</span>].index(loc) ]</span>
 <span id="cb20-3"><a href="#cb20-3" aria-label="3"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="sc">{</span>loc<span class="sc">}</span><span class="ss">&#39;s latitude is </span><span class="sc">{</span>lat<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -4726,7 +4726,7 @@ Warning
 <section id="the-location-of-a-listing" class="level2">
 <h2 class="anchored" data-anchor-id="the-location-of-a-listing">The Location of a Listing</h2>
 <p>Let’s have a look at how we might print a listing’s lat/long:</p>
-<div id="6a4338d2" class="cell" data-execution_count="28">
+<div id="b3114025" class="cell" data-execution_count="28">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-label="1"></a>loc <span class="op">=</span> <span class="st">&#39;Cozy Room near Canary Wharf&#39;</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-label="2"></a><span class="bu">print</span>(<span class="ss">f&quot;The listing of </span><span class="sc">{</span>loc<span class="sc">}</span><span class="ss"> can be found at &quot;</span> <span class="op">+</span> </span>
 <span id="cb24-3"><a href="#cb24-3" aria-label="3"></a>    <span class="ss">f&quot;</span><span class="sc">{</span><span class="bu">abs</span>(myData[<span class="st">&#39;Longitude&#39;</span>][myData[<span class="st">&#39;Name&#39;</span>].index(loc)])<span class="sc">}</span><span class="ss">ºW, &quot;</span> <span class="op">+</span></span>
@@ -4742,15 +4742,15 @@ Warning
 <h3 class="anchored" data-anchor-id="the-second-and-third-f-strings">2. The second and third f-strings</h3>
 <p>These are harder because there’s just a <em>lot</em> of code there. But, again, if we start with what we recognise that it gets just a little bit more manageable… Also, it stands to reason that the only difference between the two outputs is that one asks for the ‘Longitude’ and the other for the ‘Latitude’. So if you can make sense of one you have <em>automatically</em> made sense of the other and don’t need to work it all out.</p>
 <p>Let’s start with a part that you might recognise:</p>
-<div id="58eedc66" class="cell" data-execution_count="29">
+<div id="c8d24df2" class="cell" data-execution_count="29">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-label="1"></a>myData[<span class="st">&#39;Name&#39;</span>].index(loc)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>You’ve <em>got</em> this. This is just asking Python to work out the index of ‘Cozy Room near Canary Wharf’ (because <code>loc = &#39;Cozy Room near Canary Wharf&#39;</code>). So it’s a number. And we can then think, ’OK so what does this return:</p>
-<div id="26e1d3e0" class="cell" data-execution_count="30">
+<div id="3278bce8" class="cell" data-execution_count="30">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-label="1"></a>myData[<span class="st">&#39;Longitude&#39;</span>][<span class="dv">4</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>And the answer is <code>{python} o3</code>. That’s the Longitude of the listing! There’s just <em>one</em> last thing: notice that we’re talking about degrees West here. So the answer isn’t a negative (because negative West degrees would be <em>East</em>!), it’s the <em>absolute</em> value. And that is the final piece of the puzzle: <code>abs(...)</code> gives us the absolute value of a number!</p>
-<div id="d68a0735" class="cell" data-execution_count="32">
+<div id="f777fa29" class="cell" data-execution_count="32">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-label="1"></a><span class="bu">help</span>(<span class="bu">abs</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
@@ -4758,12 +4758,12 @@ Warning
 <section id="the-longitude-of-a-listing" class="level2">
 <h2 class="anchored" data-anchor-id="the-longitude-of-a-listing">The Longitude of a Listing</h2>
 <p>The code we’ve just seen can look pretty daunting, so let’s break it down into two parts. What would you get if you ran just this code?</p>
-<div id="11256c3d" class="cell" data-execution_count="33">
+<div id="10bbbbbb" class="cell" data-execution_count="33">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-label="1"></a>myData[<span class="st">&#39;Longitude&#39;</span>][<span class="dv">4</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Remember that this is a dictionary-of-lists (DoL). So, Python first looks for a key named <code>Longitude</code> in the myData dictionary. It finds out that the value associated with this key is a <em>list</em> and, in this example, it just pulls out the second value (index <code>1</code>). Does <strong>that part</strong> make sense?</p>
 <p>Now, to the second part:</p>
-<div id="2edadd4e" class="cell" data-execution_count="34">
+<div id="8a1937c3" class="cell" data-execution_count="34">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-label="1"></a>myData[<span class="st">&#39;Name&#39;</span>].index(<span class="st">&#39;Cozy Room near Canary Wharf&#39;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Here we look in the dictionary for the key <code>Name</code> and find that that’s <em>also</em> a list. All we’re doing here is asking Python to find the index of ‘Cozy Room near Canary Wharf’ for us in that list. And <code>myData[&#39;Name&#39;].index(&#39;Cozy Room near Canary Wharf&#39;)</code> gives us back a <code>4</code>, so <em>instead</em> of just writing <code>myData[&#39;Longitude&#39;][4]</code> we can replace the <code>4</code> with <code>myData[&#39;Name&#39;].index(&#39;Cozy Room near Canary Wharf&#39;)</code>! Crucially, notice the complete <em>absence</em> of a for loop, which means that this code is <em>fast</em>!</p>
@@ -4772,7 +4772,7 @@ Warning
 <section id="the-easternmost-listing" class="level2">
 <h2 class="anchored" data-anchor-id="the-easternmost-listing">The Easternmost Listing</h2>
 <p>Where this approach really comes into its own is on problems that involve maths. To figure out the easternmost city in this list we need to find the <em>maximum</em> Longitude and then use <em>that</em> value to look up the city name. So let’s do the same process of pulling this apart into two steps. Let start with the easier bit:</p>
-<div id="0f78e0ee" class="cell" data-execution_count="35">
+<div id="cf8d4df5" class="cell" data-execution_count="35">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-label="1"></a>myData[<span class="st">&#39;Name&#39;</span>][<span class="dv">0</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>That would give us the name of a city, but we don’t just want the first city in the list, we want the one with the maximum longitude. To achieve <em>that</em> we need to somehow replace the <code>0</code> with the <em><strong>index of the maximum longitude</strong></em>. Let’s break this down further:</p>
@@ -4781,17 +4781,17 @@ Warning
 <li>We then need to <em>find</em> the <strong>index</strong> of that maximum longitude.</li>
 </ol>
 <p>So Step 1 would be:</p>
-<div id="9ce0a561" class="cell" data-execution_count="36">
+<div id="b2904bd9" class="cell" data-execution_count="36">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-label="1"></a>max_lon <span class="op">=</span> <span class="bu">max</span>(myData[<span class="st">&#39;Longitude&#39;</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Because the <code>max(...)</code> helps us to find the maximum longitude in the Longitude list. Now that we have that we can proceed to Step 2:</p>
-<div id="7b3684c9" class="cell" data-execution_count="37">
+<div id="4c9bf9d5" class="cell" data-execution_count="37">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-label="1"></a>myData[<span class="st">&#39;Longitude&#39;</span>].index(</span>
 <span id="cb32-2"><a href="#cb32-2" aria-label="2"></a>    max_lon</span>
 <span id="cb32-3"><a href="#cb32-3" aria-label="3"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>So now we ask Python to find the position of <code>max_lon</code> in the list. But rather than doing this in two steps we can combine into one if we write it down to make it easier to read:</p>
-<div id="854fdd2c" class="cell" data-execution_count="38">
+<div id="394c9296" class="cell" data-execution_count="38">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-label="1"></a>myData[<span class="st">&#39;Longitude&#39;</span>].index(</span>
 <span id="cb33-2"><a href="#cb33-2" aria-label="2"></a>    <span class="bu">max</span>(myData[<span class="st">&#39;Longitude&#39;</span>])</span>
 <span id="cb33-3"><a href="#cb33-3" aria-label="3"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -4803,7 +4803,7 @@ Warning
 <li>Using that index to read a value out of the Name column.</li>
 </ul>
 <p>I <em>am</em> a geek, but that’s pretty cool, right? In one line of code we managed to quickly find out where the data we needed was even though it involved three discrete steps. Think about how much work you’d have to do if you were still thinking in <em>rows</em>, not <em>columns</em>!</p>
-<div id="106d12d3" class="cell" data-execution_count="39">
+<div id="1cdf887a" class="cell" data-execution_count="39">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-label="1"></a>loc <span class="op">=</span> myData[<span class="st">&#39;Name&#39;</span>][</span>
 <span id="cb34-2"><a href="#cb34-2" aria-label="2"></a>    myData[<span class="st">&#39;Longitude&#39;</span>].index(</span>
 <span id="cb34-3"><a href="#cb34-3" aria-label="3"></a>        <span class="bu">max</span>(myData[<span class="st">&#39;Longitude&#39;</span>])</span>
@@ -4814,7 +4814,7 @@ Warning
 <section id="the-average-number-of-bedrooms" class="level3">
 <h3 class="anchored" data-anchor-id="the-average-number-of-bedrooms">The Average Number of Bedrooms</h3>
 <p>So here we’re going to ‘cheat’ a little bit: rather than writing our own function, we’re going to import a package and use someone <em>else’s</em> function. The <code>numpy</code> package contains a <em>lot</em> of useful functions that we can call on (if you don’t believe me, add “<code>dir(np)</code>” on a new line after the <code>import</code> statement), and one of them calculates the average of a list or array of data.</p>
-<div id="3c160173" class="cell" data-execution_count="40">
+<div id="27be317d" class="cell" data-execution_count="40">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-label="1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb35-2"><a href="#cb35-2" aria-label="2"></a><span class="bu">print</span>(<span class="ss">f&quot;The mean number of bedrooms is </span><span class="sc">{??</span>(myData[<span class="st">&#39;Bedrooms&#39;</span>])<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
