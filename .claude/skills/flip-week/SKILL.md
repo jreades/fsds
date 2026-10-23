@@ -1,7 +1,7 @@
 ---
 name: flip-week
-description: Draft a flipped-class plan and a draft in-person session deck for one FSDS teaching week, from the session page, video transcripts, lecture decks, and the lecturer's annotated readings. Use when the user says "flip week N", "/flip-week N", "plan the in-person session for week N", "make week N's prep count", or "build the session around the readings/videos". Never edits existing course materials; writes one plan file and one new deck (`--plan-only` skips the deck).
-argument-hint: "[week number] [optional: readings folder] [optional: --plan-only]"
+description: Draft a flipped-class plan and a draft in-person session deck for one FSDS teaching week, from the session page, video transcripts, lecture decks, and the lecturer's annotated readings. Use when the user says "flip week N", "/flip-week N", "plan the in-person session for week N", "make week N's prep count", or "build the session around the readings/videos". Never edits existing course materials; writes one plan file and one new deck (`--plan-only` skips the deck; `--guest "Name: topic"` limits the flip to hour 1 and hands hour 2 to a guest speaker).
+argument-hint: "[week number] [optional: readings folder] [optional: --plan-only] [optional: --guest \"Name: topic\"]"
 allowed-tools: ["Read", "Grep", "Glob", "Write", "Bash"]
 ---
 
@@ -14,6 +14,19 @@ Produce a session plan in which every pre-class item (video, reading) has a name
 **2026/27 scope (Tier A):** the lecturer has about 60–90 min a week. Follow the reduced pattern in `quality_reports/plans/2026-10-13_flipped-rollout-tiers.md`, not the full template: votes are with **fingers (1–4) or hands by reading**; Mentimeter (browser only, never PowerPoint) is used just for the exit ticket. No QR poll decks, short-text polls, or ranking polls. Suggest a surname split only if the readings total more than about 30 pages.
 
 **Participation (from the week 2 post-session note):** never ask for volunteers or cold-call individuals. Questions to the room go to a pair or group ("What did you two decide?"), and which reading they used is asked only after they answer. Each neighbour discussion starts with 1 minute of silent writing. Spare time goes to neighbour discussion, not to more lecturing. Write these into the run sheet and the deck notes.
+
+## Guest weeks (`--guest "Name: topic"`)
+
+Worked example: `quality_reports/plans/2026-10-22_week4-flipped-session.md` and `lectures/4.4-Session.qmd`. When a guest gives the second hour, change the steps as follows:
+
+- **Ask first** if it isn't stated: does the guest also run hour 1, or does the lecturer? Is the guest happy to run the exit ticket (Mentimeter account)? Record the answers as assumptions in the plan.
+- **Run sheet:** hour 1 (0–55) is the flipped part: opening (4), predict the output (12), reading verdict (22), bridge (10), and admin plus the practical intro (7). Admin goes **before** the break so an overrunning talk can't eat it. Then the break (55–62), the guest (62–114, hard stop) and the exit ticket (114–120). Note that the exit ticket has moved from minute 110.
+- **No live-talk block (step 7):** the guest's talk is the week's case study. Still fill in the disposition table for any pulls from the videos into the bridge, and recommend no video changes unless they're trivial.
+- **The week's question** must be answerable from the readings *and* from the guest's topic. The exit ticket asks it again after the talk.
+- **The bridge (step 10.4)** ends with a hand-off slide: one reading quote that frames the guest's topic, and one "Listen for..." question about the talk. Don't make claims about the guest's work beyond what the user said. Use `[CHECK]` for anything else.
+- **Notes for a cover lecturer** (if the guest runs hour 1): put the participation rules and the full run sheet in the title-slide notes. Tell video stories as "In the video, Jon...". Start each snippet's notes with the video and slide it comes from (e.g. "From Functions ("But Notice!")"): a cover lecturer needs that, so the usual rule against saying where a prompt came from doesn't apply here. Call reading notes "Reading notes". Send assessment and group questions to the module lecturer.
+- **Deck:** the author line names both. Order the closing slides as admin, practical intro, `# Over to <Guest>`, then "Before You Go..." and "Input" (used after the talk).
+- **Plan, §3C:** add a briefing for the guest: the deck, the participation rules, the hard stop, the Menti link, and three exit tickets from the previous week.
 
 ## Configuration (machine-specific; change these here if they move)
 
@@ -98,7 +111,7 @@ Room constraint (from the template): about 110 students, free seating, 120 minut
 
     **Render** with `quarto render <deck>`. While the deck is excluded, this writes a standalone copy *next to the source* (`lectures/$N.M-Session.html` and `_files/`), without the site theme, and nothing to `_site/`. Check that the output was created, then scan the log for warnings or unresolved citations. Delete the standalone `.html` and `_files/`, and confirm that `_site/lectures/` has no copy of the deck.
 
-11. **Report** in fewer than 15 lines: the plan and deck paths, the week's question, the 3 strongest bridges, the live-talk recommendation (none, fold or pull; slides or video minutes before → after; the 3 biggest changes), quotes or snippets the lecturer should check, any missing inputs, and the assumptions to confirm (date, room). Also give the offline steps. **To present:** delete the exclusion line, render the deck and present from `_site/`; don't publish until the session is over, and never use `publish --no-render`. **After the session:** leave the line deleted, add the session-page row, then render and publish.
+11. **Report** in fewer than 15 lines: the plan and deck paths, the week's question, the 3 strongest bridges, the live-talk recommendation (none, fold or pull; slides or video minutes before → after; the 3 biggest changes), quotes or snippets the lecturer should check, any missing inputs, and the assumptions to confirm (date, room, and for `--guest`, who runs hour 1 and the Menti). Also give the offline steps. **Everything in the report must also be in the plan**: put the assumptions, `[CHECK]` placeholders, render warnings and offline steps in a final "Open items" section, so that the plan alone is enough. **To present:** delete the exclusion line, render the deck and present from `_site/`; don't publish until the session is over, and never use `publish --no-render`. **After the session:** leave the line deleted, add the session-page row, then render and publish.
 
 ## Token discipline
 
