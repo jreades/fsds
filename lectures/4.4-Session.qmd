@@ -1,0 +1,456 @@
+---
+author: "Jon Reades & Ollie Ballinger"
+email: "j.reades@ucl.ac.uk"
+title: "Can You Trust a View<br />from a Distance?"
+other: ""
+format: revealjs
+title-slide-attributes:
+  data-notes: "Run sheet (120 min). This deck covers hour 1. Hour 2 is Ollie's own talk.
+
+0–4: last week's exit tickets + the question. 4–16: predict the output (4 snippets). 16–38: reading verdict. 38–48: bridge (3 slides). 48–55: groups + practical intro + handoff.
+
+55–62: break. 62–114: Ollie's talk (hard stop at 114). 114–120: exit ticket (the last two slides of this deck).
+
+How to run the room: never ask for volunteers or pick out individuals. Walk to a row and ask 'What did you two decide?' Ask which reading they used only after they've answered. Every neighbour discussion starts with 1 minute of silent writing. If there's spare time, give it to neighbour discussion, not more talking."
+---
+
+<h2>Last Week, You Said...</h2>
+
+> Isn't. It decides which questions are easy to ask. Choosing what to keep means choosing what to leave out. Categories and keys carry assumptions. The organisation is the information.
+
+> It isn't a neutral choice because I don't always know where, how or why data was collected [...]
+
+> How I store data is a neutral choice, because storage itself is just a technical tool.
+
+::: {.notes}
+
+Last week's stem was "How I store data is / isn't a neutral choice, because...". There were 43 responses (up from 17 in week 2). Almost all said it isn't neutral; only one said it is (the third quote). A few answered on practical grounds (security, privacy, "easier to browse") without taking a side.
+
+The most common reason was personal bias or lived experience ("I already have some sort of bias"). Next came access and power: who can see it, open vs proprietary formats. Fewer said that the categories themselves decide what exists, which is the point of the first quote.
+
+Most of you wrote "I have bias" as if it were a flaw. D'Ignazio & Klein turn that round: they disclose their positions and treat them as "a set of valuable perspectives that could frame our work" (p.83). Come back to this on the D'Ignazio & Klein slide.
+
+Say: these are anonymous, they get read, and three of them open each session. There's one at the end of today too.
+
+:::
+
+## Why these three?
+
+- **"What to leave out":** a function or a package also decides what you see and what gets wrapped away.
+- **"Where, how or why":** that's what you need to know before you trust someone else's data, or their code.
+- **"Just a technical tool":** true in a narrow sense, if the only question is whether data can be written and read back. But *who* can read it back depends on the format.
+
+::: {.notes}
+
+Handle the third quote as a fair, narrowly technical answer, not a wrong one. Then widen it: "read back" assumes you can open the file. XLS, SPSS `.sav` files and ESRI's File Geodatabase were closed formats. You needed a paid-for application to open them, unless someone reverse-engineered the format (that's how LibreOffice, PSPP and GDAL read them). Even the Shapefile, whose specification ESRI published, is still a format one company controls. So even the technical choice decides who gets access.
+
+D'Ignazio & Klein have a line for this: "neither graphic is neutral, but both graphics are factual" (p.80). A format can be technically correct and still not neutral.
+
+The videos make the same "just a tool" case for functions and packages. Today we test it.
+
+:::
+
+. . .
+
+Today: storing data was a choice. Is *reusing* other people's code, and other people's views, one too?
+
+## This Week's Question
+
+<blockquote style="margin-top:150px">Can you trust a view from a distance?</blockquote>
+
+&nbsp;
+
+We'll answer it with code and readings now, and Ollie will answer it with satellites after the break.
+
+. . .
+
+> "Quantification is a technology of distance." ~ Theodore Porter, quoted in @dignazio:2020ch3 [p.76]
+
+::: {.notes}
+
+A function, a decorator and a package are all views from a distance: you use them without looking inside. That's what the videos argue *for*. The readings argue that the view from nowhere hides who is looking. Ollie's work, satellite imagery checked against ground evidence with Bellingcat, sits right between them.
+
+:::
+
+# Predict the Output
+
+Pairs. No laptops. Vote with your fingers.
+
+::: {.notes}
+
+Pairs means *whoever is sitting next to you*. 30 seconds to agree, then fingers up together. Reveal, then ≤ 60 seconds on the story from the video. These stories are Jon's: "In the video, Jon..."
+
+:::
+
+## 1. Why Haven't These Changed? {.smaller}
+
+```python
+data    = [1,25,-4,14,7,9]
+total   = 1
+numbers = []
+
+def calc_mean(numbers):
+  total = 0.0
+  count = len(numbers)
+  for i in numbers:
+    total += i
+  return total/count
+
+print(calc_mean(data))
+print(total)
+```
+
+What does the *last* line print?
+
+1. `1`
+2. `0.0`
+3. `52.0`
+4. `NameError`
+
+. . .
+
+**Answer: 1.** The `total` inside the function is a different variable. (And `numbers` is still `[]`.)
+
+::: {.notes}
+
+From Functions ("But Notice!"). The function can't see out, and the rest of the code can't see in.
+
+Story: the chart whose top gets chopped off once orders pass 1,000. Copy-pasted into ten places, it's ten fixes; in a function, it's one.
+
+:::
+
+## 2. Wrapping Paper {.smaller}
+
+```python
+def splitter(func):
+  def wrapper():
+    return func().split()
+  return wrapper
+
+@splitter
+@better
+def hello():
+  return('hello world')
+
+print(hello())
+```
+
+(`better` adds title case and `!`.)
+
+1. `Hello World!`
+2. `['Hello', 'World!']`
+3. `['hello', 'world']`
+4. `AttributeError`
+
+. . .
+
+**Answer: 2.** `better` runs first, then `splitter`. Swap the two lines and you get `AttributeError: 'list' object has no attribute 'title'`.
+
+::: {.notes}
+
+From Decorators ("Chaining Decorators"). Jon's image: wrapping paper. The layer furthest from the function is the outer layer, and order matters.
+
+If asked: `.title()` works on strings, but after `splitter` you have a list.
+
+:::
+
+## 3. Gotcha! {.smaller}
+
+```python
+pi = 3.1415
+print(pi) # 3.1415
+
+from math import pi
+print(pi)
+```
+
+1. `3.1415`
+2. `3.141592653589793`
+3. `NameError`
+4. Both values
+
+. . .
+
+**Answer: 2.** Your `pi` has been replaced, with no warning.
+
+::: {.notes}
+
+From Packages ("Gotcha!", Approach 2). Jon calls this "copy-pasting in its most extreme form". With `import math as m`, both values would coexist in different namespaces.
+
+:::
+
+## 4. Who's Calling? {.smaller}
+
+```python
+def better(func):
+  '''Better formatting of a string'''
+  def wrapper():
+    '''Wraps a function to format it.'''
+    return func().title() + "!"
+  return wrapper
+
+@better
+def hello():
+  '''Prints hello world'''
+  return('hello world')
+
+print(hello.__name__)
+```
+
+1. `hello`
+2. `wrapper`
+3. `better`
+4. `None`
+
+. . .
+
+**Answer: 2.** And `hello.__doc__` is the *wrapper's* docstring.
+
+::: {.notes}
+
+From Decorators ("Making Use of Metadata"). Count the hands for 1 (`hello`): that's how many people expected the function to keep its own identity.
+
+Don't explain `@wraps` yet. Say: "Hold on to that, we'll come back to it after the readings."
+
+:::
+
+# Can You Trust a View from a Distance?
+
+## Vote
+
+According to the reading you did, a view from a distance...
+
+&nbsp;
+
+1. **Can be trusted:** distance removes the noise. That's why we write functions and use packages.
+2. **Can be trusted only if someone checks on the ground:** useful, but it has to be verified from somewhere specific.
+3. **Can't be trusted:** distance hides who is looking and why.
+
+::: {.notes}
+
+First, hands: who read Massey? D'Ignazio & Klein? Both? Neither?
+
+Then fingers, **by reading**: Massey readers first, then D'Ignazio & Klein.
+
+Then **1 minute of silent writing** ("my vote, and one passage"), *then* 4 minutes with neighbours: compare votes and find *one passage* that proves yours. Anyone who didn't read is briefed by a neighbour.
+
+Plenary (15 min): walk the room and **ask pairs, not individuals** ("What did you two decide?"). Ask which reading only *after* they've answered. Start with Massey, because it's harder and people will need help with it. End on the Woolf line: is Massey against closed places?
+
+If the politics come up (Massey's free trade vs. immigration example is still a live debate): the point isn't to take a side. It's to make the context visible, because it shapes what we can and can't do with data and code.
+
+:::
+
+## Massey (1996)
+
+> [...] the boundaries which we draw in space, the 'places' we define [...], the decisions about which mobilities to allow and which not, and about how open, or how closed, our places are to be ... all these things, rather than being based on some eternal principles, are in fact expressions of, and exercises in, social power. ~ @Massey:1996 [p.117]
+
+::: {.notes}
+
+Reading notes:
+
+- Massey's 'geographical imaginations': the global ('the world is flat', the "annihilation of space") and the defensible local. People with power often hold both at once: free movement of capital, but not of people.
+- The difference between Chiapas holding on to its 'local' and California holding on to its 'local' is the **power geometry**.
+
+If a pair is stuck, ask: "Who gets to draw the boundary?" Or use Massey's own pair: she sympathises with the Native American chief defending his land but opposes Le Pen, though both are 'defending the local' (p.117). The difference is the power geometry.
+
+For students new to social science theory, this is *problematisation*: if there's no general rule for when a boundary is right, then the boundary is a social construct.
+
+:::
+
+. . .
+
+> [...] although these workplaces are globalised (if only very narrowly so) and in that sense 'open', they are also specialised and excluding places, closed and defensive, quite tightly sealed against 'non-conforming' invasions from the outside world. ~ @Massey:1996 [p.121]
+
+::: {.notes}
+
+The high-tech scientists: workplaces sealed for "high-level thought", with security guards told to keep children out at weekends, while the home is "muddled, multiple, even open and porous".
+
+Link to the videos: Functions says "Your function should never know anything about the surrounding context [...] and the code that calls the function should never know anything about what happens *inside* the function." That's good engineering, and it's the same move as the science park.
+
+:::
+
+## D'Ignazio & Klein (2020)
+
+> The view from nowhere--from a distance, from up above, like a god--may be data visualization's most signature feature. It's also the most ethically complicated to navigate for the ways in which it masks the people, the methods, the questions, and the messiness that lies behind clean lines and geometric shapes. ~ @dignazio:2020ch3 [p.76]
+
+::: {.notes}
+
+"The god trick of seeing everything from nowhere" is Donna Haraway's phrase. D'Ignazio and Klein quote it on the same page.
+
+The Porter quote on the question slide is from this page too. They also note that in most "neutral" visualisations, "this perspective is the one of the dominant, default group" (p.76): my view is 'natural', so everyone else is pushing an agenda.
+
+Reading notes: "The more plain, the more neutral; the more neutral, the more objective; and the more objective, the more true—or so this line of reasoning goes" (p.76). The four conventions that make a chart look factual (p.82): two-dimensional viewpoints, clean layouts, geometric shapes and lines, and a data source at the bottom.
+
+:::
+
+. . .
+
+> [...] all forms of knowledge [...] are situated, [Haraway] explains, meaning that they are produced by specific people in specific circumstances—cultural, historical, and geographic. ~ @dignazio:2020ch3 [p.83]
+
+::: {.notes}
+
+"She" is Haraway again. Situated knowledge is the alternative to the view from nowhere: say where you are standing. This is the answer to the exit tickets that said "I have bias": state your positionality, and the bias becomes a frame (p.83). Also: "When visualizing data, the only certifiable fact is that it's impossible to avoid interpretation" (p.80).
+
+Aside, if there's time: "Fields very close to visualization, like cartography, have long seen their work as ideological" (p.80). On 4 September 2026, the UN General Assembly voted to replace the traditional (Mercator) world map with one that more accurately reflects the size of Africa ([BBC](https://www.bbc.co.uk/news/articles/ce30vp55dnlo)). The "Correct the Map" resolution was sponsored by Togo, backed by African Union members, and passed 164 to 1, with six abstentions. The US was the only vote against. It's non-binding. There are also allegations that Trump's interest in Greenland is partly driven by how large it looks on Mercator maps.
+
+:::
+
+## Is Massey Against Closed Places?
+
+> Even as I felt critical of the scientists' exclusive workplaces I remembered Virginia Woolf's call for a room of her own. ~ @Massey:1996 [p.123]
+
+. . .
+
+A function is a room of its own. Is that a problem?
+
+::: {.notes}
+
+Massey doesn't say open is good and closed is bad. She says there are "few -- if any -- abstract, generalisable, 'rules'" (p.117), and what matters is who has the power to open or close a place. Openness can leave "the less powerful places [...] open to indiscriminate invasion and disruption" (p.123).
+
+D'Ignazio & Klein end in the same place: rather than "universal rules and ratios (think: data-ink)", work toward "a more holistic and more inclusive ideal" (p.96). Neither reading gives you a rule.
+
+So, closure (encapsulation) isn't the problem. The question is *who* gets to decide what's inside and what's left out. That's the bridge.
+
+:::
+
+# What's Been Wrapped Away?
+
+## Hello, `wrapper`
+
+:::: {.columns}
+::: {.column width="50%"}
+Without `@wraps`:
+```python
+print(hello.__name__)
+# wrapper
+print(hello.__doc__)
+# Wraps a function to format it.
+```
+:::
+::: {.column width="50%"}
+With `@wraps(func)`:
+```python
+print(hello.__name__)
+# hello
+print(hello.__doc__)
+# Prints hello world
+```
+:::
+::::
+
+. . .
+
+The frame replaced the name of whoever did the work. `@wraps` puts the provenance back.
+
+::: {.notes}
+
+Back to Q4. The output looked fine, but the function couldn't say what it was any more. That's D'Ignazio & Klein's god trick in miniature: it "masks the people, the methods".
+
+Ask the room: "When you `import` a package, what has been wrapped away from you?" Take two answers from pairs.
+
+:::
+
+## A Function Can't Tell You the Data Are Wrong
+
+```python
+ds2 = {
+  'lat':[51.51,40.71,35.69],
+  'lon':[0.13,74.01,139.68],
+  'tz': [+0,-5,+8],
+  'name':['London','New York','Tokyo']
+}
+
+def get_city_info(city:str, field:str, city_lookup:str='name', data:dict=ds2) -> str:
+  return str(data[field][ data[city_lookup].index(city) ])
+```
+
+> Reading a file (even one on a computer halfway round the world) is one of those things. Making sense of the data *in* that file for you is probably not. ~ Practical 4
+
+::: {.notes}
+
+This is the "Complicating Things" slide from Functions, unchanged. The data are the same cooked coordinates from week 3: London and New York should have *negative* longitudes, and Tokyo is UTC+9. The function works perfectly and returns wrong answers cleanly.
+
+1 minute of silent writing, then 2 minutes with neighbours: "What would you need to know before trusting `get_city_info`?" Ask two pairs. (Expected: where `ds2` came from, who made it, when.)
+
+The practical does the same: it reads a file of Airbnb listings from a server, using packages someone else wrote. Who collected those listings, and why?
+
+:::
+
+## Don't Never Do a God Trick
+
+> Simply stated: it is never a good idea to say "never" in design. ~ @dignazio:2020ch3 [p.91]
+
+. . .
+
+> [...] there are also good reasons to use the god trick as a form of recuperation, contestation, or empowerment. ~ @dignazio:2020ch3 [p.92]
+
+. . .
+
+**Listen for:** where does Ollie's work come down to the ground?
+
+::: {.notes}
+
+Their example is Margaret Pearce's *Coming Home to Indigenous Place Names in Canada*. It uses the look of the official national map, but is filled with place names collected from First Nations, Métis and Inuit peoples over fifteen months (pp.92--93). The god's-eye view is turned against the coloniser's view. It works within the norms of the prevailing power geometry (same paper size, fold, scale and projection as the official map), but subverts them.
+
+Pearce also *withheld* data: she respected communities that didn't want to share English translations, and protected "the exact geographic location of each site from being shared with outsiders" (p.92). That's Massey's Woolf point: closure chosen by the less powerful. And it's week 3 again: who gets access to what you store?
+
+Handoff: satellite imagery is the ultimate view from above. Ollie's work with Bellingcat checks it against evidence from the ground. Ask students to listen for that, because the exit ticket asks about it.
+
+:::
+
+## Group Sign-Up
+
+The [sign-up form]({{< var assess.group-signup >}}) is open from **Monday 26 October to Monday 2 November**.
+
+- Sign up as a group (4 best, **no more** than 5), or on your own.
+- Anyone not in a group by Monday 2 November will be matched to a group with space.
+- Why groups, and how they work: [Group Working](./3.6-Group_Working.qmd) (week 3).
+
+::: {.notes}
+
+Keep this short. Jon covered the reasons for the groups in week 3 (3.6). Send questions about assessment or groups to Jon or the Moodle forum rather than answering them.
+
+:::
+
+## Intro to the practical
+
+Here's what we're covering:
+
+- Recycling other people's code: reading a remote file with `urllib` and turning it into data with `csv`.
+- We're also going to stretch your understanding of how these lists and dicts as data structures interrelate and, crucially, make use of the DOL, which is analogous to how pandas -- probably *the* single biggest reason Python dominates data science -- manages and represents data to you.
+
+::: {.notes}
+
+Then the break (7 min). Put the sign-up slide back on screen while Ollie sets up.
+
+:::
+
+# Over to Ollie
+
+## Before You Go...
+
+Complete the sentence:
+
+&nbsp;
+
+A view from a distance **can / can't** be trusted when..., because...
+
+&nbsp;
+
+A selection will open next week's session.
+
+## Input
+
+Provide your input here: [form.menti.com/s/altu662n9tu3](https://form.menti.com/s/altu662n9tu3)
+
+![Mentimeter QR Code](./img/mentimeter-qr-week-4.png){height="500px"}
+
+::: {.notes}
+
+Mentimeter (open text) in a second browser tab. Start at minute 114 sharp, leave the code on screen, and give 3 minutes of silence before saying anything else. Say that it's anonymous, and that today opened with three of last week's.
+
+:::
+
+# Thank You {background-image="/img/web/title-slide.png" background-color="#f7eff5" background-opacity="0.2"}
+
+<h3>References</h3>
