@@ -345,3 +345,4 @@ Rules until the session: never use `publish --no-render` directly (`scripts/publ
 - Asana: a short video on the *purpose* of Docker/Podman (shared with QM).
 - 5.2 pizza example: rename it to `Pizza` and drop `(object)` across all slides.
 - Alt text across all decks.
+- Readings method: consider a surname split (each student reads one of three readings, then briefs neighbours) for weeks where the readings total more than about 30 pp. (2026/27 week 9 would have qualified.) Not changed mid-term in 2026/27: every student reads every assigned reading.

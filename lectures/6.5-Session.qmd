@@ -1,0 +1,427 @@
+---
+author: "Jon Reades"
+email: "j.reades@ucl.ac.uk"
+title: "Is 'No Data' the<br />Same as Nothing?"
+other: ""
+format: revealjs
+title-slide-attributes:
+  data-notes: "Run sheet (120 min). 0–4: last week's exit tickets + the question. 4–16: predict the output (4 snippets). 16–38: reading verdict. 38–50: bridge (3 slides). 50–55: assessment advice + practical intro.
+
+55–62: break. 62–74: Responding to Feedback (6.0-Feedback, existing deck). 74–104: group exercise. 104–110: buffer. 110–120: exit ticket (the last two slides of this deck).
+
+How to run the room: never ask for volunteers or pick out individuals. Walk to a row and ask 'What did you two decide?' Ask which reading they used only after they've answered. Every neighbour discussion starts with 1 minute of silent writing. If there's spare time, give it to neighbour discussion, not more talking."
+---
+
+<h2>Last Week, You Said...</h2>
+
+> [...] data doesn’t speak for itself. People decide what to record and how to present it [...]
+
+> [...] data about a park may show its size and visitor numbers but miss its cultural significance to local residents.
+
+> [...] data is never raw or objective.
+
+::: {.notes}
+
+[CHECK] These are week 3 tickets ("How I store data is / isn't a neutral choice, because..."), the latest export, and none of them has been used in an earlier session deck. If a later export is available, replace them. There were 43 responses to week 3. Almost all said that storing data isn't neutral.
+
+Say: these are anonymous, they get read, and three of them open each session. There's one at the end of today too.
+
+:::
+
+## Why these three?
+
+- **"Doesn't speak for itself":** someone decides what gets recorded. What nobody records isn't in the data at all.
+- **"Miss its cultural significance":** a column that isn't there is a missing value you can't even see.
+- **"Never raw":** and if it was never raw, an empty cell is also the product of a process.
+
+::: {.notes}
+
+Two of the three are about what is left out. The third is the claim that makes the first two matter: if data were raw, an empty cell would just be empty.
+
+Learning half: week 3's tickets were about what *I* store. Today's are about what someone else stored and how I'm supposed to read what's not there.
+
+:::
+
+## This Week's Question
+
+<blockquote style="margin-top:150px">Is 'no data' the same as nothing?</blockquote>
+
+&nbsp;
+
+We'll answer it with code and readings.
+
+. . .
+
+> "The absence of data becomes an important takeaway, as meaningful as the data themselves." ~ @dignazio:2020ch4 [p.113]
+
+::: {.notes}
+
+Three levels, one question. In Python, `None`, `np.nan`, `""` and `0` are four different things. In a data set, an empty cell, a `-999` and a `0` can all mean "we don't know". In the readings, what's missing is the finding.
+
+Run sheet again, for the room: predict the output, readings, then feedback and a group exercise after the break.
+
+:::
+
+# Predict the Output
+
+Pairs. No laptops. Vote with your fingers.
+
+::: {.notes}
+
+Pairs means *whoever is sitting next to you*. 30 seconds to agree, then fingers up together. Reveal, then ≤ 60 seconds on the story. Tell video stories as "In the video, Jon...".
+
+:::
+
+## 1. Nothing Equals Nothing? {.smaller}
+
+```python
+import numpy as np
+print(""==None)
+print(None==None)
+print(np.nan==None)
+print(np.nan==np.nan)
+print(np.nan is np.nan)
+print(np.isnan(np.nan))
+```
+
+How many of the six lines print `True`?
+
+1. 1
+2. 2
+3. 3
+4. 4
+
+. . .
+
+**Answer: 3.** `None==None`, `np.nan is np.nan` and `np.isnan(np.nan)`.
+
+::: {.notes}
+
+The expected wrong answers are 1 or 2 (people don't believe `np.nan is np.nan`) and 4 (people expect `np.nan==np.nan`). Count hands.
+
+Say: `NaN` is not equal to itself, because "unknown" doesn't equal "unknown". The only safe question is `is`, or `np.isnan`. The same logic applies to your data: two empty cells aren't "the same thing".
+
+:::
+
+## 2. Same Numbers Every Time? {.smaller}
+
+```python
+import random
+random.seed(42)
+st = random.getstate()
+for r in range(0,3):
+    random.setstate(st)
+    print(f"Repetition {r}:")
+    ints = []
+    for i in range(0,10):
+        ints.append(random.randint(0,10))
+    print(f"\t{ints}")
+```
+
+What do the three repetitions print?
+
+1. Three different lists
+2. The same list three times
+3. The same first number, then different ones
+4. An error
+
+. . .
+
+**Answer: 2.** `setstate` puts the generator back to where it was after `seed(42)`.
+
+::: {.notes}
+
+Story: the tape of numbers. The seed picks the tape, `getstate` marks your place, `setstate` rewinds. Option 3 is the expected wrong answer.
+
+Say: reproducibility means someone else can see exactly what you saw. Hold on to that for the readings: who gets to see the data you saw?
+
+:::
+
+## 3. Is There a Pattern? {.smaller}
+
+```python
+import random
+size = 10
+results = [0] * size
+
+tests = 100000
+while tests > 0:
+    results[random.randint(0,len(results)-1)] += 1
+    tests -= 1
+
+for i in range(0,len(results)):
+    print(f"{i} -> {results[i]}")
+```
+
+1. `0` is drawn most, falling away like Benford's law
+2. All ten numbers are drawn about equally often (about 10,000 each)
+3. The middle numbers are drawn most often
+4. Exactly 10,000 each
+
+. . .
+
+**Answer: 2.** There are fluctuations, but no pattern. Not 4: look at the individual counts.
+
+::: {.notes}
+
+Story: the tiger in the jungle. We are built to see a pattern even in random noise. Run it once if the room wants to see (the counts will differ each time).
+
+Say: if we see a pattern in noise, we can also see nothing in a signal. Both are mistakes about what the numbers mean.
+
+:::
+
+## 4. Did the Data Change? {.smaller}
+
+```python
+# df has three rows: two with 'Primary Type' BURGLARY, one THEFT
+df[df['Primary Type']=='BURGLARY'].Latitude = 41.7
+```
+
+1. The two `BURGLARY` rows now have latitude 41.7
+2. All three rows now have latitude 41.7
+3. Nothing changes in `df`, and Python warns you
+4. `KeyError`
+
+. . .
+
+**Answer: 3.** The selection returned a copy, so you changed something that was thrown away.
+
+::: {.notes}
+
+Story: the copy that wasn't a copy. Pandas often hands back a view, and sometimes a copy; the warning is Python telling you it can't tell which. The expected wrong answer is 1.
+
+Say: this is a case where *nothing* happened and the only sign is a warning. Missing data can be like that.
+
+:::
+
+# Is 'No Data' the Same as Nothing?
+
+## Vote
+
+According to the reading you did, a missing value...
+
+&nbsp;
+
+1. **Is nothing:** no information. Drop it, or fill it, and move on.
+2. **Tells you something:** about the process that made the data, and often about who made it.
+3. **Depends on who is counting:** only the person who made the data knows what an empty cell means, and it's rarely written down.
+
+::: {.notes}
+
+First, hands: who read D'Ignazio & Klein? Cox & Slee? Both? Neither?
+
+Then fingers, **by reading**: D'Ignazio & Klein readers first, then Cox & Slee.
+
+Then **1 minute of silent writing** ("my vote, and one passage"), *then* 4 minutes with neighbours: compare votes and find *one passage* that proves yours. Anyone who didn't read is briefed by a neighbour.
+
+Plenary (15 min): walk the room and **ask pairs, not individuals** ("What did you two decide?"). Ask which reading only *after* they've answered. Start with Cox & Slee, because it has the clearer case. End on D'Ignazio & Klein's own caution: there are also good reasons for being invisible in some contexts.
+
+If position 1 wins, use the Land Registry: it looks like "all the transactions in the UK", but it leaves out Scotland, sales that aren't at market rate and shared ownership. That is structurally missing data, and it is not the universe. Anyone who doesn't say so draws conclusions about a population that isn't all of it.
+
+The D'Ignazio & Klein chapter is about gender and classification. Whatever your views, the point isn't to take a side: it's that how things are counted shapes how resources are allocated, and that if your categories don't reflect the population you're studying, you will get bad data.
+
+:::
+
+## D'Ignazio & Klein (2020)
+
+> “Women in poor countries seem to be asked about 6 times a day what kind of contraception they use,” [...] “But they are not asked about whether they have access to abortion. They are not asked about what sports they like to play.” ~ Seager, quoted in @dignazio:2020ch4 [p.98]
+
+::: {.notes}
+
+Margin notes:
+
+- You will find what you look for. It's the drunk looking for their keys under the streetlamp because the light is better there.
+- "When thoughtfully collected, quantitative data can be empowering too" (p.98) is the key point of the chapter. Quantitative methods are needed to test what experience suggests, but counting only what's easy to count has costs.
+- Who controls the data and its collection? On p.100: "it's corporations like Facebook, and not individuals like Maria Munir, who have the power to control the terms of data collection."
+
+:::
+
+. . .
+
+> The absence of data becomes an important takeaway, as meaningful as the data themselves. ~ @dignazio:2020ch4 [p.113]
+
+::: {.notes}
+
+Margin notes: sometimes zeroes matter. The Congress map shows every district in grey for "trans + nonbinary" because "0 people in Congress are like you". That's an empty value that is also the message.
+
+Also: don't collect data you don't need (p.111). It lowers risk, and the more detail you collect, the less anonymous people become.
+
+:::
+
+## Cox & Slee (2016)
+
+> The company then presented November 17 as a typical day in the company’s operations and mis-represented the one-time purge as a historical trend. ~ @Cox:2016 [p.1]
+
+::: {.notes}
+
+Margin notes: data cleaning isn't a neutral act. This is data science used to hold a firm to account, by collecting evidence across a number of domains from the data itself.
+
+Over a thousand New York listings vanished from the Airbnb website just before the company took the snapshot it published. The missing rows were the finding.
+
+:::
+
+. . .
+
+> Airbnb did not release the data sets to external parties: instead it presented a summary on its web site and allowed individuals to inspect the data under supervision at an office in New York. ~ @Cox:2016 [p.4]
+
+::: {.notes}
+
+Margin notes: the company says its data are shared "so that policymakers can make informed decisions about home sharing in their communities" (p.4). Is a decision informed when you can't see the raw data? Is there any such thing as raw data?
+
+This is also the first sight of the data you'll use for the rest of the term. Ask: whose data is it, and who decided what's in it?
+
+:::
+
+# What's Missing?
+
+## What Doesn't Fit Becomes `NaN`
+
+```python
+df['Primary Type'] = df['Primary Type'].astype('category')
+```
+
+. . .
+
+> [...] it becomes naturalized as “the way things are.” ~ @dignazio:2020ch4 [p.104]
+
+. . .
+
+Which values *aren't* in your categories?
+
+::: {.notes}
+
+Say: when you set a list of categories, any value that isn't on the list becomes `NaN`. Nobody decided to delete it; the category list did. That's the classification point from the chapter in one line of code.
+
+1 minute of silent writing: "What would you lose if you only allowed the categories you can think of today?" Then 2 minutes with neighbours. Ask two pairs.
+
+:::
+
+## Does the File Match the Spec?
+
+**You should never assume that the data matches the spec.**
+
+1. **Truncation:** server ran out of diskspace or memory, or a file transfer was interrupted.
+2. **Translation:** headers don't line up with data.
+3. **Swapping:** column order differs from spec.
+4. **Incompleteness:** range of real values differs from spec.
+5. **Corruption:** field delimiters included in field values.
+6. **Errors:** data entry errors resulted in incorrect values or the spec is downright *wrong*.
+7. **Irrelevance:** fields that simply aren't relevant to your analysis.
+
+::: {.notes}
+
+In the video, Jon says these are real issues from his own work, including the -999 that meant "no value" to one person and a real number to everyone else.
+
+1 minute of silent writing: "Which of these would you *see*, and which would you only see if you were looking for it?" Then 2 minutes with neighbours. Ask two pairs.
+
+Cox & Slee's case isn't any of the seven: nothing was truncated or corrupted. The rows were removed on purpose, before publication. Ask: which number on the list would you have had to be suspicious of?
+
+:::
+
+## What Does Dropping Rows Remove?
+
+```python
+df.dropna()                          # rows or columns with NULL / np.nan
+df = df[df.index > 15]               # 'negative selection'
+df.drop(index=range(5,10), inplace=True)
+```
+
+. . .
+
+**Listen for:** in today's practical, which rows would you drop first? Who might they be?
+
+::: {.notes}
+
+In the video, Jon says he prefers negative selection, and often regrets dropping in place. Every one of these lines is a decision about what counts as data, in the same way that the purge was.
+
+Don't answer the question. Hand off to the practical intro.
+
+:::
+
+## Before You Start Analysing
+
+- Most groups over-complicate the analysis and under-complicate the answer. It's about who answers the question, not who writes the most code. One chart can be enough.
+- Work on the questions *together*, not one each: the questions follow on from one another, and one member's data frame name won't match another's.
+- Use a notebook as your scratchpad. See [Assessments](./5.5-Assessments.qmd) for when to move to Quarto.
+
+::: {.notes}
+
+[CHECK] Drawn from last year's week 6 talk (2025 transcript), because there is no `Week 6 Session.md`. The Assessments deck already covers the sequencing (analysis after pandas, Quarto from week 9), so keep this to two minutes.
+
+Say: you can start the data analysis this week, but start by reading about the policy questions and what has already been done with the Inside Airbnb data. A cool new dataset makes everyone want to just play with it. Taking data at face value is still the quickest way to get in trouble.
+
+:::
+
+## Intro to the practical
+
+Here's what we're covering:
+
+- Moving from working with concepts one at a time to seeing them together, 'in the wild', in pandas.
+- Reading in the Inside Airbnb data for the first time, and looking at its numeric columns.
+- Counting nulls, by column and by row. [CHECK]
+- Selecting and aggregating the data, and using indexes.
+- Pandas is 'just' a sophisticated extension of what you've already done: lists, dictionaries and functions are underneath it.
+
+::: {.notes}
+
+[CHECK] There is no `Week 6 Session.md`, so these bullets are drafted from the session page's "Connections" box and the practical's headings. Replace them with your own.
+
+Then the break (7 min). After the break: Responding to Feedback (the existing `6.0-Feedback` deck), then the group exercise.
+
+:::
+
+# Group Exercise
+
+## What Does This Empty Cell Mean?
+
+In your assessment group. 1 minute of silent writing, then discuss.
+
+| Case | What's there |
+|---|---|
+| A | `review_scores_rating` is empty and `number_of_reviews` is 0 |
+| B | `bedrooms` is empty |
+| C | `price` is `$0.00` |
+
+For each: **nothing, zero, or a finding?** Who knows? How would you write down what you decided?
+
+::: {.notes}
+
+[CHECK] Confirm each example exists in the London file before using it, and change the cases if not.
+
+1 minute of silent writing. Then 7 minutes per case in groups (neighbours are fine if the group isn't settled). Then ask groups, not individuals: "Which of the three positions did you use?" (nothing, tells you something, depends on who is counting).
+
+Link back: A is probably "no reviews yet", which isn't the same as a bad score. B might be a studio, or someone who didn't fill it in. C is the hardest: a price of zero could be an error, a placeholder, or a listing that doesn't want to be found. Whatever you decide, write it down, because it's the reader of your work who has to trust it.
+
+If time is short, do A and C only.
+
+:::
+
+# Over to You
+
+## Before You Go...
+
+Complete the sentence:
+
+&nbsp;
+
+A missing value **is / isn't** 'nothing', because...
+
+&nbsp;
+
+A selection will open next week's session.
+
+## Input
+
+Provide your input here: [form.menti.com/s/alo5y7fjn6ss](https://form.menti.com/s/alo5y7fjn6ss)
+
+![Mentimeter QR Code](./img/mentimeter-qr-week-6.png){height="500px"}
+
+::: {.notes}
+
+Mentimeter (open text) in a second browser tab. Start at minute 110 sharp, leave the code on screen, and give 3 minutes of silence before saying anything else. Say that it's anonymous, and that today opened with three of last week's.
+
+:::
+
+# Thank You {background-image="/img/web/title-slide.png" background-color="#f7eff5" background-opacity="0.2"}
+
+<h3>References</h3>

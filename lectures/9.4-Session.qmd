@@ -1,0 +1,421 @@
+---
+author: "Jon Reades"
+email: "j.reades@ucl.ac.uk"
+title: "What Does a Geographer<br />Add to Data Science?"
+other: ""
+format: revealjs
+title-slide-attributes:
+  data-notes: "Run sheet (120 min). 0–4: last week's exit tickets + the question. 4–14: predict the output (3 snippets). 14–36: reading verdict. 36–46: bridge (3 slides). 46–55: assessment advice + practical intro.
+
+55–62: break. 62–82: group slot (a randomly selected group presents its draft answer to Question 3, then feedback). 82–108: group clinic (groups work; walk the room). 108–110: buffer. 110–120: exit ticket (the last two slides of this deck).
+
+How to run the room: never ask for volunteers or pick out individuals. Walk to a row and ask 'What did you two decide?' Ask which reading they used only after they've answered. Every neighbour discussion starts with 1 minute of silent writing. If there's spare time, give it to neighbour discussion, not more talking."
+---
+
+<h2>Last Week, You Said...</h2>
+
+> [CHECK: week 8 exit ticket 1]
+
+> [CHECK: week 8 exit ticket 2]
+
+> [CHECK: week 8 exit ticket 3]
+
+::: {.notes}
+
+[CHECK] The week 8 export (stem: "Text about a place is / isn't evidence of that place, because...") didn't exist when this deck was drafted. Pick three that lead into today's question: something about what is left out of a source, and who is deciding. Don't reuse tickets from an earlier session deck.
+
+Say: these are anonymous, they get read, and three of them open each session. There's one at the end of today too.
+
+:::
+
+## Why these three?
+
+- **[CHECK]:** one line linking each quote to today's material.
+- **[CHECK]:**
+- **[CHECK]:**
+
+::: {.notes}
+
+[CHECK] Write after choosing the quotes. Add one line on the learning half: what last week's tickets say about how the room is using the readings.
+
+:::
+
+## This Week's Question
+
+<blockquote style="margin-top:150px">What does a geographer add to data science?</blockquote>
+
+&nbsp;
+
+We'll answer it with code and readings, then with your draft answers to Question 3.
+
+. . .
+
+> The acknowledged partiality of the dashboard’s rendering might make us wonder what is bracketed out. Why, all the mud of course! ~ @mattern:2015 [p.3]
+
+::: {.notes}
+
+Three levels, one question. In code, the join you choose decides which rows survive. In the readings, a dashboard, a model and a curriculum each leave things out. In your briefing, "how many properties are affected?" depends on what you counted and what you left out.
+
+You have been exposed to ways of thinking about data critically and ethically that are rarely part of an informatics or machine learning degree. That is the claim to test today.
+
+Run sheet again, for the room: predict the output, readings, then a group's draft, and then time to work.
+
+:::
+
+# Predict the Output
+
+Pairs. No laptops. Vote with your fingers.
+
+::: {.notes}
+
+Pairs means *whoever is sitting next to you*. 30 seconds to agree, then fingers up together. Reveal, then ≤ 60 seconds on the story. Tell video stories as "In the video, Jon...".
+
+:::
+
+## 1. How Many Rows? {.smaller}
+
+```python
+import pandas as pd
+
+df1 = pd.DataFrame({
+  'SensorID': [1,2,3,4,5],
+  'Place': ['LHR','LGA','STA','LUT','SEN'],
+  'Owner': ['BAA','GIP','MAG','Luton LA','Stobart']
+})
+df2 = pd.DataFrame({
+  'SensorID': [1,1,3,4,6],
+  'Parameter': ['Temperature','Humidity','Temperature','Temperature','Humidity'],
+  'Value': ['5ºC','15%','7ºC','7ºC','18%']
+})
+for how in ['inner', 'left', 'outer']:
+  print(len(pd.merge(df1, df2, how=how, on='SensorID')))
+```
+
+What does it print?
+
+1. `4`, `5`, `6`
+2. `4`, `6`, `7`
+3. `5`, `5`, `7`
+4. `4`, `6`, `6`
+
+. . .
+
+**Answer: 2.** `4`, `6`, `7`.
+
+::: {.notes}
+
+The expected wrong answers are 1 and 3 (people forget that sensor 1 appears twice in the second table, so one row on the left becomes two). Count hands.
+
+Say: the inner join keeps only the sensors in both (1, 3, 4), and sensor 1 matches two rows. The left join keeps sensors 2 and 5 with no data. The outer join also keeps sensor 6, which has no place. Each join is a different answer to "which things count?".
+
+:::
+
+## 2. What Is the Average Age? {.smaller}
+
+```python
+import pandas as pd
+import numpy as np
+
+df = pd.DataFrame({
+  'class': ['Third','First','Third','First','Third','Third','First','Third'],
+  'age':   [22.0, 38.0, 26.0, 35.0, 35.0, np.nan, 54.0, 2.0]
+})
+grouped_df = df.groupby('class').age.agg(['sum','mean'])
+print(grouped_df.loc['Third','mean'])
+```
+
+What does it print?
+
+1. `17.0`
+2. `21.25`
+3. `nan`
+4. An error
+
+. . .
+
+**Answer: 2.** `21.25`: `sum` is 85 over the four non-missing ages.
+
+::: {.notes}
+
+The expected wrong answers are 1 (people divide by five, as if the missing age were zero) and 3. Count hands.
+
+Say: pandas skips the missing value, so the mean is over four people, not five. That is week 6 again: a missing value isn't nothing, and the group's mean now says nothing about the person with no age.
+
+:::
+
+## 3. Who Is Inside the Borough? {.smaller}
+
+```python
+import geopandas as gpd
+from shapely.geometry import box, Point
+
+hackney = gpd.GeoDataFrame({'NAME': ['Hackney']}, geometry=[box(0, 0, 1, 1)])
+gdf = gpd.GeoDataFrame({'id': [1, 2, 3]},
+        geometry=[Point(0.5, 0.5), Point(1, 0.5), Point(2, 2)])
+
+print(len(gpd.sjoin(gdf, hackney, predicate='within')))
+print(len(gpd.sjoin(gdf, hackney, predicate='intersects')))
+```
+
+The second point is exactly on the boundary. What does it print?
+
+1. `1`, then `1`
+2. `1`, then `2`
+3. `2`, then `2`
+4. `2`, then `3`
+
+. . .
+
+**Answer: 2.** `1`, then `2`.
+
+::: {.notes}
+
+[CHECK] This snippet is constructed from the "A Spatial Join" slide (`predicate='within'`). The expected wrong answer is 3 (people assume the boundary is inside). Count hands.
+
+Say: a point on the edge is not *within* the borough but does *intersect* it. The predicate decides who counts as in Hackney. For Question 3, a property on a boundary is in or out of the policy depending on a word in your code.
+
+:::
+
+# What Does a Geographer Add?
+
+## Vote
+
+According to the reading you did, what a geographer adds to data science is...
+
+&nbsp;
+
+1. **The local and particular:** what a generalising method flattens or leaves out.
+2. **Asking what is left out:** whatever isn't measured gets bracketed out, so ask what that is, at every step.
+3. **Not much:** the data-driven, generalising methods work, and geographers should learn from them.
+
+::: {.notes}
+
+First, hands: who read Mattern? O'Sullivan & Manson? Both? Neither?
+
+Then fingers, **by reading**: Mattern readers first, then O'Sullivan & Manson.
+
+Then **1 minute of silent writing** ("my vote, and one passage"), *then* 4 minutes with neighbours: compare votes and find *one passage* that proves yours. Anyone who didn't read is briefed by a neighbour.
+
+Plenary (about 12 min): walk the room and **ask pairs, not individuals** ("What did you two decide?"). Ask which reading only *after* they've answered. Start with Mattern, because it is the shortest and has the clearest image. End on O'Sullivan & Manson, because position 3 is the one that most students don't expect a reading to support.
+
+If position 1 wins, push: whose local knowledge, and how do you get it into a join?
+
+If position 2 wins, push: Mattern says whatever isn't measurable is simply bracketed out. What did you leave out of your Question 3 count, and how would you know?
+
+If position 3 wins, push: O'Sullivan & Manson argue that generalisation is the capacity geography lacks. What do you lose by generalising?
+
+Reading load is about 30 pages in all (Mattern 11, O'Sullivan & Manson 19). Suggested focus pages for O'Sullivan & Manson: pp.704–706 and the Conclusion (from p.716). [CHECK] If the room says "read none" in more than a third of hands, neighbours brief each other.
+
+:::
+
+## Mattern (2015)
+
+> Of course, whatever is not readily operationalizable or measurable is simply bracketed out. ~ @mattern:2015 [p.6]
+
+::: {.notes}
+
+[CHECK] There are no annotations or summary for this reading. Add your margin notes here.
+
+Reading notes: the study guide asks how the dashboard critique connects to what data have left out in earlier weeks (for example, missing values in week 6). The dashboard brackets out the "mud": dirty data, the variables that have nothing to do with key performance, and the parts that don't lend themselves to quantification.
+
+:::
+
+## O'Sullivan & Manson (2015)
+
+> Physics envy is a (generally) derogatory term aimed at advocates for the adoption in other fields of methods and concepts from physics, particularly an emphasis on parsimony and elegance in explanation. ~ @osullivan:2015 [p.705]
+
+::: {.notes}
+
+[CHECK] There are no annotations or summary for this reading. Add your margin notes here.
+
+Reading notes: *geography envy* is the obverse: physicists working on topics geographers have long studied, often ignoring earlier research. The authors' point is that the generalising capacity of these approaches is "absent from much work in geography" (p.704). Link to Miller & Goodchild last week: law-seeking against description-seeking, and the idea that the local provides context for the global.
+
+:::
+
+# What Gets Left Out?
+
+## Which Join Did You Use?
+
+| You keep | You lose |
+|---|---|
+| Inner join | listings with no match |
+| Left join | nothing, but some rows are empty |
+| Outer join | nothing, but more empty rows |
+
+. . .
+
+For **Question 3**: how many properties are affected by the proposal? Which join gave you that number?
+
+::: {.notes}
+
+1 minute of silent writing, then 2 minutes with neighbours. Ask two pairs, not individuals.
+
+Say: every join answers "which things count?". With an inner join the properties with no match to a borough simply disappear, and no error tells you. Mattern's "bracketed out" is a join.
+
+:::
+
+## What's the 'Right' Order?
+
+1. Do the *easy* joins first (keys, enumerations).
+2. Do the *hard* joins last (spatial queries).
+
+. . .
+
+*Find me a nearby family-style Italian restaurant in New York.*
+
+Would you filter by cuisine, or buffer first? **Does the order change the answer?**
+
+::: {.notes}
+
+1 minute of silent writing, then 2 minutes with neighbours. Ask two pairs.
+
+Say: usually filtering before buffering is good practice, because it's cheaper. But the order can change the result: do you want to suggest other cuisines within the buffer, or Italian restaurants that are just outside it? There is no one recipe, only guidelines.
+
+:::
+
+## When Do You Stop?
+
+A project linking administrative data sets built up about **280 matching rules**.
+
+. . .
+
+It matched more records. It also could not be held in anyone's head, and risked matching things that don't match.
+
+::: {.notes}
+
+[CHECK] This is from the 2025 session (a piece of work you described, not named). Check the number and say it in your own words.
+
+Say: the answer to "when do I stop refining the match?" is judgement: how much time you're willing to put in, and what you get back. A strategy that matches the most records can still be brittle and overfitted. The examples in the practical answers are deliberately crude.
+
+Link: for Question 3, a simple, explainable definition beats a complicated one you cannot justify.
+
+:::
+
+## Assessment Advice
+
+- You do **not** get higher marks for techniques that haven't been covered in class.
+- You get marks for what is **justified by your analysis** and the aim of the briefing.
+- If you can't explain what a method does, why, and how it advances your argument in plain English, **don't use it**.
+- The briefing is for a policymaker. Keep it simple, keep it to the point.
+
+::: {.notes}
+
+[CHECK] This is from the 2025 session (Question 3 slot), in your own words. Check it against this year's rubric: in 2025 you said the substance is 60%, and `_variables.yml` has the writing weight at 50% and the code at 35%.
+
+Say: a Quarto document that renders, with code that runs, and an argument is already a lot. A suggested reading is Tony Travers' piece on the suburbanisation of poverty: a whole policy document that is only exploratory data analysis, and it works because the charts relate to the argument.
+
+If a group with a planning background is worried about missing quantitative methods content: the substance is where those students are strong, and the assessment is calibrated so that mixed groups can do well.
+
+[CHECK] 2025: you offered to check whether the rubric requires the five headings. Say what the answer is.
+
+Keep this to 5 minutes.
+
+:::
+
+## Intro to the practical
+
+Here's what we're covering:
+
+- Comparing different approaches to data linkage.
+- Linking data as part of a visualisation process.
+- The same task in pandas and in SQL (DuckDB), and what that does to speed.
+
+::: {.notes}
+
+[CHECK] There is no Jon-written "Intro to the practical" for week 9: `Week 9 Session.md` is a 2025 script by the guest lecturer, and the bullets above are drafted from the session page's "Connections" box and that script. Replace them with your own.
+
+From the script: it's about different techniques for achieving the same thing, and the performance differences. SQL is not always faster than Python. DuckDB with Parquet gives you a database that doesn't need a server.
+
+Then the break (7 min). After the break: the group slot, then the group clinic.
+
+:::
+
+# Group Slot
+
+## How Many Properties Would Be Affected by the Proposal?
+
+One group presents its draft answer. **Five minutes.**
+
+When you listen, ask:
+
+- How did they get from the number of professional landlords to the number of properties?
+- What did they count, and what did they leave out?
+- Where do the properties sit, and does the proposal fall equally on each area?
+
+::: {.notes}
+
+Select the group at random in front of the room (a number from a list: not a person). If the group has no draft, say so and move on: there is no feedback, as the assessments page says.
+
+5 minutes for the group. Then 1 minute of silent writing for the room, 2 minutes with neighbours, then ask **pairs** for feedback. Last, give your own.
+
+In 2025 a group built on the previous answer (a number of professional landlords, then about 160,000 properties) and added a council tax revenue estimate. The feedback was: tie your definition back to the previous steps; tweak the definition (two entire homes? any host with more than one listing?) to show what moves the count; then ask where the properties are, and what the proposal does to different areas (Kensington and Chelsea, Westminster and others have lower council tax, so the revenue effect may be uneven). A student also suggested using text to find owner-occupiers who let a room.
+
+If the group runs over, stop at 5 minutes.
+
+:::
+
+# Group Clinic
+
+## Time to Work
+
+In your groups:
+
+1. Run the **Quarto template** again. Does it still render?
+2. Replace one placeholder with **your content**.
+3. Write down the **one thing** that is stopping you.
+
+I'll come round.
+
+::: {.notes}
+
+20–25 minutes. Walk the room; ask a group "What did you two decide?" or "What are you stuck on?". Don't cold-call.
+
+Say: the practical is pick-and-mix; use it for whatever you need. The groups should be working, not in the practical room.
+
+[CHECK] 2025: groups were told they didn't need to stay in the practical room. Confirm this year.
+
+If groups finish early or aren't stuck, ask them to swap with the neighbouring group and each explain their definition in one sentence.
+
+:::
+
+## What Happens Next
+
+- [CHECK: the submission date and time, and where to submit]
+- [CHECK: is there a Week 10 session? If not, how do students reach you?]
+- [CHECK: the module feedback form]
+
+::: {.notes}
+
+[CHECK] This is a placeholder. The Week 10 session probably doesn't run this year because the assessment is due before it. Replace with whatever you need to say in what may be the last session: the submission date, how to ask questions, and where the ethics content now lives.
+
+:::
+
+# Over to You
+
+## Before You Go...
+
+Complete the sentence:
+
+&nbsp;
+
+A geographer **adds / adds nothing** to data science, because...
+
+&nbsp;
+
+[CHECK: is there a next session?]
+
+## Input
+
+Provide your input here: [form.menti.com/s/alj67nonwwx6](https://form.menti.com/s/alj67nonwwx6)
+
+![Mentimeter QR Code](./img/mentimeter-qr-week-9.png){height="500px"}
+
+::: {.notes}
+
+Mentimeter (open text) in a second browser tab. Start at minute 110 sharp, leave the code on screen, and give 3 minutes of silence before saying anything else. Say that it's anonymous, and that today opened with three of last week's.
+
+:::
+
+# Thank You {background-image="/img/web/title-slide.png" background-color="#f7eff5" background-opacity="0.2"}
+
+<h3>References</h3>

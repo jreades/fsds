@@ -1,0 +1,535 @@
+---
+author: "Jon Reades"
+email: "j.reades@ucl.ac.uk"
+title: "Describing a Place<br />or Shaping It?"
+other: ""
+format: revealjs
+title-slide-attributes:
+  data-notes: "Run sheet (120 min). 0–4: last week's exit tickets + the question. 4–16: predict the output (4 snippets). 16–38: reading verdict. 38–50: bridge (3 slides). 50–55: admin + practical intro.
+
+55–62: break. 62–82: group slot (a randomly selected group presents its draft answer to Question 2, then feedback). 82–104: 'From Words to Numbers' (6 slides). 104–110: buffer. 110–120: exit ticket (the last two slides of this deck).
+
+How to run the room: never ask for volunteers or pick out individuals. Walk to a row and ask 'What did you two decide?' Ask which reading they used only after they've answered. Every neighbour discussion starts with 1 minute of silent writing. If there's spare time, give it to neighbour discussion, not more talking."
+---
+
+<h2>Last Week, You Said...</h2>
+
+> [CHECK: week 7 exit ticket 1]
+
+> [CHECK: week 7 exit ticket 2]
+
+> [CHECK: week 7 exit ticket 3]
+
+::: {.notes}
+
+[CHECK] The week 7 export (stem: "You can / can't prove anything with numbers, because...") didn't exist when this deck was drafted. Pick three that lead into today's question: something about who decides what a number or a word means. Don't reuse tickets from an earlier session deck.
+
+Say: these are anonymous, they get read, and three of them open each session. There's one at the end of today too.
+
+:::
+
+## Why these three?
+
+- **[CHECK]:** one line linking each quote to today's material.
+- **[CHECK]:**
+- **[CHECK]:**
+
+::: {.notes}
+
+[CHECK] Write after choosing the quotes. Add one line on the learning half: what last week's tickets say about how the room is using the readings.
+
+:::
+
+## This Week's Question
+
+<blockquote style="margin-top:150px">When people write about a place, are they describing it or shaping it?</blockquote>
+
+&nbsp;
+
+We'll answer it with code and readings, then with your draft answers to Question 2.
+
+. . .
+
+> As home-seekers have different preferences for house characteristics and neighborhood amenities, the words used to advertise homes are expected to vary according to the type of neighborhood and expected homebuyer. ~ @delmelle:2021 [p.1]
+
+::: {.notes}
+
+Three levels, one question. In code, a pattern decides what counts as a match. In the readings, a listing is both a description of a home and a signal to a particular buyer. In your briefing, deciding who is a "professional landlord" starts with deciding which words, or which counts, to look for.
+
+Run sheet again, for the room: predict the output, readings, then a group's draft, and then how words become numbers.
+
+:::
+
+# Predict the Output
+
+Pairs. No laptops. Vote with your fingers.
+
+::: {.notes}
+
+Pairs means *whoever is sitting next to you*. 30 seconds to agree, then fingers up together. Reveal, then ≤ 60 seconds on the story. Tell video stories as "In the video, Jon...".
+
+:::
+
+## 1. What Does the Group Capture? {.smaller}
+
+```python
+import re
+s = "'That will be $1,000,000, he said...'"
+m = re.search(r'\$((\d+,){2,}\d+)',s)
+
+print(m.group(1))
+```
+
+What does it print?
+
+1. `$1,000,000`
+2. `1,000,000`
+3. `1,000,000,`
+4. `None`
+
+. . .
+
+**Answer: 2.** `1,000,000`.
+
+::: {.notes}
+
+The expected wrong answers are 1 (people forget the `$` is outside the brackets) and 3 (the trailing comma is not part of the match, because the pattern ends in `\d+`). Count hands.
+
+Say: `group(0)` is everything that matched, and `group(1)` is only the part in the first brackets. The pattern is a decision about what counts as the number.
+
+:::
+
+## 2. Does Case Matter? {.smaller}
+
+```python
+import re
+s = '123foo456'
+
+m = re.search('FOO',s)
+print(f"First search: {m}")
+
+m = re.search('FOO',s,re.IGNORECASE)
+print(f"Second search: {m}")
+```
+
+What does it print?
+
+1. `None`, then `None`
+2. `None`, then a match for `'foo'`
+3. A match for `'foo'`, then a match for `'foo'`
+4. An error
+
+. . .
+
+**Answer: 2.** `First search: None`, then `Second search: <re.Match object; span=(3, 6), match='foo'>`.
+
+::: {.notes}
+
+The expected wrong answer is 1 or 4. Count hands.
+
+Say: a failed search doesn't raise an error: it returns `None`. That's week 6 again: nothing was found, and the code doesn't tell you whether that is because there's nothing there or because your pattern was too strict.
+
+:::
+
+## 3. Where Does It Split? {.smaller}
+
+```python
+import re
+s = '123foo456foo789'
+
+rs = re.sub('foo',' ',s)
+print(re.split(' ',rs))
+```
+
+What does it print?
+
+1. `['123foo456foo789']`
+2. `['123', '456', '789']`
+3. `['123', 'foo', '456', 'foo', '789']`
+4. `['123 456 789']`
+
+. . .
+
+**Answer: 2.** `['123', '456', '789']`.
+
+::: {.notes}
+
+The expected wrong answer is 4 (people stop after the `sub`). Count hands.
+
+Say: `sub` replaced each `foo` with a space, and `split` cut on the spaces. You've turned an unstructured string into a list you can count. That is cleaning text.
+
+:::
+
+## 4. Which Article Is All Zeros? {.smaller}
+
+```python
+import pandas as pd
+
+topics = pd.Series(['News', 'Culture', 'Politics', 'Entertainment'],
+                   index=['Article 1', 'Article 2', 'Article 3', 'Article 4'])
+print(pd.get_dummies(topics, drop_first=True))
+```
+
+Each row is one article. Which article has a `0` in every column?
+
+1. Article 1 (News)
+2. Article 2 (Culture)
+3. Article 3 (Politics)
+4. Article 4 (Entertainment)
+
+. . .
+
+**Answer: 2.** `get_dummies` drops the *first category in alphabetical order*: Culture.
+
+::: {.notes}
+
+[CHECK] This snippet is constructed from the Dummy Columns slide (the slide's table leaves out the fourth category, Entertainment, which is not the one `get_dummies` drops). Check it before use. The expected wrong answer is 4 (the last row, as on the slide). Count hands.
+
+Say: with $n$ categories a dummy encoding has $n-1$ columns, so one category becomes the baseline and is represented by all zeros. Someone chose the baseline, and here it was alphabetical order. One-hot encoding keeps all $n$ columns, so a document that fits no category can be all zeros.
+
+:::
+
+# Describing a Place or Shaping It?
+
+## Vote
+
+According to the reading you did, when people write about a place, the text is...
+
+&nbsp;
+
+1. **A record:** populations, not samples, and closer to the source than any survey.
+2. **A performance:** what people choose to show, not their whole lives.
+3. **A lever:** the words steer who is attracted to a place, and who is not.
+
+::: {.notes}
+
+First, hands: who read Miller & Goodchild? Delmelle & Nilsson? The chapter (Reades 2022)? More than one? None?
+
+Then fingers, **by reading**: Miller & Goodchild readers first, then Delmelle & Nilsson, then the chapter.
+
+Then **1 minute of silent writing** ("my vote, and one passage"), *then* 4 minutes with neighbours: compare votes and find *one passage* that proves yours. Anyone who didn't read is briefed by a neighbour.
+
+Plenary (about 12 min): walk the room and **ask pairs, not individuals** ("What did you two decide?"). Ask which reading only *after* they've answered. Start with Miller & Goodchild, because it sets up both positions 1 ("populations, not samples", p.450) and 2. End on Delmelle & Nilsson: the words are the lever, and their results show who the agents were writing for.
+
+If position 1 wins, push: a listing is written by someone selling the place. Who wrote it, and what did they leave out?
+
+If position 2 wins, push: is a performance still evidence? It is evidence of the performance.
+
+If position 3 wins, push: does the result depend on the model? Delmelle & Nilsson's model under-estimated some neighbourhood types.
+
+Reading load is about 27 pages in all (Miller & Goodchild 13, Delmelle & Nilsson 10, Reades 2022 pp.21–25). Suggested focus pages: Miller & Goodchild pp.450, 452, 455 and 457; Delmelle & Nilsson pp.1–2, 7 and 9; Reades 2022 pp.21–25. If the room says "read none" in more than a third of hands, neighbours brief each other.
+
+:::
+
+## Miller & Goodchild (2015)
+
+> This inverts the classic sampling problem where we identify a question and collect data to answer that question. Instead, we collect the data and determine what questions we can answer. ~ @Miller:2015 [p.452]
+
+::: {.notes}
+
+Reading notes: the paper's central tension is theory-driven against data-driven research. This is the passage that inverts the order: you collect the data and then work out what questions it can answer. Without any theory you are just fishing, which is the crisis in reproducibility.
+
+The middle-range theory idea (p.455) is a compromise between theory-free correlation and totalising theories of the entire social system. The paper ends on abductive reasoning: X *may* be true, as against *must* (deductive) or *is* (inductive).
+
+:::
+
+. . .
+
+> [...] we cannot be assured that the information people volunteer is an accurate depiction of their complete lives or just of the lives they wish to present to the social sphere. ~ @Miller:2015 [p.452]
+
+::: {.notes}
+
+Reading notes: the authors draw on Goffman's theatre metaphor (stage and backstage behaviour). Social media is a performance, so it affects how you understand it. The same passage is about volunteered geographic information: it is easy to find a place to drink, and hard to find a place to breastfeed. Link this to position 2.
+
+:::
+
+## Delmelle & Nilsson (2021)
+
+> [...] real estate agents serving as neighborhood gatekeepers as they seek to maximize profits to attract particular homebuyers to neighborhoods [...] ~ @delmelle:2021 [p.7]
+
+::: {.notes}
+
+Reading notes: this is the key linkage. They draw on amenity-based theories of residential location choice and extract the amenities and home characteristics associated with different kinds of neighbourhood. The hypothesis is that the vernacular of the advertisement varies by neighbourhood.
+
+Data availability question: could we replicate this in the UK? How well would it translate?
+
+:::
+
+. . .
+
+> [...] mentioning the specific neighborhood the property is in carries more prestige in neighborhoods where Whites are the predominant homebuyer. ~ @delmelle:2021 [p.7]
+
+::: {.notes}
+
+Reading notes: place branding (the neighbourhood name as a signal of prestige). The model under-estimated some neighbourhood types: that's model bias. A large share of listings that predict a different neighbourhood type may suggest that agents are looking for a different type of buyer before the demographics change. That raises predictive relevance against explanatory power, which is the same split as in Miller & Goodchild.
+
+:::
+
+## Reades (2022)
+
+> Knowing which bit of text contains locational information simplifies things enormously because we can be a lot ‘stupider’ in our approach [...] ~ @Reades:2022 [p.23]
+
+::: {.notes}
+
+Reading notes: the chapter starts from a single tweet and asks how many pieces of locational information it contains (at least four: the geo-tag coordinates, the profile's Location field and the place named in the text among them). Coordinates look unambiguous but may not be where the event happened. Text is harder: a profile location can be missing, mis-spelt, slang or ambiguous (more than one Delhi).
+
+Link to Question 2: the strings in the listings (host names, descriptions) have to be matched and interpreted before you can count anything.
+
+:::
+
+. . .
+
+> [...] to imagine that ‘address matching’ is a straightforward process that can be ‘tacked on’ later is to set yourself up for frustration, and possibly failure. ~ @Reades:2022 [p.24]
+
+::: {.notes}
+
+Reading notes: the Soviet-era factory data example (places that no longer exist, inconsistently recorded addresses) is a warning about estimating the time needed to get data into shape. Address matching needs reference data (the Postal Address File) that may not be open.
+
+:::
+
+# What Is a Word Worth?
+
+## What Does 'Cozy' Mean?
+
+> [...] the adjective ‘cozy’, for instance, carries different valences for detached properties in a scenic area and urban rental units. ~ @Reades:2025 [p.4]
+
+. . .
+
+How would a pattern find the *same* word with *different* meanings?
+
+::: {.notes}
+
+1 minute of silent writing: "What does 'cosy' mean in a listing for a London flat? In the Highlands?" Then 2 minutes with neighbours. Ask two pairs, not individuals.
+
+Say: in a London flat, "cosy" means you're lucky if a bed and a toilet fit. In Scotland it means it's insulated. A regular expression finds the word; it can't tell you what the word meant. That takes context, which is what embeddings try to learn.
+
+[CHECK] The two meanings are from the 2025 session. Say them in your own words.
+
+:::
+
+## What Would You Search For?
+
+You want listings where the host **shares** the home. Write the pattern.
+
+- It must match: *Sharing a flat*, *shared kitchen*, *we share*.
+- It must not match: *file-sharing*.
+
+::: {.notes}
+
+1 minute of silent writing, then 2 minutes with neighbours. Ask two pairs: "What did you two write?"
+
+A pattern that works on those examples: `(?<![-\w])shar(?:e|es|ed|ing)\b`, case-insensitive. A simpler `\bshar(e|ed|es|ing)\b` also matches *file-sharing*, because a hyphen is a word boundary. Don't give the answer first.
+
+Then: it picks up a tiny proportion. Look at the descriptions and see what else is buried in them (flatmates, roommates), and split them into patterns you test separately, or roll them into one. It's iterative, and the computer doesn't mind doing it 100 million times.
+
+Link to Question 2: this is how you'd go from "hosts who list entire homes" to hosts whose text suggests a shared home. Whoever writes the pattern decides who is "professional".
+
+:::
+
+## How Big Is the Table?
+
+- A corpus with 10,000 words has a term co-occurrence matrix of size $10,000^{2}$ (100,000,000).
+- A corpus with 50,000 words has one of size $50,000^{2}$ (2,500,000,000).
+
+. . .
+
+Embeddings squash the columns, not the rows.
+
+::: {.notes}
+
+Say: every word needs a row, because throwing away rows is throwing away vocabulary. What the embedding does is compress the columns into a much smaller number. The vectors keep the relationships between words (the famous example is king − man + woman ≈ queen).
+
+Ask neighbours (1 minute of silent writing first): "If most pairs of words never occur together, what does that tell you about the table?" (It's almost all zeros.)
+
+:::
+
+## Admin
+
+- Your draft answer to **Question 2** (how many professional landlords?) is due this week; **Question 3** is due next week.
+- From this week you can start moving your group's work into Quarto. **First render the template**; then bring in your content a block at a time, and render as you go.
+- If a block breaks the render, post it on Slack so everyone can learn.
+- Priorities: content first, then form.
+
+::: {.notes}
+
+[CHECK] There is no current `assessments` wording for this. It is drafted from the session page, `assessments/_questions.qmd` and the 2025 session. Confirm the dates, and say the final submission date if you know it.
+
+Say: notebooks are for doodling, trying things out and jotting ideas; Quarto is the publication, so rendering every time will slow down exploration. Take the useful stuff out of the notebook and put it in the Quarto document. If you can render the template, your infrastructure works, and the problems are in individual blocks.
+
+Keep this to 3 minutes.
+
+:::
+
+## Intro to the practical
+
+- Notice that there are **two** practicals today.
+  - There's the core practical which is really focussed on basic cleaning of textual data, regexes, and using them to select rows from the data frame.
+  - There's the bonus practical which goes much further into more advanced topics in cleaning (as covered in the lectures), text normalisation, word clouds, and even word2vec.
+- You will *not* get bonus marks on the group assessment for using the techniques covered in the bonus practical; rather, that's there for those of you who think it's all a bit basic.
+
+::: {.notes}
+
+These are the bullets from `Week 8 Session.md`, as written.
+
+Then the break (7 min). After the break: the group slot, then the talk on how words become numbers.
+
+:::
+
+# Group Slot
+
+## How Many Professional Landlords Are There?
+
+One group presents its draft answer. **Five minutes.**
+
+When you listen, ask:
+
+- How did they decide what a professional landlord is?
+- Is that definition from the literature, the data, or both?
+- What would change the number?
+
+::: {.notes}
+
+Select the group at random in front of the room (a number from a list: not a person). If the group has no draft, say so and move on: there is no feedback, as the assessments page says.
+
+5 minutes for the group. Then 1 minute of silent writing for the room, 2 minutes with neighbours, then ask **pairs** for feedback. Last, give your own.
+
+In 2025 a group decided that "all it takes is having two entire homes", filtered to entire homes and apartments, and counted hosts with more than one listing. The feedback was: it's not about the specific number, it's about showing the thought process. Part of it was the literature and part of it was the data, and there was a rationale. A counterpoint is the HMO sector, with many rooms in one building. The definition links back to Question 1: if "out of control" means whole properties, the next question is who lets whole properties.
+
+If the group runs over, stop at 5 minutes.
+
+:::
+
+# From Words to Numbers
+
+## Why `apply`?
+
+```python
+df['clean'] = df['text'].apply(lambda x: x.lower())
+```
+
+Pandas decides the order. All it needs is that **each row can be handled on its own**.
+
+::: {.notes}
+
+[CHECK] This snippet is illustrative. Replace it with the one from the 8.3 deck ("Pandas.apply() vs. Numpy" and "Lambda Functions") if you prefer.
+
+Say: text is richer and harder to work with than numbers, so any benefit from computing it faster pays off. Each piece of text is like a whole new data set. `apply` lets Python and pandas choose how to process the rows, in any order, provided each row is self-contained. Looping over every row and column one at a time is the slowest possible way.
+
+Link back to week 5: functions that take an input and return an output are what let a computer divide the work.
+
+:::
+
+## Dummy Columns, One-Hot, Bag of Words
+
+| | Climate | Flat | Thames |
+|---|---|---|---|
+| Listing 1 | 0 | 2 | 1 |
+| Listing 2 | 1 | 1 | 0 |
+
+. . .
+
+One column per word. Most of the table is zeros.
+
+::: {.notes}
+
+Say: the dummy and one-hot columns on the first slide of 8.4 were about categories. The bag of words keeps the *counts*, so a listing that mentions the Thames three times looks different from one that mentions it once. TF/IDF then down-weights the words that appear everywhere.
+
+[CHECK] The numbers in the table are made up for this slide.
+
+:::
+
+## Words Near Words
+
+> King − man + woman ≈ queen
+
+. . .
+
+The model learns relationships from **how words are used**, not what they mean.
+
+::: {.notes}
+
+Say: embeddings are statistical properties of text. The model has no idea what a king is. Where there are lots of examples it does well (a polite academic workshop description); where there are few it does badly (a specific question about a planning document).
+
+In 2025: a large language model produced about 30% hallucinated references in a dissertation, because two real authors in the same field are close together in the compressed space. Plausible, and false. [CHECK] Say it in general terms; don't identify a student.
+
+:::
+
+## Parking and Price
+
+The word *parking* in listing text predicts a **lower** price in London, and a **higher** price everywhere else.
+
+. . .
+
+Why?
+
+::: {.notes}
+
+[CHECK] This is from unpublished student work using Zoopla listings (word embeddings to group similar words, then a geographically weighted regression). Check what you can say about it, and attribute it.
+
+1 minute of silent writing, then 2 minutes with neighbours: "Why would parking lower the price in London?" Ask two pairs.
+
+The answer in 2025: not "Londoners hate parking". It is that Londoners value the period property, built before cars, whereas a purpose-built 1960s or 70s flat has a parking space and is further out. The word is a proxy for the type of building. Say that this is a hypothesis, not a result.
+
+Link to the question: the words don't just describe the home. They are part of how a market sorts homes and buyers.
+
+:::
+
+## Who Wrote the Data?
+
+> [...] we cannot be assured that the information people volunteer is an accurate depiction of their complete lives or just of the lives they wish to present to the social sphere. ~ @Miller:2015 [p.452]
+
+. . .
+
+For the Inside Airbnb data: **who wrote the descriptions and the reviews?**
+
+::: {.notes}
+
+Ask neighbours (1 minute of silent writing first): "Who wrote the description and who wrote the review, and what did each one want?" Two pairs, not individuals.
+
+Link to the practical: the core practical selects listings by what the text says. Whoever wrote the text decides what is findable.
+
+:::
+
+## So, Describing or Shaping?
+
+1. A pattern is a decision about what counts as a match.
+2. A word can mean different things in different places.
+3. The words you search for decide who and what you find.
+
+::: {.notes}
+
+Ask neighbours (1 minute of silent writing first): "What will you write in your briefing about how you went from text to a number?" Two pairs, not individuals.
+
+If time is short, drop "Dummy Columns, One-Hot, Bag of Words".
+
+:::
+
+# Over to You
+
+## Before You Go...
+
+Complete the sentence:
+
+&nbsp;
+
+Text about a place **is / isn't** evidence of that place, because...
+
+&nbsp;
+
+A selection will open next week's session.
+
+## Input
+
+Provide your input here: [form.menti.com/s/alaj17852nfk](https://form.menti.com/s/alaj17852nfk)
+
+![Mentimeter QR Code](./img/mentimeter-qr-week-8.png){height="500px"}
+
+::: {.notes}
+
+Mentimeter (open text) in a second browser tab. Start at minute 110 sharp, leave the code on screen, and give 3 minutes of silence before saying anything else. Say that it's anonymous, and that today opened with three of last week's.
+
+:::
+
+# Thank You {background-image="/img/web/title-slide.png" background-color="#f7eff5" background-opacity="0.2"}
+
+<h3>References</h3>
