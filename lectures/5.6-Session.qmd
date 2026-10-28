@@ -7,7 +7,7 @@ format: revealjs
 title-slide-attributes:
   data-notes: "Run sheet (120 min). This deck covers hour 1 and is run by the guest. Hour 2 is the guest's own talk (his research more generally, not the view from above: [CHECK: topic, Jon is confirming]).
 
-0--4: last week's exit tickets + the question. 4--13: predict the output (3 snippets; skip 'Where's the Bug?' if short). 13--29: reading verdict. 29--36: bridge (skip 'Deliberate Mistakes' if short). 36--40: groups + practical intro.
+0--4: last week's exit tickets + the question. 4--13: predict the output (3 snippets; skip 'Where's the Bug?' if short). 13--23: reading verdict. 23--35: bridge (the split-room vehicle exercise, then the bare `except:`; skip 'Deliberate Mistakes' if short). 35--40: groups + practical intro.
 
 40--60: Jon presents the assessments (5.5-Assessments, unchanged). 60--67: break. 67--114: Ollie's talk (hard stop at 114). 114--120: exit ticket (the last two slides of this deck). The exit ticket has moved from minute 110.
 
@@ -208,9 +208,9 @@ First, hands: who read D'Ignazio & Klein? Etherington? Both? Neither?
 
 Then fingers, **by reading**: D'Ignazio & Klein readers first, then Etherington.
 
-Then **1 minute of silent writing** ("my vote, and one passage"), *then* 4 minutes with neighbours: compare votes and find *one passage* that proves yours. Anyone who didn't read is briefed by a neighbour.
+Then **1 minute of silent writing** ("my vote, and one passage"), *then* 3 minutes with neighbours: compare votes and find *one passage* that proves yours. Anyone who didn't read is briefed by a neighbour.
 
-Plenary (about 8 min): walk the room and **ask pairs, not individuals** ("What did you two decide?"). Ask which reading only *after* they've answered. Start with D'Ignazio & Klein, because it's the one that has an answer. End on Etherington: who decided which mistakes the students are allowed to make?
+Plenary (about 4 min): walk the room and **ask pairs, not individuals** ("What did you two decide?"). Ask which reading only *after* they've answered. Start with D'Ignazio & Klein, because it's the one that has an answer. End on Etherington: who decided which mistakes the students are allowed to make?
 
 :::
 
@@ -288,9 +288,62 @@ Someone chose these categories. Who? And for what?
 
 ::: {.notes}
 
-1 minute of silent writing: "Where would *you* put a rickshaw, and why?" Then 2 minutes with neighbours. Ask two pairs, not individuals.
+Set-up (1 minute). Don't ask for answers yet: the next slide splits the room.
 
-The note from the slide: an automobile manufacturer and a government trying to implement a tax policy would make *different* choices. Same for Etherington's six concepts: another teacher might pick other ones. A class hierarchy is a decision about what counts as a thing and what counts as a special case.
+:::
+
+## Split the Room
+
+Choose your side. You are...
+
+&nbsp;
+
+1. **Vehicle makers (left):** you design, build and sell them. Group by what you make and who buys it.
+2. **Safety advocates (centre):** you count the injuries. Group by who gets hurt, and how badly.
+3. **Local government (right):** you license, tax and police them. Group by where each can go and what it needs.
+
+. . .
+
+**Alone, 1 minute:** redraw the top two levels of the tree for *your* side. Where do the e-bike, unicycle and rickshaw go?
+
+**With neighbours, 3 minutes:** agree one **attribute** that every `Vehicle` must have, and one value you would **refuse** (raise an error).
+
+::: {.notes}
+
+Split by block of seating as seen from the front, since seating is free. About 35 per side. Anyone in the wrong block is a neutral observer who picks the side they'd argue least comfortably.
+
+Tell them this is the same move as the readings: whoever draws the hierarchy decides what counts as a thing and what counts as a special case. The `__init__` question is the Python version of "what counts as an error?": a refused value is a rule somebody wrote.
+
+Walk the room. Don't answer questions about what is "correct": there isn't a correct tree.
+
+:::
+
+## Same E-Bike, Three Trees
+
+Ask pairs, **one side at a time**: *What did you two decide? Where did the e-bike go, and what would you refuse?*
+
+. . .
+
+```python
+class EBike(Vehicle):
+    def __init__(self, motor_watts, assist_cutoff_kph):
+        if motor_watts > 250 or assist_cutoff_kph > 25:
+            raise ValueError("Not a legal e-bike")
+```
+
+. . .
+
+For a maker, a 500 W motor is a product. For a regulator, it is an error. Same input, different answer.
+
+::: {.notes}
+
+Plenary (3 minutes). Take two pairs from each side, then show the code. Ask which side's rule the code is *the code version of*. [CHECK: the figures are the UK electrically assisted pedal cycle limits (250 W continuous rated power, assistance cutting out at 15.5 mph or 25 km/h). Confirm before use.]
+
+Land it on the week's question: whoever writes the class writes the definition of an error, and everyone else lives with it. Where should the people on the other two sides have been in the room when this was written?
+
+If a student says the manufacturers are just obeying the law: yes, and the line they obey was drawn by a regulator after lobbying by makers and advocates. Categories are negotiated.
+
+If asked what happens to a 500 W bike under the rule: it becomes a different class (a moped or motorcycle), with its own licence, insurance and registration. A boundary doesn't remove an object; it moves it into another category with other costs.
 
 :::
 
@@ -315,7 +368,7 @@ finally:
 
 In the video, Jon asks what you should do with input that doesn't fit: ignore it, try anyway, or tell the user? A bare `except:` that does nothing is the code version of dropping the outlier: the program carries on and nobody knows what was lost.
 
-1 minute of silent writing: "What would `except: pass` do to an Airbnb listing with a price of 0?" Then 2 minutes with neighbours. Ask two pairs.
+1 minute of silent writing: "What would `except: pass` do to an Airbnb listing with a price of 0?" Then 1 minute with neighbours. Ask one pair. This is the same point as the vehicle exercise, in code: the `except:` is the rule that decides what is an error, and this one decides nothing. About 3 minutes in all.
 
 The video's manifesto says it from the programmer's side: ignoring a bug or "just squashing it without understanding it is storing up trouble for the future".
 
