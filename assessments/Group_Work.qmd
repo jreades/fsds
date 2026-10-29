@@ -71,6 +71,7 @@ See the raw file for examples of how to hide computational output as there is co
 
 ```{python}
 #| echo: True 
+#| label: importing
 # This code will be shown, 
 # but the next block will not
 import os
@@ -80,16 +81,26 @@ import pandas as pd
 {{< include ../practicals/_data_definition.qmd >}}
 
 ```{python}
+#| echo: true
+#| label: downloading
+#| warning: true
+#| error: true
 # This code is not shown because echo was
 # set to False in the header. You should
 # think carefully about whether you want
 # or need to show any code to the reader
-# in the PDf.
+# in the PDf.
 if os.path.exists(file):
-  df = pd.read_parquet(file)
+  try:
+    df = pd.read_parquet(file)
+  except:
+    print(f"Unable to read parquet '{url}'")
 else: 
-  df = pd.read_parquet(url)
-  df.to_parquet(file)
+  try:
+    df = pd.read_parquet(url)
+    df.to_parquet(file)
+  except:
+    print(f"Unable to download parquet '{url}")
 ```
 
 An inline citation example: As discussed on @insideairbnb, there are many...
@@ -98,17 +109,19 @@ A parenthetical citation example: There are many ways to research Airbnb [see, f
 
 ```{python}
 #| output: asis
+#| label: writing-text
 # This is one way to write dynamic text. 'As is' means
 # it will interpret the result as regular Quarto markdown 
 # so the below `print` statement becomes plain text with
 # the size of the dataframe interpolated into the string.
 # When Quarto is done running the Python code what's left
 # is plain-text and that is then treated as a paragraph
-# like it would be if you'd written it in Quarto.
+# like it would be if you'd written it in Quarto.
 print(f"One of way to embed output in the text looks like this: after cleaning, we were left with {df.shape[0]:,} rows of data.")
 ```
 
 ```{python}
+#| label: writing-text-2
 # The other way is to ensure that your variables are *simple* 
 # data types that Quarto can understand. So notice below that
 # we just have a single, inline `{python} with the value of
@@ -121,6 +134,7 @@ The other way is to interpolate it directly into the sentence like this (`{pytho
 And here's a nice little chart straight into the document!
 
 ```{python}
+#| label: plotting
 ax = df.host_listings_count.plot.hist(bins=50);
 ax.set_xlim([0,500]);
 ```

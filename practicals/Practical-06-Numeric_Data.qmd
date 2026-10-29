@@ -133,7 +133,7 @@ print(f"Data frame is {df.shape[0]:,} x {df.shape[1]}")
 
 #### Answer
 
-This is a bit of a fuller answer than the question, but hopefully you'll see why we take this approach as a 'better' one that the skeleton set out in the Question. Note that you can also find reviews and calendar at the same location as the listings file (i.e. `{{< var data.ymd >}}-{city}-calendar.csv.gz`)
+This is a bit of a fuller answer than the question, but hopefully you'll see why we take this approach as a 'better' one that the skeleton set out in the Question. Note that you can also find reviews and calendar at the same location as the listings file (i.e. `{{< var data.cal >}}`)
 
 ```{python}
 # Notice that we import a specific error here
@@ -327,7 +327,7 @@ Although the code here is simple, the logic is not.
 
 You should always be looking for ways to _avoid_ hard-coding values that might change over time, especially those linked to the date of the data file.
 
-In this case you might try to work out how to make it easy to update the code to download the latest file. For instance, if the file looks like `20250910-listings.csv.gz` then I might well specify the `url` as `{date}-listings.csv.gz` or `{year}{month}{day}-listings.csv.gz` and set up the variables that I need beforehand, possibly in a separate 'configuration' file that I read in at the start.
+In this case you might try to work out how to make it easy to update the code to download the latest file. For instance, if the file looks like `{{< var data.ymd >}}{{< var data.lst >}}` then I might well specify the `url` as `{date}-{city}-listings.csv.gz` or `{year}{month}{day}-{city}-listings.csv.gz` and set up the variables that I need beforehand, possibly in a separate 'configuration' file that I read in at the start.
 
 Using parameters makes it easier to write robust code that doesn't have unwanted side-effects. Here's a common one: you write code to download and process a file named `20251111-data.csv.gz`. You save the outputs to `clean-data.csv.gz`. 
 

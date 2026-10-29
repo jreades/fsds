@@ -43,3 +43,4 @@ General lessons from working sessions, as `[LEARN:category]` entries. Machine- a
 - [LEARN:style] Speaker notes with provenance ("From LOLs: the video says…") and editorial asides → the lecturer trims them. Keep notes to what to do and say; reasons for slide choices go on a visible slide if they matter to students.
 - [LEARN:workflow] The /flip-week report held items (assumptions, [CHECK]s, render warnings, offline steps) that weren't in the plan → the plan ends with an "Open items" section that mirrors the report.
 - [LEARN:quarto] "A profile render leaves `_site` alone" → wrong: `clean` defaults to true, so any whole-project render (profiles included) empties `_site`; partial renders need `--no-clean`. `quarto publish gh-pages` runs `git rm -r .` on the branch, so the live site becomes an exact copy of `_site`.
+- [LEARN:quarto] `#| label:` with spaces/brackets → invalid cell div ID, shows as "unbalanced div fence" → use hyphenated labels (e.g. `file-location-csv`)
