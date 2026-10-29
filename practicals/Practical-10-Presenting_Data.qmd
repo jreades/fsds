@@ -11,7 +11,7 @@ filters:
 
 #### Important
 
-This practical focusses on the final topic we want to cover in *Foundations*: visualisation! You will have seen and learned quite a bit of this across the preceding weeks, but it was done in an _ad-hoc_ way, here we try to systematise things a bit.
+This practical focusses on the final topic we want to cover in *Foundations*: visualisation! You will have seen and learned quite a bit of this across the preceding weeks, but it was done in an _ad-hoc_ way, here we try to systematise things a bit. We pick up directly from Practical 9: the data you linked and saved there is what we are going to present.
 
 :::
 
@@ -19,25 +19,52 @@ This practical focusses on the final topic we want to cover in *Foundations*: vi
 
 #### &#128279; Connections
 
-Here we're trying to tidy up the loose ends. You've already worked with basic data visualisations in Seaborn and Matplotlib (including (geo)panda's `plot` function), but we want you to have a better sense of how that _works_ as part of a coherent -- if altogether rather complex and overwhelming -- approach to managing a data visualisation.
+Here we're trying to tidy up the loose ends. You've already worked with basic data visualisations in Seaborn and Matplotlib (including (geo)panda's `plot` function), but we want you to have a better sense of how that _works_ as part of a coherent -- if altogether rather complex and overwhelming -- approach to managing a data visualisation. We'll finish by automating the whole process so that a single function produces a consistent 'atlas' page for *every* London borough.
 
 :::
 
 # Preamble
 
 ```{python}
-import os
-import pandas as pd
 import geopandas as gpd
-import seaborn as sns
 
-import matplotlib.cm as cm
+from pathlib import Path
+
 import matplotlib.pyplot as plt
+from matplotlib import font_manager
 ```
 
 {{< include _cache_function.qmd >}}
 
-# Using Maplotlib
+# Where We Left Off
+
+Practical 9 finished by saving three files to `data/geo`. If one of them is missing then the cell below will tell you so, and you'll need to go back to Practical 9 and run it from the top.
+
+```{python}
+gdir = Path('data/geo')
+
+# This must match the LA set in the Preamble of Practical 9
+LA      = 'Waltham Forest'
+LA_slug = LA.lower().replace(' ','-')
+
+files = {
+    'listings': gdir / 'Listings_with_LA.geoparquet',
+    'msoas':    gdir / 'London_MSOA_Names.geoparquet',
+    'la_msoas': gdir / f'{LA_slug}-MSOA_data.geoparquet',
+}
+missing = [str(p) for p in files.values() if not p.exists()]
+if missing:
+    raise FileNotFoundError(f"Run Practical 9 first; missing: {', '.join(missing)}")
+
+# Only load the columns we need: the listings file in particular is large
+listings = gpd.read_parquet(files['listings'], columns=['listing_url','room_type','price','NAME','geometry'])
+msoas    = gpd.read_parquet(files['msoas'], columns=['MSOA11CD','MSOA11NM','Borough','Subregion','geometry'])
+msoa_gdf = gpd.read_parquet(files['la_msoas'])
+
+print(f"{LA}: {msoa_gdf.shape[0]} MSOAs; London: {msoas.shape[0]} MSOAs and {listings.shape[0]:,} listings.")
+```
+
+# Using Matplotlib
 
 ## Anatomy of a Figure
 
@@ -53,86 +80,9 @@ Nevertheless, the [core components of all matplotlib figures](https://matplotlib
 
 <img src="https://matplotlib.org/stable/_images/sphx_glr_anatomy_001.png" alt="Anatomy of a Figure" style="width:75%" />
 
-## Finding Fonts
+## Fonts
 
-I find matplotlib's use of fonts to be _profoundly_ weird. If you use `conda` and install directly on to the computer then you _might_ have access to all of your computer's fonts (though there are different *types* of fonts as well, not all of which will show up), but for most users it will be those that were installed into Podman. 
-
-### Listing Fonts
-
-::: {.callout-warning}
-
-Depending on how you are running the notebook, you may not be able to see all of the fonts available on your system. If the notebook is running in a Podman container it only has access to the fonts that are installed in the container. In other words: **don't panic if you don't see the font(s) you want.**.
-
-:::
-
-```{python}
-from matplotlib import font_manager
-from IPython.core.display import HTML
-
-flist = font_manager.findSystemFonts()
-names = []
-for fname in flist:
-    try:
-        names.append(font_manager.FontProperties(fname=fname).get_name())
-    except RuntimeError:
-        pass # Think the issue is emoji-support/colour fonts
-
-print(f"Found {len(set(names))} fonts.")
-
-def make_html(fontname):
-    return f"<p><span style='font-family: {fontname}; font-size: 18px;'>{fontname}</p>"
-
-code = "\n".join([make_html(font) for font in sorted(set(names)) if not font.startswith('.')])
-
-HTML("<div style='column-count: 2;'>{}</div>".format(code))
-```
-
-### Using Fontconfig
-
-`fontconfig` is the base Linux utility for managing fonts. We can list font using `fc-list` and then a set of 'switches' determining the kind of information we want back. Since fontconfig doesn't exist on OSX or Windows, you'll need to do some more investigating and poking around to get these details on a `conda` install (I'll show an option further down)...
-
-Here we ask fontconfig to format the output so that we only get the first part of the family name, and then we pipe (recall `|` sends output from one utility to another!) the output of that to `sort`, which sorts the output, and `uniq` which removes duplicates (which there will be because there are **bold**, *italic*, small-caps, etc. versions of each font). To make better sense of this you can always try playing around with all three steps in the output below!
-
-```{python}
-fonts = ! fc-list --format="%{family[0]}\n" | sort | uniq
-print(fonts[:5])
-```
-
-::: {.callout-tip}
-#### Capturing output
-
-Notice that we're able to capture the output of an external application (called via the Terminal) with `fonts = ! ...`. This can be useful when something is easy to do on the command line but hard to do in Python.
-
-:::
-
-The below option also pipes output from fonctconfig, but to the `grep` utility which checks each line for the character sequence `Liberation`. Now we're asking fontconfig to include `style` details which will relate to both weight (regular, bold, extra bold, light, etc.) and italic, bold, small caps, etc.
-
-```{python}
-fonts = ! fc-list : family style | grep "Liberation"
-print(sorted(fonts)[:5])
-```
-
-You can find more examples [here](https://www.geeksforgeeks.org/fc-list-command-in-linux-with-examples/), a more detailed set of instructions [here](https://www.freedesktop.org/software/fontconfig/fontconfig-user.html), and even information about (for example) [supported languages](https://thottingal.in/blog/2016/03/04/fontconfig-language-matching/) based on [RFC 3066](http://www.i18nguy.com/unicode/language-identifiers.html).
-
-Here are the languages supported by the Ubuntu Light font:
-
-```{python}
-langs = ! fc-list "Liberation Mono" : lang
-print(sorted(langs)[:5], "...")
-```
-
-Here are the monospace fonts installed: 
-
-```{python}
-monos = ! fc-list :spacing=mono : family | sort | uniq
-print(sorted(monos)[:5], "...")
-```
-
-### Fontdicts
-
-Now that we know what's available, the next step is to set up some useful defaults that we can re-use across multiple plots to ensure consistency of output. The format for specifying fonts on a per-figure basis is a dictionary, so where you see `fontdict` in the `matplotlib` [documentation](https://matplotlib.org/stable/gallery/text_labels_and_annotations/text_fontdict.html) the following should work:
-
-Here's the example:
+I find matplotlib's use of fonts to be _profoundly_ weird. The format for specifying fonts on a per-figure basis is a dictionary (a 'fontdict'), so where you see `fontdict` in the `matplotlib` [documentation](https://matplotlib.org/stable/gallery/text_labels_and_annotations/text_fontdict.html) the following should work:
 
 ```{python}
 #| eval: False
@@ -143,39 +93,32 @@ font = {'family': 'serif',
         }
 ```
 
+::: {.callout-warning}
+
+Depending on how you are running the notebook, you may not have access to all of the fonts on your computer: if the notebook is running in a Podman container it only has the fonts that are installed in the container. In other words: **don't panic if you don't see the font(s) you want.** The code below picks the first font from a list that is actually available (see the [appendix](#sec-fonts) if you want to explore what is installed).
+
+:::
+
+We are going to set a 'title font' (`tfont`), a 'body copy font' (`bfont`), and an 'axis font' (`afont`) to re-use across multiple plots to ensure consistency of output. You can pick another font and see what happens.
+
 ```{python}
-ff='Liberation Sans'
+available = {f.name for f in font_manager.fontManager.ttflist}
+ff = next((f for f in ['Liberation Sans','Helvetica','Arial'] if f in available), 'DejaVu Sans')
+print(f"Using the {ff} font.")
+
 tfont = {'fontname':ff}
 bfont = {'fontname':ff, 'weight':'bold', 'horizontalalignment':'left'}
 afont = {'fontname':ff}
 ```
 
-I am setting the 'title font' (`tfont`) and 'body copy font' (`bfont`) and 'axis font' (`afont`) here to use in the output below. You can pick another font and see what happens. 
+## The Defaults
 
-### 2.3: Using Fonts
-
-At this point we're going to work towards a kind of 'atlas' that would make it easy to compare some features for different London boroughs. I basically implemented a the basic `matplotlib` version of QGIS' Atlas functionality.
-
-```{python}
-# This must match the LA set in the Preamble of Practical 9
-LA = 'Waltham Forest'
-LA_slug = LA.lower().replace(' ','-')
-```
-
-```{python}
-msoa_gdf = gpd.read_parquet(os.path.join('data','geo',f'{LA_slug}-MSOA_data.geoparquet'))
-```
+At this point we're going to work towards a kind of 'atlas' that would make it easy to compare some features for different London boroughs (I basically implemented a the basic `matplotlib` version of QGIS' Atlas functionality). First, we pull out the two columns of the data frame from Practical 9 that we want to map:
 
 ```{python}
 median_gdf  = msoa_gdf[['MSOA11CD','median_price','geometry']]
 listing_gdf = msoa_gdf[['MSOA11CD','listing_count','geometry']]
 ```
-
-```{python}
-import matplotlib.pyplot as plt
-```
-
-### The Defaults
 
 Here is a demonstration of some of the ways you can adjust features in a Python matplotlib plot. I'm not suggesting either of these is a _good_ output, but that's not the point! The idea is to see the various ways you can tweak a plot... And notice that we've not yet changed any fonts. And it shows.
 
@@ -190,7 +133,7 @@ ax2 = axes[1]
 # Left plot is the median price
 median_gdf.plot(column='median_price', ax=ax1, legend=True, cmap='viridis')
 ax1.set_title("Median Price per MSOA");
-# Turn off the frame, one side of the plat at a time
+# Turn off the frame, one side of the plot at a time
 ax1.spines['top'].set_visible(False)
 ax1.spines['right'].set_visible(False)
 ax1.spines['bottom'].set_visible(False)
@@ -200,27 +143,22 @@ ax1.set_xlabel("Easting");
 ax1.set_ylabel("Northing");
 
 # Right plot is the number of listings; note
-# here the use of both zorder (which is the 
+# here the use of both zorder (which is the
 # 'stacking order' of elements on the plot, and
-# the legend_kwds (keywords) to change the 
+# the legend_kwds (keywords) to change the
 # orientation of the plot to horizontal
-listing_gdf.plot(column='listing_count', ax=ax2, legend=True, cmap='plasma', zorder=1, 
+listing_gdf.plot(column='listing_count', ax=ax2, legend=True, cmap='plasma', zorder=1,
                  legend_kwds={"orientation": "horizontal"})
 ax2.set_title("Count of Listings per MSOA");
 # Set a background colour for the plot
 ax2.set_facecolor((.4, .4, .4, .2))
 # Add grid lines and set their zorder to
 # below that of the data on the plot
-plt.grid(visible=True, which='major', axis='both', color='w', linestyle='-', linewidth=2, zorder=0)
+ax2.grid(visible=True, which='major', axis='both', color='w', linestyle='-', linewidth=2, zorder=0)
 ax2.set_axisbelow(True)
 
-# This is equivalent to the ax1.spines... 
-# above, but if you use it here you lose
-# the background to the plot as well!
-#plt.gca().set(frame_on=False)
-
-# Remove the labels on the ticks of the 
-# axes (meaning: remove the numbers on 
+# Remove the labels on the ticks of the
+# axes (meaning: remove the numbers on
 # x- and y-axes).
 ax2.set_xticklabels([])
 ax2.set_yticklabels([])
@@ -230,107 +168,318 @@ ax2.set_xlabel("Easting");
 ax2.set_ylabel("Northing");
 ```
 
-### Improving on Defaults
+## Improving on Defaults
+
+Now we apply the fonts. Notice the `**tfont` below: this is a way of expanding the `tfont` dictionary into a set of keyword parameters to a function call. We do the same for the titles on each map, but passing a different fontdict.
+
+:::: {.qna}
+
+#### Question
+
+```{python}
+#| eval: False
+f,axes = plt.subplots(1,2,figsize=(8,6))
+
+median_gdf.plot(column='median_price', ax=axes[0], legend=True, cmap='viridis')
+listing_gdf.plot(column='listing_count', ax=axes[1], legend=True, cmap='plasma')
+for ax in axes:
+    ax.???('off')
+
+# The 'super-title' is no longer centred (x=0.025) but left-aligned
+f.suptitle(LA, x=0.025, ha='left', size=24, **???)
+axes[0].set_title('Median Price', size=20, **???)
+axes[1].set_title('Count', size=20, **???)
+
+# And add a short piece of text below the borough
+plt.figtext(x=0.88, y=0.957, linespacing=1.4, va='top', ha='right', size=12,
+            s=f"Total listings: {listing_gdf['listing_count'].sum():,.0f}  Median price: ${median_gdf['median_price'].median():,.2f}", **bfont);
+f
+```
+
+#### Answer
 
 ```{python}
 f,axes = plt.subplots(1,2,figsize=(8,6))
 
-# Set up the plots
 median_gdf.plot(column='median_price', ax=axes[0], legend=True, cmap='viridis')
 listing_gdf.plot(column='listing_count', ax=axes[1], legend=True, cmap='plasma')
 for ax in axes:
     ax.axis('off')
-    # Note that here, set_facebolor doesn't work,
-    # presumably because the axis is 'off'
-    ax.set_facecolor((.4, .4, .4, .2))
 
-# Add the 'super-title', but notice that it is not 
-# longer either centered (x=0.025) or centre-aligned
-# (horizonal alignment=left). We also see **tfont, which
-# is a way of expading the 'tfont' dictionary into a 
-# set of parameters to a function call. We do the same
-# for the titles on each figure, but passing a different
-# fontdict.
+# The 'super-title' is no longer centred (x=0.025) but left-aligned
 f.suptitle(LA, x=0.025, ha='left', size=24, **tfont)
 axes[0].set_title('Median Price', size=20, **afont)
 axes[1].set_title('Count', size=20, **afont)
 
 # And add a short piece of text below the borough
-plt.figtext(x=0.88, y=0.957, linespacing=1.4, va='top', ha='right', size=12, 
+plt.figtext(x=0.88, y=0.957, linespacing=1.4, va='top', ha='right', size=12,
             s=f"Total listings: {listing_gdf['listing_count'].sum():,.0f}  Median price: ${median_gdf['median_price'].median():,.2f}", **bfont);
 f
 ```
 
+::::
+
 # Create an Atlas
 
-## Adding Picture-in-Picture 
+## Adding Picture-in-Picture
 
 We're now going to emulate a _bit_ of QGIS' Atlas function by creating two subplots and then adding a _third_ plot afterwards that shows where the borough is.
 
 ```{python}
+spath = 'https://github.com/jreades/fsds/blob/master/data/src/' # source path
+boros = gpd.read_file( cache_data(spath+'Boroughs.gpkg?raw=true', gdir) )
+```
+
+:::: {.qna}
+
+#### Question
+
+```{python}
+#| eval: False
 f,axes = plt.subplots(1,3,gridspec_kw={'width_ratios':[1,4,4]}, figsize=(8,6))
 
-# Plot 0 is basically being used as a 'spacer' 
-# as you'll see below
+# Plot 0 is basically being used as a 'spacer'
 axes[0].axis('off')
 
-# Plot 1 is the median price
 median_gdf.plot(column='median_price', ax=axes[1], legend=True, cmap='viridis')
 axes[1].set_title('Median Price', size=20, **afont)
-
-# Plot 2 is the count of listings
 listing_gdf.plot(column='listing_count', ax=axes[2], legend=True, cmap='plasma')
 axes[2].set_title('Count', size=20, **afont)
 
-# For plots 1 and 2... if you were doing this a lot it could be a function!
 for ax in axes[1:]:
-    ax.set_facecolor((.9, .9, .9, .5))
-    ax.grid(visible=True, which='major', axis='both', color='w', linestyle='-', linewidth=2, zorder=0)
-    ax.set_axisbelow(True)
-    ax.spines['top'].set_visible(False)
-    ax.spines['bottom'].set_visible(False)
-    ax.spines['left'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-    ax.set_xticklabels([])
-    ax.set_yticklabels([])
-    ax.tick_params(axis='both', which='both', length=0)
+    ax.axis('off')
 
-# Add a *third* chart that we use as a kind of 'PiP'
-# to show which borough we're talking about. The 
-# add_axes call is here taking information about the
-# positioning and size of the additional figure.
-# Disable ax2.axis('off') if you want to see the
-# figure in full.
+# Add a *third* chart that we use as a kind of 'PiP' to show which borough
+# we're talking about. The add_axes call takes the [left, bottom, width,
+# height] of the new chart as fractions of the whole figure.
 ax3 = f.add_axes([0.015, 0.7, 0.2, 0.2])
-spath = 'https://github.com/jreades/fsds/blob/master/data/src/' # source path
-ddir  = os.path.join('data','geo') # destination directory
-boros = gpd.read_file( cache_data(spath+'Boroughs.gpkg?raw=true', ddir) )
+boros.plot(facecolor='lightgrey', edgecolor='w', linewidth=1, ax=ax3)
+boros[boros.NAME==???].plot(facecolor='r', edgecolor='none', hatch='///', ax=ax3)
+ax3.axis('off')
+
+f.suptitle(LA, x=0.025, ha='left', size=24, **tfont)
+plt.figtext(x=0.025, y=0.65, s=f"Total listings: {listing_gdf['listing_count'].sum():,.0f}", size=12, **bfont);
+```
+
+#### Answer
+
+```{python}
+f,axes = plt.subplots(1,3,gridspec_kw={'width_ratios':[1,4,4]}, figsize=(8,6))
+
+# Plot 0 is basically being used as a 'spacer'
+axes[0].axis('off')
+
+median_gdf.plot(column='median_price', ax=axes[1], legend=True, cmap='viridis')
+axes[1].set_title('Median Price', size=20, **afont)
+listing_gdf.plot(column='listing_count', ax=axes[2], legend=True, cmap='plasma')
+axes[2].set_title('Count', size=20, **afont)
+
+for ax in axes[1:]:
+    ax.axis('off')
+
+# Add a *third* chart that we use as a kind of 'PiP' to show which borough
+# we're talking about. The add_axes call takes the [left, bottom, width,
+# height] of the new chart as fractions of the whole figure.
+ax3 = f.add_axes([0.015, 0.7, 0.2, 0.2])
 boros.plot(facecolor='lightgrey', edgecolor='w', linewidth=1, ax=ax3)
 boros[boros.NAME==LA].plot(facecolor='r', edgecolor='none', hatch='///', ax=ax3)
 ax3.axis('off')
 
-# Add the 'super-title', but notice that it is not 
-# longer either centered (x=0.025) or centre-aligned
-# (horizonal alignment=left). We also see **tfont, which
-# is a way of expanding the 'tfont' dictionary into a 
-# set of parameters to a function call. We do the same
-# for the titles on each figure, but passing a different
-# fontdict.
 f.suptitle(LA, x=0.025, ha='left', size=24, **tfont)
-
-# And add a short piece of text below the borough
 plt.figtext(x=0.025, y=0.65, s=f"Total listings: {listing_gdf['listing_count'].sum():,.0f}", size=12, **bfont);
+```
+
+::::
+
+## Data for Every Borough
+
+An atlas needs a page for *every* borough, and each page needs its own data. So we'll go back to the two London-wide files from Practical 9 and do for all of London what we did for one borough there: join each listing to its MSOA (a spatial join), then aggregate the listings by MSOA.
+
+```{python}
+joined = gpd.sjoin(listings[['price','geometry']], msoas[['MSOA11CD','geometry']], predicate='within', how='inner')
+
+agg = joined.groupby('MSOA11CD').agg(
+    listing_count = ('price','count'),
+    median_price  = ('price','median')
+).reset_index()
+
+# Left join so that MSOAs without any listings are kept (as zeros/NaN)
+london = msoas[['MSOA11CD','MSOA11NM','Borough','Subregion','geometry']].merge(agg, on='MSOA11CD', how='left')
+london['listing_count'] = london.listing_count.fillna(0)
+
+print(f"{london.shape[0]:,} MSOAs in {london.Borough.nunique()} boroughs.")
+london.head(3)
+```
+
+::: {.callout-tip}
+
+#### Why not use the borough in the join?
+
+We join on the `MSOA11CD` and not on the borough because an MSOA is the unit that we want to *map*. The borough is then just a way of splitting the result up into pages.
+
+:::
+
+Now split the result up by borough and save one file for each. The file names follow the same pattern as Practical 9 (`<borough-slug>-MSOA_data.geoparquet`) so that you can find them again.
+
+:::: {.qna}
+
+#### Question
+
+```{python}
+#| eval: False
+atlas_dir = gdir / 'atlas'
+atlas_dir.mkdir(parents=True, exist_ok=True)
+
+for borough, gdf in london.groupby(???):
+    slug = borough.lower().replace(' ','-')
+    gdf.to_parquet(???)
+
+print(f"Saved {len(list(atlas_dir.glob('*.geoparquet')))} files.")
+```
+
+#### Answer
+
+```{python}
+atlas_dir = gdir / 'atlas'
+atlas_dir.mkdir(parents=True, exist_ok=True)
+
+for borough, gdf in london.groupby('Borough'):
+    slug = borough.lower().replace(' ','-')
+    gdf.to_parquet(atlas_dir / f'{slug}-MSOA_data.geoparquet')
+
+print(f"Saved {len(list(atlas_dir.glob('*.geoparquet')))} files.")
+```
+
+::::
+
+## A Function for One Page
+
+If you were doing this a lot it should be a function, and there is one more design decision to make first: **consistent colours**. If each borough chooses its own colour range then bright yellow means one thing in Waltham Forest and something quite different in Westminster, so we work out the minimum and maximum for *London* once and pass them to every page.
+
+```{python}
+scale = {
+    'median_price':  (london.median_price.min(), london.median_price.max()),
+    'listing_count': (0, london.listing_count.max()),
+}
+scale
+```
+
+:::: {.qna}
+
+#### Question
+
+```{python}
+#| eval: False
+def atlas_page(la:str, boros:gpd.GeoDataFrame, scale:dict, outdir:Path):
+    slug = la.lower().replace(' ','-')
+    gdf  = gpd.read_parquet(atlas_dir / f'{slug}-MSOA_data.geoparquet')
+
+    f,axes = plt.subplots(1,3,gridspec_kw={'width_ratios':[1,4,4]}, figsize=(8,6))
+    axes[0].axis('off')
+
+    for ax, col, cmap, title in zip(axes[1:], ['median_price','listing_count'],
+                                    ['viridis','plasma'], ['Median Price','Count']):
+        vmin, vmax = scale[???]
+        gdf.plot(column=col, ax=ax, legend=True, cmap=cmap, vmin=vmin, vmax=vmax)
+        ax.set_title(title, size=20, **afont)
+        ax.axis('off')
+
+    ax3 = f.add_axes([0.015, 0.7, 0.2, 0.2])
+    boros.plot(facecolor='lightgrey', edgecolor='w', linewidth=1, ax=ax3)
+    boros[boros.NAME==???].plot(facecolor='r', edgecolor='none', hatch='///', ax=ax3)
+    ax3.axis('off')
+
+    f.suptitle(la, x=0.025, ha='left', size=24, **tfont)
+    plt.figtext(x=0.025, y=0.65, s=f"Total listings: {gdf['listing_count'].sum():,.0f}", size=12, **bfont)
+
+    f.savefig(outdir / f'{slug}.png', dpi=150, bbox_inches='tight')
+    plt.close(f) # Otherwise 33 figures stay open in memory
+```
+
+#### Answer
+
+```{python}
+def atlas_page(la:str, boros:gpd.GeoDataFrame, scale:dict, outdir:Path):
+    slug = la.lower().replace(' ','-')
+    gdf  = gpd.read_parquet(atlas_dir / f'{slug}-MSOA_data.geoparquet')
+
+    f,axes = plt.subplots(1,3,gridspec_kw={'width_ratios':[1,4,4]}, figsize=(8,6))
+    axes[0].axis('off')
+
+    for ax, col, cmap, title in zip(axes[1:], ['median_price','listing_count'],
+                                    ['viridis','plasma'], ['Median Price','Count']):
+        vmin, vmax = scale[col]
+        gdf.plot(column=col, ax=ax, legend=True, cmap=cmap, vmin=vmin, vmax=vmax)
+        ax.set_title(title, size=20, **afont)
+        ax.axis('off')
+
+    ax3 = f.add_axes([0.015, 0.7, 0.2, 0.2])
+    boros.plot(facecolor='lightgrey', edgecolor='w', linewidth=1, ax=ax3)
+    boros[boros.NAME==la].plot(facecolor='r', edgecolor='none', hatch='///', ax=ax3)
+    ax3.axis('off')
+
+    f.suptitle(la, x=0.025, ha='left', size=24, **tfont)
+    plt.figtext(x=0.025, y=0.65, s=f"Total listings: {gdf['listing_count'].sum():,.0f}", size=12, **bfont)
+
+    f.savefig(outdir / f'{slug}.png', dpi=150, bbox_inches='tight')
+    plt.close(f) # Otherwise 33 figures stay open in memory
+```
+
+::::
+
+## Automate All the Things
+
+Now the function does the work. Test it on one borough first and then loop over the rest:
+
+:::: {.qna}
+
+#### Question
+
+```{python}
+#| eval: False
+img_dir = Path('data/atlas_img')
+img_dir.mkdir(parents=True, exist_ok=True)
+
+atlas_page(LA, boros, scale, img_dir)
+
+for la in sorted(london.???.unique()):
+    atlas_page(la, boros, scale, img_dir)
+
+print(f"Saved {len(list(img_dir.glob('*.png')))} pages to {img_dir}.")
+```
+
+#### Answer
+
+```{python}
+img_dir = Path('data/atlas_img')
+img_dir.mkdir(parents=True, exist_ok=True)
+
+atlas_page(LA, boros, scale, img_dir)
+
+for la in sorted(london.Borough.unique()):
+    atlas_page(la, boros, scale, img_dir)
+
+print(f"Saved {len(list(img_dir.glob('*.png')))} pages to {img_dir}.")
+```
+
+::::
+
+Here is one of the pages (open the others from `data/atlas_img`):
+
+```{python}
+from IPython.display import Image
+Image(img_dir / f'{LA_slug}.png', width=600)
 ```
 
 ## Bonus Achievement Unlocked!
 
-If you have the time and inclination, see if you can convert the above to an _actual_ atlas output: 
+If you have the time and inclination, here are some ways to improve the atlas:
 
-1. You'll want to turn this plot into a function so as to be able to produce (and save) the map for _every_ borough. 
-2. You'll even need to parameterise the filename so that you save to _different_ PNG files as well as going back to see how we generated the listing and pricing data frames for the Local Authority... 
-3. And you'll *also* need to make sure that you ensure a consistent colour bar (for all of London, because the median price and number of listings will vary rather a lot by LA)
-4. Then there's the placement of the PiP for some boroughs with long names
-5. And finally, you might consider adding some more text to atlas--maybe pull some content from Wikipedia using Beautiful Soup (`bs4`)?
+1. The placement of the picture-in-picture (and the title) needs a rethink for boroughs with long names, such as 'Barking and Dagenham' or 'Kensington and Chelsea'.
+2. Median price is very skewed by a few expensive MSOAs. How would a different colour scale (quantiles? a log scale?) change the pages? Remember that it still needs to be the *same* scale for every borough.
+3. MSOAs with no listings are currently drawn as empty. Could you mark them in a way that explains why they are empty?
+4. Add some more text to each page: maybe pull some content from Wikipedia using Beautiful Soup (`bs4`)?
+5. Combine the pages into a single PDF.
 
 # Think Text!
 
@@ -347,49 +496,36 @@ Basically, bookmark [this blog post](https://blog.datawrapper.de/text-in-data-vi
 
 # Using Bokeh
 
-::: {.callout-warning}
-#### Bokeh in Jupyter
-
-This last section currently doesn't seem to work since I updated the course materials for the current year. So you *could* check out the old image `jreades/sds:2024-silicon` (or `-intel`) but it's up to you. If I work out why this is happening I will fix it and either update the code or update the image.
-
-:::
-
-Bokeh can do a *lot* more than this, but I just wanted to give you a flavour of the other visualisation tools supported by Python. This obviously works *very* differently in setup and use.
+Bokeh can do a *lot* more than this, but I just wanted to give you a flavour of the other visualisation tools supported by Python. This obviously works *very* differently in setup and use: instead of a static image we get an interactive chart that you can hover over, pan, and zoom.
 
 ```{python}
-gdf_la = gpd.read_parquet(os.path.join('data','geo','Listings_with_LA.geoparquet'))
-msoas  = gpd.read_parquet(os.path.join('data','geo','London_MSOA_Names.geoparquet'))
+from bokeh.io import output_notebook, show
+from bokeh.plotting import figure
+from bokeh.models import ColumnDataSource, GeoJSONDataSource, LinearColorMapper, ColorBar, HoverTool
+from bokeh.palettes import brewer
+
+output_notebook()
 ```
 
 ## For a Chart
 
-Group the listings by Borough and Room Type, and aggregate by median price, also producing a count variable for the number of listings of each type in each Borough.
+Group the listings by Room Type, and aggregate by median price, also producing a count variable for the number of listings of each type in the borough.
 
 ```{python}
-la_tots = gdf_la[gdf_la.NAME==LA].groupby(by='room_type', observed=False).agg(
+la_tots = listings[listings.NAME==LA].groupby(by='room_type', observed=False).agg(
                             {'price':'median', 'listing_url':'count'}
                         ).reset_index().rename(columns={'listing_url':'count'})
 la_tots
 ```
 
 ```{python}
-from bokeh.io import output_notebook, show
-from bokeh.plotting import figure
-from bokeh.models import ColumnDataSource, HoverTool
-from bokeh.palettes import Spectral4
-from bokeh.models import CustomJS, Dropdown
-
-output_notebook()
-
 room_types = la_tots.room_type.to_list()
-prices     = la_tots.price.to_list()
-counts     = la_tots['count'].to_list()
 
 # Add hover tooltip
 source = ColumnDataSource(data=dict(
-    rt=room_types,
-    count=counts,
-    price=prices,
+    rt    = room_types,
+    count = la_tots['count'].to_list(),
+    price = la_tots.price.to_list(),
 ))
 
 TOOLTIPS = [
@@ -402,7 +538,7 @@ p = figure(x_range=room_types, height=300, tooltips=TOOLTIPS,
            title=f"Median Price by Room Type in {LA}",
            toolbar_location=None, tools="")
 
-p.vbar(x='rt', top='count', width=0.9, source=source)
+p.vbar(x='rt', top='price', width=0.9, source=source)
 p.xgrid.grid_line_color = None
 p.y_range.start = 0
 
@@ -411,100 +547,59 @@ show(p)
 
 ## For a Map
 
-This is not the prettiest code, but it should work...
-
-```{python}
-from bokeh.plotting import figure
-
-from bokeh.io import output_file, show, output_notebook, push_notebook, export_png
-from bokeh.models import ColumnDataSource, GeoJSONDataSource, LinearColorMapper, ColorBar, HoverTool
-from bokeh.plotting import figure
-from bokeh.palettes import brewer
-
-#output_notebook()
-```
-
-```{python}
-msoadf = gpd.sjoin(
-            gdf_la[gdf_la.NAME==LA].reset_index(), 
-            msoas[msoas.Borough==LA].drop(columns=['index_right']), predicate='within')
-```
-
-```{python}
-msoagrdf = msoadf.groupby('MSOA11NM').agg({'price':['median','count']}).reset_index()
-msoagrdf.columns=['msoa11nm','median','count']
-```
-
-I cobbled the mapping functions below together from two tutorials I found online ([this one](https://github.com/dmnfarrell/teaching/blob/master/geo/maps_python.ipynb) and [this one](https://widdowquinn.github.io/Teaching-Data-Visualisation/exercises/interactive_bokeh_map/interactive_bokeh_map.html)). As you can see, this is a very different approach to mapping data, but it has clear benefits for exploratory purposes and produces fast, interactive maps... and I've not even added selection and filtering tools!
+This is not the prettiest code, but it should work... Bokeh wants GeoJSON, so the function below converts a GeoDataFrame and then builds the map. It was cobbled together from two tutorials ([this one](https://github.com/dmnfarrell/teaching/blob/master/geo/maps_python.ipynb) and [this one](https://widdowquinn.github.io/Teaching-Data-Visualisation/exercises/interactive_bokeh_map/interactive_bokeh_map.html)). As you can see, this is a very different approach to mapping data, but it has clear benefits for exploratory purposes and produces fast, interactive maps... and I've not even added selection and filtering tools!
 
 ```{python}
 import json
 
-def get_geodatasource(gdf):    
-    """Get getjsondatasource from geopandas object"""
-    json_data = json.dumps(json.loads(gdf.to_json()))
-    return GeoJSONDataSource(geojson = json_data)
+def get_geodatasource(gdf):
+    """Get a GeoJSONDataSource from a GeoPandas object"""
+    return GeoJSONDataSource(geojson=json.dumps(json.loads(gdf.to_json())))
 
-def bokeh_plot_map(gdf, column=None, title=''):
-    """Plot bokeh map from GeoJSONDataSource """
+def bokeh_plot_map(gdf, column, title=''):
+    """Plot a Bokeh map of one column of a GeoDataFrame"""
 
     geosource = get_geodatasource(gdf)
-    palette = brewer['OrRd'][8]
-    palette = palette[::-1]
-    vals = gdf[column]
-    
-    #Instantiate LinearColorMapper that linearly maps numbers in a range, into a sequence of colors.
-    color_mapper = LinearColorMapper(palette=palette, low=vals.min(), high=vals.max())
-    color_bar = ColorBar(color_mapper=color_mapper, label_standoff=8, width=500, height=10,
-                         location=(0,0), orientation='horizontal')
+    palette   = brewer['OrRd'][8][::-1]
+    vals      = gdf[column]
 
-    tools = 'wheel_zoom,pan,reset,hover'
-    
-    p = figure(title = title, height=700, width=850, toolbar_location='right', tools=tools)
+    # LinearColorMapper maps numbers in a range onto a sequence of colours
+    color_mapper = LinearColorMapper(palette=palette, low=vals.min(), high=vals.max())
+    color_bar    = ColorBar(color_mapper=color_mapper, label_standoff=8, width=500, height=10,
+                            location=(0,0), orientation='horizontal')
+
+    p = figure(title=title, height=700, width=850, toolbar_location='right',
+               tools='wheel_zoom,pan,reset,hover')
     p.add_tile("CartoDB Positron", retina=True)
     p.xgrid.grid_line_color = None
     p.ygrid.grid_line_color = None
-    
+
     # Add patch renderer to figure
-    p.patches('xs','ys', source=geosource, fill_alpha=0.5, line_width=0.5, line_color='white',  
-              fill_color={'field' :column , 'transform': color_mapper})
-    
-    # Specify figure layout.
+    p.patches('xs','ys', source=geosource, fill_alpha=0.5, line_width=0.5, line_color='white',
+              fill_color={'field':column, 'transform':color_mapper})
     p.add_layout(color_bar, 'below')
-    
+
     # Add hover
     hover = p.select_one(HoverTool)
     hover.point_policy = "follow_mouse"
     hover.tooltips = [("Borough", "@Borough"),
-                      ("Neighbourhood", "@msoa11hclnm"),
-                      ("Count of Listings", "@count"),
-                      ("Median Price", "$@median")]
-    
+                      ("MSOA", "@MSOA11NM"),
+                      ("Count of Listings", "@listing_count"),
+                      ("Median Price", "$@median_price")]
     return p
 ```
 
-Reproject to Web Mercator:
+The tile map that sits underneath the data is in Web Mercator (EPSG:3857), so we need to reproject the data first. And that's where the per-borough data from above comes in handy:
 
 ```{python}
-msoa_gdf = pd.merge(msoagrdf, msoas, left_on='msoa11nm', right_on='MSOA11NM', how='inner')
-msoa_gdf = msoa_gdf.set_geometry('geometry').set_crs('epsg:27700')
-```
-
-```{python}
-msoageo = msoa_gdf.to_crs('epsg:3785')
-msoageo.total_bounds
+la_msoas = london[london.Borough==LA].to_crs('epsg:3857')
+la_msoas.total_bounds
 ```
 
 And map it!
 
 ```{python}
-# Need to drop the right geometry column
-# as Bokeh doesn't know how to handle two
-# and tries to 'serialise' the second geom.
-p = bokeh_plot_map(msoageo.drop(columns=['geometry_right','index_right']), 'median', title=f'MSOA-Level Activity in {LA}')
-
-handle = show(p, notebook_handle=True)
-push_notebook(handle=handle)
+show(bokeh_plot_map(la_msoas, 'median_price', title=f'MSOA-Level Activity in {LA}'))
 ```
 
 ::: {.callout-note}
@@ -514,3 +609,54 @@ push_notebook(handle=handle)
 And that's it. That's all she wrote! You've now covered in <10 weeks what many people might take 10 _months_ to cover. So do not feel like either: 1) you know it all; or 2) you know nothing. You have learned a _lot_, but it's probably just enough to see how much you _don't_ know. And *that* is the start of wisdom. Good luck, young Python-master!
 
 :::
+
+# Appendix: Finding Fonts {#sec-fonts}
+
+If you use `conda` and install directly on to the computer then you _might_ have access to all of your computer's fonts (though there are different *types* of fonts as well, not all of which will show up), but for most users it will be those that were installed into Podman. Here are some ways to see what you have.
+
+## Listing Fonts in Matplotlib
+
+```{python}
+from IPython.display import HTML
+
+names = sorted({f.name for f in font_manager.fontManager.ttflist if not f.name.startswith('.')})
+print(f"Found {len(names)} fonts.")
+
+code = "\n".join([f"<p><span style='font-family: {name}; font-size: 18px;'>{name}</span></p>" for name in names])
+HTML("<div style='column-count: 2;'>{}</div>".format(code))
+```
+
+## Using Fontconfig
+
+`fontconfig` is the base Linux utility for managing fonts. We can list fonts using `fc-list` and then a set of 'switches' determining the kind of information we want back. Since fontconfig doesn't exist on OSX or Windows you may not be able to run these.
+
+Here we ask fontconfig to format the output so that we only get the first part of the family name, and then we pipe (recall `|` sends output from one utility to another!) the output of that to `sort`, which sorts the output, and `uniq` which removes duplicates (which there will be because there are **bold**, *italic*, small-caps, etc. versions of each font). To make better sense of this you can always try playing around with all three steps!
+
+```{python}
+#| eval: false
+fonts = ! fc-list --format="%{family[0]}\n" | sort | uniq
+print(fonts[:5])
+```
+
+::: {.callout-tip}
+#### Capturing output
+
+Notice that we're able to capture the output of an external application (called via the Terminal) with `fonts = ! ...`. This can be useful when something is easy to do on the command line but hard to do in Python.
+
+:::
+
+The next option also pipes output from fontconfig, but to the `grep` utility which checks each line for the character sequence `Liberation`. Now we're asking fontconfig to include `style` details which will relate to both weight (regular, bold, extra bold, light, etc.) and italic, bold, small caps, etc. Then we ask for the languages supported by one font, and the monospace fonts installed:
+
+```{python}
+#| eval: false
+fonts = ! fc-list : family style | grep "Liberation"
+print(sorted(fonts)[:5])
+
+langs = ! fc-list "Liberation Mono" : lang
+print(sorted(langs)[:5], "...")
+
+monos = ! fc-list :spacing=mono : family | sort | uniq
+print(sorted(monos)[:5], "...")
+```
+
+You can find more examples [here](https://www.geeksforgeeks.org/fc-list-command-in-linux-with-examples/), a more detailed set of instructions [here](https://www.freedesktop.org/software/fontconfig/fontconfig-user.html), and even information about (for example) [supported languages](https://thottingal.in/blog/2016/03/04/fontconfig-language-matching/) based on [RFC 3066](http://www.i18nguy.com/unicode/language-identifiers.html).
