@@ -51,7 +51,14 @@ def timing(func):
 {{< include _cache_function.qmd >}}
 
 ```{python}
-ddir     = Path('data/clean')
+ddir     = Path('data/clean') # non-spatial data
+gdir     = Path('data/geo')   # spatial data
+
+# The Local Authority we work with from here on; change it to
+# analyse a different borough (Practical 10 expects the same one).
+LA       = 'Waltham Forest'
+LA_slug  = LA.lower().replace(' ','-')
+
 pqt      = url.replace('.geo','.')
 ```
 
@@ -698,7 +705,7 @@ print(f"msoa_nms has {msoa_nms.shape[0]:,} rows and {msoa_nms.shape[1]:,} column
 We also need some geodata:
 
 ```{python}
-msoa_gpkg = gpd.read_file( cache_data(f'{host}/~jreades/data/MSOA-2011.gpkg', ddir) ).to_crs('epsg:27700')
+msoa_gpkg = gpd.read_file( cache_data(f'{host}/~jreades/data/MSOA-2011.gpkg', gdir) ).to_crs('epsg:27700')
 ```
 
 ::: {.callout-tip}
@@ -745,8 +752,7 @@ We can also try to constrain the result set to one LA thanks to data in the MSOA
 ```{python}
 %%time 
 
-la_nm = 'Waltham Forest'
-sdf   = msoa_nms[msoa_nms.Laname==la_nm][['msoa11cd','msoa11hclnm','Laname']].copy()
+sdf   = msoa_nms[msoa_nms.Laname==LA][['msoa11cd','msoa11hclnm','Laname']].copy()
 
 rs = pd.merge(msoa_df, sdf, left_on='MSOA 2021 Code', right_on='msoa11cd', how='inner')
 print(f"Result set has {rs.shape[0]:,} rows and {rs.shape[1]:,} columns.")
@@ -816,17 +822,16 @@ Now, running the same query to get the Waltham Forest data can be done two ways:
 ```{python}
 %%time
 
-boro = 'Waltham Forest'
 query = f'''
-SELECT * 
-FROM 
-    read_parquet('data/MSOA_population_estimates.parquet') as n 
-INNER JOIN 
+SELECT *
+FROM
+    read_parquet('data/MSOA_population_estimates.parquet') as n
+INNER JOIN
     read_csv('{cache_data(msoa_names_url, 'data')}', header=true) as m
-ON 
+ON
     n."MSOA 2021 Code"=m.msoa11cd
-WHERE 
-    m.Laname='{boro}';
+WHERE
+    m.Laname='{LA}';
 '''
 
 db.sql(query).to_df().head(3)
@@ -842,13 +847,12 @@ Everything here is *basically* the same except for:
 ```{python}
 %%time
 
-boro = 'Waltham Forest'
 query = f'''
-SELECT * 
-FROM 
-    read_parquet('data/MSOA_population_estimates.parquet') as n, 
+SELECT *
+FROM
+    read_parquet('data/MSOA_population_estimates.parquet') as n,
     read_csv('{cache_data(msoa_names_url, 'data')}', header=true) as m
-WHERE m.Laname='{boro}'
+WHERE m.Laname='{LA}'
 AND n."MSOA 2021 Code"=m.msoa11cd;
 '''
 
@@ -862,7 +866,7 @@ The second way is a little easier to read, but it *only* allows you to do **inne
 Let's try to find all of the listings that fall within the borough of Waltham Forest. 
 
 ```{python}
-listings = gpd.read_parquet( cache_data(url, ddir) ).to_crs('epsg:27700')
+listings = gpd.read_parquet( cache_data(url, gdir) ).to_crs('epsg:27700')
 ```
 
 This query implies two steps:
@@ -871,8 +875,7 @@ This query implies two steps:
 2. Run a spatial query to find the listings that are within those MSOAs (we could, optionally, `union` the MSOAs to get the outline of the borough)
 
 ```{python}
-boro = 'Waltham Forest'
-boro_gdf = msoa_gpkg[msoa_gpkg.LAD11NM==boro].copy()
+boro_gdf = msoa_gpkg[msoa_gpkg.LAD11NM==LA].copy()
 
 # Do the spatial join
 boro_listings = gpd.sjoin(listings, boro_gdf, predicate='within', rsuffix='_r')
@@ -898,8 +901,6 @@ So the example is provided for reference only when you need to work with a geosp
 ```{python}
 %%time
 
-boro = 'Waltham Forest'
-
 query = f'''
 INSTALL SPATIAL;
 LOAD SPATIAL;
@@ -909,7 +910,7 @@ COPY(
       (SELECT MSOA11CD, geom FROM ST_Read("{cache_data(f'{host}/~jreades/data/MSOA-2011.gpkg', ddir)}")) AS m,
       read_csv("{cache_data(msoa_names_url, 'data')}") AS n
   WHERE m.MSOA11CD=n.msoa11cd
-  AND n.Laname='{boro}'
+  AND n.Laname='{LA}'
 ) TO 'data/geo/merged.gpkg' WITH (FORMAT GDAL, DRIVER 'GPKG', LAYER_CREATION_OPTIONS 'WRITE_BBOX=YES');
 '''
 
@@ -930,10 +931,10 @@ A lot of additional geo-data can be accessed from the [GeoPortal](https://geopor
 
 ```{python}
 spath = 'https://github.com/jreades/fsds/blob/master/data/src/' # source path
-water = gpd.read_file( cache_data(spath+'Water.gpkg?raw=true', ddir) )
-boros = gpd.read_file( cache_data(spath+'Boroughs.gpkg?raw=true', ddir) )
-green = gpd.read_file( cache_data(spath+'Greenspace.gpkg?raw=true', ddir) )
-msoas = gpd.read_file( cache_data(f'{host}/~jreades/data/MSOA-2011.gpkg', ddir) ).to_crs('epsg:27700')
+water = gpd.read_file( cache_data(spath+'Water.gpkg?raw=true', gdir) )
+boros = gpd.read_file( cache_data(spath+'Boroughs.gpkg?raw=true', gdir) )
+green = gpd.read_file( cache_data(spath+'Greenspace.gpkg?raw=true', gdir) )
+msoas = gpd.read_file( cache_data(f'{host}/~jreades/data/MSOA-2011.gpkg', gdir) ).to_crs('epsg:27700')
 ```
 
 ## Select London MSOAs
@@ -1201,7 +1202,7 @@ ldn_msoas['Subregion'] = ldn_msoas.Borough.map(mapping)
 ### And Save
 
 ```{python}
-ldn_msoas.to_parquet(ddir / 'London_MSOA_Names.geoparquet')
+ldn_msoas.to_parquet(gdir / 'London_MSOA_Names.geoparquet')
 ```
 
 ## Spatial Join
@@ -1281,12 +1282,12 @@ You should get the following:
 #| echo: false
 ax = gdf_la.plot(column='NAME', markersize=0.5, alpha=0.5, figsize=(9,7))
 boros.plot(ax=ax, edgecolor='r', facecolor='None', alpha=0.5);
-gdf_la.to_parquet(ddir / 'Listings_with_LA.geoparquet')
+gdf_la.to_parquet(gdir / 'Listings_with_LA.geoparquet')
 ```
 
 ```{python}
 #| eval: False
-gdf_la.to_parquet(ddir / 'Listings_with_LA.geoparquet')
+gdf_la.to_parquet(gdir / 'Listings_with_LA.geoparquet')
 ```
 
 :::: {.qna}
@@ -1311,11 +1312,7 @@ Now that we've assigned every listing to a borough, we can derive aggregate valu
 
 ### Select LA
 
-Select a LA that is relevant to _you_ to explore further...
-
-```{python}
-LA = 'Waltham Forest'
-```
+We use the Local Authority (`LA`) set in the Preamble. Change it there if you want to explore a different borough.
 
 ### Spatial Join
 
@@ -1369,7 +1366,7 @@ msoa_gdf.plot(column='median_price', legend=True, figsize=(6,8));
 Just so that we can pick up here without having to re-run all the preceding cells.
 
 ```{python}
-msoa_gdf.to_parquet(ddir / f'{LA}-MSOA_data.geoparquet')
+msoa_gdf.to_parquet(gdir / f'{LA_slug}-MSOA_data.geoparquet')
 ```
 
 :::: {.qna}
