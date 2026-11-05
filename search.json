@@ -104,7 +104,7 @@
     "href": "assessments/content.html#style",
     "title": "Briefing",
     "section": "Style",
-    "text": "Style\nThis is not an essay, and students who submit answers using a traditional essay style will see their overall mark impacted as a result. You must preserve the question/response format, and your responses should be readily-grasped by an intelligent, but non-technical audience. This doesn’t mean that you don’t need citations, but you should not employ an academic writing style. See the examples provided below for insights into how to write for a less technical audience.\nThere will also be opportunities to discuss the submission during the second half of term.\n\n\n\n\n\n\nWarningWrite for Your Audience\n\n\n\nWhat makes writing a good briefing hard—and not just about writing good code—is finding the right balance of technical detail and high-level explanation: you can’t just say ‘here are the five types of accommodation we found…’, but you also can’t say ‘we tested clustering solutions in the range 3–50 and found the optimal result at k=12…’",
+    "text": "Style\nThis is not an essay, and students who submit answers using a traditional essay style will see their overall mark impacted as a result. This doesn’t mean that you don’t need citations, but you should not employ an academic writing style. See the examples provided below for insights into how to write for a less technical audience.\nYou do not need to preserve the five questions as separate headings in your response, but it should be clear to an intelligent, but non-technical audience that you have addressed these questions. To put it another way, the Mayor would never require you to write out the five questions; rather they would say something like “I need to know if we answers to these questions so that I’m ready for the next press conference…” and they would need to be able to take in the information quickly but there are many different ways to signpost that.\nThere will also be opportunities to discuss the submission during the second half of term.\n\n\n\n\n\n\nWarningWrite for Your Audience\n\n\n\nWhat makes writing a good briefing hard—and not just about writing good code—is finding the right balance of technical detail and high-level explanation: you can’t just say ‘here are the five types of accommodation we found…’, but you also can’t say ‘we tested clustering solutions in the range 3–50 and found the optimal result at k=12…’",
     "crumbs": [
       "Elements",
       "Group Work",
@@ -2875,7 +2875,7 @@
     "href": "sessions/week4.html#in-person-lectures",
     "title": "Reduce, Reuse, Recycle",
     "section": "In-Person Lectures",
-    "text": "In-Person Lectures\n\n\n\nSession\nVideo\nPresentation",
+    "text": "In-Person Lectures\n\n\n\nSession\nVideo\nPresentation\n\n\n\n\nCan You Trust a View…?\nIn Class\nSlides",
     "crumbs": [
       "Part 1: Foundations",
       "4. Efficient Code"
@@ -3416,7 +3416,7 @@
     "href": "sessions/week5.html#in-person-lectures",
     "title": "Objects",
     "section": "In-Person Lectures",
-    "text": "In-Person Lectures\nThis week’s session will provide additional detail on the assessments.\n\n\n\nSession\nVideo\nPresentation\n\n\n\n\nThe Assessments\nIn class\nSlides",
+    "text": "In-Person Lectures\nThis week’s session will provide additional detail on the assessments.\n\n\n\nSession\nVideo\nPresentation\n\n\n\n\nThe Assessments\nIn class\nSlides\n\n\nWho Decides…?\nIn class\nSlides",
     "crumbs": [
       "Part 1: Foundations",
       "5. Objects"
@@ -7518,5 +7518,257 @@
     "title": "Practical 10: Presenting Data",
     "section": "Using Fontconfig",
     "text": "Using Fontconfig\nfontconfig is the base Linux utility for managing fonts. We can list fonts using fc-list and then a set of ‘switches’ determining the kind of information we want back. Since fontconfig doesn’t exist on OSX or Windows you may not be able to run these.\nHere we ask fontconfig to format the output so that we only get the first part of the family name, and then we pipe (recall | sends output from one utility to another!) the output of that to sort, which sorts the output, and uniq which removes duplicates (which there will be because there are bold, italic, small-caps, etc. versions of each font). To make better sense of this you can always try playing around with all three steps!\n\nfonts = ! fc-list --format=\"%{family[0]}\\n\" | sort | uniq\nprint(fonts[:5])\n\n\n\n\n\n\n\nTipCapturing output\n\n\n\nNotice that we’re able to capture the output of an external application (called via the Terminal) with fonts = ! .... This can be useful when something is easy to do on the command line but hard to do in Python.\n\n\nThe next option also pipes output from fontconfig, but to the grep utility which checks each line for the character sequence Liberation. Now we’re asking fontconfig to include style details which will relate to both weight (regular, bold, extra bold, light, etc.) and italic, bold, small caps, etc. Then we ask for the languages supported by one font, and the monospace fonts installed:\n\nfonts = ! fc-list : family style | grep \"Liberation\"\nprint(sorted(fonts)[:5])\n\nlangs = ! fc-list \"Liberation Mono\" : lang\nprint(sorted(langs)[:5], \"...\")\n\nmonos = ! fc-list :spacing=mono : family | sort | uniq\nprint(sorted(monos)[:5], \"...\")\n\nYou can find more examples here, a more detailed set of instructions here, and even information about (for example) supported languages based on RFC 3066."
+  },
+  {
+    "objectID": "lectures/4.4-Session.html#why-these-three",
+    "href": "lectures/4.4-Session.html#why-these-three",
+    "title": "Can You Trust a Viewfrom a Distance?",
+    "section": "Why these three?",
+    "text": "Why these three?\n\n“What to leave out”: a function or a package also decides what you see and what gets wrapped away.\n“Where, how or why”: that’s what you need to know before you trust someone else’s data, or their code.\n“Just a technical tool”: true in a narrow sense, if the only question is whether data can be written and read back. But who can read it back depends on the format.\n\n\nHandle the third quote as a fair, narrowly technical answer, not a wrong one. Then widen it: “read back” assumes you can open the file. XLS, SPSS .sav files and ESRI’s File Geodatabase were closed formats. You needed a paid-for application to open them, unless someone reverse-engineered the format (that’s how LibreOffice, PSPP and GDAL read them). Even the Shapefile, whose specification ESRI published, is still a format one company controls. So even the technical choice decides who gets access.\nD’Ignazio & Klein have a line for this: “neither graphic is neutral, but both graphics are factual” (p.80). A format can be technically correct and still not neutral.\nThe videos make the same “just a tool” case for functions and packages. Today we test it.\n\n\nToday: storing data was a choice. Is reusing other people’s code, and other people’s views, one too?"
+  },
+  {
+    "objectID": "lectures/4.4-Session.html#this-weeks-question",
+    "href": "lectures/4.4-Session.html#this-weeks-question",
+    "title": "Can You Trust a Viewfrom a Distance?",
+    "section": "This Week’s Question",
+    "text": "This Week’s Question\n\nCan you trust a view from a distance?\n\n \nWe’ll answer it with code and readings now, and Ollie will answer it with satellites after the break.\n\n\n“Quantification is a technology of distance.” ~ Theodore Porter, quoted in D’Ignazio and Klein (2020, 76)\n\n\nA function, a decorator and a package are all views from a distance: you use them without looking inside. That’s what the videos argue for. The readings argue that the view from nowhere hides who is looking. Ollie’s work, satellite imagery checked against ground evidence with Bellingcat, sits right between them."
+  },
+  {
+    "objectID": "lectures/4.4-Session.html#why-havent-these-changed",
+    "href": "lectures/4.4-Session.html#why-havent-these-changed",
+    "title": "Can You Trust a Viewfrom a Distance?",
+    "section": "1. Why Haven’t These Changed?",
+    "text": "1. Why Haven’t These Changed?\ndata    = [1,25,-4,14,7,9]\ntotal   = 1\nnumbers = []\n\ndef calc_mean(numbers):\n  total = 0.0\n  count = len(numbers)\n  for i in numbers:\n    total += i\n  return total/count\n\nprint(calc_mean(data))\nprint(total)\nWhat does the last line print?\n\n1\n0.0\n52.0\nNameError\n\n\nAnswer: 1. The total inside the function is a different variable. (And numbers is still [].)\n\nFrom Functions (“But Notice!”). The function can’t see out, and the rest of the code can’t see in.\nStory: the chart whose top gets chopped off once orders pass 1,000. Copy-pasted into ten places, it’s ten fixes; in a function, it’s one."
+  },
+  {
+    "objectID": "lectures/4.4-Session.html#wrapping-paper",
+    "href": "lectures/4.4-Session.html#wrapping-paper",
+    "title": "Can You Trust a Viewfrom a Distance?",
+    "section": "2. Wrapping Paper",
+    "text": "2. Wrapping Paper\ndef splitter(func):\n  def wrapper():\n    return func().split()\n  return wrapper\n\n@splitter\n@better\ndef hello():\n  return('hello world')\n\nprint(hello())\n(better adds title case and !.)\n\nHello World!\n['Hello', 'World!']\n['hello', 'world']\nAttributeError\n\n\nAnswer: 2. better runs first, then splitter. Swap the two lines and you get AttributeError: 'list' object has no attribute 'title'.\n\nFrom Decorators (“Chaining Decorators”). Jon’s image: wrapping paper. The layer furthest from the function is the outer layer, and order matters.\nIf asked: .title() works on strings, but after splitter you have a list."
+  },
+  {
+    "objectID": "lectures/4.4-Session.html#gotcha",
+    "href": "lectures/4.4-Session.html#gotcha",
+    "title": "Can You Trust a Viewfrom a Distance?",
+    "section": "3. Gotcha!",
+    "text": "3. Gotcha!\npi = 3.1415\nprint(pi) # 3.1415\n\nfrom math import pi\nprint(pi)\n\n3.1415\n3.141592653589793\nNameError\nBoth values\n\n\nAnswer: 2. Your pi has been replaced, with no warning.\n\nFrom Packages (“Gotcha!”, Approach 2). Jon calls this “copy-pasting in its most extreme form”. With import math as m, both values would coexist in different namespaces."
+  },
+  {
+    "objectID": "lectures/4.4-Session.html#whos-calling",
+    "href": "lectures/4.4-Session.html#whos-calling",
+    "title": "Can You Trust a Viewfrom a Distance?",
+    "section": "4. Who’s Calling?",
+    "text": "4. Who’s Calling?\ndef better(func):\n  '''Better formatting of a string'''\n  def wrapper():\n    '''Wraps a function to format it.'''\n    return func().title() + \"!\"\n  return wrapper\n\n@better\ndef hello():\n  '''Prints hello world'''\n  return('hello world')\n\nprint(hello.__name__)\n\nhello\nwrapper\nbetter\nNone\n\n\nAnswer: 2. And hello.__doc__ is the wrapper’s docstring.\n\nFrom Decorators (“Making Use of Metadata”). Count the hands for 1 (hello): that’s how many people expected the function to keep its own identity.\nDon’t explain @wraps yet. Say: “Hold on to that, we’ll come back to it after the readings.”"
+  },
+  {
+    "objectID": "lectures/4.4-Session.html#vote",
+    "href": "lectures/4.4-Session.html#vote",
+    "title": "Can You Trust a Viewfrom a Distance?",
+    "section": "Vote",
+    "text": "Vote\nAccording to the reading you did, a view from a distance…\n \n\nCan be trusted: distance removes the noise. That’s why we write functions and use packages.\nCan be trusted only if someone checks on the ground: useful, but it has to be verified from somewhere specific.\nCan’t be trusted: distance hides who is looking and why.\n\n\nFirst, hands: who read Massey? D’Ignazio & Klein? Both? Neither?\nThen fingers, by reading: Massey readers first, then D’Ignazio & Klein.\nThen 1 minute of silent writing (“my vote, and one passage”), then 4 minutes with neighbours: compare votes and find one passage that proves yours. Anyone who didn’t read is briefed by a neighbour.\nPlenary (15 min): walk the room and ask pairs, not individuals (“What did you two decide?”). Ask which reading only after they’ve answered. Start with Massey, because it’s harder and people will need help with it. End on the Woolf line: is Massey against closed places?\nIf the politics come up (Massey’s free trade vs. immigration example is still a live debate): the point isn’t to take a side. It’s to make the context visible, because it shapes what we can and can’t do with data and code."
+  },
+  {
+    "objectID": "lectures/4.4-Session.html#massey-1996",
+    "href": "lectures/4.4-Session.html#massey-1996",
+    "title": "Can You Trust a Viewfrom a Distance?",
+    "section": "Massey (1996)",
+    "text": "Massey (1996)\n\n[…] the boundaries which we draw in space, the ‘places’ we define […], the decisions about which mobilities to allow and which not, and about how open, or how closed, our places are to be … all these things, rather than being based on some eternal principles, are in fact expressions of, and exercises in, social power. ~ Massey (1996, 117)\n\n\nReading notes:\n\nMassey’s ‘geographical imaginations’: the global (‘the world is flat’, the “annihilation of space”) and the defensible local. People with power often hold both at once: free movement of capital, but not of people.\nThe difference between Chiapas holding on to its ‘local’ and California holding on to its ‘local’ is the power geometry.\n\nIf a pair is stuck, ask: “Who gets to draw the boundary?” Or use Massey’s own pair: she sympathises with the Native American chief defending his land but opposes Le Pen, though both are ‘defending the local’ (p.117). The difference is the power geometry.\nFor students new to social science theory, this is problematisation: if there’s no general rule for when a boundary is right, then the boundary is a social construct.\n\n\n\n[…] although these workplaces are globalised (if only very narrowly so) and in that sense ‘open’, they are also specialised and excluding places, closed and defensive, quite tightly sealed against ‘non-conforming’ invasions from the outside world. ~ Massey (1996, 121)\n\n\nThe high-tech scientists: workplaces sealed for “high-level thought”, with security guards told to keep children out at weekends, while the home is “muddled, multiple, even open and porous”.\nLink to the videos: Functions says “Your function should never know anything about the surrounding context […] and the code that calls the function should never know anything about what happens inside the function.” That’s good engineering, and it’s the same move as the science park."
+  },
+  {
+    "objectID": "lectures/4.4-Session.html#dignazio-klein-2020",
+    "href": "lectures/4.4-Session.html#dignazio-klein-2020",
+    "title": "Can You Trust a Viewfrom a Distance?",
+    "section": "D’Ignazio & Klein (2020)",
+    "text": "D’Ignazio & Klein (2020)\n\nThe view from nowhere–from a distance, from up above, like a god–may be data visualization’s most signature feature. It’s also the most ethically complicated to navigate for the ways in which it masks the people, the methods, the questions, and the messiness that lies behind clean lines and geometric shapes. ~ D’Ignazio and Klein (2020, 76)\n\n\n“The god trick of seeing everything from nowhere” is Donna Haraway’s phrase. D’Ignazio and Klein quote it on the same page.\nThe Porter quote on the question slide is from this page too. They also note that in most “neutral” visualisations, “this perspective is the one of the dominant, default group” (p.76): my view is ‘natural’, so everyone else is pushing an agenda.\nReading notes: “The more plain, the more neutral; the more neutral, the more objective; and the more objective, the more true—or so this line of reasoning goes” (p.76). The four conventions that make a chart look factual (p.82): two-dimensional viewpoints, clean layouts, geometric shapes and lines, and a data source at the bottom.\n\n\n\n[…] all forms of knowledge […] are situated, [Haraway] explains, meaning that they are produced by specific people in specific circumstances—cultural, historical, and geographic. ~ D’Ignazio and Klein (2020, 83)\n\n\n“She” is Haraway again. Situated knowledge is the alternative to the view from nowhere: say where you are standing. This is the answer to the exit tickets that said “I have bias”: state your positionality, and the bias becomes a frame (p.83). Also: “When visualizing data, the only certifiable fact is that it’s impossible to avoid interpretation” (p.80).\nAside, if there’s time: “Fields very close to visualization, like cartography, have long seen their work as ideological” (p.80). On 4 September 2026, the UN General Assembly voted to replace the traditional (Mercator) world map with one that more accurately reflects the size of Africa (BBC). The “Correct the Map” resolution was sponsored by Togo, backed by African Union members, and passed 164 to 1, with six abstentions. The US was the only vote against. It’s non-binding. There are also allegations that Trump’s interest in Greenland is partly driven by how large it looks on Mercator maps."
+  },
+  {
+    "objectID": "lectures/4.4-Session.html#is-massey-against-closed-places",
+    "href": "lectures/4.4-Session.html#is-massey-against-closed-places",
+    "title": "Can You Trust a Viewfrom a Distance?",
+    "section": "Is Massey Against Closed Places?",
+    "text": "Is Massey Against Closed Places?\n\nEven as I felt critical of the scientists’ exclusive workplaces I remembered Virginia Woolf’s call for a room of her own. ~ Massey (1996, 123)\n\n\nA function is a room of its own. Is that a problem?\n\nMassey doesn’t say open is good and closed is bad. She says there are “few – if any – abstract, generalisable, ‘rules’” (p.117), and what matters is who has the power to open or close a place. Openness can leave “the less powerful places […] open to indiscriminate invasion and disruption” (p.123).\nD’Ignazio & Klein end in the same place: rather than “universal rules and ratios (think: data-ink)”, work toward “a more holistic and more inclusive ideal” (p.96). Neither reading gives you a rule.\nSo, closure (encapsulation) isn’t the problem. The question is who gets to decide what’s inside and what’s left out. That’s the bridge."
+  },
+  {
+    "objectID": "lectures/4.4-Session.html#hello-wrapper",
+    "href": "lectures/4.4-Session.html#hello-wrapper",
+    "title": "Can You Trust a Viewfrom a Distance?",
+    "section": "Hello, wrapper",
+    "text": "Hello, wrapper\n\n\nWithout @wraps:\nprint(hello.__name__)\n# wrapper\nprint(hello.__doc__)\n# Wraps a function to format it.\n\nWith @wraps(func):\nprint(hello.__name__)\n# hello\nprint(hello.__doc__)\n# Prints hello world\n\n\nThe frame replaced the name of whoever did the work. @wraps puts the provenance back.\n\nBack to Q4. The output looked fine, but the function couldn’t say what it was any more. That’s D’Ignazio & Klein’s god trick in miniature: it “masks the people, the methods”.\nAsk the room: “When you import a package, what has been wrapped away from you?” Take two answers from pairs."
+  },
+  {
+    "objectID": "lectures/4.4-Session.html#a-function-cant-tell-you-the-data-are-wrong",
+    "href": "lectures/4.4-Session.html#a-function-cant-tell-you-the-data-are-wrong",
+    "title": "Can You Trust a Viewfrom a Distance?",
+    "section": "A Function Can’t Tell You the Data Are Wrong",
+    "text": "A Function Can’t Tell You the Data Are Wrong\nds2 = {\n  'lat':[51.51,40.71,35.69],\n  'lon':[0.13,74.01,139.68],\n  'tz': [+0,-5,+8],\n  'name':['London','New York','Tokyo']\n}\n\ndef get_city_info(city:str, field:str, city_lookup:str='name', data:dict=ds2) -&gt; str:\n  return str(data[field][ data[city_lookup].index(city) ])\n\nReading a file (even one on a computer halfway round the world) is one of those things. Making sense of the data in that file for you is probably not. ~ Practical 4\n\n\nThis is the “Complicating Things” slide from Functions, unchanged. The data are the same cooked coordinates from week 3: London and New York should have negative longitudes, and Tokyo is UTC+9. The function works perfectly and returns wrong answers cleanly.\n1 minute of silent writing, then 2 minutes with neighbours: “What would you need to know before trusting get_city_info?” Ask two pairs. (Expected: where ds2 came from, who made it, when.)\nThe practical does the same: it reads a file of Airbnb listings from a server, using packages someone else wrote. Who collected those listings, and why?"
+  },
+  {
+    "objectID": "lectures/4.4-Session.html#dont-never-do-a-god-trick",
+    "href": "lectures/4.4-Session.html#dont-never-do-a-god-trick",
+    "title": "Can You Trust a Viewfrom a Distance?",
+    "section": "Don’t Never Do a God Trick",
+    "text": "Don’t Never Do a God Trick\n\nSimply stated: it is never a good idea to say “never” in design. ~ D’Ignazio and Klein (2020, 91)\n\n\n\n[…] there are also good reasons to use the god trick as a form of recuperation, contestation, or empowerment. ~ D’Ignazio and Klein (2020, 92)\n\n\n\nListen for: where does Ollie’s work come down to the ground?\n\nTheir example is Margaret Pearce’s Coming Home to Indigenous Place Names in Canada. It uses the look of the official national map, but is filled with place names collected from First Nations, Métis and Inuit peoples over fifteen months (pp.92–93). The god’s-eye view is turned against the coloniser’s view. It works within the norms of the prevailing power geometry (same paper size, fold, scale and projection as the official map), but subverts them.\nPearce also withheld data: she respected communities that didn’t want to share English translations, and protected “the exact geographic location of each site from being shared with outsiders” (p.92). That’s Massey’s Woolf point: closure chosen by the less powerful. And it’s week 3 again: who gets access to what you store?\nHandoff: satellite imagery is the ultimate view from above. Ollie’s work with Bellingcat checks it against evidence from the ground. Ask students to listen for that, because the exit ticket asks about it."
+  },
+  {
+    "objectID": "lectures/4.4-Session.html#group-sign-up",
+    "href": "lectures/4.4-Session.html#group-sign-up",
+    "title": "Can You Trust a Viewfrom a Distance?",
+    "section": "Group Sign-Up",
+    "text": "Group Sign-Up\nThe sign-up form is open from Monday 26 October to Monday 2 November.\n\nSign up as a group (4 best, no more than 5), or on your own.\nAnyone not in a group by Monday 2 November will be matched to a group with space.\nWhy groups, and how they work: Group Working (week 3).\n\n\nKeep this short. Jon covered the reasons for the groups in week 3 (3.6). Send questions about assessment or groups to Jon or the Moodle forum rather than answering them."
+  },
+  {
+    "objectID": "lectures/4.4-Session.html#intro-to-the-practical",
+    "href": "lectures/4.4-Session.html#intro-to-the-practical",
+    "title": "Can You Trust a Viewfrom a Distance?",
+    "section": "Intro to the practical",
+    "text": "Intro to the practical\nHere’s what we’re covering:\n\nRecycling other people’s code: reading a remote file with urllib and turning it into data with csv.\nWe’re also going to stretch your understanding of how these lists and dicts as data structures interrelate and, crucially, make use of the DOL, which is analogous to how pandas – probably the single biggest reason Python dominates data science – manages and represents data to you.\n\n\nThen the break (7 min). Put the sign-up slide back on screen while Ollie sets up."
+  },
+  {
+    "objectID": "lectures/4.4-Session.html#before-you-go",
+    "href": "lectures/4.4-Session.html#before-you-go",
+    "title": "Can You Trust a Viewfrom a Distance?",
+    "section": "Before You Go…",
+    "text": "Before You Go…\nComplete the sentence:\n \nA view from a distance can / can’t be trusted when…, because…\n \nA selection will open next week’s session."
+  },
+  {
+    "objectID": "lectures/4.4-Session.html#input",
+    "href": "lectures/4.4-Session.html#input",
+    "title": "Can You Trust a Viewfrom a Distance?",
+    "section": "Input",
+    "text": "Input\nProvide your input here: form.menti.com/s/altu662n9tu3\n\n\n\nMentimeter QR Code\n\n\n\nMentimeter (open text) in a second browser tab. Start at minute 114 sharp, leave the code on screen, and give 3 minutes of silence before saying anything else. Say that it’s anonymous, and that today opened with three of last week’s."
+  },
+  {
+    "objectID": "lectures/5.6-Session.html#this-weeks-question",
+    "href": "lectures/5.6-Session.html#this-weeks-question",
+    "title": "Who Decides WhatCounts as an Error?",
+    "section": "This Week’s Question",
+    "text": "This Week’s Question\n\nWho decides what counts as an error?\n\n \nWe’ll answer it with code and readings.\n\n\n“Data do not need cleaning until there are strangers in the dataset.” ~ D’Ignazio and Klein (2020, 133)\n\n\nThree levels, one question. In Python the programmer decides which problems are expected (trapped) and which are not. In data, the analyst decides what is an outlier or a mistake. In teaching, the teacher decides which mistakes are useful."
+  },
+  {
+    "objectID": "lectures/5.6-Session.html#the-pizza-that-changed",
+    "href": "lectures/5.6-Session.html#the-pizza-that-changed",
+    "title": "Who Decides WhatCounts as an Error?",
+    "section": "1. The Pizza That Changed",
+    "text": "1. The Pizza That Changed\n# the pizza class from the video, unchanged\np1 = pizza(sauce='white')\np1.add_topping('peppers')\n\np2 = pizza()\np2.base = \"Plain old base\"\n\npizza.base = 'Crusty'\n\np3 = pizza()\nHow many of p1, p2 and p3 now have a 'Crusty' base?\n\n0\n1\n2\n3\n\n\nAnswer: 3 (two of the three): p1 and p3. p2 set its own base, so the class change doesn’t reach it.\n\nFrom Classes (“Pizza in Action”). The answer is option 3 (two pizzas). Option 4 (all three) is the expected wrong answer: count the hands.\nStory: a class variable is a rule written on the recipe, and every pizza that hasn’t set its own follows it, even ones already out for delivery.\nCorrection to the Classes video (say it in one sentence): an aside on “The Constructor” says the __init__ parameters sauce and cheese are the same as the instance variables self.sauce and self.cheese. They are not the same: the parameters exist only while __init__ runs, and the instance variables are stored on the object. They just share a name, because they live in different namespaces."
+  },
+  {
+    "objectID": "lectures/5.6-Session.html#wheres-the-bug",
+    "href": "lectures/5.6-Session.html#wheres-the-bug",
+    "title": "Who Decides WhatCounts as an Error?",
+    "section": "2. Where’s the Bug?",
+    "text": "2. Where’s the Bug?\ntotal = 0\nprint(\"About to start loop\"\nfor i in range(1,10):\n  total += i\nprint(total)\nWhich line is actually wrong?\n\nLine 1: total = 0\nLine 2: print(\"About to start loop\"\nLine 3: for i in range(1,10):\nLine 5: print(total)\n\n\nAnswer: 2. The missing ) is on the line before the one Python complains about, in older versions.\n\nFrom Errors (“Challenge 1”). Skip this one if you are behind at minute 9. In the video, Python points at the colon on line 3. Newer Python (3.10 and later) says '(' was never closed and points at line 2, so the message has got better since the video was recorded. The lesson is the same: the line Python blames isn’t always the line that’s wrong.\nStory: the unclosed bracket three lines up. Python decided the error was where it gave up, not where it started."
+  },
+  {
+    "objectID": "lectures/5.6-Session.html#trapped",
+    "href": "lectures/5.6-Session.html#trapped",
+    "title": "Who Decides WhatCounts as an Error?",
+    "section": "3. Trapped",
+    "text": "3. Trapped\nx,y = 10,0\ntry:\n  print(x/y)\nexcept ZeroDivisionError:\n  print(\"You can't divide by zero!\")\nexcept:\n  print(\"Something has gone very wrong.\")\nfinally:\n  print(\"Division is fun!\")\nWhat does this print?\n\nYou can't divide by zero! then Division is fun!\nSomething has gone very wrong. then Division is fun!\nA ZeroDivisionError traceback\nOnly You can't divide by zero!\n\n\nAnswer: 1. The named except catches it, the generic one is skipped, and finally always runs.\n\nFrom Errors (“Trapping Errors”). In the video, Jon’s image is that named excepts are like elif, the bare except: is like else. Option 4 is the expected wrong answer (people forget finally).\nCorrection to the Errors video (one sentence): the bare except: taught there catches everything, including Ctrl+C (KeyboardInterrupt), so you can’t even stop the program. In your own code, write except Exception: instead."
+  },
+  {
+    "objectID": "lectures/5.6-Session.html#raising-hell",
+    "href": "lectures/5.6-Session.html#raising-hell",
+    "title": "Who Decides WhatCounts as an Error?",
+    "section": "4. Raising Hell",
+    "text": "4. Raising Hell\nx,y = 10,0\ntry:\n  print(x/y)\nexcept ZeroDivisionError:\n  print(\"You can't divide by zero!\")\n  raise Exception(\"Please don't do that again!\")\nfinally:\n  print(\"Division is fun!\")\n\nTwo messages, then the program ends normally\nTwo messages, then a traceback that ends Exception: Please don't do that again!\nOnly a traceback\nDivision is fun! is never printed\n\n\nAnswer: 2. finally still runs, and the traceback shows both errors (“During handling of the above exception, another exception occurred”).\n\nFrom Errors (“Raising Hell” and “Understanding Multiple Errors”). The first error is the clue to the real problem; the second tells you what was happening when it was triggered. Don’t tell the room the answer to 4 first: ask which messages they expect on screen.\nSay: whoever wrote the raise decided that this was an error worth stopping for. That’s the week’s question in four lines."
+  },
+  {
+    "objectID": "lectures/5.6-Session.html#vote",
+    "href": "lectures/5.6-Session.html#vote",
+    "title": "Who Decides WhatCounts as an Error?",
+    "section": "Vote",
+    "text": "Vote\nAccording to the reading you did, the person who decides is…\n \n\nThe analyst: that’s what expertise is for. Decide, and document it.\nThe rules: decide in advance, in code, so anyone can check.\nThe people the data describe: everyone else is a stranger in the dataset.\n\n\nFirst, hands: who read D’Ignazio & Klein? Etherington? Both? Neither?\nThen fingers, by reading: D’Ignazio & Klein readers first, then Etherington.\nThen 1 minute of silent writing (“my vote, and one passage”), then 3 minutes with neighbours: compare votes and find one passage that proves yours. Anyone who didn’t read is briefed by a neighbour.\nPlenary (about 4 min): walk the room and ask pairs, not individuals (“What did you two decide?”). Ask which reading only after they’ve answered. Start with D’Ignazio & Klein, because it’s the one that has an answer. End on Etherington: who decided which mistakes the students are allowed to make?"
+  },
+  {
+    "objectID": "lectures/5.6-Session.html#dignazio-klein-2020",
+    "href": "lectures/5.6-Session.html#dignazio-klein-2020",
+    "title": "Who Decides WhatCounts as an Error?",
+    "section": "D’Ignazio & Klein (2020)",
+    "text": "D’Ignazio & Klein (2020)\n\nBut what might be lost in the process of dominating and disciplining data? Whose perspectives might be lost in that process? And, conversely, whose perspectives might be additionally imposed? ~ D’Ignazio and Klein (2020, 131)\n\n\nReading notes:\n\nCleaning isn’t a neutral process. It’s a removing of observations from a data set, and potentially therefore a removal of people.\nThe Wickham critique is fair but a little unsubtle: “tidy data” is as much about reproducibility, wide vs long data and linking operations. The decisions we make when cleaning aren’t always bad. It’s more about how much we understand our data. (TfL data is an example: you can’t just ‘ask someone’ for the Oyster card data because what is logged depends on what purpose the data was collected for in the first place.)\nThe map the chapter opens with (the AEMP “Narratives” map, pp.127–129) breaks the rules of good data visualisation on purpose. If you’re going to do that, be explicit about why.\n\n\n\n\nLikewise, data do not need cleaning until there are strangers in the dataset. ~ D’Ignazio and Klein (2020, 133)\n\n\nReading notes: the Clemson example, where “upstate” was perfectly clear to Clemson’s librarians but useless to anyone else. The analogy is street names: you don’t need them until there are strangers in the landscape. Understanding the process by which data was generated matters (“data settings”).\nThe argument runs like this:\n\nStreets: people who live somewhere know their way around by local knowledge (“the road past the post office”). Street names and house numbers only become necessary once outsiders arrive and need a standard system. The authors’ wording comes from the chapter’s discussion of how this standardisation happened, and your margin note on that page ties it to “the systematisation required for street names in the previous century”.\nData: their example is the Clemson University Library dataset, which uses “upstate” for a region of South Carolina. To Clemson’s own librarians that was perfectly clear. Once “hackers in Cambridge” tried to map every library record in the US, “upstate” stopped being usable. The data then “needed cleaning”, meaning standardising to a form outsiders can read.\nTheir point: “dirty” data often just means data that was clear to the people who made it and opaque to everyone else. The cleaning is done for the stranger’s benefit, and it can overwrite the local meaning. The risk they name is epistemic violence, where the stranger’s way of knowing wins (p.133).\n\n\n\n\n\nDoes one choose cleaner data at a larger scale that is relatively easy and quick to purchase? Or more accurate data at a local scale for which one has to engage and build trust with community groups? ~ D’Ignazio and Klein (2020, 135)\n\n\nReading notes: this is a real-world question for research or for money. The authors clearly feel there is a right answer, but I think if we asked them directly they’d acknowledge the complexity: the Eviction Lab turned to a real estate data broker to try to produce a country-wide picture of evictions; but the AEMP said it found three times the number of evictions in the areas that it was monitoring closely!"
+  },
+  {
+    "objectID": "lectures/5.6-Session.html#etherington-2016",
+    "href": "lectures/5.6-Session.html#etherington-2016",
+    "title": "Who Decides WhatCounts as an Error?",
+    "section": "Etherington (2016)",
+    "text": "Etherington (2016)\n\nThe concepts of location, event, neighbourhood, field, object and network (Figure 1a) are a succinct list of spatial concepts used as the basis for six laboratory exercises […] ~ Etherington (2016, 118)\n\n\nReading notes: can you map these onto modules and taught content? Why do we ask you to read about this approach and not follow it? (1) It shows how teachers connect concepts and applications, in a way students can’t always see. (2) It shows how many programming concepts transfer across contexts. (3) It helps you connect your first five weeks to the places they could be applied. Also: notice how things are connected up here. That’s the reflective part.\nThe six concepts are a set of categories chosen by a teacher, so they’re a decision about what counts. The same question as the Tree of Vehicles, coming next.\n\n\n\nUnwin (1980) argued for open-ended laboratories, as highly structured laboratories do not teach research skills and result in students producing nearly identical work. ~ Etherington (2016, 123)\n\n\nReading notes: these debates aren’t new. We’re a little more structured than Unwin would like, but we also try to say what should be coming along. Etherington’s other ideas for open-ended laboratories are on the same page and are coming up in the bridge."
+  },
+  {
+    "objectID": "lectures/5.6-Session.html#where-do-e-bikes-unicycles-and-rickshaws-go",
+    "href": "lectures/5.6-Session.html#where-do-e-bikes-unicycles-and-rickshaws-go",
+    "title": "Who Decides WhatCounts as an Error?",
+    "section": "Where Do E-Bikes, Unicycles and Rickshaws Go?",
+    "text": "Where Do E-Bikes, Unicycles and Rickshaws Go?\n\n\nSomeone chose these categories. Who? And for what?\n\nSet-up (1 minute). Don’t ask for answers yet: the next slide splits the room."
+  },
+  {
+    "objectID": "lectures/5.6-Session.html#split-the-room",
+    "href": "lectures/5.6-Session.html#split-the-room",
+    "title": "Who Decides WhatCounts as an Error?",
+    "section": "Split the Room",
+    "text": "Split the Room\nChoose your side. You are…\n \n\nVehicle makers (left): you design, build and sell them.\nSafety advocates (centre): you count injuries.\nLocal government (right): you license, tax and police them.\n\n\nAlone, 1 minute: redraw the top two levels of the tree according to your interests. Where do the e-bike, unicycle and rickshaw go?\nWith neighbours, 3 minutes: agree one attribute that every Vehicle must have, and one value you would refuse (raise an error).\n\nJon makes sure the room actually splits (he is in the room for this). Split by block of seating as seen from the front, since seating is free. About 35 per side. Anyone in the wrong block is a neutral observer who picks the side they’d argue least comfortably.\nPrompts if students are stuck:\n\nVehicle makers: group by what you make and who buys it.\nSafety advocates: group by who gets hurt, and how badly.\nPolicymakers: group by where each can go and what it needs.\n\nTell them this is the same move as the readings: whoever draws the hierarchy decides what counts as a thing and what counts as a special case. The __init__ question is the Python version of “what counts as an error?”: a refused value is a rule somebody wrote.\nWalk the room. Don’t answer questions about what is “correct”: there isn’t a correct tree."
+  },
+  {
+    "objectID": "lectures/5.6-Session.html#same-e-bike-three-trees",
+    "href": "lectures/5.6-Session.html#same-e-bike-three-trees",
+    "title": "Who Decides WhatCounts as an Error?",
+    "section": "Same E-Bike, Three Trees",
+    "text": "Same E-Bike, Three Trees\nAsk pairs, one side at a time: What did you two decide? Where did the e-bike go, and what would you refuse?\n\nclass EBike(Vehicle):\n    def __init__(self, motor_watts, assist_cutoff_kph):\n        if motor_watts &gt; 250 or assist_cutoff_kph &gt; 25:\n            raise ValueError(\"Not a legal e-bike\")\n\n\nFor a maker, a 500 W motor is a product. For a regulator, it is an error. Same input, different answer.\n\nPlenary (3 minutes). Take two pairs from each side, then show the code. Ask which side’s rule the code is the code version of. In the UK electrically assisted pedal cycle (EAPC) limits are 250 W continuous rated power, assistance cutting out at 15.5 mph or 25 km/h, working pedals, minimum age of 14.\nLand it on the week’s question: whoever writes the class writes the definition of an error, and everyone else lives with it. Where should the people on the other two sides have been in the room when this was written?\nIf a student says the manufacturers are just obeying the law: yes, and the line they obey was drawn by a regulator after lobbying by makers and advocates. Categories are negotiated.\nIf asked what happens to a 500 W bike under the rule: it becomes a different class (a moped or motorcycle), with its own licence, insurance and registration. A boundary doesn’t remove an object; it moves it into another category with other costs."
+  },
+  {
+    "objectID": "lectures/5.6-Session.html#what-happens-to-what-doesnt-fit",
+    "href": "lectures/5.6-Session.html#what-happens-to-what-doesnt-fit",
+    "title": "Who Decides WhatCounts as an Error?",
+    "section": "What Happens to What Doesn’t Fit?",
+    "text": "What Happens to What Doesn’t Fit?\ntry:\n  #... some code that might fail...\nexcept &lt;Named_Error_Type&gt;:\n  #... what do it if it fails for a specific reason...\nexcept:\n  #... what to do if it fails for any other reason...\nfinally:\n  #... always do this, even if it fails...\n\n\nBut what might be lost in the process of dominating and disciplining data? ~ D’Ignazio and Klein (2020, 131)\n\n\nIn the video, Jon asks what you should do with input that doesn’t fit: ignore it, try anyway, or tell the user? A bare except: that does nothing is the code version of dropping the outlier: the program carries on and nobody knows what was lost.\n1 minute of silent writing: “What would except: pass do to an Airbnb listing with a price of 0?” Then 1 minute with neighbours. Ask one pair. This is the same point as the vehicle exercise, in code: the except: is the rule that decides what is an error, and this one decides nothing. About 3 minutes in all.\nThe video’s manifesto says it from the programmer’s side: ignoring a bug or “just squashing it without understanding it is storing up trouble for the future”.\nIf it comes up: this is also why you should write except Exception: rather than a bare except: (see the note on snippet 3)."
+  },
+  {
+    "objectID": "lectures/5.6-Session.html#deliberate-mistakes",
+    "href": "lectures/5.6-Session.html#deliberate-mistakes",
+    "title": "Who Decides WhatCounts as an Error?",
+    "section": "Deliberate Mistakes",
+    "text": "Deliberate Mistakes\n\n[…] including deliberate mistakes that need to be corrected […] ~ Etherington (2016, 123)\n\n\nListen for: in today’s practical, where does Python throw an error on purpose?\n\nEtherington lists this as one way to make a laboratory more open-ended. The practical does it in the classes section: you get an error until you implement the missing method, and the error tells you what’s missing. Here an error is information from the person who wrote the code to the person using it.\nHand-off to the admin and practical intro. Skip this slide if you are behind at minute 33."
+  },
+  {
+    "objectID": "lectures/5.6-Session.html#a-word-about-groups",
+    "href": "lectures/5.6-Session.html#a-word-about-groups",
+    "title": "Who Decides WhatCounts as an Error?",
+    "section": "A Word About Groups",
+    "text": "A Word About Groups\nThe sign-up form closed on Tuesday 3 November.\n\nJon is allocating everyone not yet in a group to a group with space.\nGroups will be confirmed by Friday 6 November.\nWhy groups, and how they work: Group Working.\n\n\nKeep this short. If Jon has already finished the allocation, say so and drop the second bullet. Send questions about assessment or groups to Jon."
+  },
+  {
+    "objectID": "lectures/5.6-Session.html#intro-to-the-practical",
+    "href": "lectures/5.6-Session.html#intro-to-the-practical",
+    "title": "Who Decides WhatCounts as an Error?",
+    "section": "Intro to the practical",
+    "text": "Intro to the practical\nHere’s what we’re covering:\n\nTrying to pull together everything you’ve learned over the preceding few weeks: functions, decorators, DoLs, list comprehensions, etc.\nWe’re going to work through creating several functions as well as a decorator to handle downloading and caching data from a remote URL in a way that saves on bandwidth costs by checking a local cache to see if a file exists before mindlessly requesting another copy from the URL.\nWe’re going to look at how writing comments — and they can be quite verbose when you’re starting out! — can help you to understand what’s going on.\nAnd we’re going to place these functions into a library file so that they can be imported."
+  },
+  {
+    "objectID": "lectures/5.6-Session.html#optional-second-half",
+    "href": "lectures/5.6-Session.html#optional-second-half",
+    "title": "Who Decides WhatCounts as an Error?",
+    "section": "Optional second half",
+    "text": "Optional second half\nThere is a second section that is about making use of classes and inheritance. This will help you a lot when you get to understanding how Pandas and Geopandas work and it’s the core power of Python, but do not panic if you run out of time to get to this. You will also pick it up through using Python. That’s not an excuse to not engage with the ideas, it’s an excuse for not spending nine hours on this practical.\nYou will see: - Custom exceptions - Abstract base classes - Inheritance - Class and instance variables - A tiny bit of polymorphism.\n\nThen Jon presents the assessments deck (5.5-Assessments, minute 40 to 60), then the break (7 min). After the break: Ollie’s talk, which starts at minute 67 and stops at 114."
+  },
+  {
+    "objectID": "lectures/5.6-Session.html#listen-for",
+    "href": "lectures/5.6-Session.html#listen-for",
+    "title": "Who Decides WhatCounts as an Error?",
+    "section": "Listen For…",
+    "text": "Listen For…\nDamage detection in Gaza from satellite imagery\n \nListen for: how does Ollie check what the satellite shows? And who decides what counts as “damaged”?\n\nSay Ollie’s name and topic. The first question sets up the exit ticket (week 4’s: can a view from a distance be trusted?). The second links back to this week’s question. Don’t say more about the talk than that. Hard stop at minute 114 (a timer on the lectern): the exit ticket follows."
+  },
+  {
+    "objectID": "lectures/5.6-Session.html#before-you-go",
+    "href": "lectures/5.6-Session.html#before-you-go",
+    "title": "Who Decides WhatCounts as an Error?",
+    "section": "Before You Go…",
+    "text": "Before You Go…\nComplete the sentence:\n \nA view from a distance can / can’t be trusted when…, because…\n \nA selection will open next week’s session."
+  },
+  {
+    "objectID": "lectures/5.6-Session.html#input",
+    "href": "lectures/5.6-Session.html#input",
+    "title": "Who Decides WhatCounts as an Error?",
+    "section": "Input",
+    "text": "Input\nProvide your input here: form.menti.com/s/altu662n9tu3\n\n\n\nMentimeter QR Code\n\n\n\nThis is the week 4 Mentimeter (it didn’t run last week). Week 5’s (alujv3evg5eh) is unused. Mentimeter (open text) in a second browser tab. Start at minute 114 sharp, leave the code on screen, and give 3 minutes of silence before saying anything else. Say that it’s anonymous, and that a selection will open next week’s session. Jon runs the Mentimeter, so he is back in the room by minute 114."
   }
 ]
