@@ -20,7 +20,7 @@ Tracks what needs doing, session by session, before and during teaching. Review 
 ### Rendering and publishing
 
 - **Full site:** `quarto render`, then `quarto publish gh-pages`. Slow (practicals included). A full render empties `_site` first, so it also clears out anything stale.
-- **Content only** (week pages, lectures, assessments): `scripts/publish-content.sh`. It renders with `--profile content --no-clean` and publishes `_site` with `--no-render`. It stops if `_site` has no practicals (do a full render first), or if a deck excluded in `_quarto.yml` (`"!lectures/N.M-Session.qmd"`) has HTML in `_site`. Use `--no-publish` to render and check without publishing.
+- **Content only** (week pages, lectures, assessments): `scripts/publish-content.sh`. It renders with `--profile content --no-clean` and publishes `_site` with `--no-render`. It stops if `_site` has no practicals (do a full render first), or if a deck excluded in `_quarto.yml` (`"!lectures/N.M-Session.qmd"`) has HTML in `_site`. Use `--no-publish` to render and check without publishing. Pass one or more `.qmd` paths (e.g. `scripts/publish-content.sh lectures/5.6-Session.qmd`) to render only those files: the same checks run, and it stops if a file's `_site` output wasn't updated (usually because the file is excluded). By hand, the equivalent is `quarto render <files>`, then check the timestamps and `ls _site/lectures/*Session*`, then `quarto publish gh-pages --no-render`.
 - Publishing replaces the whole `gh-pages` branch with `_site`. Never publish a `_site` that has only part of the site in it.
 
 ### Recording fields for [V] items
@@ -341,6 +341,19 @@ Rules until the session: never use `publish --no-render` directly (`scripts/publ
 ## Summer 2027 (not before teaching)
 
 - Re-record the segments flagged *Summer* above: 2.5 (16), 3.3 (9), 4.3 (6), 5.3 (2), 5.4 (4, 20). Then remove the matching "clarification" lines from the end slides.
+- **Not fixed before teaching in 2026/27; do these at the start of the 2027/28 cycle (new branch, mid-summer).** Both were covered by a spoken correction in the `5.6-Session` notes on 2026-11-05 instead:
+  - 5.2 Classes, The Constructor (6), **P1**: the aside says `sauce`/`cheese` "are the **same** as the instance variables". Change it to "are **not** the same". See the Week 5 table.
+  - 5.4 Errors, So Errors can be Trapped / Trapping (9, 10), **P2**: add a caveat to the bare `except:` saying to prefer `except Exception:`. See the Week 5 table.
+  - Also check the rest of the Week 5 [V] tables (5.2, 5.3, 5.4), since none of the visual-only rebuilds happened before week 5 was taught.
+- **Rethink the flipped-session format so other lecturers can deliver it** (Ollie Ballinger's feedback after weeks 4–5, 2026-11-05).
+  - *Problem 1, infrastructure:* "Don't publish until after the session" means whoever delivers it has to run the whole render and publish pipeline on their own machine. Most colleagues use PowerPoint.
+  - *Problem 2, format:* the session design is specific to Jon (and to the planning conversations behind it). It's complex to deliver and hard for anyone else to pick up. If Jon has to be in the room every week, the format loses most of its benefit.
+  - *What worked:* Ollie liked using the readings as a point of departure for his own research. For example, "data for good" in his Gaza work, compared with the view of a colleague *from* Gaza. He'd like that to be the anchor for discussion.
+  - *To consider:*
+    - A standard slot along the lines of "taking the readings as a point of departure for a discussion of my research", which any lecturer could fill.
+    - Trimming and simplifying the interactive elements (predict-the-output, reading verdict, split-room exercises) so they don't depend on keeping answers offline. For example, answers given only verbally or in the notes, or interactive material that doesn't need hiding at all.
+    - Which of this year's elements can be kept in a simpler form, and which a guest could run from a PowerPoint or a PDF.
+    - Whether the exit ticket and Mentimeter can run without Jon present (weeks 4–5 showed they don't at the moment).
 - Asana "Big rethinks": the sequencing of Podman / Terminal / Git (Week 1 terminal, Week 2 Git, Week 3 Podman); whether to keep Git at all versus a stronger focus on prompting; an "Applications" slide and reading for each week; a 'simple world' 16×16 grid for teaching.
 - Asana: a short video on the *purpose* of Docker/Podman (shared with QM).
 - 5.2 pizza example: rename it to `Pizza` and drop `(object)` across all slides.

@@ -4,6 +4,8 @@
 #
 #   scripts/publish-content.sh            render content, check, publish
 #   scripts/publish-content.sh --no-publish   render and check only
+#   scripts/publish-content.sh [--no-publish] FILE.qmd [FILE.qmd ...]
+#                                         render only these files, check, publish
 #
 # Publishing replaces the gh-pages branch with whatever is in _site, so this
 # stops if _site looks incomplete or holds a deck excluded in _quarto.yml.
@@ -12,7 +14,14 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 publish=true
-[[ "${1:-}" == "--no-publish" ]] && publish=false
+files=()
+for arg in "$@"; do
+  case "$arg" in
+    --no-publish) publish=false ;;
+    *.qmd) files+=("$arg") ;;
+    *) echo "ERROR: unknown argument '$arg'" >&2; exit 1 ;;
+  esac
+done
 
 # 1. _site must already hold a full render (practicals + home page).
 if [[ ! -f _site/index.html ]] || ! compgen -G "_site/practicals/*.html" > /dev/null; then
@@ -20,8 +29,24 @@ if [[ ! -f _site/index.html ]] || ! compgen -G "_site/practicals/*.html" > /dev/
   exit 1
 fi
 
-# 2. Render the content only, keeping everything else in _site.
-quarto render --profile content --no-clean
+# 2. Render the named files (rendering single files never empties _site), or
+#    else all the content, keeping everything else in _site.
+if (( ${#files[@]} )); then
+  stamp=$(mktemp)
+  quarto render "${files[@]}"
+  # An excluded file renders standalone next to its source, not into _site:
+  # catch that rather than publish an unchanged copy.
+  for f in "${files[@]}"; do
+    out="_site/${f%.qmd}.html"
+    if [[ ! "$out" -nt "$stamp" ]]; then
+      echo "ERROR: $out was not updated (is $f excluded in _quarto.yml?)" >&2
+      rm -f "$stamp"; exit 1
+    fi
+  done
+  rm -f "$stamp"
+else
+  quarto render --profile content --no-clean
+fi
 
 # 3. Nothing excluded in _quarto.yml (e.g. "!lectures/4.4-Session.qmd") may
 #    have output in _site: an old copy rendered to present from would be
