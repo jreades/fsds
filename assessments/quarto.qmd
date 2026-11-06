@@ -1,0 +1,171 @@
+---
+format: html
+date: last-modified
+author: "Jon Reades"
+title: "Using Quarto"
+---
+
+::: {.callout-tip}
+
+The TL;DR version of how to create the submission PDF is on the [Resources](./resources.qmd) page.
+
+:::
+
+Quarto has been built into the [SDS image]({{< var module.sds >}}) along with a selection of publicly-available fonts and the Spatial Data Science Python 'stack'. So although you can install and use Quarto directly, for *this* module you should use the version provided by the image since it will increase the likelihood that your code is fully reproducible.
+
+This page is *not* a replacement for the [Quarto documentation](https://quarto.org/docs/guide/). It explains the key ideas, a sensible way of working, and the things most likely to trip you up in *our* setup. Follow the links for details.
+
+## Key Terms
+
+QMD file
+: A plain-text file (ending `.qmd`) that mixes Markdown text with code 'chunks'. This is what you write and what you submit.
+
+YAML header
+: The block between the two `---` lines at the **top of the QMD file**. It sets file-specific options such as the title, bibliography, and output *formats* (and their options). Look at the one in the [template](https://github.com/jreades/fsds/blob/master/assessments/Group_Work.qmd).
+
+Format
+: An output type such as `html` or `pdf`. The template defines both options but you can choose which one to render.
+
+Render
+: Run all of the code in the QMD file and turn the result into one or more output files.
+
+Preview
+: Render, then keep watching the file for changes and re-render it every time you save a change.
+
+Chunk options
+: Lines starting `#|` at the top of a code chunk that control what appears in the output (e.g. `#| echo: false` hides the code but keeps its output). See [code cell options](https://quarto.org/docs/reference/cells/cells-jupyter.html).
+
+## Anatomy of a QMD File
+
+### The YAML header
+
+Here is a minimal header for a single file that produces both a Web page and a PDF:
+
+```yaml
+---
+title: "My Analysis"
+author: "A. Student"
+date: last-modified
+bibliography: bio.bib                # <1>
+csl: harvard-cite-them-right.csl
+execute:
+  echo: false                        # <2>
+format:
+  html:                              # <3>
+    toc: true
+  pdf:
+    papersize: a4
+    mainfont: Spectral               # <4>
+---
+```
+1. Your references, and the style used to format them (see [Citations](https://quarto.org/docs/authoring/citations.html)).
+2. Options under `execute` apply to *every* code chunk unless a chunk overrides them. Here, code is hidden but its output is shown.
+3. Each format has its own options. The *first* format listed is the one that `quarto preview` uses.
+4. Fonts must be installed where the render happens. The ones in the template are installed in the Podman image.
+
+YAML is fussy about indentation: use spaces (not tabs), and options *belong* to whatever sits above them at one less level of indentation. Most 'my option is being ignored' problems are indentation problems. The [template](https://github.com/jreades/fsds/blob/master/assessments/Group_Work.qmd) has a fuller header, and each format's options are listed in the reference pages for [HTML](https://quarto.org/docs/reference/formats/html.html) and [PDF](https://quarto.org/docs/reference/formats/pdf.html).
+
+### Code chunks, labels, and cross-references
+
+A code chunk can carry a `label`, and labels starting `fig-` or `tbl-` turn the output into a numbered figure or table that you can refer to in the text:
+
+````markdown
+```{{python}}
+#| label: fig-income
+#| fig-cap: "Median household income by borough."
+ax = df.plot.bar(x="borough", y="income")
+```
+
+As @fig-income shows, income varies considerably across London.
+````
+
+When rendered, `@fig-income` becomes 'Figure 1' (with a link to the figure in both the HTML and the PDF), and the numbering updates itself if you add or move figures. Labels must be unique and contain no spaces. Even when you aren't cross-referencing, labelling chunks is worthwhile because Quarto reports the label when a chunk fails. See [Cross-references](https://quarto.org/docs/authoring/cross-references.html) for tables, sections, and equations.
+
+## The Basics
+
+Quarto can 'render' QMD files into many different formats, including Jupyter/iPython notebooks, PDFs, Word documents, and Web pages. For *our* purposes, we're interested in PDFs and Web pages: PDFs because that's what you have to submit to Moodle, and Web pages because they are much faster to render than PDFs (so you can get more done, more quickly).
+
+All of the commands below are run from a Terminal *inside* Podman (in JupyterLab: `File` > `New` > `Terminal`), in the folder that contains your QMD file (e.g. `cd work/<your group's folder>`).
+
+There are two ways to run Quarto:
+
+1. **A one-time render**: `quarto render <file_name.qmd> --to html` (or `--to pdf`). This runs all of the code *once* and produces the output you asked for. If you leave off `--to`, Quarto renders *every* format in the YAML header, which includes the (slow) PDF.
+2. **A live preview**: `quarto preview <file_name.qmd> --port 4444 --host 0.0.0.0 --no-browser`. This renders the *first* format in the YAML header (HTML, in the template) and **re-renders** it each time you save so it's a good way to work interatively. Open <[http://localhost:4444](http://localhost:4444)>^[Or, for those of you who can't use **localhost** use the same IP address as you use to access JupyterLab!] in your browser to see the result. Stop the preview with `Ctrl+C`.
+
+::: {.callout-important}
+## Why the extra options on `preview`?
+
+Quarto is running *inside* the container, but your browser is *outside* it. The `podman run` command in the [SDS setup instructions]({{< var module.sds >}}) opens two 'ports' between the two: `8888` for JupyterLab and `4444` for Quarto preview. So you need to tell Quarto to use port 4444 (`--port 4444`), to accept connections from outside the container (`--host 0.0.0.0`), and not to try to open a browser that doesn't exist (`--no-browser`). If you started the container *without* `-p 4444:4444` then the preview won't be visible and you'll need to stop and restart the container using the full command.
+:::
+
+## Output Formats
+
+The same QMD file can be rendered to many [formats](https://quarto.org/docs/output-formats/all-formats.html). The ones you are most likely to meet are:
+
+| Format | YAML / `--to` name | What you get next to your QMD file |
+|---|---|---|
+| Web page | `html` | `file.html`, plus a `file_files/` folder holding its figures, scripts, and styles |
+| PDF | `pdf` | `file.pdf` (made via LaTeX, so slower) |
+| Word | `docx` | `file.docx` |
+| Slides | `revealjs` | `file.html` as a slide deck (the lectures on this site are made this way) |
+| Notebook | `ipynb` | `file.ipynb` |
+
+So if you suddenly see an HTML *and* a PDF version of your file when you only wanted one of these, it's because you ran `quarto render` without `--to`, and Quarto rendered every format in the YAML header. All of these are *outputs*: you can delete them and re-create them at any time, and you should not edit them by hand. If you are working in a Git repository, consider adding them to your `.gitignore` so they don't clutter up your commits.
+
+## Single Files and Projects
+
+Everything on this page treats your QMD as a single, self-contained file, and that's how we will render it. Quarto can also manage a whole folder of files as a *project*, configured by a `_quarto.yml` file that sets shared options, the order of pages, navigation, and so on. This Web site is a Quarto project: have a look at [its `_quarto.yml`](https://github.com/jreades/fsds/blob/master/_quarto.yml) to see how much more is possible, and at [Quarto Projects](https://quarto.org/docs/projects/quarto-projects.html) to learn more.
+
+::: {.callout-warning}
+Don't put a `_quarto.yml` in your submission folder and then rely on it: we test with *only* your QMD file, so any setting that lives in `_quarto.yml` will be missing. Put everything your file needs in its own YAML header.
+:::
+
+## A Sensible Way of Working
+
+1. Write and test in HTML using `preview` (or `render --to html`). It is quick and you can see charts, text, and structure change in near real-time.
+2. Every so often (e.g. at the end of each working session) run `quarto render <file_name.qmd> --to pdf`. PDFs are produced via LaTeX, which is slower and fails in ways that HTML does not (fonts, very wide tables, some special characters, image formats). Finding these problems one at a time is *much* easier than finding ten of them the night before the deadline.
+3. Before submitting, test in a *clean* folder that contains *only* your QMD file, since that is how we will test it (see [Resources](./resources.qmd)).
+
+You do not need to remove or comment out the `pdf` section of the YAML header while you are working: just don't use `quarto render` without `--to html`.
+
+## Things to Watch Out For
+
+::: {.callout-warning}
+## Every render runs *all* of your code
+
+Each render (including each save during `preview`) starts Python from scratch and runs every code chunk from the top. If your QMD file downloads a large data set, it will download it *every time* you save changes to the QMD. From [Week 4](../sessions/week4.qmd) you know how to write a function to save a local copy and only download it if it isn't there yet. In other words:
+
+```python
+import os
+import pandas as pd
+
+url = "https://example.org/some-large-file.csv"   # <1>
+fn  = os.path.join("data", os.path.basename(url))
+
+if not os.path.exists(fn):
+    os.makedirs("data", exist_ok=True)
+    pd.read_csv(url).to_csv(fn, index=False)
+
+df = pd.read_csv(fn)
+```
+1. Replace with your own data source. The download still happens the *first* time, so it will run during our reproducibility test.
+
+The template's `freeze: true` setting doesn't help here: it only applies when rendering a whole Quarto *project*, not a single file.
+:::
+
+::: {.callout-warning}
+## Reading a failed render
+
+Scroll *up* to the first error, not the last line of output. A Python error will name the code chunk that failed (this is where chunk `label`s help). A LaTeX error (PDF only) usually points to a font, an image, or a special character such as `&`, `%`, or `_` in text that LaTeX is treating as a command.
+:::
+
+## Where to Learn More
+
+- [Markdown basics](https://quarto.org/docs/authoring/markdown-basics.html): headings, lists, links, emphasis.
+- [Figures](https://quarto.org/docs/authoring/figures.html), [tables](https://quarto.org/docs/authoring/tables.html), and [cross-references](https://quarto.org/docs/authoring/cross-references.html): numbering and referring to figures and tables.
+- [Citations](https://quarto.org/docs/authoring/citations.html): uses the `.bib` and `.csl` files provided with the template.
+- [Inline code](https://quarto.org/docs/computations/inline-code.html): putting values computed in Python into your text.
+- [Code cell options](https://quarto.org/docs/reference/cells/cells-jupyter.html): the full list of `#|` options.
+- [PDF options](https://quarto.org/docs/reference/formats/pdf.html): fonts, margins, and other layout settings in the YAML header.
+
+Please also see [Resources](./resources.qmd) for the templates and information about how to create and render the QMD file.
