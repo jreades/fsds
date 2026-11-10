@@ -31,7 +31,7 @@ Writing: British spelling, Oxford comma, plain English.
 quarto render                    # whole site → _site/
 quarto render lectures/2.7-On_Writing.qmd   # one file
 quarto render --profile content --no-clean  # sessions, lectures, assessments only (keeps rest of _site)
-quarto render --profile pracs    # practicals only → _answers/
+quarto render --profile pracs --to ipynb,pdf   # practical answers → _answers/ (--to needed: site render has no PDFs)
 quarto preview                   # NB: doesn't run post-render scripts
 
 scripts/publish-content.sh       # content render + checks + publish --no-render (see To_Do.md § "Rendering and publishing")

@@ -5,7 +5,7 @@ rootdir = Path("_answers").resolve()
 #shutil.rmtree(rootdir)
 print("~" * 50)
 msg = """Rendering the practicals..."""
-# > quarto render --profile pracs practicals
+# > quarto render --profile pracs --to ipynb,pdf
 print(msg)
 print("~" * 50)
 exit()
