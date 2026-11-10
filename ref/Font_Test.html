@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Installed Font Test – Foundations of Spatial Data Science</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="..//img/favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-0f3ac383ce70eb1615e9c2a4900a74ac.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b7c25b840b8316902e8eb02a5b2a3792.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-0f3ac383ce70eb1615e9c2a4900a74ac.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/quarto-axe/axe.min.js"></script>
+<script src="../site_libs/quarto-axe/axe-check.js" type="module"></script>
+<script id="quarto-axe-checker-options" type="text/plain">eyJvdXRwdXQiOiJjb25zb2xlIn0=</script>
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-4febdd7a8f9ede5063c2a7bc0cb87c62.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-7baae9d86009b36eaeb2ad9dfdfa1450.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-4febdd7a8f9ede5063c2a7bc0cb87c62.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<meta property="og:title" content="Installed Font Test – Foundations of Spatial Data Science">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://jreades.github.io/fsds/ref/Font_Test_files/figure-html/cell-4-output-2.png">
+<meta property="og:site_name" content="Foundations of Spatial Data Science">
+<meta property="og:locale" content="en_GB">
+<meta property="og:image:height" content="965">
+<meta property="og:image:width" content="1214">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " aria-label="Main navigation" data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../img/logo/logo_only_sm.png" alt="Foundations of Spatial Data Science home" class="navbar-logo light-content">
+    <img src="../img/logo/logo_only_sm.png" alt="Foundations of Spatial Data Science home" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Foundations of Spatial Data Science</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../setup/index.html"> 
+<span class="menu-text">Setup</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-week-by-week" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Week-by-Week</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-week-by-week">    
+        <li>
+    <a class="dropdown-item" href="../sessions/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Part 1: Foundations</li>
+        <li>
+    <a class="dropdown-item" href="../sessions/week1.html">
+ <span class="dropdown-text">1. Setting Up</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week2.html">
+ <span class="dropdown-text">2. Foundations (Pt.1)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week3.html">
+ <span class="dropdown-text">3. Foundations (Pt.2)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week4.html">
+ <span class="dropdown-text">4. Efficient Code</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week5.html">
+ <span class="dropdown-text">5. Objects</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/reading_week.html">
+ <span class="dropdown-text">Reading Week</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Part 2: Process</li>
+        <li>
+    <a class="dropdown-item" href="../sessions/week6.html">
+ <span class="dropdown-text">6. Numeric Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week7.html">
+ <span class="dropdown-text">7. Spatial Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week8.html">
+ <span class="dropdown-text">8. Textual Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week9.html">
+ <span class="dropdown-text">9. Selecting Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week10.html">
+ <span class="dropdown-text">10. Presenting Data</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Part 3: Bonus</li>
+        <li>
+    <a class="dropdown-item" href="../sessions/week11.html">
+ <span class="dropdown-text">11. Dimensions in Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../sessions/week12.html">
+ <span class="dropdown-text">12. Grouping Data</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../references.html">
+ <span class="dropdown-text">Bibliography</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-assessments" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Assessments</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-assessments">    
+        <li>
+    <a class="dropdown-item" href="../assessments/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Elements</li>
+        <li>
+    <a class="dropdown-item" href="../assessments/group.html">
+ <span class="dropdown-text">Group Work</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../assessments/peer.html">
+ <span class="dropdown-text">Group Self-Evaluation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../assessments/quarto.html">
+ <span class="dropdown-text">Using Quarto</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../help.html"> 
+<span class="menu-text">Getting Help</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Font_Test.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Installed Font Test</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This file shows the fonts installed and accessible to Quarto/Matplotlib. It’s used partly to audit the latest Docker/Podman image release and partly to allow students to explore what is available in a reasonably intuitive fashion.</p>
+<section id="raw-list" class="level3">
+<h3 class="anchored" data-anchor-id="raw-list">Raw List</h3>
+<p>Taken directly from Matplotlib’s font cache:</p>
+<div id="316dcda3" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-label="1"></a><span class="op">!</span> grep <span class="st">'"name"'</span> <span class="op">~/</span>.cache<span class="op">/</span>matplotlib<span class="op">/</span>fontlist<span class="op">-</span>v390.json <span class="op">|</span> sort <span class="op">|</span> uniq</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      "name": "Big Shoulders Display",
+      "name": "Bitstream Charter",
+      "name": "Computer Modern",
+      "name": "Courier",
+      "name": "Cousine",
+      "name": "DejaVu Sans Display",
+      "name": "DejaVu Sans Mono",
+      "name": "DejaVu Sans",
+      "name": "DejaVu Serif Display",
+      "name": "DejaVu Serif",
+      "name": "EB Garamond",
+      "name": "Font Awesome 5 Brands",
+      "name": "Font Awesome 5 Free",
+      "name": "Font Awesome 6 Brands",
+      "name": "Font Awesome 6 Free",
+      "name": "Hanken Grotesk",
+      "name": "Helvetica",
+      "name": "ITC Avant Garde Gothic",
+      "name": "ITC Bookman",
+      "name": "ITC Zapf Chancery",
+      "name": "ITC Zapf Dingbats",
+      "name": "Inconsolata Condensed",
+      "name": "Inconsolata Expanded",
+      "name": "Inconsolata ExtraCondensed",
+      "name": "Inconsolata ExtraExpanded",
+      "name": "Inconsolata SemiCondensed",
+      "name": "Inconsolata SemiExpanded",
+      "name": "Inconsolata UltraCondensed",
+      "name": "Inconsolata UltraExpanded",
+      "name": "Inconsolata",
+      "name": "Inter Tight",
+      "name": "LMMono10",
+      "name": "LMMonoCaps10",
+      "name": "LMMonoLt10",
+      "name": "LMMonoLtCond10",
+      "name": "LMMonoProp10",
+      "name": "LMMonoPropLt10",
+      "name": "LMMonoSlant10",
+      "name": "LMRoman10",
+      "name": "LMRomanCaps10",
+      "name": "LMRomanDemi10",
+      "name": "LMRomanDunh10",
+      "name": "LMRomanSlant10",
+      "name": "LMRomanUnsl10",
+      "name": "LMSans10",
+      "name": "LMSansDemiCond10",
+      "name": "LMSansQuot8",
+      "name": "Liberation Mono",
+      "name": "Liberation Sans",
+      "name": "Liberation Serif",
+      "name": "Lobster",
+      "name": "Micro 5",
+      "name": "New Century Schoolbook",
+      "name": "Palatino",
+      "name": "Roboto Flex",
+      "name": "Roboto Mono",
+      "name": "Roboto Slab",
+      "name": "STIXGeneral",
+      "name": "STIXNonUnicode",
+      "name": "STIXSizeFiveSym",
+      "name": "STIXSizeFourSym",
+      "name": "STIXSizeOneSym",
+      "name": "STIXSizeThreeSym",
+      "name": "STIXSizeTwoSym",
+      "name": "Silkscreen",
+      "name": "Source Code Pro",
+      "name": "Source Sans 3",
+      "name": "Source Serif 4 18pt",
+      "name": "Source Serif 4 36pt",
+      "name": "Source Serif 4 48pt",
+      "name": "Source Serif 4",
+      "name": "Spectral SC",
+      "name": "Spectral",
+      "name": "Symbol",
+      "name": "Times",
+      "name": "Ubuntu Condensed",
+      "name": "Ubuntu Mono",
+      "name": "Ubuntu",
+      "name": "Utopia",
+      "name": "ZapfDingbats",
+      "name": "cmb10",
+      "name": "cmex10",
+      "name": "cmmi10",
+      "name": "cmr10",
+      "name": "cmss10",
+      "name": "cmsy10",
+      "name": "cmtt10",</code></pre>
+</div>
+</div>
+</section>
+<section id="formatted-list" class="level3">
+<h3 class="anchored" data-anchor-id="formatted-list">Formatted List</h3>
+<p>Taken from Matplotlib’s font manager tool.</p>
+<p>Please note that fonts may not render correctly in Safari, but will do so in Google Chrome and other browsers. The <em>list</em> is correct and these fonts <em>can</em> be used to render PDFs from Quarto.</p>
+<div id="c108a197" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-label="1"></a><span class="im">from</span> matplotlib <span class="im">import</span> font_manager</span>
+<span id="cb3-2"><a href="#cb3-2" aria-label="2"></a><span class="im">from</span> IPython.core.display <span class="im">import</span> HTML</span>
+<span id="cb3-3"><a href="#cb3-3" aria-label="3"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-label="4"></a>flist <span class="op">=</span> font_manager.findSystemFonts()</span>
+<span id="cb3-5"><a href="#cb3-5" aria-label="5"></a>names <span class="op">=</span> []</span>
+<span id="cb3-6"><a href="#cb3-6" aria-label="6"></a><span class="cf">for</span> fname <span class="kw">in</span> flist:</span>
+<span id="cb3-7"><a href="#cb3-7" aria-label="7"></a>    <span class="cf">try</span>:</span>
+<span id="cb3-8"><a href="#cb3-8" aria-label="8"></a>        names.append(font_manager.FontProperties(fname<span class="op">=</span>fname).get_name())</span>
+<span id="cb3-9"><a href="#cb3-9" aria-label="9"></a>    <span class="cf">except</span> <span class="pp">RuntimeError</span>:</span>
+<span id="cb3-10"><a href="#cb3-10" aria-label="10"></a>        <span class="bu">print</span>(<span class="ss">f"- Problem detected with </span><span class="sc">{</span>fname<span class="sc">}</span><span class="ss">, skipping..."</span>) <span class="co"># Think the issue is emoji-support/colour fonts</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-label="11"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-label="12"></a><span class="bu">print</span>(<span class="ss">f"Found </span><span class="sc">{</span><span class="bu">len</span>(<span class="bu">set</span>(names))<span class="sc">}</span><span class="ss"> valid fonts."</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-label="13"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-label="14"></a><span class="kw">def</span> make_html(fontname):</span>
+<span id="cb3-15"><a href="#cb3-15" aria-label="15"></a>    <span class="cf">return</span> <span class="st">"&lt;p&gt;&lt;span style='font-family:</span><span class="sc">{font}</span><span class="st">; font-size: 20px;'&gt;</span><span class="sc">{font}</span><span class="st">&lt;/span&gt;&lt;/p&gt;"</span>.<span class="bu">format</span>(font<span class="op">=</span>fontname)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-label="16"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-label="17"></a>code <span class="op">=</span> <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>.join([make_html(font) <span class="cf">for</span> font <span class="kw">in</span> <span class="bu">sorted</span>(<span class="bu">set</span>(names))])</span>
+<span id="cb3-18"><a href="#cb3-18" aria-label="18"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-label="19"></a>HTML(<span class="st">"&lt;div style='column-count: 2;'&gt;</span><span class="sc">{}</span><span class="st">&lt;/div&gt;"</span>.<span class="bu">format</span>(code))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Found 42 valid fonts.</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div style="column-count: 2;"><p><span style="font-family:Big Shoulders Display; font-size: 20px;">Big Shoulders Display</span></p>
+<p><span style="font-family:Cousine; font-size: 20px;">Cousine</span></p>
+<p><span style="font-family:DejaVu Sans; font-size: 20px;">DejaVu Sans</span></p>
+<p><span style="font-family:EB Garamond; font-size: 20px;">EB Garamond</span></p>
+<p><span style="font-family:Font Awesome 5 Brands; font-size: 20px;">Font Awesome 5 Brands</span></p>
+<p><span style="font-family:Font Awesome 5 Free; font-size: 20px;">Font Awesome 5 Free</span></p>
+<p><span style="font-family:Font Awesome 6 Brands; font-size: 20px;">Font Awesome 6 Brands</span></p>
+<p><span style="font-family:Font Awesome 6 Free; font-size: 20px;">Font Awesome 6 Free</span></p>
+<p><span style="font-family:Font Awesome v4 Compatibility; font-size: 20px;">Font Awesome v4 Compatibility</span></p>
+<p><span style="font-family:Hanken Grotesk; font-size: 20px;">Hanken Grotesk</span></p>
+<p><span style="font-family:Inconsolata; font-size: 20px;">Inconsolata</span></p>
+<p><span style="font-family:Inconsolata Condensed; font-size: 20px;">Inconsolata Condensed</span></p>
+<p><span style="font-family:Inconsolata Expanded; font-size: 20px;">Inconsolata Expanded</span></p>
+<p><span style="font-family:Inconsolata ExtraCondensed; font-size: 20px;">Inconsolata ExtraCondensed</span></p>
+<p><span style="font-family:Inconsolata ExtraExpanded; font-size: 20px;">Inconsolata ExtraExpanded</span></p>
+<p><span style="font-family:Inconsolata SemiCondensed; font-size: 20px;">Inconsolata SemiCondensed</span></p>
+<p><span style="font-family:Inconsolata SemiExpanded; font-size: 20px;">Inconsolata SemiExpanded</span></p>
+<p><span style="font-family:Inconsolata UltraCondensed; font-size: 20px;">Inconsolata UltraCondensed</span></p>
+<p><span style="font-family:Inconsolata UltraExpanded; font-size: 20px;">Inconsolata UltraExpanded</span></p>
+<p><span style="font-family:Inter Tight; font-size: 20px;">Inter Tight</span></p>
+<p><span style="font-family:League Gothic; font-size: 20px;">League Gothic</span></p>
+<p><span style="font-family:Liberation Mono; font-size: 20px;">Liberation Mono</span></p>
+<p><span style="font-family:Liberation Sans; font-size: 20px;">Liberation Sans</span></p>
+<p><span style="font-family:Liberation Serif; font-size: 20px;">Liberation Serif</span></p>
+<p><span style="font-family:Lobster; font-size: 20px;">Lobster</span></p>
+<p><span style="font-family:Micro 5; font-size: 20px;">Micro 5</span></p>
+<p><span style="font-family:Roboto Flex; font-size: 20px;">Roboto Flex</span></p>
+<p><span style="font-family:Roboto Mono; font-size: 20px;">Roboto Mono</span></p>
+<p><span style="font-family:Roboto Slab; font-size: 20px;">Roboto Slab</span></p>
+<p><span style="font-family:Silkscreen; font-size: 20px;">Silkscreen</span></p>
+<p><span style="font-family:Source Code Pro; font-size: 20px;">Source Code Pro</span></p>
+<p><span style="font-family:Source Sans 3; font-size: 20px;">Source Sans 3</span></p>
+<p><span style="font-family:Source Sans Pro; font-size: 20px;">Source Sans Pro</span></p>
+<p><span style="font-family:Source Serif 4; font-size: 20px;">Source Serif 4</span></p>
+<p><span style="font-family:Source Serif 4 18pt; font-size: 20px;">Source Serif 4 18pt</span></p>
+<p><span style="font-family:Source Serif 4 36pt; font-size: 20px;">Source Serif 4 36pt</span></p>
+<p><span style="font-family:Source Serif 4 48pt; font-size: 20px;">Source Serif 4 48pt</span></p>
+<p><span style="font-family:Spectral; font-size: 20px;">Spectral</span></p>
+<p><span style="font-family:Spectral SC; font-size: 20px;">Spectral SC</span></p>
+<p><span style="font-family:Ubuntu; font-size: 20px;">Ubuntu</span></p>
+<p><span style="font-family:Ubuntu Condensed; font-size: 20px;">Ubuntu Condensed</span></p>
+<p><span style="font-family:Ubuntu Mono; font-size: 20px;">Ubuntu Mono</span></p></div>
+</div>
+</div>
+</section>
+<section id="plotting-test" class="level3">
+<h3 class="anchored" data-anchor-id="plotting-test">Plotting Test</h3>
+<p>A quick test to ensure that a font is rendering correctly.</p>
+<div id="3f8e6e31" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-label="1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb5-2"><a href="#cb5-2" aria-label="2"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb5-3"><a href="#cb5-3" aria-label="3"></a>x <span class="op">=</span> np.random.random(<span class="dv">20</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-label="4"></a>y <span class="op">=</span> np.random.random(<span class="dv">20</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-label="5"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-label="6"></a>ff <span class="op">=</span> <span class="st">'SPectral SC'</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-label="7"></a>tfont <span class="op">=</span> {<span class="st">'fontname'</span>:ff}</span>
+<span id="cb5-8"><a href="#cb5-8" aria-label="8"></a>bfont <span class="op">=</span> {<span class="st">'fontname'</span>:ff, <span class="st">'weight'</span>:<span class="st">'bold'</span>, <span class="st">'horizontalalignment'</span>:<span class="st">'left'</span>}</span>
+<span id="cb5-9"><a href="#cb5-9" aria-label="9"></a>afont <span class="op">=</span> {<span class="st">'fontname'</span>:ff}</span>
+<span id="cb5-10"><a href="#cb5-10" aria-label="10"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-label="11"></a>f,ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">1</span>,figsize<span class="op">=</span>(<span class="dv">7</span>,<span class="dv">5</span>))</span>
+<span id="cb5-12"><a href="#cb5-12" aria-label="12"></a>plt.scatter(x,y)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-label="13"></a>f.suptitle(<span class="st">"Testing Font Spec"</span>, x<span class="op">=</span><span class="fl">0.025</span>, ha<span class="op">=</span><span class="st">'left'</span>, size<span class="op">=</span><span class="dv">24</span>, <span class="op">**</span>tfont)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-label="14"></a>ax.set_ylabel(<span class="st">'Median Price'</span>, size<span class="op">=</span><span class="dv">20</span>, <span class="op">**</span>afont)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-label="15"></a>ax.set_xlabel(<span class="st">'Count'</span>, size<span class="op">=</span><span class="dv">20</span>, <span class="op">**</span>afont)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>Text(0.5, 0, 'Count')</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="Font_Test_files/figure-html/cell-4-output-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="Font_Test_files/figure-html/cell-4-output-2.png" width="607" height="483" class="figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jreades\.github\.io\/fsds\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 2022–2026, Jon Reades</p>
+</div>   
+    <div class="nav-footer-center">
+<p><img src="../img/logo/logo_only_sm.png" alt="CASA Logo" height="25"> Foundations of Spatial Data Science</p>
+<div class="toc-actions"><ul><li><a href="https://github.com/jreades/fsds/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jreades/fsds">
+      <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://bsky.app/profile/jreades.bsky.social/">
+      <i class="bi bi-twitter" role="img" aria-label="Bluesky">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+</body></html>
