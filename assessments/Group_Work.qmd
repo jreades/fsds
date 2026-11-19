@@ -1,0 +1,199 @@
+---
+date: last-modified
+bibliography: bio.bib
+csl: harvard-cite-them-right.csl
+title: Group Name's Group Project
+execute:
+  echo: false
+  freeze: true
+format:
+  html:
+    code-copy: true
+    code-link: true
+    toc: true
+    toc-title: On this page
+    toc-depth: 2
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+  pdf:
+    include-in-header:
+      text: |
+        \addtokomafont{disposition}{\rmfamily}
+    mainfont: Spectral
+    sansfont: "Roboto Flex"
+    monofont: "Liberation Mono"
+    papersize: a4
+    geometry:
+      - top=25mm
+      - left=40mm
+      - right=30mm
+      - bottom=25mm
+      - heightrounded
+    toc: false
+    number-sections: false
+    colorlinks: true
+    highlight-style: github
+jupyter:
+  jupytext:
+    text_representation:
+      extension: .qmd
+      format_name: quarto
+      format_version: '1.0'
+      jupytext_version: 1.15.2
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
+---
+
+## Declaration of Authorship {.unnumbered .unlisted}
+
+We, [insert your group's names], pledge our honour that the work presented in this assessment is our own. Where information has been derived from other sources, we confirm that this has been indicated in the work. Where a Large Language Model such as ChatGPT has been used we confirm that we have made its contribution to the final submission clear.
+
+Date:
+
+Student Numbers: 
+
+## Priorities for Feedback
+
+Are there any areas on which you would appreciate more detailed feedback if we're able to offer it?
+
+{{< pagebreak >}}
+
+**Remove this page (up to the next `pagebreak`) prior to submission!**
+
+# Code Examples
+
+This page has example code to show you can include outputs while hiding code in Quarto, as well as some tools for interpolating data in the text. 
+
+See the raw file for examples of how to hide computational output as there is code hidden here.
+
+```{python}
+#| echo: True 
+#| label: importing
+# This code will be shown, 
+# but the next block will not
+import os
+import pandas as pd
+```
+
+```{python}
+#| label: file-location-parquet
+ymd  = '20260619'
+city = 'London'
+host = 'http://orca.casa.ucl.ac.uk'
+url  = f'{host}/~jreades/data/{ymd}-{city}-listings.parquet'
+file = f'{ymd}-{city}-listings.parquet'
+```
+
+```{python}
+#| echo: true
+#| label: downloading
+#| warning: true
+#| error: true
+# This code is not shown because echo was
+# set to False in the header. You should
+# think carefully about whether you want
+# or need to show any code to the reader
+# in the PDf.
+if os.path.exists(file):
+  try:
+    df = pd.read_parquet(file)
+  except:
+    print(f"Unable to read parquet '{url}'")
+else: 
+  try:
+    df = pd.read_parquet(url)
+    df.to_parquet(file)
+  except:
+    print(f"Unable to download parquet '{url}")
+```
+
+An inline citation example: As discussed on @insideairbnb, there are many...
+
+A parenthetical citation example: There are many ways to research Airbnb [see, for example, @insideairbnb]... 
+
+```{python}
+#| output: asis
+#| label: writing-text
+# This is one way to write dynamic text. 'As is' means
+# it will interpret the result as regular Quarto markdown 
+# so the below `print` statement becomes plain text with
+# the size of the dataframe interpolated into the string.
+# When Quarto is done running the Python code what's left
+# is plain-text and that is then treated as a paragraph
+# like it would be if you'd written it in Quarto.
+print(f"One of way to embed output in the text looks like this: after cleaning, we were left with {df.shape[0]:,} rows of data.")
+```
+
+```{python}
+#| label: writing-text-2
+# The other way is to ensure that your variables are *simple* 
+# data types that Quarto can understand. So notice below that
+# we just have a single, inline `{python} with the value of
+# the row directly inserted into the sentence. his should also work, but is sometimes less predictably
+# reliable.
+row_count = f"{df.shape[0]:,}"
+```
+The other way is to interpolate it directly into the sentence like this (`{python} row_count `); however, I've found it less reliable and it really requires you to be careful about data types. So `{python} print(f"{df.shape[0]:,}") ` probably won't work and you'll just see some Python code instead.
+
+And here's a nice little chart straight into the document!
+
+```{python}
+#| label: plotting
+ax = df.host_listings_count.plot.hist(bins=50);
+ax.set_xlim([0,500]);
+```
+
+{{< pagebreak >}}
+
+# Briefing
+
+
+In the midst of an election, a newspaper has broken the story of an advisor on social mobility to the Mayor owning three homes, two of which are let on Airbnb (one of which is still council-owned housing!). The opposition has announced a plan to force all *professional landlords* to register their properties and face higher Council Tax rates claiming that Airbnb is 'out of control' in the capital. 
+
+The Mayor wants to understand the scale of the 'problem' and the likely impacts of the opposition's proposal so that they can either adopt it (and show how responsive they are) or demonstrate how poorly thought-through the opposition's proposal is (and show that they're not ready to govern). 
+
+They have come to you---their crack team of data analysts and policy advisors---for a briefing supported by evidence and visualisations that they can use in their campaign communications. You are working in an information-poor environment, so you will need to make assumptions, justify them clearly, and show how they affect your conclusions. Use data, reasoning, and clear visualisation to build a persuasive and evidence-informed argument.
+
+## What the Mayor wants to know
+
+The Mayor has asked you to answer five key questions.
+
+::: {.callout-important}
+### Flexibility of Format
+
+You will need to address the following five questions as part of your briefing, but you do *not* need to keep the question/answer format in your submission. I would like you to focus on effective communication: it must be clear that you *have* answered these questions in your briefing, but you don't need to keep these headings if they get in the way of your ability to communicate to the target audience.
+
+:::
+
+### 1. Is Airbnb 'out of control' in London?
+
+::: {.duedate}
+
+Draft answer due Week 7.
+
+:::
+ 
+### 2. How many professional landlords are there?
+
+::: {.duedate}
+
+Draft answer due Week 8.
+
+:::
+ 
+### 3. How many properties would be affected by the opposition's proposal?
+
+::: {.duedate}
+
+Draft answer due Week 9.
+
+:::
+ 
+### 4. What are the likely pros and cons of the opposition's proposal (for the Mayor, for residents, and for the city)?
+
+### 5. Can the story be reframed as a positive one about social mobility or housing opportunity?
+
+## References
