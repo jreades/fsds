@@ -3,9 +3,14 @@
 flatten_qmd.py — inline Quarto {{< include >}} shortcodes into a new .qmd.
 
 Usage:
-    python flatten_qmd.py input.qmd [output.qmd]
+    python flatten_qmd.py input.qmd [output.qmd | output_dir/]
 
-If output is omitted, writes <input>-flat.qmd next to the input.
+If output is omitted, writes <input>-flat.qmd next to the input. If output
+is an existing directory, writes <output_dir>/<input name>.
+
+During `quarto render` this runs automatically (from scripts/post.py) for
+any rendered file whose front matter contains `flatten-qmd: true`: the
+flattened copy is written next to its HTML/PDF in the output dir.
 
 Behaviour (mirrors Quarto's own rules):
   * Relative include paths resolve from the directory of the MAIN file,
@@ -19,16 +24,21 @@ Behaviour (mirrors Quarto's own rules):
   * Shortcodes inside fenced code blocks (``` or ~~~) are left untouched.
   * YAML front matter in included files is dropped (Quarto ignores it too),
     except in the main file.
+  * The `flatten-qmd` flag is removed from the main file's front matter.
   * Code chunks are NOT executed — the output is still a renderable .qmd.
 """
 import re
 import sys
 from pathlib import Path
 
+FLAG = "flatten-qmd"
+
 INCLUDE_RE = re.compile(
     r'(?<!\{)\{\{<\s*include\s+(?P<path>"[^"]+"|\'[^\']+\'|\S+)\s*>\}\}(?!\})'
 )
 FENCE_RE = re.compile(r'^(\s*)(`{3,}|~{3,})')
+FRONT_MATTER_RE = re.compile(r'^---\s*\n.*?\n(---|\.\.\.)\s*\n', re.S)
+FLAG_LINE_RE = re.compile(rf'^{FLAG}\s*:.*\n', re.M)
 
 
 def find_project_root(start: Path) -> Path:
@@ -39,11 +49,24 @@ def find_project_root(start: Path) -> Path:
 
 
 def strip_front_matter(text: str) -> str:
-    if text.startswith("---"):
-        m = re.match(r'^---\s*\n.*?\n(---|\.\.\.)\s*\n', text, re.S)
-        if m:
-            return text[m.end():]
-    return text
+    m = FRONT_MATTER_RE.match(text)
+    return text[m.end():] if m else text
+
+
+def is_flagged(path: Path) -> bool:
+    """True if the file's front matter has a top-level `flatten-qmd: true`."""
+    try:
+        m = FRONT_MATTER_RE.match(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError):
+        return False
+    return bool(m and re.search(rf'^{FLAG}\s*:\s*true\s*(#.*)?$', m.group(0), re.M))
+
+
+def drop_flag(text: str) -> str:
+    m = FRONT_MATTER_RE.match(text)
+    if not m:
+        return text
+    return FLAG_LINE_RE.sub("", m.group(0)) + text[m.end():]
 
 
 def expand(text, main_dir, root, stack):
@@ -79,15 +102,26 @@ def expand(text, main_dir, root, stack):
     return "".join(out)
 
 
+def flatten(src: Path) -> str:
+    src = Path(src).resolve()
+    main_dir = src.parent
+    root = find_project_root(main_dir)
+    return drop_flag(expand(src.read_text(encoding="utf-8"), main_dir, root, [src]))
+
+
 def main():
     if len(sys.argv) < 2:
         sys.exit(__doc__)
     src = Path(sys.argv[1]).resolve()
-    dst = Path(sys.argv[2]) if len(sys.argv) > 2 else src.with_name(src.stem + "-flat.qmd")
-    main_dir = src.parent
-    root = find_project_root(main_dir)
-    result = expand(src.read_text(encoding="utf-8"), main_dir, root, [src])
-    dst.write_text(result, encoding="utf-8")
+    if len(sys.argv) > 2:
+        dst = Path(sys.argv[2])
+        if dst.is_dir():
+            dst = dst / src.name
+    else:
+        dst = src.with_name(src.stem + "-flat.qmd")
+    if dst.resolve() == src:
+        sys.exit("Refusing to overwrite the input file.")
+    dst.write_text(flatten(src), encoding="utf-8")
     print(f"Wrote {dst}")
 
 

@@ -98,5 +98,31 @@ def label_nav_landmarks(output_dir: str) -> None:
     print(f"[post.py] Added nav aria-labels/roles to {n_files} HTML file(s) in {site}")
 
 
+def flatten_flagged_qmds(output_dir: str) -> None:
+    """Write a self-contained .qmd (includes inlined) next to the HTML/PDF of
+    every file rendered in this pass whose front matter has `flatten-qmd: true`.
+    Students can't see `_`-prefixed include files, so templates they download
+    must be flattened. Keyed off QUARTO_PROJECT_OUTPUT_FILES so it only touches
+    files rendered now and is redone after a cleaning render."""
+    from flatten_qmd import flatten, is_flagged  # sibling module in scripts/
+
+    site = Path(output_dir).resolve()
+    outputs = os.environ.get("QUARTO_PROJECT_OUTPUT_FILES", "").splitlines()
+    sources = set()
+    for out in filter(None, outputs):
+        try:
+            rel = Path(out).resolve().relative_to(site)
+        except ValueError:
+            continue
+        sources.add(rel.with_suffix(".qmd"))
+    for rel in sorted(sources):
+        src = Path(rel)
+        if src.is_file() and is_flagged(src):
+            dst = site / rel
+            dst.write_text(flatten(src), encoding="utf-8")
+            print(f"[post.py] Flattened {src} -> {dst.relative_to(site.parent)}")
+
+
 _output_dir = os.environ.get("QUARTO_PROJECT_OUTPUT_DIR", "_site")
 label_nav_landmarks(_output_dir)
+flatten_flagged_qmds(_output_dir)
