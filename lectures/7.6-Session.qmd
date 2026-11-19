@@ -5,9 +5,13 @@ title: "Can You Prove Anything<br />with Numbers?"
 other: ""
 format: revealjs
 title-slide-attributes:
+  data-background-image: "/img/web/title-slide.png"
+  data-background-size: stretch
+  data-background-opacity: "0.08"
+  data-background-color: "#4e3c56"
   data-notes: "Run sheet (120 min). 0–4: last week's exit tickets + the question. 4–16: predict the output (4 snippets). 16–38: reading verdict. 38–50: bridge (3 slides). 50–55: admin + practical intro.
 
-55–62: break. 62–82: group slot (a randomly selected group presents its draft answer to Question 1, then feedback). 82–104: 'Where Did This Number Come From?' (6 slides). 104–110: buffer. 110–120: exit ticket (the last two slides of this deck).
+55–62: break. 62–82: group slot (a randomly selected group presents its draft answer to Question 1, then feedback). 82–104: 'Where Did This Number Come From?' (6 slides). 104–110: buffer. [CHECK] The PDR case (Chng et al. vs Clifford et al., 5 slides) moved here from week 6 and sits before 'Where Did This Number Come From?'; timings not yet rebalanced (7.6 still needs the rebuild in the new format). 110–120: exit ticket (the last two slides of this deck).
 
 How to run the room: never ask for volunteers or pick out individuals. Walk to a row and ask 'What did you two decide?' Ask which reading they used only after they've answered. Every neighbour discussion starts with 1 minute of silent writing. If there's spare time, give it to neighbour discussion, not more talking."
 ---
@@ -398,6 +402,104 @@ Select the group at random in front of the room (a number from a list: not a per
 Starting points for feedback if the group needs one (from 2025): a published heuristic is better than a guess (estimate nights from reviews with a review rate and an average stay, then compare with the 90-day limit); read Airbnb's own methodology; think about density *relative to* something (homes, population) rather than raw counts. [CHECK] Don't present these as the answer.
 
 If the group runs over, stop at 5 minutes. Remind the room that the question is a draft: the point is the thinking.
+
+:::
+
+# Case: Permitted Development
+
+## Offices into Homes
+
+- Since 2013, Permitted Development Rights (PDR) let developers convert offices into homes **without full planning permission**.
+- Before April 2021, there was no requirement to meet the national space standard (37 m² for a one-bedroom flat).
+- So: how small are these homes? And how would you find out across all of London?
+
+::: {.notes}
+
+Sources: @Chng:2024 [pp.961, 963–964]. The Ilford example (p.963): single-aspect studio flats of 13 m² in an office block next to the A12.
+
+Moved from week 6. Link back: last week's atlas used the same EPC + Price Paid linkage; this is what happens when that kind of work is challenged in print.
+
+Say: this is my own work, with Ian Chng and Phil Hubbard, and it was then challenged in print. I'm going to show you both sides, and you're going to put both on the frame.
+
+:::
+
+## Linking Three Data Sets
+
+| Frame | What we did |
+|---|---|
+| **Inputs** | London Planning Database: 2,323 PDR schemes, 2013–2021, 18,000+ homes |
+| **Cleaning** | Match each scheme to Energy Performance Certificates (floor area) and Price Paid Data (price) by address |
+| **Method** | Compare floor areas with the space standard |
+
+. . .
+
+<div style="margin-top:30px">
+Every match is an address problem: a reused property ID, a building that's gone but still in the postal data, a postcode that changes.
+</div>
+
+::: {.notes}
+
+Source: @Chng:2024 [p.963].
+
+This is where the address-matching examples from week 5 belong (all in the **cleaning** box): one UPRN entered 20–50 times on EPCs for a new development because the new flats didn't have their own yet; a building destroyed and rebuilt that the postal data never records; a large development that gets a new postcode. Every failed match is a home that drops out of the analysis without anyone deciding to drop it.
+
+Ask (pairs, 1 min): *what kind of home is most likely to fail to match?*
+
+:::
+
+## What We Found
+
+> Figure 8 shows large PDR developments (33.7%) have delivered a greater proportion of units smaller than the NDSS minimum for a one-bedroom home compared to small PDR developments (14.1%) [...] the values here are significantly lower than the 86.4% Clifford et al. (2019) and 70% Ferm et al. (2021) identified in their studies ~ @Chng:2024 [p.973]
+
+. . .
+
+Same question. Very different numbers. Who's right?
+
+::: {.notes}
+
+Note what the paper says in the same paragraph: it used 35 m², not 37 m², as the threshold *because* EPC floor areas are often wrong ("as many as one-in-four EPCs report floor space that varies by 10% or more", p.973), and it says some larger flats may also be below the standard for their size. The caveats were in the paper.
+
+Don't answer "who's right" yet: the next slide is the response.
+
+:::
+
+## The Response
+
+> EPCs are about energy performance, not space standards albeit they do include floorspace data ~ @Clifford:2025 [p.674]
+
+. . .
+
+> The EPC data does not show the number of bedrooms, and so Chng et al. (2024) have just applied the minimum standard for a one bedroom, one person residence to everything they have analysed. ~ @Clifford:2025 [p.677]
+
+. . .
+
+Their three issues: **complexity**, **accuracy**, **availability**. Which box does each one go in?
+
+::: {.notes}
+
+Pairs, 2 minutes: place the three issues on the frame. Likely answers: *complexity* (the missing bedroom count; one standard applied to everything) → **inputs** and **method**; *accuracy* (EPC floor areas are estimates) → **inputs**; *availability* (what data exists at all) → **inputs**, but also **analyst** (who can collect it).
+
+**Say the "no right of reply" part here, briefly and in your own words.** It's part of the lesson: this is how these debates unfold in print, and not always fairly. Several of the authors are UCL colleagues.
+
+:::
+
+## Where Is the 'Nothing'?
+
+- The EPC has **no bedroom field**. So one rule was applied to every home.
+- Their suggested fix: the EPC *does* record **habitable rooms**, so assume bedrooms = rooms − 1 [@Clifford:2025, p.677].
+- Their worked example: studio flats of **21–28 m²** measured from floorplans, **20–33 m²** in the EPCs [@Clifford:2025, p.675].
+
+. . .
+
+A city-wide linkage vs 30 schemes measured by hand: *what does each one give up?*
+
+::: {.notes}
+
+This is the week's question in a real dispute: a missing field decided a result. And the fix was in another column, which is the case for reading the data's documentation before you decide what's missing.
+
+The contrast is the same as Ollie's measurement vs memory in week 5. The big-data approach gives up detail (bedrooms, floorplans) to get coverage (all 33 boroughs). The case-study approach gives up coverage to get detail: 30 schemes, chosen in places with lots of PDR. Neither is the view from nowhere. Ask: which box on the frame does each approach strengthen, and which does it weaken?
+
+If someone asks for the verdict: both studies find a real problem with PDR housing. They disagree about how big it is, and that disagreement is about the data.
 
 :::
 
