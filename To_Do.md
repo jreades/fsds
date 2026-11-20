@@ -358,4 +358,11 @@ Rules until the session: never use `publish --no-render` directly (`scripts/publ
 - Asana: a short video on the *purpose* of Docker/Podman (shared with QM).
 - 5.2 pizza example: rename it to `Pizza` and drop `(object)` across all slides.
 - Alt text across all decks.
+- **Collapse the data-download includes into one** (decided 2026-11-19; not changed mid-term because Practicals 6 and 7 had already run). At the moment `scripts/pre.py` writes three includes (`practicals/_data_definition{,_csv,_sp}.qmd`) from `data:` in `_variables.yml`, one per format, so that `url` is complete when each include finishes.
+  - *Change:* use one include that defines `ymd`, `city`, `host` and `listings = f'{host}/~jreades/data/{ymd}-{city}-listings'`. Each of the seven include sites then builds its own URL in its next code cell, so students see where the URL comes from:
+    - Practical 6: `url = f'{listings}.csv.gz'`
+    - Practical 7 and `assessments/Group_Work.qmd`: `url = f'{listings}.parquet'`, plus `file = …` in `Group_Work`
+    - Practicals 8, 9, 11 and 12: `url = f'{listings}.geoparquet'`
+  - Then reduce `INCLUDES` in `pre.py` to one template and delete the other two files. Keep the freeze-clearing logic: `freeze: auto` ignores changes to included files.
+  - Check Practical 11, which includes the GeoParquet file but never uses `url`.
 - Readings method: consider a surname split (each student reads one of three readings, then briefs neighbours) for weeks where the readings total more than about 30 pp. (2026/27 week 9 would have qualified.) Not changed mid-term in 2026/27: every student reads every assigned reading.
