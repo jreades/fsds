@@ -4,14 +4,15 @@ email: "j.reades@ucl.ac.uk"
 title: "Describing a Place<br />or Shaping It?"
 other: ""
 format: revealjs
+answers: false
 title-slide-attributes:
   data-background-image: "/img/web/title-slide.png"
   data-background-size: stretch
   data-background-opacity: "0.08"
   data-background-color: "#4e3c56"
-  data-notes: "Run sheet (120 min). 0–4: last week's exit tickets + the question. 4–16: predict the output (4 snippets). 16–38: reading verdict. 38–50: bridge (3 slides). 50–55: admin + practical intro.
+  data-notes: "Run sheet (120 min). 0–4: last week's exit tickets + the question. 4–26: admin, then the group slot (a randomly selected group presents its draft answer to Question 2, then feedback). This comes first and is protected. 26–48: reading verdict. 48–51: practical intro.
 
-55–62: break. 62–82: group slot (a randomly selected group presents its draft answer to Question 2, then feedback). 82–104: 'From Words to Numbers' (6 slides). 104–110: buffer. 110–120: exit ticket (the last two slides of this deck).
+51–58: break. 58–70: predict the output (4 snippets; 3 if behind). 70–82: bridge (3 slides). 82–104: 'From Words to Numbers' (6 slides). 104–110: buffer. 110–120: exit ticket (the last two slides of this deck).
 
 How to run the room: never ask for volunteers or pick out individuals. Walk to a row and ask 'What did you two decide?' Ask which reading they used only after they've answered. Every neighbour discussion starts with 1 minute of silent writing. If there's spare time, give it to neighbour discussion, not more talking."
 ---
@@ -50,7 +51,7 @@ Say: these are anonymous, they get read, and three of them open each session. Th
 
 &nbsp;
 
-We'll answer it with code and readings, then with your draft answers to Question 2.
+We'll answer it with your draft answers to Question 2, then with readings and code.
 
 . . .
 
@@ -60,136 +61,48 @@ We'll answer it with code and readings, then with your draft answers to Question
 
 Three levels, one question. In code, a pattern decides what counts as a match. In the readings, a listing is both a description of a home and a signal to a particular buyer. In your briefing, deciding who is a "professional landlord" starts with deciding which words, or which counts, to look for.
 
-Run sheet again, for the room: predict the output, readings, then a group's draft, and then how words become numbers.
+Run sheet again, for the room: a group's draft answer first, then the readings; after the break, predict the output and how words become numbers.
 
 :::
 
-# Predict the Output
+# Group Slot
 
-Pairs. No laptops. Vote with your fingers.
+## Admin
+
+- Your draft answer to **Question 2** (how many professional landlords?) is due this week; **Question 3** is due next week.
+- From this week you can start moving your group's work into Quarto. **First render the template**; then bring in your content a block at a time, and render as you go.
+- If a block breaks the render, post it on Slack so everyone can learn.
+- Priorities: content first, then form.
 
 ::: {.notes}
 
-Pairs means *whoever is sitting next to you*. 30 seconds to agree, then fingers up together. Reveal, then ≤ 60 seconds on the story. Tell video stories as "In the video, Jon...".
+[CHECK] There is no current `assessments` wording for this. It is drafted from the session page, `assessments/_questions.qmd` and the 2025 session. Confirm the dates, and say the final submission date if you know it.
+
+Say: notebooks are for doodling, trying things out and jotting ideas; Quarto is the publication, so rendering every time will slow down exploration. Take the useful stuff out of the notebook and put it in the Quarto document. If you can render the template, your infrastructure works, and the problems are in individual blocks.
+
+**Clock: 4:00.** Keep this to 2 minutes: the group slot follows (6–26) and is protected. If anything else overruns, cut from after the break, never from the group slot.
 
 :::
 
-## 1. What Does the Group Capture? {.smaller}
+## How Many Professional Landlords Are There?
 
-```python
-import re
-s = "'That will be $1,000,000, he said...'"
-m = re.search(r'\$((\d+,){2,}\d+)',s)
+One group presents its draft answer. **Five minutes.**
 
-print(m.group(1))
-```
+When you listen, ask:
 
-What does it print?
-
-1. `$1,000,000`
-2. `1,000,000`
-3. `1,000,000,`
-4. `None`
-
-. . .
-
-**Answer: 2.** `1,000,000`.
+- How did they decide what a professional landlord is?
+- Is that definition from the literature, the data, or both?
+- What would change the number?
 
 ::: {.notes}
 
-The expected wrong answers are 1 (people forget the `$` is outside the brackets) and 3 (the trailing comma is not part of the match, because the pattern ends in `\d+`). Count hands.
+Select the group at random in front of the room (a number from a list: not a person). If the group has no draft, say so and move on: there is no feedback, as the assessments page says.
 
-Say: `group(0)` is everything that matched, and `group(1)` is only the part in the first brackets. The pattern is a decision about what counts as the number.
+5 minutes for the group (6–11). Then 1 minute of silent writing for the room, 2 minutes with neighbours (11–14), then ask **pairs** for feedback (14–20). Last, give your own (20–26).
 
-:::
+In 2025 a group decided that "all it takes is having two entire homes", filtered to entire homes and apartments, and counted hosts with more than one listing. The feedback was: it's not about the specific number, it's about showing the thought process. Part of it was the literature and part of it was the data, and there was a rationale. A counterpoint is the HMO sector, with many rooms in one building. The definition links back to Question 1: if "out of control" means whole properties, the next question is who lets whole properties.
 
-## 2. Does Case Matter? {.smaller}
-
-```python
-import re
-s = '123foo456'
-
-m = re.search('FOO',s)
-print(f"First search: {m}")
-
-m = re.search('FOO',s,re.IGNORECASE)
-print(f"Second search: {m}")
-```
-
-What does it print?
-
-1. `None`, then `None`
-2. `None`, then a match for `'foo'`
-3. A match for `'foo'`, then a match for `'foo'`
-4. An error
-
-. . .
-
-**Answer: 2.** `First search: None`, then `Second search: <re.Match object; span=(3, 6), match='foo'>`.
-
-::: {.notes}
-
-The expected wrong answer is 1 or 4. Count hands.
-
-Say: a failed search doesn't raise an error: it returns `None`. That's week 6 again: nothing was found, and the code doesn't tell you whether that is because there's nothing there or because your pattern was too strict.
-
-:::
-
-## 3. Where Does It Split? {.smaller}
-
-```python
-import re
-s = '123foo456foo789'
-
-rs = re.sub('foo',' ',s)
-print(re.split(' ',rs))
-```
-
-What does it print?
-
-1. `['123foo456foo789']`
-2. `['123', '456', '789']`
-3. `['123', 'foo', '456', 'foo', '789']`
-4. `['123 456 789']`
-
-. . .
-
-**Answer: 2.** `['123', '456', '789']`.
-
-::: {.notes}
-
-The expected wrong answer is 4 (people stop after the `sub`). Count hands.
-
-Say: `sub` replaced each `foo` with a space, and `split` cut on the spaces. You've turned an unstructured string into a list you can count. That is cleaning text.
-
-:::
-
-## 4. Which Article Is All Zeros? {.smaller}
-
-```python
-import pandas as pd
-
-topics = pd.Series(['News', 'Culture', 'Politics', 'Entertainment'],
-                   index=['Article 1', 'Article 2', 'Article 3', 'Article 4'])
-print(pd.get_dummies(topics, drop_first=True))
-```
-
-Each row is one article. Which article has a `0` in every column?
-
-1. Article 1 (News)
-2. Article 2 (Culture)
-3. Article 3 (Politics)
-4. Article 4 (Entertainment)
-
-. . .
-
-**Answer: 2.** `get_dummies` drops the *first category in alphabetical order*: Culture.
-
-::: {.notes}
-
-[CHECK] This snippet is constructed from the Dummy Columns slide (the slide's table leaves out the fourth category, Entertainment, which is not the one `get_dummies` drops). Check it before use. The expected wrong answer is 4 (the last row, as on the slide). Count hands.
-
-Say: with $n$ categories a dummy encoding has $n-1$ columns, so one category becomes the baseline and is represented by all zeros. Someone chose the baseline, and here it was alphabetical order. One-hot encoding keeps all $n$ columns, so a document that fits no category can be all zeros.
+If the group runs over, stop at 5 minutes.
 
 :::
 
@@ -206,6 +119,8 @@ According to the reading you did, when people write about a place, the text is..
 3. **A lever:** the words steer who is attracted to a place, and who is not.
 
 ::: {.notes}
+
+**Clock: 26:00.** Finish the plenary by 48:00.
 
 First, hands: who read Miller & Goodchild? Delmelle & Nilsson? The chapter (Reades 2022)? More than one? None?
 
@@ -291,6 +206,160 @@ Reading notes: the Soviet-era factory data example (places that no longer exist,
 
 :::
 
+## Intro to the practical
+
+- Notice that there are **two** practicals today.
+  - There's the core practical which is really focussed on basic cleaning of textual data, regexes, and using them to select rows from the data frame.
+  - There's the bonus practical which goes much further into more advanced topics in cleaning (as covered in the lectures), text normalisation, word clouds, and even word2vec.
+- You will *not* get bonus marks on the group assessment for using the techniques covered in the bonus practical; rather, that's there for those of you who think it's all a bit basic.
+
+::: {.notes}
+
+These are the bullets from `Week 8 Session.md`, as written.
+
+**Clock: 48:00.** Then the break (51–58). After the break: predict the output, the bridge, then the talk on how words become numbers.
+
+:::
+
+# Predict the Output
+
+Pairs. No laptops. Vote with your fingers.
+
+::: {.notes}
+
+**Clock: 58:00.** A warm-up after the break: 3 minutes a snippet, finish by 70:00. If you're behind, drop one.
+
+Pairs means *whoever is sitting next to you*. 30 seconds to agree, then fingers up together. Reveal, then ≤ 60 seconds on the story. Tell video stories as "In the video, Jon...".
+
+:::
+
+## 1. What Does the Group Capture? {.smaller}
+
+```python
+import re
+s = "'That will be $1,000,000, he said...'"
+m = re.search(r'\$((\d+,){2,}\d+)',s)
+
+print(m.group(1))
+```
+
+What does it print?
+
+1. `$1,000,000`
+2. `1,000,000`
+3. `1,000,000,`
+4. `None`
+
+::: {.content-visible when-meta="answers"}
+. . .
+
+**Answer: 2.** `1,000,000`.
+
+::: {.notes}
+
+The expected wrong answers are 1 (people forget the `$` is outside the brackets) and 3 (the trailing comma is not part of the match, because the pattern ends in `\d+`). Count hands.
+
+Say: `group(0)` is everything that matched, and `group(1)` is only the part in the first brackets. The pattern is a decision about what counts as the number.
+
+:::
+:::
+
+## 2. Does Case Matter? {.smaller}
+
+```python
+import re
+s = '123foo456'
+
+m = re.search('FOO',s)
+print(f"First search: {m}")
+
+m = re.search('FOO',s,re.IGNORECASE)
+print(f"Second search: {m}")
+```
+
+What does it print?
+
+1. `None`, then `None`
+2. `None`, then a match for `'foo'`
+3. A match for `'foo'`, then a match for `'foo'`
+4. An error
+
+::: {.content-visible when-meta="answers"}
+. . .
+
+**Answer: 2.** `First search: None`, then `Second search: <re.Match object; span=(3, 6), match='foo'>`.
+
+::: {.notes}
+
+The expected wrong answer is 1 or 4. Count hands.
+
+Say: a failed search doesn't raise an error: it returns `None`. That's week 6 again: nothing was found, and the code doesn't tell you whether that is because there's nothing there or because your pattern was too strict.
+
+:::
+:::
+
+## 3. Where Does It Split? {.smaller}
+
+```python
+import re
+s = '123foo456foo789'
+
+rs = re.sub('foo',' ',s)
+print(re.split(' ',rs))
+```
+
+What does it print?
+
+1. `['123foo456foo789']`
+2. `['123', '456', '789']`
+3. `['123', 'foo', '456', 'foo', '789']`
+4. `['123 456 789']`
+
+::: {.content-visible when-meta="answers"}
+. . .
+
+**Answer: 2.** `['123', '456', '789']`.
+
+::: {.notes}
+
+The expected wrong answer is 4 (people stop after the `sub`). Count hands.
+
+Say: `sub` replaced each `foo` with a space, and `split` cut on the spaces. You've turned an unstructured string into a list you can count. That is cleaning text.
+
+:::
+:::
+
+## 4. Which Article Is All Zeros? {.smaller}
+
+```python
+import pandas as pd
+
+topics = pd.Series(['News', 'Culture', 'Politics', 'Entertainment'],
+                   index=['Article 1', 'Article 2', 'Article 3', 'Article 4'])
+print(pd.get_dummies(topics, drop_first=True))
+```
+
+Each row is one article. Which article has a `0` in every column?
+
+1. Article 1 (News)
+2. Article 2 (Culture)
+3. Article 3 (Politics)
+4. Article 4 (Entertainment)
+
+::: {.content-visible when-meta="answers"}
+. . .
+
+**Answer: 2.** `get_dummies` drops the *first category in alphabetical order*: Culture.
+
+::: {.notes}
+
+[CHECK] This snippet is constructed from the Dummy Columns slide (the slide's table leaves out the fourth category, Entertainment, which is not the one `get_dummies` drops). Check it before use. The expected wrong answer is 4 (the last row, as on the slide). Count hands.
+
+Say: with $n$ categories a dummy encoding has $n-1$ columns, so one category becomes the baseline and is represented by all zeros. Someone chose the baseline, and here it was alphabetical order. One-hot encoding keeps all $n$ columns, so a document that fits no category can be all zeros.
+
+:::
+:::
+
 # What Is a Word Worth?
 
 ## What Does 'Cozy' Mean?
@@ -302,6 +371,8 @@ Reading notes: the Soviet-era factory data example (places that no longer exist,
 How would a pattern find the *same* word with *different* meanings?
 
 ::: {.notes}
+
+**Clock: 70:00.** Three slides, finish by 82:00.
 
 1 minute of silent writing: "What does 'cosy' mean in a listing for a London flat? In the Highlands?" Then 2 minutes with neighbours. Ask two pairs, not individuals.
 
@@ -347,62 +418,6 @@ Ask neighbours (1 minute of silent writing first): "If most pairs of words never
 
 :::
 
-## Admin
-
-- Your draft answer to **Question 2** (how many professional landlords?) is due this week; **Question 3** is due next week.
-- From this week you can start moving your group's work into Quarto. **First render the template**; then bring in your content a block at a time, and render as you go.
-- If a block breaks the render, post it on Slack so everyone can learn.
-- Priorities: content first, then form.
-
-::: {.notes}
-
-[CHECK] There is no current `assessments` wording for this. It is drafted from the session page, `assessments/_questions.qmd` and the 2025 session. Confirm the dates, and say the final submission date if you know it.
-
-Say: notebooks are for doodling, trying things out and jotting ideas; Quarto is the publication, so rendering every time will slow down exploration. Take the useful stuff out of the notebook and put it in the Quarto document. If you can render the template, your infrastructure works, and the problems are in individual blocks.
-
-Keep this to 3 minutes.
-
-:::
-
-## Intro to the practical
-
-- Notice that there are **two** practicals today.
-  - There's the core practical which is really focussed on basic cleaning of textual data, regexes, and using them to select rows from the data frame.
-  - There's the bonus practical which goes much further into more advanced topics in cleaning (as covered in the lectures), text normalisation, word clouds, and even word2vec.
-- You will *not* get bonus marks on the group assessment for using the techniques covered in the bonus practical; rather, that's there for those of you who think it's all a bit basic.
-
-::: {.notes}
-
-These are the bullets from `Week 8 Session.md`, as written.
-
-Then the break (7 min). After the break: the group slot, then the talk on how words become numbers.
-
-:::
-
-# Group Slot
-
-## How Many Professional Landlords Are There?
-
-One group presents its draft answer. **Five minutes.**
-
-When you listen, ask:
-
-- How did they decide what a professional landlord is?
-- Is that definition from the literature, the data, or both?
-- What would change the number?
-
-::: {.notes}
-
-Select the group at random in front of the room (a number from a list: not a person). If the group has no draft, say so and move on: there is no feedback, as the assessments page says.
-
-5 minutes for the group. Then 1 minute of silent writing for the room, 2 minutes with neighbours, then ask **pairs** for feedback. Last, give your own.
-
-In 2025 a group decided that "all it takes is having two entire homes", filtered to entire homes and apartments, and counted hosts with more than one listing. The feedback was: it's not about the specific number, it's about showing the thought process. Part of it was the literature and part of it was the data, and there was a rationale. A counterpoint is the HMO sector, with many rooms in one building. The definition links back to Question 1: if "out of control" means whole properties, the next question is who lets whole properties.
-
-If the group runs over, stop at 5 minutes.
-
-:::
-
 # From Words to Numbers
 
 ## Why `apply`?
@@ -414,6 +429,8 @@ df['clean'] = df['text'].apply(lambda x: x.lower())
 Pandas decides the order. All it needs is that **each row can be handled on its own**.
 
 ::: {.notes}
+
+**Clock: 82:00.** Six slides, finish by 104:00.
 
 [CHECK] This snippet is illustrative. Replace it with the one from the 8.3 deck ("Pandas.apply() vs. Numpy" and "Lambda Functions") if you prefer.
 

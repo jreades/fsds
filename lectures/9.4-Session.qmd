@@ -4,14 +4,15 @@ email: "j.reades@ucl.ac.uk"
 title: "What Does a Geographer<br />Add to Data Science?"
 other: ""
 format: revealjs
+answers: false
 title-slide-attributes:
   data-background-image: "/img/web/title-slide.png"
   data-background-size: stretch
   data-background-opacity: "0.08"
   data-background-color: "#4e3c56"
-  data-notes: "Run sheet (120 min). 0–4: last week's exit tickets + the question. 4–14: predict the output (3 snippets). 14–36: reading verdict. 36–46: bridge (3 slides). 46–55: assessment advice + practical intro.
+  data-notes: "Run sheet (120 min). 0–4: last week's exit tickets + the question. 4–24: group slot (a randomly selected group presents its draft answer to Question 3, then feedback). This comes first and is protected. 24–46: reading verdict. 46–50: assessment advice. 50–57: how I used AI (4 slides, moved from week 10). 57–59: practical intro.
 
-55–62: break. 62–82: group slot (a randomly selected group presents its draft answer to Question 3, then feedback). 82–108: group clinic (groups work; walk the room). 108–110: buffer. 110–120: exit ticket (the last two slides of this deck).
+59–66: break. 66–74: predict the output (3 snippets; cut to 2 if behind). 74–84: bridge (3 slides). 84–102: group clinic (groups work; walk the room). 102–104: what happens next. 104–108: module feedback form (moved from week 10). 108–110: buffer. 110–120: exit ticket, then 'Stop. Read. Think.' (moved from week 10).
 
 How to run the room: never ask for volunteers or pick out individuals. Walk to a row and ask 'What did you two decide?' Ask which reading they used only after they've answered. Every neighbour discussion starts with 1 minute of silent writing. If there's spare time, give it to neighbour discussion, not more talking."
 ---
@@ -50,7 +51,7 @@ Say: these are anonymous, they get read, and three of them open each session. Th
 
 &nbsp;
 
-We'll answer it with code and readings, then with your draft answers to Question 3.
+We'll answer it with your draft answers to Question 3, then with readings and code.
 
 . . .
 
@@ -62,121 +63,33 @@ Three levels, one question. In code, the join you choose decides which rows surv
 
 You have been exposed to ways of thinking about data critically and ethically that are rarely part of an informatics or machine learning degree. That is the claim to test today.
 
-Run sheet again, for the room: predict the output, readings, then a group's draft, and then time to work.
+Run sheet again, for the room: a group's draft answer first, then the readings; after the break, predict the output, what gets left out, and then time to work.
 
 :::
 
-# Predict the Output
+# Group Slot
 
-Pairs. No laptops. Vote with your fingers.
+## How Many Properties Would Be Affected by the Proposal?
 
-::: {.notes}
+One group presents its draft answer. **Five minutes.**
 
-Pairs means *whoever is sitting next to you*. 30 seconds to agree, then fingers up together. Reveal, then ≤ 60 seconds on the story. Tell video stories as "In the video, Jon...".
+When you listen, ask:
 
-:::
-
-## 1. How Many Rows? {.smaller}
-
-```python
-import pandas as pd
-
-df1 = pd.DataFrame({
-  'SensorID': [1,2,3,4,5],
-  'Place': ['LHR','LGA','STA','LUT','SEN'],
-  'Owner': ['BAA','GIP','MAG','Luton LA','Stobart']
-})
-df2 = pd.DataFrame({
-  'SensorID': [1,1,3,4,6],
-  'Parameter': ['Temperature','Humidity','Temperature','Temperature','Humidity'],
-  'Value': ['5ºC','15%','7ºC','7ºC','18%']
-})
-for how in ['inner', 'left', 'outer']:
-  print(len(pd.merge(df1, df2, how=how, on='SensorID')))
-```
-
-What does it print?
-
-1. `4`, `5`, `6`
-2. `4`, `6`, `7`
-3. `5`, `5`, `7`
-4. `4`, `6`, `6`
-
-. . .
-
-**Answer: 2.** `4`, `6`, `7`.
+- How did they get from the number of professional landlords to the number of properties?
+- What did they count, and what did they leave out?
+- Where do the properties sit, and does the proposal fall equally on each area?
 
 ::: {.notes}
 
-The expected wrong answers are 1 and 3 (people forget that sensor 1 appears twice in the second table, so one row on the left becomes two). Count hands.
+Select the group at random in front of the room (a number from a list: not a person). If the group has no draft, say so and move on: there is no feedback, as the assessments page says.
 
-Say: the inner join keeps only the sensors in both (1, 3, 4), and sensor 1 matches two rows. The left join keeps sensors 2 and 5 with no data. The outer join also keeps sensor 6, which has no place. Each join is a different answer to "which things count?".
+**Clock: 4:00.** The group slot runs 4–24 and is protected: if anything else overruns, cut from after the break, never from here.
 
-:::
+5 minutes for the group (4–9). Then 1 minute of silent writing for the room, 2 minutes with neighbours (9–12), then ask **pairs** for feedback (12–18). Last, give your own (18–24).
 
-## 2. What Is the Average Age? {.smaller}
+In 2025 a group built on the previous answer (a number of professional landlords, then about 160,000 properties) and added a council tax revenue estimate. The feedback was: tie your definition back to the previous steps; tweak the definition (two entire homes? any host with more than one listing?) to show what moves the count; then ask where the properties are, and what the proposal does to different areas (Kensington and Chelsea, Westminster and others have lower council tax, so the revenue effect may be uneven). A student also suggested using text to find owner-occupiers who let a room.
 
-```python
-import pandas as pd
-import numpy as np
-
-df = pd.DataFrame({
-  'class': ['Third','First','Third','First','Third','Third','First','Third'],
-  'age':   [22.0, 38.0, 26.0, 35.0, 35.0, np.nan, 54.0, 2.0]
-})
-grouped_df = df.groupby('class').age.agg(['sum','mean'])
-print(grouped_df.loc['Third','mean'])
-```
-
-What does it print?
-
-1. `17.0`
-2. `21.25`
-3. `nan`
-4. An error
-
-. . .
-
-**Answer: 2.** `21.25`: `sum` is 85 over the four non-missing ages.
-
-::: {.notes}
-
-The expected wrong answers are 1 (people divide by five, as if the missing age were zero) and 3. Count hands.
-
-Say: pandas skips the missing value, so the mean is over four people, not five. That is week 6 again: a missing value isn't nothing, and the group's mean now says nothing about the person with no age.
-
-:::
-
-## 3. Who Is Inside the Borough? {.smaller}
-
-```python
-import geopandas as gpd
-from shapely.geometry import box, Point
-
-hackney = gpd.GeoDataFrame({'NAME': ['Hackney']}, geometry=[box(0, 0, 1, 1)])
-gdf = gpd.GeoDataFrame({'id': [1, 2, 3]},
-        geometry=[Point(0.5, 0.5), Point(1, 0.5), Point(2, 2)])
-
-print(len(gpd.sjoin(gdf, hackney, predicate='within')))
-print(len(gpd.sjoin(gdf, hackney, predicate='intersects')))
-```
-
-The second point is exactly on the boundary. What does it print?
-
-1. `1`, then `1`
-2. `1`, then `2`
-3. `2`, then `2`
-4. `2`, then `3`
-
-. . .
-
-**Answer: 2.** `1`, then `2`.
-
-::: {.notes}
-
-[CHECK] This snippet is constructed from the "A Spatial Join" slide (`predicate='within'`). The expected wrong answer is 3 (people assume the boundary is inside). Count hands.
-
-Say: a point on the edge is not *within* the borough but does *intersect* it. The predicate decides who counts as in Hackney. For Question 3, a property on a boundary is in or out of the policy depending on a word in your code.
+If the group runs over, stop at 5 minutes.
 
 :::
 
@@ -193,6 +106,8 @@ According to the reading you did, what a geographer adds to data science is...
 3. **Not much:** the data-driven, generalising methods work, and geographers should learn from them.
 
 ::: {.notes}
+
+**Clock: 24:00.** Finish the plenary by 46:00.
 
 First, hands: who read Mattern? O'Sullivan & Manson? Both? Neither?
 
@@ -236,6 +151,238 @@ Reading notes: *geography envy* is the obverse: physicists working on topics geo
 
 :::
 
+## Assessment Advice
+
+- You do **not** get higher marks for techniques that haven't been covered in class.
+- You get marks for what is **justified by your analysis** and the aim of the briefing.
+- If you can't explain what a method does, why, and how it advances your argument in plain English, **don't use it**.
+- The briefing is for a policymaker. Keep it simple, keep it to the point.
+
+::: {.notes}
+
+[CHECK] This is from the 2025 session (Question 3 slot), in your own words. Check it against this year's rubric: in 2025 you said the substance is 60%, and `_variables.yml` has the writing weight at 50% and the code at 35%.
+
+Say: a Quarto document that renders, with code that runs, and an argument is already a lot. A suggested reading is Tony Travers' piece on the suburbanisation of poverty: a whole policy document that is only exploratory data analysis, and it works because the charts relate to the argument.
+
+If a group with a planning background is worried about missing quantitative methods content: the substance is where those students are strong, and the assessment is calibrated so that mixed groups can do well.
+
+[CHECK] 2025: you offered to check whether the rubric requires the five headings. Say what the answer is.
+
+**Clock: 46:00.** Keep this to 4 minutes: the AI slides follow (50–57).
+
+:::
+
+# Where's the *Human* in All of This?
+
+## How I Used AI This Year
+
+- **NotebookLM:** the study guides.
+- **Copilot** (in VS Code): auto-completion.
+- **Claude Code:** planning, reviewing and building the materials, including the in-person sessions.
+
+. . .
+
+Your briefing needs an AI declaration. This is mine.
+
+::: {.notes}
+
+**Clock: 50:00.** Four slides, 7 minutes in all. Moved from the week 10 wrap-up (10.2), because week 10 is after the deadline.
+
+Say: last year it was ChatGPT too. I've dropped it, partly for its personality and partly because Claude Code helps me get things done.
+
+Link to the [AI policy](../assessments/index.qmd#use-of-ai): category 2, assistive use. Keep a short record as you go (tool, purpose, what you changed). That's all this slide is.
+
+:::
+
+## Where It Helped Most
+
+Filling the gaps around things I already had:
+
+1. I knew what I wanted to achieve: a flipped classroom.
+2. I had the background and vocabulary to discuss the problem.
+3. I had a mental model of how the term fits together, so I could describe the learning journey.
+4. I had your feedback, and I wanted to act on it.
+5. I knew I *didn't* have much pedagogical depth in making a flipped classroom work.
+
+::: {.notes}
+
+This is the substantive point. It worked where I could say what I wanted and judge what came back, and it filled the gap I knew I had (5). The same applied to Quarto: the plugins and parameters behind this site.
+
+Say: the first four are things you also have for your briefing (a question, your readings, the course, our feedback). If you don't have them, the tool has nothing to fill gaps around.
+
+:::
+
+## The Pivot
+
+- Ollie's sessions in weeks 4 and 5 used the readings as a starting point for his own research.
+- I saw the difference in the room.
+- So I chose readings I could present and discuss together, with some guidance on how they fit...
+- ...and that gave the tool something to build suggestions and slides from.
+
+::: {.notes}
+
+Say: the change came from watching you, not from the tool. I made the call about what worked; it helped me rebuild the sessions around it from week 6.
+
+:::
+
+## The Technical Bits
+
+- I gave it my annotated PDFs, and it picked out the passages worth a question in class.
+- You asked for slides before class. A Quarto setting that hides the predict-the-output answers took an afternoon, not days of reading documentation.
+- It couldn't check a quote against a scanned page, so it flagged every one for me to check.
+
+. . .
+
+**Co-pilot, not co-author.** I'm accountable for every slide; you're accountable for every line of your briefing.
+
+::: {.notes}
+
+Keep this brief: the point is the last line, which is the AI policy in one sentence.
+
+Last year's closing line still holds: in *every* case, I had to curate the output.
+
+:::
+
+## Intro to the practical
+
+Here's what we're covering:
+
+- Comparing different approaches to data linkage.
+- Linking data as part of a visualisation process.
+- The same task in pandas and in SQL (DuckDB), and what that does to speed.
+
+::: {.notes}
+
+[CHECK] There is no Jon-written "Intro to the practical" for week 9: `Week 9 Session.md` is a 2025 script by the guest lecturer, and the bullets above are drafted from the session page's "Connections" box and that script. Replace them with your own.
+
+From the script: it's about different techniques for achieving the same thing, and the performance differences. SQL is not always faster than Python. DuckDB with Parquet gives you a database that doesn't need a server.
+
+**Clock: 57:00.** Then the break (59–66). After the break: predict the output, what gets left out, then the group clinic.
+
+:::
+
+# Predict the Output
+
+Pairs. No laptops. Vote with your fingers.
+
+::: {.notes}
+
+**Clock: 66:00.** A warm-up after the break: finish by 74:00. If you're behind, skip a snippet: the clinic needs its time.
+
+Pairs means *whoever is sitting next to you*. 30 seconds to agree, then fingers up together. Reveal, then ≤ 60 seconds on the story. Tell video stories as "In the video, Jon...".
+
+:::
+
+## 1. How Many Rows? {.smaller}
+
+```python
+import pandas as pd
+
+df1 = pd.DataFrame({
+  'SensorID': [1,2,3,4,5],
+  'Place': ['LHR','LGA','STA','LUT','SEN'],
+  'Owner': ['BAA','GIP','MAG','Luton LA','Stobart']
+})
+df2 = pd.DataFrame({
+  'SensorID': [1,1,3,4,6],
+  'Parameter': ['Temperature','Humidity','Temperature','Temperature','Humidity'],
+  'Value': ['5ºC','15%','7ºC','7ºC','18%']
+})
+for how in ['inner', 'left', 'outer']:
+  print(len(pd.merge(df1, df2, how=how, on='SensorID')))
+```
+
+What does it print?
+
+1. `4`, `5`, `6`
+2. `4`, `6`, `7`
+3. `5`, `5`, `7`
+4. `4`, `6`, `6`
+
+::: {.content-visible when-meta="answers"}
+. . .
+
+**Answer: 2.** `4`, `6`, `7`.
+
+::: {.notes}
+
+The expected wrong answers are 1 and 3 (people forget that sensor 1 appears twice in the second table, so one row on the left becomes two). Count hands.
+
+Say: the inner join keeps only the sensors in both (1, 3, 4), and sensor 1 matches two rows. The left join keeps sensors 2 and 5 with no data. The outer join also keeps sensor 6, which has no place. Each join is a different answer to "which things count?".
+
+:::
+:::
+
+## 2. What Is the Average Age? {.smaller}
+
+```python
+import pandas as pd
+import numpy as np
+
+df = pd.DataFrame({
+  'class': ['Third','First','Third','First','Third','Third','First','Third'],
+  'age':   [22.0, 38.0, 26.0, 35.0, 35.0, np.nan, 54.0, 2.0]
+})
+grouped_df = df.groupby('class').age.agg(['sum','mean'])
+print(grouped_df.loc['Third','mean'])
+```
+
+What does it print?
+
+1. `17.0`
+2. `21.25`
+3. `nan`
+4. An error
+
+::: {.content-visible when-meta="answers"}
+. . .
+
+**Answer: 2.** `21.25`: `sum` is 85 over the four non-missing ages.
+
+::: {.notes}
+
+The expected wrong answers are 1 (people divide by five, as if the missing age were zero) and 3. Count hands.
+
+Say: pandas skips the missing value, so the mean is over four people, not five. That is week 6 again: a missing value isn't nothing, and the group's mean now says nothing about the person with no age.
+
+:::
+:::
+
+## 3. Who Is Inside the Borough? {.smaller}
+
+```python
+import geopandas as gpd
+from shapely.geometry import box, Point
+
+hackney = gpd.GeoDataFrame({'NAME': ['Hackney']}, geometry=[box(0, 0, 1, 1)])
+gdf = gpd.GeoDataFrame({'id': [1, 2, 3]},
+        geometry=[Point(0.5, 0.5), Point(1, 0.5), Point(2, 2)])
+
+print(len(gpd.sjoin(gdf, hackney, predicate='within')))
+print(len(gpd.sjoin(gdf, hackney, predicate='intersects')))
+```
+
+The second point is exactly on the boundary. What does it print?
+
+1. `1`, then `1`
+2. `1`, then `2`
+3. `2`, then `2`
+4. `2`, then `3`
+
+::: {.content-visible when-meta="answers"}
+. . .
+
+**Answer: 2.** `1`, then `2`.
+
+::: {.notes}
+
+[CHECK] This snippet is constructed from the "A Spatial Join" slide (`predicate='within'`). The expected wrong answer is 3 (people assume the boundary is inside). Count hands.
+
+Say: a point on the edge is not *within* the borough but does *intersect* it. The predicate decides who counts as in Hackney. For Question 3, a property on a boundary is in or out of the policy depending on a word in your code.
+
+:::
+:::
+
 # What Gets Left Out?
 
 ## Which Join Did You Use?
@@ -251,6 +398,8 @@ Reading notes: *geography envy* is the obverse: physicists working on topics geo
 For **Question 3**: how many properties are affected by the proposal? Which join gave you that number?
 
 ::: {.notes}
+
+**Clock: 74:00.** Three slides, finish by 84:00 for the clinic.
 
 1 minute of silent writing, then 2 minutes with neighbours. Ask two pairs, not individuals.
 
@@ -295,69 +444,6 @@ Link: for Question 3, a simple, explainable definition beats a complicated one y
 
 :::
 
-## Assessment Advice
-
-- You do **not** get higher marks for techniques that haven't been covered in class.
-- You get marks for what is **justified by your analysis** and the aim of the briefing.
-- If you can't explain what a method does, why, and how it advances your argument in plain English, **don't use it**.
-- The briefing is for a policymaker. Keep it simple, keep it to the point.
-
-::: {.notes}
-
-[CHECK] This is from the 2025 session (Question 3 slot), in your own words. Check it against this year's rubric: in 2025 you said the substance is 60%, and `_variables.yml` has the writing weight at 50% and the code at 35%.
-
-Say: a Quarto document that renders, with code that runs, and an argument is already a lot. A suggested reading is Tony Travers' piece on the suburbanisation of poverty: a whole policy document that is only exploratory data analysis, and it works because the charts relate to the argument.
-
-If a group with a planning background is worried about missing quantitative methods content: the substance is where those students are strong, and the assessment is calibrated so that mixed groups can do well.
-
-[CHECK] 2025: you offered to check whether the rubric requires the five headings. Say what the answer is.
-
-Keep this to 5 minutes.
-
-:::
-
-## Intro to the practical
-
-Here's what we're covering:
-
-- Comparing different approaches to data linkage.
-- Linking data as part of a visualisation process.
-- The same task in pandas and in SQL (DuckDB), and what that does to speed.
-
-::: {.notes}
-
-[CHECK] There is no Jon-written "Intro to the practical" for week 9: `Week 9 Session.md` is a 2025 script by the guest lecturer, and the bullets above are drafted from the session page's "Connections" box and that script. Replace them with your own.
-
-From the script: it's about different techniques for achieving the same thing, and the performance differences. SQL is not always faster than Python. DuckDB with Parquet gives you a database that doesn't need a server.
-
-Then the break (7 min). After the break: the group slot, then the group clinic.
-
-:::
-
-# Group Slot
-
-## How Many Properties Would Be Affected by the Proposal?
-
-One group presents its draft answer. **Five minutes.**
-
-When you listen, ask:
-
-- How did they get from the number of professional landlords to the number of properties?
-- What did they count, and what did they leave out?
-- Where do the properties sit, and does the proposal fall equally on each area?
-
-::: {.notes}
-
-Select the group at random in front of the room (a number from a list: not a person). If the group has no draft, say so and move on: there is no feedback, as the assessments page says.
-
-5 minutes for the group. Then 1 minute of silent writing for the room, 2 minutes with neighbours, then ask **pairs** for feedback. Last, give your own.
-
-In 2025 a group built on the previous answer (a number of professional landlords, then about 160,000 properties) and added a council tax revenue estimate. The feedback was: tie your definition back to the previous steps; tweak the definition (two entire homes? any host with more than one listing?) to show what moves the count; then ask where the properties are, and what the proposal does to different areas (Kensington and Chelsea, Westminster and others have lower council tax, so the revenue effect may be uneven). A student also suggested using text to find owner-occupiers who let a room.
-
-If the group runs over, stop at 5 minutes.
-
-:::
-
 # Group Clinic
 
 ## Time to Work
@@ -372,7 +458,7 @@ I'll come round.
 
 ::: {.notes}
 
-20–25 minutes. Walk the room; ask a group "What did you two decide?" or "What are you stuck on?". Don't cold-call.
+**Clock: 84:00.** 18 minutes; stop at 102:00 for "What Happens Next" and the feedback form. Walk the room; ask a group "What did you two decide?" or "What are you stuck on?". Don't cold-call.
 
 Say: the practical is pick-and-mix; use it for whatever you need. The groups should be working, not in the practical room.
 
@@ -386,11 +472,28 @@ If groups finish early or aren't stuck, ask them to swap with the neighbouring g
 
 - [CHECK: the submission date and time, and where to submit]
 - [CHECK: is there a Week 10 session? If not, how do students reach you?]
-- [CHECK: the module feedback form]
 
 ::: {.notes}
 
+**Clock: 102:00.** Two minutes.
+
 [CHECK] This is a placeholder. The Week 10 session probably doesn't run this year because the assessment is due before it. Replace with whatever you need to say in what may be the last session: the submission date, how to ask questions, and where the ethics content now lives.
+
+:::
+
+## Looking Back
+
+[CHECK: module feedback form link]
+
+[CHECK: QR code image]
+
+::: {.notes}
+
+Moved from week 10 (in 2025 it closed the wrap-up). Leave it on screen for 3 minutes in silence (104–108).
+
+Say: some questions repeat Checkpoint 1, so we can compare. Others ask you to look back: where you started and where you are now. If you're not sure the module was worth it, there's a question about what you'd tell someone deciding whether to take it.
+
+[CHECK] Is this the same form as last year's end-of-module reflection, or a Checkpoint 2? Add its link and QR code.
 
 :::
 
@@ -417,6 +520,18 @@ Provide your input here: [form.menti.com/s/alj67nonwwx6](https://form.menti.com/
 ::: {.notes}
 
 Mentimeter (open text) in a second browser tab. Start at minute 110 sharp, leave the code on screen, and give 3 minutes of silence before saying anything else. Say that it's anonymous, and that today opened with three of last week's.
+
+:::
+
+# So Lastly... {.center}
+
+> Stop. Read. Think.
+>
+> And *then* act.
+
+::: {.notes}
+
+Moved from the week 10 wrap-up. Code, write, present: whatever you're doing.
 
 :::
 

@@ -1480,6 +1480,22 @@ You can find a lot of *possible* solutions in [this Stackoverflow thread](https:
 
 A great resource for more help and more examples is Dani Arribas-Bel's _Geographic Data Science_ module: he has put all of his [module practicals online](https://github.com/darribas/gds_course) (as we have too), and you might find that something that he does makes more sense to you than what we've done... check it out!
 
+## Crib Sheet
+
+The code from this practical that you'll use again and again:
+
+| # | What it does | Code | When you'd use it |
+| :- | :----------- | :--- | :---------------- |
+| 1 | Read geo-data | `gpd.read_file('Boroughs.gpkg')` or `gpd.read_parquet('listings.geoparquet')` | `read_file` for GeoPackage, shapefile or GeoJSON; Parquet has its own method, as in pandas |
+| 2 | Write geo-data | `boros.to_file('boros.gpkg', driver='GPKG')` or `gdf.to_parquet('listings.geoparquet')` | The same split as reading; save once so you don't rebuild the geometry every time |
+| 3 | Make a GeoDataFrame from x/y columns | `gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.longitude, df.latitude, crs='epsg:4326'))` | The data have coordinates but no geometry |
+| 4 | Check the projection | `gdf.crs` | Before combining layers or measuring anything |
+| 5 | Reproject | `gdf = gdf.to_crs('epsg:27700')` | Before mapping with other layers or measuring in metres; it returns a copy, so assign it |
+| 6 | Quick map of one layer | `boros.plot(edgecolor='red', facecolor='white')` | A first look at the data |
+| 7 | Stack layers on one map | `fig, ax = plt.subplots(1, 1, figsize=(8,6))`, then `water.plot(ax=ax)` and `boros.plot(ax=ax)` | Several layers on the same axes |
+| 8 | Colour by a value, with a classification | `gdf.plot(column='price', cmap='viridis', scheme='quantiles', k=5)` | A choropleth; `scheme` decides the breaks |
+| 9 | Use pandas methods on geo-data | `gdf.price.plot.hist(bins=200)` | A GeoDataFrame *is* a DataFrame (inheritance) |
+
 ## Credits!
 
 #### Contributors:
