@@ -50,3 +50,7 @@ General lessons from working sessions, as `[LEARN:category]` entries. Machine- a
 - [LEARN:quarto] A `format:` list in a directory `_metadata.yml` decides which formats a file gets; a profile can only add settings for those formats, not new formats (and `_metadata-<profile>.yml` is ignored). Use `--to` on the command line to build an extra format with the profile settings.
 - [LEARN:quarto] A deck-level `title-slide-attributes` (e.g. for `data-notes`) replaces the project-level block in `_quarto.yml` instead of merging, so the title-slide background is lost → repeat the four `data-background-*` keys in the deck.
 - [LEARN:sessions] Moved material between session decks without retiming → rebalance the run sheet in the same edit; overruns squeeze the closing questions and exit ticket.
+- [LEARN:git] Ran `git stash`/`pop` on the whole working tree to compare a render → never do whole-tree git operations without asking; write the old version to a scratch file with `git show HEAD:<file>` instead.
+- [LEARN:readings] Cited the PDF's page index → cite the printed journal page from the page header or footer (Arribas-Bel 2014: printed page = PDF page + 44).
+- [LEARN:data] `data/` CSVs looked unused and were deleted → some are fetched from GitHub `master` through bit.ly links in decks (e.g. `2019-sample-crime.csv` in 6.4); grep for the filename and its short link before deleting.
+- [LEARN:tools] Asserted how the lecturer used to annotate in Preview → don't claim to know someone's past UI workflow; describe the options and ask.
