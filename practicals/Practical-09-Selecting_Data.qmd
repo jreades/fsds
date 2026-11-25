@@ -1257,3 +1257,20 @@ msoa_gdf.to_parquet(gdir / f'{LA_slug}-MSOA_data.geoparquet')
 > Joins are DataFrame functionality and so are unaware of GeoDataFrames (so the return type 'devolves' to a DataFrame), whereas merges seem to preserve the child class type and mean that a GeoDataFrame is returned even though this is *also* a Pandas utility function.
 
 ::::
+
+# Crib Sheet
+
+The code from this practical that you'll use again and again:
+
+| # | What it does | Code | When you'd use it |
+| :- | :----------- | :--- | :---------------- |
+| 1 | Load only the columns you need | `pd.read_parquet(pqt, columns=['listing_url','price','property_type'])` | Large files: faster than loading everything and then selecting |
+| 2 | Group and summarise, with names | `df.groupby(by=['room_type','property_type'], observed=True).agg(frequency=('property_type','count'), median_price=('price','median')).reset_index()` | Counts and medians per group, with readable column names |
+| 3 | Query a file with SQL, using DuckDB | `import duckdb as db`, then `db.sql(f"SELECT price, property_type FROM read_parquet('{pqt}') WHERE price < 250").df()` | Filtering or aggregating *before* the data reach Python's memory |
+| 4 | Join by attribute | `pd.merge(msoa_df, msoa_nms, left_on='MSOA 2021 Code', right_on='msoa11cd', how='left')` | Linking two tables on a shared code; `how` decides which rows survive |
+| 5 | Check what didn't join | `rs.msoa11hclnm.isna().sum()` | After every left join: rows with no match get `NaN`, and no error |
+| 6 | Join in DuckDB | `... FROM read_parquet(...) AS n INNER JOIN read_csv(...) AS m ON n."MSOA 2021 Code"=m.msoa11cd` | The same join without loading either file into pandas first |
+| 7 | Spatial join | `gpd.sjoin(listings, boros, predicate='within', how='left')` | Giving each point the attributes of the area it falls in; the predicate decides what counts as 'in' |
+| 8 | Merge areas into one shape | `boros.union_all()` (or `boros.dissolve()` for a GeoDataFrame) | An outline of London from its boroughs |
+| 9 | Buffer a shape | `ldn.geometry.buffer(250)` | Making a boundary slightly bigger so edge areas aren't lost to `within` |
+| 10 | Recode values with a lookup | `ldn_msoas.Borough.map(mapping)` | Grouping categories (boroughs → subregions) with a dict |

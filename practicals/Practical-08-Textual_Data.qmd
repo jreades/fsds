@@ -836,3 +836,19 @@ And some more useful links:
 - [Pandas String Contains Method](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.str.contains.html)
 - [Using Regular Expressions with Pandas](https://kanoki.org/2019/11/12/how-to-use-regex-in-pandas/)
 - [Summarising Chapters from Frankenstein using TF/IDF](https://towardsdatascience.com/using-tf-idf-to-form-descriptive-chapter-summaries-via-keyword-extraction-4e6fd857d190)
+
+# Crib Sheet
+
+The code from this practical that you'll use again and again:
+
+| # | What it does | Code | When you'd use it |
+| :- | :----------- | :--- | :---------------- |
+| 1 | Show more of each text cell | `pd.options.display.max_colwidth = 250` | Before reading text in a data frame; pandas cuts it short by default |
+| 2 | Drop rows with no text | `gdf = gdf.dropna(subset=['description','amenities'])` | Before any text processing, which fails on `NaN`; check *why* they're missing first |
+| 3 | Change case or trim | `gdf.description.str.lower()` or `.str.strip()` | Normalising text so that 'Flat' and 'flat' count as the same word |
+| 4 | Replace with a pattern | `gdf.description.str.replace(r'\W', '', regex=True)` | Removing characters you don't want; `regex=False` for a plain string |
+| 5 | Split a string into a list | `gdf.amenities.str.split(r',')` (add `expand=True` for columns) | A column that looks like a list but is really one long string |
+| 6 | Turn a list-in-a-string into dummies | `gdf.amenities.str.get_dummies(sep=',')` | One column per item, whatever order the items were listed in |
+| 7 | Select rows by a pattern | `gdf[gdf.description.str.contains(r'\b(?:affordable\|budget\|cheap\|cosy)\b', regex=True, flags=re.IGNORECASE)]` | Picking out listings by the words they use; `\b` stops partial matches |
+| 8 | Pull out part of the text | `gdf.description.str.extract(r'stylish (?P<detail>\w+)')` | Turning a match into a new column (named group → column name) |
+| 9 | Build a readable regex and reuse it | `pat = re.compile(r'''...''', re.X \| re.IGNORECASE)`, then `m = pat.search(s)` and `m.group('flat')` | Long patterns you test on cases and use many times; `re.X` allows comments and spacing |

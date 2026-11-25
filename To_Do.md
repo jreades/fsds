@@ -345,6 +345,7 @@ Rules until the session: never use `publish --no-render` directly (`scripts/publ
 - **Rename the cite key `Bunday:0000` to `Bunday:1963`** in `ref/Readings.bib` and in every file that cites it (`grep -rl 'Bunday:0000' lectures sessions assessments practicals`). The year was fixed in the bib entry on 2026-11-24, but the key was left alone mid-term so no references broke.
 
 - **Reset `answers: true` to `false`** in `lectures/3.5`, `3.7`, `4.4`, `5.6` and `6.5-Session.qmd` (set to `true` in 2026 because they were already taught and published), and in 7.6–9.4 once they're taught. Every session deck should start the year at `false`. See "Rendering and publishing".
+- **Crib Sheet at the end of every practical** (added 2026-11-25). Model: the end of `practicals/Practical-07-Spatial_Data.qmd` (# · What it does · Code · When you'd use it; code that students will reuse, taken from the practical itself). 2026/27 has 7, 8, 8 Pt2 and 9; add the rest, and update each one when its practical changes.
 
 - Re-record the segments flagged *Summer* above: 2.5 (16), 3.3 (9), 4.3 (6), 5.3 (2), 5.4 (4, 20). Then remove the matching "clarification" lines from the end slides.
 - **Not fixed before teaching in 2026/27; do these at the start of the 2027/28 cycle (new branch, mid-summer).** Both were covered by a spoken correction in the `5.6-Session` notes on 2026-11-05 instead:

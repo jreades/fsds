@@ -1068,3 +1068,20 @@ And some more useful links:
 - [Pandas String Contains Method](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.str.contains.html)
 - [Using Regular Expressions with Pandas](https://kanoki.org/2019/11/12/how-to-use-regex-in-pandas/)
 - [Summarising Chapters from Frankenstein using TF/IDF](https://towardsdatascience.com/using-tf-idf-to-form-descriptive-chapter-summaries-via-keyword-extraction-4e6fd857d190)
+
+# Crib Sheet
+
+The code from this practical that you'll use again and again:
+
+| # | What it does | Code | When you'd use it |
+| :- | :----------- | :--- | :---------------- |
+| 1 | Apply a `lambda` (an unnamed function) to every row | `cleaned = sample.apply(lambda x: BeautifulSoup(x, 'html.parser').get_text(" "))` | No built-in `.str` method does what you need (here, stripping HTML), so we create a function and apply it to every row in one line |
+| 2 | Pass arguments through `apply` | `bluesp.description.apply(normalise_document, remove_digits=True)` | Your function has options; note they go *after* the function name |
+| 3 | Remove punctuation with a compiled regex | `pat = re.compile(r'[,\.!\-><=\(\)\[\]\/&\'\"’;\+\–\—]+')`, then `lower.apply(lambda x: pat.sub('', x))` | Cleaning before counting words; escape characters that mean something in a regex |
+| 4 | Split text into words | `tokens = lower.apply(word_tokenize)` | Most NLP steps expect a list of tokens, not a string |
+| 5 | Remove stopwords | `tokens.apply(lambda x: [t for t in x if t not in stopword_list and len(t) > 1])` | Dropping 'the', 'and' and so on before counting |
+| 6 | Lemmatise or stem | `lemmatizer.lemmatize(t)` or `stemmer.stem(t)` | Grouping word forms ('cities' → 'city'); stems are cruder and faster |
+| 7 | Count words (bag of words) | `cv = CountVectorizer(ngram_range=(1,3))`, `cv.fit(corpus)`, then `cvtcorpus = cv.transform(corpus)` | Turning documents into a document × term table of counts |
+| 8 | Weight words by how distinctive they are | `TfidfVectorizer(use_idf=True, ngram_range=(1,3), max_df=0.75, min_df=0.01).fit_transform(corpus)` | Finding what is distinctive about a document; `max_df`/`min_df` drop very common and very rare terms |
+| 9 | See the result as a data frame | `pd.DataFrame(tftcorpus.toarray(), columns=tfvectorizer.get_feature_names_out())` | Vectorisers return a sparse matrix; only do this on a small corpus |
+| 10 | Time a cell | `%%time` (first line of the cell) | Text processing is slow: know how long a step takes before you run it on everything |
