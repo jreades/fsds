@@ -70,13 +70,12 @@ Run sheet again, for the room: a group's draft answer first, then the readings; 
 ## Admin
 
 - Your draft answer to **Question 2** (how many professional landlords?) is due this week; **Question 3** is due next week.
+- The final submission is due **{{< var assess.group-date >}} at {{< var assess.group-time >}}**.
 - From this week you can start moving your group's work into Quarto. **First render the template**; then bring in your content a block at a time, and render as you go.
 - If a block breaks the render, post it on Slack so everyone can learn.
 - Priorities: content first, then form.
 
 ::: {.notes}
-
-[CHECK] There is no current `assessments` wording for this. It is drafted from the session page, `assessments/_questions.qmd` and the 2025 session. Confirm the dates, and say the final submission date if you know it.
 
 Say: notebooks are for doodling, trying things out and jotting ideas; Quarto is the publication, so rendering every time will slow down exploration. Take the useful stuff out of the notebook and put it in the Quarto document. If you can render the template, your infrastructure works, and the problems are in individual blocks.
 
@@ -336,7 +335,7 @@ import pandas as pd
 
 topics = pd.Series(['News', 'Culture', 'Politics', 'Entertainment'],
                    index=['Article 1', 'Article 2', 'Article 3', 'Article 4'])
-print(pd.get_dummies(topics, drop_first=True))
+print(pd.get_dummies(topics, drop_first=True, dtype=int))
 ```
 
 Each row is one article. Which article has a `0` in every column?
@@ -353,7 +352,7 @@ Each row is one article. Which article has a `0` in every column?
 
 ::: {.notes}
 
-[CHECK] This snippet is constructed from the Dummy Columns slide (the slide's table leaves out the fourth category, Entertainment, which is not the one `get_dummies` drops). Check it before use. The expected wrong answer is 4 (the last row, as on the slide). Count hands.
+The 8.4 Dummy Columns slide leaves out Entertainment, which is not the category `get_dummies` drops. The expected wrong answer is 4 (the last row, as on the slide). Count hands.
 
 Say: with $n$ categories a dummy encoding has $n-1$ columns, so one category becomes the baseline and is represented by all zeros. Someone chose the baseline, and here it was alphabetical order. One-hot encoding keeps all $n$ columns, so a document that fits no category can be all zeros.
 
@@ -364,7 +363,7 @@ Say: with $n$ categories a dummy encoding has $n-1$ columns, so one category bec
 
 ## What Does 'Cozy' Mean?
 
-> [...] the adjective ‘cozy’, for instance, carries different valences for detached properties in a scenic area and urban rental units. ~ @Reades:2025 [p.4]
+> [...] the adjective 'cozy', for instance, carries different valences for detached properties in a scenic area and urban rental units. ~ @Reades:2025 [p.4]
 
 . . .
 
@@ -377,9 +376,6 @@ How would a pattern find the *same* word with *different* meanings?
 1 minute of silent writing: "What does 'cosy' mean in a listing for a London flat? In the Highlands?" Then 2 minutes with neighbours. Ask two pairs, not individuals.
 
 Say: in a London flat, "cosy" means you're lucky if a bed and a toilet fit. In Scotland it means it's insulated. A regular expression finds the word; it can't tell you what the word meant. That takes context, which is what embeddings try to learn.
-
-[CHECK] The two meanings are from the 2025 session. Say them in your own words.
-
 :::
 
 ## What Would You Search For?
@@ -412,9 +408,9 @@ Embeddings squash the columns, not the rows.
 
 ::: {.notes}
 
-Say: every word needs a row, because throwing away rows is throwing away vocabulary. What the embedding does is compress the columns into a much smaller number. The vectors keep the relationships between words (the famous example is king − man + woman ≈ queen).
+Say: every word needs a row, because throwing away rows is throwing away vocabulary. What the embedding does is compress the columns into a much smaller number, while keeping the relationships between words.
 
-Ask neighbours (1 minute of silent writing first): "If most pairs of words never occur together, what does that tell you about the table?" (It's almost all zeros.)
+Ask the room, and answer it yourself after a pause: "If most pairs of words never occur together, what does that tell you about the table?" (It's almost all zeros.)
 
 :::
 
@@ -423,7 +419,7 @@ Ask neighbours (1 minute of silent writing first): "If most pairs of words never
 ## Why `apply`?
 
 ```python
-df['clean'] = df['text'].apply(lambda x: x.lower())
+cleaned = sample.apply(lambda x: BeautifulSoup(x, 'html.parser').get_text(" "))
 ```
 
 Pandas decides the order. All it needs is that **each row can be handled on its own**.
@@ -432,7 +428,7 @@ Pandas decides the order. All it needs is that **each row can be handled on its 
 
 **Clock: 82:00.** Six slides, finish by 104:00.
 
-[CHECK] This snippet is illustrative. Replace it with the one from the 8.3 deck ("Pandas.apply() vs. Numpy" and "Lambda Functions") if you prefer.
+This is the first `apply` in the bonus practical (Part 2): the Inside Airbnb descriptions contain HTML such as `<br />`, and this strips it out row by row. The core practical doesn't use `apply`, so this is where most students see it. Something like `.lower()` doesn't need `apply` (`.str.lower()` already does it); there is no built-in for stripping HTML.
 
 Say: text is richer and harder to work with than numbers, so any benefit from computing it faster pays off. Each piece of text is like a whole new data set. `apply` lets Python and pandas choose how to process the rows, in any order, provided each row is self-contained. Looping over every row and column one at a time is the slowest possible way.
 
@@ -455,7 +451,7 @@ One column per word. Most of the table is zeros.
 
 Say: the dummy and one-hot columns on the first slide of 8.4 were about categories. The bag of words keeps the *counts*, so a listing that mentions the Thames three times looks different from one that mentions it once. TF/IDF then down-weights the words that appear everywhere.
 
-[CHECK] The numbers in the table are made up for this slide.
+The numbers in the table are illustrative.
 
 :::
 
@@ -471,13 +467,13 @@ The model learns relationships from **how words are used**, not what they mean.
 
 Say: embeddings are statistical properties of text. The model has no idea what a king is. Where there are lots of examples it does well (a polite academic workshop description); where there are few it does badly (a specific question about a planning document).
 
-In 2025: a large language model produced about 30% hallucinated references in a dissertation, because two real authors in the same field are close together in the compressed space. Plausible, and false. [CHECK] Say it in general terms; don't identify a student.
+In 2025: a large language model produced about 30% hallucinated references in a dissertation, because two real authors in the same field are close together in the compressed space. Plausible, and false. Keep it general: don't identify the student.
 
 :::
 
 ## Parking and Price
 
-The word *parking* in listing text predicts a **lower** price in London, and a **higher** price everywhere else.
+The word *parking* in listing text predicts a **lower** price in London, and a **higher** price everywhere else [@huang:2022].
 
 . . .
 
@@ -485,7 +481,7 @@ Why?
 
 ::: {.notes}
 
-[CHECK] This is from unpublished student work using Zoopla listings (word embeddings to group similar words, then a geographically weighted regression). Check what you can say about it, and attribute it.
+From a previous MSc student's thesis using Zoopla listings: word embeddings to group similar words (driveway, on-street, covered parking), then a geographically weighted regression.
 
 1 minute of silent writing, then 2 minutes with neighbours: "Why would parking lower the price in London?" Ask two pairs.
 
@@ -497,7 +493,7 @@ Link to the question: the words don't just describe the home. They are part of h
 
 ## Who Wrote the Data?
 
-> [...] we cannot be assured that the information people volunteer is an accurate depiction of their complete lives or just of the lives they wish to present to the social sphere. ~ @Miller:2015 [p.452]
+Remember Miller & Goodchild: what people volunteer may be only "the lives they wish to present".
 
 . . .
 
@@ -505,7 +501,7 @@ For the Inside Airbnb data: **who wrote the descriptions and the reviews?**
 
 ::: {.notes}
 
-Ask neighbours (1 minute of silent writing first): "Who wrote the description and who wrote the review, and what did each one want?" Two pairs, not individuals.
+No neighbour discussion here: ask the question, pause, then answer it. The host wrote the description to sell the place; the guest wrote the review, often to be polite, and knowing the host will see it.
 
 Link to the practical: the core practical selects listings by what the text says. Whoever wrote the text decides what is findable.
 
@@ -519,9 +515,9 @@ Link to the practical: the core practical selects listings by what the text says
 
 ::: {.notes}
 
-Ask neighbours (1 minute of silent writing first): "What will you write in your briefing about how you went from text to a number?" Two pairs, not individuals.
+No neighbour discussion here: this is the summary, and the exit ticket comes next. Say: in your briefing, explain how you went from text to a number, because each of these is a decision.
 
-If time is short, drop "Dummy Columns, One-Hot, Bag of Words".
+If time is short, drop "Dummy Columns, One-Hot, Bag of Words", then "Who Wrote the Data?".
 
 :::
 
@@ -533,7 +529,7 @@ Complete the sentence:
 
 &nbsp;
 
-Text about a place **is / isn't** evidence of that place, because...
+When people write about a place, they're mainly **describing / shaping** it, because...
 
 &nbsp;
 
