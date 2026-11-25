@@ -1037,7 +1037,7 @@ gdf['description_norm'] = gdf.description.apply(normalise_document, remove_digit
 ```
 
 ```python
-gdf.to_parquet(os.path.join('data','geo',f'{fn.replace(".","-with-nlp.")}'))
+gdf.to_parquet(Path('data/geo') / 'listings-with-nlp.geoparquet')
 ```
 
 ::: {.callout-tip}
@@ -1076,7 +1076,7 @@ The code from this practical that you'll use again and again:
 | # | What it does | Code | When you'd use it |
 | :- | :----------- | :--- | :---------------- |
 | 1 | Apply a `lambda` (an unnamed function) to every row | `cleaned = sample.apply(lambda x: BeautifulSoup(x, 'html.parser').get_text(" "))` | No built-in `.str` method does what you need (here, stripping HTML), so we create a function and apply it to every row in one line |
-| 2 | Pass arguments through `apply` | `bluesp.description.apply(normalise_document, remove_digits=True)` | Your function has options; note they go *after* the function name |
+| 2 | Pass arguments through `apply` | `bluesp.description.apply( normalise_document, remove_digits=True )` | Your function has options; note they go *after* the function name |
 | 3 | Remove punctuation with a compiled regex | `pat = re.compile(r'[,\.!\-><=\(\)\[\]\/&\'\"’;\+\–\—]+')`, then `lower.apply(lambda x: pat.sub('', x))` | Cleaning before counting words; escape characters that mean something in a regex |
 | 4 | Split text into words | `tokens = lower.apply(word_tokenize)` | Most NLP steps expect a list of tokens, not a string |
 | 5 | Remove stopwords | `tokens.apply(lambda x: [t for t in x if t not in stopword_list and len(t) > 1])` | Dropping 'the', 'and' and so on before counting |

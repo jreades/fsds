@@ -660,3 +660,20 @@ print(sorted(monos)[:5], "...")
 ```
 
 You can find more examples [here](https://www.geeksforgeeks.org/fc-list-command-in-linux-with-examples/), a more detailed set of instructions [here](https://www.freedesktop.org/software/fontconfig/fontconfig-user.html), and even information about (for example) [supported languages](https://thottingal.in/blog/2016/03/04/fontconfig-language-matching/) based on [RFC 3066](http://www.i18nguy.com/unicode/language-identifiers.html).
+
+# Crib Sheet
+
+The code from this practical that you'll use again and again:
+
+| # | What it does | Code | When you'd use it |
+| :- | :----------- | :--- | :---------------- |
+| 1 | Stop early if input files are missing | `missing = [str(p) for p in files.values() if not p.exists()]`, then `raise FileNotFoundError(...)` | A notebook that depends on files saved by an earlier one |
+| 2 | Several plots in one figure | `f, axes = plt.subplots(1, 2, figsize=(8,6))`, then `gdf.plot(column='median_price', ax=axes[0])` | Comparing maps side by side; `gridspec_kw={'width_ratios':[1,4,4]}` for unequal widths |
+| 3 | Remove the frame and axes | `ax.axis('off')` | Maps, where eastings and northings add nothing |
+| 4 | Title and text for the whole figure | `f.suptitle(LA, x=0.025, ha='left', size=24)` and `plt.figtext(x=0.025, y=0.65, s='...')` | One title over several plots, or a note anywhere on the figure |
+| 5 | Reuse text settings | `tfont = {'fontname': ff}`, then `ax.set_title('Count', **tfont)` | The same font everywhere; `**` unpacks a dict into keyword arguments |
+| 6 | Add an inset map | `ax3 = f.add_axes([0.015, 0.7, 0.2, 0.2])` | Showing where the area is; the list is left, bottom, width and height as fractions of the figure |
+| 7 | Fix the colour scale | `gdf.plot(column=col, vmin=vmin, vmax=vmax)` | Maps that will be compared: the same colour must mean the same value |
+| 8 | Save one file per group | `for borough, gdf in london.groupby('Borough'):`, then `gdf.to_parquet(atlas_dir / f'{slug}-MSOA_data.geoparquet')` | Splitting a data set by area, category or year |
+| 9 | Save a figure, then close it | `f.savefig(outdir / f'{slug}.png', dpi=150, bbox_inches='tight')`, then `plt.close(f)` | Making many figures in a loop, so they don't all stay in memory |
+| 10 | Interactive chart with hover text | `p = figure(x_range=room_types, tooltips=TOOLTIPS)`, `p.vbar(x='rt', top='price', source=source)`, `show(p)` | Exploring or presenting in a browser (Bokeh) rather than in print |

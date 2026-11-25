@@ -38,7 +38,6 @@ Notice that the number of modules and functions that we import is steadily incre
 Standard libraries we've seen before.
 
 ```{python}
-import os
 import numpy as np
 import pandas as pd
 import geopandas as gpd
@@ -396,7 +395,7 @@ lux = gdf[
         r'???', 
         regex=True, flags=re.IGNORECASE)
 ].copy()
-lux.to_parquet(os.path.join('data','geo','luxury.geoparquet'))
+lux.to_parquet(Path('data/geo') / 'luxury.geoparquet')
 print(f"Found {lux.shape[0]:,} records for 'luxury' flats")
 ```
 
@@ -408,7 +407,7 @@ lux = gdf[
         r'(?:luxur(?:y|ious|iat)|prestigious|stunning)', 
         regex=True, flags=re.IGNORECASE)
 ].copy()
-lux.to_parquet(os.path.join('data','geo','luxury.geoparquet'))
+lux.to_parquet(Path('data/geo') / 'luxury.geoparquet')
 print(f"Found {lux.shape[0]:,} records for 'luxury' flats")
 ```
 
@@ -569,7 +568,7 @@ aff = gdf[
         ???, 
         regex=True, flags=re.IGNORECASE)
 ].copy()
-aff.to_parquet(os.path.join('data','geo','affordable.geoparquet'))
+aff.to_parquet(Path('data/geo') / 'affordable.geoparquet')
 print(f"There are {aff.shape[0]:,} rows flagged as 'affordable'.")
 ```
 
@@ -581,7 +580,7 @@ aff = gdf[
         r'\b(?:affordable|budget|cheap|cosy)\b', 
         regex=True, flags=re.IGNORECASE)
 ].copy()
-aff.to_parquet(os.path.join('data','geo','affordable.geoparquet'))
+aff.to_parquet(Path('data/geo') / 'affordable.geoparquet')
 print(f"There are {aff.shape[0]:,} rows flagged as 'affordable'.")
 ```
 
@@ -707,7 +706,7 @@ bluesp = gdf[
     (gdf.description.str.contains(???, regex=True, flags=re.IGNORECASE)) |
     (gdf.description.str.contains(???, regex=True, flags=re.IGNORECASE))
 ].copy()
-bluesp.to_parquet(os.path.join('data','geo','bluespace.geoparquet'))
+bluesp.to_parquet(Path('data/geo') / 'bluespace.geoparquet')
 print(f"Found {bluesp.shape[0]:,} rows.")
 ```
 
@@ -722,7 +721,7 @@ bluesp = gdf[
         r'(?:walk|close|near) to (?:Thames|river|water|canal)', 
         regex=True, flags=re.IGNORECASE))
 ].copy()
-bluesp.to_parquet(os.path.join('data','geo','bluespace.geoparquet'))
+bluesp.to_parquet(Path('data/geo') / 'bluespace.geoparquet')
 print(f"Found {bluesp.shape[0]:,} rows.")
 ```
 
@@ -844,11 +843,12 @@ The code from this practical that you'll use again and again:
 | # | What it does | Code | When you'd use it |
 | :- | :----------- | :--- | :---------------- |
 | 1 | Show more of each text cell | `pd.options.display.max_colwidth = 250` | Before reading text in a data frame; pandas cuts it short by default |
-| 2 | Drop rows with no text | `gdf = gdf.dropna(subset=['description','amenities'])` | Before any text processing, which fails on `NaN`; check *why* they're missing first |
+| 2 | Drop rows with no text | `gdf = gdf.dropna( subset=['description','amenities'] )` | Before any text processing, which fails on `NaN`; check *why* they're missing first |
 | 3 | Change case or trim | `gdf.description.str.lower()` or `.str.strip()` | Normalising text so that 'Flat' and 'flat' count as the same word |
 | 4 | Replace with a pattern | `gdf.description.str.replace(r'\W', '', regex=True)` | Removing characters you don't want; `regex=False` for a plain string |
 | 5 | Split a string into a list | `gdf.amenities.str.split(r',')` (add `expand=True` for columns) | A column that looks like a list but is really one long string |
 | 6 | Turn a list-in-a-string into dummies | `gdf.amenities.str.get_dummies(sep=',')` | One column per item, whatever order the items were listed in |
-| 7 | Select rows by a pattern | `gdf[gdf.description.str.contains(r'\b(?:affordable\|budget\|cheap\|cosy)\b', regex=True, flags=re.IGNORECASE)]` | Picking out listings by the words they use; `\b` stops partial matches |
-| 8 | Pull out part of the text | `gdf.description.str.extract(r'stylish (?P<detail>\w+)')` | Turning a match into a new column (named group → column name) |
-| 9 | Build a readable regex and reuse it | `pat = re.compile(r'''...''', re.X \| re.IGNORECASE)`, then `m = pat.search(s)` and `m.group('flat')` | Long patterns you test on cases and use many times; `re.X` allows comments and spacing |
+| 7 | Select rows by a pattern | `gdf[ gdf.description.str.contains( r'\b(?:affordable\|budget\|cheap\|cosy)\b', regex=True, flags=re.IGNORECASE) ]` | Picking out listings by the words they use; `\b` stops partial matches |
+| 8 | Pull out part of the text | `gdf.description.str.extract( r'stylish (?P<detail>\w+)' )` | Turning a match into a new column (named group → column name) |
+| 9 | Build a readable regex and reuse it | `pat = re.compile( r'''...''', re.X \| re.IGNORECASE )`, then `m = pat.search(s)` and `m.group('flat')` | Long patterns you test on cases and use many times; `re.X` allows comments and spacing |
+

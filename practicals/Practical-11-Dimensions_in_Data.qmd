@@ -663,7 +663,7 @@ plt.show();
 
 ```{python}
 #| eval: false
-gdf.to_geoparquet(msoa.parent / 'MSOA_Atlas.geoparquet'))
+gdf.to_parquet(Path('data/geo') / 'MSOA_Atlas.geoparquet')
 ```
 
 ### Questions
@@ -698,7 +698,7 @@ On subsequent runs of this notebook you might just want to start here!
 # in memory. And notice this is just a list comprehension
 # to see what is locally loaded.
 if 'gdf' not in locals():
-    gdf = gpd.read_parquet(msoa.parent / 'MSOA_Atlas.geoparquet')
+    gdf = gpd.read_parquet(Path('data/geo') / 'MSOA_Atlas.geoparquet')
 print(gdf.shape)
 ```
 
@@ -759,7 +759,7 @@ print(", ".join([str(x) for x in pr_train.index[:10]]))
 
 ```{python}
 #| eval: false
-boros = gpd.read_file(os.path.join('data','geo','Boroughs.gpkg'))
+boros = gpd.read_file(Path('data/geo') / 'Boroughs.gpkg')
 ```
 
 ```{python}
@@ -1175,7 +1175,7 @@ Use this is your data gets messy...
 
 ```{python}
 #| eval: false
-gdf = gpd.read_parquet(os.path.join('data','geo','MSOA_Atlas.geoparquet')).set_index('MSOA Code')
+gdf = gpd.read_parquet(Path('data/geo') / 'MSOA_Atlas.geoparquet').set_index('MSOA Code')
 print(gdf.shape)
 ```
 
@@ -1421,7 +1421,7 @@ pcadf.sample(3).iloc[:,-10:-4]
 
 ```{python}
 #| eval: false
-msoas = gpd.read_file(os.path.join('data','geo','Middle_Layer_Super_Output_Areas__December_2011__EW_BGC_V2-shp.zip'), driver='ESRI Shapefile')
+msoas = gpd.read_file(Path('data/geo') / 'Middle_Layer_Super_Output_Areas__December_2011__EW_BGC_V2-shp.zip', driver='ESRI Shapefile')
 msoas = msoas.set_index('MSOA11CD')
 print(msoas.columns)
 ```
@@ -1615,13 +1615,30 @@ Your first dimension map should look something like this:
 
 ```{python}
 #| eval: false
-rddf.to_parquet(os.path.join('data','clean','Reduced_Dimension_Data.geoparquet'))
+rddf.to_parquet(Path('data/clean') / 'Reduced_Dimension_Data.geoparquet')
 ```
 
 ### Questions
 
 - How would you compare/contrast PCA components with UMAP dimensions? Why do they not seem to show the same thing even though *both* seem to show *something*?
 - What might you do with the output of either the PCA or UMAP processes?
+
+# Crib Sheet
+
+The code from this practical that you'll use again and again:
+
+| # | What it does | Code | When you'd use it |
+| :- | :----------- | :--- | :---------------- |
+| 1 | Read a sheet with several header rows | `pd.read_excel(path, sheet_name='iadatasheet1', header=[0,1,2])` | Spreadsheets with grouped column headings; you get a MultiIndex |
+| 2 | Work with one level of a MultiIndex | `df.columns.get_level_values(1)` and `df.drop(columns=to_drop, level=0)` | Selecting or dropping whole groups of columns at once |
+| 3 | Store categories efficiently | `gdf[c] = gdf[c].astype('category')` | Text columns with a few repeated values (boroughs, subregions) |
+| 4 | Split into training and test data | `train_test_split(X, y, test_size=0.2, random_state=44)` | Before fitting anything, so you can test on data the model hasn't seen |
+| 5 | Fit a scaler on training data, apply it to both | `sc = StandardScaler().fit(tr[col].values.reshape(-1,1))`, then `sc.transform(tst[col].values.reshape(-1,1))` | Fit on training data only; `reshape(-1,1)` because scikit-learn expects 2D input |
+| 6 | Scale with outliers present | `RobustScaler(quantile_range=(25.0, 75.0))` | Skewed data, where extreme values would distort a z-score |
+| 7 | Make skewed data more normal | `PowerTransformer(method='yeo-johnson').fit_transform(s.values.reshape(-1,1))` | Prices, incomes and counts before methods that assume normal-ish data |
+| 8 | Compare many variables at once | `sns.pairplot(data=df, hue='Subregion', diag_kind='kde', corner=True)` | Checking distributions and relationships before reducing dimensions |
+| 9 | Reduce dimensions with PCA | `pca = PCA(n_components=7, whiten=True)`, `X = pca.fit_transform(pcadf)`, then `pca.explained_variance_ratio_` | Many correlated variables; the ratio says how much each component explains |
+| 10 | Reduce dimensions with UMAP | `UMAP(n_neighbors=25, min_dist=0.01, n_components=2, random_state=42).fit_transform(X)` | Non-linear structure, or 2 dimensions for plotting; set `random_state` because it isn't deterministic |
 
 ## Credits!
 

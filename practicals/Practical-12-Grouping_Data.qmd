@@ -33,7 +33,6 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import matplotlib as mpl
 import re
-import os
 
 from matplotlib.colors import ListedColormap
 
@@ -141,7 +140,7 @@ def add_colorbar(mappable, ax, cmap, norm, breaks, outliers=False):
 ```{python}
 #| eval: false
 spath = 'https://github.com/jreades/fsds/blob/master/data/src/' # source path
-ddir  = os.path.join('data','geo') # destination directory
+ddir  = Path('data/geo') # destination directory
 water = gpd.read_file( cache_data(spath+'Water.gpkg?raw=true', ddir) )
 boros = gpd.read_file( cache_data(spath+'Boroughs.gpkg?raw=true', ddir) )
 green = gpd.read_file( cache_data(spath+'Greenspace.gpkg?raw=true', ddir) )
@@ -1617,3 +1616,19 @@ If all of that seems like a lot of work then why not learn a bit more about mach
 
 See: [Introduction to Machine Learning with Scikit-Learn](http://www.slideshare.net/BenjaminBengfort/introduction-to-machine-learning-with-scikitlearn).
 
+# Crib Sheet
+
+The code from this practical that you'll use again and again:
+
+| # | What it does | Code | When you'd use it |
+| :- | :----------- | :--- | :---------------- |
+| 1 | Summarise by area | `msoa_listings.groupby('MSOA11CD')['price'].agg('median')` | Point data to area statistics; the group becomes the index |
+| 2 | Long to wide | `df.groupby(['MSOA11CD','room_type'], observed=False).listing_url.agg(Count='count').reset_index().pivot(index='MSOA11CD', columns=['room_type'], values=['Count'])` | One row per area and one column per category, as clustering expects |
+| 3 | Select rows whose ID is in a list | `msoa_listings[msoa_listings.MSOA11CD.isin(mlgp[mlgp > 300].index)]` | Looking at the listings behind an unusual area value |
+| 4 | Drop rows you've identified | `cleaned = msoa_listings.drop(index=to_drop.index)` | Removing outliers after checking them |
+| 5 | k-means clustering | `kmeans = KMeans(n_clusters=k, n_init=25, random_state=42).fit(df)`, then `pd.Series(kmeans.labels_, index=df.index)` | Grouping areas when you can choose the number of clusters |
+| 6 | Choose k | `silhouette_score(df, kmeans.labels_)`, in a loop over `k` | Comparing numbers of clusters; higher is better, but look at the map too |
+| 7 | Map the clusters | `rs.plot(column='KMeans', categorical=True, legend=True)` | Cluster numbers are labels, not values: `categorical=True` |
+| 8 | Find a distance for DBSCAN | `nbrs = NearestNeighbors(n_neighbors=6).fit(df)`, then `distances, indices = nbrs.kneighbors(df)` | Choosing `eps` from the 'knee' in the sorted distances |
+| 9 | Density-based clustering | `DBSCAN(eps=e, min_samples=df.shape[1]+1).fit(df)` | Clusters of any shape, without choosing k; label `-1` means noise |
+| 10 | Classify with a random forest | `rfc = RandomForestClassifier(max_depth=8, random_state=42).fit(X_train, y_train)`, then `rfc.predict(X_test)` and `rfc.feature_importances_` | Supervised learning: predicting a known category (here, room type) |
