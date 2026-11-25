@@ -10,21 +10,22 @@ filters:
 A common challenge in data analysis is how to group observations in a data set together in a way that allows for generalisation: _this_ group of observations are similar to one another, _that_ group is dissimilar to this group. Sometimes we have a *label* that we can use as part of the process (in which case we're doing **classification**), and somtimes we don't (in which case we're doing **clustering**). But what defines similarity and difference? There is no _one_ answer to that question and so there are many different ways to cluster or classify data, each of which has strengths and weaknesses that make them more, or less, appropriate in different contexts.
 
 ::: {.callout-note}
+#### Connections
 
-**&#128279; Connections**: This practical pulls together many topics covered in other modules, and many of the ideas covered elsewhere in _this_ module: clustering, reproducibility, dimensionality reduction... but, above all, this practical is about the importance of **judgement**. Do _not_ take what we've done here as the ONE RIGHT WAY: a number of these results are questionnable at best because we haven't developed or defined an underlying hypothesis informed by a critical appraisal of the data. You should be _much_ more selective in how you deploy the data and the algorithms, as last week's [session on dimensionality](https://jreades.github.io/fsds/sessions/week8.html) should have shown.
+This practical pulls together many topics covered in other modules, and many of the ideas covered elsewhere in _this_ module: clustering, reproducibility, dimensionality reduction... but, above all, this practical is about the importance of **judgement**. Do _not_ take what we've done here as the ONE RIGHT WAY: a number of these results are questionnable at best because we haven't developed or defined an underlying hypothesis informed by a critical appraisal of the data. You should be _much_ more selective in how you deploy the data and the algorithms, as last week's [session on dimensionality](https://jreades.github.io/fsds/sessions/week8.html) should have shown.
     
 :::
 
 # Preamble
 
+{{< include _data_definition_sp.qmd >}}
+
 ```{python}
-#| eval: false
 import warnings # This suppresses some meaningless errors from Seaborn and Pandas
 warnings.simplefilter(action='ignore', category=FutureWarning)
 ```
 
 ```{python}
-#| eval: false
 import numpy as np
 import pandas as pd
 import geopandas as gpd
@@ -49,8 +50,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import silhouette_samples, silhouette_score
 
 import random
-random.seed(42)    # For reproducibility
-np.random.seed(42) # For reproducibility
+random.seed(SEED)    # For reproducibility (SEED is set where the data is defined)
+np.random.seed(SEED) # For reproducibility
 
 # Make numeric display a bit neater
 pd.set_option('display.float_format', lambda x: '{:,.2f}'.format(x))
@@ -61,7 +62,6 @@ pd.set_option('display.float_format', lambda x: '{:,.2f}'.format(x))
 Remember that you can set up the `sklearn` transformers in advance, and then `fit` them before `transform`-ing them.
 
 ```{python}
-#| eval: false
 mms  = MinMaxScaler(feature_range=(-1,1))
 stds = StandardScaler()
 rbs  = RobustScaler()
@@ -71,13 +71,13 @@ pts  = PowerTransformer()
 ### Set Up Plotting Functions
 
 ::: {.callout-note}
+#### Connections
 
-**&#128279; Connections**: Here's an example of how you can use a function to do something a little more complex than just locally save some data. This is still largely a kind of 'stub', but if you are going to be producing a lot of plots of London why not automate away some of the pain of producing a good-looking basemap _each_ time: use a function to apply the formatting and then just return `f` and `ax` as if you'd done this all yourself.
+Here's an example of how you can use a function to do something a little more complex than just locally save some data. This is still largely a kind of 'stub', but if you are going to be producing a lot of plots of London why not automate away some of the pain of producing a good-looking basemap _each_ time: use a function to apply the formatting and then just return `f` and `ax` as if you'd done this all yourself.
 
 :::
 
 ```{python}
-#| eval: false
 def plt_ldn(w, b):
     """
     Creates a new figure of a standard size with the 
@@ -138,7 +138,6 @@ def add_colorbar(mappable, ax, cmap, norm, breaks, outliers=False):
 :::
 
 ```{python}
-#| eval: false
 spath = 'https://github.com/jreades/fsds/blob/master/data/src/' # source path
 ddir  = Path('data/geo') # destination directory
 water = gpd.read_file( cache_data(spath+'Water.gpkg?raw=true', ddir) )
@@ -168,7 +167,6 @@ print("Done.")
 You should have this locally from last week, but just in case...
 
 ```{python}
-#| eval: false
 host = 'http://orca.casa.ucl.ac.uk'
 path = '~jreades/data'
 rddf = gpd.read_parquet( cache_data(f'{host}/{path}/Reduced_Dimension_Data.geoparquet', ddir) )
@@ -180,17 +178,15 @@ You should have: `Data frame is 983 x 93`.
 And below you should see both the components and the dimensions from last week's processing.
 
 ```{python}
-#| eval: false
 rddf.iloc[0:3, -7:]
 ```
 
 I get the results below, but note that the **Dimension values** may be slightly different:
 
-|        | Component 5 | Component 6 | Component 7 | Borough | Dimension 1 | Dimension 2 | Subregion |
-| :------| ----------: | -----------:| ----------: | ------: | ----------: | ----------: | --------: |
-| **E02000001** | 1.44 | 3.95 | -1.52 | City of London | 7.74 | 3.36 | Inner West |
-| **E02000002** | -0.28 | 0.89 | 0.26 | Barking and Dagenham | 2.04 | 7.59 | Outer East and North East |
-| **E02000003** | -0.11 | 1.12 | 0.83 | Barking and Dagenham | 2.20 | 6.87 | Outer East and North East |
+```{python}
+#| echo: false
+rddf.iloc[0:3, -7:]
+```
 
 ## Listings Data
 
@@ -202,24 +198,34 @@ I get the results below, but note that the **Dimension values** may be slightly 
 
 Let's also get the listings data from a few weeks back:
 
-{{< include _data_definition_sp.qmd >}}
-
 ```{python}
-#| eval: false
 listings = gpd.read_parquet( cache_data(url, ddir) )
 listings = listings.to_crs(epsg=27700)
 print(f"Data frame is {listings.shape[0]:,} x {listings.shape[1]}")
 ```
 
-You should have: `Data frame is 85,134 x 31`.
+You should have: <code>Data frame is `{python} f"{listings.shape[0]:,} x {listings.shape[1]}"`</code>.
 
 And a quick plot of the price to check:
+
+:::: {.qna}
+
+#### Question
 
 ```{python}
 #| eval: false
 listings.plot(???, cmap='plasma', scheme='quantiles', k=10, 
               markersize=.5, alpha=0.15, figsize=(10,7));
 ```
+
+#### Answer
+
+```{python}
+listings.plot(column='price', cmap='plasma', scheme='quantiles', k=10,
+              markersize=.5, alpha=0.15, figsize=(10,7));
+```
+
+::::
 
 # Aggregate Listings by MSOA
 
@@ -234,16 +240,20 @@ listings.plot(???, cmap='plasma', scheme='quantiles', k=10,
 First, let's link all this using the MSOA Geography that we created last week and a mix or merge and sjoin!
 
 ::: {.callout-note}
+#### Connections
 
-    **&#128279; Connections**: Notice a few things going on here! We are calling `gpd.sjoin` because pandas (`pd`) doesn't know about spatial joins, only geopandas (`gpd`) does. More on this [next week](https://jreades.github.io/fsds/sessions/week10.html#lectures). Also see how we drop some columns _at the point where we do the join_ by taking advantage of the fact that most pandas/geopandas operations return a _copy_ of the (Geo)DataFrame. That allows us to get back from the spatial join a neat, tidy data frame ready for further analysis. If you're struggling to make sense of this, try removing the `drop` operations and see what your data frame looks like afterwards. This should all be old hat, but in case you need a refresher there's always [Week 5](https://jreades.github.io/fsds/sessions/week5.html) on pandas.
+Notice a few things going on here! We are calling `gpd.sjoin` because pandas (`pd`) doesn't know about spatial joins, only geopandas (`gpd`) does. More on this [next week](https://jreades.github.io/fsds/sessions/week10.html#lectures). Also see how we drop some columns _at the point where we do the join_ by taking advantage of the fact that most pandas/geopandas operations return a _copy_ of the (Geo)DataFrame. That allows us to get back from the spatial join a neat, tidy data frame ready for further analysis. If you're struggling to make sense of this, try removing the `drop` operations and see what your data frame looks like afterwards. This should all be old hat, but in case you need a refresher there's always [Week 5](https://jreades.github.io/fsds/sessions/week5.html) on pandas.
     
 :::
 
 ```{python}
-#| eval: false
 # Before the spatial join
 listings.columns
 ```
+
+:::: {.qna}
+
+#### Question
 
 ```{python}
 #| eval: false
@@ -255,8 +265,20 @@ msoa_listings = gpd.sjoin(???, msoas.drop(
                 )
 ```
 
+#### Answer
+
 ```{python}
-#| eval: false
+msoa_listings = gpd.sjoin(listings, msoas.drop(
+                        columns=['MSOA11NM', 'LAD11CD', 'LAD11NM', 'RGN11CD', 'RGN11NM',
+                                 'USUALRES', 'HHOLDRES', 'COMESTRES', 'POPDEN', 'HHOLDS',
+                                 'AVHHOLDSZ']), predicate='within').drop(
+                        columns=['latitude','longitude','index_right']
+                )
+```
+
+::::
+
+```{python}
 # All we've added is the MSOA11CD
 msoa_listings.columns
 ```
@@ -286,9 +308,14 @@ Index(['listing_url', 'last_scraped', 'name', 'description', 'host_id',
 Let's calculate the median price by MSOA... Notice that we have to specify the column we want after the `groupby` so the we don't get the median of *every* column returned
 
 ::: {.callout-note}
+#### Connections
 
-    **&#128279; Connections**: I find `groupby` to be a complex operation and often need a couple of gos before I get back waht I want. The thing to take away is that: 1) anything in the `groupby` will become part of the `index` afterwards (so if you group on multiple things you get a multi-part index); 2) aggregating functions apply to _all_ columns unless you filter them some way. Here we filter by selecting only the `price` column to aggregate. You can also filter for `numeric only`.
+I find `groupby` to be a complex operation and often need a couple of gos before I get back waht I want. The thing to take away is that: 1) anything in the `groupby` will become part of the `index` afterwards (so if you group on multiple things you get a multi-part index); 2) aggregating functions apply to _all_ columns unless you filter them some way. Here we filter by selecting only the `price` column to aggregate. You can also filter for `numeric only`.
 :::
+
+:::: {.qna}
+
+#### Question
 
 ```{python}
 #| eval: false
@@ -297,16 +324,21 @@ mlgp = msoa_listings.groupby('???')['price'].agg('???')
 mlgp.head()
 ```
 
+#### Answer
+
+```{python}
+# *m*soa *l*istings *g*rouped by *p*rice
+mlgp = msoa_listings.groupby('MSOA11CD')['price'].agg('median')
+mlgp.head()
+```
+
+::::
+
 You should get something like:
 
-```
-MSOA11CD
-E02000001   170.00
-E02000002    97.00
-E02000003    80.00
-E02000004    54.00
-E02000005   100.00
-Name: price, dtype: float64
+```{python}
+#| echo: false
+mlgp.head()
 ```
 
 ## Room Type by MSOA
@@ -319,6 +351,10 @@ Name: price, dtype: float64
 
 Now let's calculate the count of room types by MSOA and compare the effects of `reset_index` on the outputs below. And notice too that we can assign the aggregated value to a column name!
 
+:::: {.qna}
+
+#### Question
+
 ```{python}
 #| eval: false
 # *m*soa *l*istings *g*rouped *c*ount
@@ -326,15 +362,26 @@ mlgc = msoa_listings.groupby(['???','???'], observed=False).listing_url.agg(Coun
 mlgc.head()
 ```
 
+#### Answer
+
+```{python}
+# *m*soa *l*istings *g*rouped *c*ount
+mlgc = msoa_listings.groupby(['MSOA11CD','room_type'], observed=False).listing_url.agg(Count='count')
+mlgc.head()
+```
+
+::::
+
 You should get something resembling this:
 
-| MSOA11CD | room_type | Count<br/>&nbsp;<br />&nbsp; |
-| -------: | :-------- | --: |
-| **E02000001** | **Entire home/apt** | 466 |
-|  | **Hotel room** | 0 |
-|  | **Private room** | 61 |
-|  | **Shared room** | 1 |
-| **E02000002** | **Entire home/apt** | 4 |
+```{python}
+#| echo: false
+mlgc.head()
+```
+
+:::: {.qna}
+
+#### Question
 
 ```{python}
 #| eval: false
@@ -343,15 +390,22 @@ mlgcr = msoa_listings.groupby(['???','???'], observed=False).listing_url.agg(Cou
 mlgcr.head()
 ```
 
+#### Answer
+
+```{python}
+# *m*soa *l*istings *g*rouped *c*ount *r*eset index
+mlgcr = msoa_listings.groupby(['MSOA11CD','room_type'], observed=False).listing_url.agg(Count='count').reset_index() # msoa listings grouped counts
+mlgcr.head()
+```
+
+::::
+
 You should get something like: 
 
-|    | MSOA11CD | room_type | Count |
-| -: | :------- | :-------- | ----: |
-| 0 | E02000001 | Entire home/apt | 466 |
-| 1 | E02000001 | Hotel room | 0 |
-| 2 | E02000001 | Private room | 61 |
-| 3 | E02000001 | Shared room | 1 |
-| 4 | E02000002 | Entire home/apt | 4 |
+```{python}
+#| echo: false
+mlgcr.head()
+```
 
 ## Price by Room Type
 
@@ -363,6 +417,10 @@ You should get something like:
 
 But perhaps median price/room type would make more sense? And do we want to retain values where there are no listings? For example, there are no hotel rooms listed for E02000001, how do we ensure that these *NAs are dropped*?
 
+:::: {.qna}
+
+#### Question
+
 ```{python}
 #| eval: false
 # *m*soa *l*istings *g*rouped *r*oom *p*rice
@@ -371,15 +429,23 @@ mlgrp = msoa_listings.???(???, observed=True
 mlgrp.head()
 ```
 
+#### Answer
+
+```{python}
+# *m*soa *l*istings *g*rouped *r*oom *p*rice
+mlgrp = msoa_listings.groupby(['MSOA11CD','room_type'], observed=True
+                      )['price'].agg('median').reset_index()
+mlgrp.head()
+```
+
+::::
+
 You should get something like:
 
-|    | MSOA11CD | room type | price |
-| -: | :------- | :-------  | ----: |
-| 0 | E02000001 | Entire home/apt | 177.00 |
-| 2 | E02000001 | Private room | 100.00 |
-| 3 | E02000001 | Shared room | 120.00 |
-| 4 | E02000002 | Entire home/apt | 117.00 |
-| 6 | E02000002 | Private room | 42.00 |
+```{python}
+#| echo: false
+mlgrp.head()
+```
 
 ## Explore Outlier Per-MSOA Prices
 
@@ -394,7 +460,6 @@ Are there MSOAs what *look* like they might contain erroneous data?
 ### Plot MSOA Median Prices
 
 ```{python}
-#| eval: false
 mlgp.hist(bins=200);
 ```
 
@@ -403,7 +468,6 @@ mlgp.hist(bins=200);
 Careful, this is showing the *listings* from MSOAs whose median price is above $300/night:
 
 ```{python}
-#| eval: false
 msoa_listings[
     msoa_listings.MSOA11CD.isin(mlgp[mlgp > 300].index)
 ].sort_values(by='price', ascending=False).head(7)[
@@ -416,7 +480,6 @@ Some of these look legi (4, 5, and... 8 bedroom 'villas'?), though not every one
 And how about these?
 
 ```{python}
-#| eval: false
 msoa_listings[
     (msoa_listings.MSOA11CD.isin(mlgp[mlgp > 300].index)) & (msoa_listings.room_type!='Entire home/apt')
 ].sort_values(by='price', ascending=False).head(7)[
@@ -427,7 +490,6 @@ msoa_listings[
 If we wanted to be rigorous then we'd have to investigate further: properties in Mayfair and Westminster *are* going to be expensive, but are these plausible nightly prices? In some cases, yes. In others...
 
 ```{python}
-#| eval: false
 msoa_listings[
     (msoa_listings.MSOA11CD.isin(mlgp[mlgp < 100].index)) & (msoa_listings.room_type!='Entire home/apt')
 ].sort_values(by='price', ascending=False).head(7)[
@@ -438,8 +500,10 @@ msoa_listings[
 On the whole, let's take a *guess* that there are a small number of implausibly high prices for individual units that aren't in very expensive neighbourhoods and that these are either erroneous/deliberately incorrect, or represent a price that is not per-night. 
 
 ::: {.callout-note}
+#### Connections
 
-    **&#128279; Connections**: What's the right answer here? There isn't one. You could probably spend _months_ figuring out what's a real, available-to-let listing and waht isn't. I would argue that assuming all listings are 'legit' without doing some additional EDA and ESDA is negligent. You could also look at how some of the methods of standardisation/normalisation work and use those to identify improbable listings (but remember that a £10,000 in Mayfair _might_ be legit, while a $5,000 listing in Barking _probably_ isn't!). Or you could look at the inter-decile range (or just define your own range: 1%-99%?).
+What's the right answer here? There isn't one. You could probably spend _months_ figuring out what's a real, available-to-let listing and waht isn't. I would argue that assuming all listings are 'legit' without doing some additional EDA and ESDA is negligent. You could also look at how some of the methods of standardisation/normalisation work and use those to identify improbable listings (but remember that a £10,000 in Mayfair _might_ be legit, while a $5,000 listing in Barking _probably_ isn't!). Or you could look at the inter-decile range (or just define your own range: 1%-99%?).
+
 :::
 
 ### Filter Unlikely Listings
@@ -456,7 +520,9 @@ See if you can filter out these less likely listings on the following criteria:
 2. Room type is not `'Entire home/apt'` AND
 3. Listings do *not* contain the words: suite, luxury, loft, stunning, prime, historic, or deluxe.
 
-I found 901 rows to drop this way.
+:::: {.qna}
+
+#### Question
 
 ```{python}
 #| eval: false
@@ -468,8 +534,22 @@ to_drop = msoa_listings[
 print(f"Have found {to_drop.shape[0]:,} rows to drop on the basis of unlikely per night prices.")
 ```
 
+#### Answer
+
 ```{python}
-#| eval: false
+target_regex = r'(?:suite|luxury|loft|stunning|prime|historic|deluxe|boutique)'
+to_drop = msoa_listings[
+            (msoa_listings.price > 300) &
+            (msoa_listings.room_type != 'Entire home/apt') &
+            ~(msoa_listings.description.str.contains(target_regex, flags=re.IGNORECASE, regex=True, na=True))]
+print(f"Have found {to_drop.shape[0]:,} rows to drop on the basis of unlikely per night prices.")
+```
+
+::::
+
+I found `{python} f"{to_drop.shape[0]:,}"` rows to drop this way.
+
+```{python}
 to_drop.sort_values(by='price', ascending=False)[['price','room_type','name','description']]
 ```
 
@@ -477,15 +557,32 @@ to_drop.sort_values(by='price', ascending=False)[['price','room_type','name','de
 
 Here we use the `plt_ldn` function -- notice how it's designed to return `f,ax` in the same way that `plt.subplots` (which we're already familiar with) does!
 
+:::: {.qna}
+
+#### Question
+
 ```{python}
 #| eval: false
 f,ax = plt_ldn(???, ???)
 to_drop.plot(column='price', markersize=10, alpha=0.7, cmap='viridis', ax=ax);
 ```
 
+#### Answer
+
+```{python}
+f,ax = plt_ldn(water, boros)
+to_drop.plot(column='price', markersize=10, alpha=0.7, cmap='viridis', ax=ax);
+```
+
+::::
+
 ### ... And Drop
 
 Some might be legitimate, but I'm feeling broadly ok with the remainder.
+
+:::: {.qna}
+
+#### Question
 
 ```{python}
 #| eval: false
@@ -493,7 +590,16 @@ cleaned = msoa_listings.drop(index=to_drop.???)
 print(f"Cleaned data has {cleaned.shape[0]:,} rows.")
 ```
 
-After this I had 84,308 rows.
+#### Answer
+
+```{python}
+cleaned = msoa_listings.drop(index=to_drop.index)
+print(f"Cleaned data has {cleaned.shape[0]:,} rows.")
+```
+
+::::
+
+After this I had `{python} f"{cleaned.shape[0]:,}"` rows.
 
 I would normally, at this point, spend quite a bit of time validating this cleaning approach, but right now we're going to take a rough-and-ready approach.
 
@@ -512,8 +618,10 @@ I would normally, at this point, spend quite a bit of time validating this clean
 The `group_by` operation is *one* way to organise and aggregate our data, but pivot tables are a *second* common way to achieve this. We typically use a pivot table to go from long to wide data frames -- it's often seen as one of Excel's main benefits, but Pandas can do that too!
 
 ::: {.callout-note}
+#### Connections
 
-    **&#128279; Connections**: Notice that a pivot table is just a different kind of aggregation. Principally, it's about going from long to wide in your data frame. These issues should be familiar from R and it's `mutate` and other `data.table` methods. We just write them different in Python.
+Notice that a pivot table is just a different kind of aggregation. Principally, it's about going from long to wide in your data frame. These issues should be familiar from R and it's `mutate` and other `data.table` methods. We just write them different in Python.
+
 :::
 
 ## Create Pivot Table
@@ -526,6 +634,10 @@ The `group_by` operation is *one* way to organise and aggregate our data, but pi
 
 We can make use of the pivot table function to generate counts by MSOA in a 'wide' format.
 
+:::: {.qna}
+
+#### Question
+
 ```{python}
 #| eval: false
 pivot = cleaned.groupby(
@@ -535,15 +647,24 @@ pivot = cleaned.groupby(
 pivot.head(3)
 ```
 
+#### Answer
+
+```{python}
+pivot = cleaned.groupby(
+                ['MSOA11CD','room_type'], observed=False
+        ).listing_url.agg(Count='count').reset_index().pivot(
+                index='MSOA11CD', columns=['room_type'], values=['Count'])
+pivot.head(3)
+```
+
+::::
+
 The formatting will look a tiny bit different, but you should get something like this: 
 
-|    |          |       |       |       | Count |
-| -: | -------: | ----: | ----: | ----: | ----: |
-| **room_type** | **Entire home/apt** | **Hotel room** | **Private room** | **Shared room** |
-| **MSOA11CD** |  |  |  |  |  | 
-| **E02000001** | 466 | 0 | 55 | 1 | 
-| **E02000002** | 4 | 0 | 2 | 0 |
-| **E02000003** | 12 | 0 | 13 | 0 |
+```{python}
+#| echo: false
+pivot.head(3)
+```
 
 ## Check Counts
 
@@ -554,14 +675,12 @@ The formatting will look a tiny bit different, but you should get something like
 :::
 
 ```{python}
-#| eval: false
 pivot.sum()
 ```
 
 Just to reassure you that the pivot results 'make sense':
 
 ```{python}
-#| eval: false
 print(cleaned[cleaned.room_type=='Entire home/apt'].listing_url.count())
 print(cleaned[cleaned.room_type=='Private room'].listing_url.count())
 ```
@@ -580,6 +699,10 @@ My instinct at this point is that, looking at the pivot table, we see quite diff
 
 Personally, based on the room type counts above I think we can drop Hotel Rooms and Shared Rooms from this since the other two categories are *so* dominant.
 
+:::: {.qna}
+
+#### Question
+
 ```{python}
 #| eval: false
 # Flatten the column index
@@ -589,9 +712,25 @@ pivot.drop(???, inplace=True)
 pivot.head()
 ```
 
+#### Answer
+
+```{python}
+# Flatten the column index
+pivot.columns = ['Entire home/apt','Hotel room','Private room','Shared room']
+# Drop the columns
+pivot.drop(columns=['Hotel room','Shared room'], inplace=True)
+pivot.head()
+```
+
+::::
+
 You should have only the **Entire home/apt** and **Private room** columns now.
 
 ### Normalise
+
+:::: {.qna}
+
+#### Question
 
 ```{python}
 #| eval: false
@@ -603,18 +742,29 @@ for c in pivot.columns.to_list():
 pivot_norm.head()
 ```
 
+#### Answer
+
+```{python}
+pivot_norm = pd.DataFrame(index=pivot.index)
+for c in pivot.columns.to_list():
+    # Power Transform
+    pivot_norm[c] = pts.fit_transform(pivot[c].to_numpy().reshape(-1,1))
+
+pivot_norm.head()
+```
+
+::::
+
 You should have something like:
 
-|          | Entire home/apt | Private room |
-| :------- | --------------: | -----------: |
-| **MSOA11CD** |  |  |
-| **E02000001** | 2.20 | 1.06 |
-| **E02000002** | -1.29 | -1.85 |
+```{python}
+#| echo: false
+pivot_norm.head()
+```
 
 ### Plot
 
 ```{python}
-#| eval: false
 pnm = pd.merge(msoas.set_index('MSOA11CD'), pivot_norm, left_index=True, right_index=True)
 pnm.plot(column='Entire home/apt', cmap='viridis', edgecolor='none', legend=True, figsize=(12,8));
 ```
@@ -633,17 +783,30 @@ For instance, if we went back to last week's code, we could have appended this I
 
 ### Perform Reduction
 
+:::: {.qna}
+
+#### Question
+
 ```{python}
 #| eval: false
-pcomp = PCA(n_components=???, random_state=42)
+pcomp = PCA(n_components=???, random_state=SEED)
 rd    = pcomp.???(pivot_norm)
 print(f"The explained variance of each component is: {', '.join([f'{x*100:.2f}%' for x in pcomp.explained_variance_ratio_])}")
 ```
 
+#### Answer
+
+```{python}
+pcomp = PCA(n_components=2, random_state=SEED)
+rd    = pcomp.fit_transform(pivot_norm)
+print(f"The explained variance of each component is: {', '.join([f'{x*100:.2f}%' for x in pcomp.explained_variance_ratio_])}")
+```
+
+::::
+
 Take the first component and convert to a series to enable the merge:
 
 ```{python}
-#| eval: false
 airbnb_pca = pd.DataFrame(
                 {'Airbnb Component 1': mms.fit_transform(rd[:,1].reshape(-1,1)).reshape(1,-1)[0]}, 
                 index=pivot.index)
@@ -652,14 +815,13 @@ airbnb_pca.head()
 ```
 
 You should have something like:
-|       | Airbnb Component 1 |
-| :---- | ----: |
-| **MSOA11CD** |     |
-| **E02000001** | 0.47 |
-| **E02000002** | 0.19 
 
 ```{python}
-#| eval: false
+#| echo: false
+airbnb_pca.head()
+```
+
+```{python}
 pcanm = pd.merge(msoas.set_index('MSOA11CD'), airbnb_pca, left_index=True, right_index=True)
 pcanm.plot(column='Airbnb Component 1', cmap='viridis', edgecolor='none', legend=True, figsize=(12,8));
 ```
@@ -667,7 +829,6 @@ pcanm.plot(column='Airbnb Component 1', cmap='viridis', edgecolor='none', legend
 ### Write to Data Frame
 
 ```{python}
-#| eval: false
 # Result Set from merge
 rs = pd.merge(rddf, airbnb_pca, left_index=True, right_index=True)
 ```
@@ -675,7 +836,6 @@ rs = pd.merge(rddf, airbnb_pca, left_index=True, right_index=True)
 Grab the PCA, UMAP, and Airbnb outputs for clustering and append rescaled price:
 
 ```{python}
-#| eval: false
 # Merge the reducded dimensionality data frame with the PCA-reduced Airbnb data
 # to create the *cl*uster *d*ata *f*rame
 cldf = pd.merge(rddf.loc[:,'Component 1':], airbnb_pca, 
@@ -690,6 +850,11 @@ s2 = cleaned.groupby(by='MSOA11CD').price.agg('mean')
 cldf['mean_price'] = pd.Series(np.squeeze(mms.fit_transform(s2.values.reshape(-1,1))), index=s2.index)
 
 cldf.drop(columns=['Subregion','Borough'], inplace=True)
+
+# An MSOA whose listings all lack a price has no median or mean price,
+# and k-means can't handle missing values, so we drop it here.
+print(f"Dropping MSOAs with missing values: {', '.join(cldf[cldf.isna().any(axis=1)].index)}")
+cldf = cldf.dropna()
 
 cldf.head()
 ```
@@ -714,18 +879,32 @@ cldf.head()
 
 :::
 
+:::: {.qna}
+
+#### Question
+
 ```{python}
 #| eval: false
 c_nm   = 'KMeans' # Clustering name
 k_pref = ??? # Number of clusters
 
-kmeans = KMeans(n_clusters=k_pref, n_init=25, random_state=42).fit(cldf.drop(columns=['Dimension 1','Dimension 2'])) # The process
+kmeans = KMeans(n_clusters=k_pref, n_init=25, random_state=SEED).fit(cldf.drop(columns=['Dimension 1','Dimension 2'])) # The process
 ```
+
+#### Answer
+
+```{python}
+c_nm   = 'KMeans' # Clustering name
+k_pref = 3 # Number of clusters
+
+kmeans = KMeans(n_clusters=k_pref, n_init=25, random_state=SEED).fit(cldf.drop(columns=['Dimension 1','Dimension 2'])) # The process
+```
+
+::::
 
 Here are the results:
 
 ```{python}
-#| eval: false
 print(kmeans.labels_) # The results
 ```
 
@@ -742,7 +921,6 @@ print(kmeans.labels_) # The results
 Now capture the labels (i.e. clusters) and write them to a data series that we store on the result set df (`rs`):
 
 ```{python}
-#| eval: false
 rs[c_nm] = pd.Series(kmeans.labels_, index=cldf.index)
 ```
 
@@ -750,14 +928,30 @@ rs[c_nm] = pd.Series(kmeans.labels_, index=cldf.index)
 
 How are the clusters distributed?
 
+:::: {.qna}
+
+#### Question
+
 ```{python}
 #| eval: false
 sns.histplot(data=???, x=c_nm, bins=k_pref);
 ```
 
+#### Answer
+
+```{python}
+sns.histplot(data=rs, x=c_nm, bins=k_pref);
+```
+
+::::
+
 ### Map Clusters
 
 And here's a map!
+
+:::: {.qna}
+
+#### Question
 
 ```{python}
 #| eval: false
@@ -765,6 +959,16 @@ fig, ax = plt_ldn(water, boros)
 fig.suptitle(f"{c_nm} Results (k={k_pref})", fontsize=20, y=0.92)
 rs.plot(column=???, ax=ax, linewidth=0, zorder=0, categorical=???, legend=True);
 ```
+
+#### Answer
+
+```{python}
+fig, ax = plt_ldn(water, boros)
+fig.suptitle(f"{c_nm} Results (k={k_pref})", fontsize=20, y=0.92)
+rs.plot(column=c_nm, ax=ax, linewidth=0, zorder=0, categorical=True, legend=True);
+```
+
+::::
 
 ### Questions
 
@@ -801,16 +1005,14 @@ Another way to try to make the process of selecting the number of clusters a lit
 Either way, to evaluate this in a systematic way, we want to do multiple k-means clusterings for multiple values of k and then we can look at which gives the best results...
 
 ```{python}
-#| eval: false
 kcldf = cldf.drop(columns=['Dimension 1','Dimension 2'])
 ```
 
 ### Repeated Clustering
 
-Let's try clustering across a wider range. Because we repeatedly re-run the clustering code (unlike with Hierarchical Clustering) this can take a few minutes. I got nearly 5 minutes on a M2 Mac.
+Let's try clustering across a wider range. Because we repeatedly re-run the clustering code (unlike with Hierarchical Clustering) this used to take a few minutes; on a recent laptop it now takes seconds.
 
 ```{python}
-#| eval: false
 %%time 
 
 # Adapted from: http://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_silhouette_analysis.html
@@ -823,7 +1025,7 @@ for k in range(2,41):
     
     #############
     # Do the clustering using the main columns
-    kmeans = KMeans(n_clusters=k, n_init=25, random_state=42).fit(kcldf)
+    kmeans = KMeans(n_clusters=k, n_init=25, random_state=SEED).fit(kcldf)
     
     # Calculate the overall silhouette score
     silhouette_avg = silhouette_score(kcldf, kmeans.labels_)
@@ -837,7 +1039,6 @@ for k in range(2,41):
 ### Plot Silhouette Scores
 
 ```{python}
-#| eval: false
 print()
 print(f"Largest silhouette score was {max(x):6.4f} for k={y[x.index(max(x))]}")
 
@@ -847,8 +1048,10 @@ plt.gcf().suptitle("Average Silhouette Scores");
 ```
 
 ::: {.callout-warning}
+#### Note
 
-    **&#9888; Note**: Had we used the UMAP dimensions here you'd likely see more instability in the silhouette plot because the distribution is not remotely Gaussian, though a lot depends on the magnitude of the columns and the number of UMAP vs. PCA components.
+Had we used the UMAP dimensions here you'd likely see more instability in the silhouette plot because the distribution is not remotely Gaussian, though a lot depends on the magnitude of the columns and the number of UMAP vs. PCA components.
+
 :::
 
 We can use the largest average silhouette score to determine the 'natural' number of clusters in the data, but that that's only if we don't have any kind of underlying theory, other empirical evidence, or even just a reason for choosing a different value... Again, we're now getting in areas where your judgement and your ability to communicate your rationale to readers is the key thing.
@@ -861,9 +1064,13 @@ We can use the largest average silhouette score to determine the 'natural' numbe
 
 :::
 
-So although we should probably pick the largest silhouette scores, that's `k=3` which kind of defeats the purpose of clustering in the first place. In the absence of a _compelling_ reason to pick 2 or 3 clusters, let's have a closer look at the _next_ maximum silhouetted score:
+Here the largest average silhouette score is for <code>k=`{python} y[x.index(max(x))]`</code>. If it had been 2 or 3 that would rather defeat the purpose of clustering, and we'd look at the _next_ largest score instead; in the absence of a _compelling_ reason to pick something else, let's use the k with the largest score:
 
 ### Perform Clustering
+
+:::: {.qna}
+
+#### Question
 
 ```{python}
 #| eval: false
@@ -871,7 +1078,7 @@ k_pref=???
 
 #############
 # Do the clustering using the main columns
-kmeans = KMeans(n_clusters=k_pref, n_init=25, random_state=42).fit(kcldf)
+kmeans = KMeans(n_clusters=k_pref, n_init=25, random_state=SEED).fit(kcldf)
 
 # Convert to a series
 s = pd.Series(kmeans.labels_, index=kcldf.index, name=c_nm)
@@ -886,10 +1093,33 @@ silhouette_avg = silhouette_score(kcldf, kmeans.labels_)
 sample_silhouette_values = silhouette_samples(kcldf, kmeans.labels_)
 ```
 
+#### Answer
+
+```{python}
+k_pref = y[x.index(max(x))] # The k with the largest average silhouette score
+
+#############
+# Do the clustering using the main columns
+kmeans = KMeans(n_clusters=k_pref, n_init=25, random_state=SEED).fit(kcldf)
+
+# Convert to a series
+s = pd.Series(kmeans.labels_, index=kcldf.index, name=c_nm)
+
+# We do this for plotting
+rs[c_nm] = s
+    
+# Calculate the overall silhouette score
+silhouette_avg = silhouette_score(kcldf, kmeans.labels_)
+
+# Calculate the silhouette values
+sample_silhouette_values = silhouette_samples(kcldf, kmeans.labels_)
+```
+
+::::
+
 ### Plot Diagnostics
 
 ```{python}
-#| eval: false
 #############
 # Create a subplot with 1 row and 2 columns
 fig, (ax1, ax2) = plt.subplots(1, 2)
@@ -969,14 +1199,14 @@ plt.show()
 ```
 
 ::: {.callout-warning}
+#### Stop
 
-    **&#9888; Stop**: Make sure that you understand how the silhouette plot and value work, and why your results _may_ diverge from mine.
+Make sure that you understand how the silhouette plot and value work, and why your results _may_ diverge from mine.
 ::: 
 
 ### Map Clusters
 
 ```{python}
-#| eval: false
 fig, ax = plt_ldn(water, boros)
 fig.suptitle(f"{c_nm} Results (k={k_pref})", fontsize=20, y=0.92)
 rs.plot(column=c_nm, ax=ax, linewidth=0, zorder=0, categorical=True, legend=True);
@@ -995,7 +1225,6 @@ To get a sense of how these clusters differ we can try to extract 'representativ
 These are columns that we want to suppress from our sample:
 
 ```{python}
-#| eval: false
 to_suppress=['OBJECTID', 'BNG_E', 'BNG_N', 'LONG', 'LAT', 
              'Shape__Are', 'Shape__Len', 'geometry', 'Component 1', 
              'Component 2', 'Component 3', 'Component 4', 'Component 5', 
@@ -1006,7 +1235,6 @@ to_suppress=['OBJECTID', 'BNG_E', 'BNG_N', 'LONG', 'LAT',
 Take a sample of the full range of numeric columns:
 
 ```{python}
-#| eval: false
 cols = random.sample(rs.select_dtypes(exclude='object').drop(columns=to_suppress).columns.to_list(), 12)
 print(cols)
 ```
@@ -1014,7 +1242,6 @@ print(cols)
 Calculate the mean of these columns for each cluster:
 
 ```{python}
-#| eval: false
 # Empty data frame with the columns we'll need
 centroids = pd.DataFrame(columns=cols)
 
@@ -1030,12 +1257,10 @@ for k in sorted(rs[c_nm].unique()):
 ```
 
 ```{python}
-#| eval: false
 centroids
 ```
 
 ```{python}
-#| eval: false
 centroids_long = pd.DataFrame(columns=['Variable','Cluster','Std. Value'])
 for i in range(0,len(centroids.index)):
     row = centroids.iloc[i,:]
@@ -1045,14 +1270,14 @@ for i in range(0,len(centroids.index)):
 ```
 
 ```{python}
-#| eval: false
 g = sns.FacetGrid(centroids_long, col="Variable", col_wrap=3, height=3, aspect=1.5, margin_titles=True, sharey=True)
 g = g.map(plt.bar, "Cluster", "Std. Value")
 ```
 
 ::: {.callout-note}
+#### Connections
 
-    **&#128279; Connections**: The above centroid outputs are a way to think about how each cluster is 'loaded' on to the data. We can't show all of the variables in the data, so we've randomly selected a subset and can then look at how different clusters are more (or less) associated with the standardised value of a particular column/variable.
+The above centroid outputs are a way to think about how each cluster is 'loaded' on to the data. We can't show all of the variables in the data, so we've randomly selected a subset and can then look at how different clusters are more (or less) associated with the standardised value of a particular column/variable.
 :::
 
 # DBSCAN
@@ -1060,7 +1285,6 @@ g = g.map(plt.bar, "Cluster", "Std. Value")
 For what it's worth, I've had _enormous_ trouble with DBSCAN and this kind of data. I don't think it deals very well with *much* more than three dimensions, so the flexbility to not have to specify the number of clusters is balanced with a density-based approach that is severely hampered by high-dimensional distance-inflation.
 
 ```{python}
-#| eval: false
 # Drop the PCA dimensions
 cldf2 = cldf.loc[:,'Dimension 1':].copy()
 for c in [x for x in cldf.columns.to_list() if x.startswith('Dimension ')]:
@@ -1079,7 +1303,6 @@ cldf2.head()
 We normally look for some kind of 'knee' to set the distance.
 
 ```{python}
-#| eval: false
 nbrs = NearestNeighbors(n_neighbors=6).fit(cldf2)
 distances, indices = nbrs.kneighbors(cldf2)
 
@@ -1096,7 +1319,6 @@ distances = distances[:,1]
 :::
 
 ```{python}
-#| eval: false
 from kneed import knee_locator
 
 kn = knee_locator.KneeLocator(np.arange(distances.shape[0]), distances, S=12,
@@ -1107,7 +1329,6 @@ kn.plot_knee_normalized()
 ```
 
 ```{python}
-#| eval: false
 print(f"Best guess at epsilon for DBSCAN is {distances[kn.knee]:0.4f}")
 ```
 
@@ -1124,12 +1345,12 @@ There are two values that need to be specified: `eps` and `min_samples`. Both se
 ### Iterate Over Range
 
 ::: {.callout-caution}
+#### Warning
 
-    **&#9888; Warning**: Depending on the data volume, this next step may take quite a lot of time since we are iterating through many, many values of Epsilon to explore how the clustering result changes and how well this matches up with (or doesn't) the graph above.
+Depending on the data volume, this next step may take quite a lot of time since we are iterating through many, many values of Epsilon to explore how the clustering result changes and how well this matches up with (or doesn't) the graph above.
 :::
 
 ```{python}
-#| eval: false
 %%time 
 
 c_nm = 'DBSCAN'
@@ -1180,12 +1401,10 @@ print("Done.")
 ### Examine Clusters
 
 ```{python}
-#| eval: false
 edf.head() # Notice the -1 cluster for small epsilons
 ```
 
 ```{python}
-#| eval: false
 epsilon_long = pd.DataFrame(columns=['Epsilon','Cluster','Count'])
 
 for i in range(0,len(edf.index)):
@@ -1203,7 +1422,6 @@ epsilon_long['Count'] = epsilon_long.Count.astype(float)
 One of the really big problems with DBSCAN and this kind of data is that you have no *practical* way of specifying epsilon (whereas if you were doing walkability analysis then you could cluster on walking distance!). So you can look at the data (as above) to get a reasoanble value, but look what the output below shows about the stability of the clusters for different values of epsilon!
 
 ```{python}
-#| eval: false
 fig, ax = plt.subplots(figsize=(12,8))
 sns.lineplot(data=epsilon_long, x='Epsilon', y='Count', hue='Cluster');
 plt.vlines(x=distances[kn.knee], ymin=0, ymax=epsilon_long.Count.max(), color=(1, .7, .7, .8), linestyles='dashed')
@@ -1224,7 +1442,6 @@ plt.tight_layout()
 Use the value from kneed...
 
 ```{python}
-#| eval: false
 dbs = DBSCAN(eps=distances[kn.knee], min_samples=cldf2.shape[1]+1).fit(cldf2.values)
 s = pd.Series(dbs.labels_, index=cldf2.index, name=c_nm)
 rs[c_nm] = s
@@ -1234,7 +1451,6 @@ print(s.value_counts())
 ###: Map Clusters
 
 ```{python}
-#| eval: false
 fig, ax = plt_ldn(water, boros)
 fig.suptitle(f"{c_nm} Results", fontsize=20, y=0.92)
 rs.plot(column=c_nm, ax=ax, linewidth=0, zorder=0, legend=True, categorical=True);
@@ -1243,7 +1459,6 @@ rs.plot(column=c_nm, ax=ax, linewidth=0, zorder=0, legend=True, categorical=True
 ### 'Representative' Centroids
 
 ```{python}
-#| eval: false
 to_suppress=['OBJECTID', 'BNG_E', 'BNG_N', 'LONG', 'LAT', 
              'Shape__Are', 'Shape__Len', 'geometry', 'Component 1', 
              'Component 2', 'Component 3', 'Component 4', 'Component 5', 
@@ -1254,7 +1469,6 @@ to_suppress=['OBJECTID', 'BNG_E', 'BNG_N', 'LONG', 'LAT',
 Take a sample of the full range of numeric columns:
 
 ```{python}
-#| eval: false
 cols = random.sample(rs.select_dtypes(exclude='object').drop(columns=to_suppress).columns.to_list(), 12)
 print(cols)
 ```
@@ -1262,7 +1476,6 @@ print(cols)
 Calculate the mean of these columns for each cluster:
 
 ```{python}
-#| eval: false
 # Empty data frame with the columns we'll need
 centroids = pd.DataFrame(columns=cols)
 
@@ -1278,14 +1491,12 @@ for k in sorted(rs[c_nm].unique()):
 ```
 
 ```{python}
-#| eval: false
 # Drop the unclustered records (-1)
 centroids.drop(labels=[-1], axis=0, inplace=True)
 centroids
 ```
 
 ```{python}
-#| eval: false
 centroids_long = pd.DataFrame(columns=['Variable','Cluster','Std. Value'])
 for i in range(0,len(centroids.index)):
     row = centroids.iloc[i,:]
@@ -1295,7 +1506,6 @@ for i in range(0,len(centroids.index)):
 ```
 
 ```{python}
-#| eval: false
 g = sns.FacetGrid(centroids_long, col="Variable", col_wrap=3, height=3, aspect=1.5, margin_titles=True, sharey=True)
 g = g.map(plt.bar, "Cluster", "Std. Value")
 ```
@@ -1321,7 +1531,6 @@ And now for something completely different! This is section is **completely opti
 ### Import Libraries
 
 ```{python}
-#| eval: false
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
@@ -1334,7 +1543,6 @@ from sklearn.inspection import permutation_importance
 I'm taking a fairly brutal approach here: anything that is not inherently numeric is gone (bye, bye, text), and I'm not bothering to convert implicitly numeric values either: dates could be converted to 'months since last review', for instance, while amenities could be One-Hot Encoded after some pruning of rare amenities. This leaves us with a much smaller number of columns to feed *in* to the classifier.
 
 ```{python}
-#| eval: false
 print(f"Cleaned columns: {', '.join(cleaned.columns.to_list())}.")
 classifier_in = cleaned.drop(columns=['listing_url','last_scraped','name','description',
                                       'host_name', 'host_location', 'property_type', 
@@ -1349,20 +1557,17 @@ classifier_in = cleaned.drop(columns=['listing_url','last_scraped','name','descr
 Not all classifiers have this issue, but some will struggle to make predictions (or not be able to do so at all) if there are NAs in the data set. The classifier we're using can't deal with NAs, so we have to strip these out, but before we do let's check the effect:
 
 ```{python}
-#| eval: false
 classifier_in.isna().sum()
 ```
 
-We can safely drop these now, and you should end up with about 54,000 rows to work with.
+We can safely drop these now, and you should end up with about `{python} f"{classifier_in.dropna(axis=0, how='any').shape[0]:,}"` rows to work with.
 
 ```{python}
-#| eval: false
 classifier_in = classifier_in.dropna(axis=0, how='any')
 print(f"Now have {classifier_in.shape[0]:,} rows of data to work with (down from {cleaned.shape[0]:,}).")
 ```
 
 ```{python}
-#| eval: false
 print()
 print(f"Classifier training columns: {', '.join(classifier_in.columns.to_list())}.")
 classifier_in.head()
@@ -1373,12 +1578,10 @@ classifier_in.head()
 We do still have a couple of non-numeric columns to deal with: booleans and the thing we're actually trying to predict (the room type)!
 
 ```{python}
-#| eval: false
 classifier_in['host_is_superhost'] = classifier_in.host_is_superhost.replace({True:1, False:0}).astype('int')
 ```
 
 ```{python}
-#| eval: false
 le = LabelEncoder()
 classifier_in['room_class'] = le.fit_transform(classifier_in.room_type)
 ```
@@ -1386,7 +1589,6 @@ classifier_in['room_class'] = le.fit_transform(classifier_in.room_type)
 A quick check: we should only have one type per class and vice versa.
 
 ```{python}
-#| eval: false
 classifier_in.groupby(by=['room_type','room_class']).host_id.agg('count').reset_index()
 ```
 
@@ -1401,21 +1603,20 @@ classifier_in.groupby(by=['room_type','room_class']).host_id.agg('count').reset_
 We're going to use a [Random Forest Classifier](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html) but the nice thing about `sklearn` is that you can quite easily swap in other classifiers if you'd like to explore further. This is one *big* advantage of Python over R in my book: whereas R tends to get new algorithms *first*, they are often implemented independently by many people and you can end up with incompatible data structures that require a lot of faff to reorganise for a different algorithm. Python is a bit more 'managed' and the dominance of `numpy` and `sklearn` and `pandas` means that people have an incentive to contribute to this library or, if it's genuinely novel, to create an implementation that works *like* it would if it were part of `sklearn`!
 
 ::: {.callout-note}
+#### Connections
 
-    **&#128279; Connections**: So here's an _actual_ Machine Learning implementation, but you'll have seen a lot of parts of the code before! 
+So here's an _actual_ Machine Learning implementation, but you'll have seen a lot of parts of the code before! 
 :::
 
 ### Train/Test Split
 
 ```{python}
-#| eval: false
-train, test = train_test_split(classifier_in, test_size=0.2, random_state=42)
+train, test = train_test_split(classifier_in, test_size=0.2, random_state=SEED)
 print(f"Train contains {train.shape[0]:,} records.")
 print(f"Test contains {test.shape[0]:,} records.")
 ```
 
 ```{python}
-#| eval: false
 y_train = train.room_class
 X_train = train.drop(columns=['room_class','room_type'])
 
@@ -1426,24 +1627,21 @@ X_test  = test.drop(columns=['room_class','room_type'])
 ### Classifier Setup
 
 ```{python}
-#| eval: false
 rfc = RandomForestClassifier(
     max_depth=8,
     min_samples_split=7,
     n_jobs=4,
-    random_state=42
+    random_state=SEED
 )
 ```
 
 ### Fit and Predict
 
 ```{python}
-#| eval: false
 rfc.fit(X_train, y_train)
 ```
 
 ```{python}
-#| eval: false
 y_hat = rfc.predict(X_test)
 ```
 
@@ -1458,7 +1656,6 @@ y_hat = rfc.predict(X_test)
 ### Confusion Matrix
 
 ```{python}
-#| eval: false
 c_matrix = pd.DataFrame(confusion_matrix(y_test, y_hat))
 c_matrix.index = le.inverse_transform(c_matrix.index)
 c_matrix.columns = le.inverse_transform(c_matrix.columns)
@@ -1470,12 +1667,12 @@ c_matrix
 Compare the Random Forest's built-in 'feature importance' with Permutation Feature Importance as [documented here](https://scikit-learn.org/stable/auto_examples/inspection/plot_permutation_importance.html).
 
 ::: {.callout-note}
+#### Connections
 
-    **&#128279; Connections**: This next section is the reason you shouldn't blindly run ML algorithms on your data. It turns out that the Random Forest is seriously affected by the scale of different variables, and of binary variables in particular. You will tend to get erroneous feature importance values back from `sklearn`'s RF implementation and should _normally_ look at Permutation Feature Importance values instead. But this little demonstration also shows (above) a more subtle issue: imbalanced data. There are far fewer hotels than there are private rooms, and far fewer of _those_ than there are entire home/apt listings in the sample. So you'll see that the RF has trouble predicting the classes correctly: that's because with a data set like this it's hard to to _better_ than just predicting entire home/apt _Every Single Time_.
+This next section is the reason you shouldn't blindly run ML algorithms on your data. It turns out that the Random Forest is seriously affected by the scale of different variables, and of binary variables in particular. You will tend to get erroneous feature importance values back from `sklearn`'s RF implementation and should _normally_ look at Permutation Feature Importance values instead. But this little demonstration also shows (above) a more subtle issue: imbalanced data. There are far fewer hotels than there are private rooms, and far fewer of _those_ than there are entire home/apt listings in the sample. So you'll see that the RF has trouble predicting the classes correctly: that's because with a data set like this it's hard to to _better_ than just predicting entire home/apt _Every Single Time_.
 :::
 
 ```{python}
-#| eval: false
 mdi_importances = pd.Series(
     rfc.feature_importances_, index=rfc.feature_names_in_
 ).sort_values(ascending=True)
@@ -1488,14 +1685,12 @@ ax.figure.tight_layout()
 ### Permutation Feature Importance
 
 ```{python}
-#| eval: false
 result = permutation_importance(
-    rfc, X_test, y_test, n_repeats=10, random_state=42, n_jobs=2
+    rfc, X_test, y_test, n_repeats=10, random_state=SEED, n_jobs=2
 )
 ```
 
 ```{python}
-#| eval: false
 sorted_importances_idx = result.importances_mean.argsort()
 importances = pd.DataFrame(
     result.importances[sorted_importances_idx].T,
@@ -1562,14 +1757,15 @@ explainer = shap.Explainer(rfc.predict, Xsample)
 Now we calculate the shap values for the 5% sample from `X_test`.
 
 ::: {.callout-caution}
+#### Warning
 
-    **&#9888; Warning**: This next block is the one that takes a long time to run. I got between 3mn and 4mn.
+This next block is the one that takes a long time to run. I got between 3mn and 4mn.
 :::
 
 ```{python}
 #| eval: false
 %%time
-shap_values = explainer(X_test.sample(frac=.05, random_state=42))
+shap_values = explainer(X_test.sample(frac=.05, random_state=SEED))
 ```
 
 ### Single Observation
@@ -1580,7 +1776,7 @@ Now you can take any random record (`sample_ind`) and produce a shap plot to sho
 #| eval: false
 sample_ind=250
 shap.plots.waterfall(shap_values[sample_ind], max_display=14, show=False);
-plt.title(f"Shapely values for observation #{sample_ind} ({X_test.sample(frac=.05, random_state=42).iloc[sample_ind].name})")
+plt.title(f"Shapely values for observation #{sample_ind} ({X_test.sample(frac=.05, random_state=SEED).iloc[sample_ind].name})")
 plt.tight_layout()
 #plt.savefig('practical-09-waterfall.png', dpi=150)
 ```
@@ -1623,12 +1819,13 @@ The code from this practical that you'll use again and again:
 | # | What it does | Code | When you'd use it |
 | :- | :----------- | :--- | :---------------- |
 | 1 | Summarise by area | `msoa_listings.groupby('MSOA11CD')['price'].agg('median')` | Point data to area statistics; the group becomes the index |
-| 2 | Long to wide | `df.groupby(['MSOA11CD','room_type'], observed=False).listing_url.agg(Count='count').reset_index().pivot(index='MSOA11CD', columns=['room_type'], values=['Count'])` | One row per area and one column per category, as clustering expects |
-| 3 | Select rows whose ID is in a list | `msoa_listings[msoa_listings.MSOA11CD.isin(mlgp[mlgp > 300].index)]` | Looking at the listings behind an unusual area value |
+| 2 | Long to wide | `df.groupby( ['MSOA11CD','room_type'], observed=False ).listing_url.agg( Count='count' ).reset_index().pivot( index='MSOA11CD', columns=['room_type'], values=['Count'] )` | One row per area and one column per category, as clustering expects |
+| 3 | Select rows whose ID is in a list | `msoa_listings[ msoa_listings.MSOA11CD.isin( mlgp[mlgp > 300].index ) ]` | Looking at the listings behind an unusual area value |
 | 4 | Drop rows you've identified | `cleaned = msoa_listings.drop(index=to_drop.index)` | Removing outliers after checking them |
-| 5 | k-means clustering | `kmeans = KMeans(n_clusters=k, n_init=25, random_state=42).fit(df)`, then `pd.Series(kmeans.labels_, index=df.index)` | Grouping areas when you can choose the number of clusters |
+| 5 | k-means clustering | `kmeans = KMeans(n_clusters=k, n_init=25, random_state=SEED).fit(df)`, then `pd.Series(kmeans.labels_, index=df.index)` | Grouping areas when you can choose the number of clusters |
 | 6 | Choose k | `silhouette_score(df, kmeans.labels_)`, in a loop over `k` | Comparing numbers of clusters; higher is better, but look at the map too |
 | 7 | Map the clusters | `rs.plot(column='KMeans', categorical=True, legend=True)` | Cluster numbers are labels, not values: `categorical=True` |
 | 8 | Find a distance for DBSCAN | `nbrs = NearestNeighbors(n_neighbors=6).fit(df)`, then `distances, indices = nbrs.kneighbors(df)` | Choosing `eps` from the 'knee' in the sorted distances |
 | 9 | Density-based clustering | `DBSCAN(eps=e, min_samples=df.shape[1]+1).fit(df)` | Clusters of any shape, without choosing k; label `-1` means noise |
-| 10 | Classify with a random forest | `rfc = RandomForestClassifier(max_depth=8, random_state=42).fit(X_train, y_train)`, then `rfc.predict(X_test)` and `rfc.feature_importances_` | Supervised learning: predicting a known category (here, room type) |
+| 10 | Classify with a random forest | `rfc = RandomForestClassifier( max_depth=8, random_state=SEED ).fit( X_train, y_train )`, then `rfc.predict(X_test)` and `rfc.feature_importances_` | Supervised learning: predicting a known category (here, room type) |
+

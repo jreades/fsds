@@ -16,7 +16,7 @@ Ultimately, however, you don't *need* to use this for your analysis, this practi
 
 ::: {.callout-note}
 
-#### &#128279; Connections
+#### Connections
 
 There are a _lot_ of links across sessions now, as well as some _forward links_ to stuff we've not yet covered (see: `pandas.merge`). We'll pick these up as we move through the notebook.
 
@@ -60,7 +60,7 @@ except:
 
 ::: {.callout-note}
 
-#### &#128279; Connections
+#### Connections
 
 By this point you should be fairly familiar with the UK's census geographies as you'll have encountered them in your GIS module. But in case you need a refresher, here's what the [Office for National Statistics](https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeographies/census2021geographies) says.
 
@@ -154,7 +154,7 @@ Until now we have understood the pandas index as a single column-like 'thing' in
 
 ::: {.callout-note}
 
-#### &#128279; Connections
+#### Connections
 
 We'll be looking at **Grouping Data** in much more detail in [next week](https://jreades.github.io/fsds/sessions/week9.html#lectures), so the main thing to remember is that grouping is for rows, multi-indexing is about columns.
 
@@ -164,10 +164,22 @@ We'll be looking at **Grouping Data** in much more detail in [next week](https:/
 
 Of course, one way to get at the data is to use `.iloc[...]` since that refers to columns by *position* and ignores the complexity of the index. Try printing out the the first five rows of the first column using `iloc`:
 
+:::: {.qna}
+
+#### Question
+
 ```{python}
 #| eval: false
 excel_atlas.iloc[???]
 ```
+
+#### Answer
+
+```{python}
+excel_atlas.iloc[0:5,0]
+```
+
+::::
 
 You should get:
 
@@ -351,7 +363,7 @@ for i in range(10):
 
 ::: {.callout-note}
 
-#### &#128279; Connections
+#### Connections
 
 See how regular expressions keep coming [baaaaaaaaack](https://jreades.github.io/fsds/sessions/week7.html#lectures)? That said, you can also often make use of simple string functions like `startswith` and `endswith` for this problem.
 
@@ -479,7 +491,7 @@ tidy.drop(index=tidy[tidy['MSOA Code'].isna()].index, inplace=True)
 
 ::: {.callout-note}
 
-#### &#128279; Connections
+#### Connections
 
 We touched on `lambda` functions last week; it's a 'trivial' function that we don't even want to bother defining with `def`. We also used the lambda function in the context of `apply` so this is just another chance to remind yourself how this works. This is quite advanced Python, so don't panic if you don't get it right away and have to do some Googling... 
 
@@ -579,7 +591,7 @@ print("Done.")
 
 ::: {.callout-note}
 
-#### &#128279; Connections
+#### Connections
 
 We'll cover joins (of which a `merge` is just one type) in the [final week's lectures](https://jreades.github.io/fsds/sessions/week10.html#lectures), but between what you'd done in GIS and what we have here there should be enough here for you to start being able to make sense of how they work so that you don't have to wait until Week 10 to think about how this could help you with your Group Assessment.
 
@@ -636,6 +648,10 @@ You should get <code>Final data frame has shape `{python} f"{gdf.shape[0]:,} x {
 
 Let's plot the median income in 2011 column using the `plasma` colour ramp... The rest is to show you how to customise a legend.
 
+:::: {.qna}
+
+#### Question
+
 ```{python}
 #| eval: false
 col = 'Median-2011'
@@ -659,10 +675,35 @@ for lbl in leg.get_texts():
 plt.show();
 ```
 
+#### Answer
+
+```{python}
+col = 'Median-2011'
+fig = gdf.plot(column=col, cmap='plasma',
+         scheme='FisherJenks', k=7, edgecolor='None',
+         legend=True, legend_kwds={'frameon':False, 'fontsize':8},
+         figsize=(8,7));
+plt.title(col.replace('-',' '));
+
+# Now to modify the legend: googling "geopandas format legend"
+# brings me to: https://stackoverflow.com/a/56591102/4041902
+leg = fig.get_legend()
+leg._loc = 3
+
+for lbl in leg.get_texts():
+    label_text = lbl.get_text()
+    [low, hi] = label_text.split(', ')
+    new_text = f'£{float(low):,.0f} - £{float(hi):,.0f}'
+    lbl.set_text(new_text)
+
+plt.show();
+```
+
+::::
+
 ### Save
 
 ```{python}
-#| eval: false
 gdf.to_parquet(Path('data/geo') / 'MSOA_Atlas.geoparquet')
 ```
 
@@ -674,7 +715,9 @@ gdf.to_parquet(Path('data/geo') / 'MSOA_Atlas.geoparquet')
 
 ::: {.callout-note}
 
-    **&#128279; Connections**: Here you will be using a standard approach in Machine Learningknown as _test/train  split_, although we _won't_ be doing any actual ML (&#128517;). Here we are just going to use it to explore some issues raised by normalisation and standardisation in [this week's lectures](https://jreades.github.io/fsds/sessions/week8.html#lectures).
+#### Connections
+
+Here you will be using a standard approach in Machine Learningknown as _test/train  split_, although we _won't_ be doing any actual ML (&#128517;). Here we are just going to use it to explore some issues raised by normalisation and standardisation in [this week's lectures](https://jreades.github.io/fsds/sessions/week8.html#lectures).
 :::
 
 A standard approach to Machine Learning, and something that is becoming more widely used elsewhere, is the splitting of a large data into set into testing and training components. Typically, you would take 80-90% of your data to 'train' your algorithm and withold between 10-20% for validation ('testing'). An even 'stricter' approach, in the sense of trying to ensure the robustness of your model against outlier effects, is [cross validation](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_validate.html) such as [k-folds cross-validation](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.KFold.html).
@@ -687,13 +730,12 @@ We're not building a model here (that's for Term 2!) so we'll just 'pretend' tha
 
 ::: {.callout-tip}
 
-    In future 'runs' of this notebook you can now just pick up here and skip all of Task 1.
+In future 'runs' of this notebook you can now just pick up here and skip all of Task 1.
 :::
 
 On subsequent runs of this notebook you might just want to start here!
 
 ```{python}
-#| eval: false
 # Notice this handy code: we check if the data is already
 # in memory. And notice this is just a list comprehension
 # to see what is locally loaded.
@@ -703,7 +745,6 @@ print(gdf.shape)
 ```
 
 ```{python}
-#| eval: false
 categoricals = ['Borough','Subregion']
 for c in categoricals:
     gdf[c] = gdf[c].astype('category')
@@ -720,7 +761,6 @@ for c in categoricals:
 For our purposes this is a little bit overkill as you could also use pandas' `sample(frac=0.2)` and the indexes, but it's useful to see how this works. You use test/train split to get **four** data sets out: the training data gives you two (predictors + target as separate data sets) and the testing data gives you two as well (predictors + target as separate data sets). These are sized accoridng to the `test_size` specfied in the `test_train_split` parameters.
 
 ```{python}
-#| eval: false
 from sklearn.model_selection import train_test_split 
 
 pdf = gdf['Median-2011'].copy() # pdf for Median *P*rice b/c we need *something*
@@ -729,13 +769,12 @@ pdf = gdf['Median-2011'].copy() # pdf for Median *P*rice b/c we need *something*
 # pr == *predicted* value (a.k.a. dependent variable)
 # Notice we don't want the median price included in our training data
 df_train, df_test, pr_train, pr_test = train_test_split(
-                gdf.drop(columns=['Median-2011']), pdf, test_size=0.2, random_state=44)
+                gdf.drop(columns=['Median-2011']), pdf, test_size=0.2, random_state=SEED)
 ```
 
 Below you should see that the data has been split roughly on the basis of the `test_size` parameter.
 
 ```{python}
-#| eval: false
 print(f"Original data size: {gdf.shape[0]:,} x {gdf.shape[1]}")
 print(f"  Training data size: {df_train.shape[0]:,} x {df_train.shape[1]} ({(df_train.shape[0]/gdf.shape[0])*100:.0f}%)")
 print(f"  Testing data size:  {df_test.shape[0]:,} x {df_test.shape[1]} ({(df_test.shape[0]/gdf.shape[0])*100:.0f}%)")
@@ -744,7 +783,6 @@ print(f"  Testing data size:  {df_test.shape[0]:,} x {df_test.shape[1]} ({(df_te
 Also notice the indexes of each pair of data sets match:
 
 ```{python}
-#| eval: false
 print(", ".join([str(x) for x in df_train.index[:10]]))
 print(", ".join([str(x) for x in pr_train.index[:10]]))
 ```
@@ -758,9 +796,12 @@ print(", ".join([str(x) for x in pr_train.index[:10]]))
 :::
 
 ```{python}
-#| eval: false
 boros = gpd.read_file(Path('data/geo') / 'Boroughs.gpkg')
 ```
+
+:::: {.qna}
+
+#### Question
 
 ```{python}
 #| eval: false
@@ -778,6 +819,25 @@ axes[1].set_xlim(500000,565000)
 axes[1].set_yticks([]);
 ```
 
+#### Answer
+
+```{python}
+f,axes = plt.subplots(1,2, figsize=(12,5))
+df_train.plot(ax=axes[0])
+df_test.plot(ax=axes[1])
+boros.plot(ax=axes[0], facecolor='none', edgecolor='r', linewidth=.5, alpha=0.4)
+boros.plot(ax=axes[1], facecolor='none', edgecolor='r', linewidth=.5, alpha=0.4)
+axes[0].set_title('Training Data')
+axes[1].set_title('Testing Data');
+axes[0].set_ylim(150000,210000)
+axes[1].set_ylim(150000,210000)
+axes[0].set_xlim(500000,565000)
+axes[1].set_xlim(500000,565000)
+axes[1].set_yticks([]);
+```
+
+::::
+
 ### Questions
 
 - Why might it be useful to produce a *map* of a test/train split? 
@@ -790,7 +850,6 @@ The developers of [SciKit-Learn](https://scikit-learn.org/) define [normalisatio
 Let's see what effect this has on the data!
 
 ```{python}
-#| eval: false
 # Sets some handy 'keywords' to tweak the Seaborn plot
 kwds = dict(s=7,alpha=0.95,edgecolor="none")
 
@@ -810,7 +869,6 @@ ho = ['Inner East','Inner West','Outer West and North West','Outer South','Outer
 One thing you'll need to explain is why I keep writing `df[cols+['Subregion']` and why I don't just add it to the `cols` variable at the start? Don't try to answer this now, get through the rest of Tasks 3 and 4 and see what you think.
 
 ```{python}
-#| eval: false
 cols = ['Tenure-Owned outright', 'Tenure-Owned with a mortgage or loan',
         'Tenure-Social rented', 'Tenure-Private rented']
 ```
@@ -818,7 +876,6 @@ cols = ['Tenure-Owned outright', 'Tenure-Owned with a mortgage or loan',
 *Answer*: one part of the answer is that it makes it easy to change the columns we select without having to remember to keep `Subregion`, but the more important reason is that it allows us to re-use *this* 'definition' of `cols` elsewhere throughout the rest of this practical without needing to remember to *remove* `Subregion`.
 
 ```{python}
-#| eval: false
 tr_raw  = df_train[cols+['Subregion']].copy() # train raw
 tst_raw = df_test[cols+['Subregion']].copy()  # test raw
 ```
@@ -833,6 +890,10 @@ tst_raw = df_test[cols+['Subregion']].copy()  # test raw
 
 Fit the training data:
 
+:::: {.qna}
+
+#### Question
+
 ```{python}
 #| eval: false
 from sklearn.preprocessing import MinMaxScaler
@@ -840,6 +901,17 @@ from sklearn.preprocessing import MinMaxScaler
 # Notice what this is doing! See if you can explain it clearly.
 scalers = [???.fit(???[x].values.reshape(-1,1)) for x in cols]
 ```
+
+#### Answer
+
+```{python}
+from sklearn.preprocessing import MinMaxScaler
+
+# Notice what this is doing! See if you can explain it clearly.
+scalers = [MinMaxScaler().fit(df_train[x].values.reshape(-1,1)) for x in cols]
+```
+
+::::
 
 ## Apply Transformations
 
@@ -851,6 +923,10 @@ scalers = [???.fit(???[x].values.reshape(-1,1)) for x in cols]
 
 Train:
 
+:::: {.qna}
+
+#### Question
+
 ```{python}
 #| eval: false
 tr_normed = tr_raw.copy()
@@ -860,7 +936,23 @@ for i, sc in enumerate(scalers):
     tr_normed[cols[i]] = sc.transform(df_???[cols[i]].values.reshape(-1,1))
 ```
 
+#### Answer
+
+```{python}
+tr_normed = tr_raw.copy()
+
+for i, sc in enumerate(scalers):
+    # Ditto this -- can you explain what this code is doing
+    tr_normed[cols[i]] = sc.transform(df_train[cols[i]].values.reshape(-1,1))
+```
+
+::::
+
 Test:
+
+:::: {.qna}
+
+#### Question
 
 ```{python}
 #| eval: false
@@ -870,12 +962,29 @@ for i, sc in enumerate(scalers):
     tst_normed[cols[i]] = sc.transform(df_???[cols[i]].values.reshape(-1,1))
 ```
 
+#### Answer
+
+```{python}
+tst_normed = tst_raw.copy()
+
+for i, sc in enumerate(scalers):
+    tst_normed[cols[i]] = sc.transform(df_test[cols[i]].values.reshape(-1,1))
+```
+
+::::
+
 ::: {.callout-note}
 
-    **&#128279; Connections**: You don't _have_ to fully understand the next section, but if you are able to get your head around it then this will seriously help you to prepare for the use of more advanced techniques in modelling and programming.
+#### Connections
+
+You don't _have_ to fully understand the next section, but if you are able to get your head around it then this will seriously help you to prepare for the use of more advanced techniques in modelling and programming.
 :::
 
 Check out the properties of `tst_normed` below. If you've understood what the `MinMaxScaler` is doing then you should be able to spot something unexpected in the transformed *test* outputs. If you've *really* understood this, you'll see why this result is problematic for *models*. *Hint*: one way to think of it is an issue of **extrapolation**.
+
+:::: {.qna}
+
+#### Question
 
 ```{python}
 #| eval: false
@@ -883,6 +992,16 @@ for c in cols:
     print(f"  Minimum: {tst_normed[c].min():.4f}")
     ???
 ```
+
+#### Answer
+
+```{python}
+for c in cols:
+    print(f"  Minimum: {tst_normed[c].min():.4f}")
+    print(f"  Maximum: {tst_normed[c].max():.4f}")
+```
+
+::::
 
 ## Plot Distributions
 
@@ -893,7 +1012,6 @@ for c in cols:
 :::
 
 ```{python}
-#| eval: false
 tr_raw.columns     = [re.sub('(-|/)',"\n",x) for x in tr_raw.columns.values]
 tst_raw.columns    = [re.sub('(-|/)',"\n",x) for x in tst_raw.columns.values]
 tr_normed.columns  = [re.sub('(-|/)',"\n",x) for x in tr_normed.columns.values]
@@ -901,12 +1019,10 @@ tst_normed.columns = [re.sub('(-|/)',"\n",x) for x in tst_normed.columns.values]
 ```
 
 ```{python}
-#| eval: false
 sns.pairplot(data=tr_raw, hue='Subregion', diag_kind='kde', corner=True, plot_kws=kwds, hue_order=ho);
 ```
 
 ```{python}
-#| eval: false
 sns.pairplot(data=tr_normed, hue='Subregion', diag_kind='kde', corner=True, plot_kws=kwds, hue_order=ho);
 ```
 
@@ -923,7 +1039,6 @@ sns.pairplot(data=tr_normed, hue='Subregion', diag_kind='kde', corner=True, plot
 Standardisation is typically focussed on rescaling data to have a mean (or median) of 0 and standard deviation or IQR of 1. That these approaches are conceptually tied to the idea of symmetric, unimodal data such as that encountered in the standard normal distribution. Rather confusingly, many data scientists will use standardisation and normalisation largely interchangeably!
 
 ```{python}
-#| eval: false
 col = 'Vehicles-No cars or vans in hh'
 tr  = df_train[[col]].copy()
 tst = df_test[[col]].copy()
@@ -937,6 +1052,10 @@ tst = df_test[[col]].copy()
 
 :::
 
+:::: {.qna}
+
+#### Question
+
 ```{python}
 #| eval: false
 stsc = StandardScaler().fit(tr[col].values.reshape(-1,1))
@@ -944,6 +1063,17 @@ stsc = StandardScaler().fit(tr[col].values.reshape(-1,1))
 tr[f"Z. {col}"]  = stsc.transform(???)
 tst[f"Z. {col}"] = stsc.transform(???)
 ```
+
+#### Answer
+
+```{python}
+stsc = StandardScaler().fit(tr[col].values.reshape(-1,1))
+
+tr[f"Z. {col}"]  = stsc.transform(tr[col].values.reshape(-1,1))
+tst[f"Z. {col}"] = stsc.transform(tst[col].values.reshape(-1,1))
+```
+
+::::
 
 ## Inter-Quartile Standardisation
 
@@ -953,6 +1083,10 @@ tst[f"Z. {col}"] = stsc.transform(???)
 
 :::
 
+:::: {.qna}
+
+#### Question
+
 ```{python}
 #| eval: false
 rs = ???(quantile_range=(25.0, 75.0)).fit(???)
@@ -961,11 +1095,24 @@ tr[f"IQR. {col}"] = rs.transform(???)
 tst[f"IQR. {col}"] = rs.transform(???)
 ```
 
+#### Answer
+
+```{python}
+rs = RobustScaler(quantile_range=(25.0, 75.0)).fit(tr[col].values.reshape(-1,1))
+
+tr[f"IQR. {col}"] = rs.transform(tr[col].values.reshape(-1,1))
+tst[f"IQR. {col}"] = rs.transform(tst[col].values.reshape(-1,1))
+```
+
+::::
+
 ## Plot Distributions
 
 ::: {.callout-note}
 
-    **&#128279; Connections**: The point of these next plots is simply to show that *linear* transformations (which are 'reversible') is about changing things like the magnitude/scale of our data but doesn't fundamentally change relationships *between* observations.
+#### Connections
+
+The point of these next plots is simply to show that *linear* transformations (which are 'reversible') is about changing things like the magnitude/scale of our data but doesn't fundamentally change relationships *between* observations.
 :::
 
 ::: {.callout-tip collapse="true"}
@@ -975,24 +1122,20 @@ tst[f"IQR. {col}"] = rs.transform(???)
 :::
 
 ```{python}
-#| eval: false
 sns.jointplot(data=tr, x=f"{col}", y=f"Z. {col}", kind='kde'); # hex probably not the best choice
 ```
 
 ```{python}
-#| eval: false
 sns.jointplot(data=tr, x=f"{col}", y=f"IQR. {col}", kind='kde'); # hex probably not the best choice
 ```
 
 ```{python}
-#| eval: false
 sns.jointplot(data=tr, x=f"Z. {col}", y=f"IQR. {col}", kind='hex'); # hex probably not the best choice
 ```
 
 Perhaps a little more useful...
 
 ```{python}
-#| eval: false
 ax = sns.kdeplot(tr[f"Z. {col}"])
 sns.kdeplot(tr[f"IQR. {col}"], color='r', ax=ax)
 plt.legend(loc='upper right', labels=['Standard', 'Robust']) # title='Foo'
@@ -1009,7 +1152,9 @@ ax.set_xlabel("Standardised Value for No cars or vans in hh")
 
 ::: {.callout-note}
 
-    **&#128279; Connections**: Now *these* transformations are not directly revsersible because they change the actual relationships between observations in the data. We use these when we need to achieve particular 'behaviours' from our data in order to improve our model's 'predictive' ability. Even a simple regression is doing a kind of prediction ($y = \beta X + \epsilon$). You covered these concepts in [this week's lectures](https://jreades.github.io/fsds/sessions/week8.html#lectures).
+#### Connections
+
+Now *these* transformations are not directly revsersible because they change the actual relationships between observations in the data. We use these when we need to achieve particular 'behaviours' from our data in order to improve our model's 'predictive' ability. Even a simple regression is doing a kind of prediction ($y = \beta X + \epsilon$). You covered these concepts in [this week's lectures](https://jreades.github.io/fsds/sessions/week8.html#lectures).
 :::
 
 So transformations are useful when a data series has features that make comparisons or analysis difficult, or that affect our ability to intuit meaningful difference. By manipulating the data using one or more mathematical operations we can sometimes make it more *tractable* for subsequent analysis. In other words, it's all about the _context_ of our data.
@@ -1042,6 +1187,10 @@ But... what if our data are non-normal? Well, Just because data are non-normal d
 
 Below is a function to create that theoretical normal distribution. See if you can understand what's going and add comments to the code to explain what each line does. 
 
+:::: {.qna}
+
+#### Question
+
 ```{python}
 #| eval: false
 def normal_from_dist(series): 
@@ -1052,6 +1201,19 @@ def normal_from_dist(series):
     return s                   #return this set of random numbers
 ```
 
+#### Answer
+
+```{python}
+def normal_from_dist(series):
+    mu = series.mean()         # mean of our data
+    sd = series.std()          # standard deviation of our data
+    n  = len(series)           # count how many observations are in our data
+    s = np.random.normal(mu, sd, n)   #use the parameters of the data just calculated to generate n random numbers, drawn from a normal distributions
+    return s                   #return this set of random numbers
+```
+
+::::
+
 To make it easier to understand what the function above is doing, let's use it! We'll use the function to plot both a distribution plot with both histogram and KDE for our data, and then add a _second_ overplot distplot to the same fig showing the theoretical normal distribution (in red). We'll do this in a loop for each of the three variables we want to examine.
 
 ### Visual Comparisons
@@ -1061,7 +1223,6 @@ Looking at the output, which of the variables has a roughly normal distribution?
 *Also*, how would you determine the _meaning_ of some of the departures from the normal distribution?
 
 ```{python}
-#| eval: false
 selection = [x for x in df_train.columns.values if x.startswith('Composition')]
 
 for c in selection:
@@ -1092,6 +1253,10 @@ To create a new series in the data frame containing the natural log of the origi
 Let's perform the transform then compare to the un-transformed data. Comment the code below to ensure that you understand what it is doing. 
 
 ### Apply and Plot
+
+:::: {.qna}
+
+#### Question
 
 ```{python}
 #| eval: false
@@ -1128,6 +1293,44 @@ for m in cols:
     plt.show()
 ```
 
+#### Answer
+
+```{python}
+cols = ['Median-2012','Total Mean hh Income']
+
+for m in cols:
+    s  = df_train[m] # s == series
+    ts = np.log(s)   # ts == transformed series
+    
+    ax = sns.kdeplot(s)
+    sns.kdeplot(normal_from_dist(s), color='r', fill=True, ax=ax)
+    plt.legend(loc='upper right', labels=['Observed', 'Normal']) # title also an option
+    plt.title("Original Data")
+    
+    ### USEFUL FORMATTING TRICKS ###
+    # This turns off scientific notation in the ticklabels
+    ax.ticklabel_format(useOffset=False, style='plain')
+    # Notice this snippet of code
+    ax.set_xlabel(ax.get_xlabel() + " (Raw Distribution)")
+    # Notice this little code snippet too
+    if ax.get_xlim()[1] > 999999:
+        plt.xticks(rotation=45)
+    
+    plt.show()
+    
+    ax = sns.kdeplot(ts)
+    sns.kdeplot(normal_from_dist(ts), color='r', fill=True, ax=ax)
+    plt.legend(loc='upper right', labels=['Observed', 'Normal'])
+    ax.ticklabel_format(useOffset=False, style='plain')
+    ax.set_xlabel(ax.get_xlabel() + " (Logged Distribution)")
+    if ax.get_xlim()[1] > 999999:
+        plt.xticks(rotation=45)
+    plt.title("Log-Transformed Data")
+    plt.show()
+```
+
+::::
+
 Hopefully, you can see that the transformed data do indeed look 'more normal'; the peak of the red and blue lines are closer together and the blue line at the lower extreme is also closer to the red line, but we can check this by seeing what has happened to the z-scores.
 
 ## Power Transformations 
@@ -1137,6 +1340,10 @@ Hopefully, you can see that the transformed data do indeed look 'more normal'; t
 #### Difficulty: Moderate.
 
 :::
+
+:::: {.qna}
+
+#### Question
 
 ```{python}
 #| eval: false
@@ -1160,11 +1367,38 @@ for m in cols:
     plt.show();
 ```
 
+#### Answer
+
+```{python}
+cols = ['Median-2012','Total Mean hh Income']
+pt = PowerTransformer(method='yeo-johnson')
+
+for m in cols:
+    s  = df_train[m] # s == series
+    ts = pt.fit_transform(s.values.reshape(-1,1))
+    print(f"Using lambda (transform 'exponent') of {pt.lambdas_[0]:0.5f}")
+    
+    ax = sns.kdeplot(ts.reshape(-1,))
+    
+    sns.kdeplot(normal_from_dist(ts.reshape(-1,)), color='r', fill=True, ax=ax)
+    plt.legend(loc='upper right', labels=['Observed', 'Normal'])
+    ax.ticklabel_format(useOffset=False, style='plain')
+    ax.set_xlabel(m + " (Transformed Distribution)")
+    if ax.get_xlim()[1] > 999999: # <-- What does this do?
+        plt.xticks(rotation=45)
+    plt.title("Power-Transformed Data")
+    plt.show();
+```
+
+::::
+
 # Principal Components Analysis
 
 ::: {.callout-note}
 
-    **&#128279; Connections**: This is all about _dimensionality_ and the different ways that we can reduce dimensionality in our data in order to improve our models' robustness and gain a better understanding of whether (or not) there is structure in our data. We'll start with linear decomposition and then look at non-linear decomposition, which we also demonstrated with UMAP last week.
+#### Connections
+
+This is all about _dimensionality_ and the different ways that we can reduce dimensionality in our data in order to improve our models' robustness and gain a better understanding of whether (or not) there is structure in our data. We'll start with linear decomposition and then look at non-linear decomposition, which we also demonstrated with UMAP last week.
 :::
 
 Now we're going to ask the question: how can we represent our data using a smaller number of components that capture the variance in the original data. You should have covered PCA in Quantitative Methods.
@@ -1197,20 +1431,22 @@ for c in categoricals:
 Sadly, there's no transformer to work this out for you automatically, but let's start by converting the raw population and household figures to shares so that our later dimensionality reduction steps aren't impacted by the size of the MSOA.
 
 ```{python}
-#| eval: false
 gdf[['Age-All Ages','Households-All Households']].head(5)
 ```
 
 ### Specify Totals Columns
 
 ```{python}
-#| eval: false
 total_pop = gdf['Age-All Ages']
 total_hh  = gdf['Households-All Households']
 total_vec = gdf['Vehicles-Sum of all cars or vans in the area']
 ```
 
 ### Specify Columns for Pop or HH Normalisation
+
+:::: {.qna}
+
+#### Question
 
 ```{python}
 #| eval: false
@@ -1220,13 +1456,41 @@ pop_cols  = ['Age-', 'Composition-', 'Qualifications-', 'Economic Activity-', 'W
 hh_cols   = [???, ???, ???, 'Detached', 'Semi-detached', 'Terraced', 'Flat, ']
 ```
 
+#### Answer
+
+```{python}
+pop_cols  = ['Age-', 'Composition-', 'Qualifications-', 'Economic Activity-', 'White', 'Mixed/multiple',
+             'Asian/Asian British', 'Black/African', 'BAME', 'Other ethnic',
+             'Country of Birth-']
+hh_cols   = ['Households-', 'Tenure-', 'Language-', 'Detached', 'Semi-detached', 'Terraced', 'Flat, ']
+```
+
+::::
+
+:::: {.qna}
+
+#### Question
+
 ```{python}
 #| eval: false
 popre = re.compile(r'^(?:' + "|".join(pop_cols) + r')')
 hhre  = re.compile(r'^(?:' + "|".join(???) + r')')
 ```
 
+#### Answer
+
+```{python}
+popre = re.compile(r'^(?:' + "|".join(pop_cols) + r')')
+hhre  = re.compile(r'^(?:' + "|".join(hh_cols) + r')')
+```
+
+::::
+
 ### Apply to Columns
+
+:::: {.qna}
+
+#### Question
 
 ```{python}
 #| eval: false
@@ -1248,6 +1512,29 @@ for c in gdf.columns:
         print("  Passing through.")
 ```
 
+#### Answer
+
+```{python}
+tr_gdf = gdf.copy()
+tr_gdf['Mean hh size'] = tr_gdf['Age-All Ages']/tr_gdf['Households-All Households']
+
+for c in gdf.columns:
+    print(c)
+    if popre.match(c):
+        print("  Normalising by total population.")
+        tr_gdf[c] = gdf[c]/total_pop
+    elif hhre.match(c):
+        print("  Normalising by total households.")
+        tr_gdf[c] = gdf[c]/total_hh
+    elif c.startswith('Vehicles-') and not c.startswith('Vehicles-Cars per hh'):
+        print("  Normalising by total vehicles.")
+        tr_gdf[c] = gdf[c]/total_vec
+    else:
+        print("  Passing through.")
+```
+
+::::
+
 ## Removing Columns
 
 ::: {.callout-warning collapse="true"}
@@ -1266,7 +1553,6 @@ So in practice, it's probably a good idea to drop categorical data if you're pla
 ### Drop Totals Columns
 
 ```{python}
-#| eval: false
 pcadf = tr_gdf.drop(columns=['Age-All Ages', 'Households-All Households',
                              'Vehicles-Sum of all cars or vans in the area'])
 pcadf = pcadf.set_index('MSOA Code')
@@ -1275,18 +1561,15 @@ pcadf = pcadf.set_index('MSOA Code')
 ### Drop Non-Numeric Columns
 
 ```{python}
-#| eval: false
 pcadf.select_dtypes(['category','object']).columns
 ```
 
 ```{python}
-#| eval: false
 pcadf.drop(columns=pcadf.select_dtypes(['category','object']).columns.to_list(), inplace=True)
 pcadf.drop(columns=['BNG_E','BNG_N','geometry', 'LONG', 'LAT','Shape__Are', 'Shape__Len'], inplace=True)
 ```
 
 ```{python}
-#| eval: false
 pcadf.columns
 ```
 
@@ -1304,6 +1587,10 @@ In order to ensure that our results aren't dominated by a single scale (e.g. Hou
 
 Set up the Robust Rescaler for inter-decile standardisation: 10th and 90th quantiles.
 
+:::: {.qna}
+
+#### Question
+
 ```{python}
 #| eval: false
 rs = ???
@@ -1312,10 +1599,20 @@ for c in pcadf.columns.values:
     pcadf[c] = rs.fit_transform(pcadf[c].values.reshape(-1, 1))
 ```
 
+#### Answer
+
+```{python}
+rs = RobustScaler(quantile_range=(10.0, 90.0))
+
+for c in pcadf.columns.values:
+    pcadf[c] = rs.fit_transform(pcadf[c].values.reshape(-1, 1))
+```
+
+::::
+
 ### PCA Reduce
 
 ```{python}
-#| eval: false
 from sklearn.decomposition import PCA 
 
 pca = PCA(n_components=50, whiten=True) 
@@ -1328,6 +1625,10 @@ singular_values = pca.singular_values_
 
 ### Examine Explained Variance
 
+:::: {.qna}
+
+#### Question
+
 ```{python}
 #| eval: false
 x = np.arange(1,???)
@@ -1336,8 +1637,18 @@ plt.ylabel('Share of Variance Explained')
 plt.show()
 ```
 
+#### Answer
+
 ```{python}
-#| eval: false
+x = np.arange(1,len(explained_variance)+1)
+plt.plot(x, explained_variance)
+plt.ylabel('Share of Variance Explained')
+plt.show()
+```
+
+::::
+
+```{python}
 for i in range(0, 20):
     print(f"Component {i:>2} accounts for {explained_variance[i]*100:>2.2f}% of variance")
 ```
@@ -1354,13 +1665,16 @@ There are a number of ways that we could set a threshold for dimensionality redu
 In order to _do_ anything with these components we need to somehow reattach them to the MSOAs. So that entails taking the transformed results (`X_train` and `X_test`) 
 
 ```{python}
-#| eval: false
 kn = knee_locator.KneeLocator(x, explained_variance, 
                               curve='convex', direction='decreasing', 
                               interp_method='interp1d')
 print(f"Knee detected at: {kn.knee}")
 kn.plot_knee()
 ```
+
+:::: {.qna}
+
+#### Question
 
 ```{python}
 #| eval: false
@@ -1389,6 +1703,36 @@ print(f"PCA df shape: {pcadf.shape[0]}")
 print(f"Row 0 of X-train contains {len(X_train[0])} elements.") 
 ```
 
+#### Answer
+
+```{python}
+keep_n_components = 7
+
+# If we weren't changing the number of components we
+# could re-use the pca object created above. 
+pca = PCA(n_components=keep_n_components, whiten=True)
+
+X_train = pca.fit_transform(pcadf)
+
+# Notice that we get the _same_ values out,
+# so this is a *deterministic* process that
+# is fully replicable (allowing for algorithmic
+# and programming language differences).
+print(f"Total explained variance: {pca.explained_variance_ratio_.sum()*100:2.2f}%")
+for i in range(0, keep_n_components):
+    print(f"  Component {i:>2} accounts for {pca.explained_variance_ratio_[i]*100:>5.2f}% of variance")
+
+# Notice...
+print(f"X-train shape: {len(X_train)}")
+print(f"PCA df shape: {pcadf.shape[0]}")
+# So each observation has a row in X_train and there is 
+# 1 column for each component. This defines the mapping
+# of the original data space into the reduced one
+print(f"Row 0 of X-train contains {len(X_train[0])} elements.") 
+```
+
+::::
+
 ## Components to Columns
 
 ::: {.callout-warning collapse="true"}
@@ -1399,6 +1743,10 @@ print(f"Row 0 of X-train contains {len(X_train[0])} elements.")
 
 You could actually do this more quickly (but less clearly) using `X_train.T` to transpose the matrix!
 
+:::: {.qna}
+
+#### Question
+
 ```{python}
 #| eval: false
 for i in range(0,keep_n_components):
@@ -1406,9 +1754,18 @@ for i in range(0,keep_n_components):
     pcadf[f"Component {i+1}"] = s
 ```
 
+#### Answer
+
 ```{python}
-#| eval: false
-pcadf.sample(3).iloc[:,-10:-4]
+for i in range(0,keep_n_components):
+    s = pd.Series(X_train[:,i], index=pcadf.index)
+    pcadf[f"Component {i+1}"] = s
+```
+
+::::
+
+```{python}
+pcadf.sample(3, random_state=SEED).iloc[:,-10:-4]
 ```
 
 ## (Re)Attaching GeoData
@@ -1420,34 +1777,42 @@ pcadf.sample(3).iloc[:,-10:-4]
 :::
 
 ```{python}
-#| eval: false
-msoas = gpd.read_file(Path('data/geo') / 'Middle_Layer_Super_Output_Areas__December_2011__EW_BGC_V2-shp.zip', driver='ESRI Shapefile')
+msoas = gpd.read_file(Path('data/clean') / 'Middle_Layer_Super_Output_Areas__December_2011__EW_BGC_V2-shp.zip', driver='ESRI Shapefile')
 msoas = msoas.set_index('MSOA11CD')
 print(msoas.columns)
 ```
 
 ```{python}
-#| eval: false
 msoas.head(1)
 ```
 
 ```{python}
-#| eval: false
 pcadf.head(1)
 ```
 
 ```{python}
-#| eval: false
-gpcadf = pd.merge(msoas.set_index(['MSOA11CD'], drop=True), pcadf, left_index=True, right_index=True, how='inner')
+gpcadf = pd.merge(msoas, pcadf, left_index=True, right_index=True, how='inner')
 print(f"Geo-PCA df has shape {gpcadf.shape[0]} x {gpcadf.shape[1]}")
 ```
 
-You should get `PCA df has shape 983 x 89`.
+You should get `Geo-PCA df has shape 983 x 89`.
+
+:::: {.qna}
+
+#### Question
 
 ```{python}
 #| eval: false
 gpcadf['Borough'] = gpcadf.MSOA11NM.apply(???)
 ```
+
+#### Answer
+
+```{python}
+gpcadf['Borough'] = gpcadf.MSOA11NM.apply(lambda x: re.sub(r' \d+$', '', x))
+```
+
+::::
 
 ## Map the First _n_ Components
 
@@ -1459,6 +1824,10 @@ gpcadf['Borough'] = gpcadf.MSOA11NM.apply(???)
 
 How would you automate this so that the loop creates one plot for each of the first 3 components? How do you interpret these?
 
+:::: {.qna}
+
+#### Question
+
 ```{python}
 #| eval: false
 for comp in [f"Component {x}" for x in range(1,3)]:
@@ -1467,6 +1836,18 @@ for comp in [f"Component {x}" for x in range(1,3)]:
     boros.plot(ax=ax, edgecolor='w', facecolor='none', linewidth=1, alpha=0.7)
     ax.set_title(f'PCA {comp}')
 ```
+
+#### Answer
+
+```{python}
+for comp in [f"Component {x}" for x in range(1,3)]:
+    ax = gpcadf.plot(column=comp, cmap='plasma', 
+         scheme='FisherJenks', k=7, edgecolor='None', legend=True, figsize=(9,7));
+    boros.plot(ax=ax, edgecolor='w', facecolor='none', linewidth=1, alpha=0.7)
+    ax.set_title(f'PCA {comp}')
+```
+
+::::
 
 Your first component map should look something like this:
     
@@ -1483,6 +1864,10 @@ UMAP is a non-linear dimensionality reduction technique. Technically, it's calle
 #### Difficulty: Hard.
 
 :::
+
+:::: {.qna}
+
+#### Question
 
 ```{python}
 #| eval: false
@@ -1504,6 +1889,30 @@ X_embedded = u.fit_transform(???)
 print(X_embedded.shape)
 ```
 
+#### Answer
+
+```{python}
+from umap import UMAP
+
+# You might want to experiment with all
+# 3 of these values -- it may make sense 
+# to package a lot of this up into a function!
+keep_dims=2
+rs=SEED
+
+u = UMAP(
+    n_neighbors=25,
+    min_dist=0.01,
+    n_components=keep_dims,
+    random_state=rs)
+
+# The rescaled data, *without* the PCA components we just added
+X_embedded = u.fit_transform(pcadf.drop(columns=[f"Component {i+1}" for i in range(keep_n_components)]))
+print(X_embedded.shape)
+```
+
+::::
+
 ## Write to Data Frame
 
 ::: {.callout-tip collapse="true"}
@@ -1514,6 +1923,10 @@ print(X_embedded.shape)
 
 Can probably also be solved using `X_embedded.T`.
 
+:::: {.qna}
+
+#### Question
+
 ```{python}
 #| eval: false
 for ix in range(0,X_embedded.shape[1]):
@@ -1521,6 +1934,17 @@ for ix in range(0,X_embedded.shape[1]):
     s = pd.Series(X_embedded[:,???], index=pcadf.???)
     gpcadf[f"Dimension {ix+1}"] = s
 ```
+
+#### Answer
+
+```{python}
+for ix in range(0,X_embedded.shape[1]):
+    print(ix)
+    s = pd.Series(X_embedded[:,ix], index=pcadf.index)
+    gpcadf[f"Dimension {ix+1}"] = s
+```
+
+::::
 
 ## Visualise!
 
@@ -1531,11 +1955,14 @@ for ix in range(0,X_embedded.shape[1]):
 :::
 
 ```{python}
-#| eval: false
 rddf = gpcadf.copy() # Reduced Dimension Data Frame
 ```
 
 ### Simple Scatter
+
+:::: {.qna}
+
+#### Question
 
 ```{python}
 #| eval: false
@@ -1543,22 +1970,33 @@ f,ax = plt.subplots(1,1,figsize=(8,6))
 sns.scatterplot(x=rddf[???], y=rddf[???], hue=rddf['Borough'], legend=False, ax=ax)
 ```
 
+#### Answer
+
+```{python}
+f,ax = plt.subplots(1,1,figsize=(8,6))
+sns.scatterplot(x=rddf['Dimension 1'], y=rddf['Dimension 2'], hue=rddf['Borough'], legend=False, ax=ax)
+```
+
+::::
+
 ### Seaborn Jointplot
 
 That is *suggestive* of there being struccture in the data, but with 983 data points and 33 colours it's hard to make sense of what the structure *might* imply. Let's try this again using the Subregion instead and taking advantage of the Seaborn visualisation library's `jointplot` (joint distribution plot):
 
 ```{python}
-#| eval: false
 rddf['Subregion'] = rddf.Borough.apply(lambda x: mapping[x])
 ```
 
 ```{python}
-#| eval: false
 # Sets some handy 'keywords' to tweak the Seaborn plot
 kwds = dict(s=7,alpha=0.95,edgecolor="none")
 # Set the *hue order* so that all plots have some colouring by Subregion
 ho = ['Inner East','Inner West','Outer West and North West','Outer South','Outer East and North East']
 ```
+
+:::: {.qna}
+
+#### Question
 
 ```{python}
 #| eval: false
@@ -1566,6 +2004,16 @@ g = sns.jointplot(data=rddf, x=???, y=???, height=8,
                   hue=???, hue_order=ho, joint_kws=kwds)
 g.ax_joint.legend(loc='upper right', prop={'size': 8});
 ```
+
+#### Answer
+
+```{python}
+g = sns.jointplot(data=rddf, x='Dimension 1', y='Dimension 2', height=8, 
+                  hue='Subregion', hue_order=ho, joint_kws=kwds)
+g.ax_joint.legend(loc='upper right', prop={'size': 8});
+```
+
+::::
 
 Your jointplot should look like this:
 
@@ -1576,7 +2024,6 @@ What do you make of this?
 Maybe let's give this one last go splitting the plot out by subregion so that we can see how these vary:
 
 ```{python}
-#| eval: false
 for r in rddf.Subregion.unique():
     g = sns.jointplot(data=rddf[rddf.Subregion==r], x='Dimension 1', y='Dimension 2', 
                   hue='Borough', joint_kws=kwds)
@@ -1598,6 +2045,10 @@ Next week we'll also add the listings data back in as part of the picture!
 
 :::
 
+:::: {.qna}
+
+#### Question
+
 ```{python}
 #| eval: false
 for comp in [f"Dimension {x}" for x in range(1,3)]:
@@ -1607,6 +2058,18 @@ for comp in [f"Dimension {x}" for x in range(1,3)]:
     ax.set_title(f'UMAP {comp}')
 ```
 
+#### Answer
+
+```{python}
+for comp in [f"Dimension {x}" for x in range(1,3)]:
+    f, ax = plt.subplots(1,1,figsize=(12,8))
+    rddf.plot(column=comp, cmap='plasma', scheme='FisherJenks', k=7, edgecolor='None', legend=True, ax=ax);
+    boros.plot(edgecolor='w', facecolor='none', linewidth=1, alpha=0.7, ax=ax)
+    ax.set_title(f'UMAP {comp}')
+```
+
+::::
+
 Your first dimension map should look something like this:
 
 ![UMAP Dimension 1](https://github.com/jreades/fsds/raw/master/practicals/img/UMAP-Dimension-1.png)
@@ -1614,7 +2077,6 @@ Your first dimension map should look something like this:
 ## And Save
 
 ```{python}
-#| eval: false
 rddf.to_parquet(Path('data/clean') / 'Reduced_Dimension_Data.geoparquet')
 ```
 
@@ -1633,9 +2095,9 @@ The code from this practical that you'll use again and again:
 | 2 | Work with one level of a MultiIndex | `df.columns.get_level_values(1)` and `df.drop(columns=to_drop, level=0)` | Selecting or dropping whole groups of columns at once |
 | 3 | Store categories efficiently | `gdf[c] = gdf[c].astype('category')` | Text columns with a few repeated values (boroughs, subregions) |
 | 4 | Split into training and test data | `train_test_split(X, y, test_size=0.2, random_state=44)` | Before fitting anything, so you can test on data the model hasn't seen |
-| 5 | Fit a scaler on training data, apply it to both | `sc = StandardScaler().fit(tr[col].values.reshape(-1,1))`, then `sc.transform(tst[col].values.reshape(-1,1))` | Fit on training data only; `reshape(-1,1)` because scikit-learn expects 2D input |
+| 5 | Fit a scaler on training data, apply it to both | `sc = StandardScaler().fit( tr[col].values.reshape(-1,1) )`, then `sc.transform( tst[col].values.reshape(-1,1) )` | Fit on training data only; `reshape(-1,1)` because scikit-learn expects 2D input |
 | 6 | Scale with outliers present | `RobustScaler(quantile_range=(25.0, 75.0))` | Skewed data, where extreme values would distort a z-score |
-| 7 | Make skewed data more normal | `PowerTransformer(method='yeo-johnson').fit_transform(s.values.reshape(-1,1))` | Prices, incomes and counts before methods that assume normal-ish data |
+| 7 | Make skewed data more normal | `PowerTransformer(method='yeo-johnson').fit_transform( s.values.reshape(-1,1) )` | Prices, incomes and counts before methods that assume normal-ish data |
 | 8 | Compare many variables at once | `sns.pairplot(data=df, hue='Subregion', diag_kind='kde', corner=True)` | Checking distributions and relationships before reducing dimensions |
 | 9 | Reduce dimensions with PCA | `pca = PCA(n_components=7, whiten=True)`, `X = pca.fit_transform(pcadf)`, then `pca.explained_variance_ratio_` | Many correlated variables; the ratio says how much each component explains |
 | 10 | Reduce dimensions with UMAP | `UMAP(n_neighbors=25, min_dist=0.01, n_components=2, random_state=42).fit_transform(X)` | Non-linear structure, or 2 dimensions for plotting; set `random_state` because it isn't deterministic |
