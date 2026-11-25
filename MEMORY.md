@@ -54,3 +54,6 @@ General lessons from working sessions, as `[LEARN:category]` entries. Machine- a
 - [LEARN:readings] Cited the PDF's page index → cite the printed journal page from the page header or footer (Arribas-Bel 2014: printed page = PDF page + 44).
 - [LEARN:data] `data/` CSVs looked unused and were deleted → some are fetched from GitHub `master` through bit.ly links in decks (e.g. `2019-sample-crime.csv` in 6.4); grep for the filename and its short link before deleting.
 - [LEARN:tools] Asserted how the lecturer used to annotate in Preview → don't claim to know someone's past UI workflow; describe the options and ask.
+- [LEARN:sessions] Too many neighbour discussions → about 3 after the break; the rest become ask-and-answer (flow and time).
+- [LEARN:practicals] Unseeded `.sample()` → always `random_state=SEED` (from the data-definition include); students take a different sample as their own mistake.
+- [LEARN:practicals] Test code in the conda `sds` env; the repo `.venv` only has pymupdf.

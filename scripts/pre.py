@@ -1,5 +1,8 @@
 """Pre-render hook: keep the data-download includes in step with _variables.yml.
 
+Also writes the sampling settings (data.sample, data.seed, data.sample-n) used
+by the computationally intensive practicals.
+
 The code-block includes (practicals/_data_definition*.qmd) can't use
 {{< var >}}, so this writes them from `data:` in _variables.yml. It runs
 before every render, including single-file renders.
@@ -48,7 +51,7 @@ def read_data_vars(path: Path) -> dict:
     return out
 
 
-def include_text(ymd: str, host: str, label: str, ext: str, extra: list) -> str:
+def include_text(ymd: str, host: str, label: str, ext: str, extra: list, smp: dict) -> str:
     lines = [
         "```{python}",
         f"#| label: {label}",
@@ -57,6 +60,13 @@ def include_text(ymd: str, host: str, label: str, ext: str, extra: list) -> str:
         f"host = '{host}'",
         f"url  = f'{{host}}/~jreades/data/{{ymd}}-{{city}}-listings.{ext}'",
         *extra,
+        "",
+        "# Sampling, for the computationally intensive practicals (10 onwards).",
+        "# Keep SAMPLE = True to get the same results as the ones shown on the",
+        "# page; set it to False to use all of the data in your own work.",
+        f"SAMPLE   = {smp['sample']}",
+        f"SEED     = {smp['seed']}      # The same 'random' sample (and results) as ours",
+        f"SAMPLE_N = {smp['n']}   # Listings to keep when SAMPLE is True",
         "```",
     ]
     return "\n".join(lines) + "\n"
@@ -69,10 +79,17 @@ def main() -> None:
         raise SystemExit(f"[pre.py] data.ymd in {VARS.name} isn't YYYYMMDD: {ymd!r}")
     m = re.match(r"(https?://[^/]+)", data.get("url", ""))
     host = m.group(1) if m else "https://orca.casa.ucl.ac.uk"
+    smp = {
+        "sample": data.get("sample", "True"),
+        "seed": data.get("seed", "42"),
+        "n": data.get("sample-n", "10000"),
+    }
+    if smp["sample"] not in ("True", "False") or not (smp["seed"].isdigit() and smp["n"].isdigit()):
+        raise SystemExit(f"[pre.py] data.sample/seed/sample-n in {VARS.name} look wrong: {smp}")
 
     for name, (label, ext, extra) in INCLUDES.items():
         p = PRACS / name
-        text = include_text(ymd, host, label, ext, extra)
+        text = include_text(ymd, host, label, ext, extra, smp)
         if not p.exists() or p.read_text(encoding="utf-8") != text:
             p.write_text(text, encoding="utf-8")
             print(f"[pre.py] wrote {p.relative_to(ROOT)} ({ymd})")
