@@ -240,7 +240,7 @@
 
 <p><span style="margin:0px; font-weight:700;" class="author">Jon Reades</span> - j.reades@ucl.ac.uk </p>
 
-<p style="opacity: 0.8">24th November 2026</p>
+<p style="opacity: 0.8">25th November 2026</p>
 
 <p style="opacity:0.8;"></p>
 
@@ -390,6 +390,34 @@ Can you prove anything with numbers?
 <section id="what-would-out-of-control-mean" class="slide level2">
 <h2>What Would ‘Out of Control’ Mean?</h2>
 <p>You’re asked: <strong>Is Airbnb ‘out of control’ in London?</strong></p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>You could count</th>
+<th>You’d be assuming</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Listings</td>
+<td>every listing is a home taken off the market</td>
+</tr>
+<tr class="even">
+<td>Listings per 1,000 homes</td>
+<td>the number of homes is the right baseline</td>
+</tr>
+<tr class="odd">
+<td>Nights booked</td>
+<td>that reviews are a proxy for bookings</td>
+</tr>
+<tr class="even">
+<td>Hosts with many listings</td>
+<td>that they are “professional”</td>
+</tr>
+</tbody>
+</table>
+<div class="fragment">
+<p>Which one goes on slide 1 of your briefing? <strong>Who decides?</strong></p>
 <aside class="notes">
 <p><strong>Clock: 20:00.</strong> Provide feedback on the group’s draft using this table. Point to the row that matches what the group counted and say what it assumes. Then ask the room the last line. Pairs only, and only if on time: if it’s past 24:00, ask the question and leave it with them for their own drafts.</p>
 <p>Don’t give an answer: each choice is a transformation in Bunday’s sense, which is where the readings come in.</p>
@@ -405,6 +433,7 @@ Can you prove anything with numbers?
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
+</div>
 </section></section>
 <section>
 <section id="can-you-prove-anything-with-numbers" class="title-slide slide level1 center">
@@ -572,10 +601,9 @@ Can you prove anything with numbers?
 <li>Creating and working with geo-data in Python.</li>
 <li>Making maps with GeoPandas.</li>
 <li>Exploring the data visually: distributions, outliers, and spatial patterns.</li>
-<li>Using the Inside Airbnb data’s second ‘class’ of information: <em>where</em> it is.</li>
+<li>Using the Inside Airbnb data’s second ‘class’ of information: <em>location</em>.</li>
 </ul>
 <aside class="notes">
-<p>[CHECK] There is no <code>Week 7 Session.md</code>, so these bullets are drafted from the session page’s “Connections” box. Replace them with your own.</p>
 <p><strong>Clock: 44:00.</strong> Keep it to 2 minutes: the checkpoint slides come next (46–52), then the break (52–59).</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
@@ -772,6 +800,23 @@ Can you prove anything with numbers?
 <li><code>False</code>, <code>True</code>, <code>True</code></li>
 <li><code>True</code>, <code>True</code>, <code>True</code></li>
 </ol>
+<div class="fragment">
+<p><strong>Answer: 3.</strong> <code>False</code>, <code>True</code>, <code>True</code>.</p>
+<aside class="notes">
+<p>The expected wrong answer is 2: people think a <code>GeoDataFrame</code> has stopped being a <code>DataFrame</code>. Count hands.</p>
+<p>Say: a <code>GeoDataFrame</code> <em>is</em> a <code>DataFrame</code> that has learned about maps, so you can use it anywhere you’d use one. That’s inheritance, and it’s why <code>.describe()</code> and <code>.groupby()</code> work on spatial data. Whoever built the class decided what counted as the same thing.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
 </section>
 <section id="did-the-original-change" class="slide level2 smaller">
 <h2>2. Did the Original Change?</h2>
@@ -786,6 +831,23 @@ Can you prove anything with numbers?
 <li><code>ESRI:54030</code>, then <code>EPSG:4326</code></li>
 <li><code>EPSG:4326</code>, then <code>ESRI:54030</code></li>
 </ol>
+<div class="fragment">
+<p><strong>Answer: 4.</strong> <code>EPSG:4326</code>, then <code>ESRI:54030</code>.</p>
+<aside class="notes">
+<p>The expected wrong answer is 2 (people expect the method to change the data in place). Count hands.</p>
+<p>Say: <code>to_crs</code> returns a <em>copy</em>, as pandas methods do. Reprojecting is a transformation, and the original stays as it was: that’s why you can show someone both and ask which one they’d trust.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
 </section>
 <section id="how-much-is-250" class="slide level2 smaller">
 <h2>3. How Much Is 250?</h2>
@@ -803,6 +865,23 @@ Can you prove anything with numbers?
 <li><code>Polygon</code>, then 4</li>
 <li><code>Polygon</code>, then 0</li>
 </ol>
+<div class="fragment">
+<p><strong>Answer: 3.</strong> <code>Polygon</code>, then <code>4</code>: a triangle.</p>
+<aside class="notes">
+<p>The expected wrong answer is 2 or 1 (people think 250 is metres). Count hands.</p>
+<p>Say: <code>simplify</code> works in the units of the coordinate reference system. Here those are degrees, so 250 degrees is far bigger than the whole circle and the shape collapses to a triangle. The code ran without an error and the answer was wrong. Nothing in the output tells you.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
 </section>
 <section id="same-summary-same-data" class="slide level2 smaller">
 <h2>4. Same Summary, Same Data?</h2>
@@ -816,6 +895,26 @@ Can you prove anything with numbers?
 <li>3</li>
 <li>4</li>
 </ol>
+<div class="fragment">
+<p><strong>Answer: 4.</strong> All four have the same mean and correlation.</p>
+</div>
+<div class="fragment">
+<p><a href="./img/Quartet.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img data-src="./img/Quartet.png" alt="Anscombe's quartet: four scatter plots with identical summary statistics but very different patterns"></a></p>
+<aside class="notes">
+<p>The expected wrong answer is 1 or 2 (people don’t believe it). Count hands.</p>
+<p>Say: the four data sets have the same mean, the same correlation and the same fitted line, and they look nothing alike. If you only look at the summary you’ll think they’re the same. Start with a chart.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
 </section></section>
 <section>
 <section id="case-permitted-development" class="title-slide slide level1 center">
@@ -1029,7 +1128,7 @@ Can you prove anything with numbers?
 <h2>Who is Missing?</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><a href="./img/1280px-Survivorship-bias.svg.webp" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="By Martin Grandjean (vector), McGeddon (picture), US Air Force (hit plot concept)"><img data-src="./img/1280px-Survivorship-bias.svg.webp" height="400" alt="By Martin Grandjean (vector), McGeddon (picture), US Air Force (hit plot concept)"></a></p>
+<p><a href="./img/1280px-Survivorship-bias.svg.webp" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="By Martin Grandjean (vector), McGeddon (picture), US Air Force (hit plot concept)"><img data-src="./img/1280px-Survivorship-bias.svg.webp" height="400" alt="By Martin Grandjean (vector), McGeddon (picture), US Air Force (hit plot concept)"></a></p>
 <figcaption>By Martin Grandjean (vector), McGeddon (picture), US Air Force (hit plot concept)</figcaption>
 </figure>
 </div>
@@ -1107,7 +1206,7 @@ Can you prove anything with numbers?
 <p>Provide your input here: <a href="https://form.menti.com/s/alb33vmjf1ow">form.menti.com/s/alb33vmjf1ow</a></p>
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><a href="./img/mentimeter-qr-week-7.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Mentimeter QR Code"><img data-src="./img/mentimeter-qr-week-7.png" height="500" alt="Mentimeter QR Code"></a></p>
+<p><a href="./img/mentimeter-qr-week-7.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Mentimeter QR Code"><img data-src="./img/mentimeter-qr-week-7.png" height="500" alt="Mentimeter QR Code"></a></p>
 <figcaption>Mentimeter QR Code</figcaption>
 </figure>
 </div>
